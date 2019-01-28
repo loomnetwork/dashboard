@@ -502,7 +502,8 @@ export default {
         }         
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
-        commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})        
+        // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
+        return
       }      
       commit("DPOS/setStatus", "mapped", {root: true})
     },

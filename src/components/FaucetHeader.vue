@@ -53,8 +53,6 @@
     </b-navbar> 
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
       <div class="container ensure-padded">
-        <div class="col">      
-        </div>
         <div class="col">          
           <b-navbar-nav>
             <div class="sub-menu-links">

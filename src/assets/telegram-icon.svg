@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>telegram_ico</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="DelegateCall--Index-1-Copy-6" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-885.000000, -810.000000)">
+        <g id="telegram_ico" transform="translate(885.000000, 810.000000)" fill="#FFFFFF">
+            <rect id="Rectangle-2-Copy-3" opacity="0.01" x="0" y="0" width="30" height="30"></rect>
+            <g id="telegram" transform="translate(1.000000, 0.000000)" fill-rule="nonzero">
+                <path d="M14,0 C6.26612903,0 0,6.26612903 0,14 C0,21.733871 6.26612903,28 14,28 C21.733871,28 28,21.733871 28,14 C28,6.26612903 21.733871,0 14,0 Z M21.9546988,9.09481127 L19.5394535,19.275673 C19.3614256,19.9975694 18.8807502,20.1727354 18.2101784,19.8330195 L14.530935,17.4072354 L12.7565902,18.9359571 C12.5607595,19.1111231 12.3946001,19.2597488 12.0148072,19.2597488 L12.2759148,15.9103621 L19.0943837,10.4005944 C19.3910969,10.1670397 19.0291068,10.0343381 18.6374454,10.2678928 L10.2107911,15.0132997 L6.57902172,13.99946 C5.78976466,13.7765214 5.77196186,13.2934878 6.7451811,12.9537719 L20.9340054,8.05973929 C21.5927087,7.84741684 22.1683323,8.20305695 21.9546988,9.09481127 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

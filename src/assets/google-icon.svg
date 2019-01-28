@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="google-icon" transform="translate(6.000000, 5.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M23.9560329,28.5608421 L23.9560329,19.6328421 L46.4009309,19.6328421 C46.7374866,21.1452632 47,22.56 47,24.5524211 C47,38.2568421 37.8153956,48 23.9795918,48 C10.7428571,48 0,37.248 0,24 C0,10.752 10.7428571,0 23.9795918,0 C30.454923,0 35.8734694,2.37642105 40.0215181,6.26357895 L33.211314,12.8875789 C31.4847834,11.2555789 28.4625134,9.33557895 23.9795918,9.33557895 C16.0419262,9.33557895 9.56827784,15.936 9.56827784,24.0235789 C9.56827784,32.1111579 16.043609,38.7115789 23.9795918,38.7115789 C33.1641962,38.7115789 36.544898,32.352 37.167526,28.5827368 L23.9543502,28.5827368 L23.9543502,28.5591579 L23.9560329,28.5608421 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

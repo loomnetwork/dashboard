@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icons8-search</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="User-Flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Marketplace---9-one-card---Variation-with-background" transform="translate(-1041.000000, -30.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="icons8-search" transform="translate(1041.000000, 30.000000)">
+                <path d="M8.4,0 C3.77075756,0 0,3.77075756 0,8.4 C0,13.0292425 3.77075756,16.8 8.4,16.8 C10.4130667,16.8 12.2618034,16.0851482 13.7107034,14.8985155 L18.726094,19.913906 C18.9367799,20.1333483 19.2496382,20.2217456 19.5440096,20.1450058 C19.8383809,20.0682661 20.0682661,19.8383809 20.1450058,19.5440096 C20.2217456,19.2496382 20.1333483,18.9367799 19.913906,18.726094 L14.8985155,13.7107034 C16.0851482,12.2618034 16.8,10.4130667 16.8,8.4 C16.8,3.77075756 13.0292425,0 8.4,0 Z M8.4,1.68 C12.1213033,1.68 15.12,4.67869702 15.12,8.4 C15.12,12.1213033 12.1213033,15.12 8.4,15.12 C4.67869702,15.12 1.68,12.1213033 1.68,8.4 C1.68,4.67869702 4.67869702,1.68 8.4,1.68 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

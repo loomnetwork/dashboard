@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="9px" viewBox="0 0 18 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>down_blue_arrow</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="DelegateCall--Question-page-3-Copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-38.000000, -260.000000)">
+        <g id="down_blue_arrow" transform="translate(38.000000, 260.000000)">
+            <rect id="Rectangle-42" fill="#888888" opacity="0.01" x="0" y="0" width="18" height="9"></rect>
+            <g id="down_arrow_big-copy-2" transform="translate(1.000000, 0.000000)" stroke="#888888" stroke-width="2">
+                <polyline id="Path-5" transform="translate(8.000000, 3.900000) rotate(90.000000) translate(-8.000000, -3.900000) " points="4.9 -3.6 11.1 3.9 4.9 11.4"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

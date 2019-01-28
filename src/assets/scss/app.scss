@@ -1,0 +1,61 @@
+@import url("https://use.typekit.net/nbq4wog.css");
+@import './bootstrap-override.scss';
+@import 'mixin';
+@import 'variables';
+
+// Additional global styles go below...
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background-color: #eff3f5 !important;
+}
+
+.page-header {
+	color: #354168;
+  font-weight: 600;
+  font-size: 30px;
+	margin-bottom: 24px;
+}
+
+.bg-light {
+	background-color: #f9f9fc;
+}
+
+.custom-input {
+	border: none;
+}
+
+.custom-card {
+  padding: 12px;
+  background-color: #ffffff;
+  border: 1px solid #d5dcec;
+  margin-bottom: 36px;
+}
+
+.table-container {
+  .custom-table {
+    background-color: #ffffff;
+    border: 1px solid #d5dcec;
+    td {
+      span {
+        color: $subheader !important;
+      }
+    }
+    .thead-gray {
+      background: #F3F5F6 !important;
+    }
+  }
+}
+
+.text-grey {
+  color: $header;
+}
+
+a.disabled {
+ pointer-events: none;
+ cursor: default;
+ color: #5f5f5f !important;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="20px" viewBox="0 0 21 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>ICONS/Icons 22/back arrow</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-389.000000, -1521.000000)">
+        <g id="ICONS/Icons-22/back-arrow" transform="translate(387.000000, 1519.000000)">
+            <rect id="Rectangle-16-Copy" opacity="0.01" x="0" y="0" width="24" height="24"></rect>
+            <g id="Group-3" stroke-width="1" fill-rule="evenodd" transform="translate(2.000000, 3.000000)" stroke="#ffffff">
+                <polyline id="Path-5" transform="translate(5.000000, 9.000000) scale(-1, 1) translate(-5.000000, -9.000000) " points="0 -3.73034936e-14 10 9 0 18"></polyline>
+                <path d="M1,9 L21,9" id="Path-8"></path>
+            </g>
+        </g>
+    </g>
+</svg>

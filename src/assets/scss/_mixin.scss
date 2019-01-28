@@ -1,0 +1,19 @@
+@mixin normal-font{
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+//the 600 fonts
+@mixin important-font {
+  font-weight: 600;
+}
+
+@mixin shadow {
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
+}
+
+@mixin gradient {
+	background: linear-gradient(30deg, #464de4, #814eff);
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="22px" viewBox="0 0 21 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>ICONS-26/notification</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="User-Flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Marketplace---9-one-card---Variation-with-background" transform="translate(-1084.000000, -29.000000)">
+            <g id="ICONS-26/notification" transform="translate(1082.000000, 28.000000)">
+                <rect id="Rectangle-5" x="0" y="0" width="25" height="25"></rect>
+                <g id="bell-53" transform="translate(3.846154, 1.923077)" stroke="#FFFFFF" stroke-linecap="square" stroke-width="1.6">
+                    <path d="M11.5384615,17.3076923 C11.5384615,18.9423077 10.2884615,20.1923077 8.65384615,20.1923077 C7.01923077,20.1923077 5.76923077,18.9423077 5.76923077,17.3076923" id="Shape"></path>
+                    <path d="M15.3846154,10.3238866 C15.3846154,8.17307692 15.3846154,6.02226721 15.3846154,6.02226721 C15.3846154,2.66700405 12.4038462,0 8.65384615,0 C4.90384615,0 1.92307692,2.66700405 1.92307692,6.02226721 C1.92307692,6.02226721 1.92307692,8.17307692 1.92307692,10.3238866 C1.92307692,13.7651822 0,16.3461538 0,16.3461538 L17.3076923,16.3461538 C17.3076923,16.3461538 15.3846154,13.7651822 15.3846154,10.3238866 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

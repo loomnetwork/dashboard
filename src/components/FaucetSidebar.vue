@@ -1,0 +1,56 @@
+<template>
+  <b-nav id="faucet-sidebar" vertical class="navbar-side">
+    <b-nav-item>
+      <router-link to="/validators" class="router" exact-active-class="router-active">Validators</router-link>
+    </b-nav-item>    
+    <b-nav-item>
+      <router-link to="/account" class="router" exact-active-class="router-active">My Account</router-link>
+    </b-nav-item>
+    <b-nav-item>
+      <router-link to="/delegations" class="router" exact-active-class="router-active">My Delegations</router-link>
+    </b-nav-item>
+    <b-nav-item>
+      <router-link to="/rewards" class="router" exact-active-class="router-active">Rewards</router-link>
+    </b-nav-item>    
+  </b-nav>
+</template>
+
+<script>
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+
+@Component({
+})
+
+export default class FaucetSidebar extends Vue {
+}</script>
+<style lang="scss" scoped>
+.navbar-side {
+  background-color: #ffffff;
+  z-index: 100;
+  position: relative;
+  border-right: 2px solid #f2f1f3;
+  height: 100%;
+  min-width: 230px;
+  padding-top: 24px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.router-active {
+  border-left: 5px solid #5756e6;
+  font-weight: bold
+}
+.router {
+  color: gray;
+  padding: 5px 15px;
+}
+.column {
+  flex-direction: column;
+}
+h4, h1 {
+  color: gray;
+}
+.text-gray {
+  color: gray;
+}
+</style>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <meta name="description" content="Plasma Chain - Karma Faucet">
+    <meta property="og:title" content="Plasma Chain - Karma Faucet">
+    <meta property="og:description" content="Plasma Chain - Karma Faucet">
+<!--    <meta property="og:image" content="/todo.png"> -->
+    <meta property="og:url" content="OGURL">
+    <meta name="twitter:card" content="summary">
+    <link rel="icon" href="/favicon.ico">
+    <title>DPOS Dashboard</title>
+    <script>
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t,e){var n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src="https://cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(n,a);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.1.0";
+      analytics.load("i121uK4bbmgkaYRQpFRtiyw8lUOHBYeb");
+      analytics.page();
+      }}();
+
+      window.onload = function(e){
+      }
+    </script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
+    <style>
+      body {
+        overflow: hidden;
+      }
+      #app {
+        min-width: 470px;
+      }
+      #loading_wrapper-outer {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99999;
+        transition: all .2s;
+      }
+      .loading_wrapper {
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        background-color: #08050c;
+      }
+      #loading-outline {
+        animation: rotate 2s linear infinite;
+        position: absolute;
+        left: calc(50% - 72.5px);
+        top: calc(50% - 72.5px);
+      }
+      #loading-center {
+        animation: rotate-diff 3s linear infinite;
+        position: absolute;
+        left: calc(50% - 72.5px);
+        top: calc(50% - 72.5px);
+      }
+      @keyframes rotate {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes rotate-diff {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but DPOS Dashboard doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+  </body>
+</html>

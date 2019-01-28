@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="18px" viewBox="0 0 16 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>FAB77276-14CA-44CF-80E8-062130DB637B</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ICONS/arrow_up">
+            <g>
+                <rect id="Rectangle-4" opacity="0.666383605" x="0" y="0" width="16" height="18"></rect>
+                <g id="ICONS/Icons-22/back-arrow-Copy" transform="translate(8.500000, 8.500000) rotate(90.000000) translate(-8.500000, -8.500000) translate(0.500000, 1.000000)">
+                    <rect id="Rectangle-16-Copy" opacity="0.314877717" x="0" y="0" width="15" height="15"></rect>
+                    <g id="Group-3-Copy-7" transform="translate(1.250000, 1.875000)" stroke="#888888" stroke-width="1.4">
+                        <polyline id="Path-5" transform="translate(2.875000, 5.625000) scale(-1, 1) translate(-2.875000, -5.625000) " points="-8.8817842e-16 0.125 5.75 5.625 -8.8817842e-16 11.125"></polyline>
+                        <path d="M0.625,5.625 L13.125,5.625" id="Path-8"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

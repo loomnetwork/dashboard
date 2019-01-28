@@ -1,0 +1,137 @@
+<template>
+  <footer id="faucet-footer" class="faucet-footer">
+    <div class="block footer-block bg-blue-gradient py-5">
+      <div class="container">
+        <div class="inner-container">
+          <div class="footer-title">
+            <img src="../assets/logo-grey.svg">
+          </div>
+          <div class="d-flex flex-row justify-content-around flex-wrap">
+            <div class="">
+              <ul class="list-unstyled list-spaced">
+                <li><a href="https://loomx.io" target="_blank" class="hover-warning">LoomX.io</a></li>
+                <li><a href="https://EthFiddle.com" target="_blank" class="hover-warning">EthFiddle.com</a></li>
+                <li><a href="https://EthDeploy.com" target="_blank" class="hover-warning">EthDeploy.com</a></li>
+                <li><a href="https://cryptozombies.io" target="_blank" class="hover-warning">Cryptozombies.io</a></li>
+                <li><a href="https://solidityx.org" target="_blank" class="hover-warning">SolidityX.org</a></li>
+              </ul>
+            </div>
+            <div class="">
+              <ul class="list-unstyled list-spaced">
+                <li><a href="https://github.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'github']" fixed-width /> Github</a></li>
+                <li><a href="https://medium.com/loom-network" target="_blank" class="hover-warning"><fa :icon="['fab', 'medium']" fixed-width /> Medium</a></li>
+                <li><a href="https://angel.co/loom-network-1" target="_blank" class="hover-warning"><fa :icon="['fab', 'angellist']" fixed-width /> Angel.co</a></li>
+                <li><a href="https://twitter.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'twitter']" fixed-width /> Twitter</a></li>
+                <li><a href="https://t.me/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'telegram']" fixed-width /> Telegram</a></li>
+                <li><a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning"><fa :icon="['fas', 'envelope']" fixed-width /> Email</a></li>
+              </ul>
+            </div>
+            <div class="col-lg-4 col-md-6 text-left">
+              <p>Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Like how Filecoin tokenized disk space, Loom aims to be the tokenized application protocol of the new decentralized web.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</template>
+
+<script>
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+
+@Component({
+})
+
+export default class FaucetFooter extends Vue {
+}</script>
+<style lang="scss">
+.faucet-footer {
+  color: #495057;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+  .footer-title {
+    img {
+      width: 120px;
+    }
+    span {
+      color: #495057; 
+    }    
+  }
+  @media (max-width: 529px) {
+    & {
+      position: relative;
+    }
+  }
+  @media (max-height: 1200px) {
+    & {
+      position: relative;
+    }
+  }
+}
+h3,h1 {
+  color: gray;
+}
+p {
+  color: gray;
+}
+//Footer
+.footer-block {
+  background-color: #f9f7f7;
+  padding: 7em 0 9.5em 0;
+  .footer-title {
+    font-size: 18px;
+    color: #495057;
+    font-style: italic;
+    font-weight: 600;
+    padding: 0 2em;
+    img {
+      margin-right: .625rem;
+    }
+    margin-bottom: 1.125rem;
+  }
+  ul {
+    display: table;
+    li {
+      a {
+        font-size: 16px;
+        font-weight:400;
+        line-height: 2.63;        
+        svg:not(:root).svg-inline--fa {
+          width: 1.375rem;
+          height: 1.375rem;
+          margin-right: .75rem;
+        }
+      }
+    }
+  }
+  p {
+    font-size: 16px;
+    line-height: 1.56;
+    color: #495057;
+    margin-bottom: 29px;
+  }  
+  .btn {
+    border-radius: 23px;
+    border: solid 2px #495057;
+    font-size: 18px;
+    font-weight: normal;
+    color: #495057;
+  }
+}
+
+.bg-blue-gradient {
+  background-attachment: fixed;
+  color: white;
+}
+
+a {
+  color: #495057;
+}
+
+a.hover-warning:hover {
+  text-decoration: none;
+  color: #f0ad4e !important;
+}
+</style>

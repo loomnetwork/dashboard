@@ -11,6 +11,7 @@ const defaultState = () => {
     validators: [],
     status: "check_mapping",
     metamaskDisabled: false,
+    showLoadingSpinner: false,
     userBalance: {
       loomBalance: "loading",
       mainnetBalance: "loading",
@@ -51,6 +52,9 @@ export default {
     },
     setMetamaskDisabled(state, payload) {
       state.metamaskDisabled = payload
+    },
+    setShowLoadingSpinner(state, payload) {
+      state.showLoadingSpinner = payload
     }
   },
   actions: {

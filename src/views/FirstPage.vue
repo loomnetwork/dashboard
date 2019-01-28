@@ -82,8 +82,9 @@ const DappChainStore = createNamespacedHelpers('DappChain')
   methods: {    
     ...mapActions(['signOut', 'setPrivateKey']),
     ...DPOSStore.mapActions(['storePrivateKeyFromSeed']),
+    ...DPOSStore.mapMutations(['setShowLoadingSpinner']),
     ...DappChainStore.mapActions([
-      'addChainUrl',
+      'addChainUrl'
     ]),    
     ...mapMutations(['setUserIsLoggedIn'])
   }
@@ -111,6 +112,7 @@ export default class FirstPage extends Vue {
   }
 
   async gotoAccount() {
+    this.setShowLoadingSpinner(true)
     this.$root.$emit('login')
     if(this.isLoggedIn) {
       this.$router.push({

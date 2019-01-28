@@ -34,7 +34,10 @@
               </b-nav-item>
               <b-nav-item :hidden="false">
                 <router-link to="/blockexplorer" class="router text-light hover-warning">Explorer</router-link>
-              </b-nav-item>                            
+              </b-nav-item>   
+              <b-nav-item :hidden="false">
+                <router-link to="/help" class="router text-light hover-warning">Help</router-link>
+              </b-nav-item>                         
               <!-- TODO: Add if needed (needs clarification) -->
               <!-- <b-nav-item :hidden="false">
                 <router-link to="/blockexplorer" class="router text-light hover-warning">My Stakes</router-link>
@@ -50,8 +53,6 @@
     </b-navbar> 
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
       <div class="container ensure-padded">
-        <div class="col">      
-        </div>
         <div class="col">          
           <b-navbar-nav>
             <div class="sub-menu-links">
@@ -236,7 +237,7 @@ export default class FaucetHeader extends Vue {
       this.$root.$on('login', () => {
         this.startPolling()
       })
-    }
+    }  
   }
 
   startPolling() {
@@ -254,22 +255,18 @@ export default class FaucetHeader extends Vue {
     return this.userIsLoggedIn ? 'Log Out' : 'Log In'
   }
 
-  async refresh() {
-
+  async refresh() {      
     let loomBalance = await this.getDappchainLoomBalance()
     let mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,
       address: this.currentMetmaskAddress
     })
-    // TODO: Add better polling when API supports batch calls
-    let stakedAmount = 0
-    // let stakedAmount = await this.getAccumulatedStakingAmount()
+    let stakedAmount = await this.getAccumulatedStakingAmount()
     this.setUserBalance({
       loomBalance,
       mainnetBalance,
       stakedAmount
     })
-
   }
 
   onLoginAccount() {

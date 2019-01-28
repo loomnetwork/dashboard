@@ -421,22 +421,9 @@ export default {
       return combination
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
-      const validators = await dispatch('getValidatorsAsync')
-      const stakedValidators = []
-      let accStaking = new BN()
-      for(let validator of validators) {
-        const delegation = await state.dposUser.checkDelegationsAsync(validator.address)
-        if (delegation === null) {
-          console.log(` No delegation`)
-        } else {
-          if(formatToCrypto(delegation.amount) > 0) {
-            accStaking = accStaking.add(new BN(delegation.amount.toString()))
-            stakedValidators.push(validator)
-          }
-        }
-      }
-      
-      return formatToCrypto(accStaking)
+      const totalDelegation = await state.dposUser.getTotalDelegationAsync()
+      const amount = formatToCrypto(totalDelegation.amount)
+      return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {
       const privateKeyString = localStorage.getItem('privatekey')
@@ -493,18 +480,26 @@ export default {
       state.dpos2 = dpos2
       return dpos2
     },
-    async ensureIdentityMappingExists({ rootState, state, dispatch, commit }) {
+    async ensureIdentityMappingExists({ rootState, state, dispatch, commit }, payload) {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
+
       if(!state.localAddress) return
+      let metamaskAddress = ""
+
+      if(payload) {
+        metamaskAddress = payload.currentAddress
+      } else {
+        metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
+      }
+
       try {   
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
-        const metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
         let dappchainAddress = mappedEthAddress.toLowerCase()
         if(dappchainAddress !== metamaskAddress) {
-          commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: true}, {root: true})
+          commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: false}, {root: true})
           commit('setMappingStatus', 'INCOMPATIBLE_MAPPING')
           commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
           return
@@ -515,7 +510,8 @@ export default {
         }         
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
-        commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})        
+        // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
+        return
       }      
       commit("DPOS/setStatus", "mapped", {root: true})
     },

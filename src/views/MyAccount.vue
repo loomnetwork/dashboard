@@ -3,31 +3,6 @@
     <div class="faucet-content">
       <div>
         <main>
-          <div v-if="mappingStatus == 'INCOMPATIBLE_MAPPING'" class="disabled-overlay">
-            <div>           
-              <div class="network-error-container mb-3">
-                <img src="../assets/network-error-graphic.png"/>
-              </div>
-              <h4>
-                Mapping error!?
-              </h4>
-              <div v-if="mappingError">
-
-                Your account appears to be mapped with the following address:
-                <span class="address">{{mappingError.mappedEthAddress}}</span> <br>
-                but your current account address is: <br>
-                <span class="address">{{mappingError.metamaskAddress}}</span> <br>
-                Please change your Metmask account
-
-              </div>
-              <div v-else>
-                <span>
-                  Please check your Metmask account and/or network
-                </span>
-              </div>              
-            </div>
-          </div>
-
           <faucet-delegate-modal ref="delegateModalRef"></faucet-delegate-modal>
           <div class="container mb-5">
             <div class="column py-5 p-3 d-flex">
@@ -325,7 +300,8 @@ Vue.use(VueClipboard)
       'addMappingAsync',
       'getDappchainLoomBalance',
       'getMetamaskLoomBalance',
-      'init'
+      'init',
+      'checkMappingCompatability'
     ])
   }
 })
@@ -399,15 +375,13 @@ export default class MyAccount extends Vue {
     onClickWithNoMapping: "No mapping detected, please click \"Map Accounts\" or refresh the page"
   }
 
+
+
   async mounted() {
     await this.refresh(true)
     this.setShowLoadingSpinner(false)
     this.currentAllowance = await this.checkAllowance()    
     this.refreshInterval = setInterval(() => this.refresh(false), 5000)
-    // TODO: Move to global component
-    window.ethereum.on('accountsChanged', (accounts) => {
-      this.$forceUpdate()
-    })    
   }
 
   destroyed() {

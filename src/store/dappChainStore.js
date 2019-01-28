@@ -480,18 +480,26 @@ export default {
       state.dpos2 = dpos2
       return dpos2
     },
-    async ensureIdentityMappingExists({ rootState, state, dispatch, commit }) {
+    async ensureIdentityMappingExists({ rootState, state, dispatch, commit }, payload) {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
+
       if(!state.localAddress) return
+      let metamaskAddress = ""
+
+      if(payload) {
+        metamaskAddress = payload.currentAddress
+      } else {
+        metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
+      }
+
       try {   
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
-        const metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
         let dappchainAddress = mappedEthAddress.toLowerCase()
         if(dappchainAddress !== metamaskAddress) {
-          commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: true}, {root: true})
+          commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: false}, {root: true})
           commit('setMappingStatus', 'INCOMPATIBLE_MAPPING')
           commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
           return

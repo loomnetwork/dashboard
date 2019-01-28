@@ -10,13 +10,13 @@
             <input type="hidden" ref="address" :value="validator.Address">
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
              <h5>
-              State: <span class="highlight">{{`${delegationState}`}}</span>
+              State: <span class="highlight">{{delegationState}}</span>
             </h5>
             <h5>
-              Amount Delegated: <span class="highlight">{{`${amountDelegated} LOOM`}}</span>
+              Amount Delegated: <span class="highlight">{{amountDelegated}} LOOM</span>
             </h5>
             <h5>
-              Updated Amount: <span class="highlight">{{`${updatedAmount} LOOM`}}</span>
+              Updated Amount: <span class="highlight">{{updatedAmount}} LOOM</span>
             </h5>
             <h5>
               Timelock Tier: <span class="highlight">{{lockTimeTier}}</span>
@@ -131,7 +131,7 @@ export default class ValidatorDetail extends Vue {
     if(this.canDelegate) {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
-        this.hasDelegation = true        
+        this.checkHasDelegation()      
       } catch(err) {
         this.hasDelegation = false        
       }
@@ -147,7 +147,12 @@ export default class ValidatorDetail extends Vue {
 
   async delegateHandler() {
     this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
+    this.checkHasDelegation()
     this.currentLockTimeTier = this.delegation.lockTimeTier
+  }
+
+  checkHasDelegation() {
+    this.hasDelegation = this.delegation.amount.toString() != 0
   }
 
   updateLocktime() {

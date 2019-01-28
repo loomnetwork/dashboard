@@ -5,10 +5,10 @@ export SENTRY_ORG=loom-network
 export SENTRY_PROJECT=loomgames-frontend
 export SENTRY_AUTH_TOKEN=cdee406313f047fd89156b6c0cf0b30e45112161ec424b81925782f53625e70b
 
-PRESET_DEV="dashboard.dappchains.com"
-PRESET_STAGE="dashboard.dappchains.com" #future production
-PRESET_PROD="faucet.dappchains.com"
-FAUCET_PATH='faucet.dappchains.com'
+PRESET_DEV="rinkeby-dashboard.dappchains.com"
+PRESET_STAGE="rinkeby-dashboard.dappchains.com" #future production
+PRESET_PROD="dashboard.dappchains.com"
+FAUCET_PATH='dashboard.dappchains.com'
 
 # You probably don't need to modify this stuff.
 if [ "$GIT_BRANCH" == '' ]; then

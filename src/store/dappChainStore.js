@@ -95,8 +95,8 @@ const getChainUrls = () => {
   let chainUrls
   if (!chainUrlsJSON) {
     chainUrls = [
-      clientNetwork['4'],
       clientNetwork['plasma'],
+      clientNetwork['4'],      
       clientNetwork['stage'],
       clientNetwork['loomv2a'],
       clientNetwork['loomv2b']
@@ -178,7 +178,7 @@ export default {
     defaultNetworkId,
     dappchainEndpoint(state) {
       const network = state.chainUrls[state.chainIndex]
-      return 'http://' + getServerUrl(network)
+      return 'https://' + getServerUrl(network)
     },
   },
   mutations: {

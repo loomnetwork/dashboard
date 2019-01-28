@@ -1,4 +1,4 @@
-# battleground-marketplace
+# DPoS Dashboard
 
 To run it:
 

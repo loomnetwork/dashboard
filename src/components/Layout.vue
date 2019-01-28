@@ -17,7 +17,31 @@
             </span>
           </div>              
         </div>
-      </div>      
+      </div>
+      <div v-if="mappingStatus == 'INCOMPATIBLE_MAPPING'" class="disabled-overlay">
+        <div>           
+          <div class="network-error-container mb-3">
+            <img src="../assets/network-error-graphic.png"/>
+          </div>
+          <h4>
+            Mapping error!?
+          </h4>
+          <div v-if="mappingError">
+
+            Your account appears to be mapped with the following address: <br>
+            <span class="address">{{mappingError.mappedEthAddress}}</span> <br>
+            but your current account address is: <br>
+            <span class="address">{{mappingError.metamaskAddress}}</span> <br>
+            Please change your Metmask account
+
+          </div>
+          <div v-else>
+            <span>
+              Please check your Metmask account and/or network
+            </span>
+          </div>              
+        </div>
+      </div>         
       <div class="row">
         <div v-show="showSidebar" class="col-lg-3">
           <faucet-sidebar></faucet-sidebar>      
@@ -73,7 +97,8 @@ import { initWeb3 } from '../services/initWeb3'
       'init',
       'initDposUser',
       'setMetmaskStatus',
-      'setMetamaskError'
+      'setMetamaskError',
+      'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
@@ -94,7 +119,9 @@ import { initWeb3 } from '../services/initWeb3'
     ...DappChainStore.mapState([
       'account',
       'metamaskStatus',
-      'metamaskError'      
+      'metamaskError',
+      'mappingStatus',
+      'mappingError'
     ]),
     ...DPOSStore.mapState([
       'showSidebar',
@@ -152,12 +179,15 @@ export default class Layout extends Vue {
   }
 
   async mounted() {
-    // this.registerWeb3()
-    // this.updateContractState()
-    // this.checkNetwork()
+
     if(!this.account) {
       await this.init()
-    }    
+    }
+
+    window.ethereum.on('accountsChanged', async (accounts) => {
+      this.ensureIdentityMappingExists({currentAddress: accounts[0]})
+    })    
+
   }
 
   onLoginHandler() {

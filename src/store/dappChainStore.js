@@ -421,22 +421,9 @@ export default {
       return combination
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
-      const validators = await dispatch('getValidatorsAsync')
-      const stakedValidators = []
-      let accStaking = new BN()
-      for(let validator of validators) {
-        const delegation = await state.dposUser.checkDelegationsAsync(validator.address)
-        if (delegation === null) {
-          console.log(` No delegation`)
-        } else {
-          if(formatToCrypto(delegation.amount) > 0) {
-            accStaking = accStaking.add(new BN(delegation.amount.toString()))
-            stakedValidators.push(validator)
-          }
-        }
-      }
-      
-      return formatToCrypto(accStaking)
+      const totalDelegation = await state.dposUser.getTotalDelegationAsync()
+      const amount = formatToCrypto(totalDelegation.amount)
+      return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {
       const privateKeyString = localStorage.getItem('privatekey')

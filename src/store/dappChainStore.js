@@ -177,7 +177,9 @@ export default {
     },
     defaultNetworkId,
     dappchainEndpoint(state) {
-      const network = state.chainUrls[state.chainIndex]
+      const network = state.chainUrls[state.chainIndex]      
+      let protocol = state.chainIndex === "1" ? 'https://' : 'http://'
+      debugger
       return 'https://' + getServerUrl(network)
     },
   },

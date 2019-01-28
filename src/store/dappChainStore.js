@@ -421,6 +421,9 @@ export default {
       return combination
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }      
       const totalDelegation = await state.dposUser.getTotalDelegationAsync()
       const amount = formatToCrypto(totalDelegation.amount)
       return amount

@@ -34,7 +34,10 @@
               </b-nav-item>
               <b-nav-item :hidden="false">
                 <router-link to="/blockexplorer" class="router text-light hover-warning">Explorer</router-link>
-              </b-nav-item>                            
+              </b-nav-item>   
+              <b-nav-item :hidden="false">
+                <router-link to="/help" class="router text-light hover-warning">Help</router-link>
+              </b-nav-item>                         
               <!-- TODO: Add if needed (needs clarification) -->
               <!-- <b-nav-item :hidden="false">
                 <router-link to="/blockexplorer" class="router text-light hover-warning">My Stakes</router-link>

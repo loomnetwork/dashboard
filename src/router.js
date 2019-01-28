@@ -12,6 +12,7 @@ import CandidateList from './views/CandidateList.vue'
 import CandidateDetail from './views/CandidateDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
 import Rewards from './views/Rewards.vue'
+import Help from './views/Help.vue'
 
 import { initWeb3 } from './services/initWeb3'
 
@@ -51,6 +52,11 @@ const router = new VueRouter({
         requireLogIn: true
       }   
     },    
+    {
+      path: '/help',
+      name: 'help',
+      component: Help,  
+    }, 
     {
       path: '/validators',
       name: 'validators',

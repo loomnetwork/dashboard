@@ -314,6 +314,7 @@ Vue.use(VueClipboard)
     ]),
     ...DPOSStore.mapMutations([
       'setWeb3',
+      'setShowLoadingSpinner',
       'setConnectedToMetamask'
     ]),
     ...DappChainStore.mapActions([
@@ -400,7 +401,8 @@ export default class MyAccount extends Vue {
 
   async mounted() {
     await this.refresh(true)
-    this.currentAllowance = await this.checkAllowance()
+    this.setShowLoadingSpinner(false)
+    this.currentAllowance = await this.checkAllowance()    
     this.refreshInterval = setInterval(() => this.refresh(false), 5000)
     // TODO: Move to global component
     window.ethereum.on('accountsChanged', (accounts) => {

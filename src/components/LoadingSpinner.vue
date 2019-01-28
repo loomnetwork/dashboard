@@ -40,7 +40,7 @@ export default class LoadingSpinner extends Vue {
   left: 0px;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.9);
   z-index: 999;
 }
 

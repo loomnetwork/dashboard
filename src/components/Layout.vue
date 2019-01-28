@@ -1,9 +1,8 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">
-
+  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>
-    <div class="content container">
+    <faucet-header v-on:update:chain="refresh()"></faucet-header>    
+    <div class="content container">      
       <div v-if="metamaskDisabled" class="disabled-overlay">
         <div>           
           <div class="network-error-container mb-3">
@@ -24,6 +23,7 @@
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div :class="contentClass">
+          <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           <router-view></router-view>
         </div>        
       </div>          
@@ -40,6 +40,7 @@ import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vue
 import FaucetHeader from '@/components/FaucetHeader'
 import FaucetSidebar from '../components/FaucetSidebar'
 import FaucetFooter from '@/components/FaucetFooter'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -50,7 +51,8 @@ import { initWeb3 } from '../services/initWeb3'
   components: {
     FaucetHeader,
     FaucetSidebar,
-    FaucetFooter
+    FaucetFooter,
+    LoadingSpinner
   },
   props: {
     data: Object,
@@ -97,7 +99,8 @@ import { initWeb3 } from '../services/initWeb3'
     ...DPOSStore.mapState([
       'showSidebar',
       'web3',
-      'metamaskDisabled'
+      'metamaskDisabled',
+      'showLoadingSpinner'
     ])    
   },
 })

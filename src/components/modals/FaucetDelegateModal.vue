@@ -9,14 +9,11 @@
           <b-col sm="3"><label>Amount:</label></b-col>
           <b-col sm="9"><b-form-input v-model="delegationDetail.amount" type="number" value="0"></b-form-input></b-col>
         </b-row>
-        <b-row class="my-1" v-if="!unbond && hasDelegation" key="range">
+        <b-row class="my-1" v-if="!unbond" key="range">
           <b-col sm="6"><label for="locktime">Locktime / Bonuses:</label></b-col>
           <b-col sm="6"><span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span></b-col>
           <b-col><b-form-input v-model="locktimeTierVal" :min="locktimeTier || 0" max="3" value="0" :formatter="formatRangeInput" id="locktime" type="range" data-toggle="tooltip"></b-form-input></b-col>
         </b-row> 
-        <b-row class="my-1 text-center" v-if="!unbond && !hasDelegation" key="range"> 
-          <b-col>No delegation</b-col>
-        </b-row>              
       </div>
     </b-container>
     <div slot="modal-footer" class="w-100">

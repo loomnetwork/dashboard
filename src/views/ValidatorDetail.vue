@@ -18,9 +18,10 @@
             <h5>
               Updated Amount: <span class="highlight">{{updatedAmount}} LOOM</span>
             </h5>
-            <h5>
+            <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
+            <!-- <h5>
               Timelock Tier: <span class="highlight">{{lockTimeTier}}</span>
-            </h5>
+            </h5> -->
             <h5 class="mb-4">
               Timelock: <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
               <span v-else class="highlight">Unlocked</span>

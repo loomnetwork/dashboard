@@ -35,8 +35,8 @@
                 <b-button class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
               </div>
               <div class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 1 && amountDelegated != 0)">Delegate</b-button>
-                <b-button class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || !lockTimeExpired || delegationState != 1">Un-delegate</b-button>                
+                <b-button class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
+                <b-button class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || !lockTimeExpired || delegationState != 'Bonded'">Un-delegate</b-button>                
               </div>
             </div>
           </div>

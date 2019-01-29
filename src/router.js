@@ -153,7 +153,7 @@ router.beforeEach(async (to, from, next) => {
     store.commit('DPOS/setShowSidebar', false)
   }
 
-  if(to.meta.requireDeps) {
+  if(to.meta.requireDeps && store.state.userIsLoggedIn) {
     await checkDeps(next)
   } else {
     next()

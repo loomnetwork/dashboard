@@ -32,7 +32,7 @@
               <b-nav-item :hidden="isLoggedIn">
                 <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
               </b-nav-item>
-              <b-nav-item :hidden="false">
+              <b-nav-item :hidden="true">
                 <router-link to="/blockexplorer" class="router text-light hover-warning">Explorer</router-link>
               </b-nav-item>   
               <b-nav-item :hidden="false">
@@ -55,11 +55,14 @@
       <div class="container ensure-padded">
         <div class="col">          
           <b-navbar-nav>
-            <div class="sub-menu-links">
+            <div class="sub-menu-links" v-if="!errorRefreshing">
               <b-nav-item v-if="isLoggedIn">
-                <span class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
-                <span class="mr-2">DappChain: <strong class="highlight">{{formatLoomBalance}}</strong></span>
-                <span>Staked: <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
+                <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
+                <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
+                <span id="dappchainBalance" class="mr-2">DappChain: <strong class="highlight">{{formatLoomBalance}}</strong></span>
+                <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
+                <span id="stakedAmount">Staked: <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
+                <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
               <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left">
                 <a @click="logOut" class="sign-out-link">Sign out</a>
@@ -213,6 +216,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class FaucetHeader extends Vue {
 
   refreshInterval = null
+  errorRefreshing = false
 
   logOut() {
     this.clearPrivateKey()
@@ -255,18 +259,23 @@ export default class FaucetHeader extends Vue {
     return this.userIsLoggedIn ? 'Log Out' : 'Log In'
   }
 
-  async refresh() {      
-    let loomBalance = await this.getDappchainLoomBalance()
-    let mainnetBalance = await this.getMetamaskLoomBalance({
-      web3: this.web3,
-      address: this.currentMetmaskAddress
-    })
-    let stakedAmount = await this.getAccumulatedStakingAmount()
-    this.setUserBalance({
-      loomBalance,
-      mainnetBalance,
-      stakedAmount
-    })
+  async refresh() {
+    try {
+      let loomBalance = await this.getDappchainLoomBalance()
+      let mainnetBalance = await this.getMetamaskLoomBalance({
+        web3: this.web3,
+        address: this.currentMetmaskAddress
+      })
+      let stakedAmount = await this.getAccumulatedStakingAmount()
+      this.setUserBalance({
+        loomBalance,
+        mainnetBalance,
+        stakedAmount
+      })
+      this.errorRefreshing = false
+    } catch(err) {
+      this.errorRefreshing = true
+    }
   }
 
   onLoginAccount() {

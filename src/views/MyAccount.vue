@@ -140,7 +140,8 @@
                                   <b-button class="text-small pt-0" variant="link" @click="transferAmount=mainnetBalance">use maximum</b-button>
                                 </div>
                               </div>
-                              <b-button style="width: 160px" variant="primary" @click="depositHandler">Deposit</b-button>
+                              <b-button id="depositBtn" style="width: 160px" variant="primary" @click="depositHandler">Deposit</b-button>
+                              <b-tooltip target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
                             </div>
                           </div>
 
@@ -157,7 +158,8 @@
                                   <b-button class="text-small pt-0" variant="link" @click="withdrawAmount=userBalance.loomBalance">use maximum</b-button>
                                 </div>
                               </div>
-                              <b-button style="width: 160px" variant="primary" @click="withdrawHandler">Withdraw</b-button>
+                              <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">Withdraw</b-button>
+                              <b-tooltip target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
                             </div>
                           </div>
 

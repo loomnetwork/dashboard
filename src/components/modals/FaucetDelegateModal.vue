@@ -10,9 +10,10 @@
           <b-col sm="9"><b-form-input v-model="delegationDetail.amount" type="number" value="0"></b-form-input></b-col>
         </b-row>
         <b-row class="my-1" v-if="!unbond" key="range">
-          <b-col sm="6"><label for="locktime">Locktime / Bonuses:</label></b-col>
+          <b-col sm="6"><label id="lockTimeReward" for="locktime">Locktime / Bonuses:</label></b-col>
           <b-col sm="6"><span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span></b-col>
           <b-col><b-form-input v-model="locktimeTierVal" :min="locktimeTier || 0" max="3" value="0" :formatter="formatRangeInput" id="locktime" type="range" data-toggle="tooltip"></b-form-input></b-col>
+          <b-tooltip target="lockTimeReward" placement="bottom" title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"></b-tooltip>
         </b-row> 
       </div>
     </b-container>

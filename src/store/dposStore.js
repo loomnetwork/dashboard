@@ -13,9 +13,9 @@ const defaultState = () => {
     metamaskDisabled: false,
     showLoadingSpinner: false,
     userBalance: {
-      loomBalance: "loading",
-      mainnetBalance: "loading",
-      stakedAmount: "loading"
+      loomBalance: 0,
+      mainnetBalance: 0,
+      stakedAmount: 0
     }
   }
 }

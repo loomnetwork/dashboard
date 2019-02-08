@@ -18,25 +18,29 @@
             <h5>
               Updated Amount: <span class="highlight">{{updatedAmount}} LOOM</span>
             </h5>
-            <h5>
+            <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
+            <!-- <h5>
               Timelock Tier: <span class="highlight">{{lockTimeTier}}</span>
-            </h5>
+            </h5> -->
             <h5 class="mb-4">
               Timelock: <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
               <span v-else class="highlight">Unlocked</span>
             </h5>
-            <a href="www.validator.com" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
+            <a href="http://www.loomx.io" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
             <p class="text-gray">{{validator.Description || 'No Description'}}</p>
           </div>
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
             <div class="row justify-content-end validator-action-container">
               <div class="col col-sm-12 col-md-3">
-                <b-button class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
+                <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
+                <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
               </div>
               <div class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate">Delegate</b-button>
-                <b-button class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || !lockTimeExpired">Un-delegate</b-button>                
+                <b-button id="delegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
+                <b-tooltip target="delegateBtn" placement="bottom" title="Click here to transfer tokens to this validator"></b-tooltip>
+                <b-button id="undelegateBtn" class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || !lockTimeExpired || delegationState != 'Bonded'">Un-delegate</b-button>
+                <b-tooltip target="undelegateBtn" placement="bottom" title="Click here to withdraw your delegated tokens"></b-tooltip>
               </div>
             </div>
           </div>

@@ -202,7 +202,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'web3',
       'connectedToMetamask',
       'currentMetmaskAddress',
-      'userBalance'
+      'userBalance',
+      'status'
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
@@ -260,6 +261,7 @@ export default class FaucetHeader extends Vue {
   }
 
   async refresh() {
+    if(this.status !== 'mapped') return
     try {
       let loomBalance = await this.getDappchainLoomBalance()
       let mainnetBalance = await this.getMetamaskLoomBalance({

@@ -498,7 +498,7 @@ export default {
         metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
       }
 
-      try {   
+      try {
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
         let dappchainAddress = mappedEthAddress.toLowerCase()
@@ -514,9 +514,10 @@ export default {
         }         
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
+        console.log("mapping error", err)
         // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
         return
-      }      
+      }
       commit("DPOS/setStatus", "mapped", {root: true})
     },
     async addMappingAsync({ state, dispatch }, payload) {

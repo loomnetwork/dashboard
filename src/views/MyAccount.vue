@@ -60,20 +60,13 @@
                   <b-card-header header-tag="header" class="p-1" role="tab">
                     <div class="row">                   
                       <div class="col-md-6">
-                        <a ref="accordion2Toggle" v-if="metamaskConnected" v-b-toggle.accordion2>
+                        <a ref="accordion2Toggle" v-b-toggle.accordion2>
                           <h4>
                             <strong>
                               Deposit/Withdraw
                             </strong>                        
                           </h4>
-                        </a>
-                        <a v-else>
-                          <h4>
-                            <strong>
-                              Deposit/Withdraw
-                            </strong>                        
-                          </h4>                          
-                        </a>                      
+                        </a>                     
                       </div>
                       <div class="col-md-6 deposit-error-container">
                         <span v-if="!metamaskConnected">

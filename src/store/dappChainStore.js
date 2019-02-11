@@ -518,13 +518,15 @@ export default {
       }
       commit("DPOS/setStatus", "mapped", {root: true})
     },
-    async addMappingAsync({ state, dispatch }, payload) {
+    async addMappingAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       } try {
         await state.dposUser.mapAccountsAsync()
+        commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        console.error(err)
+        this._vm.$log(err)
+        commit('setErrorMsg', {msg: `Failed establishing mapping: ${err}`, forever: false}, {root: true})
       }
     },
     async init({ state, commit, rootState }, payload) {

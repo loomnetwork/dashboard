@@ -513,7 +513,6 @@ export default {
         }         
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
-        console.log("mapping error", err)
         // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
         return
       }

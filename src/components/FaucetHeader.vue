@@ -11,7 +11,7 @@
       <span class="text-dark" v-html="this.$store.state.successMsg"></span>
     </b-alert>   
     <b-navbar toggleable="md" type="dark">
-      <div class="container d-flex justify-content-between ensure-padded">        
+      <div class="container-fluid d-flex justify-content-between ensure-padded">        
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
             Plasmachain Dashboard            
@@ -52,7 +52,7 @@
       </div>
     </b-navbar> 
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
-      <div class="container ensure-padded">
+      <div class="container-fluid ensure-padded">
         <div class="col">          
           <b-navbar-nav>
             <div class="sub-menu-links" v-if="!errorRefreshing">

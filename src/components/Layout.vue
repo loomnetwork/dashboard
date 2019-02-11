@@ -2,7 +2,7 @@
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <faucet-header v-on:update:chain="refresh()"></faucet-header>    
-    <div class="content container">      
+    <div class="content container-fluid">      
       <div v-if="metamaskDisabled" class="disabled-overlay">
         <div>           
           <div class="network-error-container mb-3">
@@ -299,6 +299,11 @@ export default class Layout extends Vue {
   .highlight {
     color: #f0ad4e;
   }
+
+  .container-fluid {
+    max-width: 1200px;
+    padding: 0 24px !important;
+  }  
 
   @media (max-width: 576px) {
   }

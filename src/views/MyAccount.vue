@@ -643,7 +643,7 @@ export default class MyAccount extends Vue {
       overflow: scroll;
       white-space: nowrap;
     }
-  }
+  }  
 
   #accordion {
     .card {

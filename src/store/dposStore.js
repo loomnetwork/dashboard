@@ -1,5 +1,6 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils.js'
+import { initWeb3 } from '../services/initWeb3'
 
 const defaultState = () => {
   return {
@@ -58,6 +59,28 @@ export default {
     }
   },
   actions: {
+    async initializeDependencies({ commit, dispatch }, payload) {
+      try {
+        let web3js = await initWeb3()
+        commit("DPOS/setConnectedToMetamask", true)
+        commit("DPOS/setWeb3", web3js)    
+        let accounts = await web3js.eth.getAccounts()
+        let metamaskAccount = accounts[0]    
+        store.commit("DPOS/setCurrentMetmaskAddress", metamaskAccount)
+        await dispatch("DappChain/init")
+        await dispatch("DappChain/registerWeb3", {web3: web3js})
+        await dispatch("DappChain/initDposUser")
+        await dispatch("DappChain/ensureIdentityMappingExists")    
+        next()
+      } catch(err) {
+        console.log("Error initializing dependencies", err)
+        if(err === "no Metamask installation detected") {
+          store.commit("DPOS/setMetamaskDisabled", true)
+        }
+        store.commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false})
+        next('/login')
+      }      
+    },
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)

@@ -98,7 +98,8 @@ import { initWeb3 } from '../services/initWeb3'
       'initDposUser',
       'setMetmaskStatus',
       'setMetamaskError',
-      'ensureIdentityMappingExists'
+      'ensureIdentityMappingExists',
+      'initializeDependencies'
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
@@ -184,9 +185,11 @@ export default class Layout extends Vue {
       await this.init()
     }
 
+    this.initializeDependencies()
+
     window.ethereum.on('accountsChanged', async (accounts) => {
       this.ensureIdentityMappingExists({currentAddress: accounts[0]})
-    })    
+    })
 
   }
 

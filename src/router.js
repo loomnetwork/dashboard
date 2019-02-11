@@ -122,6 +122,8 @@ router.beforeEach(async (to, from, next) => {
     store.commit('DPOS/setShowSidebar', false)
   }
 
+  next()
+
 })
 
 // router.afterEach((to, from, next) => {

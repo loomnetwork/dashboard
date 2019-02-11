@@ -112,7 +112,6 @@ export default class FirstPage extends Vue {
   }
 
   async gotoAccount() {
-    this.setShowLoadingSpinner(true)
     this.$root.$emit('login')
     if(this.isLoggedIn) {
       this.$router.push({

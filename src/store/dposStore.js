@@ -60,26 +60,26 @@ export default {
   },
   actions: {
     async initializeDependencies({ commit, dispatch }, payload) {
+      commit("setShowLoadingSpinner", true)
       try {
         let web3js = await initWeb3()
-        commit("DPOS/setConnectedToMetamask", true)
-        commit("DPOS/setWeb3", web3js)    
+        commit("setConnectedToMetamask", true)
+        commit("setWeb3", web3js, null)
         let accounts = await web3js.eth.getAccounts()
-        let metamaskAccount = accounts[0]    
-        store.commit("DPOS/setCurrentMetmaskAddress", metamaskAccount)
-        await dispatch("DappChain/init")
-        await dispatch("DappChain/registerWeb3", {web3: web3js})
-        await dispatch("DappChain/initDposUser")
-        await dispatch("DappChain/ensureIdentityMappingExists")    
-        next()
+        let metamaskAccount = accounts[0]
+        commit("setCurrentMetmaskAddress", metamaskAccount)
+        await dispatch("DappChain/init", null, { root: true })
+        await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
+        await dispatch("DappChain/initDposUser", null, { root: true })
+        await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
       } catch(err) {
-        console.log("Error initializing dependencies", err)
+        this._vm.$log(err)
         if(err === "no Metamask installation detected") {
-          store.commit("DPOS/setMetamaskDisabled", true)
+          commit("setMetamaskDisabled", true)
         }
-        store.commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false})
-        next('/login')
-      }      
+        commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false}, { root: true })
+      }
+      commit("setShowLoadingSpinner", false)
     },
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))

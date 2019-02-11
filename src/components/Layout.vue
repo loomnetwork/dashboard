@@ -186,7 +186,8 @@ export default class Layout extends Vue {
 
     window.ethereum.on('accountsChanged', async (accounts) => {
       this.ensureIdentityMappingExists({currentAddress: accounts[0]})
-    })    
+      this.setCurrentMetmaskAddress(accounts[0])
+    })
 
   }
 

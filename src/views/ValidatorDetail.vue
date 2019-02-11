@@ -223,14 +223,16 @@ export default class ValidatorDetail extends Vue {
   }
 
   async claimRewardHandler() {
-
-    let privateKey = getAddress(this.getPrivateKey)
+    this.finished = false
+    let address = getAddress(this.getPrivateKey)
     try {
-      await this.claimRewardAsync({address: privateKey})
+      await this.claimRewardAsync(address)
+      this.setSuccess("Successfully claimed rewards!")
     } catch(err) {
-      this.setErrorMsg({msg: err, forever: false})
+      console.log("err", err)
+      this.setErrorMsg({msg: "Claiming reward failed", forever: false})
     }
-
+    this.finished = true
   }
 
   get canDelegate() {
@@ -265,7 +267,7 @@ export default class ValidatorDetail extends Vue {
 
 
   get canClaimReward() {
-    return false
+    return this.hasDelegation && this.lockTimeExpired ? true : false
   }
 
   // setValidatorInfo() {

@@ -329,8 +329,7 @@ export default {
 
       const user = state.dposUser
       const address = payload
-      const tx = await user.claimDelegationsAsync(address)
-      await tx.wait()
+      await user.claimDelegationsAsync(address)
 
     },        
     async approveAsync({ state, dispatch }, payload) {

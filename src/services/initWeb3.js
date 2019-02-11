@@ -33,7 +33,6 @@ export const initWeb3 = () => {
           reject("User denied access to Metamask")
         }
       } else if(window.web3) {
-        debugger
         myWeb3 = new Web3(window.web3.currentProvider)
       } else {
         reject("no Metamask installation detected")

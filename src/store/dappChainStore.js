@@ -329,8 +329,7 @@ export default {
 
       const user = state.dposUser
       const address = payload
-      const tx = await user.claimDelegationsAsync(address)
-      await tx.wait()
+      await user.claimDelegationsAsync(address)
 
     },        
     async approveAsync({ state, dispatch }, payload) {
@@ -498,7 +497,7 @@ export default {
         metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
       }
 
-      try {   
+      try {
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
         let dappchainAddress = mappedEthAddress.toLowerCase()
@@ -516,7 +515,7 @@ export default {
         commit("DPOS/setStatus", "no_mapping", {root: true})
         // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
         return
-      }      
+      }
       commit("DPOS/setStatus", "mapped", {root: true})
     },
     async addMappingAsync({ state, dispatch }, payload) {

@@ -570,7 +570,6 @@ export default class MyAccount extends Vue {
       return
     }
     this.isLoading = false
-    this.status = this.STATUS['mapped']
   }
 
   async transferToPlasmaChain() {

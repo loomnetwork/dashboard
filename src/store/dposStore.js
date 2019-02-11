@@ -62,7 +62,6 @@ export default {
     async initializeDependencies({ commit, dispatch }, payload) {
       commit("setShowLoadingSpinner", true)
       try {
-        throw "dijsfojids"
         let web3js = await initWeb3()
         commit("setConnectedToMetamask", true)
         commit("setWeb3", web3js, null)

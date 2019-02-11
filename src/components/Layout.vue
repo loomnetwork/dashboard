@@ -184,10 +184,10 @@ export default class Layout extends Vue {
   async mounted() {
 
     if(this.$route.meta.requireDeps) {
-      await this.initializeDependencies()
+      this.attemptToInitialize()     
     } else {
       this.$root.$on('login', async () => {
-        await this.initializeDependencies()
+        this.attemptToInitialize()
       })      
     }
     
@@ -195,6 +195,14 @@ export default class Layout extends Vue {
       this.ensureIdentityMappingExists({currentAddress: accounts[0]})
     })
 
+  }
+
+  async attemptToInitialize() {
+    try {
+      await this.initializeDependencies()
+    } catch(err) {
+      this.$root.$emit("logout")
+    }           
   }
 
   onLoginHandler() {

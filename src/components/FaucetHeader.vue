@@ -242,7 +242,12 @@ export default class FaucetHeader extends Vue {
       this.$root.$on('login', () => {
         this.startPolling()
       })
-    }  
+    }
+
+    this.$root.$on('logout', () => {
+      this.logOut()
+    })
+
   }
 
   startPolling() {

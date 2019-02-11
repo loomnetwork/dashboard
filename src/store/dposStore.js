@@ -62,6 +62,7 @@ export default {
     async initializeDependencies({ commit, dispatch }, payload) {
       commit("setShowLoadingSpinner", true)
       try {
+        throw "dijsfojids"
         let web3js = await initWeb3()
         commit("setConnectedToMetamask", true)
         commit("setWeb3", web3js, null)
@@ -78,7 +79,9 @@ export default {
           commit("setMetamaskDisabled", true)
         }
         commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false}, { root: true })
-      }
+        commit("setShowLoadingSpinner", false)
+        throw err
+      }      
       commit("setShowLoadingSpinner", false)
     },
     async storePrivateKeyFromSeed({ commit }, payload) {

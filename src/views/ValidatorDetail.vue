@@ -2,6 +2,7 @@
   <div class="faucet">        
     <div class="faucet-content">
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
+      <success-modal></success-modal>
       <div>
         <main>
           <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
@@ -32,10 +33,10 @@
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
             <div class="row justify-content-end validator-action-container">
-              <div class="col col-sm-12 col-md-3">
+              <!-- <div class="col col-sm-12 col-md-3">
                 <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
-              </div>
+              </div> -->
               <div class="col col-sm-12 col-md-9 right-container text-right">
                 <b-button id="delegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
                 <b-tooltip target="delegateBtn" placement="bottom" title="Click here to transfer tokens to this validator"></b-tooltip>
@@ -58,6 +59,7 @@ import FaucetTable from '../components/FaucetTable'
 import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
+import SuccessModal from '../components/modals/SuccessModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
@@ -68,6 +70,7 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     FaucetTable,
     FaucetHeader,
     FaucetFooter,
+    SuccessModal,
     FaucetDelegateModal,
     LoadingSpinner
   },
@@ -153,6 +156,10 @@ export default class ValidatorDetail extends Vue {
     this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
     this.checkHasDelegation()
     this.currentLockTimeTier = this.delegation.lockTimeTier
+
+    // show modal
+    this.$root.$emit("bv::hide::modal", "success-modal")
+
   }
 
   checkHasDelegation() {

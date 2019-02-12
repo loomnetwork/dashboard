@@ -17,7 +17,8 @@ const defaultState = () => {
       loomBalance: 0,
       mainnetBalance: 0,
       stakedAmount: 0
-    }
+    },
+    rewardsResults: null
   }
 }
 
@@ -56,6 +57,9 @@ export default {
     },
     setShowLoadingSpinner(state, payload) {
       state.showLoadingSpinner = payload
+    },
+    setRewardsResults(state, payload) {
+      state.rewardsResults = payload
     }
   },
   actions: {
@@ -146,6 +150,25 @@ export default {
         console.log(err)
         dispatch("setError", "Fetching validators failed", {root: true})        
       }
-    } 
+    },
+    async queryRewards({ rootState, dispatch, commit }) {
+      
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+
+      const user = rootState.DappChain.dposUser
+      
+      try {
+        const result = await user.checkRewardsAsync()
+        console.log("rex", result)
+        commit("setRewardsResults", result)        
+      } catch(err) {
+        console.log(err)
+        commit("setErrorMsg", {msg: err.toString(), forever: false}, {root: true})
+      }
+      
+    }
+
   }
 }

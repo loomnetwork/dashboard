@@ -47,7 +47,8 @@ const router = new VueRouter({
       name: 'rewards',
       component: Rewards,
       meta: {
-        requireLogIn: true
+        requireLogIn: true,
+        requireDeps: true
       }   
     },    
     {

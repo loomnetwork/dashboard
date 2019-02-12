@@ -270,10 +270,9 @@ export default {
         return 0
       }
     },
-    async initDposUser({ state, rootState, getters, commit }) {
+    async initDposUser({ state, rootState, getters, dispatch, commit }) {
       if (!rootState.DPOS.web3) {
-        throw 'Web3 not connect'
-        return
+        await dispatch("DPOS/initializeDependencies", null, { root: true })
       }
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {

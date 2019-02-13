@@ -8,7 +8,7 @@ const defaultState = () => {
     showSidebar: false,
     connectedToMetamask: false,
     web3: undefined,
-    currentMetmaskAddress: undefined,
+    currentMetamaskAddress: undefined,
     validators: [],
     status: "check_mapping",
     metamaskDisabled: false,
@@ -18,7 +18,8 @@ const defaultState = () => {
       mainnetBalance: 0,
       stakedAmount: 0
     },
-    rewardsResults: null
+    rewardsResults: null,
+    timeUntilElectionCycle: null
   }
 }
 
@@ -46,8 +47,8 @@ export default {
     setValidators(state, payload) {
       state.validators = payload
     },
-    setCurrentMetmaskAddress(state, payload) {
-      state.currentMetmaskAddress = payload
+    setCurrentMetamaskAddress(state, payload) {
+      state.currentMetamaskAddress = payload
     },
     setStatus(state, payload) {
       state.status = payload
@@ -60,6 +61,9 @@ export default {
     },
     setRewardsResults(state, payload) {
       state.rewardsResults = payload
+    },
+    setTimeUntilElectionCycle(state, payload) {
+      state.timeUntilElectionCycle = payload
     }
   },
   actions: {
@@ -71,7 +75,7 @@ export default {
         commit("setWeb3", web3js, null)
         let accounts = await web3js.eth.getAccounts()
         let metamaskAccount = accounts[0]
-        commit("setCurrentMetmaskAddress", metamaskAccount)
+        commit("setCurrentMetamaskAddress", metamaskAccount)
         await dispatch("DappChain/init", null, { root: true })
         await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
         await dispatch("DappChain/initDposUser", null, { root: true })
@@ -147,7 +151,7 @@ export default {
         commit("setValidators", validatorList)
         return validatorList
       } catch(err) {
-        console.log(err)
+        this._vm.$log(err)
         dispatch("setError", "Fetching validators failed", {root: true})        
       }
     },
@@ -164,11 +168,31 @@ export default {
         console.log("rex", result)
         commit("setRewardsResults", result)        
       } catch(err) {
-        console.log(err)
+        this._vm.$log(err)
         commit("setErrorMsg", {msg: err.toString(), forever: false}, {root: true})
       }
       
+    },
+
+    async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
+      
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+
+      const user = rootState.DappChain.dposUser
+
+      try {
+        const result = await user.getTimeUntilElectionsAsync()
+        commit("setTimeUntilElectionCycle", result.toString())
+      } catch(err) {
+        this._vm.$log(err)
+      }
+
     }
 
   }
+
+
+
 }

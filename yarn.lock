@@ -6371,10 +6371,9 @@ loglevel@^1.4.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.1.tgz#e0fc95133b6ef276cdc8887cdaf24aa6f156f8fa"
 
-loom-js@^1.41.2:
-  version "1.41.2"
-  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.41.2.tgz#eb8e122d531ac7d1b9dc1cac368459a664064521"
-  integrity sha512-DG/hxz65mJh7K5K1WbFDh/DTT93zFUV+gcEQ5cfy5kx0/rsCPCmjp+in+fhE2h3McB3dJwAdakGIjG07XIjH7w==
+loom-js@^1.41.3:
+  version "1.41.3"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.41.3.tgz#48b04e0cbc801c781f8f72e1146fbc6affd8eb9b"
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

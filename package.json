@@ -38,7 +38,7 @@
     "chart.js": "^2.7.2",
     "date-fns": "^1.29.0",
     "google-protobuf": "^3.6.0",
-    "loom-js": "^1.41.2",
+    "loom-js": "^1.41.3",
     "node-sass": "^4.9.0",
     "protoc": "^1.0.3",
     "raven-js": "^3.27.0",

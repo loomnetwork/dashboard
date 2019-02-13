@@ -1,7 +1,7 @@
 <!-- PlasmaChain Delegators -->
 <template>
   <div class="faucet">
-    <div class="faucet-content">
+    <div class="faucet-content pt-5">
       <main>
         <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
         <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
@@ -9,25 +9,29 @@
         <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
 
-        <div class="container mb-5 column">
-          <div class="row my-3 p-3 d-flex justify-content-center mb-auto mt-auto">
-            <div class="col col-lg-6 d-flex flex-column justify-content-center ">
-              <img src="../assets/loomy-player-one.png" class="loomy-graphic">
-              <div class="d-flex flex-column justify-content-center align-items-center flex-wrap">
-                <!-- <b-button class="top-border bottom-border button" v-if="userIsLoggedIn" @click="signOutHandler"><p class="mb-0 color-grey"><b>Sign out</b></p><p class="mb-0 color-grey">Sign out account</p></b-button>
-                <b-button class="top-border bottom-border button" v-else @click="openLoginModal"><p class="mb-0 color-grey"><b>Login</b></p><p class="mb-0 color-grey">Sign in with existing account</p></b-button>
-                <b-button class="no-top-border bottom-border button" @click="openCreateAccountModal"><p class="mb-0 color-grey"><b>Create Account</b></p><p class="mb-0 color-grey">Setup new account from scratch</p></b-button>
-                <b-button class="no-top-border bottom-border button" @click="openRestoreAccountModal"><p class="mb-0 color-grey"><b>Restore Account</b></p><p class="mb-0 color-grey">Use seed phrase to retrieve existing account</p></b-button> -->
-                <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">New User</b-button>
-                <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">Returning User</b-button>
+        <div class="container-fluid mb-5 mt-4 rmv-padding">
+          <div class="row my-3 p-3 d-flex justify-content-center mt-5 mb-auto mt-auto">
+            <div class="col">
+              <div class="row banner-container mb-5">
+                <div class="col text-center">
+                  <img src="../assets/loomy-player-one.png" class="loomy-graphic">
+                </div>
+                <div class="col button-container">
+                  <div class="button-inner-container">
+                    <!-- <b-button class="top-border bottom-border button" v-if="userIsLoggedIn" @click="signOutHandler"><p class="mb-0 color-grey"><b>Sign out</b></p><p class="mb-0 color-grey">Sign out account</p></b-button>
+                    <b-button class="top-border bottom-border button" v-else @click="openLoginModal"><p class="mb-0 color-grey"><b>Login</b></p><p class="mb-0 color-grey">Sign in with existing account</p></b-button>
+                    <b-button class="no-top-border bottom-border button" @click="openCreateAccountModal"><p class="mb-0 color-grey"><b>Create Account</b></p><p class="mb-0 color-grey">Setup new account from scratch</p></b-button>
+                    <b-button class="no-top-border bottom-border button" @click="openRestoreAccountModal"><p class="mb-0 color-grey"><b>Restore Account</b></p><p class="mb-0 color-grey">Use seed phrase to retrieve existing account</p></b-button> -->
+                    <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">New User</b-button>
+                    <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">Returning User</b-button>
 
-                <ChainSelector style="width: 250px" class="connection-status"
-                  :allowedUrls="chainUrls"
-                  :serverUrl="currentChain"
-                  @urlClicked="onUserInputUrl"
-                  @urlInput="onUserInputUrl"/>
-
-
+                    <ChainSelector style="width: 250px" class="connection-status"
+                      :allowedUrls="chainUrls"
+                      :serverUrl="currentChain"
+                      @urlClicked="onUserInputUrl"
+                      @urlInput="onUserInputUrl"/>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -112,7 +116,6 @@ export default class FirstPage extends Vue {
   }
 
   async gotoAccount() {
-    this.setShowLoadingSpinner(true)
     this.$root.$emit('login')
     if(this.isLoggedIn) {
       this.$router.push({
@@ -196,6 +199,28 @@ export default class FirstPage extends Vue {
 
 }</script>
 
+
+<style lang="scss" scoped>
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 2px solid #f2f1f3;
+  }
+  .banner-container .col {
+    padding: 0 36px;
+  }
+
+  .button-inner-container {
+    width: 250px;
+  }
+
+  .rmv-padding {
+    padding: 0 !important;
+  }
+</style>
+
+
 <style lang="scss">
 @import url('https://use.typekit.net/nbq4wog.css');
 
@@ -212,10 +237,8 @@ $theme-colors: (
 );
 
 .header {
-  background: #5756e6;
   .navbar {
     padding: 0;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
     width: 100%;
     .navbar-brand {
       display: block;
@@ -263,7 +286,8 @@ $theme-colors: (
     margin: 0 auto;
     margin-bottom: 32px;
     width: 100%;
-    max-width: 360px;
+    min-width: 256px;
+    max-width: 280px;
     height: auto;
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <footer id="faucet-footer" class="faucet-footer">
     <div class="block footer-block bg-blue-gradient py-5">
-      <div class="container">
+      <div class="container-fluid">
         <div class="inner-container">
           <div class="footer-title">
             <img src="../assets/logo-grey.svg">
           </div>
-          <div class="d-flex flex-row justify-content-around flex-wrap">
-            <div class="">
+          <div class="d-flex flex-row row flex-wrap">
+            <div class="col">
               <ul class="list-unstyled list-spaced">
                 <li><a href="https://loomx.io" target="_blank" class="hover-warning">LoomX.io</a></li>
                 <li><a href="https://EthFiddle.com" target="_blank" class="hover-warning">EthFiddle.com</a></li>
@@ -16,7 +16,7 @@
                 <li><a href="https://solidityx.org" target="_blank" class="hover-warning">SolidityX.org</a></li>
               </ul>
             </div>
-            <div class="">
+            <div class="col">
               <ul class="list-unstyled list-spaced">
                 <li><a href="https://github.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'github']" fixed-width /> Github</a></li>
                 <li><a href="https://medium.com/loom-network" target="_blank" class="hover-warning"><fa :icon="['fab', 'medium']" fixed-width /> Medium</a></li>
@@ -26,7 +26,7 @@
                 <li><a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning"><fa :icon="['fas', 'envelope']" fixed-width /> Email</a></li>
               </ul>
             </div>
-            <div class="col-lg-4 col-md-6 text-left">
+            <div class="col text-left">
               <p>Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Like how Filecoin tokenized disk space, Loom aims to be the tokenized application protocol of the new decentralized web.</p>
             </div>
           </div>
@@ -53,6 +53,8 @@ export default class FaucetFooter extends Vue {
   bottom: 0;
   .footer-title {
     img {
+      position: relative;
+      left: -16px;
       width: 120px;
     }
     span {
@@ -85,7 +87,6 @@ p {
     color: #495057;
     font-style: italic;
     font-weight: 600;
-    padding: 0 2em;
     img {
       margin-right: .625rem;
     }

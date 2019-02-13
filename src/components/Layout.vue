@@ -2,7 +2,7 @@
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <faucet-header v-on:update:chain="refresh()"></faucet-header>    
-    <div class="content container">      
+    <div class="content container-fluid">      
       <div v-if="metamaskDisabled" class="disabled-overlay">
         <div>           
           <div class="network-error-container mb-3">
@@ -100,10 +100,13 @@ import { initWeb3 } from '../services/initWeb3'
       'setMetamaskError',
       'ensureIdentityMappingExists'
     ]),
+    ...DPOSStore.mapActions([
+      'initializeDependencies'
+    ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
       'setWeb3',
-      'setCurrentMetmaskAddress'
+      'setCurrentMetmaskAddress'      
     ])
   },  
   computed: {
@@ -180,15 +183,27 @@ export default class Layout extends Vue {
 
   async mounted() {
 
-    if(!this.account) {
-      await this.init()
+    if(this.$route.meta.requireDeps) {
+      this.attemptToInitialize()     
+    } else {
+      this.$root.$on('login', async () => {
+        this.attemptToInitialize()
+      })      
     }
-
+    
     window.ethereum.on('accountsChanged', async (accounts) => {
-      this.ensureIdentityMappingExists({currentAddress: accounts[0]})
+      if(this.UserIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
       this.setCurrentMetmaskAddress(accounts[0])
     })
 
+  }
+
+  async attemptToInitialize() {
+    try {
+      await this.initializeDependencies()
+    } catch(err) {
+      this.$root.$emit("logout")
+    }           
   }
 
   onLoginHandler() {
@@ -293,6 +308,11 @@ export default class Layout extends Vue {
   .highlight {
     color: #f0ad4e;
   }
+
+  .container-fluid {
+    max-width: 1200px;
+    padding: 0 24px !important;
+  }  
 
   @media (max-width: 576px) {
   }

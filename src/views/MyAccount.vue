@@ -374,7 +374,6 @@ export default class MyAccount extends Vue {
 
   async mounted() {
     await this.refresh(true)
-    this.setShowLoadingSpinner(false)
     this.currentAllowance = await this.checkAllowance()    
     this.refreshInterval = setInterval(() => this.refresh(false), 5000)
   }
@@ -637,7 +636,7 @@ export default class MyAccount extends Vue {
       overflow: scroll;
       white-space: nowrap;
     }
-  }
+  }  
 
   #accordion {
     .card {

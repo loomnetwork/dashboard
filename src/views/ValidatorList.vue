@@ -60,10 +60,10 @@ export default class ValidatorList extends Vue {
     { key: 'Name', sortable: true },
     { key: 'Status', sortable: true },
     { key: 'Stake', sortable: true },
-    { key: 'Weight', sortable: true },
+    // { key: 'Weight', sortable: true },
     { key: 'Fees', sortable: true },
-    { key: 'Uptime', sortable: true },
-    { key: 'Slashes', sortable: true },
+    // { key: 'Uptime', sortable: true },
+    // { key: 'Slashes', sortable: true },
   ]
   validatorList = null
 

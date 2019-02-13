@@ -14,8 +14,6 @@ import BlockExplorer from './views/BlockExplorer.vue'
 import Rewards from './views/Rewards.vue'
 import Help from './views/Help.vue'
 
-import { initWeb3 } from './services/initWeb3'
-
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -49,7 +47,8 @@ const router = new VueRouter({
       name: 'rewards',
       component: Rewards,
       meta: {
-        requireLogIn: true
+        requireLogIn: true,
+        requireDeps: true
       }   
     },    
     {
@@ -101,35 +100,6 @@ const router = new VueRouter({
   }
 })
 
-const checkDeps = async (next) => {
-  
-  if(store.state.DPOS.web3 && store.state.DappChain.dposUser) {
-    next()
-    return
-  }
-
-  try {
-    let web3js = await initWeb3()
-    store.commit("DPOS/setConnectedToMetamask", true)
-    store.commit("DPOS/setWeb3", web3js)    
-    let accounts = await web3js.eth.getAccounts()
-    let metamaskAccount = accounts[0]    
-    store.commit("DPOS/setCurrentMetmaskAddress", metamaskAccount)
-    await store.dispatch("DappChain/init")
-    await store.dispatch("DappChain/registerWeb3", {web3: web3js})
-    await store.dispatch("DappChain/initDposUser")
-    await store.dispatch("DappChain/ensureIdentityMappingExists")    
-    next()
-  } catch(err) {
-    console.log("Error initializing dependencies", err)
-    if(err === "no Metamask installation detected") {
-      store.commit("DPOS/setMetamaskDisabled", true)
-    }
-  }  
-
-}
-
-
 router.beforeEach(async (to, from, next) => {
 
   if(to.meta.requireLogIn && !localStorage.getItem('privatekey')) {
@@ -153,12 +123,7 @@ router.beforeEach(async (to, from, next) => {
     store.commit('DPOS/setShowSidebar', false)
   }
 
-  if(to.meta.requireDeps && store.state.userIsLoggedIn) {
-    await checkDeps(next)
-  } else {
-    next()
-  }
-  
+  next()
 
 })
 

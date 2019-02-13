@@ -1,5 +1,6 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils.js'
+import { initWeb3 } from '../services/initWeb3'
 
 const defaultState = () => {
   return {
@@ -16,7 +17,8 @@ const defaultState = () => {
       loomBalance: 0,
       mainnetBalance: 0,
       stakedAmount: 0
-    }
+    },
+    rewardsResults: null
   }
 }
 
@@ -55,9 +57,36 @@ export default {
     },
     setShowLoadingSpinner(state, payload) {
       state.showLoadingSpinner = payload
+    },
+    setRewardsResults(state, payload) {
+      state.rewardsResults = payload
     }
   },
   actions: {
+    async initializeDependencies({ commit, dispatch }, payload) {
+      commit("setShowLoadingSpinner", true)
+      try {
+        let web3js = await initWeb3()
+        commit("setConnectedToMetamask", true)
+        commit("setWeb3", web3js, null)
+        let accounts = await web3js.eth.getAccounts()
+        let metamaskAccount = accounts[0]
+        commit("setCurrentMetmaskAddress", metamaskAccount)
+        await dispatch("DappChain/init", null, { root: true })
+        await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
+        await dispatch("DappChain/initDposUser", null, { root: true })
+        await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
+      } catch(err) {
+        this._vm.$log(err)
+        if(err === "no Metamask installation detected") {
+          commit("setMetamaskDisabled", true)
+        }
+        commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false}, { root: true })
+        commit("setShowLoadingSpinner", false)
+        throw err
+      }      
+      commit("setShowLoadingSpinner", false)
+    },
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
@@ -121,6 +150,25 @@ export default {
         console.log(err)
         dispatch("setError", "Fetching validators failed", {root: true})        
       }
-    } 
+    },
+    async queryRewards({ rootState, dispatch, commit }) {
+      
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+
+      const user = rootState.DappChain.dposUser
+      
+      try {
+        const result = await user.checkRewardsAsync()
+        console.log("rex", result)
+        commit("setRewardsResults", result)        
+      } catch(err) {
+        console.log(err)
+        commit("setErrorMsg", {msg: err.toString(), forever: false}, {root: true})
+      }
+      
+    }
+
   }
 }

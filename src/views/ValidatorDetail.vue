@@ -27,7 +27,7 @@
               Timelock: <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
               <span v-else class="highlight">Unlocked</span>
             </h5>
-            <a href="http://www.loomx.io" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
+            <a :href="renderValidatorWebsite" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
             <p class="text-gray">{{validator.Description || 'No Description'}}</p>
           </div>
           <div class="container">
@@ -104,10 +104,10 @@ export default class ValidatorDetail extends Vue {
   fields = [
     { key: 'Status', sortable: false },
     { key: 'Stake', sortable: false },
-    { key: 'Weight', sortable: false },
+    // { key: 'Weight', sortable: false },
     { key: 'Fees', sortable: false },
-    { key: 'Uptime', sortable: false },
-    { key: 'Slashes', sortable: false },
+    // { key: 'Uptime', sortable: false },
+    // { key: 'Slashes', sortable: false },
   ]
   validator = {}
 
@@ -272,6 +272,9 @@ export default class ValidatorDetail extends Vue {
     return formattedTime
   }
 
+  get renderValidatorWebsite() {
+    return this.validator.Website ? this.validator.Website : "https://loomx.io/"
+  }
 
   get canClaimReward() {
     return this.hasDelegation && this.lockTimeExpired ? true : false

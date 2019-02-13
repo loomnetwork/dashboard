@@ -265,7 +265,7 @@ Vue.use(VueClipboard)
       'status',
       'userBalance',
       'connectedToMetamask',
-      'currentMetmaskAddress'
+      'currentMetamaskAddress'
     ]),
     ...DappChainStore.mapState([
       'LoomTokenInstance',
@@ -478,7 +478,7 @@ export default class MyAccount extends Vue {
       const gateway = user.ethereumGateway
       const address = this.userAccount.address      
     try {          
-      const allowance = await user.ethereumLoom.allowance(this.currentMetmaskAddress, gateway.address)
+      const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
       return allowance.toString()
     } catch(err) {
       console.log(err)

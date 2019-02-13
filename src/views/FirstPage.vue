@@ -35,20 +35,6 @@
               </div>
             </div>
           </div>
-          <div class="row mt-3">
-            <div class="col-md-4 col-sm-12 mb-5">
-              <h5>Stake tokens</h5>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, ducimus distinctio quidem quam natus deleniti vitae quis quia minima, dicta ea quos soluta beatae dolore dolorum magni quas perferendis corrupti!
-            </div>
-            <div class="col-md-4 col-sm-12 mb-5">
-              <h5>Contribute to the network</h5>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, ducimus distinctio quidem quam natus deleniti vitae quis quia minima, dicta ea quos soluta beatae dolore dolorum magni quas perferendis corrupti!
-            </div>
-            <div class="col-md-4 col-sm-12 mb-5">
-              <h5>Earn money</h5>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, ducimus distinctio quidem quam natus deleniti vitae quis quia minima, dicta ea quos soluta beatae dolore dolorum magni quas perferendis corrupti!
-            </div>
-          </div>
         </div>
       </main>
     </div>

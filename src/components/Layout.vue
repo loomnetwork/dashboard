@@ -195,7 +195,7 @@ export default class Layout extends Vue {
       if(this.UserIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
       this.setCurrentMetmaskAddress(accounts[0])
     })
-
+    
   }
 
   async attemptToInitialize() {

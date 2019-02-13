@@ -14,7 +14,7 @@
       <div class="container-fluid d-flex justify-content-between ensure-padded">        
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
-            Plasmachain Dashboard            
+            Plasmachain Dashboard
             <span v-if="connectedToMetamask" class="metamask-status">connected</span>
             <span v-else class="metamask-status metamask-status-error">disconnected</span>
           </b-navbar-brand>
@@ -24,7 +24,7 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-
+            
             <b-nav-form>
               <b-nav-item :hidden="false">
                 <router-link to="/account" class="router text-light hover-warning">Home</router-link>
@@ -53,6 +53,18 @@
     </b-navbar> 
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
       <div class="container-fluid ensure-padded">
+
+        <div class="col">
+          <b-navbar-nav v-if="formattedTimeUntilElectionCycle">
+            <div id="countdown-container">
+              <progress :value="timeLeft" max="600" ref="electionCycleProgressBar"></progress>
+            </div>            
+            <b-tooltip target="countdown-container" placement="bottom">
+              <span>Next election cycle:</span> <strong class="highlight">{{formattedTimeUntilElectionCycle}}</strong>
+            </b-tooltip>
+          </b-navbar-nav>      
+        </div>
+
         <div class="col">          
           <b-navbar-nav>
             <div class="sub-menu-links" v-if="!errorRefreshing">
@@ -183,7 +195,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DPOSStore.mapMutations([
       'setUserBalance'
     ]),
-    ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask']),
+    ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
     ...DappChainStore.mapActions([
       'addChainUrl',
       'getDappchainLoomBalance',
@@ -203,7 +215,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'connectedToMetamask',
       'currentMetmaskAddress',
       'userBalance',
-      'status'
+      'status',
+      'timeUntilElectionCycle'
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
@@ -217,7 +230,12 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class FaucetHeader extends Vue {
 
   refreshInterval = null
+  timerRefreshInterval = null
+  formattedTimeUntilElectionCycle = null
+  timeLeft = 600
   errorRefreshing = false
+
+  electionCycleTimer = undefined
 
   logOut() {
     this.clearPrivateKey()
@@ -248,6 +266,33 @@ export default class FaucetHeader extends Vue {
       this.logOut()
     })
 
+    // Get time until next election cycle
+    await this.updateTimeUntilElectionCycle()
+    this.startTimer()  
+  }
+
+  startTimer() {
+    this.timerRefreshInterval = setInterval(async () => this.decreaseTimer(), 1000)
+  }
+
+  async updateTimeUntilElectionCycle() {
+    await this.getTimeUntilElectionsAsync()
+    this.electionCycleTimer = this.timeUntilElectionCycle    
+  }
+
+  async decreaseTimer() {
+    if(this.electionCycleTimer) {
+      let timeLeft = parseInt(this.electionCycleTimer)      
+      if(timeLeft > 0) {
+        timeLeft--
+        this.timeLeft = timeLeft
+        this.electionCycleTimer = timeLeft.toString()
+        this.showTimeUntilElectionCycle()
+      } else {
+        await this.updateTimeUntilElectionCycle()
+      }
+    }
+    
   }
 
   startPolling() {
@@ -255,10 +300,10 @@ export default class FaucetHeader extends Vue {
       this.refreshInterval = setInterval(async () => this.refresh(), 5000)
     }
   }
-
   
   destroyed() {
     if(this.refreshInterval) clearInterval(this.refreshInterval)
+    if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)
   }
 
   get loginText() {
@@ -333,6 +378,18 @@ export default class FaucetHeader extends Vue {
 
   get formatLoomBalance() {
       return this.userBalance.loomBalance.toString()
+  }
+
+  showTimeUntilElectionCycle() {    
+    if(this.electionCycleTimer) {
+      let timeLeft = this.electionCycleTimer
+      let date = new Date(null)
+      date.setSeconds(timeLeft)
+      let result = date.toISOString().substr(11, 8)
+      this.formattedTimeUntilElectionCycle = result
+    } else {
+      this.formattedTimeUntilElectionCycle = ""      
+    }
   }
 
   hideAlert(alertOpt){

@@ -18,7 +18,8 @@ const defaultState = () => {
       mainnetBalance: 0,
       stakedAmount: 0
     },
-    rewardsResults: null
+    rewardsResults: null,
+    timeUntilElectionCycle: null
   }
 }
 
@@ -60,6 +61,9 @@ export default {
     },
     setRewardsResults(state, payload) {
       state.rewardsResults = payload
+    },
+    setTimeUntilElectionCycle(state, payload) {
+      state.timeUntilElectionCycle = payload
     }
   },
   actions: {
@@ -147,7 +151,7 @@ export default {
         commit("setValidators", validatorList)
         return validatorList
       } catch(err) {
-        console.log(err)
+        this._vm.$log(err)
         dispatch("setError", "Fetching validators failed", {root: true})        
       }
     },
@@ -164,11 +168,31 @@ export default {
         console.log("rex", result)
         commit("setRewardsResults", result)        
       } catch(err) {
-        console.log(err)
+        this._vm.$log(err)
         commit("setErrorMsg", {msg: err.toString(), forever: false}, {root: true})
       }
       
+    },
+
+    async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
+      
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+
+      const user = rootState.DappChain.dposUser
+
+      try {
+        const result = await user.getTimeUntilElectionsAsync()
+        commit("setTimeUntilElectionCycle", result.toString())
+      } catch(err) {
+        this._vm.$log(err)
+      }
+
     }
 
   }
+
+
+
 }

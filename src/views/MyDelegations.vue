@@ -50,7 +50,7 @@ import { initWeb3 } from '../services/initWeb3'
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
       'setWeb3',
-      'setCurrentMetmaskAddress'
+      'setCurrentMetamaskAddress'
     ])
   },
   computed: {

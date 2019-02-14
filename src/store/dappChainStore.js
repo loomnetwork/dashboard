@@ -483,7 +483,7 @@ export default {
       if(payload) {
         metamaskAddress = payload.currentAddress
       } else {
-        metamaskAddress = rootState.DPOS.currentMetmaskAddress.toLowerCase()
+        metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
 
       try {

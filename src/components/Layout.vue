@@ -9,7 +9,7 @@
             <img src="../assets/metamask-error-graphic.png"/>
           </div>
           <h4>
-            Metmask error!?
+            Metamask error!?
           </h4>
           <div>
             <span>
@@ -32,12 +32,12 @@
             <span class="address">{{mappingError.mappedEthAddress}}</span> <br>
             but your current account address is: <br>
             <span class="address">{{mappingError.metamaskAddress}}</span> <br>
-            Please change your Metmask account
+            Please change your Metamask account
 
           </div>
           <div v-else>
             <span>
-              Please check your Metmask account and/or network
+              Please check your Metamask account and/or network
             </span>
           </div>              
         </div>
@@ -96,7 +96,7 @@ import { initWeb3 } from '../services/initWeb3'
     ...DappChainStore.mapActions([
       'init',
       'initDposUser',
-      'setMetmaskStatus',
+      'setMetamaskStatus',
       'setMetamaskError',
       'ensureIdentityMappingExists'
     ]),
@@ -106,7 +106,7 @@ import { initWeb3 } from '../services/initWeb3'
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
       'setWeb3',
-      'setCurrentMetmaskAddress'      
+      'setCurrentMetamaskAddress'      
     ])
   },  
   computed: {
@@ -193,7 +193,7 @@ export default class Layout extends Vue {
     
     window.ethereum.on('accountsChanged', async (accounts) => {
       if(this.UserIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
-      this.setCurrentMetmaskAddress(accounts[0])
+      this.setCurrentMetamaskAddress(accounts[0])
     })
     
   }

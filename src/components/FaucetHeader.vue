@@ -209,7 +209,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DPOSStore.mapState([
       'web3',
       'connectedToMetamask',
-      'currentMetmaskAddress',
+      'currentMetamaskAddress',
       'userBalance',
       'status',
       'timeUntilElectionCycle'
@@ -312,7 +312,7 @@ export default class FaucetHeader extends Vue {
       let loomBalance = await this.getDappchainLoomBalance()
       let mainnetBalance = await this.getMetamaskLoomBalance({
         web3: this.web3,
-        address: this.currentMetmaskAddress
+        address: this.currentMetamaskAddress
       })
       let stakedAmount = await this.getAccumulatedStakingAmount()
       this.setUserBalance({

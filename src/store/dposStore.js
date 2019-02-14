@@ -8,7 +8,7 @@ const defaultState = () => {
     showSidebar: false,
     connectedToMetamask: false,
     web3: undefined,
-    currentMetmaskAddress: undefined,
+    currentMetamaskAddress: undefined,
     validators: [],
     status: "check_mapping",
     metamaskDisabled: false,
@@ -47,8 +47,8 @@ export default {
     setValidators(state, payload) {
       state.validators = payload
     },
-    setCurrentMetmaskAddress(state, payload) {
-      state.currentMetmaskAddress = payload
+    setCurrentMetamaskAddress(state, payload) {
+      state.currentMetamaskAddress = payload
     },
     setStatus(state, payload) {
       state.status = payload
@@ -75,7 +75,7 @@ export default {
         commit("setWeb3", web3js, null)
         let accounts = await web3js.eth.getAccounts()
         let metamaskAccount = accounts[0]
-        commit("setCurrentMetmaskAddress", metamaskAccount)
+        commit("setCurrentMetamaskAddress", metamaskAccount)
         await dispatch("DappChain/init", null, { root: true })
         await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
         await dispatch("DappChain/initDposUser", null, { root: true })

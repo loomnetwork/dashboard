@@ -62,7 +62,6 @@ export default class BlockExplorer extends Vue {
   }
 
   refresh() {
-    debugger
     this.blockchain!.setServerUrl(this.$store.state.chainUrl);
     (this.$refs.blockList as BlockList).onConnectionUrlChanged(this.$store.state.chainUrl)
   }

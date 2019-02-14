@@ -192,10 +192,10 @@ export default class Layout extends Vue {
     }
     
     window.ethereum.on('accountsChanged', async (accounts) => {
-      if(this.UserIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
+      if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
       this.setCurrentMetamaskAddress(accounts[0])
     })
-    
+
   }
 
   async attemptToInitialize() {

@@ -50,7 +50,7 @@
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
       <div class="container-fluid ensure-padded">
 
-        <div class="col">
+        <div class="col" v-if="userIsLoggedIn">
           <b-navbar-nav v-if="formattedTimeUntilElectionCycle">
             <div id="countdown-container">
               <progress :value="timeLeft" max="600" ref="electionCycleProgressBar"></progress>
@@ -252,19 +252,22 @@ export default class FaucetHeader extends Vue {
   async mounted() {
     if(this.userIsLoggedIn) {
       this.startPolling()
+       // Get time until next election cycle
+       await this.updateTimeUntilElectionCycle()
+       this.startTimer()
     } else {
-      this.$root.$on('login', () => {
+      this.$root.$on('login', async () => {
         this.startPolling()
+        await this.updateTimeUntilElectionCycle()
+        this.startTimer()        
       })
     }
 
     this.$root.$on('logout', () => {
+      this.deleteIntervals()
       this.logOut()
     })
 
-    // Get time until next election cycle
-    await this.updateTimeUntilElectionCycle()
-    this.startTimer()  
   }
 
   startTimer() {
@@ -298,9 +301,14 @@ export default class FaucetHeader extends Vue {
   }
   
   destroyed() {
-    if(this.refreshInterval) clearInterval(this.refreshInterval)
-    if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)
+    this.deleteIntervals()
   }
+
+  deleteIntervals() {
+    if(this.refreshInterval) clearInterval(this.refreshInterval)
+    if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)    
+  }
+
 
   get loginText() {
     return this.userIsLoggedIn ? 'Log Out' : 'Log In'

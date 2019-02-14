@@ -165,7 +165,6 @@ export default {
       
       try {
         const result = await user.checkRewardsAsync()
-        console.log("rex", result.toString())
         commit("setRewardsResults", result)        
       } catch(err) {
         this._vm.$log(err)
@@ -192,7 +191,6 @@ export default {
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
       
       if(!rootState.DappChain.dposUser) {
-        debugger
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
 

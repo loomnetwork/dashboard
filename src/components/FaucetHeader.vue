@@ -427,6 +427,12 @@ export default class FaucetHeader extends Vue {
   }
 }
 
+#countdown-container {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
 .sign-out-link {  
   color: #007bff !important;
 }

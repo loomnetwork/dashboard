@@ -165,7 +165,6 @@ export default {
       
       try {
         const result = await user.checkRewardsAsync()
-        console.log("rex", result)
         commit("setRewardsResults", result)        
       } catch(err) {
         this._vm.$log(err)
@@ -173,6 +172,21 @@ export default {
       }
       
     },
+
+    async claimRewardsAsync({ rootState, dispatch }, payload) {
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+  
+      const user = rootState.DappChain.dposUser
+      const address = payload
+      try {
+        await user.claimDelegationsAsync(address)
+      } catch(err) {
+        console.log(err)
+      }
+      
+    },    
 
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
       
@@ -192,7 +206,6 @@ export default {
     }
 
   }
-
 
 
 }

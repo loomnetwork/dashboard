@@ -84,7 +84,7 @@ const router = new VueRouter({
     },
     {
       path: '/blockexplorer',
-      name: 'BlockExplorer',
+      name: 'blockexplorer',
       component: BlockExplorer
     },
     {
@@ -117,7 +117,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if(to.name === 'account' || to.name === 'delegations' || to.name === "rewards" || to.name === "validators" || to.name === "validatorDetail" && store.state.userIsLoggedIn) {
+  if(to.name === 'account' || to.name === 'delegations' || to.name === "rewards" || to.name === "validators" || to.name === "validatorDetail") {
     store.commit('DPOS/setShowSidebar', true)
   } else {
     store.commit('DPOS/setShowSidebar', false)

@@ -10,23 +10,25 @@
             <h1>{{validator.Name}}</h1>
             <input type="hidden" ref="address" :value="validator.Address">
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
-             <h5>
-              State: <span class="highlight">{{delegationState}}</span>
-            </h5>
-            <h5>
-              Amount Delegated: <span class="highlight">{{amountDelegated}} LOOM</span>
-            </h5>
-            <h5>
-              Updated Amount: <span class="highlight">{{updatedAmount}} LOOM</span>
-            </h5>
-            <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
-            <!-- <h5>
-              Timelock Tier: <span class="highlight">{{lockTimeTier}}</span>
-            </h5> -->
-            <h5 class="mb-4">
-              Timelock: <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
-              <span v-else class="highlight">Unlocked</span>
-            </h5>
+            <div v-if="userIsLoggedIn">
+              <h5>
+                State: <span class="highlight">{{delegationState}}</span>
+              </h5>
+              <h5>
+                Amount Delegated: <span class="highlight">{{amountDelegated}} LOOM</span>
+              </h5>
+              <h5>
+                Updated Amount: <span class="highlight">{{updatedAmount}} LOOM</span>
+              </h5>
+              <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
+              <!-- <h5>
+                Timelock Tier: <span class="highlight">{{lockTimeTier}}</span>
+              </h5> -->
+              <h5 class="mb-4">
+                Timelock: <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
+                <span v-else class="highlight">Unlocked</span>
+              </h5>
+            </div>
             <a :href="renderValidatorWebsite" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
             <p class="text-gray">{{validator.Description || 'No Description'}}</p>
           </div>

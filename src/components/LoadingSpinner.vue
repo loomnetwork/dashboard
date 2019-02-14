@@ -4,6 +4,7 @@
     <div class="gif-container">
       <img src="../assets/loomy-running.gif" class="looping-loomy mb-2" alt="loomy">
       <h6 class="loading-text">Please be patient, Loomy is on it!</h6>
+      <small>Please don't close or refresh your browser</small>
     </div>
 
     <!-- Uncomment for minimal spinner  -->

@@ -5,7 +5,7 @@ export SENTRY_ORG=loom-network
 export SENTRY_PROJECT=loomgames-frontend
 export SENTRY_AUTH_TOKEN=cdee406313f047fd89156b6c0cf0b30e45112161ec424b81925782f53625e70b
 
-PRESET_DEV="rinkeby-dashboard.dappchains.com"
+PRESET_DEV="dev-dashboard.dappchains.com"
 PRESET_STAGE="rinkeby-dashboard.dappchains.com" #future production
 PRESET_PROD="dashboard.dappchains.com"
 FAUCET_PATH='dashboard.dappchains.com'
@@ -27,7 +27,7 @@ case "$BRANCH_CHOICE" in
     FAUCET_PATH="${PRESET_STAGE}"
     AWS_DISTRIBUTION_ID=E3MGPR8CO07CC2
   ;;
-  origin/develop|develop|origin/add-cardpack|add-cardpack|dpos_ui|origin/dpos_ui)
+  origin/develop|develop)
     FAUCET_PATH="${PRESET_DEV}"
   ;;
   *)

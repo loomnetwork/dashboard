@@ -7,11 +7,11 @@
             <h4 class="mb-4">
               Unclaimed rewards: 
               <strong>
-                {{`${this.rewardsResults.toString()} LOOM`}}
+                {{this.rewardsResults.toString() + " LOOM"}}
               </strong>
             </h4>
             <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler">Claim Reward</b-button>
-            <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>        
+            <b-tooltip v-if="!showLoadingSpinner" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>        
           </div>
           <div v-else>
             <h4>You have yet to recieve any rewards</h4>
@@ -37,16 +37,19 @@ const DappChainStore = createNamespacedHelpers('DappChain')
       'getPrivateKey'
     ]),    
     ...DPOSStore.mapState([
-      'rewardsResults'
+      'rewardsResults',
+      'showLoadingSpinner'
     ])
   },  
   methods: {
     ...DPOSStore.mapActions([
-      'queryRewards'
+      'queryRewards',
+      'claimRewardsAsync'
     ]),
-    ...DappChainStore.mapActions([
-      'claimRewardAsync'
-    ]),    
+    ...mapMutations([
+      'setSuccessMsg',
+      'setErrorMsg'
+    ]),
     ...DPOSStore.mapMutations(['setShowLoadingSpinner'])
   }
 })
@@ -62,11 +65,11 @@ export default class ValidatorDetail extends Vue {
     this.setShowLoadingSpinner(true)
     let address = getAddress(this.getPrivateKey)
     try {
-      await this.claimRewardAsync(address)
-      // this.setSuccess("Successfully claimed rewards!")
+      await this.claimRewardsAsync(address)
+      this.setSuccessMsg({msg: "Successfully claimed rewards!", forever: false})
     } catch(err) {
-      console.log("err", err)
-      // this.setErrorMsg({msg: "Claiming reward failed", forever: false})
+      this.$log("err", err)
+      this.setErrorMsg({msg: "Claiming reward failed", forever: false})
     }
     this.setShowLoadingSpinner(false)
   }

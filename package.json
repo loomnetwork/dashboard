@@ -60,6 +60,7 @@
     "vue-template-compiler": "^2.5.16",
     "vueisotope": "^3.1.2",
     "vuex": "^3.0.1",
+    "vuex-class": "^0.3.1",
     "vuex-router-sync": "^5.0.0",
     "waypoints": "^4.0.1",
     "web3": "1.0.0-beta.36",

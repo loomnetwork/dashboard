@@ -17,7 +17,7 @@
                       </h4>
                     </a>
                   </b-card-header>
-                  <b-collapse @shown="initAccordion1" id="accordion1" accordion="my-accordion" role="tabpanel">
+                  <b-collapse id="accordion1" accordion="my-accordion" role="tabpanel">
                     <b-card-body style="position: relative;">
                       <div class="row mt-4">
                         <loading-spinner v-if="isLoading2" :showBackdrop="true"></loading-spinner>
@@ -75,7 +75,7 @@
                       </div>
                     </div>
                   </b-card-header>
-                  <b-collapse @shown="initAccordion2" id="accordion2" :visible="metamaskConnected" accordion="my-accordion" role="tabpanel">
+                  <b-collapse id="accordion2" :visible="metamaskConnected" accordion="my-accordion" role="tabpanel">
                     <b-card-body>
                       <div class="row mt-4 mb-4">
                         <div class="col-md-8 offset-md-2">
@@ -134,7 +134,7 @@
                                 </div>
                               </div>
                               <b-button id="depositBtn" style="width: 160px" variant="primary" @click="depositHandler">Deposit</b-button>
-                              <b-tooltip target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
+                              <b-tooltip v-if="!isLoading" target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
                             </div>
                           </div>
 
@@ -152,7 +152,7 @@
                                 </div>
                               </div>
                               <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">Withdraw</b-button>
-                              <b-tooltip target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
+                              <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
                             </div>
                           </div>
 

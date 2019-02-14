@@ -320,17 +320,6 @@ export default {
       await tx.wait()
 
     },
-    async claimRewardAsync({ state, dispatch }, payload) {
-
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      const user = state.dposUser
-      const address = payload
-      await user.claimDelegationsAsync(address)
-
-    },        
     async approveAsync({ state, dispatch }, payload) {
 
       if (!state.dposUser) {
@@ -361,6 +350,7 @@ export default {
     },
     async delegateAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
+
         await dispatch('initDposUser')
       }      
       try {       

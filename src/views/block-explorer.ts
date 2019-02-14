@@ -1,6 +1,8 @@
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import Vue from 'vue'
+import { Component, Prop } from 'vue-property-decorator'
+import { Getter } from 'vuex-class'
 import { VueConstructor } from 'vue/types/vue'
-
+import { mapGetters } from 'vuex'
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
 import BlockList from '../components/blockExplorer/BlockList.vue'
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
@@ -28,17 +30,22 @@ export interface ISearchQuery {
     FaucetSidebar,
     FaucetHeader,
     FaucetFooter
-  }  
+  },
+  computed: {
+    ...mapGetters([
+      "dappchainEndpoint"
+    ])
+  }
 })
 export default class BlockExplorer extends Vue {
   @Prop() view!: string // prettier-ignore
   @Prop({ default: true }) showConnectionDropdown!: boolean // prettier-ignore
   @Prop({ default: () => ({ blockHeight: null }) }) searchQuery!: ISearchQuery // prettier-ignore
 
-  blockchain: Blockchain | null = new Blockchain({
-    serverUrl: this.$store.state.chainUrl,
-    allowedUrls: this.$store.state.allowedChainUrls
-  })
+  @Getter("dappchainEndpoint", { namespace: "DappChain" })
+  dappchainEndpoint
+
+  blockchain: Blockchain | null = null
 
   beforeDestroy() {
     if (this.blockchain) {
@@ -47,7 +54,15 @@ export default class BlockExplorer extends Vue {
     }
   }
 
+  beforeMount() {
+    this.blockchain = new Blockchain({
+      serverUrl: this.dappchainEndpoint + "/rpc",
+      allowedUrls: this.$store.state.allowedChainUrls
+    })
+  }
+
   refresh() {
+    debugger
     this.blockchain!.setServerUrl(this.$store.state.chainUrl);
     (this.$refs.blockList as BlockList).onConnectionUrlChanged(this.$store.state.chainUrl)
   }

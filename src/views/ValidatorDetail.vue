@@ -10,7 +10,7 @@
             <h1>{{validator.Name}}</h1>
             <input type="hidden" ref="address" :value="validator.Address">
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
-            <div >
+            <div v-if="userIsLoggedIn">
               <h5>
                 State: <span class="highlight">{{delegationState}}</span>
               </h5>

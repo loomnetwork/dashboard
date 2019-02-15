@@ -249,7 +249,7 @@ export default {
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
       } catch (err) {
-        this._vm.$log(err)
+        console.log(err)
       }
     },
     async getMetamaskLoomBalance({ state }, payload) {
@@ -502,6 +502,7 @@ export default {
         }         
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
+        console.log(err)
         // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
         return
       }
@@ -514,7 +515,7 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        this._vm.$log(err)
+        console.log(err)
         commit('setErrorMsg', {msg: `Failed establishing mapping: ${err}`, forever: false}, {root: true})
       }
     },

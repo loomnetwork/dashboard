@@ -18,7 +18,7 @@
       </b-nav-item>  
     </div>
     <b-tooltip v-if="!userIsLoggedIn" target="restricted-access-links" placement="bottom">
-      <h5 class="tooltip-header"> Please <router-link class="login-link" to="/login">login</router-link> </br> to gain access </h5>
+      <h5 class="tooltip-header"> Please login to gain access </h5>
     </b-tooltip>
   </b-nav>
 </template>

@@ -34,7 +34,7 @@
           </div>
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
-            <div class="row justify-content-end validator-action-container">
+            <div v-if="!disableNode" class="row justify-content-end validator-action-container">
               <!-- <div class="col col-sm-12 col-md-3">
                 <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
@@ -66,6 +66,7 @@ import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 const DappChainStore = createNamespacedHelpers('DappChain')
+const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
@@ -79,6 +80,9 @@ const DappChainStore = createNamespacedHelpers('DappChain')
   computed: {
     ...mapState([
       'userIsLoggedIn'
+    ]),
+    ...DPOSStore.mapState([
+      'prohibitedNodes'
     ]),
     ...mapGetters([
       'getPrivateKey'
@@ -262,6 +266,10 @@ export default class ValidatorDetail extends Vue {
 
   get lockTimeTier() { 
     return this.lockTimeTiers[this.delegation.lockTimeTier]
+  }
+
+  get disableNode() {
+    return this.prohibitedNodes.indexOf(this.validator.Name) > -1 ? true : false
   }
 
   get formatLocktime() {    

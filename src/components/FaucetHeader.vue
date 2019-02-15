@@ -37,9 +37,6 @@
               </b-nav-item>   
               <b-nav-item :hidden="false">
                 <router-link to="/faq" class="router text-light hover-warning">F.A.Q</router-link>
-              </b-nav-item>                         
-              <b-nav-item :hidden="false">
-                <router-link to="/blockexplorer" class="router text-light hover-warning">Blockexplorer</router-link>
               </b-nav-item>
             </b-nav-form>
 

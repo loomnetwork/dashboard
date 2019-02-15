@@ -66,9 +66,8 @@ export default class ValidatorDetail extends Vue {
   async claimRewardHandler() {
     this.hideTooltip = true
     this.setShowLoadingSpinner(true)
-    let address = getAddress(this.getPrivateKey)
     try {
-      await this.claimRewardsAsync(address)
+      await this.claimRewardsAsync()
       this.setSuccessMsg({msg: "Successfully claimed rewards!", forever: false})
     } catch(err) {
       this.$log("err", err)
@@ -79,7 +78,8 @@ export default class ValidatorDetail extends Vue {
   }
 
   get displayResults() {
-    if(this.rewardsResults && parseInt(this.rewardsResults) > 0) {
+    if(!this.rewardsResults) return ""
+    if(parseInt(this.rewardsResults) > 0) {
       return this.rewardsResults.toString()
     } else {
       return ""  

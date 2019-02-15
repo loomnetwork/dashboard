@@ -5,7 +5,7 @@
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="validatorList !== null && validatorList.length > 0">
             <h1>Validators</h1>
-            <faucet-table :items="validatorList" :fields="fields" sortBy="Stake" sortDesc @row-clicked="showValidatorDetail"></faucet-table>
+            <faucet-table :items="validatorList" :fields="fields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
           </div>
           <div v-else-if="validatorList !== null && validatorList.length == 0">
             No validators available, please try again later

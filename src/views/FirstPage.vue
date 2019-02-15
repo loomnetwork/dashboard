@@ -26,6 +26,7 @@
                     <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">Returning User</b-button>
 
                     <ChainSelector style="width: 250px" class="connection-status"
+                      v-if="!isProduction"
                       :allowedUrls="chainUrls"
                       :serverUrl="currentChain"
                       @urlClicked="onUserInputUrl"
@@ -97,6 +98,8 @@ export default class FirstPage extends Vue {
   seedPhrases = []
 
   currentStatus = this.STATUS.NONE
+
+  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async openLoginModal() {
     this.$root.$emit('bv::show::modal', 'login-account-modal')

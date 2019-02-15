@@ -8,7 +8,7 @@
           <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
           <div class="container mb-2 column py-3 p-3 d-flex bottom-border">
             <h1>{{validator.Name}}</h1>
-            <input type="hidden" ref="address" :value="validator.Address">
+            <input type="text" ref="address" :value="validator.Address" tabindex='-1' aria-hidden='true' style="position: absolute; left: -9999px">
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn">
               <h5>
@@ -34,7 +34,7 @@
           </div>
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
-            <div class="row justify-content-end validator-action-container">
+            <div v-if="!disableNode" class="row justify-content-end validator-action-container">
               <!-- <div class="col col-sm-12 col-md-3">
                 <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
@@ -66,6 +66,7 @@ import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 const DappChainStore = createNamespacedHelpers('DappChain')
+const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
@@ -79,6 +80,9 @@ const DappChainStore = createNamespacedHelpers('DappChain')
   computed: {
     ...mapState([
       'userIsLoggedIn'
+    ]),
+    ...DPOSStore.mapState([
+      'prohibitedNodes'
     ]),
     ...mapGetters([
       'getPrivateKey'
@@ -191,8 +195,13 @@ export default class ValidatorDetail extends Vue {
 
   copyAddress() {
     this.$refs.address.select();    
-    document.execCommand('copy');
-    this.setSuccess("Address copied to clipboard")
+    const successful = document.execCommand('copy');
+    if (successful) {
+        this.setSuccess("Address copied to clipboard")
+    }
+    else {
+        this.setSuccess("Somehow copy  didn't work...sorry")
+    }
   }
 
   async refresh() {
@@ -264,6 +273,10 @@ export default class ValidatorDetail extends Vue {
     return this.lockTimeTiers[this.delegation.lockTimeTier]
   }
 
+  get disableNode() {
+    return this.prohibitedNodes.indexOf(this.validator.Name) > -1 ? true : false
+  }
+
   get formatLocktime() {    
     if(!this.delegation.lockTime) return 0
     let date = new Date(this.delegation.lockTime*1000)
@@ -275,7 +288,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get renderValidatorWebsite() {
-    return this.validator.Website ? this.validator.Website : "https://loomx.io/"
+    return this.validator.Website ? "https://" + this.validator.Website : "https://loomx.io/"
   }
 
   get canClaimReward() {

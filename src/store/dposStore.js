@@ -2,6 +2,20 @@ const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils.js'
 import { initWeb3 } from '../services/initWeb3'
 
+
+
+const dynamicSort = (property) => {
+  let sortOrder = 1
+  if(property[0] === "-") {
+      sortOrder = -1
+      property = property.substr(1)
+  }
+  return (a,b) => {
+    let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0
+    return result * sortOrder
+  }
+}
+
 const defaultState = () => {
   return {
     isLoggedIn: false,
@@ -19,7 +33,8 @@ const defaultState = () => {
       stakedAmount: 0
     },
     rewardsResults: null,
-    timeUntilElectionCycle: null
+    timeUntilElectionCycle: null,
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4"]
   }
 }
 
@@ -131,6 +146,15 @@ export default {
         }
         const validatorList = []
         for (let i in validators) {
+
+          let weight = 0
+          if(validators[i].name.startsWith("plasma-")) 
+          {
+            weight = 1
+          } else if(validators[i].name === "") {
+            weight = 2
+          }
+
           const validator = validators[i]
           const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
           validatorList.push({
@@ -139,15 +163,18 @@ export default {
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
             Weight: (validator.weight || '0') + '%',
-            Fees: (validator.fee || '0') + '%',
+            Fees: (validator.fee/100 || '0') + '%',
             Uptime: (validator.uptime || '0') + '%',
             Slashes: (validator.slashes || '0') + '%',
             Description: (validator.description) || null,
             Website: (validator.website) || null,
+            Weight: weight || 0,            
             _cellVariants: validator.active ? { Status: 'active'} : undefined,
             pubKey: (validator.pubKey)
           })
+
         }
+        validatorList.sort(dynamicSort("Weight"))
         commit("setValidators", validatorList)
         return validatorList
       } catch(err) {
@@ -177,11 +204,11 @@ export default {
       if(!rootState.DappChain.dposUser) {
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
-  
+
       const user = rootState.DappChain.dposUser
-      const address = payload
+
       try {
-        await user.claimDelegationsAsync(address)
+        await user.claimDelegationsAsync()
       } catch(err) {
         console.log(err)
       }

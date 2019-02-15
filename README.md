@@ -1,4 +1,4 @@
-# DPoS Dashboard
+# Plasmachain Staking and Validator Dashboard
 
 To run it:
 

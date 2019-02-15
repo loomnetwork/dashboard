@@ -9,11 +9,14 @@
           <div class="d-flex flex-row row flex-wrap">
             <div class="col">
               <ul class="list-unstyled list-spaced">
-                <li><a href="https://loomx.io" target="_blank" class="hover-warning">LoomX.io</a></li>
-                <li><a href="https://EthFiddle.com" target="_blank" class="hover-warning">EthFiddle.com</a></li>
-                <li><a href="https://EthDeploy.com" target="_blank" class="hover-warning">EthDeploy.com</a></li>
-                <li><a href="https://cryptozombies.io" target="_blank" class="hover-warning">Cryptozombies.io</a></li>
-                <li><a href="https://solidityx.org" target="_blank" class="hover-warning">SolidityX.org</a></li>
+                <li><a href="https://loomx.io" target="_blank" class="hover-warning">Loom Network</a></li>
+                <li><a href="https://EthFiddle.com" target="_blank" class="hover-warning">EthFiddle</a></li>
+                <li><a href="https://EthDeploy.com" target="_blank" class="hover-warning">EthDeploy</a></li>
+                <li><a href="https://CryptoZombies.io" target="_blank" class="hover-warning">CryptoZombies</a></li>
+                <li><a href="https://solidityx.org" target="_blank" class="hover-warning">SolidityX</a></li>
+                <li><a href="https://delegatecall.com/what-is-blockchain" target="_blank" class="hover-warning hover-warning">What is Blockchain</a></li>
+                <li><a href="https://loomx.io/developers/" target="_blank" class="hover-warning hover-warning">Loom SDK</a></li>
+                <li><a href="https://delegatecall.com" target="_blank" class="hover-warning">Delegatecall</a></li>
               </ul>
             </div>
             <div class="col">

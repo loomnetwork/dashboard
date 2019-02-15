@@ -266,7 +266,7 @@ export default {
       let limitDecimals = parseFloat(balance).toFixed(2)
       return limitDecimals
       } catch (err) {
-        console.log(err)
+        console.log("Error getting metamask balance", err)
         return 0
       }
     },
@@ -359,7 +359,7 @@ export default {
         const result = await state.dposUser.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
-        console.log(err)
+        console.log("Error delegating: ", err)
         commit('setErrorMsg', {msg: err.toString(), forever: false}, {root: true})
       }      
     },

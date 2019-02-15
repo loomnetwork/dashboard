@@ -6,7 +6,7 @@
     <b-nav-item>
       <router-link to="/blockexplorer" class="router" exact-active-class="router-active">Blockexplorer</router-link>
     </b-nav-item>    
-    <div id="restricted-access-links">
+    <div id="restricted-access-links" @click="clickHandler">
       <b-nav-item>
         <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">My Account</router-link>
       </b-nav-item>
@@ -17,9 +17,6 @@
         <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">Rewards</router-link>
       </b-nav-item>  
     </div>
-    <b-tooltip v-if="!userIsLoggedIn" target="restricted-access-links" placement="bottom">
-      <h5 class="tooltip-header"> Please login <br> to gain access </h5>
-    </b-tooltip>
   </b-nav>
 </template>
 
@@ -35,7 +32,14 @@ import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers
 })
 
 export default class FaucetSidebar extends Vue {
-}</script>
+
+  clickHandler() {
+    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
+    return
+  }
+
+}
+</script>
 <style lang="scss" scoped>
 .navbar-side {
   background-color: #ffffff;
@@ -71,8 +75,5 @@ h4, h1 {
 }
 .login-link {
   color: #007bff;
-}
-.tooltip-header {
-  color: #ffffff;
 }
 </style>

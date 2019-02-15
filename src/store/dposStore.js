@@ -96,7 +96,7 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
       } catch(err) {
-        this._vm.$log(err)
+        console.log(err)
         if(err === "no Metamask installation detected") {
           commit("setMetamaskDisabled", true)
         }
@@ -178,7 +178,7 @@ export default {
         commit("setValidators", validatorList)
         return validatorList
       } catch(err) {
-        this._vm.$log(err)
+        console.log(err)
         dispatch("setError", "Fetching validators failed", {root: true})        
       }
     },
@@ -194,7 +194,7 @@ export default {
         const result = await user.checkRewardsAsync()
         commit("setRewardsResults", result)        
       } catch(err) {
-        this._vm.$log(err)
+        console.log(err)
         commit("setErrorMsg", {msg: err.toString(), forever: false}, {root: true})
       }
       
@@ -227,7 +227,7 @@ export default {
         const result = await user.getTimeUntilElectionsAsync()
         commit("setTimeUntilElectionCycle", result.toString())
       } catch(err) {
-        this._vm.$log(err)
+        console.log(err)
       }
 
     }

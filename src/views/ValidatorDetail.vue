@@ -275,7 +275,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get renderValidatorWebsite() {
-    return this.validator.Website ? this.validator.Website : "https://loomx.io/"
+    return this.validator.Website ? "https://" + this.validator.Website : "https://loomx.io/"
   }
 
   get canClaimReward() {

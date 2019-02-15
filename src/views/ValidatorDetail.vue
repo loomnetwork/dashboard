@@ -34,7 +34,7 @@
           </div>
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
-            <div v-if="!disableNode" class="row justify-content-end validator-action-container">
+            <div class="row justify-content-end validator-action-container">
               <!-- <div class="col col-sm-12 col-md-3">
                 <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>

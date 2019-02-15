@@ -10,6 +10,11 @@
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
 
         <div class="container-fluid mb-5 mt-4 rmv-padding">
+          <div class="row">
+            <div class="col text-center p-3 mb-3">
+              <h1>Please Log In</h1>
+            </div>
+          </div>
           <div class="row my-3 p-3 d-flex justify-content-center mt-5 mb-auto mt-auto">
             <div class="col">
               <div class="row banner-container mb-5">

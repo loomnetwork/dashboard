@@ -2,6 +2,9 @@
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
     <b-nav-item>
       <router-link to="/validators" class="router" exact-active-class="router-active">Validators</router-link>
+    </b-nav-item>
+    <b-nav-item>
+      <router-link to="/blockexplorer" class="router" exact-active-class="router-active">Blockexplorer</router-link>
     </b-nav-item>    
     <div id="restricted-access-links">
       <b-nav-item>
@@ -14,8 +17,8 @@
         <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">Rewards</router-link>
       </b-nav-item>  
     </div>
-    <b-tooltip v-if="!userIsLoggedIn" target="restricted-access-links" placement="left">
-      Please <router-link class="login-link" to="/login">login</router-link> to gain access
+    <b-tooltip v-if="!userIsLoggedIn" target="restricted-access-links" placement="bottom">
+      <h5 class="tooltip-header"> Please <router-link class="login-link" to="/login">login</router-link> </br> to gain access </h5>
     </b-tooltip>
   </b-nav>
 </template>
@@ -68,5 +71,8 @@ h4, h1 {
 }
 .login-link {
   color: #007bff;
+}
+.tooltip-header {
+  color: #ffffff;
 }
 </style>

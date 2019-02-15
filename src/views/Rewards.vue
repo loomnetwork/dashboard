@@ -11,7 +11,7 @@
               </strong>
             </h4>
             <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler">Claim Reward</b-button>
-            <b-tooltip v-if="!showLoadingSpinner" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>        
+            <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
           </div>
           <div v-else>
             <h4>You have yet to recieve any rewards</h4>
@@ -55,6 +55,8 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 })
 export default class ValidatorDetail extends Vue {
 
+  hideTooltip = false
+
   async mounted() {
     this.setShowLoadingSpinner(true)
     await this.queryRewards()
@@ -62,20 +64,26 @@ export default class ValidatorDetail extends Vue {
   }
 
   async claimRewardHandler() {
+    this.hideTooltip = true
     this.setShowLoadingSpinner(true)
-    let address = getAddress(this.getPrivateKey)
     try {
-      await this.claimRewardsAsync(address)
+      await this.claimRewardsAsync()
       this.setSuccessMsg({msg: "Successfully claimed rewards!", forever: false})
     } catch(err) {
       this.$log("err", err)
       this.setErrorMsg({msg: "Claiming reward failed", forever: false})
     }
     this.setShowLoadingSpinner(false)
+    this.hideTooltip = false
   }
 
   get displayResults() {
-    return this.rewardsResults ? this.rewardsResults.toString() : ""
+    if(!this.rewardsResults) return ""
+    if(parseInt(this.rewardsResults) > 0) {
+      return this.rewardsResults.toString()
+    } else {
+      return ""  
+    } 
   }
 
 }

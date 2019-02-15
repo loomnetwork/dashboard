@@ -288,7 +288,12 @@ export default class ValidatorDetail extends Vue {
   }
 
   get renderValidatorWebsite() {
-    return this.validator.Website ? this.validator.Website : "https://loomx.io/"
+    if(!this.validator.Website) return "https://loomx.io/"
+    if(this.validator.Website.includes("http")) {
+      return this.validator.Website
+    } else {
+     return "https://" + this.validator.Website
+    }
   }
 
   get canClaimReward() {

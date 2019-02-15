@@ -111,6 +111,18 @@
           </p>
         </div>
 
+       <div class="mb-4">
+          <h3>
+            How do I claim my rewards? 
+          </h3>
+          <p>
+            The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the <router-link to="/validators" class="router text-primary">PlasmaChain Dashboard</router-link>.
+          </p>
+          <div class="img-container">
+            <img src="../assets/faq-screencap-3.png" alt="The rewards page">
+          </div>          
+        </div>
+
         <div class="mb-4">
           <h3>
             When will I receive rewards on my delegations?
@@ -143,10 +155,40 @@
 
         <div class="mb-4">
           <h3>
-            What currency will rewards be paid in? 
+            How can I un-delegate my tokens?  
           </h3>
           <p>
-            The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the <router-link to="/validators" class="router text-primary">PlasmaChain Dashboard</router-link>.
+            Simply navigate to “My Delegations”, select a specific validator, and click the “Un-delegate” button:
+          </p>
+          <div class="img-container">
+            <img src="../assets/faq-screencap-2.png" alt="Click on the un-delegate button">
+          </div>          
+        </div>
+
+        <div class="mb-4">
+          <h3>
+            Once I un-delegate, how long will it take to regain full access to my tokens?
+          </h3>
+          <p>
+            At launch, delegators’ funds will be fully released after 2 weeks. This is a security measure to mitigate against scenarios of staking with a bad candidate to increase their odds of gaining the right to validate, and then immediately un-delegating. This is an area of active research and something we plan to iterate through over the coming months.
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <h3>
+            Are there any ways to lose some of my delegated tokens?
+          </h3>
+          <p>
+            Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized. 
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <h3>
+            Where do the tokens go when they are slashed? 
+          </h3>
+          <p>
+            Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network. 
           </p>
         </div>
 
@@ -172,6 +214,8 @@
 .img-container img {
   display: block;
   margin: 0 auto;
+  width: 80%;
+  height: auto;
 }
 
 h3 {

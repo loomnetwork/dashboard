@@ -27,7 +27,7 @@
               </ul>
             </div>
             <div class="col text-left">
-              <p>Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Like how Filecoin tokenized disk space, Loom aims to be the tokenized application protocol of the new decentralized web.</p>
+              <p>Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web.</p>
             </div>
           </div>
         </div>

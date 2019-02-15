@@ -17,7 +17,7 @@
       <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
       <span class="text-dark" v-html="this.$store.state.successMsg"></span>
     </b-alert>   
-    <b-navbar toggleable="md" type="dark">
+    <b-navbar id="top-nav" toggleable="md" type="dark">
       <div class="container-fluid d-flex justify-content-between ensure-padded">        
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
@@ -448,11 +448,17 @@ export default class FaucetHeader extends Vue {
   }
 }</script>
 <style lang="scss">
+#top-nav {
+  padding: 24px 0;
+}
 .header {
-  background: #5756e6;
+  background: #ffffff;
+  box-shadow: 0 2px 10px 0 rgba(0,0,0,.08);
+  position: relative;
+  z-index: 999;
+  border: 0;  
   .navbar {
     padding: 0;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
     width: 100%;
     .navbar-brand {
       display: block;

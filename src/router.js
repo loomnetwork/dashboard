@@ -117,7 +117,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if(to.name === 'account' || to.name === 'delegations' || to.name === "rewards" || to.name === "validators" || to.name === "validatorDetail" || to.name === "FAQ") {
+  if(to.name === 'firstPage' || to.name === 'account' || to.name === 'delegations' || to.name === "rewards" || to.name === "validators" || to.name === "validatorDetail" || to.name === 'blockExplorer' || to.name === "FAQ") {
     store.commit('DPOS/setShowSidebar', true)
   } else {
     store.commit('DPOS/setShowSidebar', false)

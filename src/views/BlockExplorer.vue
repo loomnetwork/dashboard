@@ -93,7 +93,8 @@
     }
 
     li {
-      width: 24px;
+      // min width (page 9999 doesn't fit in 24px
+      min-width: 24px;
       height: 24px;
       margin: 6px;
       a {
@@ -115,19 +116,30 @@
     }
 
     .page-item {
+      &.disabled {
+        opacity: 0.5
+      }
       &:first-child.disabled {
         background: url('../assets/images/verry_back_arrow_left.svg') no-repeat center;
+        transform: scaleX(1);
       }
       &:first-child {
-        background: url('../assets/images/verry_back_arrow_left_active.svg') no-repeat center;
+        // for some reason this does not showup
+        // background: url('../assets/images/verry_back_arrow_left_active.svg') no-repeat center;
+        background: url('../assets/images/verry_back_arrow_right_active.svg') no-repeat center;
+        transform: scaleX(-1);
       }
 
       &:nth-child(2).disabled {
         background: url('../assets/images/back_arrow.svg') no-repeat center;
+        transform: scaleX(1);
       }
 
       &:nth-child(2) {
-        background: url('../assets/images/back_arrow_active.svg') no-repeat center;
+        // this one neither
+        // background: url('../assets/images/back_arrow_active.svg') no-repeat center;
+        background: url('../assets/images/forward_arrow_active.svg') no-repeat center;
+        transform: scaleX(-1);
       }
 
       &:last-child.disabled {

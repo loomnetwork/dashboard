@@ -147,25 +147,6 @@ export default {
         const validatorList = []
         for (let i in validators) {
 
-
-          // let validators = await this.getValidatorList()
-          // let sortedValidators = []    
-          // let indecies = []
-      
-          // for(let value of this.prohibitedNodes) {
-          //   let index = validators.findIndex((x) => {
-          //     return x.Name == value
-          //   })
-          //   indecies.push(index)
-          // }
-      
-          // for(let index of indecies) {
-          //   sortedValidators.push(validators.splice(index, 1)[0])
-          // }
-          
-          // this.validatorList = sortedValidators
-
-
           let weight = 0
           if(validators[i].name.startsWith("plasma-")) 
           {

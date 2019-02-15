@@ -8,7 +8,7 @@
           <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
           <div class="container mb-2 column py-3 p-3 d-flex bottom-border">
             <h1>{{validator.Name}}</h1>
-            <input type="hidden" ref="address" :value="validator.Address">
+            <input type="text" ref="address" :value="validator.Address" tabindex='-1' aria-hidden='true' style="position: absolute; left: -9999px">
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn">
               <h5>
@@ -191,8 +191,13 @@ export default class ValidatorDetail extends Vue {
 
   copyAddress() {
     this.$refs.address.select();    
-    document.execCommand('copy');
-    this.setSuccess("Address copied to clipboard")
+    const successful = document.execCommand('copy');
+    if (successful) {
+        this.setSuccess("Address copied to clipboard")
+    }
+    else {
+        this.setSuccess("Somehow copy  didn't work...sorry")
+    }
   }
 
   async refresh() {

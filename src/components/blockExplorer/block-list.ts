@@ -200,8 +200,9 @@ export default class BlockList extends Vue {
   }
 
   async searchWithBlockHeight() {
-    if (this.blockHeight) {
+    if(this.blockHeight) {
       let blockHeight = parseInt(this.blockHeight!)
+      if(blockHeight <= 0) return
       // let block = await this.blockchain.fetchBlock(blockHeight);
       this.showBlock(blockHeight)
     }

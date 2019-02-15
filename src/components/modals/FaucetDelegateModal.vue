@@ -16,6 +16,8 @@
           <b-tooltip target="lockTimeReward" placement="bottom" title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"></b-tooltip>
         </b-row> 
       </div>
+      <small v-if="hasDelegation && unbond" class="text-danger text-center">Warning, please note that any additional delegation will overwrite any pre-existing delegation!</small>
+      <small v-if="hasDelegation && !unbond" class="text-danger text-center">Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period.</small>
     </b-container>
     <div slot="modal-footer" class="w-100">
       <b-button v-if="!loading" style="width: 160px; float: right;" variant="primary" @click="requestDelegate">{{okTitle}}</b-button>

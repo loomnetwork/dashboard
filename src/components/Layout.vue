@@ -70,6 +70,7 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 import { initWeb3 } from '../services/initWeb3'
+import { isIP } from 'net';
 
 @Component({
   components: {
@@ -191,10 +192,12 @@ export default class Layout extends Vue {
       })      
     }
     
-    window.ethereum.on('accountsChanged', async (accounts) => {
-      if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
-      this.setCurrentMetamaskAddress(accounts[0])
-    })
+    if(window.ethereum) {
+      window.ethereum.on('accountsChanged', async (accounts) => {
+        if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
+        this.setCurrentMetamaskAddress(accounts[0])
+      })
+    }
 
   }
 

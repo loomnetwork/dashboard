@@ -435,7 +435,7 @@ export default class MyAccount extends Vue {
       await this.depositAsync({amount: this.transferAmount})
       this.setSuccess("Deposit successfull")
     } catch(err) {
-      console.log(err)
+      console.log("Deposit failed, please try again: ", err)
       this.setError("Deposit failed, please try again")
     }
     this.transferAmount = ""
@@ -455,7 +455,7 @@ export default class MyAccount extends Vue {
       await this.withdrawAsync({amount: this.withdrawAmount})
       this.setSuccess("Withdraw successfull")
     } catch(err) {
-      console.log(err)
+      console.log("Withdraw failed, please try again: ", err)
       this.setError("Withdraw failed, please try again")
     }
     this.withdrawAmount = ""
@@ -481,7 +481,7 @@ export default class MyAccount extends Vue {
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
       return allowance.toString()
     } catch(err) {
-      console.log(err)
+      console.log("Error checking allowance", err)
       return
     }
   }
@@ -496,7 +496,7 @@ export default class MyAccount extends Vue {
       this.currentAllowance = await this.checkAllowance()
       this.setSuccess("Amount approved")
     } catch(err) {
-      console.log(err)
+      console.log("Error approving amount", err)
       return
     }    
   }
@@ -576,8 +576,8 @@ export default class MyAccount extends Vue {
       await this.depositAsync({
         amount: this.transferAmount.toString()
       })
-    } catch (e) {
-      console.log(e)
+    } catch (err) {
+      console.log("Error transferring to plasma chain: ", err)
     }
   }
 

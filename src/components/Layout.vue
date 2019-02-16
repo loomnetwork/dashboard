@@ -1,21 +1,58 @@
 <template>
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>    
-    <div class="content container-fluid">      
-      <warning-overlay type="metamask"></warning-overlay>
-      <warning-overlay type="mapping"></warning-overlay>
-      <div class="row">
-        <div v-show="showSidebar" class="col-lg-3">
+    <div class="content">      
+      <div v-if="metamaskDisabled && userIsLoggedIn" class="disabled-overlay">
+        <div>           
+          <div class="network-error-container mb-3">
+            <img src="../assets/metamask-error-graphic.png"/>
+          </div>
+          <h4>
+            Metamask error!?
+          </h4>
+          <div>
+            <span>
+              Please enable Metamask or switch to a supported browser
+            </span>
+          </div>              
+        </div>
+      </div>
+      <div v-if="mappingStatus == 'INCOMPATIBLE_MAPPING' && userIsLoggedIn" class="disabled-overlay">
+        <div>           
+          <div class="network-error-container mb-3">
+            <img src="../assets/network-error-graphic.png"/>
+          </div>
+          <h4>
+            Mapping error!?
+          </h4>
+          <div v-if="mappingError">
+
+            Your account appears to be mapped with the following address: <br>
+            <span class="address">{{mappingError.mappedEthAddress}}</span> <br>
+            but your current account address is: <br>
+            <span class="address">{{mappingError.metamaskAddress}}</span> <br>
+            Please change your Metamask account
+
+          </div>
+          <div v-else>
+            <span>
+              Please check your Metamask account and/or network
+            </span>
+          </div>              
+        </div>
+      </div>         
+      <div class="row column-wrapper">
+        <div v-show="showSidebar" class="rmv-spacing col-lg-3">
           <faucet-sidebar></faucet-sidebar>      
         </div>
-        <div :class="contentClass">
+        <div id="content-container" :class="contentClass">
           <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           <router-view></router-view>
         </div>        
-      </div>          
+      </div>
     </div>    
-    <faucet-footer></faucet-footer>
+    <faucet-header v-on:update:chain="refresh()"></faucet-header>        
+    <!-- <faucet-footer></faucet-footer> -->
   </div>  
 </template>
 
@@ -185,6 +222,9 @@ export default class Layout extends Vue {
     min-height: 100vh;
     flex-direction: column;
   }
+  #content-container {
+    padding: 24px 48px;
+  }
   .content {
     display: flex;
     position: relative;
@@ -194,6 +234,9 @@ export default class Layout extends Vue {
       width: 100%;;
     }   
   }
+  .column-wrapper {
+    background-color: #eff3f5;
+  }
   .sidebar-container {
     display: flex;
     align-items: stretch;
@@ -202,6 +245,10 @@ export default class Layout extends Vue {
 </style>
 
 <style lang="scss">
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+  }
 
   .rmv-spacing {
     margin: 0px;

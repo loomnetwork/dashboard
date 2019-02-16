@@ -1,21 +1,20 @@
 <template>
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
-    <b-nav-item>
-      <router-link to="/validators" class="router" exact-active-class="router-active">{{ $t('views.validator_list.validators') }}</router-link>
-    </b-nav-item>
-    <b-nav-item>
-      <router-link to="/blockexplorer" class="router" exact-active-class="router-active">{{ $t('components.faucet_header.block_explorer') }}</router-link>
-    </b-nav-item>    
+    <a @click="$router.push({path: '/validators'})">
+      <b-navbar-brand>
+        DPOS Dashboard
+        <!-- <span v-if="connectedToMetamask" class="metamask-status">connected</span>
+        <span v-else class="metamask-status metamask-status-error">disconnected</span> -->
+      </b-navbar-brand>
+    </a>
+    <router-link to="/validators" class="router" exact-active-class="router-active">
+      <span><fa icon="code-branch" class="sidebar-icon"/>Validators</span>
+    </router-link>
+    <router-link to="/blockexplorer" class="router" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>Blockexplorer</span></router-link>
     <div id="restricted-access-links" @click="clickHandler">
-      <b-nav-item>
-        <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_account') }}</router-link>
-      </b-nav-item>
-      <b-nav-item>
-        <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_delegations') }}</router-link>
-      </b-nav-item>
-      <b-nav-item>
-        <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.rewards') }}</router-link>
-      </b-nav-item>  
+      <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>My Account</span></router-link>
+      <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>My Delegations</span></router-link>
+      <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>Rewards</span></router-link>
     </div>
   </b-nav>
 </template>
@@ -45,20 +44,35 @@ export default class FaucetSidebar extends Vue {
   background-color: #ffffff;
   z-index: 100;
   position: relative;
-  border-right: 2px solid #f2f1f3;
+  box-shadow: 0 2px 10px 0 rgba(0,0,0,.08);
   height: 100%;
   min-width: 230px;
   padding-top: 24px;
   font-size: 16px;
   font-weight: bold;
 }
+.navbar-brand {
+  padding: 12px 24px;
+}
 .router-active {
   border-left: 5px solid #5756e6;
+  background-color: #f9f9fc;
   font-weight: bold
 }
 .router {
+  display: block;
   color: gray;
-  padding: 5px 15px;
+}
+.router {
+  font-size: 16px;
+  font-weight: 400;
+  span {
+    display: block;
+    padding: 12px 24px;
+    .sidebar-icon {
+      margin-right: 12px;
+    }
+  }
 }
 .column {
   flex-direction: column;

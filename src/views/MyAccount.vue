@@ -22,8 +22,8 @@
                       <div class="row mt-4">
                         <loading-spinner v-if="isLoading2" :showBackdrop="true"></loading-spinner>
                         <div class="col mb-4">
-                          <h5 class="rmv-spacing"><strong>My Address</strong></h5>
-                          <div class="address-container">
+                          <h5 class="rmv-spacing" style="display:none"><strong>My Address</strong></h5>
+                          <div class="address-container"  style="display:none">
                             <span class="text-gray">{{userAccount.address}}</span>
                             <b-button variant="link" @click="copySuccessHandler" v-clipboard:copy="userAccount.address"><fa :icon="['fa', 'copy']" class="text-gray rmv-spacing"/></b-button>
                           </div>                          
@@ -33,7 +33,7 @@
                             <h6>Plasmachain: <strong>{{userBalance.loomBalance + " LOOM"}}</strong></h6>                            
                           </div>                          
                         </div>
-                        <div class="col text-center">
+                        <div class="col text-center" style="display:none">
                           <qrcode :value="userAccount.address" :options="{ size: 150 }"></qrcode>
                         </div>                        
                       </div>                      

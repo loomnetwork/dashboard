@@ -266,7 +266,7 @@ export default {
       let limitDecimals = parseFloat(balance).toFixed(2)
       return limitDecimals
       } catch (err) {
-        console.error("Error getting metamask balance", err)
+        commit('setErrorMsg', {msg: "Error getting metamask balance", forever: false, report:true, cause:err}, {root: true})
         return 0
       }
     },
@@ -277,7 +277,7 @@ export default {
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw 'No Private Key, Login again'
+        throw new Error('No Private Key, Login again')
       }
       
       const network = state.chainUrls[state.chainIndex].network
@@ -359,8 +359,7 @@ export default {
         const result = await state.dposUser.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
-        console.error("Error delegating: ", err)
-        commit('setErrorMsg', {msg: err.toString(), forever: false}, {root: true})
+        commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
       }      
     },
     async undelegateAsync({ state, dispatch, commit }, payload) {
@@ -373,7 +372,7 @@ export default {
         const result = await state.dposUser.undelegateAsync(payload.candidate, new BN(weiAmount,10))
         commit('setSuccessMsg', {msg: `Success un-delegating ${loomAmount} tokens`, forever: false}, {root: true})
       } catch(err) {
-        commit('setErrorMsg', {msg: err.toString(), forever: false}, {root: true})
+        commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
     }, 
     async getValidatorsAsync({ state, dispatch }, payload) {
@@ -421,7 +420,7 @@ export default {
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw 'No Private Key, Login again'
+        throw new Error('No Private Key, Login again')
       }
 
       const dpos2 = await dispatch('getDpos2', {
@@ -515,8 +514,7 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        console.error("Failed establishing mapping: ", err)
-        commit('setErrorMsg', {msg: `Failed establishing mapping: ${err}`, forever: false}, {root: true})
+        commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
       }
     },
     async init({ state, commit, rootState }, payload) {

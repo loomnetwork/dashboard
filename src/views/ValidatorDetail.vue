@@ -262,7 +262,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get updatedAmount() {
-    return this.delegation.updateAmount/10**18  
+    return this.delegation && this.delegation.updateAmount ? this.delegation.updateAmount/10**18 : 0
   }
 
   get delegationState() {

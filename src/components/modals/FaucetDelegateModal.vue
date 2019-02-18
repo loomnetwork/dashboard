@@ -121,8 +121,7 @@ export default class FaucetDelegateModal extends Vue {
     this.$emit('onDelegate')
     this.$root.$emit('bv::hide::modal', 'faucet-delegate-modal')
     } catch(err) {
-      console.error("Error requesting delgate: ", err)
-      this.setError(err)
+      this.setError({msg: "Delegation failed", err})
       this.loading = false
     }
   }

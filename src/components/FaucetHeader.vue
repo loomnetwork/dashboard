@@ -64,7 +64,7 @@
               <b-nav-item v-if="isLoggedIn">
                 <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
-                <span id="dappchainBalance" class="mr-2">DappChain: <strong class="highlight">{{formatLoomBalance}}</strong></span>
+                <span id="dappchainBalance" class="mr-2">PlasmaChain: <strong class="highlight">{{formatLoomBalance}}</strong></span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
                 <span id="stakedAmount">Staked: <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>

@@ -3,12 +3,14 @@
     <div class="faucet-content">
       <div>
         <main>
-          <div class="container mb-5 column py-3 p-3 d-flex" v-if="validatorList !== null && validatorList.length > 0">
+          <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
             <h1>Validators</h1>
-            <faucet-table :items="validatorList" :fields="fields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
+            <faucet-table :items="validators" :fields="fields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
           </div>
-          <div v-else-if="validatorList !== null && validatorList.length == 0">
-            No validators available, please try again later
+          <div v-else-if="validators !== null && validators.length == 0">
+            <h2>
+              No validators available, please try again later
+            </h2>
           </div>
           <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
             <loading-spinner :showBackdrop="true"></loading-spinner>
@@ -40,6 +42,11 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
     FaucetFooter,
     LoadingSpinner,
   },
+  computed: {
+    ...DPOSStore.mapState([
+      'validators'
+    ])
+  },
   methods: {
     ...mapMutations([
       'setErrorMsg'
@@ -65,14 +72,13 @@ export default class ValidatorList extends Vue {
     // { key: 'Uptime', sortable: true },
     // { key: 'Slashes', sortable: true },
   ]
-  validatorList = null
 
   async mounted() {
     await this.refresh()
   }
 
   async refresh() {
-    this.validatorList = await this.getValidatorList()
+    await this.getValidatorList()
   }
 
   // async getValidatorList() {
@@ -145,7 +151,7 @@ $theme-colors: (
     .column {
       flex-direction: column;
     }
-    h4, h1 {
+    h4, h2, h1 {
       color: gray;
     }
   }

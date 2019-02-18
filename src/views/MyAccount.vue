@@ -435,8 +435,8 @@ export default class MyAccount extends Vue {
       await this.depositAsync({amount: this.transferAmount})
       this.setSuccess("Deposit successfull")
     } catch(err) {
-      console.error("Deposit failed, please try again: ", err)
-      this.setError("Deposit failed, please try again")
+      console.error("Deposit failed, error: ", err)
+      this.setError({msg: "Deposit failed, please try again", err})
     }
     this.transferAmount = ""
     this.isLoading = false
@@ -455,8 +455,8 @@ export default class MyAccount extends Vue {
       await this.withdrawAsync({amount: this.withdrawAmount})
       this.setSuccess("Withdraw successfull")
     } catch(err) {
-      console.error("Withdraw failed, please try again: ", err)
-      this.setError("Withdraw failed, please try again")
+      console.error("Withdraw failed, error: ", err)
+      this.setError({msg: "Withdraw failed, please try again", err})
     }
     this.withdrawAmount = ""
     this.isLoading = false

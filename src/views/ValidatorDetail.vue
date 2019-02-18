@@ -139,7 +139,6 @@ export default class ValidatorDetail extends Vue {
   async mounted() {
 
     this.validator = this.$route.params.info
-    console.log("validator", this.validator)
 
     if(this.canDelegate) {
       try {
@@ -149,7 +148,6 @@ export default class ValidatorDetail extends Vue {
         this.hasDelegation = false        
       }
     }
-    
     if(this.hasDelegation && this.delegation.lockTime > 0) {
       this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
     }    

@@ -247,7 +247,7 @@ export default class ValidatorDetail extends Vue {
       await this.claimRewardAsync(address)
       this.setSuccess("Successfully claimed rewards!")
     } catch(err) {
-      console.log("err", err)
+      console.error("Claiming reward failed", err)
       this.setErrorMsg({msg: "Claiming reward failed", forever: false})
     }
     this.finished = true
@@ -346,7 +346,7 @@ export default class ValidatorDetail extends Vue {
   //       this.hasDelegation = true
   //     }).catch(err => {
   //       this.hasDelegation = false
-  //       console.log(err)
+  //       console.error(err)
   //     })
   //   }
   // }

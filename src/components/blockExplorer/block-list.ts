@@ -111,7 +111,7 @@ export default class BlockList extends Vue {
         block
       }))
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
 
     if (autoFetch) {

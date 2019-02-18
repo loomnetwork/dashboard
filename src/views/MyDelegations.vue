@@ -86,7 +86,7 @@ export default class MyDelegations extends Vue {
     try {
       candidates = await this.dposUser.listCandidatesAsync()
     } catch(err) {
-      console.log("Error fetching delegation list:", err)
+      console.error("Error fetching delegation list:", err)
     }
 
     if(candidates.length <= 0) return

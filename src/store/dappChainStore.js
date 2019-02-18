@@ -249,7 +249,7 @@ export default {
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     },
     async getMetamaskLoomBalance({ state }, payload) {

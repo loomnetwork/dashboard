@@ -111,7 +111,7 @@ export const mutations = {
       if (!payload.forever) {
         setTimeout(() => {
           state.errorMsg = null
-        }, 10000)
+        }, 15000)
       }
     } else {
       state.errorMsg = payload
@@ -123,13 +123,13 @@ export const mutations = {
       if (!payload.forever) {
         setTimeout(() => {
           state.successMsg = null
-        }, 10000)
+        }, 15000)
       }
     } else {
       state.successMsg = payload
       setTimeout(() => {
         state.successMsg = null
-      }, 10000)
+      }, 15000)
     }
   },
   setUserIsLoggedIn(state, payload) {
@@ -648,14 +648,14 @@ export const actions = {
     commit("setSuccessMsg", msg)
     setTimeout(() => {
       commit("setSuccessMsg", "")
-    }, 10000)
+    }, 15000)
    },
 
    setError({commit}, msg) {
     commit("setErrorMsg", msg)
     setTimeout(() => {
       commit("setErrorMsg", "")
-    }, 10000)
+    }, 15000)
    }
 
 }

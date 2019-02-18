@@ -278,7 +278,7 @@ export default {
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw 'No Private Key, Login again'
+        throw new Error('No Private Key, Login again')
       }
       
       const network = state.chainUrls[state.chainIndex].network
@@ -422,7 +422,7 @@ export default {
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw 'No Private Key, Login again'
+        throw new Error('No Private Key, Login again')
       }
 
       const dpos2 = await dispatch('getDpos2', {

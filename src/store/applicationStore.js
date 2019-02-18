@@ -501,7 +501,8 @@ export const actions = {
             // }
             // dispatch('setPrivateKey', vaultConfig)
           } else {
-            throw 'Error occur when try to get privateKey'
+            err.message = 'Error occur when try to get privateKey: ' + err.message
+            throw err
           }
         }
       })

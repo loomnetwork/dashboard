@@ -96,11 +96,10 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
       } catch(err) {
-        console.error(err)
-        if(err === "no Metamask installation detected") {
+        if(err.message === "no Metamask installation detected") {
           commit("setMetamaskDisabled", true)
         }
-        commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false}, { root: true })
+        commit("setErrorMsg", {msg: "An error occurred, please refresh the page", forever: false, report: true, cause: err}, { root: true })
         commit("setShowLoadingSpinner", false)
         throw err
       }      
@@ -179,7 +178,7 @@ export default {
       } catch(err) {
         console.error(err)
         commit("setValidators", [])
-        dispatch("setError", "Fetching validators failed", {root: true})        
+        dispatch("setError", {msg:"Fetching validators failed",report:true,cause:err}, {root: true})        
       }
     },
     async queryRewards({ rootState, dispatch, commit }) {

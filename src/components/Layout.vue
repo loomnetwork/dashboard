@@ -321,6 +321,8 @@ export default class Layout extends Vue {
       border-right: none !important;
       border-bottom: 2px solid #f2f1f3;
       justify-content: space-evenly;
+      padding-top: 0 !important;
+      height: auto !important;
       li {
         max-width: 200px;
         display: inline-block;
@@ -328,6 +330,12 @@ export default class Layout extends Vue {
           padding: 0px 0px 6px 0px !important;
         }
       }
+    }
+    .navbar-brand {
+      padding-left: 0 !important;
+    }
+    .router span {
+      text-align: center;
     }
     .router-active {
       border-left: 0px !important;

@@ -20,8 +20,8 @@
       </div>
     </div>
 
-    <div class="d-sm-block d-md-block d-lg-none">
-      <div class="row">
+    <div class="mobile-sidebar d-sm-block d-md-block d-lg-none">
+      <div class="row rmv-spacing">
         <div class="col">
           <a @click="$router.push({path: '/validators'})">
             <b-navbar-brand>
@@ -31,9 +31,15 @@
             </b-navbar-brand>
           </a>
         </div>
+        <div class="col menu-toggle-container">
+          <b-navbar-toggle style="border: 0px; margin-left: auto;" target="nav_collapse"><fa icon="bars" class="sidebar-icon"/></b-navbar-toggle>
+        </div>
       </div>
       <div class="row">
         <div class="col">
+        
+        <b-collapse is-nav id="nav_collapse">
+
           <router-link to="/validators" class="router" exact-active-class="router-active">
             <span><fa icon="chess-rook" class="sidebar-icon"/>Validators</span>
           </router-link>
@@ -42,7 +48,10 @@
             <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="user-circle" class="sidebar-icon"/>My Account</span></router-link>
             <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="list" class="sidebar-icon"/>My Delegations</span></router-link>
             <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
-          </div>          
+          </div>   
+
+        </b-collapse>    
+       
         </div>
       </div>
     </div>
@@ -111,6 +120,9 @@ export default class FaucetSidebar extends Vue {
 .column {
   flex-direction: column;
 }
+.mobile-sidebar {
+  width: 100%;
+}
 h4, h1 {
   color: #6e6f96;
 }
@@ -124,4 +136,9 @@ h4, h1 {
 .login-link {
   color: #007bff;
 }
+
+.menu-toggle-container {
+  display: flex;
+}
+
 </style>

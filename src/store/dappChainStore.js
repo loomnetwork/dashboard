@@ -267,6 +267,7 @@ export default {
       return limitDecimals
       } catch (err) {
         console.error("Error getting metamask balance", err)
+        commit('setErrorMsg', {msg: "Error getting metamask balance", forever: false, report:true, cause:err}, {root: true})
         return 0
       }
     },
@@ -360,7 +361,7 @@ export default {
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
         console.error("Error delegating: ", err)
-        commit('setErrorMsg', {msg: err.toString(), forever: false}, {root: true})
+        commit('setErrorMsg', {msg: "Error delegating", forever: false,report:true,cause:err}, {root: true})
       }      
     },
     async undelegateAsync({ state, dispatch, commit }, payload) {
@@ -373,7 +374,7 @@ export default {
         const result = await state.dposUser.undelegateAsync(payload.candidate, new BN(weiAmount,10))
         commit('setSuccessMsg', {msg: `Success un-delegating ${loomAmount} tokens`, forever: false}, {root: true})
       } catch(err) {
-        commit('setErrorMsg', {msg: err.toString(), forever: false}, {root: true})
+        commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
     }, 
     async getValidatorsAsync({ state, dispatch }, payload) {

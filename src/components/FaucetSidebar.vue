@@ -1,7 +1,7 @@
 <template>
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
 
-    <div>
+    <div class="d-none d-sm-none d-md-none d-lg-block">
       <a @click="$router.push({path: '/validators'})">
         <b-navbar-brand>
           DPOS Dashboard
@@ -19,6 +19,34 @@
         <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
       </div>
     </div>
+
+    <div class="d-sm-block d-md-block d-lg-none">
+      <div class="row">
+        <div class="col">
+          <a @click="$router.push({path: '/validators'})">
+            <b-navbar-brand>
+              DPOS Dashboard
+              <!-- <span v-if="connectedToMetamask" class="metamask-status">connected</span>
+              <span v-else class="metamask-status metamask-status-error">disconnected</span> -->
+            </b-navbar-brand>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <router-link to="/validators" class="router" exact-active-class="router-active">
+            <span><fa icon="chess-rook" class="sidebar-icon"/>Validators</span>
+          </router-link>
+          <router-link to="/blockexplorer" class="router" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>Blockexplorer</span></router-link>
+          <div id="restricted-access-links" @click="clickHandler">
+            <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="user-circle" class="sidebar-icon"/>My Account</span></router-link>
+            <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="list" class="sidebar-icon"/>My Delegations</span></router-link>
+            <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
+          </div>          
+        </div>
+      </div>
+    </div>
+
 
   </b-nav>
 </template>

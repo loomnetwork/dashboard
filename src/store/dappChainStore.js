@@ -249,7 +249,7 @@ export default {
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     },
     async getMetamaskLoomBalance({ state }, payload) {
@@ -266,7 +266,7 @@ export default {
       let limitDecimals = parseFloat(balance).toFixed(2)
       return limitDecimals
       } catch (err) {
-        console.log("Error getting metamask balance", err)
+        console.error("Error getting metamask balance", err)
         return 0
       }
     },
@@ -339,7 +339,7 @@ export default {
         try {
           await dispatch('initDposUser')
         } catch (err) {
-          console.log("Error getting Loom balance", err)
+          console.error("Error getting Loom balance", err)
           return 0
         }
       }
@@ -359,7 +359,7 @@ export default {
         const result = await state.dposUser.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
-        console.log("Error delegating: ", err)
+        console.error("Error delegating: ", err)
         commit('setErrorMsg', {msg: err.toString(), forever: false}, {root: true})
       }      
     },
@@ -502,7 +502,7 @@ export default {
         }         
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
-        console.log("Error ensuring mapping exists: ", err)
+        console.error("Error ensuring mapping exists: ", err)
         // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
         return
       }
@@ -515,7 +515,7 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        console.log("Failed establishing mapping: ", err)
+        console.error("Failed establishing mapping: ", err)
         commit('setErrorMsg', {msg: `Failed establishing mapping: ${err}`, forever: false}, {root: true})
       }
     },

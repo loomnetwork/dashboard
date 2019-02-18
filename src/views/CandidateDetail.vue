@@ -132,7 +132,7 @@ export default class CandidateDetail extends Vue {
         this.hasDelegation = true
       }).catch(err => {
         this.hasDelegation = false
-        console.log(err)
+        console.error(err)
       })
     }
     const candidateDetail = Object.assign({}, this.candidateInfo)

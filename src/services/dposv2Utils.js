@@ -155,7 +155,7 @@ export async function getDelegationListAsync(chain, base64Key) {
           account
         )
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
       delegationList.push(delegation)
     }

@@ -35,7 +35,7 @@ export default class DecodedTx extends Vue {
     try {
       jsonData = JSON.parse(txValueData.toString())
     } catch (e) {
-      console.log('this is not a valid JSON data')
+      console.error('this is not a valid JSON data')
     }
     return jsonData
   }

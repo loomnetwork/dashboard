@@ -108,11 +108,11 @@ export const mutations = {
   setErrorMsg(state, payload) {
     if (typeof payload !== 'string') {
       state.errorMsg = payload.msg
-      if (!payload.forever) {
-        setTimeout(() => {
-          state.errorMsg = null
-        }, 10000)
-      }
+      // if (!payload.forever) {
+      //   setTimeout(() => {
+      //     state.errorMsg = null
+      //   }, 10000)
+      // }
     } else {
       state.errorMsg = payload
     }
@@ -319,7 +319,7 @@ export const actions = {
       })
       return await instance.post(`${api.baseUrl}/auth/email/addauthy`, payload.phone)
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return false
     }
   },

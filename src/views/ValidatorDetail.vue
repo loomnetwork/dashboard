@@ -39,7 +39,7 @@
                 <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
               </div> -->
-              <div class="col col-sm-12 col-md-9 right-container text-right">
+              <div v-if="!this.prohibitedNodes.includes(this.validator.Name)" class="col col-sm-12 col-md-9 right-container text-right">
                 <b-button id="delegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
                 <b-tooltip target="delegateBtn" placement="bottom" title="Click here to transfer tokens to this validator"></b-tooltip>
                 <b-button id="undelegateBtn" class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
@@ -255,7 +255,6 @@ export default class ValidatorDetail extends Vue {
 
   get canDelegate() {
     return this.userIsLoggedIn && this.getPrivateKey
-      && !this.prohibitedNodes.includes(this.validator.Name)
   }
 
   get amountDelegated() {

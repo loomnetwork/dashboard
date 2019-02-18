@@ -266,7 +266,6 @@ export default {
       let limitDecimals = parseFloat(balance).toFixed(2)
       return limitDecimals
       } catch (err) {
-        console.error("Error getting metamask balance", err)
         commit('setErrorMsg', {msg: "Error getting metamask balance", forever: false, report:true, cause:err}, {root: true})
         return 0
       }
@@ -360,8 +359,7 @@ export default {
         const result = await state.dposUser.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
-        console.error("Error delegating: ", err)
-        commit('setErrorMsg', {msg: "Error delegating", forever: false,report:true,cause:err}, {root: true})
+        commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
       }      
     },
     async undelegateAsync({ state, dispatch, commit }, payload) {
@@ -516,8 +514,7 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        console.error("Failed establishing mapping: ", err)
-        commit('setErrorMsg', {msg: `Failed establishing mapping: ${err}`, forever: false}, {root: true})
+        commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
       }
     },
     async init({ state, commit, rootState }, payload) {

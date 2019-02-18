@@ -70,8 +70,7 @@ export default class ValidatorDetail extends Vue {
       await this.claimRewardsAsync()
       this.setSuccessMsg({msg: "Successfully claimed rewards!" + this.rewardsResults.toString(), forever: false})
     } catch(err) {
-      console.error("Error claiming rewards: ", err)
-      this.setErrorMsg({msg: "Claiming reward failed", forever: false})
+      this.setErrorMsg({msg: "Claiming reward failed", forever: false, report:true, cause:err})
     }
     this.setShowLoadingSpinner(false)
     this.hideTooltip = false

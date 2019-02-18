@@ -134,9 +134,11 @@ export const mutations = {
       if (payload.report) {
         if (payload.cause) {
           payload.cause.message = payload.msg +": "+ payload.cause.message
+          console.error(payload.cause);
           Sentry.captureException(payload.cause)
         }
         else {
+          console.error(payload.msg);
           Sentry.captureMessage(payload.msg)
         }
       }

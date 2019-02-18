@@ -42,7 +42,7 @@
         </div>
       </div>         
       <div class="row column-wrapper">
-        <div v-show="showSidebar" class="rmv-spacing col-lg-2">
+        <div v-show="showSidebar" class="rmv-spacing col sidebar-container">
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div id="content-container" :class="contentClass">
@@ -238,8 +238,7 @@ export default class Layout extends Vue {
     background-color: #eff3f5;
   }
   .sidebar-container {
-    display: flex;
-    align-items: stretch;
+    max-width: 340px;
   }
 
 </style>
@@ -247,7 +246,7 @@ export default class Layout extends Vue {
 <style lang="scss">
 
   body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
   }
 
   .rmv-spacing {
@@ -262,7 +261,16 @@ export default class Layout extends Vue {
   .container-fluid {
     max-width: 1200px;
     padding: 0 24px !important;
-  }  
+  }
+
+  // Table styling
+
+  // rgba(84, 85, 225, 0.18)
+  #faucet-table.table tbody tr td {
+    border: none;
+    background-color: inherit;
+  }
+
 
   @media (max-width: 576px) {
   }

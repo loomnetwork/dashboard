@@ -52,7 +52,7 @@ export default class FaucetSidebar extends Vue {
   font-weight: bold;
 }
 .navbar-brand {
-  padding: 12px 24px;
+  padding: 12px 36px;
 }
 .router-active {
   border-left: 5px solid #5756e6;
@@ -68,7 +68,7 @@ export default class FaucetSidebar extends Vue {
   font-weight: 400;
   span {
     display: block;
-    padding: 12px 24px;
+    padding: 12px 36px;
     .sidebar-icon {
       margin-right: 12px;
     }

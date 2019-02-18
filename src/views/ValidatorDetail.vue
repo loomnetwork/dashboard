@@ -255,6 +255,7 @@ export default class ValidatorDetail extends Vue {
 
   get canDelegate() {
     return this.userIsLoggedIn && this.getPrivateKey
+      && !this.prohibitedNodes.includes(this.validator.Name)
   }
 
   get amountDelegated() {

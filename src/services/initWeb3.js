@@ -11,7 +11,7 @@ export const connectToMetamask = async () => {
     window.web3 = new Web3(window.web3.currentProvider)
     web3js = new Web3(window.web3.currentProvider)
   } else {
-    throw 'Metamask is not Enabled'
+    throw new Error('Metamask is not Enabled')
   }
   
   if(web3js) {

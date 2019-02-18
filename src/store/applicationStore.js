@@ -3,6 +3,7 @@ import { Route } from 'vue-router'
 import Contract from '../services/contract'
 import ApiClient from '../services/api'
 import { getDomainType, getNetworkType, DOMAIN_NETWORK_ID } from '../utils'
+import * as Sentry from '@sentry/browser'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 
 import axios from 'axios'
@@ -104,17 +105,43 @@ export const mutations = {
   },
   setRetrievedBackerInfo(state, payload) {
     state.retrievedBackerInfo = payload
-  },   
+  },
+  /**
+   * displays the error message, logs it to console and reports it to sentry
+   * 
+   * @param {*} state 
+   * @param {string|{msg:string,forever:boolean,report?:boolean,cause?:Error}} payload a simple string or an object with:
+   *  -  a message, 
+   *  - `forever` weither to keep the message displayed or auto dismiss (current value is 10 seconds)
+   *  - `report` weither to report error to sentry (if not set, does not report)
+   *  - `cause` the underlying error if any that caused this error (optional, in wich case only the message is sent)
+   */   
   setErrorMsg(state, payload) {
-    if (typeof payload !== 'string') {
+    if (typeof payload === 'string') {
+      state.errorMsg = payload
+    }
+    else if (payload && typeof payload === 'object' ) {
       state.errorMsg = payload.msg
       if (!payload.forever) {
         setTimeout(() => {
           state.errorMsg = null
         }, 15000)
       }
-    } else {
-      state.errorMsg = payload
+      // too many ifs maybe we should standardize the payload a bit more
+      // also, interesting stuff to add for more context:
+      // current route, isUserLoggedIn, walletType, wallet connection status...
+      // there's sentry.configureScope for doing that.
+      if (payload.report) {
+        if (payload.cause) {
+          payload.cause.message = payload.msg +": "+ payload.cause.message
+          console.error(payload.cause);
+          Sentry.captureException(payload.cause)
+        }
+        else {
+          console.error(payload.msg);
+          Sentry.captureMessage(payload.msg)
+        }
+      }
     }
   },
   setSuccessMsg(state, payload) {
@@ -476,7 +503,8 @@ export const actions = {
             // }
             // dispatch('setPrivateKey', vaultConfig)
           } else {
-            throw 'Error occur when try to get privateKey'
+            err.message = 'Error occur when try to get privateKey: ' + err.message
+            throw err
           }
         }
       })

@@ -387,7 +387,7 @@ $theme-colors: (
       flex-direction: column;
     }
     h4, h1 {
-      color: gray;
+      color: #6e6f96;
     }
     h1 {
       a {

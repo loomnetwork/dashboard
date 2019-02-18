@@ -1,21 +1,25 @@
 <template>
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
-    <a @click="$router.push({path: '/validators'})">
-      <b-navbar-brand>
-        DPOS Dashboard
-        <!-- <span v-if="connectedToMetamask" class="metamask-status">connected</span>
-        <span v-else class="metamask-status metamask-status-error">disconnected</span> -->
-      </b-navbar-brand>
-    </a>
-    <router-link to="/validators" class="router" exact-active-class="router-active">
-      <span><fa icon="code-branch" class="sidebar-icon"/>Validators</span>
-    </router-link>
-    <router-link to="/blockexplorer" class="router" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>Blockexplorer</span></router-link>
-    <div id="restricted-access-links" @click="clickHandler">
-      <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>My Account</span></router-link>
-      <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>My Delegations</span></router-link>
-      <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>Rewards</span></router-link>
+
+    <div>
+      <a @click="$router.push({path: '/validators'})">
+        <b-navbar-brand>
+          DPOS Dashboard
+          <!-- <span v-if="connectedToMetamask" class="metamask-status">connected</span>
+          <span v-else class="metamask-status metamask-status-error">disconnected</span> -->
+        </b-navbar-brand>
+      </a>
+      <router-link to="/validators" class="router" exact-active-class="router-active">
+        <span><fa icon="chess-rook" class="sidebar-icon"/>Validators</span>
+      </router-link>
+      <router-link to="/blockexplorer" class="router" exact-active-class="router-active"><span><fa icon="code-branch" class="sidebar-icon"/>Blockexplorer</span></router-link>
+      <div id="restricted-access-links" @click="clickHandler">
+        <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="user-circle" class="sidebar-icon"/>My Account</span></router-link>
+        <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="list" class="sidebar-icon"/>My Delegations</span></router-link>
+        <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
+      </div>
     </div>
+
   </b-nav>
 </template>
 
@@ -61,11 +65,13 @@ export default class FaucetSidebar extends Vue {
 }
 .router {
   display: block;
-  color: gray;
-}
-.router {
+  color: #6e6f96;
   font-size: 16px;
   font-weight: 400;
+  &:hover {
+    background-color: #f9f9fc;
+    text-decoration: none;
+  }
   span {
     display: block;
     padding: 12px 36px;
@@ -78,10 +84,10 @@ export default class FaucetSidebar extends Vue {
   flex-direction: column;
 }
 h4, h1 {
-  color: gray;
+  color: #6e6f96;
 }
 .text-gray {
-  color: gray;
+  color: #6e6f96;
 }
 .disabled {
   pointer-events: none;

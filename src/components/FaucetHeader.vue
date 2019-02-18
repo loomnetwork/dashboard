@@ -59,15 +59,15 @@
     <b-navbar variant="primary" class="bottom-bar" toggleable>
       <div class="inner-container">
 
-        <div class="col-md-3 v-center" v-if="userIsLoggedIn">
+        <div class="col-sm-2 col-md-3 v-center" v-if="userIsLoggedIn">
           <div class="footer-title">
             <img src="../assets/logo-grey.svg">
           </div>          
         </div>
 
-        <div class="col-md-9 v-center">          
+        <div class="col-sm-10 col-md-9 v-center" v-if="userIsLoggedIn">           
           <b-navbar-nav>
-            <b-nav-item>
+            <b-nav-item class="hidden-medium">
               <div v-if="formattedTimeUntilElectionCycle">
                 <div class="countdown-container">
                   <span>Next election cycle: </span><progress class="countdown-bar" :value="timeLeft" max="600" ref="electionCycleProgressBar"></progress>
@@ -82,9 +82,9 @@
                 </div>
               </div>              
             </b-nav-item>
-            <div class="sub-menu-links" v-if="!errorRefreshing">
-              <b-nav-item v-if="isLoggedIn" class="mr-3">
-                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.mainnetBalance}}</strong></span>
+            <div class="sub-menu-links hidden-tiny" v-if="!errorRefreshing">
+              <b-nav-item v-if="isLoggedIn">
+                <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
                 <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : formatLoomBalance}}</strong></span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
@@ -560,6 +560,7 @@ a.hover-warning:hover {
   box-shadow: 0 2px 10px 0 rgba(0,0,0,.08);
   position: fixed;
   width: 100%;
+  min-height: 56px;
   left: 0;
   bottom: 0;
   z-index: 999;  

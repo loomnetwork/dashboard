@@ -76,7 +76,7 @@ export default class FaucetFooter extends Vue {
   }
 }
 h3,h1 {
-  color: gray;
+  color: #6e6f96;
 }
 p {
   color: gray;

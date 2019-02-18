@@ -47,7 +47,7 @@ export default class ConfirmSeedModal extends Vue {
 }</script>
 <style lang="scss">
 label {
-  color: gray;
+  color: #6e6f96;
 }
 #confirm-seed-modal .modal-dialog {
   width: 500px;
@@ -58,7 +58,7 @@ label {
     padding-left: 5px;
     padding-right: 5px;
     h5 {
-      color: gray;
+      color: #6e6f96;
     }
   }
   .modal-body {

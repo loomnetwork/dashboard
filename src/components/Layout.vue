@@ -223,7 +223,7 @@ export default class Layout extends Vue {
     flex-direction: column;
   }
   #content-container {
-    padding: 36px 12px;
+    padding: 36px 14px;
   }
   .content {
     display: flex;
@@ -249,6 +249,16 @@ export default class Layout extends Vue {
     font-family: 'Roboto Condensed', sans-serif;
   }
 
+  h1 {
+    color: #222529 !important;
+    font-weight: 400;
+    font-size: 30px;    
+  }
+
+  span {
+    color: #5455e1 !important;
+  }
+
   .rmv-spacing {
     margin: 0px;
     padding: 0px;
@@ -267,15 +277,26 @@ export default class Layout extends Vue {
 
   // rgba(84, 85, 225, 0.18)
   #faucet-table.table tbody tr td {
-    border: none;
-    background-color: inherit;
+    border: none !important;
+    background-color: inherit !important;
+    border-radius: 0 !important;
+  }
+
+  #faucet-table.table tbody tr:nth-child(odd) {
+    background: rgba(84, 85, 225, 0.03) !important;
   }
 
 
   @media (max-width: 576px) {
+    .hidden-tiny {
+      display: none; 
+    }    
   }
 
   @media (max-width: 768px) {
+    .hidden-small {
+      display: none;
+    }    
     .validator-action-container {
       div {
         text-align: center;
@@ -288,6 +309,9 @@ export default class Layout extends Vue {
   }
 
   @media (max-width: 992px) {
+    .hidden-medium {
+      display: none;
+    }        
     .navbar-side {
       display: flex;
       flex-direction: row !important;     

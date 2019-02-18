@@ -52,13 +52,11 @@ export default new Vue({
   }
 }).$mount('#app')
 
-if (!debugMode) {
   // todo should store key/project elsewhere (vault?)
   Sentry.init({
-    dsn: 'https://46e40f8393dc4d63833d13c06c9fe267@sentry.io/1279387',
+    dsn: debugMode ? null : 'https://46e40f8393dc4d63833d13c06c9fe267@sentry.io/1279387',
     integrations: [new Sentry.Integrations.Vue({ 
       Vue,
       attachProps: true
     })]
   })
-}

@@ -14,7 +14,7 @@
             <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
           </div>
           <div v-else>
-            <h4>You have yet to recieve any rewards</h4>
+            <h4>You have yet to receive any rewards</h4>
           </div>
         </b-card>
       </div>

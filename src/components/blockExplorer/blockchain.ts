@@ -211,12 +211,12 @@ export class Blockchain {
             data: data.tx
           })
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       }
       block.didFetchTxs = true
     } catch (e) {
-      console.log(e)
+      console.error(e)
     } finally {
       block.isFetchingTxs = false
     }

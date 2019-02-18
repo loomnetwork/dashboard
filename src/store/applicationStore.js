@@ -319,7 +319,7 @@ export const actions = {
       })
       return await instance.post(`${api.baseUrl}/auth/email/addauthy`, payload.phone)
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return false
     }
   },

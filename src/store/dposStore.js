@@ -1,5 +1,5 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
-import { formatToCrypto } from '../utils.js'
+import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
 
 
@@ -192,7 +192,8 @@ export default {
       
       try {
         const result = await user.checkRewardsAsync()
-        commit("setRewardsResults", result)        
+        const formattedResult = formatToCrypto(result)
+        commit("setRewardsResults", formattedResult)
       } catch(err) {
         console.log(err)
         commit("setErrorMsg", {msg: err.toString(), forever: false}, {root: true})

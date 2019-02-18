@@ -108,11 +108,11 @@ export const mutations = {
   setErrorMsg(state, payload) {
     if (typeof payload !== 'string') {
       state.errorMsg = payload.msg
-      if (!payload.forever) {
-        setTimeout(() => {
-          state.errorMsg = null
-        }, 10000)
-      }
+      // if (!payload.forever) {
+      //   setTimeout(() => {
+      //     state.errorMsg = null
+      //   }, 10000)
+      // }
     } else {
       state.errorMsg = payload
     }

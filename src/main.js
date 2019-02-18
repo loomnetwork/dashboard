@@ -54,7 +54,7 @@ export default new Vue({
 
   // todo should store key/project elsewhere (vault?)
   Sentry.init({
-    dsn: debugMode ? null : 'https://46e40f8393dc4d63833d13c06c9fe267@sentry.io/1279387',
+    dsn: debugMode ? null : 'https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913"',
     integrations: [new Sentry.Integrations.Vue({ 
       Vue,
       attachProps: true

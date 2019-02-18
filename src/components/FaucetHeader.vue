@@ -560,6 +560,7 @@ a.hover-warning:hover {
   box-shadow: 0 2px 10px 0 rgba(0,0,0,.08);
   position: fixed;
   width: 100%;
+  left: 0;
   bottom: 0;
   z-index: 999;  
   .col {

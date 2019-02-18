@@ -436,7 +436,7 @@ export default class MyAccount extends Vue {
       this.setSuccess("Deposit successfull")
     } catch(err) {
       console.error("Deposit failed, please try again: ", err)
-      this.setError("Deposit failed, please try again")
+      this.setError(err)
     }
     this.transferAmount = ""
     this.isLoading = false
@@ -456,7 +456,7 @@ export default class MyAccount extends Vue {
       this.setSuccess("Withdraw successfull")
     } catch(err) {
       console.error("Withdraw failed, please try again: ", err)
-      this.setError("Withdraw failed, please try again")
+      this.setError(err)
     }
     this.withdrawAmount = ""
     this.isLoading = false

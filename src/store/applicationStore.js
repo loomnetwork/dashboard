@@ -652,7 +652,10 @@ export const actions = {
    },
 
    setError({commit}, msg) {
-    commit("setErrorMsg", msg)
+    let errMsg = ""
+    if(msg.toString().includes("User denied transaction signature")) errMsg = "Transaction cancelled"
+    if(msg.toString().includes("cant burn coins more than available balance")) errMsg = "Insufficient funds" 
+    errMsg ? commit('setErrorMsg', {msg: errMsg, forever: false}, {root: true}) : commit('setErrorMsg', {msg: msg, forever: false}, {root: true})
     setTimeout(() => {
       commit("setErrorMsg", "")
     }, 15000)

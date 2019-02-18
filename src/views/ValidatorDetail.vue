@@ -149,7 +149,7 @@ export default class ValidatorDetail extends Vue {
         this.hasDelegation = false        
       }
     }
-    
+    console.log("delegation", this.delegation)
     if(this.hasDelegation && this.delegation.lockTime > 0) {
       this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
     }    

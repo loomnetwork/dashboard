@@ -176,9 +176,9 @@ export default {
         }
         validatorList.sort(dynamicSort("Weight"))
         commit("setValidators", validatorList)
-        return validatorList
       } catch(err) {
         console.error(err)
+        commit("setValidators", [])
         dispatch("setError", "Fetching validators failed", {root: true})        
       }
     },

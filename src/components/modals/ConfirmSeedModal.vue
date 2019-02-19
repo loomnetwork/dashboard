@@ -2,15 +2,15 @@
   <b-modal id="confirm-seed-modal" ref="modalRef" title="Create Account" hide-footer centered no-close-on-backdrop>
     <b-container fluid>
       <b-row class="my-1 align-items-center">
-        <p class="color-grey">Please type in words {{confirmIndexes[0] + 1}}, {{confirmIndexes[1] + 1}}, and {{confirmIndexes[2] + 1}} to confirm</p>
+        <p class="color-grey">{{ $t('components.modals.confirm_seed_modal.please_type_in_words_confirm_indexes_0', {confirmIndexes01:confirmIndexes[0] + 1, confirmIndexes11:confirmIndexes[1] + 1, confirmIndexes21:confirmIndexes[2] + 1}) }}</p>
       </b-row>
       <b-row class="my-1 align-items-center" v-for="(confirm, index) in confirmIndexes" :key="index">
-        <b-col sm="3"><span class="color-grey">Word{{confirm+1}}:</span></b-col>
+        <b-col sm="3"><span class="color-grey">{{ $t('components.modals.confirm_seed_modal.word_confirm_1', {confirm1:confirm+1}) }}</span></b-col>
         <b-col sm="9"><b-form-input v-model="words[index]"></b-form-input></b-col>
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span class="text-error  mt-2" variant="error">{{errorMessage}}</span>
-        <b-button class="btn" variant="primary" @click="okHandler">Create Account</b-button>
+        <b-button class="btn" variant="primary" @click="okHandler">{{ $t('views.first_page.create_account') }}</b-button>
       </b-row>
     </b-container>
   </b-modal>

@@ -5,11 +5,11 @@
       <div>
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="candidateList !== null">
-            <h1>Candidates</h1>
+            <h1>{{ $t('views.candidate_list.candidates') }}</h1>
             <faucet-table :items="candidateList" @row-clicked="showCandidateDetail"></faucet-table>
           </div>
           <div class="container mb-5 column py-3 p-3 d-flex" v-else>
-            <h1>No Candidates</h1>
+            <h1>{{ $t('views.candidate_list.no_candidates') }}</h1>
           </div>
         </main>
       </div>

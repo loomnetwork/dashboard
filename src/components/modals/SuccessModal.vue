@@ -2,7 +2,7 @@
   <b-modal id="success-modal" ref="modalRef" title="Create Account" hide-footer centered no-close-on-backdrop>
     <b-container fluid>
       <h1>
-        Success
+        {{ $t('components.modals.success_modal.success') }}
       </h1>
     </b-container>
   </b-modal>

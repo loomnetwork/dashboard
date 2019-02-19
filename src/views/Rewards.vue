@@ -5,16 +5,16 @@
         <b-card class="text-center mt-5 p-md-2 p-lg-5">
           <div v-if="displayResults">
             <h4 class="mb-4">
-              Unclaimed rewards: 
+              {{ $t('views.rewards.unclaimed_rewards') }} 
               <strong>
                 {{this.rewardsResults.toString() + " LOOM"}}
               </strong>
             </h4>
-            <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler">Claim Reward</b-button>
+            <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler">{{ $t('views.rewards.claim_reward') }}</b-button>
             <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
           </div>
           <div v-else>
-            <h4>You have yet to receive any rewards</h4>
+            <h4>{{ $t('views.rewards.you_have_yet_to_receive') }}</h4>
           </div>
         </b-card>
       </div>

@@ -4,12 +4,12 @@
       <div>
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
-            <h1>Validators</h1>
+            <h1>{{ $t('views.validator_list.validators') }}</h1>
             <faucet-table :items="validators" :fields="fields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
           </div>
           <div v-else-if="validators !== null && validators.length == 0">
             <h2>
-              No validators available, please try again later
+              {{ $t('views.validator_list.no_validators_available_please_try') }}
             </h2>
           </div>
           <div class="container mb-5 column py-3 p-3 d-flex" v-else>            

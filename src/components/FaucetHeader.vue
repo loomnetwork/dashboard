@@ -14,9 +14,9 @@
       <div class="container-fluid d-flex justify-content-between ensure-padded">        
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
-            Plasmachain Dashboard
-            <span v-if="connectedToMetamask" class="metamask-status">connected</span>
-            <span v-else class="metamask-status metamask-status-error">disconnected</span>
+            {{ $t('components.faucet_header.plasmachain_dashboard') }}
+            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.connected') }}</span>
+            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.disconnected') }}</span>
           </b-navbar-brand>
         </a>
         <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
@@ -27,16 +27,16 @@
             
             <b-nav-form>
               <b-nav-item :hidden="false">
-                <router-link to="/account" class="router text-light hover-warning">Home</router-link>
+                <router-link to="/account" class="router text-light hover-warning">{{ $t('views.history.home') }}</router-link>
               </b-nav-item>
               <b-nav-item :hidden="isLoggedIn">
-                <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
+                <router-link to="/validators" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
               </b-nav-item>
               <b-nav-item :hidden="true">
-                <router-link to="/blockexplorer" class="router text-light hover-warning">Explorer</router-link>
+                <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.explorer') }}</router-link>
               </b-nav-item>   
               <b-nav-item :hidden="false">
-                <router-link to="/faq" class="router text-light hover-warning">F.A.Q</router-link>
+                <router-link to="/faq" class="router text-light hover-warning">{{ $t('components.faucet_header.f_a_q') }}</router-link>
               </b-nav-item>
             </b-nav-form>
 
@@ -53,7 +53,7 @@
               <progress :value="timeLeft" max="600" ref="electionCycleProgressBar"></progress>
             </div>            
             <b-tooltip target="countdown-container" placement="bottom">
-              <span>Next election cycle:</span> <strong class="highlight">{{formattedTimeUntilElectionCycle}}</strong>
+              <span>{{ $t('components.faucet_header.next_election_cycle') }}</span> <strong class="highlight">{{formattedTimeUntilElectionCycle}}</strong>
             </b-tooltip>
           </b-navbar-nav>      
         </div>
@@ -62,26 +62,26 @@
           <b-navbar-nav>
             <div class="sub-menu-links" v-if="!errorRefreshing">
               <b-nav-item v-if="isLoggedIn">
-                <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
+                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
-                <span id="dappchainBalance" class="mr-2">PlasmaChain: <strong class="highlight">{{formatLoomBalance}}</strong></span>
+                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{formatLoomBalance}}</strong></span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
-                <span id="stakedAmount">Staked: <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
+                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
               <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left">
-                <a @click="logOut" class="sign-out-link">Sign out</a>
+                <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
               </b-nav-item>          
             </div>
             <!-- <b-nav-item :hidden="false" style="margin-left: auto;">
-              <a @click="logOut" class="sign-out-link">Sign out</a>
+              <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
             </b-nav-item>                  -->
             <!-- <b-nav-item-dropdown id="balance" style="margin-left: auto;" :text="balance" right>
               <router-link to="/blockexplorer" class="router text-light hover-warning">
-                <b-dropdown-item href="#">Deposit</b-dropdown-item>
+                <b-dropdown-item href="#">{{ $t('components.faucet_header.deposit') }}</b-dropdown-item>
               </router-link>
-              <b-dropdown-item href="#">Withdraw</b-dropdown-item>
-              <b-dropdown-item @click="logOut">Sign out</b-dropdown-item>
+              <b-dropdown-item href="#">{{ $t('views.my_account.withdraw') }}</b-dropdown-item>
+              <b-dropdown-item @click="logOut">{{ $t('views.first_page.sign_out') }}</b-dropdown-item>
             </b-nav-item-dropdown> -->
           </b-navbar-nav>
         </div>
@@ -90,34 +90,34 @@
     <!-- <nav class="block-foreground d-flex navbar navbar-dark navbar-expand-md ext-uppercase app-navbar mb-0 justify-content-between">
       <div class="container d-flex justify-content-between">
         <a class="navbar-brand col-lg-3 col-md-3" href="https://loomx.io/">
-          Plasmachain Dashboard
+          {{ $t('components.faucet_header.plasmachain_dashboard') }}
         </a>
         <b-collapse is-nav id="nav_dropdown_collapse">
           <b-nav class="col-lg-5 offset-md-1 col-md-6">
             <login-account-modal ref="loginAccountRef" @onLogin="onLoginAccount"/>
             <b-nav-item :hidden="hideDashboard">
-              <router-link to="/account" class="router text-light hover-warning">Dashboard</router-link>
+              <router-link to="/account" class="router text-light hover-warning">{{ $t('components.faucet_header.dashboard') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="hideWallet">
-              <router-link to="/account" class="router text-light hover-warning">Wallet</router-link>
+              <router-link to="/account" class="router text-light hover-warning">{{ $t('components.faucet_header.wallet') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="hideValidators">
-              <router-link to="/" class="router text-light hover-warning">Validators</router-link>
+              <router-link to="/" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="hideMyStaking">
-              <router-link to="/validators" class="router text-light hover-warning">My Staking</router-link>
+              <router-link to="/validators" class="router text-light hover-warning">{{ $t('components.faucet_header.my_staking') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="hideBlockExplorer">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.block_explorer') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">Validators</router-link>
+              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">My Stakes</router-link>
+              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.my_stakes') }}</router-link>
             </b-nav-item>
             <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">Status</router-link>
+              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.status') }}</router-link>
             </b-nav-item>                              
           </b-nav>
         </b-collapse>

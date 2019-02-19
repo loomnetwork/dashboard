@@ -9,9 +9,9 @@
       <component :is="txInfoComponent" :tx="selectedTx.data"/>
     </div>
     <div v-if="!isLoading && !selectedTx">
-      <div v-if="block" class="text-muted">On <span class="time-tamp"> {{blockTimestamp }}</span></div>
-      <div v-if="isVerified" class="text-muted d-flex flex-row align-items-center"><span class="verified-icon"></span>Verified</div>
-      <h5 class="text-white">Transactions</h5>
+      <div v-if="block" class="text-muted">{{ $t('components.blockExplorer.block_info.on') }} <span class="time-tamp"> {{blockTimestamp }}</span></div>
+      <div v-if="isVerified" class="text-muted d-flex flex-row align-items-center"><span class="verified-icon"></span>{{ $t('components.blockExplorer.block_info.verified') }}</div>
+      <h5 class="text-white">{{ $t('components.blockExplorer.block_info.transactions') }}</h5>
       <TransactionTable v-bind="txTableProps"/>
     </div>
   </b-card>

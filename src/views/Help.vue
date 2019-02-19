@@ -6,117 +6,115 @@
         
         <div class="mb-4">
           <h3>
-            What is PlasmaChain? 
+            {{ $t('views.help.what_is_plasma_chain') }} 
           </h3>
           <p>
-            PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains. 
+            {{ $t('views.help.plasma_chain_is_our_plasma_cash_backed') }} 
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            What is staking? 
+            {{ $t('views.help.what_is_staking') }} 
           </h3>
           <p>
-            When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network.
-            As a LOOM holder, you can <a class="text-primary" href="https://medium.com/loom-network/how-you-can-become-a-plasmachain-delegator-and-help-put-the-d-in-dpos-75177a4bac99?__s=XXXXXXXX">help secure PlasmaChain</a> by staking your tokens with a validator.
+            {{ $t('views.help.when_a_user_stakes_tokens') }} <a class="text-primary" href="https://medium.com/loom-network/how-you-can-become-a-plasmachain-delegator-and-help-put-the-d-in-dpos-75177a4bac99?__s=XXXXXXXX">{{ $t('views.help.help_secure_plasma_chain') }}</a> {{ $t('views.help.by_staking_your_tokens_with') }}
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            Why is staking important for PlasmaChain?
+            {{ $t('views.help.why_is_staking_important_for') }}
           </h3>
           <p>
-            As PlasmaChain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for PlasmaChain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.
+            {{ $t('views.help.as_plasma_chain_runs_a_delegated') }}
           </p>
         </div>
 
 
         <div class="mb-4">
           <h3>
-            How can I stake my LOOM tokens on PlasmaChain?  
+            {{ $t('views.help.how_can_i_stake_my') }}  
           </h3>
           <p>
 
-            You can stake your tokens from the  PlasmaChain Dashboard:
+            {{ $t('views.help.you_can_stake_your_tokens') }}
 
             <ul>
-              <li>Create an account</li>
-              <li>Generate a private key</li>
-              <li>Log in to your MetaMask wallet</li>
-              <li>Deposit LOOM tokens onto PlasmaChain</li>
-              <li>Choose validators to stake with</li>
+              <li>{{ $t('views.help.create_an_account') }}</li>
+              <li>{{ $t('views.help.generate_a_private_key') }}</li>
+              <li>{{ $t('views.help.log_in_to_your_meta_mask') }}</li>
+              <li>{{ $t('views.help.deposit_loom_tokens_onto_plasma_chain') }}</li>
+              <li>{{ $t('views.help.choose_validators_to_stake_with') }}</li>
             </ul>
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            How many tokens are required to become a delegator?
+            {{ $t('views.help.how_many_tokens_are_required') }}
           </h3>
           <p>
-            There is no minimum required amount of tokens to be a delegator.
-            Any LOOM token holder can delegate to any validator candidate on the network.
+            {{ $t('views.help.there_is_no_minimum_required') }}
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            Which validator(s) should I delegate to? 
+            {{ $t('views.help.which_validator_s_should_i_delegate') }} 
           </h3>
           <p>
-            You can use the <router-link to="/validators" class="router text-primary">PlasmaChain Dashboard</router-link> for a full list of available validator candidates. Keep in mind that validators perform the critical services that maintain the integrity of the system — proposing new blocks, verifying transactions, and participating in governance. In researching the validators that best suit you, you will likely want to evaluate around criteria such as performance (uptime, slashes), reputation, fee % on rewards, community, etc.
+            {{ $t('views.help.you_can_use_the') }} <router-link to="/validators" class="router text-primary">{{ $t('views.help.plasma_chain_dashboard') }}</router-link> {{ $t('views.help.for_a_full_list_of') }}
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            Do I lose control of my tokens when I delegate them to a validator?
+            {{ $t('views.help.do_i_lose_control_of') }}
           </h3>
           <p>
-            No. Upon delegation, your tokens will be sent to a smart contract and essentially frozen on the network for the duration of your lock-up period (which is up to you to select). When the lock-up ends, your tokens are automatically released back to you along with any additional rewards that your validator may have shared with their staking pool. 
+            {{ $t('views.help.no_upon_delegation_your_tokens') }} 
           </p>
           <div class="mt-3 p-4">
             <i>
-              Note: a validator never has direct control of your delegated stake. They cannot move your tokens under any circumstances. For all intents and purposes, you remain the owner while your stake is temporarily assigned to the network.
+              {{ $t('views.help.note_a_validator_never_has') }}
             </i>
           </div>            
         </div>
 
         <div class="mb-4">
           <h3>
-            Can I delegate to multiple validator candidates? 
+            {{ $t('views.help.can_i_delegate_to_multiple') }} 
           </h3>
           <p>
-            Yes. Users can choose to stake their tokens across several validators simultaneously.
+            {{ $t('views.help.yes_users_can_choose_to') }}
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            Will I earn rewards on the tokens I delegate to a validator?
+            {{ $t('views.help.will_i_earn_rewards_on') }}
           </h3>
           <p>
-            Validators earn rewards on any tokens that are delegated to their staking pool. They can choose to share a portion of those rewards back to their delegators —  but this is entirely up to the validator. The percentage each validator shares will be published on the <router-link to="/validators" class="router text-primary">PlasmaChain Dashboard</router-link> to ensure full transparency, so that users can make informed decisions prior to staking. For additional info on rewards, see <a class="text-primary" href="https://medium.com/loom-network/plasmachain-validator-staking-economics-part-1-e816d5825849">this post on validator and staking economics</a>.
+            {{ $t('views.help.validators_earn_rewards_on_any') }} <router-link to="/validators" class="router text-primary">{{ $t('views.help.plasma_chain_dashboard') }}</router-link> {{ $t('views.help.to_ensure_full_transparency_so') }} <a class="text-primary" href="https://medium.com/loom-network/plasmachain-validator-staking-economics-part-1-e816d5825849">{{ $t('views.help.this_post_on_validator_and') }}</a>{{ $t('views.help.') }}
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            What currency will rewards be paid in? 
+            {{ $t('views.help.what_currency_will_rewards_be') }} 
           </h3>
           <p>
-            The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the <router-link to="/validators" class="router text-primary">PlasmaChain Dashboard</router-link>.
+            {{ $t('views.help.the_delegation_rewards_will_be') }} <router-link to="/validators" class="router text-primary">{{ $t('views.help.plasma_chain_dashboard') }}</router-link>{{ $t('views.help.') }}
           </p>
         </div>
 
        <div class="mb-4">
           <h3>
-            How do I claim my rewards? 
+            {{ $t('views.help.how_do_i_claim_my') }} 
           </h3>
           <p>
-            The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the <router-link to="/validators" class="router text-primary">PlasmaChain Dashboard</router-link>.
+            {{ $t('views.help.the_delegation_rewards_will_be') }} <router-link to="/validators" class="router text-primary">{{ $t('views.help.plasma_chain_dashboard') }}</router-link>{{ $t('views.help.') }}
           </p>
           <div class="img-container">
             <img src="../assets/faq-screencap-3.png" alt="The rewards page">
@@ -125,15 +123,15 @@
 
         <div class="mb-4">
           <h3>
-            When will I receive rewards on my delegations?
+            {{ $t('views.help.when_will_i_receive_rewards') }}
           </h3>
           <p>
-            Currently, validator rewards are calculated and paid out at the end of election cycles, which run every 2 weeks.
+            {{ $t('views.help.currently_validator_rewards_are_calculated') }}
           </p>
 
           <div class="mt-3 p-4">
             <i>
-              Note: this is an area of active research and we are planning to shift toward more frequent payout cycles as the network matures.
+              {{ $t('views.help.note_this_is_an_area') }}
             </i>
           </div>   
 
@@ -141,24 +139,24 @@
 
         <div class="mb-4">
           <h3>
-            How long will my stake be locked for?  
+            {{ $t('views.help.how_long_will_my_stake') }}  
           </h3>
           <p>
-            You can choose from any of the pre-defined lock-up periods — 2 weeks, 3 months, 6 months, or 1 year. <br><br>
-            For the validators that choose to share rewards on their staking pool, delegators will receive bonus incentives for various lock-up periods. Longer lock-ups are rewarded with higher percentages, as detailed below:
+            {{ $t('views.help.you_can_choose_from_any') }} <br><br>
+            {{ $t('views.help.for_the_validators_that_choose') }}
           </p>
           <div class="img-container">
             <img src="../assets/faq-screencap-1.png" alt="These bonus levels are before deduction of any validator fees.">
-            <small>Note: these bonus levels are before deduction of any validator fees. </small>
+            <small>{{ $t('views.help.note_these_bonus_levels_are') }} </small>
           </div>
         </div>
 
         <div class="mb-4">
           <h3>
-            How can I un-delegate my tokens?  
+            {{ $t('views.help.how_can_i_un_delegate_my') }}  
           </h3>
           <p>
-            Simply navigate to “My Delegations”, select a specific validator, and click the “Un-delegate” button:
+            {{ $t('views.help.simply_navigate_to_my_delegations') }}
           </p>
           <div class="img-container">
             <img src="../assets/faq-screencap-2.png" alt="Click on the un-delegate button">
@@ -167,28 +165,28 @@
 
         <div class="mb-4">
           <h3>
-            Once I un-delegate, how long will it take to regain full access to my tokens?
+            {{ $t('views.help.once_i_un_delegate_how_long') }}
           </h3>
           <p>
-            At launch, delegators’ funds will be fully released after 2 weeks. This is a security measure to mitigate against scenarios of staking with a bad candidate to increase their odds of gaining the right to validate, and then immediately un-delegating. This is an area of active research and something we plan to iterate through over the coming months.
+            {{ $t('views.help.at_launch_delegators_funds_will') }}
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            Are there any ways to lose some of my delegated tokens?
+            {{ $t('views.help.are_there_any_ways_to') }}
           </h3>
           <p>
-            Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized. 
+            {{ $t('views.help.yes_if_the_protocol_rules') }} 
           </p>
         </div>
 
         <div class="mb-4">
           <h3>
-            Where do the tokens go when they are slashed? 
+            {{ $t('views.help.where_do_the_tokens_go') }} 
           </h3>
           <p>
-            Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network. 
+            {{ $t('views.help.slashed_tokens_will_be_contributed') }} 
           </p>
         </div>
 

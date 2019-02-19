@@ -2,16 +2,16 @@
   <div class="container">
     <page-header title="Trade History">
       <div class="breadcrumps" slot="breadcrumps">
-        <router-link to="/" class="active">Home</router-link>
-        /
-        <router-link to="/browse" class="current">Trade History</router-link>
+        <router-link to="/" class="active">{{ $t('views.history.home') }}</router-link>
+        {{ $t('views.history.') }}
+        <router-link to="/browse" class="current">{{ $t('views.history.trade_history') }}</router-link>
       </div>
       <div slot="right-section">
-        <span class="sort-label">Sort by:</span>
+        <span class="sort-label">{{ $t('views.history.sort_by') }}</span>
         <b-button-group class="custom-dropdown-btn">
           <b-dropdown right split text="Added">
-            <b-dropdown-item>Item 1</b-dropdown-item>
-            <b-dropdown-item>Item 2</b-dropdown-item>
+            <b-dropdown-item>{{ $t('views.history.item_1') }}</b-dropdown-item>
+            <b-dropdown-item>{{ $t('views.history.item_2') }}</b-dropdown-item>
           </b-dropdown>
         </b-button-group>
       </div>

@@ -1,20 +1,20 @@
 <template>
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
     <b-nav-item>
-      <router-link to="/validators" class="router" exact-active-class="router-active">Validators</router-link>
+      <router-link to="/validators" class="router" exact-active-class="router-active">{{ $t('views.validator_list.validators') }}</router-link>
     </b-nav-item>
     <b-nav-item>
-      <router-link to="/blockexplorer" class="router" exact-active-class="router-active">Block Explorer</router-link>
+      <router-link to="/blockexplorer" class="router" exact-active-class="router-active">{{ $t('components.faucet_header.block_explorer') }}</router-link>
     </b-nav-item>    
     <div id="restricted-access-links" @click="clickHandler">
       <b-nav-item>
-        <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">My Account</router-link>
+        <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_account') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">My Delegations</router-link>
+        <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_delegations') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">Rewards</router-link>
+        <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.rewards') }}</router-link>
       </b-nav-item>  
     </div>
   </b-nav>

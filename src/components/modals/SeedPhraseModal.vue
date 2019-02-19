@@ -4,9 +4,9 @@
       <b-row class="warning align-items-center py-4">
         <b-col sm="1"><fa :icon="['fa', 'exclamation-triangle']" style="font-size: 40px;"/></b-col>
         <b-col sm="11">
-          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>Note: these 12 words allow you to recover your wallet in case of loss or damage.</span>
-          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>You must create a backup!&nbsp;<b>Write or print it out and keep in a safe place.</b></span>
-          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>Without it you will not be able to recover your tokens if something goes wrong.</span>
+          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.note_these_12_words_allow') }}</span>
+          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.you_must_create_a_backup_nbsp') }}<b>{{ $t('components.modals.seed_phrase_modal.write_or_print_it_out') }}</b></span>
+          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.without_it_you_will_not') }}</span>
         </b-col>
       </b-row>
       <b-row class="seed-box align-items-center p-2 mt-3">
@@ -20,7 +20,7 @@
           <span class="input-group-append">
             <b-button type="button" class="input-group-text"
                       @click="copySeedstoClipboard">
-              Copy to Clipboard
+              {{ $t('components.modals.seed_phrase_modal.copy_to_clipboard') }}
             </b-button>
           </span>
         </div>

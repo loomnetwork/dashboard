@@ -8,7 +8,7 @@
               <faucet-table :items="delegations"/>
             </div>
             <div v-if="loading === false && delegations.length == 0">
-              <h2>No Delegations</h2>
+              <h2>{{ $t('views.my_delegations.no_delegations') }}</h2>
             </div>
           </div>
           <div v-if="loading === true">

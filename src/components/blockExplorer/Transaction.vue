@@ -5,14 +5,14 @@
     </div>
     <div class="col-md-10 col-lg-11">
       <div class="row">
-        <div class="col-sm-3 text-left"><h4>Push</h4></div>
-        <div class="col-sm-3 text-left"><span>Type: </span><strong>Walker</strong></div>
-        <div class="col-sm-6 text-right"><h6><strong>Listing Price: $1.99</strong></h6></div>
+        <div class="col-sm-3 text-left"><h4>{{ $t('components.blockExplorer.transaction.push') }}</h4></div>
+        <div class="col-sm-3 text-left"><span>{{ $t('components.blockExplorer.transaction.type') }} </span><strong>{{ $t('components.blockExplorer.transaction.walker') }}</strong></div>
+        <div class="col-sm-6 text-right"><h6><strong>{{ $t('components.blockExplorer.transaction.listing_price_1_99') }}</strong></h6></div>
       </div>
       <div class="row">
-        <div class="col-sm-3 text-left"><span>Rarity: </span><strong>Rare</strong></div>
-        <div class="col-sm-3 text-left"><span>Entry: </span><strong>Return a zombie to hand</strong></div>
-        <div class="col-sm-6 text-right"><strong class="transaction-status">Sold</strong></div>
+        <div class="col-sm-3 text-left"><span>{{ $t('components.blockExplorer.transaction.rarity') }} </span><strong>{{ $t('components.blockExplorer.transaction.rare') }}</strong></div>
+        <div class="col-sm-3 text-left"><span>{{ $t('components.blockExplorer.transaction.entry') }} </span><strong>{{ $t('components.blockExplorer.transaction.return_a_zombie_to_hand') }}</strong></div>
+        <div class="col-sm-6 text-right"><strong class="transaction-status">{{ $t('components.blockExplorer.transaction.sold') }}</strong></div>
       </div>
     </div>
   </div>

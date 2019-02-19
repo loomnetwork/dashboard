@@ -12,21 +12,21 @@
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn">
               <h5>
-                State: <span class="highlight">{{delegationState}}</span>
+                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState}}</span>
               </h5>
               <h5>
-                Amount Delegated: <span class="highlight">{{amountDelegated}} LOOM</span>
+                {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
               </h5>
               <h5>
-                Updated Amount: <span class="highlight">{{updatedAmount}} LOOM</span>
+                {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
               </h5>
               <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
               <!-- <h5>
-                Timelock Tier: <span class="highlight">{{lockTimeTier}}</span>
+                {{ $t('views.validator_detail.timelock_tier') }} <span class="highlight">{{lockTimeTier}}</span>
               </h5> -->
               <h5 class="mb-4">
-                Timelock: <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
-                <span v-else class="highlight">Unlocked</span>
+                {{ $t('views.validator_detail.timelock') }} <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
+                <span v-else class="highlight">{{ $t('views.validator_detail.unlocked') }}</span>
               </h5>
             </div>
             <a :href="renderValidatorWebsite" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
@@ -36,13 +36,13 @@
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
             <div class="row justify-content-end validator-action-container">
               <!-- <div class="col col-sm-12 col-md-3">
-                <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">Claim Reward</b-button>
+                <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">{{ $t('views.rewards.claim_reward') }}</b-button>
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
               </div> -->
               <div v-if="!this.prohibitedNodes.includes(this.validator.Name)" class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button id="delegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
+                <b-button id="delegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">{{ $t('views.candidate_detail.delegate') }}</b-button>
                 <b-tooltip target="delegateBtn" placement="bottom" title="Click here to transfer tokens to this validator"></b-tooltip>
-                <b-button id="undelegateBtn" class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
+                <b-button id="undelegateBtn" class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">{{ $t('views.candidate_detail.un_delegate') }}</b-button>
                 <b-tooltip target="undelegateBtn" placement="bottom" title="Click here to withdraw your delegated tokens"></b-tooltip>
               </div>
             </div>

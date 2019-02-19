@@ -1,7 +1,7 @@
 <template>
   <div>
     <TxPreviewField label="Method:" class="kind" :value="txMethod"/>
-    <div class="text-label">Transaction Data:</div>
+    <div class="text-label">{{ $t('components.blockExplorer.decoded_tx.transaction_data') }}</div>
     <hr>
     <div class="json-view">
       <vue-json-pretty :data="txJSONData">

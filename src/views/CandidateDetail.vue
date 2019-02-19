@@ -6,15 +6,14 @@
         <main>
           <div class="container mb-2 column py-3 p-3 d-flex bottom-border">
             <h1>{{candidateInfo.Name}}</h1>
-            <a href="www.candidate.com" target="_blank" class="text-gray"><u>www.candidate.com</u></a>
-            <p class="text-gray mt-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros.
-              Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.</p>
+            <a href="www.candidate.com" target="_blank" class="text-gray"><u>{{ $t('views.candidate_detail.www_candidate_com') }}</u></a>
+            <p class="text-gray mt-3">{{ $t('views.candidate_detail.lorem_ipsum_dolor_sit_amet') }}</p>
           </div>
           <div class="container">
             <faucet-table :items="getCandidateDetail"></faucet-table>
             <div class="row d-flex justify-content-end px-4">
-              <b-button class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate">Delegate</b-button>
-              <b-button class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation">Un-delegate</b-button>
+              <b-button class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate">{{ $t('views.candidate_detail.delegate') }}</b-button>
+              <b-button class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation">{{ $t('views.candidate_detail.un_delegate') }}</b-button>
             </div>
           </div>
         </main>

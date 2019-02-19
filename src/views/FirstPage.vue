@@ -12,7 +12,7 @@
         <div class="container-fluid mb-5 mt-4 rmv-padding">
           <div class="row">
             <div class="col text-center p-3 mb-3">
-              <h1>Please Log In</h1>
+              <h1>{{ $t('views.first_page.please_log_in') }}</h1>
             </div>
           </div>
           <div class="row my-3 p-3 d-flex justify-content-center mt-5 mb-auto mt-auto">
@@ -23,12 +23,12 @@
                 </div>
                 <div class="col button-container">
                   <div class="button-inner-container">
-                    <!-- <b-button class="top-border bottom-border button" v-if="userIsLoggedIn" @click="signOutHandler"><p class="mb-0 color-grey"><b>Sign out</b></p><p class="mb-0 color-grey">Sign out account</p></b-button>
-                    <b-button class="top-border bottom-border button" v-else @click="openLoginModal"><p class="mb-0 color-grey"><b>Login</b></p><p class="mb-0 color-grey">Sign in with existing account</p></b-button>
-                    <b-button class="no-top-border bottom-border button" @click="openCreateAccountModal"><p class="mb-0 color-grey"><b>Create Account</b></p><p class="mb-0 color-grey">Setup new account from scratch</p></b-button>
-                    <b-button class="no-top-border bottom-border button" @click="openRestoreAccountModal"><p class="mb-0 color-grey"><b>Restore Account</b></p><p class="mb-0 color-grey">Use seed phrase to retrieve existing account</p></b-button> -->
-                    <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">New User</b-button>
-                    <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">Returning User</b-button>
+                    <!-- <b-button class="top-border bottom-border button" v-if="userIsLoggedIn" @click="signOutHandler"><p class="mb-0 color-grey"><b>{{ $t('views.first_page.sign_out') }}</b></p><p class="mb-0 color-grey">{{ $t('views.first_page.sign_out_account') }}</p></b-button>
+                    <b-button class="top-border bottom-border button" v-else @click="openLoginModal"><p class="mb-0 color-grey"><b>{{ $t('views.first_page.login') }}</b></p><p class="mb-0 color-grey">{{ $t('views.first_page.sign_in_with_existing_account') }}</p></b-button>
+                    <b-button class="no-top-border bottom-border button" @click="openCreateAccountModal"><p class="mb-0 color-grey"><b>{{ $t('views.first_page.create_account') }}</b></p><p class="mb-0 color-grey">{{ $t('views.first_page.setup_new_account_from_scratch') }}</p></b-button>
+                    <b-button class="no-top-border bottom-border button" @click="openRestoreAccountModal"><p class="mb-0 color-grey"><b>{{ $t('views.first_page.restore_account') }}</b></p><p class="mb-0 color-grey">{{ $t('views.first_page.use_seed_phrase_to_retrieve') }}</p></b-button> -->
+                    <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
+                    <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
 
                     <ChainSelector style="width: 250px" class="connection-status"
                       v-if="!isProduction"

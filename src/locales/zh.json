@@ -3,23 +3,23 @@
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
       "lorem_ipsum_dolor_sit_amet": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros. Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.",
-      "delegate": "Delegate",
-      "un_delegate": "Un-delegate"
+      "delegate": "委托",
+      "un_delegate": "取消委托"
     },
     "candidate_list": {
-      "candidates": "Candidates",
-      "no_candidates": "No Candidates"
+      "candidates": "候选人",
+      "no_candidates": "无候选人"
     },
     "first_page": {
-      "please_log_in": "Please Log In",
-      "sign_out_account": "Sign out account",
-      "login": "Login",
-      "sign_in_with_existing_account": "Sign in with existing account",
-      "setup_new_account_from_scratch": "Setup new account from scratch",
+      "please_log_in": "请登录",
+      "sign_out_account": "退出账户",
+      "login": "登录",
+      "sign_in_with_existing_account": "使用现有帐户登录",
+      "setup_new_account_from_scratch": "新建账户",
       "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
-      "new_user": "New User",
+      "new_user": "新用户",
       "returning_user": "Returning User",
-      "sign_out": "Sign out",
+      "sign_out": "退出",
       "create_account": "Create Account",
       "restore_account": "Restore Account"
     },

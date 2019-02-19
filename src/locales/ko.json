@@ -3,30 +3,30 @@
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
       "lorem_ipsum_dolor_sit_amet": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros. Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.",
-      "delegate": "Delegate",
-      "un_delegate": "Un-delegate"
+      "delegate": "위임",
+      "un_delegate": "위임 취소"
     },
     "candidate_list": {
-      "candidates": "Candidates",
-      "no_candidates": "No Candidates"
+      "candidates": "후보",
+      "no_candidates": "후보가 없습니다"
     },
     "first_page": {
-      "please_log_in": "Please Log In",
-      "sign_out_account": "Sign out account",
-      "login": "Login",
-      "sign_in_with_existing_account": "Sign in with existing account",
-      "setup_new_account_from_scratch": "Setup new account from scratch",
+      "please_log_in": "로그인하세요",
+      "sign_out_account": "계정 로그아웃",
+      "login": "로그인",
+      "sign_in_with_existing_account": "기존 계정으로 로그인",
+      "setup_new_account_from_scratch": "새로운 계정 설정하기",
       "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
-      "new_user": "New User",
+      "new_user": "새 사용자",
       "returning_user": "Returning User",
-      "sign_out": "Sign out",
-      "create_account": "Create Account",
-      "restore_account": "Restore Account"
+      "sign_out": "로그아웃",
+      "create_account": "계정 생성",
+      "restore_account": "계정 복구"
     },
     "help": {
-      "what_is_plasma_chain": "What is PlasmaChain?",
+      "what_is_plasma_chain": "PlasmaChain이 무엇인가요?",
       "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
-      "what_is_staking": "What is staking?",
+      "what_is_staking": "스테이킹이 무엇인가요?",
       "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",
       "help_secure_plasma_chain": "help secure PlasmaChain",
       "by_staking_your_tokens_with": "by staking your tokens with a validator.",
@@ -34,7 +34,7 @@
       "as_plasma_chain_runs_a_delegated": "As PlasmaChain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for PlasmaChain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.",
       "how_can_i_stake_my": "How can I stake my LOOM tokens on PlasmaChain?",
       "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
-      "create_an_account": "Create an account",
+      "create_an_account": "계정 생성",
       "generate_a_private_key": "Generate a private key",
       "log_in_to_your_meta_mask": "Log in to your MetaMask wallet",
       "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto PlasmaChain",
@@ -56,7 +56,7 @@
       "what_currency_will_rewards_be": "What currency will rewards be paid in?",
       "how_do_i_claim_my": "How do I claim my rewards?",
       "the_delegation_rewards_will_be": "The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the",
-      "plasma_chain_dashboard": "PlasmaChain Dashboard",
+      "plasma_chain_dashboard": "PlasmaChain 대시보드",
       "": ".",
       "when_will_i_receive_rewards": "When will I receive rewards on my delegations?",
       "currently_validator_rewards_are_calculated": "Currently, validator rewards are calculated and paid out at the end of election cycles, which run every 2 weeks.",
@@ -78,9 +78,9 @@
       "": "/",
       "trade_history": "Trade History",
       "sort_by": "Sort by:",
-      "item_1": "Item 1",
-      "item_2": "Item 2",
-      "home": "Home"
+      "item_1": "아이템 1",
+      "item_2": "아이템 2",
+      "home": "홈"
     },
     "my_account": [
       null,
@@ -96,7 +96,7 @@
       "claim_reward": "Claim Reward"
     },
     "validator_detail": {
-      "state": "State:",
+      "state": "상태:",
       "amount_delegated": "Amount Delegated:",
       "amount_delegated_loom": "{amountDelegated} LOOM",
       "updated_amount": "Updated Amount:",
@@ -121,34 +121,34 @@
       "loom_sdk": "Loom SDK",
       "delegatecall": "Delegatecall",
       "github": "Github",
-      "medium": "Medium",
+      "medium": "미디엄",
       "angel_co": "Angel.co",
-      "twitter": "Twitter",
-      "telegram": "Telegram",
-      "email": "Email",
+      "twitter": "트위터",
+      "telegram": "텔레그램",
+      "email": "이메일",
       "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
     },
     "faucet_header": {
       "connected": "connected",
       "disconnected": "disconnected",
       "explorer": "Explorer",
-      "f_a_q": "F.A.Q",
+      "f_a_q": "자주 묻는 질문",
       "next_election_cycle": "Next election cycle:",
       "plasma_chain": "PlasmaChain:",
       "staked": "Staked:",
-      "deposit": "Deposit",
+      "deposit": "입금",
       "plasmachain_dashboard": "Plasmachain Dashboard",
-      "dashboard": "Dashboard",
-      "wallet": "Wallet",
+      "dashboard": "대시보드",
+      "wallet": "지갑",
       "my_staking": "My Staking",
       "my_stakes": "My Stakes",
-      "status": "Status",
+      "status": "상태",
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
       "my_account": "My Account",
       "my_delegations": "My Delegations",
-      "rewards": "Rewards"
+      "rewards": "보상"
     },
     "layout": {
       "metamask_error": "Metamask error!?",
@@ -186,7 +186,7 @@
         "copy_to_clipboard": "Copy to Clipboard"
       },
       "success_modal": {
-        "success": "Success"
+        "success": "성공"
       }
     },
     "blockExplorer": {
@@ -196,7 +196,7 @@
         "transactions": "Transactions"
       },
       "block_list": {
-        "blocks": "Blocks",
+        "blocks": "블록",
         "block_height": "Block Height:",
         "row_value": "#{rowValue}"
       },
@@ -205,7 +205,7 @@
       },
       "transaction": {
         "push": "Push",
-        "type": "Type:",
+        "type": "타입:",
         "walker": "Walker",
         "listing_price_1_99": "Listing Price: $1.99",
         "rarity": "Rarity:",

@@ -16,6 +16,7 @@ import Contract from './services/contract'
 import Faucet from './views/Faucet.vue'
 import router from './faucet-router'
 import store from './store'
+import { i18n } from './i18n'
 
 require('./assets/scss/main.scss')
 
@@ -46,6 +47,7 @@ Vue.config.productionTip = false
 export default new Vue({
   router,
   store,
+  i18n,
   render: h => h(Faucet),
   mounted() {
     document.dispatchEvent(new Event('render-event'))

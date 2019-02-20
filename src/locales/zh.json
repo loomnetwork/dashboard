@@ -101,11 +101,11 @@
       "claim_reward": "领取奖励"
     },
     "validator_detail": {
-      "state": "State:",
-      "amount_delegated": "Amount Delegated:",
-      "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "Updated Amount:",
-      "updated_amount_loom": "{updatedAmount} LOOM",
+      "state": "状态：",
+      "amount_delegated": "委托的数量：",
+      "amount_delegated_loom": "{amountDelegated} 个LOOM",
+      "updated_amount": "更新后的数量：",
+      "updated_amount_loom": "{updatedAmount} 个LOOM",
       "timelock_tier": "Timelock Tier:",
       "timelock": "Timelock:",
       "unlocked": "Unlocked"

@@ -75,8 +75,8 @@
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },
     "history": {
-      "trade_history": "Trade History",
-      "sort_by": "Sort by:",
+      "trade_history": "交易记录",
+      "sort_by": "排序方式：",
       "item_1": "Item 1",
       "item_2": "Item 2",
       "home": "Home"

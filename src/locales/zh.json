@@ -44,7 +44,7 @@
       "which_validator_s_should_i_delegate": "我该委托给哪个/些验证者呢？",
       "you_can_use_the": "你可以在 ",
       "for_a_full_list_of": "for a full list of available validator candidates. Keep in mind that validators perform the critical services that maintain the integrity of the system — proposing new blocks, verifying transactions, and participating in governance. In researching the validators that best suit you, you will likely want to evaluate around criteria such as performance (uptime, slashes), reputation, fee % on rewards, community, etc.",
-      "do_i_lose_control_of": "Do I lose control of my tokens when I delegate them to a validator?",
+      "do_i_lose_control_of": "当我将代币委托给验证者时，我会失去代币的控制权吗？",
       "no_upon_delegation_your_tokens": "No. Upon delegation, your tokens will be sent to a smart contract and essentially frozen on the network for the duration of your lock-up period (which is up to you to select). When the lock-up ends, your tokens are automatically released back to you along with any additional rewards that your validator may have shared with their staking pool.",
       "note_a_validator_never_has": "Note: a validator never has direct control of your delegated stake. They cannot move your tokens under any circumstances. For all intents and purposes, you remain the owner while your stake is temporarily assigned to the network.",
       "can_i_delegate_to_multiple": "Can I delegate to multiple validator candidates?",

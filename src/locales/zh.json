@@ -31,7 +31,7 @@
       "help_secure_plasma_chain": "协助保护 PlasmaChain",
       "by_staking_your_tokens_with": "。",
       "why_is_staking_important_for": "为什么锁仓对 PlasmaChain 很重要？",
-      "as_plasma_chain_runs_a_delegated": "As PlasmaChain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for PlasmaChain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.",
+      "as_plasma_chain_runs_a_delegated": "由于 PlasmaChain 使用委托股权证明（DPoS）共识机制，所以锁仓对网络安全至关重要。通过“委托”，用户通过将他们的代币代理到这些验证者的股权池来支持验证者。拥有最大池的验证候选者成为网络的正式验证者。通过锁定你的 LOOM 代币，你可以帮助选出最好的验证者，以确保 PlasmaChain 有最强的安全性和最佳性能（这样做还能获得奖励 —— 见下文）。委派和积极贡献的人越多，PlasmaChain 就越安全可靠。",
       "how_can_i_stake_my": "How can I stake my LOOM tokens on PlasmaChain?",
       "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
       "create_an_account": "Create an account",

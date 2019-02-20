@@ -184,43 +184,43 @@
         "note_the_phrase_is_case": "注意：短语要区分大小写，单词间需一个空格隔开。"
       },
       "seed_phrase_modal": {
-        "note_these_12_words_allow": "Note: these 12 words allow you to recover your wallet in case of loss or damage.",
-        "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
-        "write_or_print_it_out": "Write or print it out and keep in a safe place.",
-        "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
-        "copy_to_clipboard": "Copy to Clipboard"
+        "note_these_12_words_allow": "注意：这12个单词可以帮助你在丢失或损坏的情况下恢复你的钱包。",
+        "you_must_create_a_backup_nbsp": "你必须创建一个备份！&nbsp;",
+        "write_or_print_it_out": "写下来或打印出来，并保存在安全的地方。",
+        "without_it_you_will_not": "没有它的话，一旦出现问题，你将无法恢复你的代币。",
+        "copy_to_clipboard": "复制到剪贴板"
       },
       "success_modal": {
-        "success": "Success"
+        "success": "成功"
       }
     },
     "blockExplorer": {
       "block_info": {
         "on": "On",
-        "verified": "Verified",
-        "transactions": "Transactions"
+        "verified": "已核实",
+        "transactions": "事务"
       },
       "block_list": {
-        "blocks": "Blocks",
-        "block_height": "Block Height:",
+        "blocks": "区块",
+        "block_height": "区块高度：",
         "row_value": "#{rowValue}"
       },
       "decoded_tx": {
-        "transaction_data": "Transaction Data:"
+        "transaction_data": "事务数据："
       },
       "transaction": {
         "push": "Push",
-        "type": "Type:",
-        "walker": "Walker",
-        "listing_price_1_99": "Listing Price: $1.99",
-        "rarity": "Rarity:",
-        "rare": "Rare",
-        "entry": "Entry:",
-        "return_a_zombie_to_hand": "Return a zombie to hand",
-        "sold": "Sold"
+        "type": "类型：",
+        "walker": "步行者",
+        "listing_price_1_99": "上市价格：1.99美元",
+        "rarity": "稀缺性：",
+        "rare": "稀有",
+        "entry": "入场：",
+        "return_a_zombie_to_hand": "返回一个僵尸到手牌",
+        "sold": "已出售"
       },
       "transaction_list": {
-        "filter_by": "Filter by",
+        "filter_by": "筛选方式：",
         "most_old": "Most old",
         "pending": "Pending"
       }

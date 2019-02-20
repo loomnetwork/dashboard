@@ -44,7 +44,9 @@
                 <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
                 <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
                 <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
-                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal" :disabled="!hasDelegation || !canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Redelegate</b-button>
+                <!-- TODO: Uncomment -->
+                <!-- :disabled="!hasDelegation || !canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)" -->
+                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal">Redelegate</b-button>
                 <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
               </div>
             </div>
@@ -370,6 +372,13 @@ export default class ValidatorDetail extends Vue {
   }
 
   openRedelegateModal() {
+    let index = this.$route.params.index
+    this.$router.push({
+      path: '/redelegate',
+      params: {
+        index
+      }
+    })
   }
 
 }</script>

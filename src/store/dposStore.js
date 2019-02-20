@@ -19,7 +19,7 @@ const dynamicSort = (property) => {
 const defaultState = () => {
   return {
     isLoggedIn: false,
-    showSidebar: false,
+    showSidebar: true,
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
@@ -34,7 +34,16 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4"]
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4"],
+    validatorFields: [
+      { key: 'Name', sortable: true },
+      { key: 'Status', sortable: true },
+      { key: 'Stake', sortable: true },
+      // { key: 'Weight', sortable: true },
+      { key: 'Fees', sortable: true },
+      // { key: 'Uptime', sortable: true },
+      // { key: 'Slashes', sortable: true },
+    ]    
   }
 }
 

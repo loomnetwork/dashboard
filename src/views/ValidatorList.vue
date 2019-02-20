@@ -5,7 +5,7 @@
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
             <h1>{{ $t('views.validator_list.validators') }}</h1>
-            <faucet-table :items="validators" :fields="fields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
+            <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
           </div>
           <div v-else-if="validators !== null && validators.length == 0">
             <h2>
@@ -44,7 +44,8 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
   },
   computed: {
     ...DPOSStore.mapState([
-      'validators'
+      'validators',
+      'validatorFields'
     ])
   },
   methods: {
@@ -63,15 +64,6 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
   }
 })
 export default class ValidatorList extends Vue {
-  fields = [
-    { key: 'Name', sortable: true },
-    { key: 'Status', sortable: true },
-    { key: 'Stake', sortable: true },
-    // { key: 'Weight', sortable: true },
-    { key: 'Fees', sortable: true },
-    // { key: 'Uptime', sortable: true },
-    // { key: 'Slashes', sortable: true },
-  ]
 
   async mounted() {
     await this.refresh()

@@ -5,7 +5,8 @@
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
             <h1>Validators</h1>
-            <faucet-table :items="validators" :fields="fields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
+            <p><fa icon="info-circle" fixed-width /> Staking is disabled on bootstrap validators.</p>
+            <faucet-table :items="validators" :fields="fields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
           </div>
           <div v-else-if="validators !== null && validators.length == 0">
             <h2>
@@ -81,6 +82,14 @@ export default class ValidatorList extends Vue {
     await this.getValidatorList()
   }
 
+  /**
+   * adds class bootstrap node if is bootstrap
+   */
+  validatorCssClass( item, type) {
+    console.log(34943034)
+    return item.isBoostrap ? ['boostrap-validator'] : []
+  } 
+
   // async getValidatorList() {
   //   try {
   //     const validators = await this.getValidatorsAsync()
@@ -153,6 +162,12 @@ $theme-colors: (
     }
     h4, h2, h1 {
       color: gray;
+    }
+    #faucet-table.table tbody tr td.table-danger {
+      opacity: 0.5;
+    }
+    #faucet-table.table tbody tr td.table-danger ~ td {
+      opacity: 0.5
     }
   }
 }

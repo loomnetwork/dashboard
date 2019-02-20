@@ -23,7 +23,7 @@ const defaultState = () => {
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
-    validators: [],
+    validators: null,
     status: "check_mapping",
     metamaskDisabled: false,
     showLoadingSpinner: false,
@@ -34,7 +34,7 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4"]
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4", "test-z-us1-dappchains-2-aws0"]
   }
 }
 
@@ -137,7 +137,7 @@ export default {
       }      
       commit("setWeb3", web3js)
     },
-    async getValidatorList({dispatch, commit}) {
+    async getValidatorList({dispatch, commit, state}) {
       try {
         const validators = await dispatch("DappChain/getValidatorsAsync", null, {root: true})
         if (validators.length === 0) {
@@ -156,19 +156,24 @@ export default {
 
           const validator = validators[i]
           const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
+          const isBootstrap = state.prohibitedNodes.includes(validatorName)
           validatorList.push({
-            Name: validatorName,
+            Name: `${validatorName} ${isBootstrap ? "(bootstrap)" : ''}` ,
             Address: validator.address,
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
             Weight: (validator.weight || '0') + '%',
-            Fees: (validator.fee/100 || '0') + '%',
+            Fees: isBootstrap ? 'N/A' : (validator.fee/100 || '0') + '%',
             Uptime: (validator.uptime || '0') + '%',
             Slashes: (validator.slashes || '0') + '%',
             Description: (validator.description) || null,
             Website: (validator.website) || null,
             Weight: weight || 0,            
-            _cellVariants: validator.active ? { Status: 'active'} : undefined,
+            _cellVariants:  {
+              Status: validator.active ? 'active' : undefined,
+              Name:  isBootstrap ? "danger" : undefined
+            },
+            isBootstrap,
             pubKey: (validator.pubKey)
           })
 

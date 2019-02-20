@@ -6482,10 +6482,9 @@ lolex@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-3.1.0.tgz#1a7feb2fefd75b3e3a7f79f0e110d9476e294434"
 
-loom-js@1.42.1:
+loom-js@^1.42.1:
   version "1.42.1"
   resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.42.1.tgz#b46115bcc70d4f650addfd187afdc43eda9c2629"
-  integrity sha512-kMM8c6Iiz9SMjC/45LKzyM+7oWdH+wfWp0MUvCSJlJgDNHIXuGXilNYnwLABtvQvil/w4urulgtvQ9uOTPb+Ag==
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"
@@ -10132,6 +10131,10 @@ uuid@2.0.1:
 uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+
+v-autocomplete@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/v-autocomplete/-/v-autocomplete-1.8.2.tgz#966c7b3eda2c74dd683911114a20284cd096961f"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"

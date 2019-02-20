@@ -98,7 +98,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
   },
   methods: {
     ...DPOSStore.mapActions([
-      "getValidatorList"
+      "getValidatorList",
+      "redelegateAsync"
     ])
   }
 })
@@ -132,8 +133,9 @@ export default class MyAccount extends Vue {
     this.showAccordion2 = !this.showAccordion2
   }
 
-  submitHandler() {
-
+  async submitHandler() {
+    if(!this.origin || !this.target) return
+    await this.redelegateAsync()
   }
 
 }

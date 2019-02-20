@@ -239,6 +239,22 @@ export default {
         console.error(err)
       }
 
+    },
+
+    async redelegateAsync({ rootState, dispatch, commit }, payload) {
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+
+      const { origin, target, validator, amount} = payload
+      const user = rootState.DappChain.dposUser
+
+      try {
+        await user.redelegateAsync(origin, validator, amount)
+      } catch(err) {
+        console.error(err)
+      }
+
     }
 
   }

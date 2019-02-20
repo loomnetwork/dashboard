@@ -75,7 +75,6 @@
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },
     "history": {
-      "": "/",
       "trade_history": "Trade History",
       "sort_by": "Sort by:",
       "item_1": "Item 1",
@@ -83,7 +82,15 @@
       "home": "Home"
     },
     "my_account": {
-      "mainnet": "Mainnet"
+      "account_details": "Account details",
+      "deposit_withdraw": "Deposit withdraw",
+      "connect_to_deposit_funds": "Connect to deposit funds",
+      "map_accounts": "Map accounts",
+      "deposit": "Deposit",
+      "withdraw": "Withdraw",
+      "use_maximum": "Use maximum",
+      "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
+      "withdraw_to_metamask": "Withdraw to your wallet"
     },
     "my_delegations": {
       "no_delegations": "No Delegations"

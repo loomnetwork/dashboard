@@ -16,15 +16,15 @@
       "login": "登录",
       "sign_in_with_existing_account": "使用现有帐户登录",
       "setup_new_account_from_scratch": "新建账户",
-      "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
+      "use_seed_phrase_to_retrieve": "使用种子短语检索现有帐户",
       "new_user": "新用户",
-      "returning_user": "Returning User",
+      "returning_user": "老用户",
       "sign_out": "退出",
-      "create_account": "Create Account",
-      "restore_account": "Restore Account"
+      "create_account": "创建账户",
+      "restore_account": "恢复帐户"
     },
     "help": {
-      "what_is_plasma_chain": "What is PlasmaChain?",
+      "what_is_plasma_chain": "PlasmaChain 是什么？",
       "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "What is staking?",
       "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",

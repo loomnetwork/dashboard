@@ -108,11 +108,11 @@
       "updated_amount_loom": "{updatedAmount} 个LOOM",
       "timelock_tier": "Timelock Tier:",
       "timelock": "Timelock:",
-      "unlocked": "Unlocked"
+      "unlocked": "已解除锁定"
     },
     "validator_list": {
-      "no_validators_available_please_try": "No validators available, please try again later",
-      "validators": "Validators"
+      "no_validators_available_please_try": "暂无验证者可选，请稍后再试",
+      "validators": "验证者"
     }
   },
   "components": {
@@ -122,7 +122,7 @@
       "eth_deploy": "EthDeploy",
       "crypto_zombies": "CryptoZombies",
       "solidity_x": "SolidityX",
-      "what_is_blockchain": "What is Blockchain",
+      "what_is_blockchain": "区块链是什么",
       "loom_sdk": "Loom SDK",
       "delegatecall": "Delegatecall",
       "github": "Github",
@@ -131,13 +131,13 @@
       "twitter": "Twitter",
       "telegram": "Telegram",
       "email": "Email",
-      "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
+      "loom_network_is_a_platform": "Loom Network 是一个基于以太坊的平台即服务，允许开发者运行大规模的去中心化应用程序。这使得开发者可以利用世界上最安全的公共区块链的信任和安全性，以及运行商业规模服务所需的计算资源来构建 DApp。 Loom 旨在成为新去中心化网络的代币化应用程序协议。"
     },
     "faucet_header": {
-      "connected": "connected",
-      "disconnected": "disconnected",
+      "connected": "已连接",
+      "disconnected": "未连接",
       "explorer": "Explorer",
-      "f_a_q": "F.A.Q",
+      "f_a_q": "常见问题",
       "next_election_cycle": "Next election cycle:",
       "plasma_chain": "PlasmaChain:",
       "staked": "Staked:",

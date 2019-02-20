@@ -145,11 +145,9 @@ export default class ValidatorDetail extends Vue {
 
 
   async beforeMount() {
-    let slug = this.$route.params.slug
+    let index = this.$route.params.index
     if(this.validators.length <= 0) await this.getValidatorList()
-    this.validator = this.validators.find(validator => {
-      return validator.Slug === slug
-    })
+    this.validator = this.validators[index]
   }
 
   async mounted() {

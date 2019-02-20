@@ -124,7 +124,7 @@ const router = new VueRouter({
         },
       },
       {
-        path: 'validator/:slug',
+        path: 'validator/:index',
         name: 'validatorDetail',
         component: ValidatorDetail,
         meta: {

@@ -165,23 +165,23 @@
       "please_check_your_metamask_account": "请检查你的 Metamask 帐户和/或网络"
     },
     "loading_spinner": {
-      "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
-      "this_could_take_several_minutes": "This could take several minutes. Please don't close or refresh your browser"
+      "please_be_patient_loomy_is": "请耐心等待哟，Loomy 正在努力加载！",
+      "this_could_take_several_minutes": "这可能需要几分钟。请不要关闭或刷新浏览器。"
     },
     "modals": {
       "confirm_seed_modal": {
-        "please_type_in_words_confirm_indexes_0": "Please type in words {confirmIndexes01}, {confirmIndexes11}, and {confirmIndexes21} to confirm",
-        "word_confirm_1": "Word{confirm1}:"
+        "please_type_in_words_confirm_indexes_0": "请输入单词 {confirmIndexes01}，{confirmIndexes11}，和 {confirmIndexes21} 来确认",
+        "word_confirm_1": "单词{confirm1}："
       },
       "faucet_delegate_modal": {
-        "amount": "Amount:",
+        "amount": "数量：",
         "locktime_bonuses": "Locktime / Bonuses:",
-        "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
-        "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
+        "warning_please_note_that_any": "提醒一下，请注意任何额外的委托都将覆盖已存在的委托！",
+        "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。"
       },
       "restore_account_modal": {
-        "please_type_in_your_seed": "Please type in your seed phrase below.",
-        "note_the_phrase_is_case": "Note: the phrase is case sensitive and each word needs to be separated by one space."
+        "please_type_in_your_seed": "请在下方输入你的种子短语。",
+        "note_the_phrase_is_case": "注意：短语要区分大小写，单词间需一个空格隔开。"
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "Note: these 12 words allow you to recover your wallet in case of loss or damage.",

@@ -23,7 +23,7 @@ const defaultState = () => {
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
-    validators: [],
+    validators: null,
     status: "check_mapping",
     metamaskDisabled: false,
     showLoadingSpinner: false,

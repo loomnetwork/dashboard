@@ -35,7 +35,7 @@
       "how_can_i_stake_my": "How can I stake my LOOM tokens on PlasmaChain?",
       "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
       "create_an_account": "계정 생성",
-      "generate_a_private_key": "Generate a private key",
+      "generate_a_private_key": "개인 키 생성",
       "log_in_to_your_meta_mask": "Log in to your MetaMask wallet",
       "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto PlasmaChain",
       "choose_validators_to_stake_with": "Choose validators to stake with",
@@ -76,7 +76,7 @@
     },
     "history": {
       "": "/",
-      "trade_history": "Trade History",
+      "trade_history": "거래 내역",
       "sort_by": "Sort by:",
       "item_1": "아이템 1",
       "item_2": "아이템 2",
@@ -107,7 +107,7 @@
     },
     "validator_list": {
       "no_validators_available_please_try": "No validators available, please try again later",
-      "validators": "Validators"
+      "validators": "검증자"
     }
   },
   "components": {
@@ -137,17 +137,17 @@
       "plasma_chain": "PlasmaChain:",
       "staked": "Staked:",
       "deposit": "입금",
-      "plasmachain_dashboard": "Plasmachain Dashboard",
+      "plasmachain_dashboard": "Plasmachain 대시보드",
       "dashboard": "대시보드",
       "wallet": "지갑",
-      "my_staking": "My Staking",
+      "my_staking": "내 스테이킹",
       "my_stakes": "My Stakes",
       "status": "상태",
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
-      "my_account": "My Account",
-      "my_delegations": "My Delegations",
+      "my_account": "내 계정",
+      "my_delegations": "내 위임",
       "rewards": "보상"
     },
     "layout": {
@@ -183,7 +183,7 @@
         "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
         "write_or_print_it_out": "Write or print it out and keep in a safe place.",
         "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
-        "copy_to_clipboard": "Copy to Clipboard"
+        "copy_to_clipboard": "클립보드에 복사"
       },
       "success_modal": {
         "success": "성공"
@@ -193,7 +193,7 @@
       "block_info": {
         "on": "On",
         "verified": "Verified",
-        "transactions": "Transactions"
+        "transactions": "트랜잭션"
       },
       "block_list": {
         "blocks": "블록",
@@ -201,7 +201,7 @@
         "row_value": "#{rowValue}"
       },
       "decoded_tx": {
-        "transaction_data": "Transaction Data:"
+        "transaction_data": "트랜잭션 데이터:"
       },
       "transaction": {
         "push": "Push",

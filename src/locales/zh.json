@@ -93,12 +93,12 @@
       "withdraw_to_metamask": "取回到你的钱包"
     },
     "my_delegations": {
-      "no_delegations": "No Delegations"
+      "no_delegations": "暂无委托"
     },
     "rewards": {
-      "unclaimed_rewards": "Unclaimed rewards:",
-      "you_have_yet_to_receive": "You have yet to receive any rewards",
-      "claim_reward": "Claim Reward"
+      "unclaimed_rewards": "未领取的奖励：",
+      "you_have_yet_to_receive": "你还未得到任何奖励",
+      "claim_reward": "领取奖励"
     },
     "validator_detail": {
       "state": "State:",

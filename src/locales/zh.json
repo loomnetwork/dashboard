@@ -77,20 +77,20 @@
     "history": {
       "trade_history": "交易记录",
       "sort_by": "排序方式：",
-      "item_1": "Item 1",
-      "item_2": "Item 2",
-      "home": "Home"
+      "item_1": "第 1 项",
+      "item_2": "第 2 项",
+      "home": "首页"
     },
     "my_account": {
-      "account_details": "Account details",
+      "account_details": "账户信息",
       "deposit_withdraw": "Deposit withdraw",
       "connect_to_deposit_funds": "Connect to deposit funds",
-      "map_accounts": "Map accounts",
-      "deposit": "Deposit",
-      "withdraw": "Withdraw",
-      "use_maximum": "Use maximum",
-      "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
-      "withdraw_to_metamask": "Withdraw to your wallet"
+      "map_accounts": "映射账户",
+      "deposit": "存入",
+      "withdraw": "取出",
+      "use_maximum": "输入全部余额",
+      "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
+      "withdraw_to_metamask": "取回到你的钱包"
     },
     "my_delegations": {
       "no_delegations": "No Delegations"

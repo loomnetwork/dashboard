@@ -69,7 +69,7 @@
       "simply_navigate_to_my_delegations": "直接去“我的委托”页面，选择某个验证者，然后点击“取消委托”按钮：",
       "once_i_un_delegate_how_long": "取消委托之后，需要多长时间才能重新获得对代币的完全访问权？",
       "at_launch_delegators_funds_will": "发布时，委托者代币将在两周后全部释放。这是一种安全措施，可以有效减少以下情况的发生：先委托给一个糟糕的候选者，以增加他们获得验证权的几率，然后立即取消委托。这点还在不断研究中，我们计划在未来几个月进行迭代。",
-      "are_there_any_ways_to": "Are there any ways to lose some of my delegated tokens?",
+      "are_there_any_ways_to": "有没有可能丢失一些委托的代币?",
       "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
       "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."

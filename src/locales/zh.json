@@ -25,8 +25,8 @@
     },
     "help": {
       "what_is_plasma_chain": "PlasmaChain 是什么？",
-      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
-      "what_is_staking": "What is staking?",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain 是受 Plasma Cash 支持的中心枢纽，实现侧链和以太坊主网之间的交互。它支持高度可扩展、面向用户的DApp，并确保链之间资产转移的安全性。",
+      "what_is_staking": "锁仓是什么？",
       "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",
       "help_secure_plasma_chain": "help secure PlasmaChain",
       "by_staking_your_tokens_with": "by staking your tokens with a validator.",

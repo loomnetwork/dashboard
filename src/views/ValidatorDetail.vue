@@ -2,7 +2,12 @@
   <div class="faucet">        
     <div class="faucet-content">
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
-      <redelegate-modal @onDelegate="redelegateHandler" ref="redelegateModalRef" :hasDelegation="hasDelegation" :delegation="delegation" ></redelegate-modal>
+      <redelegate-modal ref="redelegateModalRef"
+                        @onDelegate="redelegateHandler"
+                        :hasDelegation="hasDelegation"
+                        :delegation="delegation"
+                        :validators="validators">
+      </redelegate-modal>
       <success-modal></success-modal>
       <div>
         <main>

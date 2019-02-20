@@ -1,51 +1,59 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Create Account" hide-footer centered no-close-on-backdrop>
-    <b-container fluid>
+  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop>
+    <div v-if="isLoading" class="pb-4">
+      <loading-spinner :showBackdrop="true"></loading-spinner>
+    </div>      
+    <strong>From</strong>
+    <div class="dropdown-container mb-4">
+      <v-autocomplete :items="filteredOriginItems"
+                      v-model="origin"
+                      :get-label="getLabel"
+                      :component-item="dropdownTemplate"
+                      @item-selected="selectItem"
+                      @update-items="updateOriginItems">
+      </v-autocomplete>
+    </div>
 
-      <h1>
-        Redelegate
-      </h1>
+    <strong>To</strong>
+    <div class="dropdown-container mb-4">
+      <v-autocomplete :items="filteredTargetItems"
+                      v-model="target"
+                      :get-label="getLabel"
+                      :component-item="dropdownTemplate"
+                      @update-items="updateTargetItems">
+      </v-autocomplete>
+    </div>      
 
-      <div class="dropdown-container mb-4">
-        <v-autocomplete :items="validators"
-                        v-model="origin"
-                        :get-label="getLabel"
-                        :component-item="dropdownTemplate"
-                        @item-selected="selectItem"
-                        @update-items="updateItems">
-        </v-autocomplete>
+    <div class="row">
+      <div class="col btn-container">
+        <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="okHandler" :disabled="disableSubmit">Redelegate</b-button>
+        <b-tooltip class="submit-btn" target="submitBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
       </div>
+    </div>
 
-      <div class="dropdown-container mb-4">
-        <v-autocomplete :items="validators"
-                        v-model="target"
-                        :get-label="getLabel"
-                        :component-item="dropdownTemplate"
-                        @item-selected="selectItem"
-                        @update-items="updateItems">
-        </v-autocomplete>
-      </div>      
-
-
-    </b-container>
   </b-modal>
 </template>
 
 <script>
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
+import LoadingSpinner from '../../components/LoadingSpinner'
 import RedelegateDropdownTemplate from './RedelegateDropdownTemplate'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
+const DappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
+  props: {
+     validators: { required: true }
+  },
   components: {
+    LoadingSpinner,
     RedelegateDropdownTemplate
   },
   computed: {
     ...DPOSStore.mapState([
-      "validators",
       "validatorFields"
     ])
   },
@@ -53,6 +61,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DPOSStore.mapActions([
       "getValidatorList",
       "redelegateAsync"
+    ]),
+    ...DappChainStore.mapActions([
+      "checkDelegationAsync"
     ])
   }
 })
@@ -61,31 +72,127 @@ export default class RedelegateModal extends Vue {
 
   dropdownTemplate = RedelegateDropdownTemplate
 
+  filteredOriginItems = []
+  filteredTargetItems = []
+  origin = {}
+  target = {}
+  isLoading = false
+  originHasDelegation = false
+
   async show() {
-    if(this.validators.length <= 0) await this.getValidatorList()
+    if(this.validators.length <= 0 ) return
+    this.filteredOriginItems = this.validators
+    this.filteredTargetItems = this.validators
     this.$refs.modalRef.show()
   }
 
+  okHandler() {
+    this.$emit('ok')
+    this.$refs.modalRef.hide()
+  }  
+
   getLabel(item) {
     if(!item) return
-    return item.label
+    return item.Name
   }
 
+  updateOriginItems(query) {
 
-  updateItems(query) {
     if(query) {
-
+      this.filteredOriginItems = this.validators.filter((item) => {
+        return item.Name.toLowerCase().includes(query.toLowerCase())
+      })
+    } else {
+      this.resetOriginItems()
     }
+
+  }
+
+  updateTargetItems(query) {
+
+    if(query) {
+      this.filteredTargetItems = this.validators.filter((item) => {
+        return item.Name.toLowerCase().includes(query.toLowerCase())
+      })
+    } else {
+      this.resetTargetItems()
+    }
+
+  }
+
+  resetOriginItems() {
+    this.filteredTargetItems = this.validators
+  }
+
+  resetTargetItems() {
+    this.filteredTargetItems = this.validators
   }
 
   async selectItem(item) {
     if(!item) return
-    const {path} = item
-    await this.selectPath(path)
+    const {pubKey} = item
+    if(!pubKey) return
+    this.isLoading = true
+    const delegation = await this.queryDelegation(pubKey)
+    this.originHasDelegation = parseInt(delegation.amount) > 0 ? true : false
+    this.isLoading = false
   }  
+
+  async queryDelegation(pubKey) {
+    try {
+      return await this.checkDelegationAsync({validator: pubKey})
+    } catch(err) {
+      console.error(err)
+      return
+    }
+  }
+
+  get disableSubmit() {
+    return true
+  //  if(!this.origin && !this.target) return true
+  //  if(this.origin.Address === this.target.Address || !this.originHasDelegation) return true
+  }
   
 }
 </script>
 <style lang="scss">
 
+.btn-container {
+  display: flex;
+  .submit-btn {
+    margin-left: auto;
+  }
+}
+
+.dropdown-container {
+  width: 100%;
+  .v-autocomplete {
+    width: 100%;
+    input {
+      width: 100%;
+      border: 2px solid #f2f1f3;
+      padding: 4px 12px;
+    }
+  }
+  .v-autocomplete-list {
+    width: 100%;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 999;
+    background-color: #ffffff;
+    border: 2px solid #f2f1f3;
+    .v-autocomplete-list-item {
+      cursor: pointer;
+      padding: 6px 12px;
+      border-bottom: 2px solid #f2f1f3;
+      text-align: center;
+      &:last-child {
+        border-bottom: none;
+      }
+      &:hover {
+        background-color: #eeeeee;
+      }
+    }
+  }
+}
 </style>

@@ -82,11 +82,9 @@
       "item_2": "Item 2",
       "home": "Home"
     },
-    "my_account": [
-      null,
-      "1",
-      "2"
-    ],
+    "my_account": {
+      "mainnet": "Mainnet"
+    },
     "my_delegations": {
       "no_delegations": "No Delegations"
     },

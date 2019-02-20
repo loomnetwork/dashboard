@@ -144,6 +144,7 @@ export default {
           return null
         }
         const validatorList = []
+        const slugMapping = []
         for (let i in validators) {
 
           let weight = 0
@@ -156,6 +157,7 @@ export default {
 
           const validator = validators[i]
           const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
+          const slug = validatorName.toLowerCase()
           validatorList.push({
             Name: validatorName,
             Address: validator.address,
@@ -167,7 +169,8 @@ export default {
             Slashes: (validator.slashes || '0') + '%',
             Description: (validator.description) || null,
             Website: (validator.website) || null,
-            Weight: weight || 0,            
+            Weight: weight || 0,
+            Slug: slug,
             _cellVariants: validator.active ? { Status: 'active'} : undefined,
             pubKey: (validator.pubKey)
           })

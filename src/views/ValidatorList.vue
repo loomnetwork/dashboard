@@ -81,46 +81,8 @@ export default class ValidatorList extends Vue {
     await this.getValidatorList()
   }
 
-  // async getValidatorList() {
-  //   try {
-  //     const validators = await this.getValidatorsAsync()
-  //     if (validators.length === 0) {
-  //       return null
-  //     }
-  //     const validatorList = []
-  //     for (let i in validators) {
-  //       const validator = validators[i]
-  //       validatorList.push({
-  //         Name: "Validator #" + (parseInt(i) + 1),
-  //         Address: validator.address,
-  //         Status: validator.active ? "Active" : "Inactive",
-  //         Stake: (validator.stake || '0'),
-  //         Weight: (validator.weight || '0') + '%',
-  //         Fees: (validator.fee || '0') + '%',
-  //         Uptime: (validator.uptime || '0') + '%',
-  //         Slashes: (validator.slashes || '0') + '%',
-  //         Description: (validator.description) || null,
-  //         Website: (validator.website) || null,
-  //         _cellVariants: validator.active ? { Status: 'active'} : undefined,
-  //         pubKey: (validator.pubKey)
-  //       })
-  //     }
-  //     this.setValidators(validatorList)
-  //     return validatorList
-  //   } catch(err) {
-  //     this.setErrorMsg('Fetch Validator List Failed')
-  //     console.log(err)
-  //     return null
-  //   }
-  // }
-
   showValidatorDetail(record, index) {
-    this.$router.push({
-      name: 'validatorDetail',
-      params: {
-        info: record
-      }
-    })
+    this.$router.push(`/validator/${record.Slug}`)
   }
 }</script>
 

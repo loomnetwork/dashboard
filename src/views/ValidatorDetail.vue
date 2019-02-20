@@ -40,10 +40,12 @@
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
               </div> -->
               <div v-if="!this.prohibitedNodes.includes(this.validator.Name)" class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button id="delegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">{{ $t('views.candidate_detail.delegate') }}</b-button>
-                <b-tooltip target="delegateBtn" placement="bottom" title="Click here to transfer tokens to this validator"></b-tooltip>
-                <b-button id="undelegateBtn" class="px-5 py-2" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">{{ $t('views.candidate_detail.un_delegate') }}</b-button>
-                <b-tooltip target="undelegateBtn" placement="bottom" title="Click here to withdraw your delegated tokens"></b-tooltip>
+                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
+                <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
+                <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
+                <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
+                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal" :disabled="!hasDelegation || !canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Redelegate</b-button>
+                <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
               </div>
             </div>
           </div>
@@ -62,6 +64,7 @@ import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import SuccessModal from '../components/modals/SuccessModal'
+import RedelegateModal from '../components/modals/RedelegateModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
@@ -82,7 +85,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'userIsLoggedIn'
     ]),
     ...DPOSStore.mapState([
-      'prohibitedNodes'
+      'prohibitedNodes',
+      'validators'
     ]),
     ...mapGetters([
       'getPrivateKey'
@@ -98,6 +102,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...mapMutations([
       'setErrorMsg'
+    ]),
+    ...DPOSStore.mapActions([
+      'getValidatorList'
     ]),
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
@@ -136,16 +143,23 @@ export default class ValidatorDetail extends Vue {
 
   states = ["Bonding", "Bonded", "Unbounding"]
 
-  async mounted() {
 
-    this.validator = this.$route.params.info
+  async beforeMount() {
+    let slug = this.$route.params.slug
+    if(this.validators.length <= 0) await this.getValidatorList()
+    this.validator = this.validators.find(validator => {
+      return validator.Slug === slug
+    })
+  }
+
+  async mounted() {
 
     if(this.canDelegate) {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
         this.checkHasDelegation()      
       } catch(err) {
-        this.hasDelegation = false        
+        this.hasDelegation = false     
       }
     }
     if(this.hasDelegation && this.delegation.lockTime > 0) {
@@ -356,6 +370,10 @@ export default class ValidatorDetail extends Vue {
   openRequestUnbondModal() {
     this.$refs.delegateModalRef.show(this.validator.Address, 'unbond')
   }
+
+  openRedelegateModal() {
+  }
+
 }</script>
 
 <style lang="scss">

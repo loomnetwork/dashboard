@@ -8,6 +8,7 @@ import RavenVue from 'raven-js/plugins/vue'
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 
+
 import FontAwesome from '@fortawesome/fontawesome'
 import BrandsFontAwesome from '@fortawesome/fontawesome-free-brands'
 import SolidFontAwesome from '@fortawesome/fontawesome-free-solid'
@@ -19,14 +20,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'swiper/dist/css/swiper.css'
 
 import ApiClient from './services/faucet-api'
-
+import { i18n } from './i18n'
 // import FirstPage from './views/FirstPage.vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { i18n } from './i18n'
-
-import { initWeb3 } from './services/initWeb3'
 
 require('./assets/scss/main.scss')
 

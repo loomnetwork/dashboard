@@ -79,12 +79,12 @@ const router = new VueRouter({
     component: LocaleComponent,
     children: [
       {
-        path: '/login',
+        path: 'login',
         name: 'firstPage',
         component: FirstPage
       },
       {
-        path: '/account',
+        path: 'account',
         name: 'account',
         component: MyAccount,
         meta: {
@@ -93,7 +93,7 @@ const router = new VueRouter({
         }
       },
       {
-        path: '/delegations',
+        path: 'delegations',
         name: 'delegations',
         component: MyDelegations,
         meta: {
@@ -102,7 +102,7 @@ const router = new VueRouter({
         }      
       },
       {
-        path: '/rewards',
+        path: 'rewards',
         name: 'rewards',
         component: Rewards,
         meta: {
@@ -111,20 +111,20 @@ const router = new VueRouter({
         }   
       },    
       {
-        path: '/faq',
+        path: 'faq',
         name: 'FAQ',
         component: Help,  
       }, 
       {
-        path: '/validators',
+        path: 'validators',
         name: 'validators',
         component: ValidatorList,
         meta: {
           requireDeps: true
-        }
+        },
       },
       {
-        path: '/validator',
+        path: 'validator/:slug',
         name: 'validatorDetail',
         component: ValidatorDetail,
         meta: {
@@ -132,17 +132,17 @@ const router = new VueRouter({
         }
       },
       {
-        path: '/candidates',
+        path: 'candidates',
         name: 'candidates',
         component: CandidateList
       },
       {
-        path: '/candidate',
+        path: 'candidate',
         name: 'candidateDetail',
         component: CandidateDetail
       },
       {
-        path: '/blockexplorer',
+        path: 'blockexplorer',
         name: 'blockexplorer',
         component: BlockExplorer
       },
@@ -170,11 +170,6 @@ router.beforeEach(async (to, from, next) => {
     }
 
     next('/login')
-    return
-  }
-
-  if(to.name === 'validatorDetail' && !to.params.info) {
-    next('/validators')
     return
   }
 

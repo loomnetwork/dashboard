@@ -82,6 +82,7 @@
       "home": "홈"
     },
     "my_account": {
+      "mainnet": "Mainnet",
       "account_details": "Account details",
       "deposit_withdraw": "Deposit withdraw",
       "connect_to_deposit_funds": "Connect to deposit funds",
@@ -94,6 +95,11 @@
     },
     "my_delegations": {
       "no_delegations": "No Delegations"
+    },
+    "redelegate": {
+      "redelegate": "Redelegate",
+      "from": "From",
+      "to": "To"
     },
     "rewards": {
       "unclaimed_rewards": "Unclaimed rewards:",

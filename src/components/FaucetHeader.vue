@@ -292,7 +292,7 @@ export default class FaucetHeader extends Vue {
   }
 
   startPolling() {
-    if(this.userIsLoggedIn) {
+    if(this.userIsLoggedIn && this.status === "mapped") {
       this.refreshInterval = setInterval(async () => this.refresh(), 5000)
     }
   }

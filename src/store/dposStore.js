@@ -169,7 +169,7 @@ export default {
           const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
           const isBootstrap = state.prohibitedNodes.includes(validatorName)
           validatorList.push({
-            Name: `${validatorName} ${isBootstrap ? "(bootstrap)" : ''}` ,
+            Name: validatorName,
             Address: validator.address,
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),

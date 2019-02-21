@@ -64,10 +64,10 @@
               :total-rows="totalNumBlocks"
               :per-page="perPage"
               :align="paginationAlignment"
-              first-text="&nbsp;"
-              last-text="&nbsp;"
-              prev-text="&nbsp;"
-              next-text="&nbsp;"
+              first-text=""
+              last-text=""
+              prev-text=""
+              next-text=""
               />
             </div>
           </div>

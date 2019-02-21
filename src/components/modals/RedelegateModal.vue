@@ -9,25 +9,25 @@
                       v-model="origin"
                       :get-label="getLabel"
                       :component-item="dropdownTemplate"
-                      @item-selected="selectItem"
+                      @item-selected="selectOriginItem"
                       @update-items="updateOriginItems">
       </v-autocomplete>
     </div>
-
+    <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
       <v-autocomplete :items="filteredTargetItems"
                       v-model="target"
                       :get-label="getLabel"
                       :component-item="dropdownTemplate"
+                      @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
     </div>      
-
+    <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>    
     <div class="row">
       <div class="col btn-container">
-        <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="okHandler" :disabled="disableSubmit">Redelegate</b-button>
-        <b-tooltip class="submit-btn" target="submitBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
+        <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="okHandler">Redelegate</b-button>
       </div>
     </div>
 
@@ -79,6 +79,9 @@ export default class RedelegateModal extends Vue {
   isLoading = false
   originHasDelegation = false
 
+  errorMsg = ""
+  originErrorMsg = ""
+
   async show() {
     if(this.validators.length <= 0 ) return
     this.filteredOriginItems = this.validators
@@ -87,6 +90,16 @@ export default class RedelegateModal extends Vue {
   }
 
   okHandler() {
+
+    if(!this.origin.Address || !this.target.Address) {
+      this.errorMsg = "Please select both a target and an origin validator"
+      return
+    }
+    if(this.origin.Address === this.target.Address || !this.originHasDelegation) {
+      this.errorMsg = "Cannot redelegate to the same validator"
+      return
+    }
+
     this.$emit('ok')
     this.$refs.modalRef.hide()
   }  
@@ -128,15 +141,20 @@ export default class RedelegateModal extends Vue {
     this.filteredTargetItems = this.validators
   }
 
-  async selectItem(item) {
+  async selectOriginItem(item) {
     if(!item) return
     const {pubKey} = item
     if(!pubKey) return
     this.isLoading = true
     const delegation = await this.queryDelegation(pubKey)
     this.originHasDelegation = parseInt(delegation.amount) > 0 ? true : false
+    this.originErrorMsg = !this.originHasDelegation ? "You don't have any existing delegations on this validator" : "" 
     this.isLoading = false
-  }  
+  }
+
+  async selectTargetItem(item) {
+    this.errorMsg = ""
+  }
 
   async queryDelegation(pubKey) {
     try {
@@ -145,12 +163,6 @@ export default class RedelegateModal extends Vue {
       console.error(err)
       return
     }
-  }
-
-  get disableSubmit() {
-    return true
-  //  if(!this.origin && !this.target) return true
-  //  if(this.origin.Address === this.target.Address || !this.originHasDelegation) return true
   }
   
 }
@@ -162,6 +174,11 @@ export default class RedelegateModal extends Vue {
   .submit-btn {
     margin-left: auto;
   }
+}
+
+.error-message {
+  color: red;
+  display: block;
 }
 
 .dropdown-container {

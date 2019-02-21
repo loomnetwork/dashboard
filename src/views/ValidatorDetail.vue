@@ -2,6 +2,13 @@
   <div class="faucet">        
     <div class="faucet-content">
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
+      <redelegate-modal ref="redelegateModalRef"
+                        @ok="redelegateHandler"
+                        :hasDelegation="hasDelegation"
+                        :delegation="delegation"
+                        :validators="validators"
+                        :originValidator="validator">
+      </redelegate-modal>
       <success-modal></success-modal>
       <div>
         <main>
@@ -77,6 +84,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     FaucetHeader,
     FaucetFooter,
     SuccessModal,
+    RedelegateModal,
     FaucetDelegateModal,
     LoadingSpinner
   },
@@ -104,7 +112,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setErrorMsg'
     ]),
     ...DPOSStore.mapActions([
-      'getValidatorList'
+      'getValidatorList',
+      'redelegateAsync'
     ]),
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
@@ -264,6 +273,9 @@ export default class ValidatorDetail extends Vue {
     this.finished = true
   }
 
+  async redelegateHandler() {
+  }
+
   get canDelegate() {
     return this.userIsLoggedIn && this.getPrivateKey
   }
@@ -311,57 +323,6 @@ export default class ValidatorDetail extends Vue {
     return this.hasDelegation && this.lockTimeExpired ? true : false
   }
 
-  // setValidatorInfo() {
-  //   const index = parseInt(this.$route.query.id)
-
-  //   const validatorForm = {
-  //     Status: null,
-  //     "Stake": null,
-  //     "Weight %": null,
-  //     "Fees": null,
-  //     "Uptime": null,
-  //     "Slashes": null,
-  //   }
-
-  //   if (this.validatorList !== null && index >= this.validatorList.length) {
-  //     // Validator index is incorrect
-  //     this.$router.push({
-  //       name: 'validators',
-  //     })
-  //     return [validatorForm]
-  //   }
-  //   if (this.validatorList === null) {
-  //     // Still loading
-  //     return [validatorForm]
-  //   }
-  //   const validator = this.validatorList[index]
-  //   this.validatorInfo = {
-  //     Status: validator.active ? "Active" : "Inactive",
-  //     "Stake": (validator.stake || '0'),
-  //     "Weight %": (validator.weight || '0') + '%',
-  //     "Fees": (validator.fee || '0') + '%',
-  //     "Uptime": (validator.uptime || '0') + '%',
-  //     "Slashes": (validator.slashes || '0') + '%',
-  //     _cellVariants: validator.active ? { Status: 'active'} : undefined
-  //   }
-
-  //   this.validatorMetaData = {
-  //     name: "Validator #" + (parseInt(index) + 1),
-  //     description: validator.description ? validator.description : null,
-  //     website: validator.website ? validator.website : null
-  //   }
-    
-  //   if (this.canDelegate) {
-  //     checkDelegationAsync(this.currentRPCUrl, this.getPrivateKey, this.validator.address)
-  //     .then(res => {
-  //       this.hasDelegation = true
-  //     }).catch(err => {
-  //       this.hasDelegation = false
-  //       console.error(err)
-  //     })
-  //   }
-  // }
-
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(this.validator.Address, '')
   }
@@ -371,6 +332,14 @@ export default class ValidatorDetail extends Vue {
   }
 
   openRedelegateModal() {
+    let index = this.$route.params.index
+    this.$refs.redelegateModalRef.show(this.validator.Address)
+    // this.$router.push({
+    //   path: '/redelegate',
+    //   params: {
+    //     index
+    //   }
+    // })
   }
 
 }</script>

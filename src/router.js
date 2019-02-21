@@ -6,6 +6,7 @@ import store from './store'
 import FirstPage from './views/FirstPage.vue'
 import MyAccount from './views/MyAccount.vue'
 import MyDelegations from './views/MyDelegations.vue'
+import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
 import CandidateList from './views/CandidateList.vue'
@@ -102,6 +103,15 @@ const router = new VueRouter({
         }      
       },
       {
+        path: 'redelegate',
+        name: 'redelegate',
+        component: Redelegate,
+        meta: {
+          requireLogIn: true,
+          requireDeps: true
+        }      
+      },
+      {
         path: 'rewards',
         name: 'rewards',
         component: Rewards,
@@ -171,12 +181,6 @@ router.beforeEach(async (to, from, next) => {
 
     next('/login')
     return
-  }
-
-  if(to.name === 'firstPage' || to.name === 'account' || to.name === 'delegations' || to.name === "rewards" || to.name === "validators" || to.name === "validatorDetail" || to.name === 'blockexplorer' || to.name === "FAQ") {
-    store.commit('DPOS/setShowSidebar', true)
-  } else {
-    store.commit('DPOS/setShowSidebar', false)
   }
 
   next()

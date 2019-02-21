@@ -45,7 +45,8 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
   },
   computed: {
     ...DPOSStore.mapState([
-      'validators'
+      'validators',
+      'validatorFields'
     ])
   },
   methods: {
@@ -64,16 +65,6 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
   }
 })
 export default class ValidatorList extends Vue {
-  fields = [
-    { key: 'Name', sortable: true },
-    { key: 'Status', sortable: true },
-    { key: 'delegationsTotal', sortable: true , label: 'Delegations Total'},
-    { key: 'votingPower', sortable: true , label: 'Voting Power'},
-    // { key: 'Weight', sortable: true },
-    { key: 'Fees', sortable: true },
-    // { key: 'Uptime', sortable: true },
-    // { key: 'Slashes', sortable: true },
-  ]
 
   async mounted() {
     await this.refresh()

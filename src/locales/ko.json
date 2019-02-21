@@ -1,0 +1,229 @@
+{
+  "views": {
+    "candidate_detail": {
+      "www_candidate_com": "www.candidate.com",
+      "lorem_ipsum_dolor_sit_amet": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros. Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.",
+      "delegate": "위임",
+      "un_delegate": "위임 취소"
+    },
+    "candidate_list": {
+      "candidates": "후보",
+      "no_candidates": "후보가 없습니다"
+    },
+    "first_page": {
+      "please_log_in": "로그인하세요",
+      "sign_out_account": "계정 로그아웃",
+      "login": "로그인",
+      "sign_in_with_existing_account": "기존 계정으로 로그인",
+      "setup_new_account_from_scratch": "새로운 계정 설정하기",
+      "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
+      "new_user": "새 사용자",
+      "returning_user": "Returning User",
+      "sign_out": "로그아웃",
+      "create_account": "계정 생성",
+      "restore_account": "계정 복구"
+    },
+    "help": {
+      "what_is_plasma_chain": "PlasmaChain이 무엇인가요?",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
+      "what_is_staking": "스테이킹이 무엇인가요?",
+      "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",
+      "help_secure_plasma_chain": "help secure PlasmaChain",
+      "by_staking_your_tokens_with": "by staking your tokens with a validator.",
+      "why_is_staking_important_for": "Why is staking important for PlasmaChain?",
+      "as_plasma_chain_runs_a_delegated": "As PlasmaChain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for PlasmaChain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.",
+      "how_can_i_stake_my": "How can I stake my LOOM tokens on PlasmaChain?",
+      "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
+      "create_an_account": "계정 생성",
+      "generate_a_private_key": "개인 키 생성",
+      "log_in_to_your_meta_mask": "Log in to your MetaMask wallet",
+      "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto PlasmaChain",
+      "choose_validators_to_stake_with": "Choose validators to stake with",
+      "how_many_tokens_are_required": "How many tokens are required to become a delegator?",
+      "there_is_no_minimum_required": "There is no minimum required amount of tokens to be a delegator. Any LOOM token holder can delegate to any validator candidate on the network.",
+      "which_validator_s_should_i_delegate": "Which validator(s) should I delegate to?",
+      "you_can_use_the": "You can use the",
+      "for_a_full_list_of": "for a full list of available validator candidates. Keep in mind that validators perform the critical services that maintain the integrity of the system — proposing new blocks, verifying transactions, and participating in governance. In researching the validators that best suit you, you will likely want to evaluate around criteria such as performance (uptime, slashes), reputation, fee % on rewards, community, etc.",
+      "do_i_lose_control_of": "Do I lose control of my tokens when I delegate them to a validator?",
+      "no_upon_delegation_your_tokens": "No. Upon delegation, your tokens will be sent to a smart contract and essentially frozen on the network for the duration of your lock-up period (which is up to you to select). When the lock-up ends, your tokens are automatically released back to you along with any additional rewards that your validator may have shared with their staking pool.",
+      "note_a_validator_never_has": "Note: a validator never has direct control of your delegated stake. They cannot move your tokens under any circumstances. For all intents and purposes, you remain the owner while your stake is temporarily assigned to the network.",
+      "can_i_delegate_to_multiple": "Can I delegate to multiple validator candidates?",
+      "yes_users_can_choose_to": "Yes. Users can choose to stake their tokens across several validators simultaneously.",
+      "will_i_earn_rewards_on": "Will I earn rewards on the tokens I delegate to a validator?",
+      "validators_earn_rewards_on_any": "Validators earn rewards on any tokens that are delegated to their staking pool. They can choose to share a portion of those rewards back to their delegators — but this is entirely up to the validator. The percentage each validator shares will be published on the",
+      "to_ensure_full_transparency_so": "to ensure full transparency, so that users can make informed decisions prior to staking. For additional info on rewards, see",
+      "this_post_on_validator_and": "this post on validator and staking economics",
+      "what_currency_will_rewards_be": "What currency will rewards be paid in?",
+      "how_do_i_claim_my": "How do I claim my rewards?",
+      "the_delegation_rewards_will_be": "The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the",
+      "plasma_chain_dashboard": "PlasmaChain 대시보드",
+      "": ".",
+      "when_will_i_receive_rewards": "When will I receive rewards on my delegations?",
+      "currently_validator_rewards_are_calculated": "Currently, validator rewards are calculated and paid out at the end of election cycles, which run every 2 weeks.",
+      "note_this_is_an_area": "Note: this is an area of active research and we are planning to shift toward more frequent payout cycles as the network matures.",
+      "how_long_will_my_stake": "How long will my stake be locked for?",
+      "you_can_choose_from_any": "You can choose from any of the pre-defined lock-up periods — 2 weeks, 3 months, 6 months, or 1 year.",
+      "for_the_validators_that_choose": "For the validators that choose to share rewards on their staking pool, delegators will receive bonus incentives for various lock-up periods. Longer lock-ups are rewarded with higher percentages, as detailed below:",
+      "note_these_bonus_levels_are": "Note: these bonus levels are before deduction of any validator fees.",
+      "how_can_i_un_delegate_my": "How can I un-delegate my tokens?",
+      "simply_navigate_to_my_delegations": "Simply navigate to “My Delegations”, select a specific validator, and click the “Un-delegate” button:",
+      "once_i_un_delegate_how_long": "Once I un-delegate, how long will it take to regain full access to my tokens?",
+      "at_launch_delegators_funds_will": "At launch, delegators’ funds will be fully released after 2 weeks. This is a security measure to mitigate against scenarios of staking with a bad candidate to increase their odds of gaining the right to validate, and then immediately un-delegating. This is an area of active research and something we plan to iterate through over the coming months.",
+      "are_there_any_ways_to": "Are there any ways to lose some of my delegated tokens?",
+      "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
+      "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
+      "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
+    },
+    "history": {
+      "trade_history": "거래 내역",
+      "sort_by": "Sort by:",
+      "item_1": "아이템 1",
+      "item_2": "아이템 2",
+      "home": "홈"
+    },
+    "my_account": {
+      "account_details": "Account details",
+      "deposit_withdraw": "Deposit withdraw",
+      "connect_to_deposit_funds": "Connect to deposit funds",
+      "map_accounts": "Map accounts",
+      "deposit": "Deposit",
+      "withdraw": "Withdraw",
+      "use_maximum": "Use maximum",
+      "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
+      "withdraw_to_metamask": "Withdraw to your wallet"
+    },
+    "my_delegations": {
+      "no_delegations": "No Delegations"
+    },
+    "rewards": {
+      "unclaimed_rewards": "Unclaimed rewards:",
+      "you_have_yet_to_receive": "You have yet to receive any rewards",
+      "claim_reward": "Claim Reward"
+    },
+    "validator_detail": {
+      "state": "상태:",
+      "amount_delegated": "Amount Delegated:",
+      "amount_delegated_loom": "{amountDelegated} LOOM",
+      "updated_amount": "Updated Amount:",
+      "updated_amount_loom": "{updatedAmount} LOOM",
+      "timelock_tier": "Timelock Tier:",
+      "timelock": "Timelock:",
+      "unlocked": "Unlocked"
+    },
+    "validator_list": {
+      "no_validators_available_please_try": "No validators available, please try again later",
+      "validators": "검증자"
+    }
+  },
+  "components": {
+    "faucet_footer": {
+      "loom_network": "Loom Network",
+      "eth_fiddle": "EthFiddle",
+      "eth_deploy": "EthDeploy",
+      "crypto_zombies": "CryptoZombies",
+      "solidity_x": "SolidityX",
+      "what_is_blockchain": "What is Blockchain",
+      "loom_sdk": "Loom SDK",
+      "delegatecall": "Delegatecall",
+      "github": "Github",
+      "medium": "미디엄",
+      "angel_co": "Angel.co",
+      "twitter": "트위터",
+      "telegram": "텔레그램",
+      "email": "이메일",
+      "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
+    },
+    "faucet_header": {
+      "connected": "connected",
+      "disconnected": "disconnected",
+      "explorer": "Explorer",
+      "f_a_q": "자주 묻는 질문",
+      "next_election_cycle": "Next election cycle:",
+      "plasma_chain": "PlasmaChain:",
+      "staked": "Staked:",
+      "deposit": "입금",
+      "plasmachain_dashboard": "Plasmachain 대시보드",
+      "dashboard": "대시보드",
+      "wallet": "지갑",
+      "my_staking": "내 스테이킹",
+      "my_stakes": "My Stakes",
+      "status": "상태",
+      "block_explorer": "Block Explorer"
+    },
+    "faucet_sidebar": {
+      "my_account": "내 계정",
+      "my_delegations": "내 위임",
+      "rewards": "보상"
+    },
+    "layout": {
+      "metamask_error": "Metamask error!?",
+      "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
+      "mapping_error": "Mapping error!?",
+      "your_account_appears_to_be": "Your account appears to be mapped with the following address:",
+      "but_your_current_account_address": "but your current account address is:",
+      "please_change_your_metamask_account": "Please change your Metamask account",
+      "please_check_your_metamask_account": "Please check your Metamask account and/or network"
+    },
+    "loading_spinner": {
+      "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
+      "this_could_take_several_minutes": "This could take several minutes. Please don't close or refresh your browser"
+    },
+    "modals": {
+      "confirm_seed_modal": {
+        "please_type_in_words_confirm_indexes_0": "Please type in words {confirmIndexes01}, {confirmIndexes11}, and {confirmIndexes21} to confirm",
+        "word_confirm_1": "Word{confirm1}:"
+      },
+      "faucet_delegate_modal": {
+        "amount": "Amount:",
+        "locktime_bonuses": "Locktime / Bonuses:",
+        "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
+        "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
+      },
+      "restore_account_modal": {
+        "please_type_in_your_seed": "Please type in your seed phrase below.",
+        "note_the_phrase_is_case": "Note: the phrase is case sensitive and each word needs to be separated by one space."
+      },
+      "seed_phrase_modal": {
+        "note_these_12_words_allow": "Note: these 12 words allow you to recover your wallet in case of loss or damage.",
+        "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
+        "write_or_print_it_out": "Write or print it out and keep in a safe place.",
+        "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
+        "copy_to_clipboard": "클립보드에 복사"
+      },
+      "success_modal": {
+        "success": "성공"
+      }
+    },
+    "blockExplorer": {
+      "block_info": {
+        "on": "On",
+        "verified": "Verified",
+        "transactions": "트랜잭션"
+      },
+      "block_list": {
+        "blocks": "블록",
+        "block_height": "Block Height:",
+        "row_value": "#{rowValue}"
+      },
+      "decoded_tx": {
+        "transaction_data": "트랜잭션 데이터:"
+      },
+      "transaction": {
+        "push": "Push",
+        "type": "타입:",
+        "walker": "Walker",
+        "listing_price_1_99": "Listing Price: $1.99",
+        "rarity": "Rarity:",
+        "rare": "Rare",
+        "entry": "Entry:",
+        "return_a_zombie_to_hand": "Return a zombie to hand",
+        "sold": "Sold"
+      },
+      "transaction_list": {
+        "filter_by": "Filter by",
+        "most_old": "Most old",
+        "pending": "Pending"
+      }
+    }
+  }
+}

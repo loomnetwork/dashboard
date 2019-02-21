@@ -66,7 +66,7 @@ export default class ValidatorList extends Vue {
   fields = [
     { key: 'Name', sortable: true },
     { key: 'Status', sortable: true },
-    { key: 'totalDelegation', sortable: true , label: 'Delegation Total'},
+    // { key: 'totalDelegation', sortable: true , label: 'Delegation Total'},
     { key: 'votingPower', sortable: true , label: 'Voting Power'},
     // { key: 'Weight', sortable: true },
     { key: 'Fees', sortable: true },

@@ -43,7 +43,7 @@
       "there_is_no_minimum_required": "对于成为委托者, 没有最低代币数量要求。任何 LOOM 代币持有者都可以委托给网络上的候选验证者。",
       "which_validator_s_should_i_delegate": "我该委托给哪个/些验证者呢？",
       "you_can_use_the": "你可以在 ",
-      "for_a_full_list_of": "for a full list of available validator candidates. Keep in mind that validators perform the critical services that maintain the integrity of the system — proposing new blocks, verifying transactions, and participating in governance. In researching the validators that best suit you, you will likely want to evaluate around criteria such as performance (uptime, slashes), reputation, fee % on rewards, community, etc.",
+      "for_a_full_list_of": " 查看候选验证者列表。请记住，验证者执行着维护系统完整性的关键服务 —— 提出新块、验证事务和参与治理。在研究最适合你的验证者时，可以利用其表现（正常运行时间、罚没记录）、声誉、奖励佣金百分比、社区等标准来进行评估。",
       "do_i_lose_control_of": "当我将代币委托给验证者时，我会失去代币的控制权吗？",
       "no_upon_delegation_your_tokens": "不会。在委托时，你的代币将被发送到一个智能合约，在你的锁定期（由你选择）内它们基本上冻结在网络上。当锁定期结束时，你的代币将自动释放给你，同时你还将收到你的验证者分享给你的相关奖励。",
       "note_a_validator_never_has": "注意：验证者永远无法直接控制你委托给他的代币。他们在任何情况下都不能动你的代币。总而言之，在将代币暂时指派给网络期间，你仍然是所有者。",

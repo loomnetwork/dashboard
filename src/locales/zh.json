@@ -82,10 +82,14 @@
       "home": "首页"
     },
     "my_account": {
+      "my_address": "My Address",
+      "balance": "Balance",
       "mainnet": "Mainnet",
+      "plasmachain": "PlasmaChain",
       "account_details": "账户信息",
       "deposit_withdraw": "存取",
       "connect_to_deposit_funds": "连接以存币",
+      "no_mapping_detected": "No mapping detected",
       "map_accounts": "映射账户",
       "deposit": "存入",
       "withdraw": "取出",

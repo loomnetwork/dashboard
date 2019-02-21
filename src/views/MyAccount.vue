@@ -20,7 +20,6 @@
 
                     <b-card-body style="position: relative;">
                       <div class="row mt-4">
-                        <loading-spinner v-if="isLoading2" :showBackdrop="true"></loading-spinner>
                         <div class="col mb-4">
                           <h5 class="rmv-spacing" style="display:none"><strong>{{ $t('views.my_account.my_address') }}</strong></h5>
                           <div class="address-container"  style="display:none">
@@ -79,7 +78,6 @@
                     <b-card-body>
                       <div class="row mt-4 mb-4">
                         <div class="col-md-8 offset-md-2">
-                          <loading-spinner v-if="isLoading" :showBackdrop="true"></loading-spinner>
                           <!-- Map Accounts -->
                           <div v-if="status != 'mapped'">
                             <div id="map-accounts">
@@ -370,14 +368,12 @@ export default class MyAccount extends Vue {
   }
 
   async refresh(poll) {    
-    if(poll) this.isLoading2 = true
     this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
     this.userAccount.balance = await this.getDappchainLoomBalance()    
     this.mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,
       address: this.userEthAddr
     })
-    if(poll) this.isLoading2 = false
   }
 
   async initWeb3() {

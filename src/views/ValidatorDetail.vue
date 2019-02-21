@@ -3,10 +3,11 @@
     <div class="faucet-content">
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef"
-                        @onDelegate="redelegateHandler"
+                        @ok="redelegateHandler"
                         :hasDelegation="hasDelegation"
                         :delegation="delegation"
-                        :validators="validators">
+                        :validators="validators"
+                        :originValidator="validator">
       </redelegate-modal>
       <success-modal></success-modal>
       <div>
@@ -113,7 +114,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setErrorMsg'
     ]),
     ...DPOSStore.mapActions([
-      'getValidatorList'
+      'getValidatorList',
+      'redelegateAsync'
     ]),
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
@@ -273,7 +275,6 @@ export default class ValidatorDetail extends Vue {
   }
 
   async redelegateHandler() {
-
   }
 
   get canDelegate() {

@@ -46,7 +46,8 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
   props: {
-     validators: { required: true }
+     validators: { required: true },
+     originValidator: Object,
   },
   components: {
     LoadingSpinner,
@@ -76,6 +77,7 @@ export default class RedelegateModal extends Vue {
   filteredTargetItems = []
   origin = {}
   target = {}
+  delegation = {}
   isLoading = false
   originHasDelegation = false
 
@@ -84,24 +86,35 @@ export default class RedelegateModal extends Vue {
 
   async show() {
     if(this.validators.length <= 0 ) return
+    this.origin = this.originValidator || this.validators[0]
+    this.target = this.validators[0]
     this.filteredOriginItems = this.validators
     this.filteredTargetItems = this.validators
     this.$refs.modalRef.show()
   }
 
-  okHandler() {
+  async okHandler() {
 
     if(!this.origin.Address || !this.target.Address) {
       this.errorMsg = "Please select both a target and an origin validator"
       return
     }
-    if(this.origin.Address === this.target.Address || !this.originHasDelegation) {
+    if(this.origin.Address === this.target.Address) {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
 
-    this.$emit('ok')
+    if(!this.originHasDelegation || this.delegation.amount <= 0) {
+      this.errorMsg = "No previous delegation detected"
+      return
+    }
+
+
+    await redelegateAsync(this.origin.pubKey, this.target.pubKey, this.delegation.amount)
+
+    // this.$emit("ok")
     this.$refs.modalRef.hide()
+
   }  
 
   getLabel(item) {
@@ -146,8 +159,8 @@ export default class RedelegateModal extends Vue {
     const {pubKey} = item
     if(!pubKey) return
     this.isLoading = true
-    const delegation = await this.queryDelegation(pubKey)
-    this.originHasDelegation = parseInt(delegation.amount) > 0 ? true : false
+    this.delegation = await this.queryDelegation(pubKey)
+    this.originHasDelegation = parseInt(this.delegation.amount) > 0 ? true : false
     this.originErrorMsg = !this.originHasDelegation ? "You don't have any existing delegations on this validator" : "" 
     this.isLoading = false
   }

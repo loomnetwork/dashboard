@@ -251,8 +251,10 @@ export default {
 
       try {
         await user.redelegateAsync(origin, validator, amount)
+        commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)
+        commit("setErrorMsg", {msg: "Failed to redelegate stake", forever: false,report:true,cause:err}, {root: true})
       }
 
     }

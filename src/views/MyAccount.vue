@@ -9,7 +9,7 @@
               <div role="tablist" id="accordion">
                 <b-card no-body class="mb-3">
                   <b-card-header header-tag="header" class="p-1" role="tab">
-                    <a v-b-toggle.accordion1>
+                    <a>
                       <h4>
                         <strong>
                           {{ $t('views.my_account.account_details') }}
@@ -17,7 +17,7 @@
                       </h4>
                     </a>
                   </b-card-header>
-                  <b-collapse id="accordion1" accordion="my-accordion" role="tabpanel">
+
                     <b-card-body style="position: relative;">
                       <div class="row mt-4">
                         <loading-spinner v-if="isLoading2" :showBackdrop="true"></loading-spinner>
@@ -54,13 +54,13 @@
                         </div>                        
                       </div>                                    -->
                     </b-card-body>
-                  </b-collapse>
+
                 </b-card>                
                 <b-card no-body class="mb-3">
                   <b-card-header header-tag="header" class="p-1" role="tab">
                     <div class="row">                   
                       <div class="col-md-6">
-                        <a ref="accordion2Toggle" v-b-toggle.accordion2>
+                        <a ref="accordion2Toggle">
                           <h4>
                             <strong>
                               {{ $t('views.my_account.deposit_withdraw') }}
@@ -75,7 +75,7 @@
                       </div>
                     </div>
                   </b-card-header>
-                  <b-collapse id="accordion2" :visible="metamaskConnected" accordion="my-accordion" role="tabpanel">
+
                     <b-card-body>
                       <div class="row mt-4 mb-4">
                         <div class="col-md-8 offset-md-2">
@@ -161,7 +161,7 @@
                         </div>
                       </div>
                     </b-card-body>
-                  </b-collapse>
+
                 </b-card>
                 <!-- TODO: Add History page if required -->
                 <!-- <b-card no-body class="mb-3">
@@ -447,15 +447,6 @@ export default class MyAccount extends Vue {
     this.isLoading = false
 
   }
-
-  async initAccordion1() {
-    this.refresh(true)
-  }
-
-  async initAccordion2() {
-    this.currentAllowance = await this.checkAllowance()
-  }
-
 
   async checkAllowance() {    
     if(!this.dposUser) return      

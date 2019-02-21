@@ -100,6 +100,11 @@
     "my_delegations": {
       "no_delegations": "No Delegations"
     },
+    "redelegate": {
+      "redelegate": "Redelegate",
+      "from": "From",
+      "to": "To"
+    },
     "rewards": {
       "unclaimed_rewards": "Unclaimed rewards:",
       "you_have_yet_to_receive": "You have yet to receive any rewards",

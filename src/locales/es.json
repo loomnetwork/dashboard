@@ -82,10 +82,14 @@
       "home": "Home"
     },
     "my_account": {
+      "my_address": "My Address",
+      "balance": "Balance",
       "mainnet": "Mainnet",
+      "plasmachain": "PlasmaChain",
       "account_details": "Account details",
       "deposit_withdraw": "Deposit withdraw",
       "connect_to_deposit_funds": "Connect to deposit funds",
+      "no_mapping_detected": "No mapping detected",
       "map_accounts": "Map accounts",
       "deposit": "Deposit",
       "withdraw": "Withdraw",

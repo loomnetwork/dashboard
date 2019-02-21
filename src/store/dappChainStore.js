@@ -377,21 +377,37 @@ export default {
     }, 
     async getValidatorsAsync({ state, dispatch }, payload) {
       const dpos2 = await dispatch('getDpos2')
-      const dpos2Validators = await dpos2.getValidatorsAsync()
-      const dpos2Candidates = await dpos2.getCandidatesAsync()
-      const dpos2Delegations = await dpos2.getAllDelegations()
-      const candidateList = dpos2Candidates.map((candidate,i) => (
-        {
+      const [dpos2Validators,dpos2Candidates,dpos2Delegations] = await Promise.all([
+        dpos2.getValidatorsAsync(),
+        dpos2.getCandidatesAsync(),
+        dpos2.getAllDelegations()
+      ]).then( async (all) => all)
+      const keyedDelegTotals = dpos2Delegations
+        .filter(dc => dc.delegationsArray.length > 0 )
+        .reduce((agg,dc) => {
+          agg.push(...dc.delegationsArray);
+          return agg;
+        },[])
+        .reduce((agg,delegation) => {
+          let key = delegation.validator.local.toString();
+          if (key in agg) agg[key] = agg[key].add(delegation.amount)
+          else  agg[key] = delegation.amount
+          return agg;
+        },{})
+      //debugger
+      const candidateList = dpos2Candidates.map((candidate,i) => {
+        let address = LocalAddress.fromPublicKey(candidate.pubKey).toString();
+        return {
           pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
-          address: LocalAddress.fromPublicKey(candidate.pubKey).toString(),
+          address,
           active: false,
           website: candidate.website,
           description: candidate.description,
           fee: candidate.fee.toString(),
           name: candidate.name,
-          delegationsTotal: (dpos2Delegations[i]||{}).delegationTotal
+          delegationsTotal: keyedDelegTotals[address] ? keyedDelegTotals[address].toString() : 0
         }
-      ))
+      })
       const combination = [...candidateList]
       for (let validator of dpos2Validators) {
         const pubKey = CryptoUtils.Uint8ArrayToB64(validator.pubKey)

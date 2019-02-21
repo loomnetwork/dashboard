@@ -116,7 +116,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class ValidatorDetail extends Vue {
   fields = [
     { key: 'Status', sortable: false },
-    // { key: 'totalDelegation', sortable: true , label: 'Delegation Total'},
+    { key: 'delegationsTotal', sortable: true , label: 'Delegations Total'},
     { key: 'votingPower', sortable: true , label: 'Voting Power'},
     // { key: 'Weight', sortable: false },
     { key: 'Fees', sortable: false },

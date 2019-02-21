@@ -117,7 +117,14 @@ $theme-colors: (
     h4, h2, h1 {
       color: gray;
     }
+    th[aria-colindex="3"], td[aria-colindex="3"] {
+      text-align: right !important;
+    }
+    th[aria-colindex="4"], td[aria-colindex="4"] {
+      text-align: right !important;
+    }
   }
+
 }
 
 </style>

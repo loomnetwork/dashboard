@@ -5,7 +5,12 @@
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
             <h1>{{ $t('views.validator_list.validators') }}</h1>
+<<<<<<< HEAD
             <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" @row-clicked="showValidatorDetail"></faucet-table>
+=======
+            <p><fa icon="info-circle" fixed-width /> Staking is disabled on bootstrap validators.</p>
+            <faucet-table :items="validators" :fields="fields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
+>>>>>>> develop
           </div>
           <div v-else-if="validators !== null && validators.length == 0">
             <h2>
@@ -73,6 +78,14 @@ export default class ValidatorList extends Vue {
     await this.getValidatorList()
   }
 
+  /**
+   * adds class bootstrap node if is bootstrap
+   */
+  validatorCssClass( item, type) {
+    console.log(34943034)
+    return item.isBoostrap ? ['boostrap-validator'] : []
+  } 
+
   showValidatorDetail(record, index) {
     this.$router.push(`/validator/${index}`)
   }
@@ -108,12 +121,23 @@ $theme-colors: (
     h4, h2, h1 {
       color: gray;
     }
+    th[aria-colindex="3"], td[aria-colindex="3"] {
+      text-align: right !important;
+    }
+    th[aria-colindex="4"], td[aria-colindex="4"] {
+      text-align: right !important;
+    }
+    #faucet-table.table tbody tr td.table-danger {
+      opacity: 0.5;
+    }
+    #faucet-table.table tbody tr td.table-danger ~ td {
+      opacity: 0.5
+    }
   }
-}
 
-</style>
-<style>
-body {
-  overflow-y: scroll;
+
 }
+  body {
+    overflow-y: scroll;
+  }
 </style>

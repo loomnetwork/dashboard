@@ -1,6 +1,7 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
+import BigNumber from 'bignumber.js';
 
 
 
@@ -23,7 +24,7 @@ const defaultState = () => {
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
-    validators: [],
+    validators: null,
     status: "check_mapping",
     metamaskDisabled: false,
     showLoadingSpinner: false,
@@ -34,7 +35,6 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4"],
     validatorFields: [
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
@@ -43,7 +43,8 @@ const defaultState = () => {
       { key: 'Fees', sortable: true },
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
-    ]    
+    ],
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4", "test-z-us1-dappchains-2-aws0"]
   }
 }
 
@@ -146,14 +147,13 @@ export default {
       }      
       commit("setWeb3", web3js)
     },
-    async getValidatorList({dispatch, commit}) {
+    async getValidatorList({dispatch, commit, state}) {
       try {
         const validators = await dispatch("DappChain/getValidatorsAsync", null, {root: true})
         if (validators.length === 0) {
           return null
         }
         const validatorList = []
-        const slugMapping = []
         for (let i in validators) {
 
           let weight = 0
@@ -166,19 +166,26 @@ export default {
 
           const validator = validators[i]
           const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
+          const isBootstrap = state.prohibitedNodes.includes(validatorName)
           validatorList.push({
-            Name: validatorName,
+            Name: `${validatorName} ${isBootstrap ? "(bootstrap)" : ''}` ,
             Address: validator.address,
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
+            votingPower: formatToCrypto(validator.stake || 0),
+            delegationsTotal: formatToCrypto(validator.delegationsTotal),
             Weight: (validator.weight || '0') + '%',
-            Fees: (validator.fee/100 || '0') + '%',
+            Fees: isBootstrap ? 'N/A' : (validator.fee/100 || '0') + '%',
             Uptime: (validator.uptime || '0') + '%',
             Slashes: (validator.slashes || '0') + '%',
             Description: (validator.description) || null,
             Website: (validator.website) || null,
-            Weight: weight || 0,
-            _cellVariants: validator.active ? { Status: 'active'} : undefined,
+            Weight: weight || 0,            
+            _cellVariants:  {
+              Status: validator.active ? 'active' : undefined,
+              Name:  isBootstrap ? "danger" : undefined
+            },
+            isBootstrap,
             pubKey: (validator.pubKey)
           })
 

@@ -379,18 +379,19 @@ export default {
       const dpos2 = await dispatch('getDpos2')
       const dpos2Validators = await dpos2.getValidatorsAsync()
       const dpos2Candidates = await dpos2.getCandidatesAsync()
-      const candidateList = []
-      for (let candidate of dpos2Candidates) {
-        candidateList.push({
+      const dpos2Delegations = await dpos2.getAllDelegations()
+      const candidateList = dpos2Candidates.map((candidate,i) => (
+        {
           pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
           address: LocalAddress.fromPublicKey(candidate.pubKey).toString(),
           active: false,
           website: candidate.website,
           description: candidate.description,
           fee: candidate.fee.toString(),
-          name: candidate.name
-        })
-      }
+          name: candidate.name,
+          delegationsTotal: (dpos2Delegations[i]||{}).delegationTotal
+        }
+      ))
       const combination = [...candidateList]
       for (let validator of dpos2Validators) {
         const pubKey = CryptoUtils.Uint8ArrayToB64(validator.pubKey)

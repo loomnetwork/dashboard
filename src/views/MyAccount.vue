@@ -203,20 +203,6 @@
         </main>
       </div>
     </div>
-    <b-modal id="metamask-modal" ref="metamaskModalRef" centered :no-close-on-backdrop="true">
-      <div slot="modal-header" class="w-100">
-        <h4 class="text-center">
-          {{ $t('views.my_account.connection_error') }}
-        </h4>
-      </div>
-      <div class="d-block text-center pb-4 pt-4 pr-2 pl-2">
-        <h5 class="mb-4">{{ $t('views.my_account.please_connect_to_metamask_to') }}</h5>
-        <b-btn variant="outline-danger" block @click="connectFromModal">{{ $t('views.my_account.connect') }}</b-btn>
-      </div>
-      <div slot="modal-footer" class="w-100 text-center">
-        <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en" class="metamask-link">{{ $t('views.my_account.click_here_to_download_metamask') }}</a>
-      </div>   
-    </b-modal>    
   </div>
  
 </template>
@@ -374,8 +360,7 @@ export default class MyAccount extends Vue {
 
   async mounted() {
     await this.refresh(true)
-    this.currentAllowance = await this.checkAllowance()    
-    this.refreshInterval = setInterval(() => this.refresh(false), 5000)
+    this.currentAllowance = await this.checkAllowance()
   }
 
   destroyed() {

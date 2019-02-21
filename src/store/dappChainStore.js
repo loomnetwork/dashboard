@@ -252,7 +252,7 @@ export default {
         console.error(err)
       }
     },
-    async getMetamaskLoomBalance({ state }, payload) {
+    async getMetamaskLoomBalance({ state, commit }, payload) {
       if (!state.web3) return 0
 
       const web3js = state.web3

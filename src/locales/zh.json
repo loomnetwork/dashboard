@@ -82,6 +82,7 @@
       "home": "首页"
     },
     "my_account": {
+      "mainnet": "Mainnet",
       "account_details": "账户信息",
       "deposit_withdraw": "存取",
       "connect_to_deposit_funds": "连接以存币",
@@ -94,6 +95,11 @@
     },
     "my_delegations": {
       "no_delegations": "暂无委托"
+    },
+    "redelegate": {
+      "redelegate": "Redelegate",
+      "from": "From",
+      "to": "To"
     },
     "rewards": {
       "unclaimed_rewards": "未领取的奖励：",

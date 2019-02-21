@@ -10,7 +10,7 @@
             <h1>{{validator.Name}}</h1>
             <input type="text" ref="address" :value="validator.Address" tabindex='-1' aria-hidden='true' style="position: absolute; left: -9999px">
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
-            <div v-if="userIsLoggedIn">
+            <div v-if="userIsLoggedIn && !validator.isBootstrap">
               <h5>
                 {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState}}</span>
               </h5>

@@ -83,8 +83,8 @@
     },
     "my_account": {
       "account_details": "账户信息",
-      "deposit_withdraw": "Deposit withdraw",
-      "connect_to_deposit_funds": "Connect to deposit funds",
+      "deposit_withdraw": "存取",
+      "connect_to_deposit_funds": "连接以存币",
       "map_accounts": "映射账户",
       "deposit": "存入",
       "withdraw": "取出",
@@ -106,8 +106,8 @@
       "amount_delegated_loom": "{amountDelegated} 个LOOM",
       "updated_amount": "更新后的数量：",
       "updated_amount_loom": "{updatedAmount} 个LOOM",
-      "timelock_tier": "Timelock Tier:",
-      "timelock": "Timelock:",
+      "timelock_tier": "可选的计时锁定：",
+      "timelock": "计时锁定：",
       "unlocked": "已解除锁定"
     },
     "validator_list": {
@@ -175,7 +175,7 @@
       },
       "faucet_delegate_modal": {
         "amount": "数量：",
-        "locktime_bonuses": "Locktime / Bonuses:",
+        "locktime_bonuses": "锁定期 / 奖励：",
         "warning_please_note_that_any": "提醒一下，请注意任何额外的委托都将覆盖已存在的委托！",
         "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。"
       },
@@ -196,7 +196,7 @@
     },
     "blockExplorer": {
       "block_info": {
-        "on": "On",
+        "on": "开启",
         "verified": "已核实",
         "transactions": "事务"
       },
@@ -209,7 +209,7 @@
         "transaction_data": "事务数据："
       },
       "transaction": {
-        "push": "Push",
+        "push": "推送",
         "type": "类型：",
         "walker": "步行者",
         "listing_price_1_99": "上市价格：1.99美元",
@@ -221,8 +221,8 @@
       },
       "transaction_list": {
         "filter_by": "筛选方式：",
-        "most_old": "Most old",
-        "pending": "Pending"
+        "most_old": "最早的记录",
+        "pending": "待处理"
       }
     }
   }

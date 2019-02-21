@@ -6,7 +6,7 @@
           <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
             <h1>{{ $t('views.validator_list.validators') }}</h1>
             <p><fa icon="info-circle" fixed-width /> Staking is disabled on bootstrap validators.</p>
-            <faucet-table :items="validators" :fields="fields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
+            <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
           </div>
           <div v-else-if="validators !== null && validators.length == 0">
             <h2>

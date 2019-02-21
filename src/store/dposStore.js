@@ -38,7 +38,8 @@ const defaultState = () => {
     validatorFields: [
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
-      { key: 'Stake', sortable: true },
+      { key: 'delegationsTotal', sortable: true, label: "Delegations total" },
+      { key: 'votingPower', sortable: true, label: "Voting power"  },
       // { key: 'Weight', sortable: true },
       { key: 'Fees', sortable: true },
       // { key: 'Uptime', sortable: true },

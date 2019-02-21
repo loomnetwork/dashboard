@@ -63,7 +63,7 @@
       "note_this_is_an_area": "注意：这一点还在继续研究中，随着网络不断趋于成熟，我们会计划更频繁的支付周期。",
       "how_long_will_my_stake": "我的代币会锁定多长时间？",
       "you_can_choose_from_any": "你可以选择任何一个预定义的锁定期 —— 2周，3个月，6个月，或1年。",
-      "for_the_validators_that_choose": "从选择分享奖励的验证者那里，委派者将获得一定量的奖励，数额与其锁定期挂钩。锁定期越长，奖励比例越高，具体如下：",
+      "for_the_validators_that_choose": "从选择分享奖励的验证者那里，委托者将获得一定量的奖励，数额与其锁定期挂钩。锁定期越长，奖励比例越高，具体如下：",
       "note_these_bonus_levels_are": "注意：以上奖励是指在扣除任何验证者佣金之前。",
       "how_can_i_un_delegate_my": "我如何取消委托？",
       "simply_navigate_to_my_delegations": "直接去“我的委托”页面，选择某个验证者，然后点击“取消委托”按钮：",

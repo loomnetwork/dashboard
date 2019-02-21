@@ -144,7 +144,6 @@ export default {
           return null
         }
         const validatorList = []
-        const slugMapping = []
         for (let i in validators) {
 
           let weight = 0
@@ -162,6 +161,8 @@ export default {
             Address: validator.address,
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
+            votingPower: formatToCrypto(validator.stake || 0),
+            totalDelegation: "unavailable",
             Weight: (validator.weight || '0') + '%',
             Fees: (validator.fee/100 || '0') + '%',
             Uptime: (validator.uptime || '0') + '%',

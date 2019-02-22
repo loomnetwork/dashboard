@@ -31,10 +31,6 @@
           {
             key: 'zh',
             localizedName: '中文'
-          },
-          {
-            key: 'ja',
-            localizedName: '日本語'
           }
         ]
       }

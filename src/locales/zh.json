@@ -7,8 +7,8 @@
       "un_delegate": "取消委托"
     },
     "candidate_list": {
-      "candidates": "候选人",
-      "no_candidates": "无候选人"
+      "candidates": "候选者",
+      "no_candidates": "无候选者"
     },
     "first_page": {
       "please_log_in": "请登录",
@@ -16,7 +16,7 @@
       "login": "登录",
       "sign_in_with_existing_account": "使用现有帐户登录",
       "setup_new_account_from_scratch": "新建账户",
-      "use_seed_phrase_to_retrieve": "使用种子短语检索现有帐户",
+      "use_seed_phrase_to_retrieve": "使用助记词检索现有帐户",
       "new_user": "新用户",
       "returning_user": "老用户",
       "sign_out": "退出",
@@ -63,7 +63,7 @@
       "note_this_is_an_area": "注意：这一点还在继续研究中，随着网络不断趋于成熟，我们会计划更频繁的支付周期。",
       "how_long_will_my_stake": "我的代币会锁定多长时间？",
       "you_can_choose_from_any": "你可以选择任何一个预定义的锁定期 —— 2周，3个月，6个月，或1年。",
-      "for_the_validators_that_choose": "从选择分享奖励的验证者那里，委派者将获得一定量的奖励，数额与其锁定期挂钩。锁定期越长，奖励比例越高，具体如下：",
+      "for_the_validators_that_choose": "从选择分享奖励的验证者那里，委托者将获得一定量的奖励，数额与其锁定期挂钩。锁定期越长，奖励比例越高，具体如下：",
       "note_these_bonus_levels_are": "注意：以上奖励是指在扣除任何验证者佣金之前。",
       "how_can_i_un_delegate_my": "我如何取消委托？",
       "simply_navigate_to_my_delegations": "直接去“我的委托”页面，选择某个验证者，然后点击“取消委托”按钮：",
@@ -82,9 +82,14 @@
       "home": "首页"
     },
     "my_account": {
+      "my_address": "我的地址",
+      "balance": "余额",
+      "mainnet": "主网",
+      "plasmachain": "PlasmaChain",
       "account_details": "账户信息",
       "deposit_withdraw": "存取",
       "connect_to_deposit_funds": "连接以存币",
+      "no_mapping_detected": "未检测到映射",
       "map_accounts": "映射账户",
       "deposit": "存入",
       "withdraw": "取出",
@@ -94,6 +99,11 @@
     },
     "my_delegations": {
       "no_delegations": "暂无委托"
+    },
+    "redelegate": {
+      "redelegate": "重新委托",
+      "from": "从",
+      "to": "到"
     },
     "rewards": {
       "unclaimed_rewards": "未领取的奖励：",
@@ -180,7 +190,7 @@
         "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。"
       },
       "restore_account_modal": {
-        "please_type_in_your_seed": "请在下方输入你的种子短语。",
+        "please_type_in_your_seed": "请在下方输入你的助记词。",
         "note_the_phrase_is_case": "注意：短语要区分大小写，单词间需一个空格隔开。"
       },
       "seed_phrase_modal": {

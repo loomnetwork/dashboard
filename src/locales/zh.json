@@ -82,14 +82,14 @@
       "home": "首页"
     },
     "my_account": {
-      "my_address": "My Address",
-      "balance": "Balance",
-      "mainnet": "Mainnet",
+      "my_address": "我的地址",
+      "balance": "余额",
+      "mainnet": "主网",
       "plasmachain": "PlasmaChain",
       "account_details": "账户信息",
       "deposit_withdraw": "存取",
       "connect_to_deposit_funds": "连接以存币",
-      "no_mapping_detected": "No mapping detected",
+      "no_mapping_detected": "未检测到映射",
       "map_accounts": "映射账户",
       "deposit": "存入",
       "withdraw": "取出",
@@ -101,7 +101,7 @@
       "no_delegations": "暂无委托"
     },
     "redelegate": {
-      "redelegate": "Redelegate",
+      "redelegate": "重新委托",
       "from": "From",
       "to": "To"
     },

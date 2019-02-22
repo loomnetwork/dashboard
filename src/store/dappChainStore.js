@@ -418,6 +418,7 @@ export default {
           description: candidate.description,
           fee: candidate.fee.toString(),
           name: candidate.name,
+          whitelistAmount: whitelistAmount.toString(),
           delegationsTotal: delegationTotal.toString(),
           totalStaked: totalStaked.toString()
         }

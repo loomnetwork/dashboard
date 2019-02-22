@@ -39,6 +39,7 @@
     "chart.js": "^2.7.2",
     "date-fns": "^1.29.0",
     "google-protobuf": "^3.6.0",
+    "ledger-wallet-provider": "^2.0.1-beta.4",
     "loom-js": "^1.42.2",
     "node-sass": "^4.9.0",
     "protoc": "^1.0.3",
@@ -67,6 +68,7 @@
     "vuex-router-sync": "^5.0.0",
     "waypoints": "^4.0.1",
     "web3": "1.0.0-beta.36",
+    "web3-provider-engine": "^14.1.0",
     "yarn": "^1.7.0"
   },
   "devDependencies": {

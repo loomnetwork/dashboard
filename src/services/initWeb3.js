@@ -1,4 +1,7 @@
 import Web3 from 'web3'
+var ProviderEngine = require('web3-provider-engine');
+var RpcSubprovider = require('web3-provider-engine/subproviders/rpc');
+var LedgerWalletSubproviderFactory = require('ledger-wallet-provider').default;
 
 export const connectToMetamask = async () => {
 
@@ -17,6 +20,26 @@ export const connectToMetamask = async () => {
   if(web3js) {
     return web3js
   }
+
+}
+
+export const initWeb3Hardware = () => {
+
+  return new Promise(
+    async (resolve, reject) => {          
+      let engine = new ProviderEngine()
+      let web3 = new Web3(engine)
+      
+      let ledgerWalletSubProvider = await LedgerWalletSubproviderFactory()
+      engine.addProvider(ledgerWalletSubProvider)
+      engine.addProvider(new RpcSubprovider({rpcUrl: 'https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0'})) // you need RPC endpoint
+      engine.start()
+
+      // window.web3 = new Web3(web3)
+      window.web3.setProvider(engine)
+      resolve(web3)
+    }
+  )
 
 }
 

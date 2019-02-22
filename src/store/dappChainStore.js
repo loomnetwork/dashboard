@@ -377,68 +377,73 @@ export default {
     }, 
     async getValidatorsAsync({ state, dispatch }, payload) {
       const dpos2 = await dispatch('getDpos2')
+
+      // Get all validators, candidates and delegations
       const [dpos2Validators,dpos2Candidates,dpos2Delegations] = await Promise.all([
         dpos2.getValidatorsAsync(),
         dpos2.getCandidatesAsync(),
         dpos2.getAllDelegations()
-      ]).then( async (all) => all)
-      const keyedDelegTotals = dpos2Delegations
-        .filter(dc => dc.delegationsArray.length > 0 )
-        .reduce((agg,dc) => {
-          agg.push(...dc.delegationsArray);
-          return agg;
-        },[])
-        .reduce((agg,delegation) => {
-          let key = delegation.validator.local.toString();
-          if (key in agg) agg[key] = agg[key].add(delegation.amount)
-          else  agg[key] = delegation.amount
-          return agg;
-        },{})
+      ])
 
-      let whitelist = {
-        "NGC_StakeX": new BN("5999982000000000000000000"),
-        "plasma-0": new BN("10000000000000000000000000"),
-        "plasma-1": new BN("10000000000000000000000000"),
-        "plasma-2": new BN("10000000000000000000000000"),
-        "plasma-3": new BN("10000000000000000000000000"),
-        "plasma-4": new BN("10000000000000000000000000"),
-        "stakewith.us": new BN("11746840000000000000000000")
+      // For each validator, get their staked tokens
+      let stakedTokens = {}
+      for (let i in dpos2Delegations) {
+          let address = dpos2Delegations[i].delegationsArray[0].validator.local.toString()
+          stakedTokens[address] = dpos2Delegations[i].delegationTotal
       }
 
-      const candidateList = dpos2Candidates.map((candidate,i) => {
-        let address = LocalAddress.fromPublicKey(candidate.pubKey).toString();
-        let delegationTotal = keyedDelegTotals[address] ? keyedDelegTotals[address] : new BN(0);
-        let whitelistAmount = whitelist[candidate.name] || new BN("1250000000000000000000000");
-        let totalStaked = delegationTotal.add(whitelistAmount);
-        return {
-          pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
-          address,
-          active: false,
-          website: candidate.website,
-          description: candidate.description,
-          fee: candidate.fee.toString(),
-          name: candidate.name,
-          whitelistAmount: whitelistAmount.toString(),
-          delegationsTotal: delegationTotal.toString(),
-          totalStaked: totalStaked.toString()
-        }
-      })
-      const combination = [...candidateList]
-      for (let validator of dpos2Validators) {
-        const pubKey = CryptoUtils.Uint8ArrayToB64(validator.pubKey)
-        const index = candidateList.findIndex(e => e.pubKey === pubKey)
-        if (index < 0) {
-          combination.push({
-            pubKey,
-            active: false,
-            stake: validator.power.toString()
-          })
-        } else {
-          combination[index].active = true
-          combination[index].stake = validator.delegationTotal.toString()
-        }
+      let validators = []
+      for (let candidate of dpos2Candidates) {
+          let addr = candidate.address.local.toString()
+
+          let validator = {
+            // Address info
+            address: addr,
+            pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
+            active : false,
+
+            // TODO: Use candidate statistics 
+            // https://github.com/loomnetwork/loomchain/issues/763
+            totalStaked: 0,
+            whitelist: 0,
+            votingPower: 0,
+            delegationTotal: 0, // Delegation total is |(tokens - whitelist) * bonus|
+
+            // Validator metadata
+            name: candidate.name,
+            website: candidate.website,
+            description: candidate.description,
+            fee: (candidate.fee / 100).toString(),
+            newFee: (candidate.newFee / 100).toString(),
+            feeDelaycounter: candidate.feeDelayCounter.toString()
+          }
+
+          // Get the validator
+          let v = dpos2Validators.find(v => v.address.local.toString() === addr)
+
+          // If there is a validator, set its stakes to the corresponding amounts.
+          if (v !== undefined) {
+              validator.active = true
+
+              // Tokens staked without bonuses
+              validator.totalStaked = stakedTokens[addr].toString()
+
+              // How much was whitelisted from the initial lockup
+              validator.whitelistAmount = v.whitelistAmount.toString()
+
+
+              // Voting Power is the whitelist plus the tokens w/ bonuses
+              validator.votingPower = v.delegationTotal.toString()
+
+              validator.delegationsTotal = new BN(v.delegationTotal).sub(v.whitelistAmount).toString()
+              console.log("VALIDATOR", validator)
+          }
+          
+
+          validators.push(validator)
       }
-      return combination
+
+      return validators
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
       if (!state.dposUser) {

@@ -407,7 +407,7 @@ export default {
             totalStaked: 0,
             whitelist: 0,
             votingPower: 0,
-            delegationTotal: 0, // Delegation total is |(tokens - whitelist) * bonus|
+            delegationTotal: 0,
 
             // Validator metadata
             name: candidate.name,
@@ -436,7 +436,6 @@ export default {
               validator.votingPower = v.delegationTotal.toString()
 
               validator.delegationsTotal = new BN(v.delegationTotal).sub(v.whitelistAmount).toString()
-              console.log("VALIDATOR", validator)
           }
           
 

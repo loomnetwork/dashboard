@@ -394,7 +394,6 @@ export default {
           else  agg[key] = delegation.amount
           return agg;
         },{})
-      //debugger
 
       let whitelist = {
         "NGC_LOOM": new BN("5999982000000000000000000"), 
@@ -411,7 +410,6 @@ export default {
         let delegationTotal = keyedDelegTotals[address] ? keyedDelegTotals[address] : new BN(0);
         let whitelistAmount = whitelist[candidate.name] || new BN("1250000000000000000000000");
         let totalStaked = delegationTotal.add(whitelistAmount);
-        console.log(delegationTotal.toString(),totalStaked.toString())
         return {
           pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
           address,

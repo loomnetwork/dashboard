@@ -1,7 +1,7 @@
 <template>
   <div class="faucet-with-navbar">
     <div class="faucet-content">
-      <div>
+      <div class="container mb-5 column py-3 p-3 d-flex">
           <BlockList ref="blockList" class="block-list" :blockchain="blockchain"
                     :showConnectionDropdown="showConnectionDropdown"
                     :searchQuery="curSearchQuery"/>

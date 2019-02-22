@@ -66,8 +66,8 @@
         </div>
 
         <div class="col-sm-10 col-md-9 v-center" v-if="userIsLoggedIn">           
-          <b-navbar-nav>
-            <b-nav-item class="hidden-medium">
+          <b-navbar-nav class="hidden-medium">
+            <b-nav-item>
               <div v-if="formattedTimeUntilElectionCycle">
                 <div class="countdown-container">
                   <span>Next election cycle: </span><progress class="countdown-bar" :value="timeLeft" max="600" ref="electionCycleProgressBar"></progress>
@@ -82,6 +82,8 @@
                 </div>
               </div>              
             </b-nav-item>
+          </b-navbar-nav>
+          <b-navbar-nav>
             <div class="sub-menu-links hidden-tiny" v-if="!errorRefreshing">
               <b-nav-item v-if="isLoggedIn">
                 <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>

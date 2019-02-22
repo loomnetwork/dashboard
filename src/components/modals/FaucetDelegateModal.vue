@@ -16,8 +16,6 @@
           <b-tooltip target="lockTimeReward" placement="bottom" title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"></b-tooltip>
         </b-row> 
       </div>
-      <small v-if="hasDelegation && unbond" class="text-danger text-center">{{ $t('components.modals.faucet_delegate_modal.warning_please_note_that_any') }}</small>
-      <small v-if="hasDelegation && !unbond" class="text-danger text-center">{{ $t('components.modals.faucet_delegate_modal.warning_please_note_that_un_delegating') }}</small>
     </b-container>
     <div slot="modal-footer" class="w-100">
       <b-button v-if="!loading" style="width: 160px; float: right;" variant="primary" @click="requestDelegate">{{okTitle}}</b-button>

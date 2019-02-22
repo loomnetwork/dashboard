@@ -174,6 +174,7 @@ export default {
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
             votingPower: formatToCrypto(validator.stake || 0),
+            whitelistAmount: formatToCrypto(validator.whitelistAmount),
             delegationsTotal: formatToCrypto(validator.delegationsTotal),
             totalStaked: formatToCrypto(validator.totalStaked),
             Weight: (validator.weight || '0') + '%',

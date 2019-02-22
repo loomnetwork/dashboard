@@ -159,9 +159,12 @@ export default class ValidatorDetail extends Vue {
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {
-    let index = this.$route.params.index
-    if(this.validators.length <= 0) await this.getValidatorList()
-    this.validator = this.validators[index]
+    let name = this.$route.params.index
+    if(!this.validators || this.validators.length <= 0) await this.getValidatorList()
+    this.validator = this.validators.find(v => v.Name === name)
+    if(this.validator === undefined) {
+      this.$router.push("../validators")
+    }
   }
 
   async mounted() {

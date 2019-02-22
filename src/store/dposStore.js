@@ -175,6 +175,7 @@ export default {
             Stake: (formatToCrypto(validator.stake) || '0'),
             votingPower: formatToCrypto(validator.stake || 0),
             delegationsTotal: formatToCrypto(validator.delegationsTotal),
+            totalStaked: formatToCrypto(validator.totalStaked),
             Weight: (validator.weight || '0') + '%',
             Fees: isBootstrap ? 'N/A' : (validator.fee/100 || '0') + '%',
             Uptime: (validator.uptime || '0') + '%',

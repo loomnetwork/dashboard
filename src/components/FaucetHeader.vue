@@ -38,6 +38,9 @@
               <b-nav-item :hidden="false">
                 <router-link to="/faq" class="router text-light hover-warning">{{ $t('components.faucet_header.f_a_q') }}</router-link>
               </b-nav-item>
+              <b-nav-item :hidden="false">
+                <LangSwitcher/>
+              </b-nav-item>
             </b-nav-form>
 
           </b-navbar-nav>
@@ -147,13 +150,15 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import ChainSelector from './ChainSelector'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import LangSwitcher from './LangSwitcher'
 
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
-    ChainSelector
+    ChainSelector,
+    LangSwitcher
   },
   props: {
     hideDashboard: {

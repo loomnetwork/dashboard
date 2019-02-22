@@ -102,8 +102,8 @@
     },
     "redelegate": {
       "redelegate": "重新委托",
-      "from": "From",
-      "to": "To"
+      "from": "从",
+      "to": "到"
     },
     "rewards": {
       "unclaimed_rewards": "未领取的奖励：",

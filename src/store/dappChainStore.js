@@ -377,20 +377,51 @@ export default {
     }, 
     async getValidatorsAsync({ state, dispatch }, payload) {
       const dpos2 = await dispatch('getDpos2')
-      const dpos2Validators = await dpos2.getValidatorsAsync()
-      const dpos2Candidates = await dpos2.getCandidatesAsync()
-      const candidateList = []
-      for (let candidate of dpos2Candidates) {
-        candidateList.push({
+      const [dpos2Validators,dpos2Candidates,dpos2Delegations] = await Promise.all([
+        dpos2.getValidatorsAsync(),
+        dpos2.getCandidatesAsync(),
+        dpos2.getAllDelegations()
+      ]).then( async (all) => all)
+      const keyedDelegTotals = dpos2Delegations
+        .filter(dc => dc.delegationsArray.length > 0 )
+        .reduce((agg,dc) => {
+          agg.push(...dc.delegationsArray);
+          return agg;
+        },[])
+        .reduce((agg,delegation) => {
+          let key = delegation.validator.local.toString();
+          if (key in agg) agg[key] = agg[key].add(delegation.amount)
+          else  agg[key] = delegation.amount
+          return agg;
+        },{})
+
+      let whitelist = {
+        "NGC_LOOM": new BN("5999982000000000000000000"), 
+        "plasma-0": new BN("10000000000000000000000000"),
+        "plasma-1": new BN("10000000000000000000000000"),
+        "plasma-2": new BN("10000000000000000000000000"),
+        "plasma-3": new BN("10000000000000000000000000"),
+        "plasma-4": new BN("10000000000000000000000000"),
+        "stakewith.us": new BN("11746840000000000000000000")
+      }
+
+      const candidateList = dpos2Candidates.map((candidate,i) => {
+        let address = LocalAddress.fromPublicKey(candidate.pubKey).toString();
+        let delegationTotal = keyedDelegTotals[address] ? keyedDelegTotals[address] : new BN(0);
+        let whitelistAmount = whitelist[candidate.name] || new BN("1250000000000000000000000");
+        let totalStaked = delegationTotal.add(whitelistAmount);
+        return {
           pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
-          address: LocalAddress.fromPublicKey(candidate.pubKey).toString(),
+          address,
           active: false,
           website: candidate.website,
           description: candidate.description,
           fee: candidate.fee.toString(),
-          name: candidate.name
-        })
-      }
+          name: candidate.name,
+          delegationsTotal: delegationTotal.toString(),
+          totalStaked: totalStaked.toString()
+        }
+      })
       const combination = [...candidateList]
       for (let validator of dpos2Validators) {
         const pubKey = CryptoUtils.Uint8ArrayToB64(validator.pubKey)

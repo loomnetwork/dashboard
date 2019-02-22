@@ -4,7 +4,7 @@
       <b-row class="block-heading">
         <b-col>
           <h1 class="page-header">
-            Blocks <fa v-if="isBusy"
+            {{ $t('components.blockExplorer.block_list.blocks') }} <fa v-if="isBusy"
                        icon="spinner"
                        class="spinner"
                        spin/>
@@ -13,7 +13,7 @@
         <b-col>
           <div class="block-search-query d-flex flex-row align-items-center">
             <fa :icon="['fas', 'search']" class="search-icon text-grey" fixed-width/>
-            <label for="sq-block-height" class="height-label text-grey">Block Height:</label>
+            <label for="sq-block-height" class="height-label text-grey">{{ $t('components.blockExplorer.block_list.block_height') }}</label>
             <b-form-input id="sq-block-height"
                           class="custom-input fieldheight-input bg-light"
                           type="number"
@@ -41,7 +41,7 @@
               :busy.sync="isBusy"
               class="custom-table">
               <template slot="blockHeight" slot-scope="row">
-                <span>#{{ row.value }}</span>
+                <span>{{ $t('components.blockExplorer.block_list.row_value', {rowValue: row.value }) }}</span>
               </template>
               <template slot="hash" slot-scope="row">
                 <span class="text-info hash-value" :title="row.value">{{ row.value }}</span>
@@ -64,10 +64,10 @@
               :total-rows="totalNumBlocks"
               :per-page="perPage"
               :align="paginationAlignment"
-              first-text="&nbsp;"
-              last-text="&nbsp;"
-              prev-text="&nbsp;"
-              next-text="&nbsp;"
+              first-text=""
+              last-text=""
+              prev-text=""
+              next-text=""
               />
             </div>
           </div>

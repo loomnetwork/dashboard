@@ -9,28 +9,27 @@
               <div role="tablist" id="accordion">
                 <b-card no-body class="mb-3">
                   <b-card-header header-tag="header" class="p-1" role="tab">
-                    <a v-b-toggle.accordion1>
+                    <a>
                       <h4>
                         <strong>
-                          Account Details
+                          {{ $t('views.my_account.account_details') }}
                         </strong>
                       </h4>
                     </a>
                   </b-card-header>
-                  <b-collapse id="accordion1" accordion="my-accordion" role="tabpanel">
+
                     <b-card-body style="position: relative;">
                       <div class="row mt-4">
-                        <loading-spinner v-if="isLoading2" :showBackdrop="true"></loading-spinner>
                         <div class="col mb-4">
-                          <h5 class="rmv-spacing" style="display:none"><strong>My Address</strong></h5>
+                          <h5 class="rmv-spacing" style="display:none"><strong>{{ $t('views.my_account.my_address') }}</strong></h5>
                           <div class="address-container"  style="display:none">
                             <span class="text-gray">{{userAccount.address}}</span>
                             <b-button variant="link" @click="copySuccessHandler" v-clipboard:copy="userAccount.address"><fa :icon="['fa', 'copy']" class="text-gray rmv-spacing"/></b-button>
                           </div>                          
                           <div class="balance-container mt-2">
-                            <h5><strong>Balance</strong></h5>
-                            <h6>Mainnet: <strong>{{userBalance.mainnetBalance + " LOOM"}}</strong></h6>
-                            <h6>Plasmachain: <strong>{{userBalance.loomBalance + " LOOM"}}</strong></h6>                            
+                            <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
+                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.mainnetBalance + " LOOM"}}</strong></h6>
+                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.loomBalance + " LOOM"}}</strong></h6>                            
                           </div>                          
                         </div>
                         <div class="col text-center" style="display:none">
@@ -39,56 +38,55 @@
                       </div>                      
                       <!-- <hr class="custom-divider">
                       <div class="balance-container">
-                        <h5><strong>Balance</strong></h5>
+                        <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
                         <div class="row mt-4 mb-4">                        
                           <div class="col text-center">
-                            <h5>Mainnet:</h5>
+                            <h5>{{ $t('views.my_account.mainnet') }}</h5>
                             <h1 v-if="metamaskConnected"><strong>{{mainnetBalance}}</strong></h1>
-                            <h5><strong>LOOM</strong></h5>
+                            <h5><strong>{{ $t('views.my_account.loom') }}</strong></h5>
                           </div>
                           <div class="col text-center">
-                            <h5>Plasmachain:</h5>
+                            <h5>{{ $t('views.my_account.plasmachain') }}</h5>
                             <h1><strong>{{parseInt(userAccount.balance)}}</strong></h1>
-                            <h5><strong>LOOM</strong></h5>
+                            <h5><strong>{{ $t('views.my_account.loom') }}</strong></h5>
                           </div>
                         </div>                        
                       </div>                                    -->
                     </b-card-body>
-                  </b-collapse>
+
                 </b-card>                
                 <b-card no-body class="mb-3">
                   <b-card-header header-tag="header" class="p-1" role="tab">
                     <div class="row">                   
                       <div class="col-md-6">
-                        <a ref="accordion2Toggle" v-b-toggle.accordion2>
+                        <a ref="accordion2Toggle">
                           <h4>
                             <strong>
-                              Deposit/Withdraw
+                              {{ $t('views.my_account.deposit_withdraw') }}
                             </strong>                        
                           </h4>
                         </a>                     
                       </div>
                       <div class="col-md-6 deposit-error-container">
                         <span v-if="!metamaskConnected">
-                          No mapping detected
+                          {{ $t('views.my_account.no_mapping_detected') }}
                         </span>
                       </div>
                     </div>
                   </b-card-header>
-                  <b-collapse id="accordion2" :visible="metamaskConnected" accordion="my-accordion" role="tabpanel">
+
                     <b-card-body>
                       <div class="row mt-4 mb-4">
                         <div class="col-md-8 offset-md-2">
-                          <loading-spinner v-if="isLoading" :showBackdrop="true"></loading-spinner>
                           <!-- Map Accounts -->
                           <div v-if="status != 'mapped'">
                             <div id="map-accounts">
-                              <!-- <span class="idx-symbol">1</span> -->
+                              <!-- <span class="idx-symbol">{{ $t('views.my_account.1') }}</span> -->
                               <div class="d-flex flex-row align-items-center mb-3">
                                 <div class="mx-2" style="width: 250px">
-                                  <h5 class="rmv-spacing">Connect to deposit funds:</h5>
+                                  <h5 class="rmv-spacing">{{ $t('views.my_account.connect_to_deposit_funds') }}</h5>
                                 </div>
-                                <b-button style="width: 160px" variant="primary" @click="addMappingHandler">Map Accounts</b-button>                            
+                                <b-button style="width: 160px" variant="primary" @click="addMappingHandler">{{ $t('views.my_account.map_accounts') }}</b-button>                            
                               </div>
                             </div>
 
@@ -98,22 +96,22 @@
                           <!-- Allowance -->
                           <!-- <div id="allowance">
                             <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <span class="idx-symbol">2</span>
-                            <h5 class="rmv-spacing mx-2">Approve amount:</h5>
+                            <span class="idx-symbol">{{ $t('views.my_account.2') }}</span>
+                            <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.approve_amount') }}</h5>
                             <div class="d-flex flex-row align-items-center">                              
                               <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">Allowed amount to deposit</span>
+                                <span class="text-small text-gray">{{ $t('views.my_account.allowed_amount_to_deposit') }}</span>
                                 <b-form-input :placeholder="'max. ' + mainnetBalance" v-model="amountToApprove" class="w-100"/>
                                 <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="amountToApprove=mainnetBalance">use maximum</b-button>
+                                  <b-button class="text-small pt-0" variant="link" @click="amountToApprove=mainnetBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
                                 </div>
                               </div>
-                              <b-button style="width: 160px" variant="primary" @click="approveAmount(amountToApprove)">Approve</b-button>
+                              <b-button style="width: 160px" variant="primary" @click="approveAmount(amountToApprove)">{{ $t('views.my_account.approve') }}</b-button>
                             </div>                                                    
                             
                             <div class="d-flex flex-row mb-3">
                               <div class="mx-2" style="width: 250px">
-                                <h6 class="rmv-spacing">Current allowance: {{ currentAllowance || 0 }}</h6>
+                                <h6 class="rmv-spacing">{{ $t('views.my_account.current_allowance_current_allowance', {currentAllowance0: currentAllowance || 0 }) }}</h6>
                               </div>   
                             </div> 
                           </div> -->
@@ -123,17 +121,17 @@
                           <!-- Deposit -->
                           <div id="deposit">
                             <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <!-- <span class="idx-symbol">2</span> -->
-                            <!-- <h5 class="rmv-spacing mx-2">Deposit:</h5> -->
+                            <!-- <span class="idx-symbol">{{ $t('views.my_account.2') }}</span> -->
+                            <!-- <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.deposit') }}</h5> -->
                             <div class="d-flex flex-row align-items-center">
                               <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">Transfer to Plasmachain for staking</span>
-                                <b-form-input :placeholder="'max. ' + mainnetBalance" v-model="transferAmount" class="w-100"/>
+                                <span class="text-small text-gray">{{ $t('views.my_account.transfer_to_plasmachain_for_staking') }}</span>
+                                <b-form-input :placeholder="'max. ' + userBalance.mainnetBalance" v-model="transferAmount" class="w-100"/>
                                 <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="transferAmount=mainnetBalance">use maximum</b-button>
+                                  <b-button class="text-small pt-0" variant="link" @click="transferAmount=userBalance.mainnetBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
                                 </div>
                               </div>
-                              <b-button id="depositBtn" style="width: 160px" variant="primary" @click="depositHandler">Deposit</b-button>
+                              <b-button id="depositBtn" style="width: 160px" variant="primary" @click="depositHandler">{{ $t('views.my_account.deposit') }}</b-button>
                               <b-tooltip v-if="!isLoading" target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
                             </div>
                           </div>
@@ -141,17 +139,17 @@
                           <!-- Withdraw -->
                           <div id="withdraw">
                             <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <!-- <span class="idx-symbol">2</span> -->
-                            <!-- <h5 class="rmv-spacing mx-2">Deposit:</h5> -->
+                            <!-- <span class="idx-symbol">{{ $t('views.my_account.2') }}</span> -->
+                            <!-- <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.deposit') }}</h5> -->
                             <div class="d-flex flex-row align-items-center">
                               <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">Withdraw to Metamask</span>
+                                <span class="text-small text-gray">{{ $t('views.my_account.withdraw_to_metamask') }}</span>
                                 <b-form-input :placeholder="'max. ' + userBalance.loomBalance" v-model="withdrawAmount" class="w-100"/>
                                 <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="withdrawAmount=userBalance.loomBalance">use maximum</b-button>
+                                  <b-button class="text-small pt-0" variant="link" @click="withdrawAmount=userBalance.loomBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
                                 </div>
                               </div>
-                              <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">Withdraw</b-button>
+                              <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">{{ $t('views.my_account.withdraw') }}</b-button>
                               <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
                             </div>
                           </div>
@@ -161,7 +159,7 @@
                         </div>
                       </div>
                     </b-card-body>
-                  </b-collapse>
+
                 </b-card>
                 <!-- TODO: Add History page if required -->
                 <!-- <b-card no-body class="mb-3">
@@ -169,7 +167,7 @@
                     <a v-b-toggle.accordion3>
                       <h4>
                         <strong>
-                          History
+                          {{ $t('views.my_account.history') }}
                         </strong>                        
                       </h4>
                     </a>              
@@ -189,10 +187,10 @@
 
               <!-- <div class="d-flex bottom-border justify-content-between w-100 p-4">
                 <div class="column d-flex justify-content-between w-100 balance-container">
-                  <h1>Delegate</h1>
+                  <h1>{{ $t('views.candidate_detail.delegate') }}</h1>
                   <div class="row mt-4 mb-4">
                     <div class="col">
-                      <b-button class="py-2" style="width: 160px" variant="primary" :disabled="userAccount.balance === 0" @click="openRequestDelegateModal">Delegate</b-button>                                  
+                      <b-button class="py-2" style="width: 160px" variant="primary" :disabled="userAccount.balance === 0" @click="openRequestDelegateModal">{{ $t('views.candidate_detail.delegate') }}</b-button>                                  
                     </div>
                   </div>
                 </div>
@@ -203,20 +201,6 @@
         </main>
       </div>
     </div>
-    <b-modal id="metamask-modal" ref="metamaskModalRef" centered :no-close-on-backdrop="true">
-      <div slot="modal-header" class="w-100">
-        <h4 class="text-center">
-          Connection Error
-        </h4>
-      </div>
-      <div class="d-block text-center pb-4 pt-4 pr-2 pl-2">
-        <h5 class="mb-4">Please connect to Metamask to proceed</h5>
-        <b-btn variant="outline-danger" block @click="connectFromModal">Connect</b-btn>
-      </div>
-      <div slot="modal-footer" class="w-100 text-center">
-        <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en" class="metamask-link">Click here to download Metamask</a>
-      </div>   
-    </b-modal>    
   </div>
  
 </template>
@@ -374,8 +358,7 @@ export default class MyAccount extends Vue {
 
   async mounted() {
     await this.refresh(true)
-    this.currentAllowance = await this.checkAllowance()    
-    this.refreshInterval = setInterval(() => this.refresh(false), 5000)
+    this.currentAllowance = await this.checkAllowance()
   }
 
   destroyed() {
@@ -385,14 +368,12 @@ export default class MyAccount extends Vue {
   }
 
   async refresh(poll) {    
-    if(poll) this.isLoading2 = true
     this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
     this.userAccount.balance = await this.getDappchainLoomBalance()    
     this.mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,
       address: this.userEthAddr
     })
-    if(poll) this.isLoading2 = false
   }
 
   async initWeb3() {
@@ -462,15 +443,6 @@ export default class MyAccount extends Vue {
     this.isLoading = false
 
   }
-
-  async initAccordion1() {
-    this.refresh(true)
-  }
-
-  async initAccordion2() {
-    this.currentAllowance = await this.checkAllowance()
-  }
-
 
   async checkAllowance() {    
     if(!this.dposUser) return      

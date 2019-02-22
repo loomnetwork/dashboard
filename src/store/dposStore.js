@@ -1,6 +1,7 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
+import BigNumber from 'bignumber.js';
 
 
 
@@ -19,7 +20,7 @@ const dynamicSort = (property) => {
 const defaultState = () => {
   return {
     isLoggedIn: false,
-    showSidebar: false,
+    showSidebar: true,
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
@@ -34,6 +35,16 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
+    validatorFields: [
+      { key: 'Name', sortable: true },
+      { key: 'Status', sortable: true },
+      { key: 'totalStaked', sortable: true, label: "Total Staked" },
+      { key: 'votingPower', sortable: true, label: "Voting power"  },
+      // { key: 'Weight', sortable: true },
+      { key: 'Fees', sortable: true },
+      // { key: 'Uptime', sortable: true },
+      // { key: 'Slashes', sortable: true },
+    ],
     prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4", "test-z-us1-dappchains-2-aws0"]
   }
 }
@@ -158,10 +169,13 @@ export default {
           const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
           const isBootstrap = state.prohibitedNodes.includes(validatorName)
           validatorList.push({
-            Name: `${validatorName} ${isBootstrap ? "(bootstrap)" : ''}` ,
+            Name: validatorName,
             Address: validator.address,
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
+            votingPower: formatToCrypto(validator.stake || 0),
+            delegationsTotal: formatToCrypto(validator.delegationsTotal),
+            totalStaked: formatToCrypto(validator.totalStaked),
             Weight: (validator.weight || '0') + '%',
             Fees: isBootstrap ? 'N/A' : (validator.fee/100 || '0') + '%',
             Uptime: (validator.uptime || '0') + '%',
@@ -232,6 +246,24 @@ export default {
         commit("setTimeUntilElectionCycle", result.toString())
       } catch(err) {
         console.error(err)
+      }
+
+    },
+
+    async redelegateAsync({ rootState, dispatch, commit }, payload) {
+      if(!rootState.DappChain.dposUser) {
+        await dispatch("DappChain/initDposUser", null, { root: true })
+      }
+
+      const { origin, target, validator, amount} = payload
+      const user = rootState.DappChain.dposUser
+
+      try {
+        await user.redelegateAsync(origin, validator, amount)
+        commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
+      } catch(err) {
+        console.error(err)
+        commit("setErrorMsg", {msg: "Failed to redelegate stake", forever: false,report:true,cause:err}, {root: true})
       }
 
     }

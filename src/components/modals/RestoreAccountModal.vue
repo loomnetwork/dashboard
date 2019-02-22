@@ -2,15 +2,15 @@
   <b-modal id="restore-account-modal" ref="modalRef" title="Restore Account" hide-footer centered>
     <b-container fluid>
       <b-row class="my-1 align-items-center">
-        <p class="color-grey">Please type in your seed phrase below.</p>
-        <p class="color-grey">Note: the phrase is case sensitive and each word needs to be separated by one space.</p>
+        <p class="color-grey">{{ $t('components.modals.restore_account_modal.please_type_in_your_seed') }}</p>
+        <p class="color-grey">{{ $t('components.modals.restore_account_modal.note_the_phrase_is_case') }}</p>
       </b-row>
       <b-row class="my-1 align-items-center">
         <b-form-input v-model="seeds" :rows="3" type="text"></b-form-input>
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span class="text-error  mt-2" variant="error">{{errorMessage}}</span>
-        <b-button class="btn" variant="primary" @click="okHandler">Restore Account</b-button>
+        <b-button class="btn" variant="primary" @click="okHandler">{{ $t('views.first_page.restore_account') }}</b-button>
       </b-row>
     </b-container>
   </b-modal>

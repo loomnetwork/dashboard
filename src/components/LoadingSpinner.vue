@@ -3,8 +3,8 @@
     
     <div class="gif-container">
       <img src="../assets/loomy-running.gif" class="looping-loomy mb-2" alt="loomy">
-      <h6 class="loading-text">Please be patient, Loomy is on it!</h6>
-      <small>This could take several minutes. Please don't close or refresh your browser</small>
+      <h6 class="loading-text">{{ $t('components.loading_spinner.please_be_patient_loomy_is') }}</h6>
+      <small>{{ $t('components.loading_spinner.this_could_take_several_minutes') }}</small>
     </div>
 
     <!-- Uncomment for minimal spinner  -->

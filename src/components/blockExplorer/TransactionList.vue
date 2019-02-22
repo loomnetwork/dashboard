@@ -3,15 +3,15 @@
     <div>
       <div class="section-header d-flex flex-row">
         <div class="bg-dark col-9">
-          <h3 class="text-primary pointer-only">Transactions</h3>
+          <h3 class="text-primary pointer-only">{{ $t('components.blockExplorer.block_info.transactions') }}</h3>
           <ConnectionStatus :blockchain="blockchain"/>
         </div>
         <div class="bg-dark ml-auto px-0">
           <div class="d-flex flex-row">
-            <h3 class="mx-2 text-white pointer-only">Filter by</h3>
+            <h3 class="mx-2 text-white pointer-only">{{ $t('components.blockExplorer.transaction_list.filter_by') }}</h3>
             <b-dropdown text="Most recent" right variant="dark">
-              <b-dropdown-item>Most old</b-dropdown-item>
-              <b-dropdown-item>Pending</b-dropdown-item>
+              <b-dropdown-item>{{ $t('components.blockExplorer.transaction_list.most_old') }}</b-dropdown-item>
+              <b-dropdown-item>{{ $t('components.blockExplorer.transaction_list.pending') }}</b-dropdown-item>
             </b-dropdown>
           </div>
         </div>

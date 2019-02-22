@@ -44,9 +44,6 @@
       background-color: transparent;
       border: none;
       color: white;
-      padding-left: 20px;
-      margin-top: 5px;
-      font-size: 18px;
       &:focus {
         box-shadow: none;
       }

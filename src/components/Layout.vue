@@ -204,6 +204,8 @@ export default class Layout extends Vue {
   async attemptToInitialize() {
     try {
       await this.initializeDependencies()
+      debugger
+      this.$root.$emit("initialized")
     } catch(err) {
       this.$root.$emit("logout")
     }           

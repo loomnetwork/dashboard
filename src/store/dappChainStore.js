@@ -395,8 +395,22 @@ export default {
           return agg;
         },{})
       //debugger
+
+      let whitelist = {
+        "NGC_LOOM": new BN("5999982000000000000000000"), 
+        "plasma-0": new BN("10000000000000000000000000"),
+        "plasma-1": new BN("10000000000000000000000000"),
+        "plasma-3": new BN("10000000000000000000000000"),
+        "plasma-4": new BN("10000000000000000000000000"),
+        "stakewith.us": new BN("11746840000000000000000000")
+      }
+
       const candidateList = dpos2Candidates.map((candidate,i) => {
         let address = LocalAddress.fromPublicKey(candidate.pubKey).toString();
+        let delegationTotal = keyedDelegTotals[address] ? keyedDelegTotals[address] : new BN(0);
+        let whitelistAmount = whitelist[candidate.name] || new BN("1250000000000000000000000");
+        let totalStaked = delegationTotal.add(whitelistAmount);
+        console.log(delegationTotal.toString(),totalStaked.toString())
         return {
           pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
           address,
@@ -405,7 +419,8 @@ export default {
           description: candidate.description,
           fee: candidate.fee.toString(),
           name: candidate.name,
-          delegationsTotal: keyedDelegTotals[address] ? keyedDelegTotals[address].toString() : 0
+          delegationsTotal: delegationTotal.toString(),
+          totalStaked: totalStaked.toString()
         }
       })
       const combination = [...candidateList]

@@ -93,76 +93,11 @@
                 <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
-              <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
-                <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
-              </b-nav-item>          
             </div>
-            <!-- <b-nav-item :hidden="false" style="margin-left: auto;">
-              <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
-            </b-nav-item>                  -->
-            <!-- <b-nav-item-dropdown id="balance" style="margin-left: auto;" :text="balance" right>
-              <router-link to="/blockexplorer" class="router text-light hover-warning">
-                <b-dropdown-item href="#">{{ $t('components.faucet_header.deposit') }}</b-dropdown-item>
-              </router-link>
-              <b-dropdown-item href="#">{{ $t('views.my_account.withdraw') }}</b-dropdown-item>
-              <b-dropdown-item @click="logOut">{{ $t('views.first_page.sign_out') }}</b-dropdown-item>
-            </b-nav-item-dropdown> -->
           </b-navbar-nav>
         </div>
       </div>
     </b-navbar>        
-    <!-- <nav class="block-foreground d-flex navbar navbar-dark navbar-expand-md ext-uppercase app-navbar mb-0 justify-content-between">
-      <div class="container d-flex justify-content-between">
-        <a class="navbar-brand col-lg-3 col-md-3" href="https://loomx.io/">
-          {{ $t('components.faucet_header.plasmachain_dashboard') }}
-        </a>
-        <b-collapse is-nav id="nav_dropdown_collapse">
-          <b-nav class="col-lg-5 offset-md-1 col-md-6">
-            <login-account-modal ref="loginAccountRef" @onLogin="onLoginAccount"/>
-            <b-nav-item :hidden="hideDashboard">
-              <router-link to="/account" class="router text-light hover-warning">{{ $t('components.faucet_header.dashboard') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideWallet">
-              <router-link to="/account" class="router text-light hover-warning">{{ $t('components.faucet_header.wallet') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideValidators">
-              <router-link to="/" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideMyStaking">
-              <router-link to="/validators" class="router text-light hover-warning">{{ $t('components.faucet_header.my_staking') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideBlockExplorer">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.block_explorer') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.my_stakes') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.status') }}</router-link>
-            </b-nav-item>                              
-          </b-nav>
-        </b-collapse>
-        <b-nav class="offset-lg-2 col-lg-2 col-md-2">
-          <b-nav-item :hidden="hideLogOut">
-            <a @click.prevent="login" class="router text-light hover-warning">{{loginText}}</a>
-          </b-nav-item>      
-        </b-nav>        
-      </div>
-      <b-alert variant="danger"
-               dismissible
-               :show="!!showErrorMsg"
-               class="custom-alert"
-               ref="errorMsg"
-      >
-        {{this.$store.state.errorMsg}}
-      </b-alert>
-      <b-alert variant="success" class="custom-alert" dismissible :show="!!showSuccessMsg" ref="successMsg">
-      <span class="text-dark" v-html="this.$store.state.successMsg"></span>
-    </b-alert>
-    </nav> -->  
   </div>
 </template>
 
@@ -257,13 +192,6 @@ export default class FaucetHeader extends Vue {
   connectedToDappChain = false 
 
   electionCycleTimer = undefined
-
-  logOut() {
-    this.clearPrivateKey()
-    localStorage.removeItem("userIsLoggedIn")
-    this.setUserIsLoggedIn(false)
-    this.$router.push({ path: '/login' })
-  }
 
   login() {
     if (this.userIsLoggedIn) {

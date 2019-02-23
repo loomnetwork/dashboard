@@ -1,4 +1,7 @@
 {
+  "general" : {
+    "loading": "Loading..."
+  },
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",

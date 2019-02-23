@@ -71,13 +71,31 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
+const DPOSStore = createNamespacedHelpers('DPOS')
+
 @Component({
   computed: {
     ...mapState(['userIsLoggedIn'])
+  },
+  methods: {
+    ...mapMutations([
+      'setUserIsLoggedIn'
+    ]),
+    ...DPOSStore.mapActions([
+      'clearPrivateKey'
+    ])
   }
 })
 
 export default class FaucetSidebar extends Vue {
+
+
+  mounted() {
+    this.$root.$on('logout', () => {
+      this.deleteIntervals()
+      this.logOut()
+    })    
+  }
 
   clickHandler() {
     if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
@@ -85,7 +103,10 @@ export default class FaucetSidebar extends Vue {
   }
 
   logOut() {
-
+    this.clearPrivateKey()
+    localStorage.removeItem("userIsLoggedIn")
+    this.setUserIsLoggedIn(false)
+    this.$router.push({ path: '/login' })
   }
 
 }

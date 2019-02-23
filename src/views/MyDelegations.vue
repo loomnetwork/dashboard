@@ -4,16 +4,16 @@
       <div>        
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex">
-            <div v-if="loading === false && delegations.length > 0">
+            <div v-if="!showLoadingSpinner && delegations.length > 0">
               <faucet-table :items="delegations"/>
             </div>
-            <div v-if="loading === false && delegations.length == 0">
+            <div v-else-if="showLoadingSpinner">
+              <h2>{{ $t('general.loading') }}</h2>
+            </div>
+            <div v-else>
               <h2>{{ $t('views.my_delegations.no_delegations') }}</h2>
             </div>
           </div>
-          <div v-if="loading === true">
-            <loading-spinner :showBackdrop="true"></loading-spinner>
-          </div>          
         </main>
       </div>
     </div>
@@ -53,7 +53,9 @@ import { initWeb3 } from '../services/initWeb3'
       'setCurrentMetamaskAddress'
     ]),
     ...DappChainStore.mapActions([
-      'getDpos2'
+      'getDpos2',
+      'setCurrentMetamaskAddress',
+      'setShowLoadingSpinner'
     ])
   },
   computed: {
@@ -64,6 +66,9 @@ import { initWeb3 } from '../services/initWeb3'
       'currentChain',
       'currentRPCUrl',
     ]),
+    ...DPOSStore.mapState([
+      'showLoadingSpinner'
+    ]),
     ...DappChainStore.mapState([
       'dposUser',
     ])  
@@ -72,7 +77,6 @@ import { initWeb3 } from '../services/initWeb3'
 export default class MyDelegations extends Vue {
   delegations = []
   states = ["Bonding", "Bonded", "Unbounding"]
-  loading = true
 
   async mounted() {
     this.$root.$on('initialized', async () => {
@@ -88,7 +92,8 @@ export default class MyDelegations extends Vue {
   }
 
   async getDelegationList() {
-    this.loading = true    
+
+    this.setShowLoadingSpinner(true)
 
     const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
 
@@ -108,7 +113,8 @@ export default class MyDelegations extends Vue {
               })
     }
 
-    this.loading = false
+    this.setShowLoadingSpinner(false)
+
   }
 
   formatLocktime() {    

@@ -18,6 +18,12 @@
         <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="list" class="sidebar-icon"/>My Delegations</span></router-link>
         <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
       </div>
+
+      <div v-if="userIsLoggedIn" :hidden="false" class="router">
+        <span @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</span>
+      </div>         
+
+
     </div>
 
     <div class="mobile-sidebar d-sm-block d-md-block d-lg-none">
@@ -78,13 +84,17 @@ export default class FaucetSidebar extends Vue {
     return
   }
 
+  logOut() {
+
+  }
+
 }
 </script>
 <style lang="scss" scoped>
 .navbar-side {
   background-color: #ffffff;
   z-index: 100;
-  position: relative;
+  position: fixed;
   box-shadow: 0 2px 10px 0 rgba(0,0,0,.08);
   height: 100%;
   min-width: 230px;

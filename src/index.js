@@ -20,6 +20,7 @@ import 'v-autocomplete/dist/v-autocomplete.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'swiper/dist/css/swiper.css'
+import 'animate.css/animate.css'
 
 import ApiClient from './services/faucet-api'
 import { i18n } from './i18n'

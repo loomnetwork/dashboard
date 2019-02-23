@@ -30,6 +30,7 @@
     "@types/web3": "^1.0.12",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "add": "^2.0.6",
+    "animate.css": "^3.7.0",
     "animejs": "^2.2.0",
     "auth0-js": "^9.8.2",
     "auth0-lock": "^11.11.0",

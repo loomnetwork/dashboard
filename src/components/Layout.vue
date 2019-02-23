@@ -46,8 +46,12 @@
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div id="content-container" :class="contentClass">
-          <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-          <router-view></router-view>
+          <transition name="router-anim" enter-active-class="animated fadeIn fast" leave-active-class="animated fadeOut fast">
+            <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+          </transition>
+          <transition name="router-anim" enter-active-class="animated fadeInUp faster" leave-active-class="animated fadeOutDown faster">
+            <router-view></router-view>
+          </transition>
         </div>        
       </div>
     </div>    

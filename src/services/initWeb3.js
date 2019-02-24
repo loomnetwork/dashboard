@@ -30,12 +30,12 @@ export const initWeb3Hardware = () => {
       let engine = new ProviderEngine()
       let web3 = new Web3(engine)
       
-      let ledgerWalletSubProvider = await LedgerWalletSubproviderFactory()
+      let ledgerWalletSubProvider = await LedgerWalletSubproviderFactory(() => {return 1})
       engine.addProvider(ledgerWalletSubProvider)
       engine.addProvider(new RpcSubprovider({rpcUrl: 'https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0'})) // you need RPC endpoint
       engine.start()
 
-      // window.web3 = new Web3(web3)
+      window.web3 = new Web3(web3)
       window.web3.setProvider(engine)
       resolve(web3)
     }

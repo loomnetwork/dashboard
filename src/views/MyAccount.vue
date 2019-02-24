@@ -410,7 +410,7 @@ export default class MyAccount extends Vue {
       return
     }
 
-    this.isLoading = true
+    this.setShowLoadingSpinner(true)
     
     try {
       await this.depositAsync({amount: this.transferAmount})
@@ -420,7 +420,9 @@ export default class MyAccount extends Vue {
       this.setError({msg: "Deposit failed, please try again", err})
     }
     this.transferAmount = ""
-    this.isLoading = false
+
+    this.setShowLoadingSpinner(false)
+    
   }
 
   async withdrawHandler() {
@@ -430,7 +432,7 @@ export default class MyAccount extends Vue {
       return
     }
 
-    this.isLoading = true
+    this.setShowLoadingSpinner(true)
 
     try {
       await this.withdrawAsync({amount: this.withdrawAmount})
@@ -440,7 +442,8 @@ export default class MyAccount extends Vue {
       this.setError({msg: "Withdraw failed, please try again", err})
     }
     this.withdrawAmount = ""
-    this.isLoading = false
+
+    this.setShowLoadingSpinner(false)
 
   }
 

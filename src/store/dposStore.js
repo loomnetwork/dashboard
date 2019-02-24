@@ -39,7 +39,7 @@ const defaultState = () => {
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
       { key: 'totalStaked', sortable: true, label: "Total Staked" },
-      { key: 'votingPower', sortable: true, label: "Voting power"  },
+      // { key: 'votingPower', sortable: true, label: "Reward Power" },
       // { key: 'Weight', sortable: true },
       { key: 'Fees', sortable: true },
       // { key: 'Uptime', sortable: true },

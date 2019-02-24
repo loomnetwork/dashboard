@@ -100,7 +100,7 @@ export default class MyDelegations extends Vue {
           console.log(` No delegation`)
         } else {
           const candidateName = candidates[i].name == "" ? "Validator #" + (parseInt(i) + 1) : candidates[i].name
-          if(formatToCrypto(delegation.amount) > 0) {
+          if(delegation.amount > 0) {
 
             this.delegations.push(
               { 

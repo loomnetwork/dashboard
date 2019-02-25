@@ -66,7 +66,7 @@ const dposStore = createNamespacedHelpers('DPOS')
     LoadingSpinner
   },
   methods: {
-    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3']),
+    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount']),
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ])

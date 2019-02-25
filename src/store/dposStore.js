@@ -29,6 +29,7 @@ const defaultState = () => {
     metamaskDisabled: false,
     showLoadingSpinner: false,
     userBalance: {
+      isLoading: true,
       loomBalance: 0,
       mainnetBalance: 0,
       stakedAmount: 0
@@ -158,38 +159,50 @@ export default {
         for (let i in validators) {
 
           let weight = 0
-          if(validators[i].name.startsWith("plasma-")) 
-          {
+          if ( validators[i].name.startsWith("plasma-") )  {
             weight = 1
-          } else if(validators[i].name === "") {
+          } else if( validators[i].name === "" ) {
             weight = 2
           }
 
           const validator = validators[i]
-          const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
+
+          // Check if bootstrap val
+          const validatorName = validator.name !== "" ? validator.name : validator.address
           const isBootstrap = state.prohibitedNodes.includes(validatorName)
           validatorList.push({
-            Name: validatorName,
             Address: validator.address,
+            pubKey: (validator.pubKey),
+            // Active / Inactive validator
             Status: validator.active ? "Active" : "Inactive",
-            Stake: (formatToCrypto(validator.stake) || '0'),
-            votingPower: formatToCrypto(validator.stake || 0),
-            whitelistAmount: formatToCrypto(validator.whitelistAmount),
-            delegationsTotal: formatToCrypto(validator.delegationsTotal),
+
             totalStaked: formatToCrypto(validator.totalStaked),
-            Weight: (validator.weight || '0') + '%',
-            Fees: isBootstrap ? 'N/A' : (validator.fee/100 || '0') + '%',
-            Uptime: (validator.uptime || '0') + '%',
-            Slashes: (validator.slashes || '0') + '%',
+
+            delegationsTotal: formatToCrypto(validator.delegationsTotal),
+
+            // Whitelist (bonus already included in it)
+            whitelistAmount: formatToCrypto(validator.whitelistAmount),
+
+            // Whitelist + Tokens Staked * Bonuses
+            votingPower: formatToCrypto(validator.votingPower || 0),
+
+
+            // Validator MEtadata
+            Name: validatorName,
             Description: (validator.description) || null,
             Website: (validator.website) || null,
+            Fees: isBootstrap ? 'N/A' : (validator.fee  || '0') + '%',
+
+            isBootstrap,
             Weight: weight || 0,            
             _cellVariants:  {
-              Status: validator.active ? 'active' : undefined,
+              Status: validator.active ? 'active' : 'inactive',
               Name:  isBootstrap ? "danger" : undefined
             },
-            isBootstrap,
-            pubKey: (validator.pubKey)
+            // UNUSED VARIABLES !!!
+            // Weight: (validator.weight || '0') + '%',
+            // Uptime: (validator.uptime || '0') + '%',
+            // Slashes: (validator.slashes || '0') + '%',
           })
 
         }

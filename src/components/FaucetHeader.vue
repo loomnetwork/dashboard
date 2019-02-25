@@ -65,11 +65,11 @@
           <b-navbar-nav>
             <div class="sub-menu-links" v-if="!errorRefreshing">
               <b-nav-item v-if="isLoggedIn" class="mr-3">
-                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
+                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.mainnetBalance}}</strong></span>
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
-                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{formatLoomBalance}}</strong></span>
+                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : formatLoomBalance}}</strong></span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
-                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
+                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
               <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
@@ -332,7 +332,9 @@ export default class FaucetHeader extends Vue {
         address: this.currentMetamaskAddress
       })
       let stakedAmount = await this.getAccumulatedStakingAmount()
+      let isLoading = false
       this.setUserBalance({
+        isLoading,
         loomBalance,
         mainnetBalance,
         stakedAmount

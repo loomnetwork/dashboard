@@ -475,7 +475,6 @@ export default {
       return result
     },
     async getDpos2({ state, commit }, payload) {
-      console.log("state.dpos2", state.dpos2);
       if (!payload && state.dpos2) {
         commit('setDappChainConnected', true)
         return state.dpos2

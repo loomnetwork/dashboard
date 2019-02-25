@@ -376,18 +376,18 @@ export default class MyAccount extends Vue {
     })
   }
 
-  async initWeb3() {
+  // async initWeb3() {
     
-    if(window.ethereum) {
-      try {
-        await this.connectMetamask()
-      } catch(err) {
-        this.$refs.metamaskModalRef.show()  
-      }
-    } else {
-      this.$refs.metamaskModalRef.show()
-    }
-  }
+  //   if(window.ethereum) {
+  //     try {
+  //       await this.connectMetamask()
+  //     } catch(err) {
+  //       this.$refs.metamaskModalRef.show()  
+  //     }
+  //   } else {
+  //     this.$refs.metamaskModalRef.show()
+  //   }
+  // }
 
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(null, '')

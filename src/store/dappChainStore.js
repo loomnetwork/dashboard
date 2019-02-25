@@ -24,8 +24,8 @@ network config
 const clientNetwork = {
   '1': {
     network: 'default',
-    websockt: 'wss://test-z-asia1.dappchains.com/websocket',
-    queryws: 'wss://test-z-asia1.dappchains.com/queryws'
+    websockt: 'wss://plasma.dappchains.com/websocket',
+    queryws: 'wss://plasma.dappchains.com/queryws'
   },
   '4': {
     network: 'asia1',

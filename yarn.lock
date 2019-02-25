@@ -639,6 +639,43 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@ledgerhq/devices@^4.39.0":
+  version "4.39.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.39.0.tgz#47d23a1a58004da162e007e0c456ab2119038c7d"
+  integrity sha512-2Jd7CVvMJDZxxaSpQpfOMeGWf7M0f6nZqZQWfjsUDQHw45Kunck101pXr6U/5UejJiLl/fhyLqvaXz0X0cs+1A==
+  dependencies:
+    "@ledgerhq/errors" "^4.39.0"
+
+"@ledgerhq/errors@^4.39.0":
+  version "4.39.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.39.0.tgz#10b9889f78df94ce36a4b34d9a3a45aac77be0e9"
+  integrity sha512-kBr2rnoYDACRCxTLtEufE4oCvYj6vx2oFWVVjwskBxYsF5LC9R8Mbg5C4GgvDweiWW4Io8HA9p9jCsOfdCDygg==
+
+"@ledgerhq/hw-app-eth@^4.41.0":
+  version "4.41.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-4.41.0.tgz#45f19de84cc67c51a56e7cd6aca357684e3fea60"
+  integrity sha512-wphegy39v0BXDuJ67Xg3j1yzYDbv6zBL7F8Ptjym/xpR+Vpr3nFCc4BIZZMvNNK0FuiUCTb+fdH7XHisBKecJQ==
+  dependencies:
+    "@ledgerhq/hw-transport" "^4.39.0"
+
+"@ledgerhq/hw-transport-u2f@^4.39.0":
+  version "4.39.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-u2f/-/hw-transport-u2f-4.39.0.tgz#f91da2d8791d343db455991ceae55218182c00b6"
+  integrity sha512-nGvf409m2W5xIuUZklCnyf7ZrFGNCKhHgXwBAZAEk37qCvM7NueC25TgQKcphe88S/dbU/arC8Z3mpVoArLTGg==
+  dependencies:
+    "@ledgerhq/errors" "^4.39.0"
+    "@ledgerhq/hw-transport" "^4.39.0"
+    u2f-api "0.2.7"
+
+"@ledgerhq/hw-transport@^4.39.0":
+  version "4.39.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.39.0.tgz#602c6ea3fef56d1df205274ea742b4cf85613f6c"
+  integrity sha512-XkVAy2SFRDdE3qQGGVxB7RQdsdIx1fcoRNReU7NQXK59fYqxue+ZoiGtynEoHq9RKMg8EBG2kBXSVEh1iPdOlA==
+  dependencies:
+    "@ledgerhq/devices" "^4.39.0"
+    "@ledgerhq/errors" "^4.39.0"
+    events "^3.0.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -6426,7 +6463,7 @@ ledger-wallet-provider@^2.0.1-beta.4:
     strip-hex-prefix "^1.0.0"
     web3-provider-engine "^13.3.3"
 
-"ledgerco@github:Neufund/ledgerjs#tomek/update_hid":
+ledgerco@Neufund/ledgerjs#tomek/update_hid:
   version "1.2.1"
   resolved "https://codeload.github.com/Neufund/ledgerjs/tar.gz/6ba988f95dd44e1badd5d8b912d95312372c8548"
   dependencies:

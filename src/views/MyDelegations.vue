@@ -82,47 +82,27 @@ export default class MyDelegations extends Vue {
   async getDelegationList() {
     this.loading = true    
 
-    let candidates = []
-    try {
-      candidates = await this.dposUser.listCandidatesAsync()
-    } catch(err) {
-      console.error("Error fetching delegation list:", err)
-    }
+    if (!this.dposUser == undefined) {
+      const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
 
-    if(candidates.length <= 0) return
-    
-    for (let i in candidates) {
-      const c = candidates[i]
-      const address = c.address.toString().split(':')[1]
-      try { 
-        const delegation = await this.dposUser.checkDelegationsAsync(address)
-        if (delegation === null) {
-          console.log(` No delegation`)
-        } else {
-          const candidateName = candidates[i].name == "" ? "Validator #" + (parseInt(i) + 1) : candidates[i].name
-          if(formatToCrypto(delegation.amount) > 0) {
+      const candidates = await this.dposUser.listCandidatesAsync()
 
-            this.delegations.push(
-              { 
-                "Name": candidateName,
-                "Amount": `${formatToCrypto(delegation.amount)}`,
-                "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-                "Height": `${delegation.height}`,
-                "Locktime": `${new Date(delegation.lockTime*1000)}`,
-                "State": `${this.states[delegation.state]}`,
-                _cellVariants: { Status: 'active'}
-              }
-            )          
-          }
-        }
-      } catch(err) {
-        this.$log("Error fetching delegations: ", err)        
+      for (let delegation of delegationsArray) {
+          const c = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
+          this.delegations.push(
+                { 
+                  "Name": c.name,
+                  "Amount": `${formatToCrypto(delegation.amount)}`,
+                  "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
+                  "Height": `${delegation.height}`,
+                  "Locktime": `${new Date(delegation.lockTime * 1000)}`,
+                  "State": `${this.states[delegation.state]}`,
+                  _cellVariants: { Status: 'active'}
+                })
       }
 
+      this.loading = false
     }
-
-    this.loading = false
-
   }
 
   formatLocktime() {    

@@ -1498,7 +1498,7 @@ async-eventemitter@^0.2.2:
   dependencies:
     async "^2.4.0"
 
-"async-eventemitter@github:ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c":
+async-eventemitter@ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c:
   version "0.2.3"
   resolved "https://codeload.github.com/ahultgren/async-eventemitter/tar.gz/fa06e39e56786ba541c180061dbf2c0a5bbf951c"
   dependencies:
@@ -6597,9 +6597,10 @@ lolex@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-3.1.0.tgz#1a7feb2fefd75b3e3a7f79f0e110d9476e294434"
 
-loom-js@^1.42.2:
-  version "1.42.2"
-  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.42.2.tgz#fcc7a70d4129fb9f0fe7cec977677920fca79e9a"
+loom-js@1.44.1:
+  version "1.44.1"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.44.1.tgz#dd137518257a294e9e249ce9d6fc1638f2c1cc4c"
+  integrity sha512-TxAqY7uuEVJRO7hv2leqgZDmXtIt9I56+/qQ0lduwG7ON0OPPZT0j1/hB4iEFpcAA3wMBj6s6LfETCrbH3Z+FQ==
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

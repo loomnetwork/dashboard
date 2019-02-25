@@ -15,8 +15,10 @@
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
             {{ $t('components.faucet_header.plasmachain_dashboard') }}
-            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.connected') }}</span>
-            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.disconnected') }}</span>
+            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.eth_connected') }}</span>
+            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.eth_disconnected') }}</span>
+            <span v-if="connectedToDappChain" class="metamask-status">{{ $t('components.faucet_header.dapp_connected') }}</span>
+            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.dapp_disconnected') }}</span>
           </b-navbar-brand>
         </a>
         <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
@@ -147,7 +149,7 @@
 
 <script>
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ChainSelector from './ChainSelector'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import LangSwitcher from './LangSwitcher'
@@ -198,7 +200,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'addChainUrl',
       'getDappchainLoomBalance',
       'getMetamaskLoomBalance',
-      'getAccumulatedStakingAmount'
+      'getAccumulatedStakingAmount',
+      'getDpos2'
     ]),
     
   },
@@ -218,6 +221,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
+      'dpos2'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
@@ -232,6 +236,7 @@ export default class FaucetHeader extends Vue {
   formattedTimeUntilElectionCycle = null
   timeLeft = 600
   errorRefreshing = false
+  connectedToDappChain = false 
 
   electionCycleTimer = undefined
 
@@ -251,8 +256,19 @@ export default class FaucetHeader extends Vue {
     // this.$root.$emit('bv::show::modal', 'login-account-modal')
   }
 
-  mounted() {
+  @Watch('dpos2')
+    onDpos2Change(newValue, oldValue) {
+    if(newValue) {
+      this.connectedToDappChain = true
+    } else {
+      this.connectedToDappChain = false
+    }
+  }
 
+  mounted() {
+    this.getDpos2()
+    console.log("dpos2",this.dpos2);
+    
     this.$root.$on('initialized', async () => {
       await this.pollingHandler()
     })    

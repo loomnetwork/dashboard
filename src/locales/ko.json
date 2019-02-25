@@ -144,8 +144,10 @@
       "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
     },
     "faucet_header": {
-      "connected": "connected",
-      "disconnected": "disconnected",
+      "eth_connected": "Ethereum Connected",
+      "eth_disconnected": "Ethereum Disconnected",
+      "dapp_connected": "PlasmaChain Connected",
+      "dapp_disconnected": "PlasmaChain Disconnected",
       "explorer": "Explorer",
       "f_a_q": "자주 묻는 질문",
       "next_election_cycle": "Next election cycle:",

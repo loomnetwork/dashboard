@@ -4,7 +4,7 @@
       <b-row class="my-1 align-items-center min-height">
         <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
 
-        <div class="dropdown-container mb-4">
+        <div v-if="componentLoaded" class="dropdown-container mb-4">
           <v-autocomplete :items="filteredPaths"
                          v-model="selectedPath"
                          :get-label="getLabel"
@@ -90,6 +90,7 @@ export default class HardwareWalletModal extends Vue {
   selectedPath = hdPaths.paths[0]
   selectedAddress = 0
   dropdownTemplate = DropdownTemplate
+  componentLoaded = false
 
   web3js = undefined
 
@@ -196,6 +197,7 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async show(myWeb3) {
+    this.componentLoaded = true
     await this.setWeb3Instance()
     this.showLoadingSpinner = true
     try {

@@ -23,9 +23,7 @@ export const connectToMetamask = async () => {
 
 }
 
-export const initWeb3Hardware = (
-  networkId = 1, 
-  rpcUrl = 'https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0') => {
+export const initWeb3Hardware = () => {
 
   return new Promise(
     async (resolve, reject) => {          

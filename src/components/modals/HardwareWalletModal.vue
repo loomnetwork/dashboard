@@ -168,7 +168,7 @@ export default class HardwareWalletModal extends Vue {
   }
 
 
-  async setWeb3() {
+  async setWeb3Instance() {
     if(typeof this.web3js === "undefined") {
       let web3js = await initWeb3Hardware() //initLedgerProvider()
       this.web3js = web3js
@@ -177,7 +177,6 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async getBalances() {
-    await this.setWeb3()
     this.accounts.forEach(account => {
       this.web3js.eth
         .getBalance(account.account.getChecksumAddressString())
@@ -197,7 +196,7 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async show(myWeb3) {
-    await this.setWeb3()
+    await this.setWeb3Instance()
     this.showLoadingSpinner = true
     try {
       this.hdWallet = await LedgerWallet()

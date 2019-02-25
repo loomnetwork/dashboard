@@ -101,13 +101,14 @@ const DappChainStore = createNamespacedHelpers('DappChain')
   },
   computed: {
     ...mapState([
-      'userIsLoggedin'
+      'userIsLoggedIn'
     ]),
     ...DappChainStore.mapState([
-      'chainUrls',
+      'chainUrls'
     ]),    
     ...DPOSStore.mapState([
-      'isLoggedIn'
+      'isLoggedIn',
+      'walletType'
     ]),
     ...mapGetters([
       'getPrivateKey'
@@ -139,6 +140,8 @@ export default class FirstPage extends Vue {
       // this.$refs.hardwareWalletConfigRef.show(web3)
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
+      this.setWalletType("metamask")
+      if(this.userIsLoggedIn) await this.gotoAccount()
     } else {
       return
     }
@@ -205,7 +208,7 @@ export default class FirstPage extends Vue {
       seed
     })
     this.setUserIsLoggedIn(true)
-    await this.gotoAccount()
+    // await this.gotoAccount()
   }
 
   newUser() {
@@ -232,7 +235,7 @@ export default class FirstPage extends Vue {
       seed
     })
     this.setUserIsLoggedIn(true)
-    await this.gotoAccount()
+    // await this.gotoAccount()
   }
 
   get STATUS() {
@@ -244,10 +247,10 @@ export default class FirstPage extends Vue {
   }
 
   async onWalletConfig() {
-    this.setUserIsLoggedIn(true)
-    // this.setIsLoggedIn(true)
-    this.setWalletType('ledger')
-    //await this.gotoAccount()
+    this.setWalletType("ledger")
+    if(this.userIsLoggedIn && this.walletType) {
+      await this.gotoAccount()
+    }
   }
 
 }</script>

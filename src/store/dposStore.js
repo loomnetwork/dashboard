@@ -1,6 +1,6 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
-import { initWeb3Hardware } from '../services/initWeb3'
+import { initWeb3 } from '../services/initWeb3'
 import BigNumber from 'bignumber.js';
 
 

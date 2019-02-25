@@ -180,8 +180,9 @@ export default {
 
             delegationsTotal: formatToCrypto(validator.delegationsTotal),
 
-            // Whitelist (bonus already included in it)
-            whitelistAmount: formatToCrypto(validator.whitelistAmount),
+            personalStake: formatToCrypto(validator.personalStake),
+
+            delegatedStake: formatToCrypto(validator.delegatedStake),
 
             // Whitelist + Tokens Staked * Bonuses
             votingPower: formatToCrypto(validator.votingPower || 0),

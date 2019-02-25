@@ -29,6 +29,7 @@ const defaultState = () => {
     metamaskDisabled: false,
     showLoadingSpinner: false,
     userBalance: {
+      isLoading: true,
       loomBalance: 0,
       mainnetBalance: 0,
       stakedAmount: 0
@@ -39,7 +40,7 @@ const defaultState = () => {
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
       { key: 'totalStaked', sortable: true, label: "Total Staked" },
-      { key: 'votingPower', sortable: true, label: "Voting power"  },
+      // { key: 'votingPower', sortable: true, label: "Reward Power" },
       // { key: 'Weight', sortable: true },
       { key: 'Fees', sortable: true },
       // { key: 'Uptime', sortable: true },
@@ -174,6 +175,7 @@ export default {
             Status: validator.active ? "Active" : "Inactive",
             Stake: (formatToCrypto(validator.stake) || '0'),
             votingPower: formatToCrypto(validator.stake || 0),
+            whitelistAmount: formatToCrypto(validator.whitelistAmount),
             delegationsTotal: formatToCrypto(validator.delegationsTotal),
             totalStaked: formatToCrypto(validator.totalStaked),
             Weight: (validator.weight || '0') + '%',

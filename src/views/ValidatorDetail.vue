@@ -130,8 +130,10 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class ValidatorDetail extends Vue {
   fields = [
     { key: 'Status' },
+    { key: 'whitelistAmount', label: 'Validator Stake'},
+    { key: 'delegationsTotal', label: 'Delegated Stake'},
     { key: 'totalStaked', label: 'Total Staked'},
-    { key: 'votingPower', label: 'Voting Power'},
+    // { key: 'votingPower', label: 'Reward Power'},
     { key: 'Fees', sortable: false },
   ]
   validator = {}
@@ -157,9 +159,12 @@ export default class ValidatorDetail extends Vue {
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {
-    let index = this.$route.params.index
-    if(this.validators.length <= 0) await this.getValidatorList()
-    this.validator = this.validators[index]
+    let name = this.$route.params.index
+    if(!this.validators || this.validators.length <= 0) await this.getValidatorList()
+    this.validator = this.validators.find(v => v.Name === name)
+    if(this.validator === undefined) {
+      this.$router.push("../validators")
+    }
   }
 
   async mounted() {

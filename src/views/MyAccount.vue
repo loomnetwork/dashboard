@@ -28,8 +28,8 @@
                           </div>                          
                           <div class="balance-container mt-2">
                             <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
-                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.mainnetBalance + " LOOM"}}</strong></h6>
-                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.loomBalance + " LOOM"}}</strong></h6>                            
+                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong></h6>
+                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>                            
                           </div>                          
                         </div>
                         <div class="col text-center" style="display:none">
@@ -269,7 +269,8 @@ Vue.use(VueClipboard)
     ...DPOSStore.mapMutations([
       'setWeb3',
       'setShowLoadingSpinner',
-      'setConnectedToMetamask'
+      'setConnectedToMetamask',
+      'setUserBalance'
     ]),
     ...DappChainStore.mapActions([
       'registerWeb3',
@@ -287,10 +288,8 @@ Vue.use(VueClipboard)
 export default class MyAccount extends Vue {
   userAccount = {
     address: "",
-    balance: 0,
   }
 
-  mainnetBalance = 0
   transferAmount = ""
   amountToApprove = ""
   withdrawAmount = ""
@@ -368,11 +367,22 @@ export default class MyAccount extends Vue {
   }
 
   async refresh(poll) {    
+    console.log('refreshing...')
     this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
-    this.userAccount.balance = await this.getDappchainLoomBalance()    
-    this.mainnetBalance = await this.getMetamaskLoomBalance({
+    let loomBalance = await this.getDappchainLoomBalance()    
+    let mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,
       address: this.userEthAddr
+    })
+
+    let isLoading = false
+    let stakedAmount = this.userBalance.stakedAmount
+
+    this.setUserBalance({
+      isLoading,
+      loomBalance,
+      mainnetBalance,
+      stakedAmount
     })
   }
 
@@ -410,7 +420,7 @@ export default class MyAccount extends Vue {
       return
     }
 
-    this.isLoading = true
+    this.setShowLoadingSpinner(true)
     
     try {
       await this.depositAsync({amount: this.transferAmount})
@@ -420,7 +430,9 @@ export default class MyAccount extends Vue {
       this.setError({msg: "Deposit failed, please try again", err})
     }
     this.transferAmount = ""
-    this.isLoading = false
+
+    this.setShowLoadingSpinner(false)
+    
   }
 
   async withdrawHandler() {
@@ -430,7 +442,7 @@ export default class MyAccount extends Vue {
       return
     }
 
-    this.isLoading = true
+    this.setShowLoadingSpinner(true)
 
     try {
       await this.withdrawAsync({amount: this.withdrawAmount})
@@ -440,7 +452,8 @@ export default class MyAccount extends Vue {
       this.setError({msg: "Withdraw failed, please try again", err})
     }
     this.withdrawAmount = ""
-    this.isLoading = false
+
+    this.setShowLoadingSpinner(false)
 
   }
 

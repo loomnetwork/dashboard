@@ -83,7 +83,7 @@ export default class ValidatorList extends Vue {
   } 
 
   showValidatorDetail(record, index) {
-    this.$router.push(`/validator/${index}`)
+    this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)
   }
 }</script>
 

@@ -405,9 +405,10 @@ export default {
             // TODO: Use candidate statistics 
             // https://github.com/loomnetwork/loomchain/issues/763
             totalStaked: 0,
-            whitelist: 0,
+            personalStake: 0,
             votingPower: 0,
             delegationTotal: 0,
+            delegatedStake: 0,
 
             // Validator metadata
             name: candidate.name,
@@ -425,13 +426,15 @@ export default {
           if (v !== undefined) {
               validator.active = true
 
-              // Tokens staked without bonuses
-              validator.totalStaked = stakedTokens[addr].toString()
+              // Tokens amount of tokens staked (sum of personal and delegated)
+              validator.totalStaked = new BN(v.whitelistAmount).add(new BN(stakedTokens[addr])).toString()
 
-              // How much was whitelisted from the initial lockup
-              validator.whitelistAmount = v.whitelistAmount.toString()
+              // How much was validator personally staked
+              validator.personalStake = v.whitelistAmount.toString()
 
-
+              // how much tokens staked by delegators
+              validator.delegatedStake = stakedTokens[addr].toString() 
+      
               // Voting Power is the whitelist plus the tokens w/ bonuses
               validator.votingPower = v.delegationTotal.toString()
 

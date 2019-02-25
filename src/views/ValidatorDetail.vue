@@ -130,8 +130,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class ValidatorDetail extends Vue {
   fields = [
     { key: 'Status' },
-    { key: 'whitelistAmount', label: 'Validator Stake'},
-    { key: 'delegationsTotal', label: 'Delegated Stake'},
+    { key: 'personalStake', label: 'Validator Personal Stake'},
+    { key: 'delegatedStake', label: 'Delegators Stake'},
     { key: 'totalStaked', label: 'Total Staked'},
     // { key: 'votingPower', label: 'Reward Power'},
     { key: 'Fees', sortable: false },
@@ -256,7 +256,9 @@ export default class ValidatorDetail extends Vue {
           Description: (validator.description) || null,
           Website: (validator.website) || null,
           _cellVariants: validator.active ? { Status: 'active'} : undefined,
-          pubKey: (validator.pubKey)
+          pubKey: (validator.pubKey),
+          personalStake: validator.personalStake,
+          delegatedStake: validator.delegatedStake,
         })
       }
       commit("setValidators", validatorList)

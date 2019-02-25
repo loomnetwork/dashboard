@@ -60,7 +60,8 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
       'getValidatorList'
     ]),
     ...DappChainStore.mapActions([
-      'getValidatorsAsync'
+      'getValidatorsAsync',
+      'getDpos2'
     ])
   }
 })
@@ -71,6 +72,7 @@ export default class ValidatorList extends Vue {
   }
 
   async refresh() {
+    await this.getDpos2()
     await this.getValidatorList()
   }
 

@@ -82,7 +82,7 @@ export default class MyDelegations extends Vue {
   async getDelegationList() {
     this.loading = true    
 
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkDelegatorDelegationsAsync()
+    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkDelegatorDelegations()
     console.log("USER DELEGATED TOTAL", amount, "TOKENS")
     console.log("USER WEIGHTED TOTAL", weightedAmount) 
     console.log("DELEGATIONS:", delegationsArray)

@@ -200,8 +200,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'addChainUrl',
       'getDappchainLoomBalance',
       'getMetamaskLoomBalance',
-      'getAccumulatedStakingAmount',
-      'getDpos2'
+      'getAccumulatedStakingAmount'
     ]),
     
   },
@@ -221,7 +220,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
-      'dpos2'
+      'isConnectedToDappChain'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
@@ -256,8 +255,8 @@ export default class FaucetHeader extends Vue {
     // this.$root.$emit('bv::show::modal', 'login-account-modal')
   }
 
-  @Watch('dpos2')
-    onDpos2Change(newValue, oldValue) {
+  @Watch('isConnectedToDappChain')
+    onConnectingToDappChainChange(newValue, oldValue) {
     if(newValue) {
       this.connectedToDappChain = true
     } else {
@@ -265,10 +264,7 @@ export default class FaucetHeader extends Vue {
     }
   }
 
-  mounted() {
-    this.getDpos2()
-    console.log("dpos2",this.dpos2);
-    
+  mounted() { 
     this.$root.$on('initialized', async () => {
       await this.pollingHandler()
     })    

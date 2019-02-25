@@ -141,7 +141,8 @@ const defaultState = () => {
     mappingStatus: undefined,
     mappingError: undefined,
     metamaskStatus: undefined,
-    metamaskError: undefined
+    metamaskError: undefined,
+    isConnectedToDappChain: false
   }
 }
 
@@ -204,6 +205,9 @@ export default {
     },
     setMetamaskError(state, payload) {
       state.metamaskError = payload
+    },
+    setDappChainConnected(state, payload) {
+      state.isConnectedToDappChain = payload
     }
   },
   actions: {
@@ -470,8 +474,12 @@ export default {
         new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
       return result
     },
-    async getDpos2({ state }, payload) {
-      if (!payload && state.dpos2) return state.dpos2
+    async getDpos2({ state, commit }, payload) {
+      console.log("state.dpos2", state.dpos2);
+      if (!payload && state.dpos2) {
+        commit('setDappChainConnected', true)
+        return state.dpos2
+      }
       const networkConfig = state.chainUrls[state.chainIndex]
 
       let privateKey
@@ -500,11 +508,13 @@ export default {
         new SignedTxMiddleware(privateKey)
       ]
       client.on('error', msg => {
+        commit('setDappChainConnected', false)
         console.error('PlasmaChain connection error', msg)
       })
 
       const dpos2 = await DPOS2.createAsync(client, new Address(networkConfig.network, LocalAddress.fromPublicKey(publicKey)))
       state.dpos2 = dpos2
+      commit('setDappChainConnected', true)
       return dpos2
     },
     async ensureIdentityMappingExists({ rootState, state, dispatch, commit }, payload) {

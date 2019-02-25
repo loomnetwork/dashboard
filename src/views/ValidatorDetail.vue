@@ -123,7 +123,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
       'checkDelegationAsync',
-      'claimRewardAsync'
+      'claimRewardAsync',
+      'getDpos2'
     ])
   }
 })
@@ -232,6 +233,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   async refresh() {
+    await this.getDpos2()
     this.getValidators()
   }
 

@@ -281,7 +281,8 @@ Vue.use(VueClipboard)
       'getDappchainLoomBalance',
       'getMetamaskLoomBalance',
       'init',
-      'checkMappingCompatability'
+      'checkMappingCompatability',
+      'getDpos2'
     ])
   }
 })
@@ -377,7 +378,7 @@ export default class MyAccount extends Vue {
 
     let isLoading = false
     let stakedAmount = this.userBalance.stakedAmount
-
+    await this.getDpos2()
     this.setUserBalance({
       isLoading,
       loomBalance,

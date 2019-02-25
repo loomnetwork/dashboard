@@ -46,7 +46,7 @@ const defaultState = () => {
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4", "test-z-us1-dappchains-2-aws0"]
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"]
   }
 }
 

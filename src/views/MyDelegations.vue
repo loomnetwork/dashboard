@@ -82,43 +82,22 @@ export default class MyDelegations extends Vue {
   async getDelegationList() {
     this.loading = true    
 
-    let candidates = []
-    try {
-      candidates = await this.dposUser.listCandidatesAsync()
-    } catch(err) {
-      console.error("Error fetching delegation list:", err)
-    }
+    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkDelegatorDelegationsAsync()
+    console.log("USER DELEGATED TOTAL", amount, "TOKENS")
+    console.log("USER WEIGHTED TOTAL", weightedAmount) 
+    console.log("DELEGATIONS:", delegationsArray)
 
-    if(candidates.length <= 0) return
-    
-    for (let i in candidates) {
-      const c = candidates[i]
-      const address = c.address.toString().split(':')[1]
-      try { 
-        const delegation = await this.dposUser.checkDelegationsAsync(address)
-        if (delegation === null) {
-          console.log(` No delegation`)
-        } else {
-          const candidateName = candidates[i].name == "" ? "Validator #" + (parseInt(i) + 1) : candidates[i].name
-          if(formatToCrypto(delegation.amount) > 0) {
-
-            this.delegations.push(
+    for (let delegation of delegationsArray) {
+        this.delegations.push(
               { 
-                "Name": candidateName,
+                "Name": delegation.address.local.toString(),
                 "Amount": `${formatToCrypto(delegation.amount)}`,
                 "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
                 "Height": `${delegation.height}`,
-                "Locktime": `${new Date(delegation.lockTime*1000)}`,
+                "Locktime": `${new Date(delegation.lockTime * 1000)}`,
                 "State": `${this.states[delegation.state]}`,
                 _cellVariants: { Status: 'active'}
-              }
-            )          
-          }
-        }
-      } catch(err) {
-        this.$log("Error fetching delegations: ", err)        
-      }
-
+              })
     }
 
     this.loading = false

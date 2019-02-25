@@ -74,10 +74,12 @@ export default class MyDelegations extends Vue {
   states = ["Bonding", "Bonded", "Unbounding"]
   loading = true
 
-  mounted() {
+  async mounted() {
     this.$root.$on('initialized', async () => {
       await this.getDelegationList()
     }) 
+
+    await this.getDelegationList()    
   }
 
   async refresh() {

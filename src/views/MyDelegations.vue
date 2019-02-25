@@ -82,26 +82,27 @@ export default class MyDelegations extends Vue {
   async getDelegationList() {
     this.loading = true    
 
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
+    if (!this.dposUser == undefined) {
+      const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
 
-    const candidates = await this.dposUser.listCandidatesAsync()
+      const candidates = await this.dposUser.listCandidatesAsync()
 
-    for (let delegation of delegationsArray) {
-        const c = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
-        this.delegations.push(
-              { 
-                "Name": c.name,
-                "Amount": `${formatToCrypto(delegation.amount)}`,
-                "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-                "Height": `${delegation.height}`,
-                "Locktime": `${new Date(delegation.lockTime * 1000)}`,
-                "State": `${this.states[delegation.state]}`,
-                _cellVariants: { Status: 'active'}
-              })
+      for (let delegation of delegationsArray) {
+          const c = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
+          this.delegations.push(
+                { 
+                  "Name": c.name,
+                  "Amount": `${formatToCrypto(delegation.amount)}`,
+                  "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
+                  "Height": `${delegation.height}`,
+                  "Locktime": `${new Date(delegation.lockTime * 1000)}`,
+                  "State": `${this.states[delegation.state]}`,
+                  _cellVariants: { Status: 'active'}
+                })
+      }
+
+      this.loading = false
     }
-
-    this.loading = false
-
   }
 
   formatLocktime() {    

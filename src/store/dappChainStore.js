@@ -16,6 +16,9 @@ import BN from 'bn.js'
 const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
+import Debug from 'debug'
+const debug = Debug('dappChainStore')
+
 /*
 network config
 1: mainnet
@@ -516,9 +519,13 @@ export default {
       } else {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
-
+      // debug
+      const ethAddress = await state.dposUser._wallet.getAddress()
+      const loomAddress = state.dposUser._address.toString()
       try {
-        const mappingExists = await state.dposUser.addressMapper.hasMappingAsync(state.localAddress)            
+        debug(`calling hasMappingAsync() state.dposUser._wallet ${ethAddress.toString()} state.dposUser._address ${loomAddress.toString()} `)
+        const mappingExists = await state.dposUser.addressMapper.hasMappingAsync(state.localAddress)     
+        debug('got'+ mappingExists)       
         if (!mappingExists) {
           commit("DPOS/setStatus", "no_mapping", {root: true})
           return;
@@ -546,9 +553,16 @@ export default {
       commit("DPOS/setStatus", "mapped", {root: true})
     },
     async addMappingAsync({ state, dispatch, commit }, payload) {
+      
       if (!state.dposUser) {
-        await dispatch('initDposUser')
-      } try {
+        //await dispatch('initDposUser')
+        throw new Error("Expected dposuser to be already initilized")
+      } 
+      // debug
+      const ethAddress = await state.dposUser._wallet.getAddress()
+      const loomAddress = state.dposUser._address.toString()
+      console.log(`calling mapAccountsAsync() state.dposUser._wallet ${ethAddress.toString()} state.dposUser._address ${loomAddress.toString()} `)
+      try {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {

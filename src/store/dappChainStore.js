@@ -518,6 +518,12 @@ export default {
       }
 
       try {
+        const mappingExists = await state.dposUser.addressMapper.hasMappingAsync(state.localAddress)            
+        if (!mappingExists) {
+          commit("DPOS/setStatus", "no_mapping", {root: true})
+          return;
+        }
+
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
         let dappchainAddress = mappedEthAddress.toLowerCase()

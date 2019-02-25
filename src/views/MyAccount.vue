@@ -477,6 +477,7 @@ export default class MyAccount extends Vue {
   }
 
   async connectMetamask() {
+    return
     let web3js
     if (window.ethereum) {
       window.web3 = new Web3(ethereum)

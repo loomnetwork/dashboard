@@ -57,6 +57,9 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ...mapMutations([
       'setErrorMsg'
     ]),
+    ...DappChainStore.mapActions([
+      'getDpos2'
+    ])
   }
 })
 export default class CandidateDetail extends Vue {
@@ -79,6 +82,7 @@ export default class CandidateDetail extends Vue {
   }
 
   async refresh() {
+    await this.getDpos2()
     this.candidateList = await getCandidatesAsync(this.currentRPCUrl)
   }
 

@@ -51,6 +51,9 @@ import { initWeb3 } from '../services/initWeb3'
       'setConnectedToMetamask',
       'setWeb3',
       'setCurrentMetamaskAddress'
+    ]),
+    ...DappChainStore.mapActions([
+      'getDpos2'
     ])
   },
   computed: {
@@ -76,6 +79,7 @@ export default class MyDelegations extends Vue {
   }
 
   async refresh() {
+    await this.getDpos2()
     await this.getDelegationList()
   }
 

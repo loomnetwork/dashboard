@@ -8,7 +8,6 @@
         <seed-phrase-modal ref="seedPhraseRef" @ok="onGenerateSeeds"/>
         <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
-        <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
 
         <div class="container-fluid mb-5 mt-4 rmv-padding">
           <div class="row">
@@ -42,30 +41,6 @@
               </div>
             </div>
           </div>
-          <div class="row mb-5 wallet-provider-container">
-            <div class="col">
-              <b-card class="text-center" @click="selectWallet('ledger')">
-                <img src="../assets/ledger_logo.svg">
-                <p>
-                  Connect & sign via your <br>
-                  hardware wallet                      
-                </p>
-                <span id="ledgerInfo" class="qa">? </span>
-                <b-tooltip target="ledgerInfo" placement="bottom" title="Click here to connect with your Ledger hardware wallet"></b-tooltip>
-              </b-card>
-            </div>
-            <div class="col">
-              <b-card class="text-center" @click="selectWallet('metamask')">
-                <img src="../assets/metamask_logo.png">
-                <p>
-                  Connect & sign via your browser <br>
-                  or extension                      
-                </p>
-                <span id="metamaskInfo" class="qa">? </span>
-                <b-tooltip target="metamaskInfo" placement="bottom" title="Click here to connect with your Metamask wallet"></b-tooltip>
-              </b-card>                  
-            </div>                
-          </div>
         </div>
       </main>
     </div>
@@ -82,7 +57,6 @@ import ChainSelector from '../components/ChainSelector'
 import SeedPhraseModal from '../components/modals/SeedPhraseModal'
 import ConfirmSeedModal from '../components/modals/ConfirmSeedModal'
 import RestoreAccountModal from '../components/modals/RestoreAccountModal'
-import HardwareWalletModal from '../components/modals/HardwareWalletModal'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 const bip39 = require('bip39')
 
@@ -96,19 +70,17 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ChainSelector,
     SeedPhraseModal,
     ConfirmSeedModal,
-    HardwareWalletModal,
     RestoreAccountModal
   },
   computed: {
     ...mapState([
-      'userIsLoggedIn'
+      'userIsLoggedin'
     ]),
     ...DappChainStore.mapState([
-      'chainUrls'
+      'chainUrls',
     ]),    
     ...DPOSStore.mapState([
-      'isLoggedIn',
-      'walletType'
+      'isLoggedIn'
     ]),
     ...mapGetters([
       'getPrivateKey'
@@ -120,7 +92,7 @@ const DappChainStore = createNamespacedHelpers('DappChain')
   methods: {    
     ...mapActions(['signOut', 'setPrivateKey']),
     ...DPOSStore.mapActions(['storePrivateKeyFromSeed']),
-    ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
+    ...DPOSStore.mapMutations(['setShowLoadingSpinner']),
     ...DappChainStore.mapActions([
       'addChainUrl'
     ]),    
@@ -133,19 +105,6 @@ export default class FirstPage extends Vue {
   currentStatus = this.STATUS.NONE
 
   isProduction = window.location.hostname === "dashboard.dappchains.com"
-
-  async selectWallet(wallet) {
-    if(wallet === "ledger") {
-      // let web3 = await initLedgerProvider()
-      // this.$refs.hardwareWalletConfigRef.show(web3)
-     this.$refs.hardwareWalletConfigRef.show() 
-    } else if(wallet === "metamask") {
-      this.setWalletType("metamask")
-      if(this.userIsLoggedIn) await this.gotoAccount()
-    } else {
-      return
-    }
-  }
 
   async openLoginModal() {
     this.$root.$emit('bv::show::modal', 'login-account-modal')
@@ -208,7 +167,7 @@ export default class FirstPage extends Vue {
       seed
     })
     this.setUserIsLoggedIn(true)
-    // await this.gotoAccount()
+    await this.gotoAccount()
   }
 
   newUser() {
@@ -235,7 +194,7 @@ export default class FirstPage extends Vue {
       seed
     })
     this.setUserIsLoggedIn(true)
-    // await this.gotoAccount()
+    await this.gotoAccount()
   }
 
   get STATUS() {
@@ -243,13 +202,6 @@ export default class FirstPage extends Vue {
       NONE: 'NONE',
       CREATE_ACCOUNT: 'CREATE_ACCOUNT',
       RESTORE_ACCOUNT: 'RESTORE_ACCOUNT'
-    }
-  }
-
-  async onWalletConfig() {
-    this.setWalletType("ledger")
-    if(this.userIsLoggedIn && this.walletType) {
-      await this.gotoAccount()
     }
   }
 
@@ -345,30 +297,6 @@ $theme-colors: (
     min-width: 256px;
     max-width: 280px;
     height: auto;
-  }
-
-  .wallet-provider-container {
-    .col {
-      position: relative;
-      img {
-        width: 96px;
-        height: auto;
-        margin-bottom: 12px;
-      }
-      span.qa {        
-        display: inline-block;
-        line-height: 20px;        
-        right: 12px;
-        bottom: 12px;
-        position: absolute;
-        font-weight: bold;
-        width: 20px;
-        height: 20px;
-        color: white;
-        background-color: grey;
-        border-radius: 50%;
-      }
-    }
   }
 }
 

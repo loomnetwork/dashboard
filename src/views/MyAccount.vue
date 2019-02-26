@@ -387,18 +387,18 @@ export default class MyAccount extends Vue {
     })
   }
 
-  // async initWeb3() {
+  async initWeb3() {
     
-  //   if(window.ethereum) {
-  //     try {
-  //       await this.connectMetamask()
-  //     } catch(err) {
-  //       this.$refs.metamaskModalRef.show()  
-  //     }
-  //   } else {
-  //     this.$refs.metamaskModalRef.show()
-  //   }
-  // }
+    if(window.ethereum) {
+      try {
+        await this.connectMetamask()
+      } catch(err) {
+        this.$refs.metamaskModalRef.show()  
+      }
+    } else {
+      this.$refs.metamaskModalRef.show()
+    }
+  }
 
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(null, '')
@@ -488,7 +488,6 @@ export default class MyAccount extends Vue {
   }
 
   async connectMetamask() {
-    return
     let web3js
     if (window.ethereum) {
       window.web3 = new Web3(ethereum)

@@ -69,6 +69,7 @@ import LoadingSpinner from '../components/LoadingSpinner'
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
+import { initWeb3 } from '../services/initWeb3'
 import { isIP } from 'net';
 
 @Component({

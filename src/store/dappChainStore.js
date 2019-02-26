@@ -9,17 +9,12 @@ import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
 
-
 const coinMultiplier = new BN(10).pow(new BN(18));
 
-import { ethers } from 'ethers';
 import BN from 'bn.js'
 
 const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
-
-import Debug from 'debug'
-const debug = Debug('dappChainStore')
 
 /*
 network config
@@ -29,8 +24,8 @@ network config
 const clientNetwork = {
   '1': {
     network: 'default',
-    websockt: 'wss://plasma.dappchains.com/websocket',
-    queryws: 'wss://plasma.dappchains.com/queryws'
+    websockt: 'wss://test-z-asia1.dappchains.com/websocket',
+    queryws: 'wss://test-z-asia1.dappchains.com/queryws'
   },
   '4': {
     network: 'asia1',
@@ -290,12 +285,8 @@ export default {
       }
       
       const network = state.chainUrls[state.chainIndex].network
-
-      const provider = new ethers.providers.Web3Provider(rootState.DPOS.web3.currentProvider)
-      const wallet = provider.getSigner(rootState.DPOS.currentMetamaskAddress)
-
-      const user = await DPOSUser.createUserAsync(
-        wallet,
+      const user = await DPOSUser.createMetamaskUserAsync(
+        rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,
         network,
@@ -541,19 +532,8 @@ export default {
       } else {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
-      // debug
-      const ethAddress = await state.dposUser._wallet.getAddress()
-      const loomAddress = state.dposUser._address.toString()
-      try {
-        debug(`calling hasMappingAsync() state.dposUser._wallet ${ethAddress.toString()} state.dposUser._address ${loomAddress.toString()} `)
-        debug(`hasMappingAsync(state.localAddress)  ${state.localAddress} `)
-        const mappingExists = await state.dposUser.addressMapper.hasMappingAsync(state.localAddress)     
-        debug('got'+ mappingExists)       
-        if (!mappingExists) {
-          commit("DPOS/setStatus", "no_mapping", {root: true})
-          return;
-        }
 
+      try {
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
         let dappchainAddress = mappedEthAddress.toLowerCase()
@@ -576,16 +556,9 @@ export default {
       commit("DPOS/setStatus", "mapped", {root: true})
     },
     async addMappingAsync({ state, dispatch, commit }, payload) {
-      
       if (!state.dposUser) {
-        //await dispatch('initDposUser')
-        throw new Error("Expected dposuser to be already initilized")
-      } 
-      // debug
-      const ethAddress = await state.dposUser._wallet.getAddress()
-      const loomAddress = state.dposUser._address.toString()
-      console.log(`calling mapAccountsAsync() state.dposUser._wallet ${ethAddress.toString()} state.dposUser._address ${loomAddress.toString()} `)
-      try {
+        await dispatch('initDposUser')
+      } try {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {

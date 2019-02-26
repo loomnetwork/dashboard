@@ -41,6 +41,8 @@ export const initWeb3Hardware = () => {
         networkId:1,
         accountsLength: 5
       });
+
+      ledger.signMessage = ledger.signPersonalMessage;
       engine.addProvider(ledger);
       engine.addProvider(new FetchSubprovider({ rpcUrl: "https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0"}));
       engine.start();

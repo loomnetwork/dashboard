@@ -3,21 +3,21 @@
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
       "lorem_ipsum_dolor_sit_amet": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros. Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.",
-      "delegate": "Delegate",
-      "un_delegate": "Un-delegate"
+      "delegate": "委任する",
+      "un_delegate": "委任をやめる"
     },
     "candidate_list": {
-      "candidates": "Candidates",
-      "no_candidates": "No Candidates"
+      "candidates": "候補者",
+      "no_candidates": "候補者なし"
     },
     "first_page": {
-      "please_log_in": "Please Log In",
-      "sign_out_account": "Sign out account",
-      "login": "Login",
-      "sign_in_with_existing_account": "Sign in with existing account",
-      "setup_new_account_from_scratch": "Setup new account from scratch",
+      "please_log_in": "ログインしてください",
+      "sign_out_account": "サインアウト",
+      "login": "ログイン",
+      "sign_in_with_existing_account": "既存アカウントでサインイン",
+      "setup_new_account_from_scratch": "新規アカウント作成",
       "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
-      "new_user": "New User",
+      "new_user": "新規ユーザー",
       "returning_user": "Returning User",
       "sign_out": "Sign out",
       "create_account": "Create Account",

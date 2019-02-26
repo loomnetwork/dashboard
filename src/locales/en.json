@@ -93,7 +93,6 @@
       "map_accounts": "Map accounts",
       "deposit": "Deposit",
       "withdraw": "Withdraw",
-      "reclaim": "Reclaim",
       "use_maximum": "Use maximum",
       "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
       "withdraw_to_metamask": "Withdraw to your wallet"

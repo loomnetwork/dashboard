@@ -152,18 +152,6 @@
                               <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">{{ $t('views.my_account.withdraw') }}</b-button>
                               <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>                              
                             </div>
-                            <div class="d-flex flex-row align-items-center">
-
-                              <div class="mx-2" style="width: 250px">                                                                
-                                <!-- <div>
-                                <b-button id="reclaimBtn" style="width: 160px" variant="success" @click="reclaimLoomHandler" :disabled="disabledClaiming">
-                                  <fa icon="sync-alt" class="sidebar-icon"/> {{ $t('views.my_account.reclaim') }}
-                                </b-button>
-                                <b-tooltip v-if="!isLoading" target="reclaimBtn" placement="right" title="Click here to reclaim tokens from plasmachain back to your choosen wallet"></b-tooltip>
-                                </div>                               -->
-                              </div>
-                            </div>
-
                           </div>
                         </div>
                       </div>
@@ -368,6 +356,7 @@ export default class MyAccount extends Vue {
 
 
   async mounted() {
+    await this.reclaimLoomHandler()
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
   }
@@ -390,7 +379,6 @@ export default class MyAccount extends Vue {
     let isLoading = false
     let stakedAmount = this.userBalance.stakedAmount
     await this.getDpos2()
-    await this.reclaimLoomHandler()
     this.setUserBalance({
       isLoading,
       loomBalance,

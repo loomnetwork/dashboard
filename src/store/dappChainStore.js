@@ -287,11 +287,8 @@ export default {
       
       const network = state.chainUrls[state.chainIndex].network
 
-      const provider = new ethers.providers.Web3Provider(rootState.DPOS.web3.currentProvider)
-      const wallet = provider.getSigner(rootState.DPOS.currentMetamaskAddress)
-
-      const user = await DPOSUser.createUserAsync(
-        wallet,
+      const user = await DPOSUser.createMetamaskUserAsync(		
+        rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,
         network,

@@ -144,10 +144,10 @@
       "loom_network_is_a_platform": "Loom Network 是一个基于以太坊的平台即服务，允许开发者运行大规模的去中心化应用程序。这使得开发者可以利用世界上最安全的公共区块链的信任和安全性，以及运行商业规模服务所需的计算资源来构建 DApp。 Loom 旨在成为新去中心化网络的代币化应用程序协议。"
     },
     "faucet_header": {
-      "eth_connected": "Ethereum Connected",
-      "eth_disconnected": "Ethereum Disconnected",
-      "dapp_connected": "PlasmaChain Connected",
-      "dapp_disconnected": "PlasmaChain Disconnected",
+      "eth_connected": "以太坊已连接",
+      "eth_disconnected": "以太坊已断开连接",
+      "dapp_connected": "PlasmaChain 已连接",
+      "dapp_disconnected": "PlasmaChain 已断开连接",
       "explorer": "浏览器",
       "f_a_q": "常见问题",
       "next_election_cycle": "下一轮选举周期：",

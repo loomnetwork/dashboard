@@ -16,11 +16,11 @@
       "login": "ログイン",
       "sign_in_with_existing_account": "既存アカウントでサインイン",
       "setup_new_account_from_scratch": "新規アカウント作成",
-      "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
+      "use_seed_phrase_to_retrieve": "シードフレーズで既存のアカウントを回復",
       "new_user": "新規ユーザー",
-      "returning_user": "Returning User",
-      "sign_out": "Sign out",
-      "create_account": "Create Account",
+      "returning_user": "リピーターのユーザー",
+      "sign_out": "サインアウト",
+      "create_account": "アカウントの作成",
       "restore_account": "Restore Account"
     },
     "help": {

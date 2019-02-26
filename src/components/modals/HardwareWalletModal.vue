@@ -59,7 +59,6 @@ import { formatToCrypto } from '../../utils'
 import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb3'
 import { setTimeout } from 'timers';
 
-const HDWalletStore = createNamespacedHelpers('HDWallet')
 const dposStore = createNamespacedHelpers('DPOS')
 
 @Component({
@@ -71,16 +70,13 @@ const dposStore = createNamespacedHelpers('DPOS')
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ])
-  },
-  computed: {
-    ...HDWalletStore.mapState(['maxAddresses'])
   }
 })
 
 export default class HardwareWalletModal extends Vue {
 
   hdWallet = undefined
-
+  maxAddresses = 5
   errorMsg = null
   accounts = []
 
@@ -96,7 +92,6 @@ export default class HardwareWalletModal extends Vue {
   web3js = undefined
 
   async okHandler() {
-    debugger
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
     let offset = this.selectedAddress
     console.log('selected address', selectedAddress)
@@ -108,7 +103,6 @@ export default class HardwareWalletModal extends Vue {
     
     this.setWeb3(this.web3js)
     
-    debugger
     this.$emit('ok');
 
     // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()

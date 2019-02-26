@@ -26,6 +26,8 @@ const defaultState = () => {
     currentMetamaskAddress: undefined,
     validators: null,
     status: "check_mapping",
+    walletType: undefined,
+    selectedAccount: undefined,
     metamaskDisabled: false,
     showLoadingSpinner: false,
     userBalance: {
@@ -91,7 +93,14 @@ export default {
     },
     setTimeUntilElectionCycle(state, payload) {
       state.timeUntilElectionCycle = payload
-    }
+    },
+    setWalletType(state, payload) {
+      state.walletType = payload
+      localStorage.setItem("walletType", payload)
+    },
+    setSelectedAccount(state, payload) {
+      state.selectedAccount = payload
+    }    
   },
   actions: {
     async initializeDependencies({ commit, dispatch }, payload) {

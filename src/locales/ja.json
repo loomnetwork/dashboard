@@ -107,18 +107,18 @@
     },
     "rewards": {
       "unclaimed_rewards": "未請求の報酬:",
-      "you_have_yet_to_receive": "You have yet to receive any rewards",
+      "you_have_yet_to_receive": "まだ報酬の受け取りをしていません",
       "claim_reward": "報酬を請求する"
     },
     "validator_detail": {
       "state": "状態:",
-      "amount_delegated": "Amount Delegated:",
+      "amount_delegated": "委任の数量:",
       "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "Updated Amount:",
+      "updated_amount": "数量を更新:",
       "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "Timelock Tier:",
-      "timelock": "Timelock:",
-      "unlocked": "Unlocked"
+      "timelock_tier": "タイムロックを選択:",
+      "timelock": "タイムロック:",
+      "unlocked": "アンロック済み"
     },
     "validator_list": {
       "no_validators_available_please_try": "No validators available, please try again later",
@@ -140,15 +140,15 @@
       "angel_co": "Angel.co",
       "twitter": "Twitter",
       "telegram": "Telegram",
-      "email": "Email",
-      "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
+      "email": "E-mail",
+      "loom_network_is_a_platform": "Loom Networkは、開発者が大規模な分散型アプリケーションを実行可能な、Ethereum上に作られたサービスとしてのプラットフォームです。これにより商業規模のサービス実行に必要な計算リソースに加え、世界で最も安全なパブリックブロックチェーンの信頼とセキュリティを利用し、開発者はDAppsを構築できるようになります。Loomは新しい分散型Webのためのトークン化されたアプリケーションプロトコルを目指しています。"
     },
     "faucet_header": {
-      "eth_connected": "Ethereum Connected",
-      "eth_disconnected": "Ethereum Disconnected",
-      "dapp_connected": "PlasmaChain Connected",
-      "dapp_disconnected": "PlasmaChain Disconnected",
-      "explorer": "Explorer",
+      "eth_connected": "Ethereumと接続済み",
+      "eth_disconnected": "Ethereumと接続なし",
+      "dapp_connected": "PlasmaChainと接続済み",
+      "dapp_disconnected": "PlasmaChainと接続なし",
+      "explorer": "エクスプロラー",
       "f_a_q": "よくある質問",
       "next_election_cycle": "次の選挙周期:",
       "plasma_chain": "PlasmaChain:",
@@ -165,29 +165,29 @@
     "faucet_sidebar": {
       "my_account": "マイアカウント",
       "my_delegations": "委任について",
-      "rewards": "Rewards"
+      "rewards": "報酬"
     },
     "layout": {
-      "metamask_error": "Metamask error!?",
-      "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
-      "mapping_error": "Mapping error!?",
-      "your_account_appears_to_be": "Your account appears to be mapped with the following address:",
-      "but_your_current_account_address": "but your current account address is:",
-      "please_change_your_metamask_account": "Please change your Metamask account",
-      "please_check_your_metamask_account": "Please check your Metamask account and/or network"
+      "metamask_error": "MetaMaskのエラー!?",
+      "please_enable_metamask_or_switch": "MetaMaskの使用を可能にするか、サポート済みのブラウザに切り替えてください。",
+      "mapping_error": "マッピングのエラー!?",
+      "your_account_appears_to_be": "あなたのアカウントは次のアドレスとマッピングされています:",
+      "but_your_current_account_address": "しかし現在あなたのアドレスは:",
+      "please_change_your_metamask_account": "MetaMaskのアカウントを変更してください",
+      "please_check_your_metamask_account": "MetaMaskのアカウントやネットワークをチェックしてください"
     },
     "loading_spinner": {
-      "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
-      "this_could_take_several_minutes": "This could take several minutes. Please don't close or refresh your browser"
+      "please_be_patient_loomy_is": "Loomyが頑張ってロード中！少々お待ちください。",
+      "this_could_take_several_minutes": "数分かかりますが、ブラウザを閉じたり再読み込みしたりしないでください。"
     },
     "modals": {
       "confirm_seed_modal": {
         "please_type_in_words_confirm_indexes_0": "Please type in words {confirmIndexes01}, {confirmIndexes11}, and {confirmIndexes21} to confirm",
-        "word_confirm_1": "Word{confirm1}:"
+        "word_confirm_1": "単語{confirm1}:"
       },
       "faucet_delegate_modal": {
-        "amount": "Amount:",
-        "locktime_bonuses": "Locktime / Bonuses:",
+        "amount": "数量:",
+        "locktime_bonuses": "ロックタイム / ボーナス:",
         "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
       },
@@ -208,7 +208,7 @@
     },
     "blockExplorer": {
       "block_info": {
-        "on": "On",
+        "on": "日時:",
         "verified": "検証済み",
         "transactions": "トランザクション"
       },
@@ -227,13 +227,13 @@
         "listing_price_1_99": "リスティング価格: $1.99",
         "rarity": "レア度:",
         "rare": "レア",
-        "entry": "Entry:",
-        "return_a_zombie_to_hand": "Return a zombie to hand",
+        "entry": "エントリー時:",
+        "return_a_zombie_to_hand": "ゾンビ１体を手札へ戻す",
         "sold": "販売済み"
       },
       "transaction_list": {
         "filter_by": "フィルタリング",
-        "most_old": "Most old",
+        "most_old": "最も古い",
         "pending": "未処理"
       }
     }

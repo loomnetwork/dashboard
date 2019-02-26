@@ -56,7 +56,7 @@ export const initWeb3Hardware = () => {
 
 }
 
-export const initWeb3SelectedWallet = (getAccountsCallback) => {
+export const initWeb3SelectedWallet = (offset) => {
 
   
 
@@ -66,10 +66,9 @@ export const initWeb3SelectedWallet = (getAccountsCallback) => {
       const getTransport = () => TransportU2F.create();
       const ledger = createLedgerSubprovider(getTransport, {
         networkId:1,
-        accountsLength: 5
+        accountsLength: 5,
+        accountsOffset: offset
       });
-
-      ledger.getAccounts = getAccountsCallback
 
       ledger.signMessage = ledger.signPersonalMessage;
       engine.addProvider(ledger);

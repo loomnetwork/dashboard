@@ -96,15 +96,15 @@ export default class HardwareWalletModal extends Vue {
   web3js = undefined
 
   async okHandler() {
+    debugger
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
+    let offset = this.selectedAddress
     console.log('selected address', selectedAddress)
+    console.log('path index', offset)
     this.setCurrentMetamaskAddress(selectedAddress)
     this.web3js.eth.defaultAccount = selectedAddress
 
-    this.web3js = await initWeb3SelectedWallet((res) => {
-      console.log('calling get accounts')
-      res(null, [selectedAddress])
-    })
+    this.web3js = await initWeb3SelectedWallet(offset)
     
     this.setWeb3(this.web3js)
     

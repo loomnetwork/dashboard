@@ -8,6 +8,7 @@ import ApiClient from '../services/api'
 import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
+import { ethers } from 'ethers'
 
 const coinMultiplier = new BN(10).pow(new BN(18));
 
@@ -285,7 +286,8 @@ export default {
       }
       
       const network = state.chainUrls[state.chainIndex].network
-      const user = await DPOSUser.createMetamaskUserAsync(
+
+      const user = await DPOSUser.createMetamaskUserAsync(		
         rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,

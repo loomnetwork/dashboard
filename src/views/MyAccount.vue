@@ -155,7 +155,6 @@
                             <div class="d-flex flex-row align-items-center">
 
                               <div class="mx-2" style="width: 250px">                                                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.withdraw_to_metamask') }}</span>
                                 <div>
                                 <b-button id="reclaimBtn" style="width: 160px" variant="success" @click="reclaimLoomHandler">
                                   <fa icon="sync-alt" class="sidebar-icon"/> {{ $t('views.my_account.reclaim') }}

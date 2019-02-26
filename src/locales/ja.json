@@ -121,8 +121,8 @@
       "unlocked": "アンロック済み"
     },
     "validator_list": {
-      "no_validators_available_please_try": "No validators available, please try again later",
-      "validators": "Validators"
+      "no_validators_available_please_try": "有効なバリデーターがいません、後で再試行してください。",
+      "validators": "バリデーター"
     }
   },
   "components": {
@@ -182,7 +182,7 @@
     },
     "modals": {
       "confirm_seed_modal": {
-        "please_type_in_words_confirm_indexes_0": "Please type in words {confirmIndexes01}, {confirmIndexes11}, and {confirmIndexes21} to confirm",
+        "please_type_in_words_confirm_indexes_0": "確認のため、{confirmIndexes01}、{confirmIndexes11}、{confirmIndexes21} の単語を入力してください。",
         "word_confirm_1": "単語{confirm1}:"
       },
       "faucet_delegate_modal": {
@@ -192,12 +192,12 @@
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
       },
       "restore_account_modal": {
-        "please_type_in_your_seed": "Please type in your seed phrase below.",
+        "please_type_in_your_seed": "以下にシードフレーズを入力してください。",
         "note_the_phrase_is_case": "Note: the phrase is case sensitive and each word needs to be separated by one space."
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "Note: these 12 words allow you to recover your wallet in case of loss or damage.",
-        "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
+        "you_must_create_a_backup_nbsp": "バックアップの作成が必須です!&nbsp;",
         "write_or_print_it_out": "メモか印刷をして、安全な場所で保管してください。",
         "without_it_you_will_not": "これを失くすと、万一の場合にトークンを回復することができません。",
         "copy_to_clipboard": "クリップボードにコピー"

@@ -150,12 +150,22 @@
                                 </div>
                               </div>
                               <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">{{ $t('views.my_account.withdraw') }}</b-button>
-                              <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
+                              <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>                              
                             </div>
+                            <div class="d-flex flex-row align-items-center">
+
+                              <div class="mx-2" style="width: 250px">                                                                
+                                <span class="text-small text-gray">{{ $t('views.my_account.withdraw_to_metamask') }}</span>
+                                <div>
+                                <b-button id="reclaimBtn" style="width: 160px" variant="success" @click="reclaimLoomHandler">
+                                  <fa icon="sync-alt" class="sidebar-icon"/> {{ $t('views.my_account.reclaim') }}
+                                </b-button>
+                                <b-tooltip v-if="!isLoading" target="reclaimBtn" placement="right" title="Click here to reclaim tokens from plasmachain back to your choosen wallet"></b-tooltip>
+                                </div>                              
+                              </div>
+                            </div>
+
                           </div>
-
-
-                        
                         </div>
                       </div>
                     </b-card-body>
@@ -276,6 +286,7 @@ Vue.use(VueClipboard)
       'registerWeb3',
       'depositAsync',
       'withdrawAsync',
+      'reclaimDeposit',
       'ensureIdentityMappingExists',
       'addMappingAsync',
       'getDappchainLoomBalance',
@@ -456,6 +467,10 @@ export default class MyAccount extends Vue {
 
     this.setShowLoadingSpinner(false)
 
+  }
+
+  async reclaimLoomHandler() {
+    await this.reclaimDeposit()
   }
 
   async checkAllowance() {    

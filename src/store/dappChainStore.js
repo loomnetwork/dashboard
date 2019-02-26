@@ -324,6 +324,21 @@ export default {
       await tx.wait()
 
     },
+
+    async reclaimDeposit({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      const dappchainGateway = user.dappchainGateway
+      try {
+        await dappchainGateway.reclaimDepositorTokensAsync()
+        commit('setSuccessMsg', {msg: `Success reclaiming tokens`, forever: false}, {root: true})
+      } catch (err) {
+        commit('setErrorMsg', {msg: "Error reclaiming tokens", forever: false, report:true, cause:err}, {root: true})
+      }
+    },
+
     async approveAsync({ state, dispatch }, payload) {
 
       if (!state.dposUser) {

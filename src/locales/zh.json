@@ -93,6 +93,7 @@
       "map_accounts": "映射账户",
       "deposit": "存入",
       "withdraw": "取出",
+      "reclaim": "Reclaim",
       "use_maximum": "输入全部余额",
       "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
       "withdraw_to_metamask": "取回到你的钱包"

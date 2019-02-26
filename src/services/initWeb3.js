@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 var ProviderEngine = require('web3-provider-engine');
 var RpcSubprovider = require('web3-provider-engine/subproviders/rpc');
-var LedgerWalletSubproviderFactory = require('./ledger-wallet-provider').default;
 
 import TransportU2F from "@ledgerhq/hw-transport-u2f";
 import createLedgerSubprovider from "@ledgerhq/web3-subprovider";

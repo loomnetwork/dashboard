@@ -9,8 +9,10 @@ import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
 
+
 const coinMultiplier = new BN(10).pow(new BN(18));
 
+import { ethers } from 'ethers';
 import BN from 'bn.js'
 
 const api = new ApiClient()
@@ -284,8 +286,12 @@ export default {
       }
       
       const network = state.chainUrls[state.chainIndex].network
-      const user = await DPOSUser.createMetamaskUserAsync(
-        rootState.DPOS.web3,
+
+      const provider = new ethers.providers.Web3Provider(rootState.DPOS.web3.currentProvider)
+      const wallet = provider.getSigner(rootState.DPOS.currentMetamaskAddress)
+
+      const user = await DPOSUser.createUserAsync(
+        wallet,
         getters.dappchainEndpoint,
         privateKeyString,
         network,
@@ -524,6 +530,7 @@ export default {
       const loomAddress = state.dposUser._address.toString()
       try {
         debug(`calling hasMappingAsync() state.dposUser._wallet ${ethAddress.toString()} state.dposUser._address ${loomAddress.toString()} `)
+        debug(`hasMappingAsync(state.localAddress)  ${state.localAddress} `)
         const mappingExists = await state.dposUser.addressMapper.hasMappingAsync(state.localAddress)     
         debug('got'+ mappingExists)       
         if (!mappingExists) {

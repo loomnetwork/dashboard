@@ -97,7 +97,12 @@ export default class HardwareWalletModal extends Vue {
   okHandler() {
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
     this.setCurrentMetamaskAddress(selectedAddress)
+    this.web3js.eth.defaultAccount = selectedAddress
+    debugger
     this.$emit('ok');
+
+    // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()
+
     this.$refs.modalRef.hide()     
   }
 

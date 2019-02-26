@@ -42,6 +42,35 @@ export const initWeb3Hardware = () => {
         accountsLength: 5
       });
 
+      ledger.getAccounts = () => {
+        return ['123']
+      }
+
+      ledger.signMessage = ledger.signPersonalMessage;
+      engine.addProvider(ledger);
+      engine.addProvider(new FetchSubprovider({ rpcUrl: "https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0"}));
+      engine.start();
+      resolve(new Web3(engine))
+    }
+  )
+
+}
+
+export const initWeb3SelectedWallet = (getAccountsCallback) => {
+
+  
+
+  return new Promise(
+    async (resolve, reject) => {          
+      const engine = new ProviderEngine();
+      const getTransport = () => TransportU2F.create();
+      const ledger = createLedgerSubprovider(getTransport, {
+        networkId:1,
+        accountsLength: 5
+      });
+
+      ledger.getAccounts = getAccountsCallback
+
       ledger.signMessage = ledger.signPersonalMessage;
       engine.addProvider(ledger);
       engine.addProvider(new FetchSubprovider({ rpcUrl: "https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0"}));

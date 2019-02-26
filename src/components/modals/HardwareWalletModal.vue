@@ -52,10 +52,11 @@ import DropdownTemplate from './DropdownTemplate'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import LedgerWallet from "@/services/ledger/ledgerWallet"
 import { pathsArr as hdPaths } from "@/services/ledger/paths"
+var HookedWalletProvider = require('web3-provider-engine/subproviders/hooked-wallet');
 
 import { formatToCrypto } from '../../utils'
 // import { initLedgerProvider } from '../../services/initWeb3'
-import { initWeb3Hardware } from '../../services/initWeb3'
+import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb3'
 import { setTimeout } from 'timers';
 
 const HDWalletStore = createNamespacedHelpers('HDWallet')
@@ -94,10 +95,19 @@ export default class HardwareWalletModal extends Vue {
 
   web3js = undefined
 
-  okHandler() {
+  async okHandler() {
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
+    console.log('selected address', selectedAddress)
     this.setCurrentMetamaskAddress(selectedAddress)
     this.web3js.eth.defaultAccount = selectedAddress
+
+    this.web3js = await initWeb3SelectedWallet((res) => {
+      console.log('calling get accounts')
+      res(null, [selectedAddress])
+    })
+    
+    this.setWeb3(this.web3js)
+    
     debugger
     this.$emit('ok');
 
@@ -177,6 +187,7 @@ export default class HardwareWalletModal extends Vue {
   async setWeb3Instance() {
     if(typeof this.web3js === "undefined") {
       let web3js = await initWeb3Hardware() //initLedgerProvider()
+      window.ledgerweb3 = web3js
       this.web3js = web3js
       this.setWeb3(web3js)
     }

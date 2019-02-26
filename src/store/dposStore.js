@@ -111,6 +111,7 @@ export default {
         if ( state.walletType ===  'ledger') {
           web3js = state.web3
           metamaskAccount = state.currentMetamaskAddress
+          debugger
         } 
         else {
           web3js = await initWeb3()

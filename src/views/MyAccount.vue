@@ -683,7 +683,7 @@ export default class MyAccount extends Vue {
     right: 0px;
     width: 100%;
     height: 100%;
-    z-index: 900;
+    z-index: 190;
     background-color: #ffffff;
     opacity: 0.5;
   }

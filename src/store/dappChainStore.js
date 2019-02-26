@@ -333,9 +333,8 @@ export default {
       const dappchainGateway = user.dappchainGateway
       try {
         await dappchainGateway.reclaimDepositorTokensAsync()
-        commit('setSuccessMsg', {msg: `Success reclaiming tokens`, forever: false}, {root: true})
       } catch (err) {
-        commit('setErrorMsg', {msg: "Error reclaiming tokens", forever: false, report:true, cause:err}, {root: true})
+        throw new Error('Error reclaiming tokens, Please try again')
       }
     },
 

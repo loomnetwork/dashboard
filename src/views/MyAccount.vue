@@ -156,7 +156,7 @@
 
                               <div class="mx-2" style="width: 250px">                                                                
                                 <div>
-                                <b-button id="reclaimBtn" style="width: 160px" variant="success" @click="reclaimLoomHandler">
+                                <b-button id="reclaimBtn" style="width: 160px" variant="success" @click="reclaimLoomHandler" :disabled="disabledClaiming">
                                   <fa icon="sync-alt" class="sidebar-icon"/> {{ $t('views.my_account.reclaim') }}
                                 </b-button>
                                 <b-tooltip v-if="!isLoading" target="reclaimBtn" placement="right" title="Click here to reclaim tokens from plasmachain back to your choosen wallet"></b-tooltip>
@@ -305,6 +305,7 @@ export default class MyAccount extends Vue {
   amountToApprove = ""
   withdrawAmount = ""
   currentAllowance = 0
+  disabledClaiming = false
 
     emptyHistory = [
     {
@@ -469,7 +470,14 @@ export default class MyAccount extends Vue {
   }
 
   async reclaimLoomHandler() {
-    await this.reclaimDeposit()
+    try {
+      this.disabledClaiming = true
+      await this.reclaimDeposit()
+      this.setSuccess("Reclaiming tokens successfull")
+    } catch (err) {
+      this.setError({msg: "Error reclaiming tokens", err})
+    }
+    this.disabledClaiming = false
   }
 
   async checkAllowance() {    

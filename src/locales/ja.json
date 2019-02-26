@@ -18,7 +18,7 @@
       "setup_new_account_from_scratch": "新規アカウント作成",
       "use_seed_phrase_to_retrieve": "シードフレーズで既存のアカウントを回復",
       "new_user": "新規ユーザー",
-      "returning_user": "リピーターのユーザー",
+      "returning_user": "既存のユーザー",
       "sign_out": "サインアウト",
       "create_account": "アカウントの作成",
       "restore_account": "アカウントの回復"
@@ -164,7 +164,7 @@
     },
     "faucet_sidebar": {
       "my_account": "マイアカウント",
-      "my_delegations": "委任",
+      "my_delegations": "委任について",
       "rewards": "Rewards"
     },
     "layout": {
@@ -223,18 +223,18 @@
       "transaction": {
         "push": "プッシュする",
         "type": "タイプ:",
-        "walker": "Walker",
-        "listing_price_1_99": "Listing Price: $1.99",
-        "rarity": "Rarity:",
-        "rare": "Rare",
+        "walker": "ウォーカー",
+        "listing_price_1_99": "リスティング価格: $1.99",
+        "rarity": "レア度:",
+        "rare": "レア",
         "entry": "Entry:",
         "return_a_zombie_to_hand": "Return a zombie to hand",
-        "sold": "Sold"
+        "sold": "販売済み"
       },
       "transaction_list": {
-        "filter_by": "Filter by",
+        "filter_by": "フィルタリング",
         "most_old": "Most old",
-        "pending": "Pending"
+        "pending": "未処理"
       }
     }
   }

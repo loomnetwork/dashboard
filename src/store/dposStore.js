@@ -26,7 +26,6 @@ const defaultState = () => {
     currentMetamaskAddress: undefined,
     validators: null,
     status: "check_mapping",
-    walletType: null, //
     metamaskDisabled: false,
     showLoadingSpinner: false,
     userBalance: {
@@ -92,35 +91,17 @@ export default {
     },
     setTimeUntilElectionCycle(state, payload) {
       state.timeUntilElectionCycle = payload
-    },
-    setWalletType(state, payload) {
-      state.walletType = payload
-      localStorage.setItem("walletType", payload)
-    },
-    setSelectedAccount(state, payload) {
-      state.selectedAccount = payload
     }
   },
   actions: {
-    async initializeDependencies({ commit, dispatch, state }, payload) {
+    async initializeDependencies({ commit, dispatch }, payload) {
       commit("setShowLoadingSpinner", true)
-
-
       try {
-        let web3js 
-        let metamaskAccount
-        if ( state.walletType ===  'ledger') {
-          web3js = state.web3
-          metamaskAccount = state.currentMetamaskAddress
-          debugger
-        } 
-        else {
-          web3js = await initWeb3()
-          commit("setWeb3", web3js, null)
-          accounts = await web3js.eth.getAccounts()
-          metamaskAccount = accounts[0]
-        }
+        let web3js = await initWeb3()
         commit("setConnectedToMetamask", true)
+        commit("setWeb3", web3js, null)
+        let accounts = await web3js.eth.getAccounts()
+        let metamaskAccount = accounts[0]
         commit("setCurrentMetamaskAddress", metamaskAccount)
         await dispatch("DappChain/init", null, { root: true })
         await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })

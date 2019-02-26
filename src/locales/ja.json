@@ -21,10 +21,10 @@
       "returning_user": "リピーターのユーザー",
       "sign_out": "サインアウト",
       "create_account": "アカウントの作成",
-      "restore_account": "Restore Account"
+      "restore_account": "アカウントの回復"
     },
     "help": {
-      "what_is_plasma_chain": "What is PlasmaChain?",
+      "what_is_plasma_chain": "PlasmaChainとは？",
       "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "What is staking?",
       "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",

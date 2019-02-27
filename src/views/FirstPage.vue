@@ -18,7 +18,6 @@
                   <b-tabs card v-model="activeTab">
                     <b-tab>
                       <template slot="title">
-                        <fa :icon="['far', 'check-circle']" fixed-width v-show="userIsLoggedIn"/>
                         <span class="tab-title">1. Login to PlasmaChain</span>
                         <b-spinner v-if="showTabSpinner" type="border" small />
                         <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>

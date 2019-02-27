@@ -157,7 +157,7 @@ export default class FirstPage extends Vue {
   seedPhrases = []
   activeTab = 0
   currentStatus = this.STATUS.NONE
-
+  showTabSpinner = false
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async selectWallet(wallet) {

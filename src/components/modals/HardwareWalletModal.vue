@@ -45,6 +45,12 @@
   <b-modal id="unlock-ledger-modal"  ref="showUnlockModal" hide-footer centered no-close-on-backdrop> 
       On your leadger, Please enter your pin code and login to the Ethereum app.
   </b-modal>
+  <b-modal id="sign-ledger-modal" hide-footer centered no-close-on-backdrop> 
+      On your leadger, Sign the message to confirm your Ethereum identity. (No gas required)
+  </b-modal>
+  <b-modal id="already-mapped" hide-footer centered no-close-on-backdrop> 
+      Your selected accout is already mapped. Please select new account.
+  </b-modal>
 </div>
 </template>
 
@@ -63,6 +69,7 @@ import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb
 import { setTimeout } from 'timers';
 
 const dposStore = createNamespacedHelpers('DPOS')
+const dappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
   components: {
@@ -70,10 +77,23 @@ const dposStore = createNamespacedHelpers('DPOS')
     // UnlockLedgerModal
   },
   methods: {
-    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount']),
+    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount', 'setShowLoadingSpinner']),
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
-                    ])
+                    ]),
+    ...dappChainStore.mapActions([
+      'ensureIdentityMappingExists',
+      'addMappingAsync',
+    ]),
+    },
+  computed: {
+    ...dappChainStore.mapState([
+      'mappingStatus',
+      'mappingError'
+    ]),
+    ...dposStore.mapState([
+      'status',
+    ]),
   }
 })
 
@@ -111,16 +131,50 @@ export default class HardwareWalletModal extends Vue {
     }
     console.log('path',path)
     this.web3js = await initWeb3SelectedWallet(path)
-
-    
     this.setWeb3(this.web3js)
-    
-    this.$emit('ok');
-
     // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()
-
+    await this.checkMapping(selectedAddress)
+    console.log("this.status", this.status);
+    if (this.status !== 'mapped') {
+      this.$root.$emit("bv::show::modal", "already-mapped")
+    } else {
+      this.$emit('ok');
+      await this.addMappingHandler()
+    }
     this.$refs.modalRef.hide()     
   }
+
+  async addMappingHandler() {
+    this.$root.$emit("bv::show::modal", "sign-ledger-modal")
+    try {
+      await this.addMappingAsync()
+    } catch(err) {
+      console.error("addMappingHandler err", err)
+      this.$root.$emit("bv::show::modal", "already-mapped")
+      return
+    }
+  }
+
+  async checkMapping(selectedAddress) {
+    this.setShowLoadingSpinner(true)
+    console.log("checking.....");
+    const mapped = await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
+    if(mapped) {
+      this.status = this.STATUS['mapped']
+    } else {
+      this.status = this.STATUS['no_mapping']
+    }
+    this.setShowLoadingSpinner(false)
+  }
+
+  get STATUS() {
+    return {
+      check_mapping: 'check_mapping',
+      mapped: 'mapped',
+      no_mapping: 'no_mapping'
+    }
+  }
+
 
   mounted() {
     this.paths = hdPaths.paths
@@ -152,11 +206,11 @@ export default class HardwareWalletModal extends Vue {
 
     if(typeof this.hdWallet ===  "undefined") {
       try {
-        this.showLoadingSpinner = true
+        this.setShowLoadingSpinner(true)
         this.hdWallet = await LedgerWallet()
         await this.hdWallet.init(path)
       } catch (error) {
-        this.showLoadingSpinner = false
+        this.setShowLoadingSpinner(false)
         this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       }
     }
@@ -223,14 +277,14 @@ export default class HardwareWalletModal extends Vue {
     this.componentLoaded = true
     await this.setWeb3Instance()
     try {
-      this.showLoadingSpinner = true
+      this.setShowLoadingSpinner(true)
       this.hdWallet = await LedgerWallet()
     } catch(err) {
         this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       return
     }
     this.$refs.modalRef.show()
-    this.showLoadingSpinner = false
+    this.setShowLoadingSpinner(false)
   }
 
 }

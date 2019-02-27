@@ -22,6 +22,9 @@
                         <b-spinner v-if="showTabSpinner" type="border" small />
                         <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>
                       </template>
+                        <div class="row">
+                          <img src="../assets/loomy-player-one.png" class="loomy-graphic">
+                        </div>
                       <div class="row pt-4 pb-4">
                         <div class="col text-center">
                           <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
@@ -33,14 +36,19 @@
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col">
-                          <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"
-                              v-if="!isProduction"
-                              :allowedUrls="chainUrls"
-                              :serverUrl="currentChain"
-                              @urlClicked="onUserInputUrl"
-                              @urlInput="onUserInputUrl"/>
-                         </div>                   
+                          <b-button v-b-toggle.collapse1 variant="warning" v-if="!isProduction">Diagnostic Options</b-button>
+                          <b-collapse id="collapse1" class="mt-2">
+                            <b-card>
+                              <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"
+                                v-if="!isProduction"
+                                :allowedUrls="chainUrls"
+                                :serverUrl="currentChain"
+                                @urlClicked="onUserInputUrl"
+                                @urlInput="onUserInputUrl"/>
+                
+                            </b-card>
+                          </b-collapse>
+                         
                        </div>                      
                     </b-tab>
                     <b-tab :disabled="!userIsLoggedIn">
@@ -345,6 +353,12 @@ $theme-colors: (
   margin-right: 6px;
 }
 
+.loomy-graphic {
+  display: block;
+  max-height: 200px;
+  margin: 0 auto;
+}
+
 .faucet {
   main {
     min-height: 620px;
@@ -375,15 +389,6 @@ $theme-colors: (
     border-radius: 0;
     background-color: transparent;
     padding: 20px;
-  }
-  .loomy-graphic {
-    display: inline-block;
-    margin: 0 auto;
-    margin-bottom: 32px;
-    width: 100%;
-    min-width: 256px;
-    max-width: 280px;
-    height: auto;
   }
 
   .wallet-provider-container {

@@ -83,22 +83,11 @@ import { isIP } from 'net';
     data: Object,
   },
   methods: {
-    ...mapActions([
-      // 'registerWeb3',
-      // 'updateContractState',
-      // 'checkNetwork',
-      'checkLottery',
-      'checkCryptoBacker'      
-    ]),
     ...mapMutations([
       'setUserIsLoggedIn',
       'setErrorMsg'
     ]),
     ...DappChainStore.mapActions([
-      'init',
-      'initDposUser',
-      'setMetamaskStatus',
-      'setMetamaskError',
       'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapActions([
@@ -106,18 +95,11 @@ import { isIP } from 'net';
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
-      'setWeb3',
       'setCurrentMetamaskAddress'      
     ])
   },  
   computed: {
     ...mapState([
-      'alternateBackground',
-      'hasPendingApprove',
-      'pendingApprove',
-      'showAnnouncement',
-      'showLottery',
-      'showCryptoBacker',
       'userIsLoggedIn'
     ]),
     ...DappChainStore.mapState([
@@ -157,14 +139,6 @@ export default class Layout extends Vue {
       'routeNames': ['My Cards', 'My Packs',  'trading', 'landing', 'overlords', 'cards', 'redeemSubmitted',  'How To Play']
     }
   ]
-
-  // Hide crypto backer modal
-  // @Watch('showCryptoBacker')
-  // onShowCryptoBackerChanged(newValue, oldValue) {
-  //   if(newValue) {
-  //     this.$root.$emit('bv::show::modal', 'crypto-backer')
-  //   }
-  // }
 
   created() {
     this.$router.beforeEach((to, from, next) => {

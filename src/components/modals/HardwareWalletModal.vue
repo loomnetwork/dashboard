@@ -1,9 +1,9 @@
 <template>
+<div> 
   <b-modal id="confirm-seed-modal" ref="modalRef" title="Hardware wallet" hide-footer centered no-close-on-backdrop>
     <b-container fluid>
       <b-row class="my-1 align-items-center min-height">
         <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-
         <div v-if="componentLoaded" class="dropdown-container mb-4">
           <v-autocomplete :items="filteredPaths"
                          v-model="selectedPath"
@@ -42,6 +42,10 @@
       </b-row>
     </b-container>
   </b-modal>
+  <b-modal id="unlock-ledger-modal"  ref="showUnlockModal" hide-footer centered no-close-on-backdrop> 
+      On your leadger, Please enter your pin code and login to the Ethereum app.
+  </b-modal>
+</div>
 </template>
 
 <script>
@@ -55,7 +59,6 @@ import { pathsArr as hdPaths } from "@/services/ledger/paths"
 var HookedWalletProvider = require('web3-provider-engine/subproviders/hooked-wallet');
 
 import { formatToCrypto } from '../../utils'
-// import { initLedgerProvider } from '../../services/initWeb3'
 import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb3'
 import { setTimeout } from 'timers';
 
@@ -63,7 +66,8 @@ const dposStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
-    LoadingSpinner
+    LoadingSpinner,
+    // UnlockLedgerModal
   },
   methods: {
     ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount']),
@@ -88,6 +92,7 @@ export default class HardwareWalletModal extends Vue {
   selectedAddress = 0
   dropdownTemplate = DropdownTemplate
   componentLoaded = false
+  showUnlockModal = true
 
   web3js = undefined
 
@@ -138,15 +143,17 @@ export default class HardwareWalletModal extends Vue {
 
   async selectPath(path) {
 
-    if(typeof this.hdWallet ===  "undefined") this.hdWallet = await LedgerWallet()
-
-    try {
-      await this.hdWallet.init(path)
-    } catch(err) {
-      this.$log("err", err)
-      return
+    if(typeof this.hdWallet ===  "undefined") {
+      try {
+        this.showLoadingSpinner = true
+        this.hdWallet = await LedgerWallet()
+        await this.hdWallet.init(path)
+      } catch (error) {
+        this.showLoadingSpinner = false
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      }
     }
-    
+
     let i = 0
     let accountsTemp = []
     while (i < this.maxAddresses) {
@@ -159,8 +166,7 @@ export default class HardwareWalletModal extends Vue {
         })
         i++ 
       } catch(err) {
-        this.$log("err", err)
-        this.setErrorMsg({msg: "Please make sure your hardware wallet is connected", forever: false})
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
         return
       }
     }
@@ -209,12 +215,11 @@ export default class HardwareWalletModal extends Vue {
   async show(myWeb3) {
     this.componentLoaded = true
     await this.setWeb3Instance()
-    this.showLoadingSpinner = true
     try {
+      this.showLoadingSpinner = true
       this.hdWallet = await LedgerWallet()
     } catch(err) {
-      this.$log("err", err)
-      this.setErrorMsg({msg: "Please make sure your hardware wallet is connected", forever: false})
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       return
     }
     this.$refs.modalRef.show()

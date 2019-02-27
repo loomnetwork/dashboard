@@ -76,7 +76,7 @@ const dposStore = createNamespacedHelpers('DPOS')
 export default class HardwareWalletModal extends Vue {
 
   hdWallet = undefined
-  maxAddresses = 5
+  maxAddresses = 10
   errorMsg = null
   accounts = []
 
@@ -99,7 +99,8 @@ export default class HardwareWalletModal extends Vue {
     this.setCurrentMetamaskAddress(selectedAddress)
     this.web3js.eth.defaultAccount = selectedAddress
 
-    this.web3js = await initWeb3SelectedWallet(offset)
+    debugger
+    this.web3js = await initWeb3SelectedWallet(this.selectedPath.path, offset)
     
     this.setWeb3(this.web3js)
     

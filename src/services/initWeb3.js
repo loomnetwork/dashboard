@@ -55,7 +55,7 @@ export const initWeb3Hardware = () => {
 
 }
 
-export const initWeb3SelectedWallet = (offset) => {
+export const initWeb3SelectedWallet = (path, offset) => {
 
   
 
@@ -66,7 +66,8 @@ export const initWeb3SelectedWallet = (offset) => {
       const ledger = createLedgerSubprovider(getTransport, {
         networkId:1,
         accountsLength: 5,
-        accountsOffset: offset
+        accountsOffset: offset,
+        path: path
       });
 
       ledger.signMessage = ledger.signPersonalMessage;

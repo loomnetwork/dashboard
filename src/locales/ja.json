@@ -68,8 +68,8 @@
       "how_can_i_un_delegate_my": "どうやってトークンの委任を取り消せる？",
       "simply_navigate_to_my_delegations": "\"委任について\" にアクセスし、特定のバリデーターを選んで \"委任をやめる\" ボタンをクリックします:",
       "once_i_un_delegate_how_long": "委任を取り消すと、自分のトークンへの完全なアクセスを取り戻すのにどれくらいかかる？",
-      "at_launch_delegators_funds_will": "At launch, delegators’ funds will be fully released after 2 weeks. This is a security measure to mitigate against scenarios of staking with a bad candidate to increase their odds of gaining the right to validate, and then immediately un-delegating. This is an area of active research and something we plan to iterate through over the coming months.",
-      "are_there_any_ways_to": "Are there any ways to lose some of my delegated tokens?",
+      "at_launch_delegators_funds_will": "ローンチ段階では、デリゲーターの資金が完全にリリースされるのに２週間かかります。これは悪意のある候補者にステーキングして、彼らがバリデート権を得る確率を上げてからすぐに委任を取り消すという状況に対するセキュリティ的緩和策です。この領域については活発な研究を行なっており、今後数カ月に渡って繰り返し取り組んでいく予定です。",
+      "are_there_any_ways_to": "委任したトークンのうちいくらか失ってしまうことはある？",
       "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
       "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."

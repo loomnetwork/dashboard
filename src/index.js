@@ -7,7 +7,7 @@ import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
-
+import * as Sentry from '@sentry/browser'
 
 import FontAwesome from '@fortawesome/fontawesome'
 import BrandsFontAwesome from '@fortawesome/fontawesome-free-brands'
@@ -16,7 +16,6 @@ import RegularFontAwesome from '@fortawesome/fontawesome-free-regular'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import Autocomplete from 'v-autocomplete'
 
-
 import 'v-autocomplete/dist/v-autocomplete.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -24,7 +23,6 @@ import 'swiper/dist/css/swiper.css'
 
 import ApiClient from './services/faucet-api'
 import { i18n } from './i18n'
-// import FirstPage from './views/FirstPage.vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -73,3 +71,12 @@ if (!debugMode) {
     .addPlugin(RavenVue, Vue)
     .install()
 }
+
+// todo should store key/project elsewhere (vault?)
+// Sentry.init({
+//   dsn: debugMode ? null : 'https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913"',
+//   integrations: [new Sentry.Integrations.Vue({ 
+//     Vue,
+//     attachProps: true
+//   })]
+// })

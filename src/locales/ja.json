@@ -45,7 +45,7 @@
       "you_can_use_the": "こちらの",
       "for_a_full_list_of": "ではバリデーター候補者の完全版リストをご利用いただけます。新規ブロックの提案、トランザクションの検証、ガバナンスへの参加といった重要な任務をバリデーターが果たすことに留意してください。あなたに合ったベストなバリデーターを見つける際には、パフォーマンス(アップタイム。罰則歴)や評判、報酬の手数料パーセンテージやコミュニティといった基準で評価すると良いでしょう。",
       "do_i_lose_control_of": "バリデーターに委任すると、自分のトークンのコントロール権はなくなる？",
-      "no_upon_delegation_your_tokens": "No. Upon delegation, your tokens will be sent to a smart contract and essentially frozen on the network for the duration of your lock-up period (which is up to you to select). When the lock-up ends, your tokens are automatically released back to you along with any additional rewards that your validator may have shared with their staking pool.",
+      "no_upon_delegation_your_tokens": "いいえ。委任の際にはあなたのトークンはスマートコントラクトへと送られ、(あなたの選択した)ロックアップ期間中は基本的にネットワーク上で凍結されています。ロックアップ期間が終わると、トークンは自動的にあなたの元へと戻され、さらにバリデーターがステーキングプールで共有した報酬も追加されている可能性があります。",
       "note_a_validator_never_has": "Note: a validator never has direct control of your delegated stake. They cannot move your tokens under any circumstances. For all intents and purposes, you remain the owner while your stake is temporarily assigned to the network.",
       "can_i_delegate_to_multiple": "Can I delegate to multiple validator candidates?",
       "yes_users_can_choose_to": "Yes. Users can choose to stake their tokens across several validators simultaneously.",

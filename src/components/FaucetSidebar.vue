@@ -18,12 +18,10 @@
         <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="list" class="sidebar-icon"/>My Delegations</span></router-link>
         <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
       </div>
-
+      <router-link to="/faq" class="router"><span><fa icon="question-circle" class="sidebar-icon"/>{{ $t('components.faucet_header.f_a_q') }}</span></router-link>
       <div v-if="userIsLoggedIn" :hidden="false" class="router">
         <span @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</span>
-      </div>         
-
-
+      </div>
     </div>
 
     <div class="mobile-sidebar d-sm-block d-md-block d-lg-none">
@@ -68,14 +66,21 @@
 
 <script>
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
+const DappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
   computed: {
-    ...mapState(['userIsLoggedIn'])
+    ...mapState(['userIsLoggedIn']),
+    ...DPOSStore.mapState([
+      'connectedToMetamask'
+    ]),
+    ...DappChainStore.mapState([
+      'isConnectedToDappChain'
+    ])
   },
   methods: {
     ...mapMutations([
@@ -88,7 +93,17 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 })
 
 export default class FaucetSidebar extends Vue {
+  
+  connectedToDappChain = false
 
+  @Watch('isConnectedToDappChain')
+    onConnectingToDappChainChange(newValue, oldValue) {
+    if(newValue) {
+      this.connectedToDappChain = true
+    } else {
+      this.connectedToDappChain = false
+    }
+  }  
 
   mounted() {
     this.$root.$on('logout', () => {
@@ -130,6 +145,28 @@ export default class FaucetSidebar extends Vue {
   border-left: 5px solid #5756e6;
   background-color: #f9f9fc;
   font-weight: bold
+}
+.connectivity-status {
+  position: relative;
+}
+.connectivity-status .router span {
+  color: #333333 !important;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+.on-sign {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: green;
+}
+.off-sign {
+ display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: red; 
 }
 .router {
   display: block;

@@ -29,8 +29,8 @@
                         <div class="col text-center">
                           <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
                         </div>
-                        <div class="col">
-                          <div class="button-inner-container">
+                        <div class="col text-center">
+                          <div>
                             <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
                           </div>
                         </div>
@@ -390,28 +390,28 @@ $theme-colors: (
     background-color: transparent;
     padding: 20px;
   }
+}
 
-  .wallet-provider-container {
-    .col {
-      position: relative;
-      img {
-        width: 96px;
-        height: auto;
-        margin-bottom: 12px;
-      }
-      span.qa {        
-        display: inline-block;
-        line-height: 20px;        
-        right: 12px;
-        bottom: 12px;
-        position: absolute;
-        font-weight: bold;
-        width: 20px;
-        height: 20px;
-        color: white;
-        background-color: grey;
-        border-radius: 50%;
-      }
+.wallet-provider-container {
+  .col {
+    position: relative;
+    img {
+      width: 96px;
+      height: auto;
+      margin-bottom: 12px;
+    }
+    span.qa {        
+      display: inline-block;
+      line-height: 20px;        
+      right: 12px;
+      bottom: 12px;
+      position: absolute;
+      font-weight: bold;
+      width: 20px;
+      height: 20px;
+      color: #ffffff !important;
+      background-color: #ababab;
+      border-radius: 50%;
     }
   }
 }

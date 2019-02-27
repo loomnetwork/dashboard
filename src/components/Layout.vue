@@ -1,7 +1,7 @@
 <template>
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
-    <div class="content">      
+    <div class="content">
       <div v-if="metamaskDisabled && userIsLoggedIn" class="disabled-overlay">
         <div>           
           <div class="network-error-container mb-3">
@@ -46,6 +46,23 @@
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div id="content-container" :class="contentClass">
+          <b-alert variant="warning"
+                  dismissible
+                  :show="!!showChromeWarning"
+                  class="custom-alert text-center"
+                  ref="errorMsg">
+            <span>Chrome is experiencing U2F errors with ledger on chrome 72, please use Opera or Brave instead</span>
+          </b-alert>    
+          <b-alert variant="danger"
+                    dismissible
+                    :show="!!showErrorMsg"
+                    class="custom-alert text-center"
+                    ref="errorMsg">
+            {{this.$store.state.errorMsg}}
+          </b-alert>
+          <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
+            <span class="text-dark" v-html="this.$store.state.successMsg"></span>
+          </b-alert>          
           <transition name="router-anim" enter-active-class="animated fadeIn fast" leave-active-class="animated fadeOut fast">
             <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           </transition>
@@ -195,12 +212,32 @@ export default class Layout extends Vue {
   }
 
   get showErrorMsg() {
+    /*
+    message opt can be like
+    {
+      stay: true, // if you don't want it be auto hidden, set it to true
+      waitTime: 5 // define how long do you want it to stay
+    }
+     */
+    if(this.$store.state.errorMsg) {
+      this.hideAlert({
+        opt: this.$store.state.msgOpt,
+        ref: this.$refs.errorMsg
+      })
+    }
     return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: 'error' } : false
   }
 
   get showSuccessMsg() {
+    if(this.$store.state.successMsg) {
+      this.hideAlert({
+        opt: this.$store.state.msgOpt,
+        ref: this.$refs.successMsg
+      })
+    }
     return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: 'success' } : false
   }
+
 
   get getClassNameForStyling() {
     let className = "";
@@ -217,6 +254,13 @@ export default class Layout extends Vue {
   get contentClass() {
     return this.showSidebar ? 'col-lg-10' : 'col-lg-12'
   }
+
+  get showChromeWarning() {
+    let agent = navigator.userAgent.toLowerCase()
+    let isChrome = /chrome|crios/.test(agent) && ! /edge|opr\//.test(agent)
+    let isBrave = isChrome && window.navigator.plugins.length === 0 && window.navigator.mimeTypes.length === 0
+    return isChrome && !isBrave
+  }  
 
 }</script>
 
@@ -269,6 +313,16 @@ export default class Layout extends Vue {
   .highlight {
     color: #f0ad4e;
   }
+
+
+  .custom-alert {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0px;
+    border: 0px;
+    border-radius: 0px;
+    z-index: 10100;
+  }  
 
   .container-fluid {
     max-width: 1200px;

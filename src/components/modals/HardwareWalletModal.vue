@@ -42,13 +42,13 @@
       </b-row>
     </b-container>
   </b-modal>
-  <b-modal id="unlock-ledger-modal"  ref="showUnlockModal" hide-footer centered no-close-on-backdrop> 
+  <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" ref="showUnlockModal"  hide-footer centered no-close-on-backdrop> 
       On your leadger, Please enter your pin code and login to the Ethereum app.
   </b-modal>
-  <b-modal id="sign-ledger-modal" hide-footer centered no-close-on-backdrop> 
+  <b-modal id="sign-ledger-modal" title="Sign Hardware wallet" hide-footer centered no-close-on-backdrop> 
       On your leadger, Sign the message to confirm your Ethereum identity. (No gas required)
   </b-modal>
-  <b-modal id="already-mapped" hide-footer centered no-close-on-backdrop> 
+  <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
       Your selected accout is already mapped. Please select new account.
   </b-modal>
 </div>
@@ -117,8 +117,6 @@ export default class HardwareWalletModal extends Vue {
   web3js = undefined
 
   async okHandler() {
-    console.log("accounts 1", this.accounts);
-    
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
     let offset = this.selectedAddress
     console.log('selected address', selectedAddress)
@@ -138,12 +136,10 @@ export default class HardwareWalletModal extends Vue {
     this.$refs.modalRef.hide()    
 
     await this.checkMapping(selectedAddress)
-    console.log("accounts 2", this.accounts);
-    console.log("this.status", this.status);
     if (this.status !== 'mapped') {
       await this.addMappingHandler()
       this.$emit('ok');
-      } else {
+    } else {
       this.$root.$emit("bv::show::modal", "already-mapped")
     }
   }
@@ -154,7 +150,6 @@ export default class HardwareWalletModal extends Vue {
       this.setShowLoadingSpinner(true)
       await this.addMappingAsync()
     } catch(err) {
-      console.error("addMappingHandler err", err)
       this.$root.$emit("bv::show::modal", "already-mapped")
       return
     }
@@ -162,7 +157,6 @@ export default class HardwareWalletModal extends Vue {
 
   async checkMapping(selectedAddress) {
     this.setShowLoadingSpinner(true)
-    console.log("checking.....");
     const mapped = await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
     if(mapped) {
       this.setStatus(this.STATUS['mapped'])

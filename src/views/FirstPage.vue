@@ -1,6 +1,6 @@
 <!-- PlasmaChain Delegators -->
 <template>
-  <div class="faucet">
+  <div class="">
     <div class="faucet-content pt-5">
       <main>
         <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
@@ -10,23 +10,16 @@
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
 
-        <div class="container-fluid mb-5 mt-4 rmv-padding">
-          <div class="row">
-            <div class="col text-center p-3 mb-3">
-              <h1>{{ $t('views.first_page.please_log_in') }}</h1>
-            </div>
-          </div>
-          <div class="row my-3 p-3 d-flex justify-content-center mt-5 mb-auto mt-auto">
+        <div class="container-fluid mb-5 rmv-padding">
+          <div class="row d-flex justify-content-center mb-auto">
             <div class="col">
-
-
-
               <div>
                 <b-card no-body>
-                  <b-tabs pills card v-model="activeTab">
+                  <b-tabs card v-model="activeTab">
                     <b-tab>
                       <template slot="title">
-                        <span class="tab-title">Login to PlasmaChain</span>
+                        <fa :icon="['far', 'check-circle']" fixed-width v-show="userIsLoggedIn"/>
+                        <span class="tab-title">1. Login to PlasmaChain</span>
                         <b-spinner v-if="showTabSpinner" type="border" small />
                         <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>
                       </template>
@@ -53,7 +46,7 @@
                     </b-tab>
                     <b-tab :disabled="!userIsLoggedIn">
                       <template slot="title">
-                        <span class="tab-title">Login to Ethereum</span>
+                        <span class="tab-title">2. Login to Ethereum</span>
                       </template>                      
                       <div class="row wallet-provider-container">
                         <div class="col">

@@ -1,5 +1,12 @@
 <template>
   <div id="faucet-header" @login="startPolling" ref="header" class="header">
+    <b-alert variant="warning"
+             dismissible
+             :show="!!showChromeWarning"
+             class="text-center rmv-margin"
+             ref="errorMsg">
+      <span>Chrome is experiencing U2F errors with ledger on chrome 72, please use Opera or Brave instead</span>
+    </b-alert>    
     <b-alert variant="danger"
                dismissible
                :show="!!showErrorMsg"
@@ -335,6 +342,11 @@ export default class FaucetHeader extends Vue {
     return this.userIsLoggedIn ? 'Log Out' : 'Log In'
   }
 
+  get showChromeWarning() {
+    return (!!window.chrome && 
+           (!!window.chrome.webstore || !!window.chrome.runtime)) ? true : false
+  }
+
   async refresh() {
     if(this.status !== 'mapped') return
     try {
@@ -454,6 +466,10 @@ export default class FaucetHeader extends Vue {
   }
 }
 
+.rmv-margin {
+  margin: 0;
+}
+
 #countdown-container {
   display: flex;
   justify-content: center;
@@ -481,7 +497,7 @@ a.hover-warning:hover {
 }
 
 .custom-alert {
-  position: fixed;
+  position: absolute;
   width: 100%;  
   font-weight: 600;
   margin-bottom: 0px;

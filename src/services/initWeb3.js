@@ -55,19 +55,20 @@ export const initWeb3Hardware = () => {
 
 }
 
-export const initWeb3SelectedWallet = (path, offset) => {
-
-  
-
+/**
+ * 
+ * @param {*} path 
+ */
+export const initWeb3SelectedWallet = (path) => {
   return new Promise(
     async (resolve, reject) => {          
       const engine = new ProviderEngine();
       const getTransport = () => TransportU2F.create();
       const ledger = createLedgerSubprovider(getTransport, {
         networkId:1,
+        // maybe we only need 1 now that we solved this
         accountsLength: 5,
-        accountsOffset: offset,
-        path: path
+        path
       });
 
       ledger.signMessage = ledger.signPersonalMessage;

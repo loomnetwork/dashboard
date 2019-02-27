@@ -90,11 +90,11 @@ const iolite = {
 }
 const ledgerEthereum = {
   path: "m/44'/60'/0'",
-  label: 'Ethereum'
+  label: 'Ledger (Legacy)'
 }
 const ledgerLiveEthereum = {
   path: "m/44'/60'",
-  label: 'Ethereum - Ledger Live'
+  label: 'Ledger Live'
 }
 const ledgerEthereumClassic = {
   path: "m/44'/60'/160720'/0",
@@ -125,58 +125,58 @@ const keepkeyEthereumClassic = {
 export const pathsObj = {
   ledgerEthereum,
   ledgerLiveEthereum,
-  ledgerEthereumClassic,
-  ledgerLiveEthereumClassic,
-  ropsten,
-  singularDTV,
-  expanse,
-  ubiq,
-  ellaism,
-  etherGem,
-  callisto,
-  ethereumSocial,
-  musicoin,
-  goChain,
-  eosClassic,
-  akroma,
-  etherSocialNetwork,
-  pirl,
-  ether1,
-  atheios,
-  tomoChain,
-  mixBlockchain,
-  iolite,
-  rskMainnet,
-  rskTestnet
+  // ledgerEthereumClassic,
+  // ledgerLiveEthereumClassic,
+  // ropsten,
+  // singularDTV,
+  // expanse,
+  // ubiq,
+  // ellaism,
+  // etherGem,
+  // callisto,
+  // ethereumSocial,
+  // musicoin,
+  // goChain,
+  // eosClassic,
+  // akroma,
+  // etherSocialNetwork,
+  // pirl,
+  // ether1,
+  // atheios,
+  // tomoChain,
+  // mixBlockchain,
+  // iolite,
+  // rskMainnet,
+  // rskTestnet
 }
 
 export const pathsArr = {
   paths: [
     ledgerEthereum,
     ledgerLiveEthereum,
-    ledgerEthereumClassic,
-    ledgerLiveEthereumClassic,
-    ropsten,
-    singularDTV,
-    expanse,
-    ubiq,
-    ellaism,
-    etherGem,
-    callisto,
-    ethereumSocial,
-    musicoin,
-    goChain,
-    eosClassic,
-    akroma,
-    etherSocialNetwork,
-    pirl,
-    ether1,
-    atheios,
-    tomoChain,
-    mixBlockchain,
-    iolite,
-    rskMainnet,
-    rskTestnet
+    // ledgerEthereumClassic,
+    // ledgerLiveEthereumClassic,
+    // ropsten,
+    // singularDTV,
+    // expanse,
+    // ubiq,
+    // ellaism,
+    // etherGem,
+    // callisto,
+    // ethereumSocial,
+    // musicoin,
+    // goChain,
+    // eosClassic,
+    // akroma,
+    // etherSocialNetwork,
+    // pirl,
+    // ether1,
+    // atheios,
+    // tomoChain,
+    // mixBlockchain,
+    // iolite,
+    // rskMainnet,
+    // rskTestnet
   ]
 }
 

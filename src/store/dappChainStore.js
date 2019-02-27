@@ -286,7 +286,6 @@ export default {
       }
       
       const network = state.chainUrls[state.chainIndex].network
-
       const user = await DPOSUser.createMetamaskUserAsync(		
         rootState.DPOS.web3,
         getters.dappchainEndpoint,

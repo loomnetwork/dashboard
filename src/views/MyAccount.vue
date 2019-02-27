@@ -78,20 +78,7 @@
                     <b-card-body>
                       <div class="row mt-4 mb-4">
                         <div class="col-md-8 offset-md-2">
-                          <!-- Map Accounts -->
-                          <div v-if="status != 'mapped'">
-                            <div id="map-accounts">
-                              <!-- <span class="idx-symbol">{{ $t('views.my_account.1') }}</span> -->
-                              <div class="d-flex flex-row align-items-center mb-3">
-                                <div class="mx-2" style="width: 250px">
-                                  <h5 class="rmv-spacing">{{ $t('views.my_account.connect_to_deposit_funds') }}</h5>
-                                </div>
-                                <b-button style="width: 160px" variant="primary" @click="addMappingHandler">{{ $t('views.my_account.map_accounts') }}</b-button>                            
-                              </div>
-                            </div>
-
-                            <hr class="custom-divider">
-                          </div>
+                         STATUS: {{status}}
 
                           <!-- Allowance -->
                           <!-- <div id="allowance">

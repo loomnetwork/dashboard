@@ -98,8 +98,14 @@ export default class HardwareWalletModal extends Vue {
     console.log('path index', offset)
     this.setCurrentMetamaskAddress(selectedAddress)
     this.web3js.eth.defaultAccount = selectedAddress
-
-    this.web3js = await initWeb3SelectedWallet(offset)
+    let path =this.selectedPath.path.replace('m/','') 
+    // https://github.com/LedgerHQ/ledger-live-desktop/issues/1185
+    if(path === "44'/60'") {
+      // ledger live
+      path =  `44'/60'/${offset}'/0/0`
+    }
+    console.log('path',path)
+    this.web3js = await initWeb3SelectedWallet(path)
     
     this.setWeb3(this.web3js)
     

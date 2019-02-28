@@ -67,11 +67,6 @@
                           </h4>
                         </a>                     
                       </div>
-                      <div class="col-md-6 deposit-error-container">
-                        <span v-if="!metamaskConnected">
-                          {{ $t('views.my_account.no_mapping_detected') }}
-                        </span>
-                      </div>
                     </div>
                   </b-card-header>
 

@@ -155,7 +155,7 @@ export default {
           commit("setSignLedgerModal", false)
           commit("setAlreadyMappedModal", true)
         }
-      } else if((state.status == 'mapped' && state.mappingError == undefined) || (state.status == 'no_mapping' && state.mappingError !== undefined)) {
+      } else if((state.status == 'no_mapping' && state.mappingError !== undefined)) {
         commit("setAlreadyMappedModal", true)
       } 
       commit("setShowLoadingSpinner", false)

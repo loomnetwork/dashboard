@@ -89,7 +89,8 @@ import { isIP } from 'net';
       'showSignLedgerModal',
       'mappingSuccess',
       'isLoggedIn',
-      'walletType'
+      'walletType',
+      'status'
     ])    
   },
 })
@@ -135,6 +136,15 @@ export default class Layout extends Vue {
   @Watch('mappingSuccess')
     onMappingSuccessChange(newValue, oldValue) {
     if(newValue && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('status')
+    onMappedChange(newValue, oldValue) {
+    if(newValue === 'mapped' && this.walletType === 'metamask') {
       this.$router.push({
         name: 'account'
       })

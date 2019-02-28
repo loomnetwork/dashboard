@@ -250,7 +250,7 @@ export default class FaucetHeader extends Vue {
     this.clearPrivateKey()
     localStorage.removeItem("userIsLoggedIn")
     this.setUserIsLoggedIn(false)
-    this.$router.push({ path: '/login' })
+    window.location.reload(true)
   }
 
   login() {

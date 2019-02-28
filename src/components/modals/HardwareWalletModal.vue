@@ -77,10 +77,11 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     LoadingSpinner
   },
   methods: {
-    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount', 'setShowLoadingSpinner', 'setStatus']),
+    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount', 'setShowLoadingSpinner', 'setStatus', 'setSelectedLedgerPath']),
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ]),
+    ...dposStore.mapActions(['checkMappingStatus']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
       'addMappingAsync',
@@ -131,6 +132,7 @@ export default class HardwareWalletModal extends Vue {
       // legacy
       path =  `${path}/${offset}`
     }
+    this.setSelectedLedgerPath(path)
     this.web3js = await initWeb3SelectedWallet(path)
     this.setWeb3(this.web3js)
     this.$refs.modalRef.hide()

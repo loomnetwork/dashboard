@@ -105,29 +105,43 @@ export default {
     setWalletType(state, payload) {
       state.walletType = payload
       localStorage.setItem("walletType", payload)
+      localStorage.setItem("selectedLedgerPath", null)      
     },
     setSelectedAccount(state, payload) {
       state.selectedAccount = payload
-    }    
+    },
+    setSelectedLedgerPath(state, payload) {
+      state.selectedLedgerPath = payload
+      localStorage.removeItem("selectedLedgerPath")
+    }
   },
   actions: {
     async initializeDependencies({ state, commit, dispatch }, payload) {
       commit("setShowLoadingSpinner", true)
       try {
-
-        let web3js 
-        !state.web3 ? web3js = await initWeb3() : web3js = state.web3
-
-        commit("setConnectedToMetamask", true)
-        commit("setWeb3", web3js, null)
-        let accounts = await web3js.eth.getAccounts()
-        let metamaskAccount = accounts[0]
-        commit("setCurrentMetamaskAddress", metamaskAccount)
+        
+        if(state.walletType === "metamask") {
+          let web3js = await initWeb3()
+          let accounts = await web3js.eth.getAccounts()
+          let metamaskAccount = accounts[0]
+          commit("setWeb3", web3js)
+          commit("setCurrentMetamaskAddress", metamaskAccount)
+        } else if(state.walletType === "ledger") {
+          if(selectedLedgerPath) {
+            let web3js = await initWeb3SelectedWallet(selectedLedgerPath)
+            commit("setWeb3", web3js)
+          } else {
+            throw "No HD path selected"
+          }
+        }
+      
+        commit("setConnectedToMetamask", true)  
         await dispatch("DappChain/init", null, { root: true })
-        await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
+        await dispatch("DappChain/registerWeb3", {web3: state.web3}, { root: true })
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
         await dispatch("checkMappingStatus")
+
       } catch(err) {
         if(err.message === "no Metamask installation detected") {
           commit("setMetamaskDisabled", true)

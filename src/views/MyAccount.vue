@@ -77,7 +77,7 @@
 
                     <b-card-body>
                       <div class="row mt-4 mb-4">
-                        <div class="col-md-8 offset-md-2">
+                        <div style="width:100%">
                           <!-- Map Accounts -->
                           <div v-if="status != 'mapped'">
                             <div id="map-accounts">
@@ -135,7 +135,6 @@
                               <b-tooltip v-if="!isLoading" target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
                             </div>
                           </div>
-                          <TransferStepper :balance="userBalance.loomBalance" :transferAction="depositHandler2" />
 
                           <!-- Withdraw -->
                           <div id="withdraw">
@@ -145,7 +144,7 @@
                             <div class="d-flex flex-row align-items-center">
                               <div class="mx-2" style="width: 250px">                                
                                 <span class="text-small text-gray">{{ $t('views.my_account.withdraw_to_metamask') }}</span>
-                                <b-form-input :placeholder="'max. ' + userBalance.loomBalance" v-model="withdrawAmount" class="w-100"/>
+                                <b-form-input :placeholder="'max. ' + userBalance.loomBalance" v-model="withdrawAmount" class="w-50"/>
                                 <div class="d-flex flex-row justify-content-end">
                                   <b-button class="text-small pt-0" variant="link" @click="withdrawAmount=userBalance.loomBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
                                 </div>
@@ -154,10 +153,18 @@
                               <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
                             </div>
                           </div>
-                          <TransferStepper :balance="userBalance.mainnetBalance" :transferAction="withdrawalHandler2" approval="false" />
 
+                          <b-card no-body>
+                            <b-tabs card>
+                              <b-tab title="Deposit" active>
+                                <TransferStepper :balance="0" :transferAction="depositHandler2" />
+                              </b-tab>
+                              <b-tab title="Withdraw">
+                                <TransferStepper :balance="0" :transferAction="withdrawalHandler2" :requireApproval="false" />
+                              </b-tab>
+                            </b-tabs>
+                          </b-card>
 
-                        
                         </div>
                       </div>
                     </b-card-body>
@@ -219,11 +226,13 @@ import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
+import TransferStepper from '../components/TransferStepper'
 import { getBalance, getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 import Web3 from 'web3'
+import { setTimeout } from 'timers';
 
 Vue.use(VueClipboard)
 
@@ -235,6 +244,7 @@ Vue.use(VueClipboard)
     FaucetFooter,
     FaucetDelegateModal,
     FaucetSidebar,
+    TransferStepper,
     LoadingSpinner
   },
   computed: {
@@ -598,6 +608,21 @@ export default class MyAccount extends Vue {
       return 'Transfer'
     }
   }
+
+  depositHandler2(amount) {
+    // return new Promise((resolve,reject) => {
+    //   setTimeout(resolve,5000)
+    // })
+    return this.depositAsync({amount})
+  }
+
+  withdrawalHandler2(amount) {
+    // return new Promise((resolve,reject) => {
+    //   setTimeout(resolve,5000)
+    // })
+    return this.withdrawAsync({amount})
+  }
+
 }</script>
 
 

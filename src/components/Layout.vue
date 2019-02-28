@@ -40,7 +40,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 
 import { initWeb3 } from '../services/initWeb3'
 import { isIP } from 'net';
-import { watch } from 'fs';
 
 @Component({
   components: {
@@ -62,7 +61,8 @@ import { watch } from 'fs';
       'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapActions([
-      'initializeDependencies'
+      'initializeDependencies',
+      'checkMappingStatus'
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
@@ -86,7 +86,10 @@ import { watch } from 'fs';
       'metamaskDisabled',
       'showLoadingSpinner',
       'showAlreadyMappedModal',
-      'showSignLedgerModal'
+      'showSignLedgerModal',
+      'mappingSuccess',
+      'isLoggedIn',
+      'walletType'
     ])    
   },
 })
@@ -129,8 +132,17 @@ export default class Layout extends Vue {
     }
   }
 
+  @Watch('mappingSuccess')
+    onMappingSuccessChange(newValue, oldValue) {
+    if(newValue && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
   @Watch('showAlreadyMappedModal')
-    onChange(newValue, oldValue) {
+    onAlreadyMappedModalChange(newValue, oldValue) {
     if(newValue) {
         this.$root.$emit("bv::show::modal", "already-mapped")
     } else {
@@ -140,7 +152,7 @@ export default class Layout extends Vue {
   }
 
   @Watch('showSignLedgerModal')
-    onChange(newValue, oldValue) {
+    onSignLedgerModalChange(newValue, oldValue) {      
     if(newValue) {
         this.$root.$emit("bv::show::modal", "sign-ledger-modal")
     } else {
@@ -162,9 +174,12 @@ export default class Layout extends Vue {
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', async (accounts) => {
         console.log("on accountsChanged");
-        
         if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
         this.setCurrentMetamaskAddress(accounts[0])
+        this.checkMappingStatus()
+        if (!this.mappingSuccess) {
+          this.$root.$emit("logout")
+        }
       })
     }
 

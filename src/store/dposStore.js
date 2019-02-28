@@ -32,6 +32,7 @@ const defaultState = () => {
     showLoadingSpinner: false,
     showSignLedgerModal: false,
     showAlreadyMappedModal: false,
+    mappingSuccess: false,
     userBalance: {
       isLoading: true,
       loomBalance: 0,
@@ -96,6 +97,9 @@ export default {
     setAlreadyMappedModal(state, payload) {
       state.showAlreadyMappedModal = payload
     },
+    setMappingSuccess(state, payload) {
+      state.mappingSuccess = payload
+    },
     setRewardsResults(state, payload) {
       state.rewardsResults = payload
     },
@@ -119,25 +123,7 @@ export default {
     async initializeDependencies({ state, commit, dispatch }, payload) {
       commit("setShowLoadingSpinner", true)
       try {
-        
-        if(state.walletType === "metamask") {
-          let web3js = await initWeb3()
-          let accounts = await web3js.eth.getAccounts()
-          let metamaskAccount = accounts[0]
-          commit("setWeb3", web3js)
-          commit("setCurrentMetamaskAddress", metamaskAccount)
-        } else if(state.walletType === "ledger") {
-          if(selectedLedgerPath) {
-            let web3js = await initWeb3SelectedWallet(selectedLedgerPath)
-            commit("setWeb3", web3js)
-          } else {
-            throw "No HD path selected"
-          }
-        }
-      
-        commit("setConnectedToMetamask", true)  
-        await dispatch("DappChain/init", null, { root: true })
-        await dispatch("DappChain/registerWeb3", {web3: state.web3}, { root: true })
+        await dispatch("initWeb3Local")
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
         await dispatch("checkMappingStatus")
@@ -153,24 +139,26 @@ export default {
       commit("setShowLoadingSpinner", false)
     },
     async checkMappingStatus({ state, commit, dispatch }) {
-      console.log("state.status", state.status);
-      
+      commit("setSignLedgerModal", false)
+      commit("setAlreadyMappedModal", false)
       if (state.status == 'no_mapping' && state.mappingError == undefined) {
-        console.log("state.walletType", state.walletType);
-        
         try {
+          if(state.walletType === "ledger") {
+            commit("setSignLedgerModal", true)
+          }
           commit("setShowLoadingSpinner", true)
-          commit("setSignLedgerModal", true)
           await dispatch("DappChain/addMappingAsync", null, { root: true })
+          commit("setShowLoadingSpinner", false)
+          commit("setMappingSuccess", true)
         } catch(err) {
+          console.log("catch... checkMappingStatus", err);
           commit("setSignLedgerModal", false)
           commit("setAlreadyMappedModal", true)
         }
       } else if((state.status == 'mapped' && state.mappingError == undefined) || (state.status == 'no_mapping' && state.mappingError !== undefined)) {
-        console.log("SHOW already-mapped")
         commit("setAlreadyMappedModal", true)
       } 
-    
+      commit("setShowLoadingSpinner", false)
     },
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
@@ -185,6 +173,26 @@ export default {
     async checkIfConnected({state, dispatch}) {        
       if(!state.web3) await dispatch("initWeb3")
     },
+    async initWeb3Local({commit, state, dispatch}){
+      if(state.walletType === "metamask") {
+        let web3js = await initWeb3()
+        let accounts = await web3js.eth.getAccounts()
+        let metamaskAccount = accounts[0]
+        commit("setWeb3", web3js)
+        commit("setCurrentMetamaskAddress", metamaskAccount)
+      } else if(state.walletType === "ledger") {
+        if(selectedLedgerPath) {
+          let web3js = await initWeb3SelectedWallet(selectedLedgerPath)
+          commit("setWeb3", web3js)
+        } else {
+          throw "No HD path selected"
+        }
+      }
+      commit("setConnectedToMetamask", true)  
+      await dispatch("DappChain/init", null, { root: true })
+      await dispatch("DappChain/registerWeb3", {web3: state.web3}, { root: true })
+    },
+
     async initWeb3({rootState, dispatch, commit}) {    
       let web3js
       if (window.ethereum) {

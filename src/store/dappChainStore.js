@@ -277,11 +277,7 @@ export default {
     },
     async initDposUser({ state, rootState, getters, dispatch, commit }) {
       if (!rootState.DPOS.web3) {    
-        console.log("init in dappchainStore");
-        
-        // TODO: Call initializeDependencies instead of initDposUser
-        // await dispatch("DPOS/initializeDependencies", null, { root: true })
-
+        await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {

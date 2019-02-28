@@ -45,12 +45,6 @@
   <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" hide-footer centered no-close-on-backdrop> 
       On your leadger, Please enter your pin code and login to the Ethereum app.
   </b-modal>
-  <b-modal id="sign-ledger-modal" title="Sign Hardware wallet" hide-footer centered no-close-on-backdrop> 
-      On your leadger, Sign the message to confirm your Ethereum identity. (No gas required)
-  </b-modal>
-  <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
-      Your selected accout is already mapped. Please select new account.
-  </b-modal>
 </div>
 </template>
 
@@ -77,14 +71,19 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     LoadingSpinner
   },
   methods: {
-    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount', 'setShowLoadingSpinner', 'setStatus', 'setSelectedLedgerPath']),
+    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 
+                              'setWeb3',
+                              'setSelectedAccount', 
+                              'setShowLoadingSpinner', 
+                              'setStatus', 
+                              'setSelectedLedgerPath', 
+                              'mappingSuccess']),
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ]),
     ...dposStore.mapActions(['checkMappingStatus']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
-      'addMappingAsync',
       'init'
     ]),
     },
@@ -136,25 +135,8 @@ export default class HardwareWalletModal extends Vue {
     this.web3js = await initWeb3SelectedWallet(path)
     this.setWeb3(this.web3js)
     this.$refs.modalRef.hide()
-
-
     await this.checkMapping(selectedAddress)
-    if (this.status == 'no_mapping' && this.mappingError == undefined) {
-      try {
-        this.setShowLoadingSpinner(true)
-        this.$root.$emit("bv::show::modal", "sign-ledger-modal")
-        await this.addMappingAsync()
-        this.$emit('ok');
-      } catch(err) {
-        this.$root.$emit("bv::hide::modal", "sign-ledger-modal")
-        this.$root.$emit("bv::show::modal", "already-mapped")
-      }
-    } else if(this.status == 'mapped' && this.mappingError == undefined) {
-      this.$root.$emit("bv::show::modal", "already-mapped")
-    } else if(this.status == 'no_mapping' && this.mappingError !== undefined) {
-      this.$root.$emit("bv::show::modal", "already-mapped")
-    } 
-    this.setShowLoadingSpinner(false)
+    if (this.mappingSuccess) this.$emit('ok');
   }
 
   async checkMapping(selectedAddress) {
@@ -162,6 +144,7 @@ export default class HardwareWalletModal extends Vue {
     await this.init()
     await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
     this.setShowLoadingSpinner(false)
+    await this.checkMappingStatus()
   }
 
   mounted() {

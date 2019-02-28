@@ -84,6 +84,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
       'addMappingAsync',
+      'init'
     ]),
     },
   computed: {
@@ -92,7 +93,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
       'mappingError'
     ]),
     ...dposStore.mapState([
-      'status',
+      'status'
     ]),
   }
 })
@@ -129,22 +130,29 @@ export default class HardwareWalletModal extends Vue {
       // ledger live
       path =  `44'/60'/${offset}'/0/0`
     }
-    if(path === "44'/60'/0'") {
+    else if(path === "44'/60'/0'") {
       // legacy
       path =  `${path}/${offset}`
     }
     console.log('path',path)
     this.web3js = await initWeb3SelectedWallet(path)
     this.setWeb3(this.web3js)
+    this.$refs.modalRef.hide()
+
+
     // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()
     await this.checkMapping(selectedAddress)
-    if (this.status !== 'mapped') {
+    console.log("this.status before", this.status);
+    console.log("this.mappingError", this.mappingError);
+    
+    if (this.status == 'no_mapping' && this.mappingError == undefined) {
       await this.addMappingHandler()
       this.$emit('ok');
-    } else {
+    } else if(this.status == 'mapped' && this.mappingError == undefined) {
       this.$root.$emit("bv::show::modal", "already-mapped")
-    }
-    this.$refs.modalRef.hide()
+    } else if(this.status == 'no_mapping' && this.mappingError !== undefined) {
+      this.$root.$emit("bv::show::modal", "already-mapped")
+    } 
   }
 
   async addMappingHandler() {
@@ -152,6 +160,7 @@ export default class HardwareWalletModal extends Vue {
     try {
       this.setShowLoadingSpinner(true)
       await this.addMappingAsync()
+      console.log("this.status after", this.status);
     } catch(err) {
       this.$root.$emit("bv::show::modal", "already-mapped")
       return
@@ -160,12 +169,8 @@ export default class HardwareWalletModal extends Vue {
 
   async checkMapping(selectedAddress) {
     this.setShowLoadingSpinner(true)
-    const mapped = await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
-    if(mapped) {
-      this.setStatus(this.STATUS['mapped'])
-    } else {
-      this.setStatus(this.STATUS['no_mapping'])
-    }
+    await this.init()
+    await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
     this.setShowLoadingSpinner(false)
   }
 
@@ -212,7 +217,7 @@ export default class HardwareWalletModal extends Vue {
         this.hdWallet = await LedgerWallet()
         await this.hdWallet.init(path)
       } catch (error) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
       }
       this.setShowLoadingSpinner(false)
     }

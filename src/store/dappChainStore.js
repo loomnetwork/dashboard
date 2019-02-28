@@ -284,16 +284,21 @@ export default {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
       }
-      
       const network = state.chainUrls[state.chainIndex].network
-      const user = await DPOSUser.createMetamaskUserAsync(		
+      let user 
+      try { 
+        user = await DPOSUser.createMetamaskUserAsync(		
         rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,
         network,
         GatewayJSON.networks[network].address,
         LoomTokenJSON.networks[network].address
-      );
+        );
+      } catch(err) {
+        commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
+        
+      }
       state.dposUser = user
     },
     async depositAsync({ state, dispatch }, payload) {
@@ -563,7 +568,10 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
+        commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
         commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
+        throw Error(err.toString())
+      
       }
     },
     async init({ state, commit, rootState }, payload) {

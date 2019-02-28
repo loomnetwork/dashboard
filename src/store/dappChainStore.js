@@ -539,8 +539,12 @@ export default {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
       console.log("1");
-      
       try {
+        commit("DPOS/setStatus", "check_mapping", {root: true})
+        commit('setMappingError', null)
+        console.log("state.mappingStatus", state.mappingStatus);
+        
+        commit('setMappingStatus', null)
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
         let dappchainAddress = mappedEthAddress.toLowerCase()

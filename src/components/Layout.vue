@@ -10,6 +10,12 @@
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div :class="contentClass">
+          <b-modal id="sign-ledger-modal"  title="Sign Hardware wallet" hide-footer centered no-close-on-backdrop> 
+              On your leadger, Sign the message to confirm your Ethereum identity. (No gas required)
+          </b-modal>
+          <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
+              Your selected accout is already mapped. Please select new account.
+          </b-modal> 
           <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           <router-view></router-view>
         </div>        
@@ -34,6 +40,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 
 import { initWeb3 } from '../services/initWeb3'
 import { isIP } from 'net';
+import { watch } from 'fs';
 
 @Component({
   components: {
@@ -77,7 +84,9 @@ import { isIP } from 'net';
       'showSidebar',
       'web3',
       'metamaskDisabled',
-      'showLoadingSpinner'
+      'showLoadingSpinner',
+      'showAlreadyMappedModal',
+      'showSignLedgerModal'
     ])    
   },
 })
@@ -120,6 +129,26 @@ export default class Layout extends Vue {
     }
   }
 
+  @Watch('showAlreadyMappedModal')
+    onChange(newValue, oldValue) {
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "already-mapped")
+    } else {
+        this.$root.$emit("bv::hide::modal", "already-mapped")
+
+    }
+  }
+
+  @Watch('showSignLedgerModal')
+    onChange(newValue, oldValue) {
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "sign-ledger-modal")
+    } else {
+        this.$root.$emit("bv::hide::modal", "sign-ledger-modal")
+
+    }
+  }
+
   async mounted() {
 
     if(this.$route.meta.requireDeps) {
@@ -132,6 +161,8 @@ export default class Layout extends Vue {
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', async (accounts) => {
+        console.log("on accountsChanged");
+        
         if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
         this.setCurrentMetamaskAddress(accounts[0])
       })
@@ -141,6 +172,7 @@ export default class Layout extends Vue {
 
   async attemptToInitialize() {
     try {
+      console.log("init in layout");
       await this.initializeDependencies()
       this.$root.$emit("initialized")
     } catch(err) {

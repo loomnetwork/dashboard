@@ -276,8 +276,10 @@ export default {
       }
     },
     async initDposUser({ state, rootState, getters, dispatch, commit }) {
-      if (!rootState.DPOS.web3) {
+      if (!rootState.DPOS.web3) {    
+        console.log("init in dappchainStore");
         await dispatch("DPOS/initializeDependencies", null, { root: true })
+
       }
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {
@@ -529,7 +531,7 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
-
+      
       if(!state.localAddress) return
       let metamaskAddress = ""
 
@@ -538,22 +540,29 @@ export default {
       } else {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
-
+      console.log("1");
+      
       try {
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
         const mappedEthAddress = mapping.to.local.toString()   
         let dappchainAddress = mappedEthAddress.toLowerCase()
         if(dappchainAddress !== metamaskAddress) {
+         console.log("2");
+
           commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: false}, {root: true})
           commit('setMappingStatus', 'INCOMPATIBLE_MAPPING')
           commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
           return
         }
         if(state.mappingStatus == 'INCOMPATIBLE_MAPPING') {
+        console.log("3");
+
           commit('setMappingError', null)
           commit('setMappingStatus', null)
         }         
       } catch (err) {
+        console.log("4");
+
         commit("DPOS/setStatus", "no_mapping", {root: true})
         console.error("Error ensuring mapping exists: ", err)
         // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
@@ -565,9 +574,11 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       } try {
+        console.log("addMappingAsync.....");
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
+        console.log("addMappingAsync err", err);
         commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
         commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
         throw Error(err.toString())

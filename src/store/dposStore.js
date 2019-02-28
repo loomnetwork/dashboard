@@ -30,6 +30,8 @@ const defaultState = () => {
     selectedAccount: undefined,
     metamaskDisabled: false,
     showLoadingSpinner: false,
+    showSignLedgerModal: false,
+    showAlreadyMappedModal: false,
     userBalance: {
       isLoading: true,
       loomBalance: 0,
@@ -88,6 +90,12 @@ export default {
     setShowLoadingSpinner(state, payload) {
       state.showLoadingSpinner = payload
     },
+    setSignLedgerModal(state, payload) {
+      state.showSignLedgerModal = payload
+    },
+    setAlreadyMappedModal(state, payload) {
+      state.showAlreadyMappedModal = payload
+    },
     setRewardsResults(state, payload) {
       state.rewardsResults = payload
     },
@@ -119,6 +127,7 @@ export default {
         await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
+        await dispatch("checkMappingStatus")
       } catch(err) {
         if(err.message === "no Metamask installation detected") {
           commit("setMetamaskDisabled", true)
@@ -128,6 +137,26 @@ export default {
         throw err
       }      
       commit("setShowLoadingSpinner", false)
+    },
+    async checkMappingStatus({ state, commit, dispatch }) {
+      console.log("state.status", state.status);
+      
+      if (state.status == 'no_mapping' && state.mappingError == undefined) {
+        console.log("state.walletType", state.walletType);
+        
+        try {
+          commit("setShowLoadingSpinner", true)
+          commit("setSignLedgerModal", true)
+          await dispatch("DappChain/addMappingAsync", null, { root: true })
+        } catch(err) {
+          commit("setSignLedgerModal", false)
+          commit("setAlreadyMappedModal", true)
+        }
+      } else if((state.status == 'mapped' && state.mappingError == undefined) || (state.status == 'no_mapping' && state.mappingError !== undefined)) {
+        console.log("SHOW already-mapped")
+        commit("setAlreadyMappedModal", true)
+      } 
+    
     },
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))

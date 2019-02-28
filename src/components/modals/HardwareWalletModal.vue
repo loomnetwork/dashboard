@@ -138,7 +138,12 @@ export default class HardwareWalletModal extends Vue {
     this.setWeb3(this.web3js)
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)
-    if (this.mappingSuccess) this.$emit('ok');
+    if (this.mappingSuccess) {
+      this.$emit('ok');
+      this.$router.push({
+        name: 'account'
+      })
+    }
   }
 
   async checkMapping(selectedAddress) {

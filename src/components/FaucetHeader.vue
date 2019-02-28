@@ -5,7 +5,7 @@
              :show="!!showChromeWarning"
              class="text-center rmv-margin"
              ref="errorMsg">
-      <span>Chrome is experiencing U2F errors with ledger on chrome 72, please use Opera or Brave instead</span>
+      <span>Ledger is experiencing timeout (U2F) errors with Chrome 72 (and latest Chromium Browsers - Brave and Opera), if you experience issues, try downgrading Chrome: <a href="https://support.ledger.com/hc/en-us/articles/360018810413-U2F-timeout-in-Chrome-browser" target="_blank">https://support.ledger.com/hc/en-us/articles/360018810413-U2F-timeout-in-Chrome-browser</a></span>
     </b-alert>    
     <b-alert variant="danger"
                dismissible
@@ -343,8 +343,10 @@ export default class FaucetHeader extends Vue {
   }
 
   get showChromeWarning() {
-    return (!!window.chrome && 
-           (!!window.chrome.webstore || !!window.chrome.runtime)) ? true : false
+    let agent = navigator.userAgent.toLowerCase()
+    let isChrome = /chrome|crios/.test(agent) && ! /edge|opr\//.test(agent)
+    let isBrave = isChrome && window.navigator.plugins.length === 0 && window.navigator.mimeTypes.length === 0
+    return isChrome && !isBrave
   }
 
   async refresh() {

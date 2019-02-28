@@ -4,7 +4,7 @@
     <div class="d-none d-sm-none d-md-none d-lg-block">
       <a @click="$router.push({path: '/validators'})">
         <b-navbar-brand>
-          DPOS Dashboard
+          PlasmaChain Dashboard
           <!-- <span v-if="connectedToMetamask" class="metamask-status">connected</span>
           <span v-else class="metamask-status metamask-status-error">disconnected</span> -->
         </b-navbar-brand>
@@ -35,7 +35,7 @@
         <div class="col">
           <a @click="$router.push({path: '/validators'})">
             <b-navbar-brand>
-              DPOS Dashboard
+              PlasmaChain Dashboard
               <!-- <span v-if="connectedToMetamask" class="metamask-status">connected</span>
               <span v-else class="metamask-status metamask-status-error">disconnected</span> -->
             </b-navbar-brand>

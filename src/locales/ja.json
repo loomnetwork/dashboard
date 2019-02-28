@@ -70,7 +70,7 @@
       "once_i_un_delegate_how_long": "委任を取り消すと、自分のトークンへの完全なアクセスを取り戻すのにどれくらいかかる？",
       "at_launch_delegators_funds_will": "ローンチ段階では、デリゲーターの資金が完全にリリースされるのに２週間かかります。これは悪意のある候補者にステーキングして、彼らがバリデート権を得る確率を上げてからすぐに委任を取り消すという状況に対するセキュリティ的緩和策です。この領域については活発な研究を行なっており、今後数カ月に渡って繰り返し取り組んでいく予定です。",
       "are_there_any_ways_to": "委任したトークンのうちいくらか失ってしまうことはある？",
-      "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
+      "yes_if_the_protocol_rules": "はい。プロトコルルールが遵守されない場合、バリデーターは処罰される可能性があります。これはつまり、プールに委託されたものも含め、ステークされたトークンの一部を没収されるということです。処罰は悪意ある行動を阻み、皆が同じルールに従って行動するネットワークの維持に役立ちます。この仕組みは、不誠実で罪深い行動を取ることがそのもたらす価値よりもより高コストになるように設計されています。例えば、無効なブロックの送信、二重支払いの試みおよび(または)ダウンタイムの発生は、すべて処罰の原因となります。処罰の条件が確定次第、詳しい概要を公開予定です。",
       "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },

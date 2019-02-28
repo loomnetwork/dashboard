@@ -6,7 +6,7 @@
         <p class="color-grey">{{ $t('components.modals.restore_account_modal.note_the_phrase_is_case') }}</p>
       </b-row>
       <b-row class="my-1 align-items-center">
-        <b-form-input v-model="seeds" :rows="3" type="text"></b-form-input>
+        <b-form-input v-model="seeds" :rows="3" type="text" autocomplete="off"></b-form-input>
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span class="text-error  mt-2" variant="error">{{errorMessage}}</span>

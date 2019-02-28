@@ -67,6 +67,7 @@ var HookedWalletProvider = require('web3-provider-engine/subproviders/hooked-wal
 import { formatToCrypto } from '../../utils'
 import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb3'
 import { setTimeout } from 'timers';
+import { throws } from 'assert';
 
 const dposStore = createNamespacedHelpers('DPOS')
 const dappChainStore = createNamespacedHelpers('DappChain')
@@ -140,31 +141,26 @@ export default class HardwareWalletModal extends Vue {
     this.$refs.modalRef.hide()
 
 
-    // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()
     await this.checkMapping(selectedAddress)
     console.log("this.status before", this.status);
     console.log("this.mappingError", this.mappingError);
     
     if (this.status == 'no_mapping' && this.mappingError == undefined) {
-      await this.addMappingHandler()
-      this.$emit('ok');
+      try {
+        this.setShowLoadingSpinner(true)
+        this.$root.$emit("bv::show::modal", "sign-ledger-modal")
+        await this.addMappingAsync()
+        this.$emit('ok');
+      } catch(err) {
+        this.$root.$emit("bv::hide::modal", "sign-ledger-modal")
+        this.$root.$emit("bv::show::modal", "already-mapped")
+      }
     } else if(this.status == 'mapped' && this.mappingError == undefined) {
       this.$root.$emit("bv::show::modal", "already-mapped")
     } else if(this.status == 'no_mapping' && this.mappingError !== undefined) {
       this.$root.$emit("bv::show::modal", "already-mapped")
     } 
-  }
-
-  async addMappingHandler() {
-    this.$root.$emit("bv::show::modal", "sign-ledger-modal")
-    try {
-      this.setShowLoadingSpinner(true)
-      await this.addMappingAsync()
-      console.log("this.status after", this.status);
-    } catch(err) {
-      this.$root.$emit("bv::show::modal", "already-mapped")
-      return
-    }
+    this.setShowLoadingSpinner(false)
   }
 
   async checkMapping(selectedAddress) {

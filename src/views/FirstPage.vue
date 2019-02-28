@@ -168,7 +168,6 @@ export default class FirstPage extends Vue {
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
       await this.initializeDependencies()
-      // if(this.userIsLoggedIn) await this.gotoAccount()
     } else {
       return
     }
@@ -272,9 +271,6 @@ export default class FirstPage extends Vue {
 
   async onWalletConfig() {
     this.setWalletType("ledger")
-    if(this.userIsLoggedIn && this.walletType) {
-      await this.gotoAccount()
-    }
   }
 
 }</script>

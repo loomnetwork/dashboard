@@ -151,7 +151,6 @@ export default {
           commit("setShowLoadingSpinner", false)
           commit("setMappingSuccess", true)
         } catch(err) {
-          console.log("catch... checkMappingStatus", err);
           commit("setSignLedgerModal", false)
           commit("setAlreadyMappedModal", true)
         }

@@ -183,7 +183,6 @@ export default class Layout extends Vue {
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', async (accounts) => {
-        console.log("on accountsChanged");
         if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
         this.setCurrentMetamaskAddress(accounts[0])
         this.checkMappingStatus()
@@ -197,7 +196,6 @@ export default class Layout extends Vue {
 
   async attemptToInitialize() {
     try {
-      console.log("init in layout");
       await this.initializeDependencies()
       this.$root.$emit("initialized")
     } catch(err) {
@@ -206,7 +204,6 @@ export default class Layout extends Vue {
   }
 
   onLoginHandler() {
-    console.log('Logged in')
     this.$auth.initAuthInstance()
   }
 

@@ -535,7 +535,7 @@ export default {
       let metamaskAddress = ""
 
       if(payload) {
-        metamaskAddress = payload.currentAddress
+        metamaskAddress = payload.currentAddress.toLowerCase()
       } else {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
@@ -544,8 +544,12 @@ export default {
         commit('setMappingError', null)
         commit('setMappingStatus', null)
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
-        const mappedEthAddress = mapping.to.local.toString()   
+        const mappedEthAddress = mapping.to.local.toString()
+
+        console.log("metamaskAddress", metamaskAddress);
+        
         let dappchainAddress = mappedEthAddress.toLowerCase()
+        console.log("dappchainAddress", dappchainAddress);
         if(dappchainAddress !== metamaskAddress) {
           commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: false}, {root: true})
           commit('setMappingStatus', 'INCOMPATIBLE_MAPPING')
@@ -568,6 +572,11 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       } try {
+        console.log("state.dposUser.loomAddress", state.dposUser.loomAddress.toString());
+        console.log("state.dposUser.ethAddress",state.dposUser.ethAddress);
+        console.log("state.dposUser._wallet._address", state.dposUser._wallet._address);
+        debugger
+        
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {

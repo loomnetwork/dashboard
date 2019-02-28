@@ -81,7 +81,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ]),
-    ...dposStore.mapActions(['checkMappingStatus']),
+    ...dposStore.mapActions(['checkMappingAccountStatus']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
       'init'
@@ -120,6 +120,8 @@ export default class HardwareWalletModal extends Vue {
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
     let offset = this.selectedAddress
     this.setCurrentMetamaskAddress(selectedAddress)
+    console.log("selectedAddress",selectedAddress);
+    
     this.web3js.eth.defaultAccount = selectedAddress
     let path =this.selectedPath.path.replace('m/','')
     // https://github.com/LedgerHQ/ledger-live-desktop/issues/1185
@@ -144,7 +146,7 @@ export default class HardwareWalletModal extends Vue {
     await this.init()
     await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
     this.setShowLoadingSpinner(false)
-    await this.checkMappingStatus()
+    await this.checkMappingAccountStatus()
   }
 
   mounted() {

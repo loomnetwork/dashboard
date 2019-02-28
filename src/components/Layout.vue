@@ -62,12 +62,16 @@ import { isIP } from 'net';
     ]),
     ...DPOSStore.mapActions([
       'initializeDependencies',
-      'checkMappingStatus'
+      'checkMappingAccountStatus'
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
       'setCurrentMetamaskAddress'      
-    ])
+    ]),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ])    
   },  
   computed: {
     ...mapState([
@@ -185,9 +189,11 @@ export default class Layout extends Vue {
       window.ethereum.on('accountsChanged', async (accounts) => {
         if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
         this.setCurrentMetamaskAddress(accounts[0])
-        this.checkMappingStatus()
+        this.checkMappingAccountStatus()
         if (!this.mappingSuccess) {
           this.$root.$emit("logout")
+          this.setMappingError(null)
+          this.setMappingStatus(null)
         }
       })
     }
@@ -200,6 +206,8 @@ export default class Layout extends Vue {
       this.$root.$emit("initialized")
     } catch(err) {
       this.$root.$emit("logout")
+      this.setMappingError(null)
+      this.setMappingStatus(null)
     }           
   }
 

@@ -141,7 +141,7 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
-    ])    
+    ])
   },
   methods: {    
     ...mapActions(['signOut', 'setPrivateKey']),
@@ -150,7 +150,11 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ...DappChainStore.mapActions([
       'addChainUrl'
     ]),    
-    ...mapMutations(['setUserIsLoggedIn'])
+    ...mapMutations(['setUserIsLoggedIn']),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ]) 
   }
 })
 export default class FirstPage extends Vue {
@@ -180,6 +184,8 @@ export default class FirstPage extends Vue {
   signOutHandler() {
     this.signOut()
     this.$router.push('/')
+    this.setMappingError(null)
+    this.setMappingStatus(null)
   }
 
   async onLoginAccount() {

@@ -126,7 +126,7 @@ export default {
         await dispatch("initWeb3Local")
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
-        await dispatch("checkMappingStatus")
+        await dispatch("checkMappingAccountStatus")
 
       } catch(err) {
         if(err.message === "no Metamask installation detected") {
@@ -138,7 +138,7 @@ export default {
       }      
       commit("setShowLoadingSpinner", false)
     },
-    async checkMappingStatus({ state, commit, dispatch }) {
+    async checkMappingAccountStatus({ state, commit, dispatch }) {
       commit("setSignLedgerModal", false)
       commit("setAlreadyMappedModal", false)
       if (state.status == 'no_mapping' && state.mappingError == undefined) {

@@ -91,6 +91,7 @@
       "connect_to_deposit_funds": "Connect to deposit funds",
       "no_mapping_detected": "No mapping detected",
       "map_accounts": "Map accounts",
+      "history": "History",
       "deposit": "Deposit",
       "withdraw": "Withdraw",
       "use_maximum": "Use maximum",
@@ -165,7 +166,8 @@
     "faucet_sidebar": {
       "my_account": "My Account",
       "my_delegations": "My Delegations",
-      "rewards": "Rewards"
+      "rewards": "Rewards",
+      "history": "History"
     },
     "layout": {
       "metamask_error": "Metamask error!?",

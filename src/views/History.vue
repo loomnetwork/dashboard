@@ -1,22 +1,11 @@
 <template>
-  <div class="container">
-    <page-header title="Trade History">
-      <div class="breadcrumps" slot="breadcrumps">
-        <router-link to="/" class="active">{{ $t('views.history.home') }}</router-link>
-        {{ $t('views.history.') }}
-        <router-link to="/browse" class="current">{{ $t('views.history.trade_history') }}</router-link>
+  <div class="faucet">
+    <div class="faucet-content">
+      <div class="container mb-5 column py-3 p-3 d-flex" >
+        <h1>{{ $t('views.history.trade_history') }}</h1>
+        <faucet-table :items="history"></faucet-table>
       </div>
-      <div slot="right-section">
-        <span class="sort-label">{{ $t('views.history.sort_by') }}</span>
-        <b-button-group class="custom-dropdown-btn">
-          <b-dropdown right split text="Added">
-            <b-dropdown-item>{{ $t('views.history.item_1') }}</b-dropdown-item>
-            <b-dropdown-item>{{ $t('views.history.item_2') }}</b-dropdown-item>
-          </b-dropdown>
-        </b-button-group>
-      </div>
-    </page-header>
-    <transaction v-for="n in 5"></transaction>
+    </div>
   </div>
 </template>
 
@@ -24,16 +13,39 @@
 <script>
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
-  import PageHeader from '@/components/PageHeader'
-  import Transaction from '@/components/Transaction'
+  import FaucetTable from '../components/FaucetTable'
 
   @Component({
     components: {
-      PageHeader,
-      Transaction,
-    },
+      FaucetTable
+    }
   })
   export default class History extends Vue {
+
+  history = [
+    {
+      ID: 2349134,
+      Date: "3/14/18",
+      Amount: "10000 LOOM",
+      To: "trdzvzr7...",
+      From: "Me"
+    },
+    {
+      ID: 2349134,
+      Date: "3/14/18",
+      Amount: "10000 LOOM",
+      To: "trdzvzr7...",
+      From: "Me"
+    },
+    {
+      ID: 2349134,
+      Date: "3/14/18",
+      Amount: "10000 LOOM",
+      To: "trdzvzr7...",
+      From: "Me"
+    }
+  ]
+
 
   }</script>
 

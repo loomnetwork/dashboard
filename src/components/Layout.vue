@@ -59,7 +59,8 @@ import { isIP } from 'net';
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
-      'setCurrentMetamaskAddress'      
+      'setCurrentMetamaskAddress',
+      'setWalletType'
     ])
   },  
   computed: {
@@ -115,9 +116,9 @@ export default class Layout extends Vue {
   }
 
   beforeMount() {
-    if(localStorage.getItem("privatekey")) {
-      this.setUserIsLoggedIn(true)
-    }
+    if(localStorage.getItem("privatekey")) this.setUserIsLoggedIn(true)
+    let walletType = localStorage.getItem("walletType")
+    if(walletType) this.setWalletType(walletType)
   }
 
   async mounted() {
@@ -132,7 +133,7 @@ export default class Layout extends Vue {
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', async (accounts) => {
-        if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
+        if(this.userIsLoggedIn && this.walletType === "metamask") this.ensureIdentityMappingExists({currentAddress: accounts[0]})
         this.setCurrentMetamaskAddress(accounts[0])
       })
     }
@@ -149,7 +150,6 @@ export default class Layout extends Vue {
   }
 
   onLoginHandler() {
-    console.log('Logged in')
     this.$auth.initAuthInstance()
   }
 

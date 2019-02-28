@@ -96,7 +96,7 @@ export default {
     },
     setWalletType(state, payload) {
       state.walletType = payload
-      localStorage.setItem("walletType", payload)
+      if(!localStorage.getItem("walletType", payload)) localStorage.setItem("walletType", payload)
     },
     setSelectedAccount(state, payload) {
       state.selectedAccount = payload

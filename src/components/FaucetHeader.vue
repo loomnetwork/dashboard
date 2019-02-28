@@ -343,8 +343,10 @@ export default class FaucetHeader extends Vue {
   }
 
   get showChromeWarning() {
-    return (!!window.chrome && 
-           (!!window.chrome.webstore || !!window.chrome.runtime)) ? true : false
+    let agent = navigator.userAgent.toLowerCase()
+    let isChrome = /chrome|crios/.test(agent) && ! /edge|opr\//.test(agent)
+    let isBrave = isChrome && window.navigator.plugins.length === 0 && window.navigator.mimeTypes.length === 0
+    return isChrome && !isBrave
   }
 
   async refresh() {

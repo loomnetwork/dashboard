@@ -30,11 +30,11 @@
                     </tr>
                   </b-form-radio-group>
                 </tbody>
-              </table>   
+              </table>
             </div>
-          </b-form-group>          
-        </b-card>  
- 
+          </b-form-group>
+        </b-card>
+
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span v-if="errorMsg" class="text-error  mt-2" variant="error">{{errorMsg}}</span>
@@ -98,23 +98,27 @@ export default class HardwareWalletModal extends Vue {
     console.log('path index', offset)
     this.setCurrentMetamaskAddress(selectedAddress)
     this.web3js.eth.defaultAccount = selectedAddress
-    let path =this.selectedPath.path.replace('m/','') 
+    let path =this.selectedPath.path.replace('m/','')
     // https://github.com/LedgerHQ/ledger-live-desktop/issues/1185
     if(path === "44'/60'") {
       // ledger live
       path =  `44'/60'/${offset}'/0/0`
     }
+    if(path === "44'/60'/0'") {
+      // legacy
+      path =  `${path}/${offset}`
+    }
     console.log('path',path)
     this.web3js = await initWeb3SelectedWallet(path)
 
-    
+
     this.setWeb3(this.web3js)
-    
+
     this.$emit('ok');
 
     // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()
 
-    this.$refs.modalRef.hide()     
+    this.$refs.modalRef.hide()
   }
 
   mounted() {
@@ -153,7 +157,7 @@ export default class HardwareWalletModal extends Vue {
       this.$log("err", err)
       return
     }
-    
+
     let i = 0
     let accountsTemp = []
     while (i < this.maxAddresses) {
@@ -164,7 +168,7 @@ export default class HardwareWalletModal extends Vue {
           account: account,
           balance: 'loading'
         })
-        i++ 
+        i++
       } catch(err) {
         this.$log("err", err)
         this.setErrorMsg({msg: "Please make sure your hardware wallet is connected", forever: false})
@@ -263,7 +267,7 @@ label {
    .card-body {
     padding: 0px;
     max-height: 250px;
-    overflow: scroll;    
+    overflow: scroll;
    }
   .custom-control-label::before {
     position: relative;
@@ -276,7 +280,7 @@ label {
     }
     tr {
       width: 100%;
-      display: inline-table;      
+      display: inline-table;
     }
   }
   .form-group {

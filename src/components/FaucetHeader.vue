@@ -1,54 +1,15 @@
 <template>
   <div id="faucet-header" @login="startPolling" ref="header" class="header">
-    <b-navbar id="top-nav" toggleable="md" type="dark">
-      <div class="container-fluid d-flex justify-content-between ensure-padded">        
-        <a @click="$router.push({path: '/validators'})">
-          <b-navbar-brand>
-            {{ $t('components.faucet_header.plasmachain_dashboard') }}
-            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.eth_connected') }}</span>
-            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.eth_disconnected') }}</span>
-            <span v-if="connectedToDappChain" class="metamask-status">{{ $t('components.faucet_header.dapp_connected') }}</span>
-            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.dapp_disconnected') }}</span>
-          </b-navbar-brand>
-        </a>
-        <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
-        <b-collapse is-nav id="nav_collapse">
-
-          <b-navbar-nav class="ml-auto">
-            
-            <b-nav-form>
-              <b-nav-item :hidden="false">
-                <router-link to="/account" class="router text-light hover-warning">{{ $t('views.history.home') }}</router-link>
-              </b-nav-item>
-              <b-nav-item :hidden="isLoggedIn">
-                <router-link to="/validators" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-              </b-nav-item>
-              <b-nav-item :hidden="true">
-                <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.explorer') }}</router-link>
-              </b-nav-item>   
-              <b-nav-item :hidden="false">
-                <router-link to="/faq" class="router text-light hover-warning">{{ $t('components.faucet_header.f_a_q') }}</router-link>
-              </b-nav-item>
-              <b-nav-item :hidden="false">
-                <LangSwitcher/>
-              </b-nav-item>
-            </b-nav-form>
-
-          </b-navbar-nav>
-        </b-collapse>        
-      </div>
-    </b-navbar>  -->
-
     <b-navbar variant="primary" class="bottom-bar" toggleable>
       <div class="inner-container">
 
-        <div class="col-sm-2 col-md-3 v-center" v-if="userIsLoggedIn">
+        <div class="col-sm-1 col-md-2 v-center" v-if="userIsLoggedIn">
           <div class="footer-title">
             <img src="../assets/logo-grey.svg">
           </div>          
         </div>
 
-        <div class="col-sm-10 col-md-9 v-center" v-if="userIsLoggedIn">           
+        <div class="col-sm-11 col-md-10 v-center" v-if="userIsLoggedIn">           
           <b-navbar-nav class="hidden-medium">
             <b-nav-item>
               <div v-if="formattedTimeUntilElectionCycle">
@@ -68,30 +29,43 @@
           </b-navbar-nav>
 
           <b-navbar-nav>
-            <div class="connectivity-status">
-              <div class="router">
+            <b-nav-item>
+              <div class="sub-menu-links">
                 <span>Ethereum
                   <div class="on-sign" v-if="connectedToMetamask"></div>
-                  <div class="off-sign" v-else></div>            
+                  <div class="off-sign animated infinite pulse slow" v-else></div>            
                 </span>
-              </div>
-              <div class="router">
                 <span>DappChain
                   <div class="on-sign" v-if="connectedToDappChain"></div>
-                  <div class="off-sign" v-else></div>            
-                </span>
+                  <div class="off-sign animated infinite pulse slow" v-else></div>            
+                </span>    
               </div>
-            </div>            
+            </b-nav-item>
           </b-navbar-nav>
 
           <b-navbar-nav>
             <div class="sub-menu-links hidden-tiny" v-if="!errorRefreshing">
               <b-nav-item v-if="isLoggedIn">
-                <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
+                <span id="mainnetBalance" class="mr-2">Mainnet: <strong class="highlight">
+                    <b-spinner v-if="!this.userBalance.mainnetBalance" type="border" small /> 
+                    <strong v-else>
+                      {{this.userBalance.mainnetBalance}}
+                    </strong>
+                  </strong></span>
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
-                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : formatLoomBalance}}</strong></span>
+                  <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }}
+                    <strong class="highlight">
+                      <b-spinner v-if="this.userBalance.isLoading" type="border" small />
+                      <strong v-else>{{formatLoomBalance}}</strong>
+                    </strong>
+                  </span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
-                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
+                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }}
+                  <strong class="highlight">
+                    <b-spinner v-if="this.userBalance.isLoading" type="border" small />
+                    <strong v-else>{{this.userBalance.stakedAmount}}</strong>
+                  </strong>
+                </span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
             </div>
@@ -340,19 +314,6 @@ export default class FaucetHeader extends Vue {
     }
   }
 
-  hideAlert(alertOpt){
-    let stay = alertOpt.opt ? alertOpt.opt.stay : false
-    let waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
-    if(!stay){
-      setTimeout(()=>{
-        if (alertOpt.ref) {
-          try {
-            alertOpt.ref.dismiss()
-          } catch (e) {}
-        }
-      }, waitTime * 1000)
-    }
-  }
 }</script>
 <style lang="scss">
 #top-nav {
@@ -387,6 +348,25 @@ export default class FaucetHeader extends Vue {
   ul {
     margin-left: auto;
   }
+}
+
+.on-sign {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #33ec33;
+  box-shadow: 0 0 4px 3px rgba(51, 236, 51, 0.3);
+  margin: 0 6px 0 3px;
+}
+.off-sign {
+ display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fd2237;
+  box-shadow: 0 0 4px 3px rgba(253, 34, 55, 0.3);
+  margin: 0 6px 0 3px; 
 }
 
 .footer-title {

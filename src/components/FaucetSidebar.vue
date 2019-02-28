@@ -19,6 +19,12 @@
         <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active"><span><fa icon="coins" class="sidebar-icon"/>Rewards</span></router-link>
       </div>
       <router-link to="/faq" class="router"><span><fa icon="question-circle" class="sidebar-icon"/>{{ $t('components.faucet_header.f_a_q') }}</span></router-link>
+      <div class="router">
+        <span>
+          <fa icon="globe" class="sidebar-icon"/>
+          <LangSwitcher/>
+        </span>
+      </div>      
       <div v-if="userIsLoggedIn" :hidden="false" class="router">
         <span @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</span>
       </div>
@@ -68,11 +74,15 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import LangSwitcher from './LangSwitcher'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
 const DappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
+  components: {
+    LangSwitcher
+  },
   computed: {
     ...mapState(['userIsLoggedIn']),
     ...DPOSStore.mapState([
@@ -129,7 +139,7 @@ export default class FaucetSidebar extends Vue {
 <style lang="scss" scoped>
 .navbar-side {
   background-color: #ffffff;
-  z-index: 100;
+  z-index: 210;
   position: fixed;
   box-shadow: 0 2px 10px 0 rgba(0,0,0,.08);
   height: 100%;
@@ -145,28 +155,6 @@ export default class FaucetSidebar extends Vue {
   border-left: 5px solid #5756e6;
   background-color: #f9f9fc;
   font-weight: bold
-}
-.connectivity-status {
-  position: relative;
-}
-.connectivity-status .router span {
-  color: #333333 !important;
-  padding-bottom: 0;
-  padding-top: 0;
-}
-.on-sign {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: green;
-}
-.off-sign {
- display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: red; 
 }
 .router {
   display: block;
@@ -190,6 +178,7 @@ export default class FaucetSidebar extends Vue {
 }
 .mobile-sidebar {
   width: 100%;
+  z-index: 210;
 }
 h4, h1 {
   color: #6e6f96;

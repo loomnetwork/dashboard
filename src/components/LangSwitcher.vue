@@ -40,10 +40,12 @@
 
 <style lang="scss" scoped>
   .locale-changer {
+    display: inline-block;
     .custom-select {
       background-color: transparent;
       border: none;
-      color: white;
+      color: #5455e1;
+      padding: 0 27px 0 0;
       &:focus {
         box-shadow: none;
       }

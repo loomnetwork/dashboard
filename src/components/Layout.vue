@@ -2,45 +2,6 @@
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <div class="content">
-      <div v-if="metamaskDisabled && userIsLoggedIn" class="disabled-overlay">
-        <div>           
-          <div class="network-error-container mb-3">
-            <img src="../assets/metamask-error-graphic.png"/>
-          </div>
-          <h4>
-            Metamask error!?
-          </h4>
-          <div>
-            <span>
-              Please enable Metamask or switch to a supported browser
-            </span>
-          </div>              
-        </div>
-      </div>
-      <div v-if="mappingStatus == 'INCOMPATIBLE_MAPPING' && userIsLoggedIn" class="disabled-overlay">
-        <div>           
-          <div class="network-error-container mb-3">
-            <img src="../assets/network-error-graphic.png"/>
-          </div>
-          <h4>
-            Mapping error!?
-          </h4>
-          <div v-if="mappingError">
-
-            Your account appears to be mapped with the following address: <br>
-            <span class="address">{{mappingError.mappedEthAddress}}</span> <br>
-            but your current account address is: <br>
-            <span class="address">{{mappingError.metamaskAddress}}</span> <br>
-            Please change your Metamask account
-
-          </div>
-          <div v-else>
-            <span>
-              Please check your Metamask account and/or network
-            </span>
-          </div>              
-        </div>
-      </div>         
       <div class="row column-wrapper">
         <div v-show="showSidebar" class="rmv-spacing col sidebar-container">
           <faucet-sidebar></faucet-sidebar>      
@@ -62,7 +23,9 @@
           </b-alert>
           <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
             <span class="text-dark" v-html="this.$store.state.successMsg"></span>
-          </b-alert>          
+          </b-alert>
+          <warning-overlay type="metamask" />
+          <warning-overlay />                 
           <transition name="router-anim" enter-active-class="animated fadeIn fast" leave-active-class="animated fadeOut fast">
             <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           </transition>
@@ -211,6 +174,20 @@ export default class Layout extends Vue {
     this.$auth.initAuthInstance()
   }
 
+  hideAlert(alertOpt){
+    let stay = alertOpt.opt ? alertOpt.opt.stay : false
+    let waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
+    if(!stay){
+      setTimeout(()=>{
+        if (alertOpt.ref) {
+          try {
+            alertOpt.ref.dismiss()
+          } catch (e) {}
+        }
+      }, waitTime * 1000)
+    }
+  }  
+
   get showErrorMsg() {
     /*
     message opt can be like
@@ -321,7 +298,7 @@ export default class Layout extends Vue {
     margin-bottom: 0px;
     border: 0px;
     border-radius: 0px;
-    z-index: 10100;
+    z-index: 1000;
   }  
 
   .container-fluid {

@@ -10,8 +10,8 @@
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
 
-        <div class="container-fluid mb-5 rmv-padding">
-          <div class="row d-flex justify-content-center mb-auto">
+        <div class="container mb-5 column justify-content-center py-3 p-3 d-flex">
+          <div class="row d-flex mb-auto">
             <div class="col">
               <div>
                 <b-card no-body>

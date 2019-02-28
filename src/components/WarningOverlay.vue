@@ -4,7 +4,7 @@
     <div v-if="type === 'metamask'">
       <div v-if="metamaskDisabled && userIsLoggedIn" class="disabled-overlay">
         <div>           
-          <div class="network-error-container mb-3">
+          <div class="network-error-container animated bounce mb-3">
             <img src="../assets/metamask-error-graphic.png"/>
           </div>
           <h4>
@@ -21,8 +21,8 @@
 
     <div v-else>
       <div v-if="mappingStatus == 'INCOMPATIBLE_MAPPING' && userIsLoggedIn" class="disabled-overlay">
-        <div>           
-          <div class="network-error-container mb-3">
+        <div>
+          <div class="network-error-container animated bounce mb-3">
             <img src="../assets/network-error-graphic.png"/>
           </div>
           <h4>
@@ -79,7 +79,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class WarningOverlay extends Vue {
 }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 
   .disabled-overlay {
     position: absolute;
@@ -92,7 +92,7 @@ export default class WarningOverlay extends Vue {
     left: 0px;
     bottom: 0px;
     right: 0px;
-    background-color: rgba(255,255,255,0.8);    
+    background-color:rgba(239, 243, 245, 0.9);
     z-index: 200;
     text-align: center;
     h4 {
@@ -120,8 +120,5 @@ export default class WarningOverlay extends Vue {
       }
     }
   }  
-
-</style>
-
 
 </style>

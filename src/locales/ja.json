@@ -72,7 +72,7 @@
       "are_there_any_ways_to": "委任したトークンのうちいくらか失ってしまうことはある？",
       "yes_if_the_protocol_rules": "はい。プロトコルルールが遵守されない場合、バリデーターは処罰される可能性があります。これはつまり、プールに委託されたものも含め、ステークされたトークンの一部を没収されるということです。処罰は悪意ある行動を阻み、皆が同じルールに従って行動するネットワークの維持に役立ちます。この仕組みは、不誠実で罪深い行動を取ることがそのもたらす価値よりもより高コストになるように設計されています。例えば、無効なブロックの送信、二重支払いの試みおよび(または)ダウンタイムの発生は、すべて処罰の原因となります。処罰の条件が確定次第、詳しい概要を公開予定です。",
       "where_do_the_tokens_go": "没収されてしまったトークンはどこへ行くの？",
-      "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
+      "slashed_tokens_will_be_contributed": "没収されたトークンは、今後のブロック報酬のための準備金へと還元され、ネットワークの検証およびステーキングを行う人々へと支払われることになります。"
     },
     "history": {
       "trade_history": "トレード履歴",

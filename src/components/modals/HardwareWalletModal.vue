@@ -42,7 +42,7 @@
       </b-row>
     </b-container>
   </b-modal>
-  <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" ref="showUnlockModal"  hide-footer centered no-close-on-backdrop> 
+  <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" hide-footer centered no-close-on-backdrop> 
       On your leadger, Please enter your pin code and login to the Ethereum app.
   </b-modal>
   <b-modal id="sign-ledger-modal" title="Sign Hardware wallet" hide-footer centered no-close-on-backdrop> 
@@ -74,8 +74,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
   components: {
-    LoadingSpinner,
-    // UnlockLedgerModal
+    LoadingSpinner
   },
   methods: {
     ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount', 'setShowLoadingSpinner', 'setStatus']),
@@ -114,15 +113,12 @@ export default class HardwareWalletModal extends Vue {
   selectedAddress = 0
   dropdownTemplate = DropdownTemplate
   componentLoaded = false
-  showUnlockModal = true
 
   web3js = undefined
 
   async okHandler() {
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
     let offset = this.selectedAddress
-    console.log('selected address', selectedAddress)
-    console.log('path index', offset)
     this.setCurrentMetamaskAddress(selectedAddress)
     this.web3js.eth.defaultAccount = selectedAddress
     let path =this.selectedPath.path.replace('m/','')
@@ -135,16 +131,12 @@ export default class HardwareWalletModal extends Vue {
       // legacy
       path =  `${path}/${offset}`
     }
-    console.log('path',path)
     this.web3js = await initWeb3SelectedWallet(path)
     this.setWeb3(this.web3js)
     this.$refs.modalRef.hide()
 
 
     await this.checkMapping(selectedAddress)
-    console.log("this.status before", this.status);
-    console.log("this.mappingError", this.mappingError);
-    
     if (this.status == 'no_mapping' && this.mappingError == undefined) {
       try {
         this.setShowLoadingSpinner(true)
@@ -169,15 +161,6 @@ export default class HardwareWalletModal extends Vue {
     await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
     this.setShowLoadingSpinner(false)
   }
-
-  get STATUS() {
-    return {
-      check_mapping: 'check_mapping',
-      mapped: 'mapped',
-      no_mapping: 'no_mapping'
-    }
-  }
-
 
   mounted() {
     this.paths = hdPaths.paths

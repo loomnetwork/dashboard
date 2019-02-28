@@ -135,6 +135,7 @@
                               <b-tooltip v-if="!isLoading" target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
                             </div>
                           </div>
+                          <TransferStepper :balance="userBalance.loomBalance" :transferAction="depositHandler2" />
 
                           <!-- Withdraw -->
                           <div id="withdraw">
@@ -153,6 +154,7 @@
                               <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
                             </div>
                           </div>
+                          <TransferStepper :balance="userBalance.mainnetBalance" :transferAction="withdrawalHandler2" approval="false" />
 
 
                         

@@ -38,7 +38,7 @@
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span v-if="errorMsg" class="text-error  mt-2" variant="error">{{errorMsg}}</span>
-        <b-button class="btn proceed-btn" variant="primary" @click="okHandler">Proceed</b-button>
+        <b-button class="btn proceed-btn" :disabled="selectedAddress < 0" variant="primary" @click="okHandler">Proceed</b-button>
       </b-row>
     </b-container>
   </b-modal>
@@ -85,7 +85,7 @@ export default class HardwareWalletModal extends Vue {
   filteredPaths = []
   addresses = []
   selectedPath = hdPaths.paths[0]
-  selectedAddress = 0
+  selectedAddress = -1
   dropdownTemplate = DropdownTemplate
   componentLoaded = false
 
@@ -148,7 +148,8 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async selectPath(path) {
-
+    this.accounts = []
+    this.selectedAddress = -1
     if(typeof this.hdWallet ===  "undefined") this.hdWallet = await LedgerWallet()
 
     try {

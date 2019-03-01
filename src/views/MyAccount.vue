@@ -89,86 +89,36 @@
                                 <b-button style="width: 160px" variant="primary" @click="addMappingHandler">{{ $t('views.my_account.map_accounts') }}</b-button>                            
                               </div>
                             </div>
-
                             <hr class="custom-divider">
-                          </div>
-
-                          <!-- Allowance -->
-                          <!-- <div id="allowance">
-                            <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <span class="idx-symbol">{{ $t('views.my_account.2') }}</span>
-                            <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.approve_amount') }}</h5>
-                            <div class="d-flex flex-row align-items-center">                              
-                              <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.allowed_amount_to_deposit') }}</span>
-                                <b-form-input :placeholder="'max. ' + mainnetBalance" v-model="amountToApprove" class="w-100"/>
-                                <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="amountToApprove=mainnetBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
-                                </div>
-                              </div>
-                              <b-button style="width: 160px" variant="primary" @click="approveAmount(amountToApprove)">{{ $t('views.my_account.approve') }}</b-button>
-                            </div>                                                    
-                            
-                            <div class="d-flex flex-row mb-3">
-                              <div class="mx-2" style="width: 250px">
-                                <h6 class="rmv-spacing">{{ $t('views.my_account.current_allowance_current_allowance', {currentAllowance0: currentAllowance || 0 }) }}</h6>
-                              </div>   
-                            </div> 
-                          </div> -->
-
-                          <!-- <hr class="custom-divider"> -->
-
-                          <!-- Deposit -->
-                          <div id="deposit">
-                            <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <!-- <span class="idx-symbol">{{ $t('views.my_account.2') }}</span> -->
-                            <!-- <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.deposit') }}</h5> -->
-                            <div class="d-flex flex-row align-items-center">
-                              <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.transfer_to_plasmachain_for_staking') }}</span>
-                                <b-form-input :placeholder="'max. ' + userBalance.mainnetBalance" v-model="transferAmount" class="w-100"/>
-                                <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="transferAmount=userBalance.mainnetBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
-                                </div>
-                              </div>
-                              <b-button id="depositBtn" style="width: 160px" variant="primary" @click="depositHandler">{{ $t('views.my_account.deposit') }}</b-button>
-                              <b-tooltip v-if="!isLoading" target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
-                            </div>
-                          </div>
-
-                          <!-- Withdraw -->
-                          <div id="withdraw">
-                            <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <!-- <span class="idx-symbol">{{ $t('views.my_account.2') }}</span> -->
-                            <!-- <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.deposit') }}</h5> -->
-                            <div class="d-flex flex-row align-items-center">
-                              <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.withdraw_to_metamask') }}</span>
-                                <b-form-input :placeholder="'max. ' + userBalance.loomBalance" v-model="withdrawAmount" class="w-50"/>
-                                <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="withdrawAmount=userBalance.loomBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
-                                </div>
-                              </div>
-                              <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">{{ $t('views.my_account.withdraw') }}</b-button>
-                              <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
-                            </div>
                           </div>
 
                           <b-card no-body>
                             <b-tabs card>
                               <b-tab title="Deposit" active>
-                                <TransferStepper :balance="0" :transferAction="depositHandler2" />
+                                <TransferStepper 
+                                  :balance="userBalance.loomBalance" 
+                                  :transferAction="executeDeposit"
+                                  :resolveTxSuccess="resolveDepositSuccess">
+                                  <template #pendingMessage><p>Please approve the transfer on your wallet</p></template>
+                                  <template #failueMessage><p>Approval failed.</p></template>
+                                </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw">
-                                <TransferStepper :balance="0" :transferAction="withdrawalHandler2" :requireApproval="false" />
+                                <TransferStepper 
+                                  :balance="userBalance.mainnetBalance" 
+                                  :transferAction="executeWithdrawal"
+                                  :resolveTxSuccess="resolveWithdrawSuccess"
+                                  executionTitle="Execute transfer">
+                                    <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
+                                    <template #failueMessage><p>Withdrawal failed... retry?</p></template>
+                                    <template #confirmingMessage><p>Waiting for ethereum confirmation</p></template>
+                                </TransferStepper>
                               </b-tab>
                             </b-tabs>
                           </b-card>
-
                         </div>
                       </div>
                     </b-card-body>
-
                 </b-card>
                 <!-- TODO: Add History page if required -->
                 <!-- <b-card no-body class="mb-3">
@@ -609,21 +559,47 @@ export default class MyAccount extends Vue {
     }
   }
 
-  depositHandler2(amount) {
-    // return new Promise((resolve,reject) => {
-    //   setTimeout(resolve,5000)
-    // })
+  executeDeposit(amount) {
+    // return new Promise((resolve,reject) => setTimeout(() => resolve('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'),5000))
+    // note: depositAsync returns Promise<TransactionReceipt>
     return this.depositAsync({amount})
   }
 
-  withdrawalHandler2(amount) {
-    // return new Promise((resolve,reject) => {
-    //   setTimeout(resolve,5000)
-    // })
+  executeWithdrawal(amount) {
+    // return new Promise((resolve,reject) => setTimeout(() => resolve('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'),5000))
+    // note:  withdrawAsync returns Promise<TransactionReceipt>
     return this.withdrawAsync({amount})
   }
 
-}</script>
+  /**
+   * 
+   * @param {TrasactionReceipt} the tx receipt
+   * @see {TransferStepper}
+   */
+  resolveDepositSuccess(txReceipt) {
+    return new Promise((resolve) => setTimeout(resolve,10000))
+    // todo
+    // const address = [userEthAddress,GatewayAddress]
+    // const topics = ?
+    // const txHash txReceipt.transactionHash
+    // return new Promise((resolve,reject) => {
+    //   const sub = web3.eth.subscribe('logs',{address,topics});
+    //   sub.on('data',(result) => resolve() && sub.unsubscribe());
+    // })
+  }
+  resolveWithdrawSuccess(txReceipt) {
+    return new Promise((resolve) => setTimeout(resolve,10000))
+    // todo
+    // const address = [GatewayAddress,userEthAddress]
+    // const topics = ?
+    // const txHash txReceipt.transactionHash
+    // return new Promise((resolve,reject) => {
+    //   const sub = web3.eth.subscribe('logs',{address,topics});
+    //   sub.on('data',(result) => resolve() && sub.unsubscribe());
+    // })
+  }
+}
+</script>
 
 
 <style lang="scss" scoped>

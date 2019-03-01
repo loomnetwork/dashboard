@@ -177,7 +177,6 @@
       "please_check_your_metamask_account": "Please check your Metamask account and/or network",
       "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": " Your selected accout is already mapped. Please select new account."
-    
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",

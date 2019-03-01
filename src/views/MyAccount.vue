@@ -97,9 +97,10 @@
                               <b-tab title="Deposit" v-if="userBalance.mainnetBalance > 0" active>
                                 <TransferStepper 
                                   :balance="userBalance.mainnetBalance" 
-                                  :transferAction="executeDeposit"
+                                  :transferAction="approveDeposit"
+                                  :resolveTxSuccess="executeDeposit"
                                   >
-                                  <template #pendingMessage><p>Signing and executing the deposit...</p></template>
+                                  <template #pendingMessage><p>Approving deposit...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
                                 </TransferStepper>
                               </b-tab>
@@ -182,8 +183,14 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 import Web3 from 'web3'
 import { setTimeout } from 'timers';
+import BN from 'bn.js'
 
 Vue.use(VueClipboard)
+
+import debug from 'debug'
+
+const log = debug('myaccount')
+
 
 @Component({
   components: {
@@ -558,10 +565,32 @@ export default class MyAccount extends Vue {
     }
   }
 
-  executeDeposit(amount) {
-    // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
-    // note: depositAsync returns Promise<TransactionReceipt>
-    return this.depositAsync({amount})
+  async approveDeposit(amount) {
+    debugger
+    console.assert(this.dposUser, "Expected dposUser to be initialized")
+    console.assert(this.web3, "Expected web3 to be initialized")
+    const { web3, dposUser} = this
+    const ethereumLoom  = dposUser.ethereumLoom
+    const ethereumGateway  = dposUser._ethereumGateway
+    const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
+    log('approve', ethereumGateway.address, weiAmount.toString())
+    const approval = await ethereumLoom.functions.approve(
+            ethereumGateway.address,
+            weiAmount.toString())
+
+    //const receipt = await approval.wait()
+    log('approvalTX', approval)
+    return approval
+  }
+
+  executeDeposit(amount,approvalTx) {
+    console.assert(this.dposUser, "Expected dposUser to be initialized")
+    console.assert(this.web3, "Expected web3 to be initialized")
+      
+    const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
+    return this.dposUser._ethereumGateway.functions.depositERC20(
+      weiAmount.toString(), this.dposUser.ethereumLoom.address
+    )
   }
 
   executeWithdrawal(amount) {
@@ -570,22 +599,7 @@ export default class MyAccount extends Vue {
     return this.withdrawAsync({amount})
   }
 
-  /**
-   * 
-   * @param {TrasactionReceipt} the tx receipt
-   * @see {TransferStepper}
-   */
-  resolveDepositSuccess(tx) {
-    return new Promise((resolve) => setTimeout(resolve,10000))
-    // todo
-    // const address = [userEthAddress,GatewayAddress]
-    // const topics = ?
-    // const txHash txReceipt.transactionHash
-    // return new Promise((resolve,reject) => {
-    //   const sub = web3.eth.subscribe('logs',{address,topics});
-    //   sub.on('data',(result) => resolve() && sub.unsubscribe());
-    // })
-  }
+
   resolveWithdrawSuccess(txReceipt) {
     return new Promise((resolve) => setTimeout(resolve,10000))
     // todo

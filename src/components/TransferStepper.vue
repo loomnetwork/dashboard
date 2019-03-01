@@ -37,7 +37,7 @@
         <p><slot name="pendingMessage"></slot></p>
       </div>
       <div v-else-if="hasTransferFailed" class="failure">
-        <p><slot name="failureMessage">The approval failed (timeout or user rejected)</slot></p>
+        <p><slot name="failureMessage">{{errorMessage}}</slot></p>
         <b-btn @click="retryTransfer">Retry</b-btn>
       </div>
     </div>
@@ -68,7 +68,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
   ]
 })
 export default class TransferStepper extends Vue {
-
+  errorMessage = ''
   step = 1;
   transferAmount = 0;
   tx = null;
@@ -97,20 +97,28 @@ export default class TransferStepper extends Vue {
     this.txHash = tx.hash
     this.etherscanTxUrl = `https://etherscan.io/tx/${tx.hash}`
     if (this.resolveTxSuccess) {
-      this.txSuccessPromise = this.resolveTxSuccess( tx )
+      this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
       this.txSuccessPromise.then(() => this.transferSuccessful(), console.error)
     }
     this.step = 3;
   }
 
   transferFailed(error) {
-    console.error('transferFailed',error)
+    if (error.message.indexOf("User denied transaction signature") >= 1) {
+      this.errorMessage = "You rejected the transaction"
+    }
+    else {
+      this.errorMessage = "Transfer failed for unknown reason..."
+      console.error('transferFailed',error)
+      // report to sentry
+    }
     this.approvalPromise = null;
     this.hasTransferFailed = true;
   }
 
   retryTransfer() {
     this.hasTransferFailed = false;
+    console.log(this.transferAmount)
     this.startTransfer();
   }
 

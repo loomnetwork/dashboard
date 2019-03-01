@@ -311,8 +311,8 @@ export default {
       const user = state.dposUser
       let weiAmount = state.web3.utils.toWei(amount, 'ether')
       const tx = await user.depositAsync(new BN(weiAmount, 10))
-      await tx.wait()
-      return tx
+      const receipt = await tx.wait()
+      return receipt
     },
     async withdrawAsync({ state, dispatch }, payload) {
       if (!state.dposUser) {
@@ -323,8 +323,8 @@ export default {
       const user = state.dposUser
       let weiAmount = state.web3.utils.toWei(amount, 'ether')
       const tx = await user.withdrawAsync(new BN(weiAmount, 10))
-      await tx.wait()
-      return tx
+      const receipt = await tx.wait()
+      return receipt
     },
     async approveAsync({ state, dispatch }, payload) {
 

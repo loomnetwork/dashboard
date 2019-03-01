@@ -355,88 +355,24 @@ export default class MyAccount extends Vue {
     })
   }
 
-  async initWeb3() {
-    
-    if(window.ethereum) {
-      try {
-        await this.connectMetamask()
-      } catch(err) {
-        this.$refs.metamaskModalRef.show()  
-      }
-    } else {
-      this.$refs.metamaskModalRef.show()
-    }
-  }
 
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(null, '')
   }
 
 
-  async connectFromModal() {
-    try {
-      await this.connectMetamask()
-    } catch(err) {
-      this.setError(err)
-    }
-    this.$refs.metamaskModalRef.hide()
-  }
-
-  async depositHandler() {
-
-    if(this.transferAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.setShowLoadingSpinner(true)
-    
-    try {
-      await this.depositAsync({amount: this.transferAmount})
-      this.setSuccess("Deposit successfull")
-    } catch(err) {
-      console.error("Deposit failed, error: ", err)
-      this.setError({msg: "Deposit failed, please try again", err})
-    }
-    this.transferAmount = ""
-
-    this.setShowLoadingSpinner(false)
-    
-  }
-
-  async withdrawHandler() {
-    
-    if(this.withdrawAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.setShowLoadingSpinner(true)
-
-    try {
-      await this.withdrawAsync({amount: this.withdrawAmount})
-      this.setSuccess("Withdraw successfull")
-    } catch(err) {
-      console.error("Withdraw failed, error: ", err)
-      this.setError({msg: "Withdraw failed, please try again", err})
-    }
-    this.withdrawAmount = ""
-
-    this.setShowLoadingSpinner(false)
-
-  }
-
-  async checkAllowance() {    
-    if(!this.dposUser) return      
-      const user = this.dposUser
-      const gateway = user.ethereumGateway
-      const address = this.userAccount.address      
+  async checkAllowance() {
+    console.assert(this.dposUser, "Expected dposUser to be initialized")
+    console.assert(this.web3, "Expected web3 to be initialized")
+    const user = this.dposUser
+    const gateway = user.ethereumGateway
+    const address = this.userAccount.address      
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
       return allowance.toString()
     } catch(err) {
       console.error("Error checking allowance", err)
-      return
+      return ''
     }
   }
 
@@ -566,7 +502,6 @@ export default class MyAccount extends Vue {
   }
 
   async approveDeposit(amount) {
-    debugger
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
     const { web3, dposUser} = this

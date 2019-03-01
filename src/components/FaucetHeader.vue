@@ -200,7 +200,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setUserIsLoggedIn'
     ]),
     ...DPOSStore.mapMutations([
-      'setUserBalance'
+      'setUserBalance',
+      'setShowLoadingSpinner'
     ]),
     ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
     ...DappChainStore.mapActions([
@@ -209,6 +210,10 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getMetamaskLoomBalance',
       'getAccumulatedStakingAmount'
     ]),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ]) 
     
   },
   computed: {
@@ -227,7 +232,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
-      'isConnectedToDappChain'
+      'isConnectedToDappChain',
+      'mappingStatus'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
@@ -250,6 +256,9 @@ export default class FaucetHeader extends Vue {
     this.clearPrivateKey()
     localStorage.removeItem("userIsLoggedIn")
     this.setUserIsLoggedIn(false)
+    this.setMappingError(null)
+    this.setMappingStatus(null)
+    this.setShowLoadingSpinner(false)
     window.location.reload(true)
   }
 

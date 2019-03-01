@@ -43,7 +43,7 @@
     </b-container>
   </b-modal>
   <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" hide-footer centered no-close-on-backdrop> 
-      On your leadger, Please enter your pin code and login to the Ethereum app.
+    {{ $t('components.modals.hardware_wallet_modal.enter_pin_code') }}
   </b-modal>
 </div>
 </template>

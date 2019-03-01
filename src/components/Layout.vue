@@ -11,10 +11,10 @@
         </div>
         <div :class="contentClass">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
-              On your {{walletType}}, Sign the message to confirm your Ethereum identity. (No gas required)
+              {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
           </b-modal>
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
-              Your selected accout is already mapped. Please select new account.
+              {{ $t('components.layout.already_mapped') }}
           </b-modal> 
           <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           <router-view></router-view>

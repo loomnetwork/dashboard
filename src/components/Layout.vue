@@ -10,6 +10,12 @@
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div :class="contentClass">
+          <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
+              On your {{walletType}}, Sign the message to confirm your Ethereum identity. (No gas required)
+          </b-modal>
+          <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
+              Your selected accout is already mapped. Please select new account.
+          </b-modal> 
           <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           <router-view></router-view>
         </div>        
@@ -55,13 +61,18 @@ import { isIP } from 'net';
       'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapActions([
-      'initializeDependencies'
+      'initializeDependencies',
+      'checkMappingAccountStatus'
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
       'setCurrentMetamaskAddress',
       'setWalletType'
-    ])
+    ]),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ])    
   },  
   computed: {
     ...mapState([
@@ -78,7 +89,13 @@ import { isIP } from 'net';
       'showSidebar',
       'web3',
       'metamaskDisabled',
-      'showLoadingSpinner'
+      'showLoadingSpinner',
+      'showAlreadyMappedModal',
+      'showSignWalletModal',
+      'mappingSuccess',
+      'isLoggedIn',
+      'walletType',
+      'status'
     ])    
   },
 })
@@ -121,6 +138,44 @@ export default class Layout extends Vue {
     if(walletType) this.setWalletType(walletType)
   }
 
+  @Watch('mappingSuccess')
+    onMappingSuccessChange(newValue, oldValue) {
+    if(newValue && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('status')
+    onMappedChange(newValue, oldValue) {
+    if(newValue === 'mapped' && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('showAlreadyMappedModal')
+    onAlreadyMappedModalChange(newValue, oldValue) {
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "already-mapped")
+    } else {
+        this.$root.$emit("bv::hide::modal", "already-mapped")
+
+    }
+  }
+
+  @Watch('showSignWalletModal')
+    onSignLedgerModalChange(newValue, oldValue) {      
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "sign-wallet-modal")
+    } else {
+        this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
+
+    }
+  }
+
   async mounted() {
 
     if(this.$route.meta.requireDeps) {
@@ -146,6 +201,8 @@ export default class Layout extends Vue {
       this.$root.$emit("initialized")
     } catch(err) {
       this.$root.$emit("logout")
+      this.setMappingError(null)
+      this.setMappingStatus(null)
     }           
   }
 

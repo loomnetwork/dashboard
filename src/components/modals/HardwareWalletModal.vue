@@ -1,9 +1,9 @@
 <template>
+<div> 
   <b-modal id="confirm-seed-modal" ref="modalRef" title="Hardware wallet" hide-footer centered no-close-on-backdrop>
     <b-container fluid>
       <b-row class="my-1 align-items-center min-height">
         <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-
         <div v-if="componentLoaded" class="dropdown-container mb-4">
           <v-autocomplete :items="filteredPaths"
                          v-model="selectedPath"
@@ -38,10 +38,14 @@
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span v-if="errorMsg" class="text-error  mt-2" variant="error">{{errorMsg}}</span>
-        <b-button class="btn proceed-btn" variant="primary" @click="okHandler">Proceed</b-button>
+        <b-button class="btn proceed-btn" :disabled="selectedAddress < 0" variant="primary" @click="okHandler">Proceed</b-button>
       </b-row>
     </b-container>
   </b-modal>
+  <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" hide-footer centered no-close-on-backdrop> 
+      On your leadger, Please enter your pin code and login to the Ethereum app.
+  </b-modal>
+</div>
 </template>
 
 <script>
@@ -55,21 +59,42 @@ import { pathsArr as hdPaths } from "@/services/ledger/paths"
 var HookedWalletProvider = require('web3-provider-engine/subproviders/hooked-wallet');
 
 import { formatToCrypto } from '../../utils'
-// import { initLedgerProvider } from '../../services/initWeb3'
 import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb3'
 import { setTimeout } from 'timers';
+import { throws } from 'assert';
 
 const dposStore = createNamespacedHelpers('DPOS')
+const dappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
   components: {
     LoadingSpinner
   },
   methods: {
-    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 'setWeb3','setSelectedAccount']),
+    ...dposStore.mapMutations(['setCurrentMetamaskAddress', 
+                              'setWeb3',
+                              'setSelectedAccount', 
+                              'setShowLoadingSpinner', 
+                              'setStatus', 
+                              'setSelectedLedgerPath']),
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
-                    ])
+                    ]),
+    ...dposStore.mapActions(['checkMappingAccountStatus']),
+    ...dappChainStore.mapActions([
+      'ensureIdentityMappingExists',
+      'init'
+    ]),
+    },
+  computed: {
+    ...dappChainStore.mapState([
+      'mappingStatus',
+      'mappingError'
+    ]),
+    ...dposStore.mapState([
+      'status', 
+      'mappingSuccess'
+    ]),
   }
 })
 
@@ -85,7 +110,7 @@ export default class HardwareWalletModal extends Vue {
   filteredPaths = []
   addresses = []
   selectedPath = hdPaths.paths[0]
-  selectedAddress = 0
+  selectedAddress = -1
   dropdownTemplate = DropdownTemplate
   componentLoaded = false
 
@@ -94,9 +119,9 @@ export default class HardwareWalletModal extends Vue {
   async okHandler() {
     let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
     let offset = this.selectedAddress
-    console.log('selected address', selectedAddress)
-    console.log('path index', offset)
     this.setCurrentMetamaskAddress(selectedAddress)
+    console.log("selectedAddress",selectedAddress);
+    
     this.web3js.eth.defaultAccount = selectedAddress
     let path =this.selectedPath.path.replace('m/','')
     // https://github.com/LedgerHQ/ledger-live-desktop/issues/1185
@@ -104,21 +129,29 @@ export default class HardwareWalletModal extends Vue {
       // ledger live
       path =  `44'/60'/${offset}'/0/0`
     }
-    if(path === "44'/60'/0'") {
+    else if(path === "44'/60'/0'") {
       // legacy
       path =  `${path}/${offset}`
     }
-    console.log('path',path)
+    this.setSelectedLedgerPath(path)
     this.web3js = await initWeb3SelectedWallet(path)
-
-
     this.setWeb3(this.web3js)
-
-    this.$emit('ok');
-
-    // this.web3js = web3js.currentProvider.stop() // MetaMask/provider-engine#stop()
-
     this.$refs.modalRef.hide()
+    await this.checkMapping(selectedAddress)
+    if (this.mappingSuccess) {
+      this.$emit('ok');
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  async checkMapping(selectedAddress) {
+    this.setShowLoadingSpinner(true)
+    await this.init()
+    await this.ensureIdentityMappingExists({currentAddress: selectedAddress})
+    this.setShowLoadingSpinner(false)
+    await this.checkMappingAccountStatus()
   }
 
   mounted() {
@@ -148,14 +181,23 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async selectPath(path) {
-
-    if(typeof this.hdWallet ===  "undefined") this.hdWallet = await LedgerWallet()
-
+    this.accounts = []
+    this.selectedAddress = -1
+    if(typeof this.hdWallet ===  "undefined") {
+      try {
+        this.setShowLoadingSpinner(true)
+        this.hdWallet = await LedgerWallet()
+      } catch (error) {
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
+        this.setShowLoadingSpinner(false)
+        return
+      }
+    }
+    
     try {
       await this.hdWallet.init(path)
-    } catch(err) {
-      this.$log("err", err)
-      return
+    } catch (error) {
+      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
     }
 
     let i = 0
@@ -170,8 +212,7 @@ export default class HardwareWalletModal extends Vue {
         })
         i++
       } catch(err) {
-        this.$log("err", err)
-        this.setErrorMsg({msg: "Please make sure your hardware wallet is connected", forever: false})
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
         return
       }
     }
@@ -220,16 +261,15 @@ export default class HardwareWalletModal extends Vue {
   async show(myWeb3) {
     this.componentLoaded = true
     await this.setWeb3Instance()
-    this.showLoadingSpinner = true
     try {
+      this.setShowLoadingSpinner(true)
       this.hdWallet = await LedgerWallet()
     } catch(err) {
-      this.$log("err", err)
-      this.setErrorMsg({msg: "Please make sure your hardware wallet is connected", forever: false})
+        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       return
     }
     this.$refs.modalRef.show()
-    this.showLoadingSpinner = false
+    this.setShowLoadingSpinner(false)
   }
 
 }

@@ -181,16 +181,23 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async selectPath(path) {
-
     if(typeof this.hdWallet ===  "undefined") {
       try {
         this.setShowLoadingSpinner(true)
         this.hdWallet = await LedgerWallet()
-        await this.hdWallet.init(path)
       } catch (error) {
+        console.log("error LedgerWallet()", error);
         this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
+        this.setShowLoadingSpinner(false)
+        return
       }
-      this.setShowLoadingSpinner(false)
+    }
+
+    try {
+      await this.hdWallet.init(path)
+    } catch (error) {
+      console.log("error hdWallet.init()", error);  
+      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
     }
 
     let i = 0

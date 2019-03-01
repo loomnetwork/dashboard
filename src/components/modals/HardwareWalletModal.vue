@@ -186,7 +186,6 @@ export default class HardwareWalletModal extends Vue {
         this.setShowLoadingSpinner(true)
         this.hdWallet = await LedgerWallet()
       } catch (error) {
-        console.log("error LedgerWallet()", error);
         this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
         this.setShowLoadingSpinner(false)
         return
@@ -196,7 +195,6 @@ export default class HardwareWalletModal extends Vue {
     try {
       await this.hdWallet.init(path)
     } catch (error) {
-      console.log("error hdWallet.init()", error);  
       this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
     }
 

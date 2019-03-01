@@ -572,11 +572,6 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       } try {
-        console.log("state.dposUser.loomAddress", state.dposUser.loomAddress.toString());
-        console.log("state.dposUser.ethAddress",state.dposUser.ethAddress);
-        console.log("state.dposUser._wallet._address", state.dposUser._wallet._address);
-        debugger
-        
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {

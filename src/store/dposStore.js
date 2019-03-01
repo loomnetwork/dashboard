@@ -30,7 +30,7 @@ const defaultState = () => {
     selectedAccount: undefined,
     metamaskDisabled: false,
     showLoadingSpinner: false,
-    showSignLedgerModal: false,
+    showSignWalletModal: false,
     showAlreadyMappedModal: false,
     mappingSuccess: false,
     userBalance: {
@@ -91,8 +91,8 @@ export default {
     setShowLoadingSpinner(state, payload) {
       state.showLoadingSpinner = payload
     },
-    setSignLedgerModal(state, payload) {
-      state.showSignLedgerModal = payload
+    setSignWalletModal(state, payload) {
+      state.showSignWalletModal = payload
     },
     setAlreadyMappedModal(state, payload) {
       state.showAlreadyMappedModal = payload
@@ -139,19 +139,17 @@ export default {
       commit("setShowLoadingSpinner", false)
     },
     async checkMappingAccountStatus({ state, commit, dispatch }) {
-      commit("setSignLedgerModal", false)
+      commit("setSignWalletModal", false)
       commit("setAlreadyMappedModal", false)
       if (state.status == 'no_mapping' && state.mappingError == undefined) {
         try {
-          if(state.walletType === "ledger") {
-            commit("setSignLedgerModal", true)
-          }
+          commit("setSignWalletModal", true)
           commit("setShowLoadingSpinner", true)
           await dispatch("DappChain/addMappingAsync", null, { root: true })
           commit("setShowLoadingSpinner", false)
           commit("setMappingSuccess", true)
         } catch(err) {
-          commit("setSignLedgerModal", false)
+          commit("setSignWalletModal", false)
           commit("setAlreadyMappedModal", true)
         }
       } else if((state.status == 'no_mapping' && state.mappingError !== undefined)) {

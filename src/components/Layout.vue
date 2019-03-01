@@ -10,8 +10,8 @@
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div :class="contentClass">
-          <b-modal id="sign-ledger-modal"  title="Sign Hardware wallet" hide-footer centered no-close-on-backdrop> 
-              On your leadger, Sign the message to confirm your Ethereum identity. (No gas required)
+          <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
+              On your {{walletType}}, Sign the message to confirm your Ethereum identity. (No gas required)
           </b-modal>
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
               Your selected accout is already mapped. Please select new account.
@@ -90,7 +90,7 @@ import { isIP } from 'net';
       'metamaskDisabled',
       'showLoadingSpinner',
       'showAlreadyMappedModal',
-      'showSignLedgerModal',
+      'showSignWalletModal',
       'mappingSuccess',
       'isLoggedIn',
       'walletType',
@@ -165,12 +165,12 @@ export default class Layout extends Vue {
     }
   }
 
-  @Watch('showSignLedgerModal')
+  @Watch('showSignWalletModal')
     onSignLedgerModalChange(newValue, oldValue) {      
     if(newValue) {
-        this.$root.$emit("bv::show::modal", "sign-ledger-modal")
+        this.$root.$emit("bv::show::modal", "sign-wallet-modal")
     } else {
-        this.$root.$emit("bv::hide::modal", "sign-ledger-modal")
+        this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
 
     }
   }

@@ -200,7 +200,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setUserIsLoggedIn'
     ]),
     ...DPOSStore.mapMutations([
-      'setUserBalance'
+      'setUserBalance',
+      'setShowLoadingSpinner'
     ]),
     ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
     ...DappChainStore.mapActions([
@@ -258,6 +259,7 @@ export default class FaucetHeader extends Vue {
     this.$router.push({ path: '/login' })
     this.setMappingError(null)
     this.setMappingStatus(null)
+    this.setShowLoadingSpinner(false)
   }
 
   login() {

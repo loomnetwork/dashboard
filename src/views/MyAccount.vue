@@ -92,22 +92,21 @@
                             <hr class="custom-divider">
                           </div>
 
-                          <b-card no-body>
+                          <b-card no-body v-if="metamaskConnected">
                             <b-tabs card>
-                              <b-tab title="Deposit" active>
+                              <b-tab title="Deposit" v-if="userBalance.mainnetBalance > 0" active>
                                 <TransferStepper 
-                                  :balance="userBalance.loomBalance" 
+                                  :balance="userBalance.mainnetBalance" 
                                   :transferAction="executeDeposit"
-                                  :resolveTxSuccess="resolveDepositSuccess">
-                                  <template #pendingMessage><p>Please approve the transfer on your wallet</p></template>
+                                  >
+                                  <template #pendingMessage><p>Signing and executing the deposit...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
                                 </TransferStepper>
                               </b-tab>
-                              <b-tab title="Withdraw">
+                              <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
                                 <TransferStepper 
-                                  :balance="userBalance.mainnetBalance" 
+                                  :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
-                                  :resolveTxSuccess="resolveWithdrawSuccess"
                                   executionTitle="Execute transfer">
                                     <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
                                     <template #failueMessage><p>Withdrawal failed... retry?</p></template>
@@ -330,7 +329,7 @@ export default class MyAccount extends Vue {
   }
 
   async refresh(poll) {    
-    console.log('refreshing...')
+    console.log('refreshing balance...')
     this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
     let loomBalance = await this.getDappchainLoomBalance()    
     let mainnetBalance = await this.getMetamaskLoomBalance({
@@ -343,8 +342,8 @@ export default class MyAccount extends Vue {
     await this.getDpos2()
     this.setUserBalance({
       isLoading,
-      loomBalance,
-      mainnetBalance,
+      loomBalance: parseFloat(loomBalance),
+      mainnetBalance: parseFloat(mainnetBalance),
       stakedAmount
     })
   }
@@ -560,13 +559,13 @@ export default class MyAccount extends Vue {
   }
 
   executeDeposit(amount) {
-    // return new Promise((resolve,reject) => setTimeout(() => resolve('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'),5000))
+    // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
     // note: depositAsync returns Promise<TransactionReceipt>
     return this.depositAsync({amount})
   }
 
   executeWithdrawal(amount) {
-    // return new Promise((resolve,reject) => setTimeout(() => resolve('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'),5000))
+    // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
     // note:  withdrawAsync returns Promise<TransactionReceipt>
     return this.withdrawAsync({amount})
   }
@@ -576,7 +575,7 @@ export default class MyAccount extends Vue {
    * @param {TrasactionReceipt} the tx receipt
    * @see {TransferStepper}
    */
-  resolveDepositSuccess(txReceipt) {
+  resolveDepositSuccess(tx) {
     return new Promise((resolve) => setTimeout(resolve,10000))
     // todo
     // const address = [userEthAddress,GatewayAddress]

@@ -20,11 +20,12 @@
               :placeholder="'max. ' + balance"
               v-model="transferAmount"
               :max="balance"
+              :min="0"
               step="1"
             />
           </b-col>
           <b-col>
-            <b-btn variant="outline-primary" @click="transferAmount = balance">all</b-btn>
+            <b-btn variant="outline-primary" @click="transferAmount = balance">all ({{balance}})</b-btn>
           </b-col>
         </b-row>
       </b-container>
@@ -70,7 +71,7 @@ export default class TransferStepper extends Vue {
 
   step = 1;
   transferAmount = 0;
-
+  tx = '';
   // {Promise} approval/execution promise
 
   approvalPromise = null;
@@ -85,19 +86,22 @@ export default class TransferStepper extends Vue {
   etherscanTxUrl = ''
 
   startTransfer() {
+    console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
-      txHash => this.transferExecuted(txHash),
+      tx => this.transferExecuted(tx),
       error => this.approvalFailed(error)
     );
     this.step = 2;
   }
 
-  transferExecuted(txReceipt) {
-    this.txHash = txReceipt.transactionHash;
-    this.etherscanTxUrl = `https://etherscan.io/tx/${this.txHash}`;
+  transferExecuted(tx) {
+    console.log("transfer executed " + tx.hash)
+    this.tx = tx
+    this.txHash = tx.hash
+    this.etherscanTxUrl = `https://etherscan.io/tx/${tx.hash}`
     if (this.resolveTxSuccess) {
-      this.txSuccessPromise = this.resolveTxSuccess( txReceipt )
-      this.txSuccessPromise.then(() => this.transferSuccessful())
+      this.txSuccessPromise = this.resolveTxSuccess( tx )
+      this.txSuccessPromise.then(() => this.transferSuccessful(), console.error)
     }
     this.step = 3;
   }
@@ -120,6 +124,8 @@ export default class TransferStepper extends Vue {
     this.step = 1
     this.transferAmount = 0
     this.hasTransferFailed = false
+    this.tx = null;
+    this.txHash = '';
     this.etherscanTxUrl = ''
     this.approvalPromise = null
     this.txSuccessPromise = null

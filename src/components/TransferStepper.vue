@@ -71,19 +71,16 @@ export default class TransferStepper extends Vue {
 
   step = 1;
   transferAmount = 0;
-  tx = '';
+  tx = null;
+  txHash = ''
+  etherscanTxUrl = ''
   // {Promise} approval/execution promise
-
   approvalPromise = null;
   // set to true when approvalPromise fails
-  hasTransferFailed = false;
+  hasTransferFailed;
   txSuccessfull = false
-
-  // promise that resolves when the tx status is no more pending
   // only used when resolveTxSuccess is provided
   txSuccessPromise = null;
-  
-  etherscanTxUrl = ''
 
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
@@ -107,7 +104,8 @@ export default class TransferStepper extends Vue {
   }
 
   transferFailed(error) {
-    console.error(error)
+    console.error('transferFailed',error)
+    this.approvalPromise = null;
     this.hasTransferFailed = true;
   }
 

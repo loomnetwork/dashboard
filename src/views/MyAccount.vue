@@ -109,8 +109,8 @@
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
                                     <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
-                                    <template #failueMessage><p>Withdrawal failed... retry?</p></template>
-                                    <template #confirmingMessage><p>Waiting for ethereum confirmation</p></template>
+                                    <template #failueMessage>Withdrawal failed... retry?</template>
+                                    <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
                               </b-tab>
                             </b-tabs>

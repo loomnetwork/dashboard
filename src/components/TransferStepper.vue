@@ -44,7 +44,7 @@
     <div v-else-if="step==3" class="complete-transfer">
       <div v-if="!resolveTxSuccess || txSuccessPromise" class="pending">
         <b-spinner variant="primary" label="Spinning"/>
-        <p><slot name="confirmingMessage">Approval detected. Waiting for Ethereum confirmation.</slot><br/>
+        <p><slot name="confirmingMessage">Approval detected. Waiting for Ethereum confirmation.</slot>
         Tx: <a :href="etherscanTxUrl" class="hash">{{txHash}}</a></p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
@@ -89,7 +89,7 @@ export default class TransferStepper extends Vue {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
       tx => this.transferExecuted(tx),
-      error => this.approvalFailed(error)
+      error => this.transferFailed(error)
     );
     this.step = 2;
   }
@@ -107,6 +107,7 @@ export default class TransferStepper extends Vue {
   }
 
   transferFailed(error) {
+    console.error(error)
     this.hasTransferFailed = true;
   }
 
@@ -159,10 +160,10 @@ export default class TransferStepper extends Vue {
 }
 .pending {
     display: flex;
+    flex-wrap: wrap;
     margin: 12px 0;
     border-top: 1px solid #ededed;
     padding: 24px 12px;
-
     >.spinner-border {
       margin-right: 12px
     }

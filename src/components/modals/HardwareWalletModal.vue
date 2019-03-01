@@ -113,7 +113,7 @@ export default class HardwareWalletModal extends Vue {
 
     // assert web3 address is the actual user selected address. Until we fully test/trust this thing...
     const web3account = (await this.web3js.eth.getAccounts())[0]
-    console.assert(web3account !== selectedAddress, 
+    console.assert(web3account === selectedAddress, 
       `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
 
     this.setWeb3(this.web3js)

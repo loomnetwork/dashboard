@@ -76,8 +76,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
                               'setSelectedAccount', 
                               'setShowLoadingSpinner', 
                               'setStatus', 
-                              'setSelectedLedgerPath', 
-                              'mappingSuccess']),
+                              'setSelectedLedgerPath']),
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ]),
@@ -93,7 +92,8 @@ const dappChainStore = createNamespacedHelpers('DappChain')
       'mappingError'
     ]),
     ...dposStore.mapState([
-      'status'
+      'status', 
+      'mappingSuccess'
     ]),
   }
 })

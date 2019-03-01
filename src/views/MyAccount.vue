@@ -29,7 +29,8 @@
                           <div class="balance-container mt-2">
                             <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
                             <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong></h6>
-                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>                            
+                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>   
+                            <small v-if="allowance">{{allowance}} LOOM awainting transfer to plasmachain account</small>                         
                           </div>                          
                         </div>
                         <div class="col text-center" style="display:none">
@@ -258,7 +259,7 @@ export default class MyAccount extends Vue {
   userAccount = {
     address: "",
   }
-
+  allowance = ""
   transferAmount = ""
   amountToApprove = ""
   withdrawAmount = ""
@@ -336,13 +337,14 @@ export default class MyAccount extends Vue {
   }
 
   async refresh(poll) {    
-    console.log('refreshing balance...')
+    console.log('refreshing balances...')
     this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
     let loomBalance = await this.getDappchainLoomBalance()    
     let mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,
       address: this.userEthAddr
     })
+    this.allowance = parseFloat(await this.checkAllowance())
 
     let isLoading = false
     let stakedAmount = this.userBalance.stakedAmount

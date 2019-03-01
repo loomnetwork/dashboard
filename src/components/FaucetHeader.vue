@@ -78,7 +78,7 @@
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
                 <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : formatLoomBalance}}</strong></span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
-                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
+                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading || this.userBalance.stakedAmount == 0 ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
               <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
@@ -255,11 +255,12 @@ export default class FaucetHeader extends Vue {
   logOut() {
     this.clearPrivateKey()
     localStorage.removeItem("userIsLoggedIn")
-    this.setUserIsLoggedIn(false)
+    this.setUserIsLoggedIn(false
     this.$router.push({ path: '/login' })
     this.setMappingError(null)
     this.setMappingStatus(null)
     this.setShowLoadingSpinner(false)
+    window.location.reload(true)
   }
 
   login() {

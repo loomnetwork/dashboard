@@ -3,23 +3,23 @@
     <b-container fluid>
       <div v-if="loading" class="loading-spinner-container">
         <loading-spinner :showBackdrop="true"></loading-spinner>
-      </div>      
-      <div v-else>     
+      </div>
+      <div v-else>
         <b-row class="my-1 mb-3">
           <b-col sm="3"><label>{{ $t('components.modals.faucet_delegate_modal.amount') }}</label></b-col>
-          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" type="number" value="0"></b-form-input></b-col>
+          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" type="number" value="0" min="0"></b-form-input></b-col>
         </b-row>
         <b-row class="my-1" v-if="!unbond" key="range">
           <b-col sm="6"><label id="lockTimeReward" for="locktime">{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label></b-col>
           <b-col sm="6"><span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span></b-col>
           <b-col><b-form-input v-model="locktimeTierVal" :min="locktimeTier || 0" max="3" value="0" :formatter="formatRangeInput" id="locktime" type="range" data-toggle="tooltip"></b-form-input></b-col>
           <b-tooltip target="lockTimeReward" placement="bottom" title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"></b-tooltip>
-        </b-row> 
+        </b-row>
       </div>
     </b-container>
     <div slot="modal-footer" class="w-100">
       <b-button v-if="!loading" style="width: 160px; float: right;" variant="primary" @click="requestDelegate">{{okTitle}}</b-button>
-    </div>    
+    </div>
   </b-modal>
 </template>
 
@@ -93,7 +93,7 @@ export default class FaucetDelegateModal extends Vue {
   ]
 
   async requestDelegate() {
-    
+
     if(this.delegationDetail.amount <= 0) {
       this.setError("Invalid amount")
       return
@@ -108,7 +108,7 @@ export default class FaucetDelegateModal extends Vue {
           amount: this.delegationDetail.amount,
           tier: this.locktimeTierVal
         })
-      } else {        
+      } else {
         await this.delegateAsync({
           candidate: this.delegationDetail.to,
           amount: this.delegationDetail.amount,
@@ -126,13 +126,13 @@ export default class FaucetDelegateModal extends Vue {
 
   show(address, type) {
     if(!address) {
-      if(this.validators && this.validators.length > 0) {      
+      if(this.validators && this.validators.length > 0) {
         this.formattedValidators = this.validators.map((v) => {
           return {
             text: v.Name || v.Address,
             value: v.Address
           }
-        }) 
+        })
       }
       this.showValidators = true
     }
@@ -152,7 +152,7 @@ export default class FaucetDelegateModal extends Vue {
         from: getAddress(this.getPrivateKey),
         to: address
       }
-    }        
+    }
     this.$refs.modalRef.show()
   }
 

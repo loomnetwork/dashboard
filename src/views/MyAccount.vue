@@ -417,7 +417,7 @@ export default class MyAccount extends Vue {
     console.assert(this.web3, "Expected web3 to be initialized")   
     const user = this.dposUser
     const gateway = user.ethereumGateway
-    const address = this.userAccount.address      
+    const address = this.userAccount.address    
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
       return this.web3.utils.fromWei(allowance.toString())

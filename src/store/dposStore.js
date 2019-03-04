@@ -341,11 +341,11 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
 
-      const { origin, target, validator, amount} = payload
+      const { origin, target, amount} = payload
       const user = rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, validator, amount)
+        await user.redelegateAsync(origin, target, amount)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)

@@ -30,9 +30,8 @@ export default class RestoreAccountModal extends Vue {
   errorMessage = "";
   okHandler() {
 
-    debugger
     let seedPhraseIsValid = bip39.validateMnemonic(this.seeds)
-    if(seedPhraseIsValid) {
+    if(!seedPhraseIsValid) {
       this.errorMessage = "Invalid seed phrase"
       return
     }

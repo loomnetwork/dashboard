@@ -110,7 +110,7 @@ export default class RedelegateModal extends Vue {
     }
 
 
-    await redelegateAsync(this.origin.pubKey, this.target.pubKey, this.delegation.amount)
+    await this.redelegateAsync(this.origin.pubKey, this.target.pubKey, this.delegation.amount)
 
     // this.$emit("ok")
     this.$refs.modalRef.hide()

@@ -18,7 +18,7 @@
       "setup_new_account_from_scratch": "새로운 계정 설정하기",
       "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
       "new_user": "새 사용자",
-      "returning_user": "Returning User",
+      "returning_user": "기존 사용자",
       "sign_out": "로그아웃",
       "create_account": "계정 생성",
       "restore_account": "계정 복구"
@@ -36,12 +36,12 @@
       "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
       "create_an_account": "계정 생성",
       "generate_a_private_key": "개인 키 생성",
-      "log_in_to_your_meta_mask": "Log in to your MetaMask wallet",
+      "log_in_to_your_meta_mask": "내 MetaMask 지갑에 로그인하기",
       "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto PlasmaChain",
-      "choose_validators_to_stake_with": "Choose validators to stake with",
-      "how_many_tokens_are_required": "How many tokens are required to become a delegator?",
+      "choose_validators_to_stake_with": "스테이킹할 검증자 선택하기",
+      "how_many_tokens_are_required": "위임자가 되려면 토큰이 얼만큼 필요한가요?",
       "there_is_no_minimum_required": "There is no minimum required amount of tokens to be a delegator. Any LOOM token holder can delegate to any validator candidate on the network.",
-      "which_validator_s_should_i_delegate": "Which validator(s) should I delegate to?",
+      "which_validator_s_should_i_delegate": "어떤 검증자(들)에게 위임해야 하나요?",
       "you_can_use_the": "You can use the",
       "for_a_full_list_of": "for a full list of available validator candidates. Keep in mind that validators perform the critical services that maintain the integrity of the system — proposing new blocks, verifying transactions, and participating in governance. In researching the validators that best suit you, you will likely want to evaluate around criteria such as performance (uptime, slashes), reputation, fee % on rewards, community, etc.",
       "do_i_lose_control_of": "Do I lose control of my tokens when I delegate them to a validator?",
@@ -76,34 +76,34 @@
     },
     "history": {
       "trade_history": "거래 내역",
-      "sort_by": "Sort by:",
+      "sort_by": "정렬 기준:",
       "item_1": "아이템 1",
       "item_2": "아이템 2",
       "home": "홈"
     },
     "my_account": {
-      "my_address": "My Address",
-      "balance": "Balance",
-      "mainnet": "Mainnet",
+      "my_address": "내 주소",
+      "balance": "잔액",
+      "mainnet": "메인넷",
       "plasmachain": "PlasmaChain",
-      "account_details": "Account details",
-      "deposit_withdraw": "Deposit withdraw",
+      "account_details": "계정 정보",
+      "deposit_withdraw": "입출금",
       "connect_to_deposit_funds": "Connect to deposit funds",
       "no_mapping_detected": "No mapping detected",
       "map_accounts": "Map accounts",
-      "deposit": "Deposit",
-      "withdraw": "Withdraw",
+      "deposit": "입금",
+      "withdraw": "인출",
       "use_maximum": "Use maximum",
       "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
-      "withdraw_to_metamask": "Withdraw to your wallet"
+      "withdraw_to_metamask": "내 지갑으로 인출하기"
     },
     "my_delegations": {
-      "no_delegations": "No Delegations"
+      "no_delegations": "위임 내역 없음"
     },
     "redelegate": {
       "redelegate": "Redelegate",
-      "from": "From",
-      "to": "To"
+      "from": "보내는 사람",
+      "to": "받는 사람"
     },
     "rewards": {
       "unclaimed_rewards": "Unclaimed rewards:",
@@ -112,16 +112,16 @@
     },
     "validator_detail": {
       "state": "상태:",
-      "amount_delegated": "Amount Delegated:",
+      "amount_delegated": "위임한 양:",
       "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "Updated Amount:",
+      "updated_amount": "갱신된 양:",
       "updated_amount_loom": "{updatedAmount} LOOM",
       "timelock_tier": "Timelock Tier:",
       "timelock": "Timelock:",
       "unlocked": "Unlocked"
     },
     "validator_list": {
-      "no_validators_available_please_try": "No validators available, please try again later",
+      "no_validators_available_please_try": "위임 가능한 검증자가 없습니다. 나중에 다시 시도해주세요.",
       "validators": "검증자"
     }
   },
@@ -144,13 +144,13 @@
       "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
     },
     "faucet_header": {
-      "eth_connected": "Ethereum Connected",
-      "eth_disconnected": "Ethereum Disconnected",
-      "dapp_connected": "PlasmaChain Connected",
-      "dapp_disconnected": "PlasmaChain Disconnected",
-      "explorer": "Explorer",
+      "eth_connected": "이더리움 연결됨",
+      "eth_disconnected": "이더리움 연결 끊어짐",
+      "dapp_connected": "PlasmaChain 연결됨",
+      "dapp_disconnected": "PlasmaChain 연결 끊어짐",
+      "explorer": "탐색기",
       "f_a_q": "자주 묻는 질문",
-      "next_election_cycle": "Next election cycle:",
+      "next_election_cycle": "다음 선거 주기:",
       "plasma_chain": "PlasmaChain:",
       "staked": "Staked:",
       "deposit": "입금",
@@ -160,7 +160,7 @@
       "my_staking": "내 스테이킹",
       "my_stakes": "My Stakes",
       "status": "상태",
-      "block_explorer": "Block Explorer"
+      "block_explorer": "블록 탐색기"
     },
     "faucet_sidebar": {
       "my_account": "내 계정",
@@ -168,9 +168,9 @@
       "rewards": "보상"
     },
     "layout": {
-      "metamask_error": "Metamask error!?",
+      "metamask_error": "MetaMask 오류!?",
       "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
-      "mapping_error": "Mapping error!?",
+      "mapping_error": "매핑 오류!?",
       "your_account_appears_to_be": "Your account appears to be mapped with the following address:",
       "but_your_current_account_address": "but your current account address is:",
       "please_change_your_metamask_account": "Please change your Metamask account",
@@ -188,8 +188,8 @@
         "word_confirm_1": "Word{confirm1}:"
       },
       "faucet_delegate_modal": {
-        "amount": "Amount:",
-        "locktime_bonuses": "Locktime / Bonuses:",
+        "amount": "수량:",
+        "locktime_bonuses": "락업 기간 / 보너스:",
         "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
       },
@@ -208,7 +208,7 @@
         "success": "성공"
       },
       "hardware_wallet_modal": {
-        "unlock_hardware_wallet": "Unlock Hardware wallet",
+        "unlock_hardware_wallet": "하드웨어 지갑 잠금해제",
         "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
       }
     },
@@ -227,18 +227,18 @@
         "transaction_data": "트랜잭션 데이터:"
       },
       "transaction": {
-        "push": "Push",
+        "push": "푸시",
         "type": "타입:",
         "walker": "Walker",
-        "listing_price_1_99": "Listing Price: $1.99",
-        "rarity": "Rarity:",
-        "rare": "Rare",
-        "entry": "Entry:",
-        "return_a_zombie_to_hand": "Return a zombie to hand",
-        "sold": "Sold"
+        "listing_price_1_99": "판매 가격: $1.99",
+        "rarity": "희소성",
+        "rare": "희귀",
+        "entry": "엔트리:",
+        "return_a_zombie_to_hand": "좀비 다시 가져오기",
+        "sold": "판매 완료"
       },
       "transaction_list": {
-        "filter_by": "Filter by",
+        "filter_by": "분류 기준",
         "most_old": "Most old",
         "pending": "Pending"
       }

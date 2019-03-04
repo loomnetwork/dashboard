@@ -16,7 +16,7 @@
 
         <b-card no-body class="wallet-config-container">
           <b-form-group v-if="accounts">
-            <div class="table-container">
+            <div class="table-container address-table">
               <table class="table b-table table-striped table-hover">
                 <tbody>
                   <b-form-radio-group v-model="selectedAddress"
@@ -101,7 +101,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
 export default class HardwareWalletModal extends Vue {
 
   hdWallet = undefined
-  maxAddresses = 10
+  maxAddresses = 99
   errorMsg = null
   accounts = []
 
@@ -307,6 +307,11 @@ label {
       width: 150px;
     }
   }
+}
+
+.address-table {
+  max-height: 280px;
+  overflow-y: scroll;
 }
 .wallet-config-container {
    width: 100%;

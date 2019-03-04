@@ -84,7 +84,7 @@
                                   >
                                   <template #pendingMessage><p>Approving deposit...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
-                                 <template #confirmingMessage>Approval detected. Completing transfer</template>
+                                  <template #confirmingMessage>Approval detected. Completing transfer</template>
                                 </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">

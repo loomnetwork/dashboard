@@ -28,9 +28,10 @@
                           </div>                          
                           <div class="balance-container mt-2">
                             <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
-                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong></h6>
+                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong>
+                              <div v-if="allowance"><small ><fa icon="fa exclamation-triangle"/> {{allowance}} LOOM out of mainnet balance awaiting transfer to plasmachain account</small> <b-btn size="sm" variant="outline-primary" style="display: inline-block;margin-left: 12px;" @click="completeDeposit">resume deposit</b-btn></div>                        
+                            </h6>
                             <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>   
-                            <small v-if="allowance">{{allowance}} LOOM awainting transfer to plasmachain account</small>                         
                           </div>                          
                         </div>
                         <div class="col text-center" style="display:none">
@@ -371,7 +372,7 @@ export default class MyAccount extends Vue {
     const address = this.userAccount.address      
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return allowance.toString()
+      return this.web3.utils.fromWei(allowance.toString())
     } catch(err) {
       console.error("Error checking allowance", err)
       return ''
@@ -528,6 +529,22 @@ export default class MyAccount extends Vue {
     return this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
+  }
+
+  completeDeposit() {
+    this.setShowLoadingSpinner(true)
+    const weiAmount = new BN(this.web3.utils.toWei(this.allowance, 'ether'), 10)
+    try {
+      await this.dposUser._ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), this.dposUser.ethereumLoom.address
+      )
+      this.allowance = 0
+    } catch (error) {
+      console.error(error)
+    }
+
+    this.setShowLoadingSpinner(false)
+
   }
 
   executeWithdrawal(amount) {

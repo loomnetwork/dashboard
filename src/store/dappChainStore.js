@@ -584,7 +584,7 @@ export default {
         return unclaimAmount.toNumber()
       } catch (err) {
         console.log("Error check unclaim loom tokens", err);
-        throw new Error(err.message)
+        commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true, cause:err})
       }
     },
     async reclaimDeposit({ state, dispatch, commit } ) {
@@ -597,9 +597,44 @@ export default {
         await dappchainGateway.reclaimDepositorTokensAsync()
       } catch (err) {
         console.log("Error reclaiming tokens", err);
-        throw new Error(err.message)
+        commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
       }
     },
+
+    async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        const receipt = await user.getPendingWithdrawalReceiptAsync()
+        if(!receipt) return { signature: null, amount: null }
+        const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+        const amount = receipt.tokenAmount
+        console.log("signature", signature);
+        console.log("amount", amount);
+        return  { signature: signature, amount: amount }
+      } catch (err) {
+        console.log("Error get pending withdrawal receipt", err);
+        commit('setErrorMsg', 'Error get pending withdrawal receipt', { root: true, cause:err})       
+      }
+    },
+
+    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
+        console.log("result", result);
+        return  result
+      } catch (err) {
+        console.log("Error withdrawal coin from gateway", err);
+        commit('setErrorMsg', 'Error withdrawal coin from gateway', { root: true, cause:err})       
+      }
+    },
+
     async init({ state, commit, rootState }, payload) {
 
       let privateKey

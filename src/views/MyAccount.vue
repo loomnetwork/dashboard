@@ -96,9 +96,15 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
-                                <div v-if="unclaimTokens > 0">
-                                Unclaimed tokens: <span> {{unclaimTokens}} </span>
-                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">Reclaim Tokens!</b-btn>
+                                <div>
+                                <!-- <div v-if="unclaimDepositTokens > 0"> -->
+                                Unclaimed deposit tokens: <span> {{unclaimDepositTokens}} </span>
+                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">Reclaim Deposit Tokens!</b-btn>
+                                </div>
+                                <div>
+                                <!-- <div v-if="unclaimWithdrawTokens > 0"> -->
+                                Unclaimed withdrawal tokens: <span> {{unclaimWithdrawTokensETH}} </span>
+                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler">Reclaim Withdrawal Tokens!</b-btn>
                                 </div>
                               </b-tab>
                             </b-tabs>
@@ -240,7 +246,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'checkMappingCompatability',
       'getDpos2',
       'getUnclaimedLoomTokens',
-      'reclaimDeposit'
+      'reclaimDeposit',
+      'getPendingWithdrawalReceipt',
+      'withdrawCoinGatewayAsync'
     ])
   }
 })
@@ -253,30 +261,33 @@ export default class MyAccount extends Vue {
   amountToApprove = ""
   withdrawAmount = ""
   currentAllowance = 0
-  unclaimTokens = 0
+  unclaimDepositTokens = 0
+  unclaimWithdrawTokens = 0
+  unclaimWithdrawTokensETH = 0
+  unclaimSignature = ""
 
-    emptyHistory = [
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
+  emptyHistory = [
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
   ]
 
   history = [
@@ -319,6 +330,7 @@ export default class MyAccount extends Vue {
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
     await this.checkUnclaimedLoomTokens()
+    await this.checkPendingWithdrawalReceipt()
   }
 
   destroyed() {
@@ -367,22 +379,27 @@ export default class MyAccount extends Vue {
   }
 
   async checkUnclaimedLoomTokens() {
-    try {
-      let unclaimAmount = await this.getUnclaimedLoomTokens()
-      this.unclaimTokens = unclaimAmount
-      console.log("unclaimAmount account",unclaimAmount);
-    } catch (error) {
-      this.setErrorMsg("Checking unclamed tokens error", error)
-    }
+    let unclaimAmount = await this.getUnclaimedLoomTokens()
+    this.unclaimDepositTokens = unclaimAmount
+    console.log("unclaimAmount account",unclaimAmount);
+
   }
 
   async reclaimDepositHandler() {
-    try {
-      let result = await this.reclaimDeposit()
-      console.log("result",result);
-    } catch (err) {
-      this.setErrorMsg("Error reclaiming tokens", err);
-    }
+    let result = await this.reclaimDeposit()
+    console.log("result",result);
+  }
+
+  async checkPendingWithdrawalReceipt() {
+    const { signature, amount } = await this.getPendingWithdrawalReceipt()
+    this.unclaimWithdrawTokens = amount
+    this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
+    this.unclaimSignature = signature
+  }
+
+  async reclaimWithdrawHandler() {
+    let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
+    console.log("reclaimWithdrawHandler result", result);
   }
 
   async connectFromModal() {

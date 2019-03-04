@@ -82,9 +82,9 @@
                                   :transferAction="approveDeposit"
                                   :resolveTxSuccess="executeDeposit"
                                   >
-                                  <template #pendingMessage><p>Approving deposit...</p></template>
+                                  <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
-                                  <template #confirmingMessage>Approval detected. Completing transfer</template>
+                                  <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
                                 </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
@@ -328,6 +328,7 @@ export default class MyAccount extends Vue {
       address: this.userEthAddr
     })
     this.allowance = parseFloat(await this.checkAllowance())
+    this.currentAllowance = this.allowance
 
     let isLoading = false
     let stakedAmount = await this.getAccumulatedStakingAmount()  
@@ -569,10 +570,11 @@ export default class MyAccount extends Vue {
     return approval
   }
 
-  executeDeposit(amount,approvalTx) {
+  async executeDeposit(amount,approvalTx) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
-      
+    
+    await approvalTx.wait()
     const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
     return this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address

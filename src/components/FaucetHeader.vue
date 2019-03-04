@@ -81,6 +81,10 @@
                 <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading || this.userBalance.stakedAmount == 0 ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
+              <b-nav-item v-if="isLoggedIn" class="mr-3">
+                  <b-spinner v-if="showRefreshSpinner" type="border" small />
+                  <a v-if="!showRefreshSpinner" @click="refresh"> <fa :icon="['fas', 'sync']" class="refresh-icon"/></a>
+              </b-nav-item>
               <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
                 <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
               </b-nav-item>          
@@ -251,6 +255,7 @@ export default class FaucetHeader extends Vue {
   connectedToDappChain = false 
 
   electionCycleTimer = undefined
+  showRefreshSpinner = false
 
   logOut() {
     this.clearPrivateKey()
@@ -361,6 +366,7 @@ export default class FaucetHeader extends Vue {
   async refresh() {
     if(this.status !== 'mapped') return
     try {
+      this.showRefreshSpinner = true
       let loomBalance = await this.getDappchainLoomBalance()
       let mainnetBalance = await this.getMetamaskLoomBalance({
         web3: this.web3,
@@ -374,6 +380,7 @@ export default class FaucetHeader extends Vue {
         mainnetBalance,
         stakedAmount
       })
+      this.showRefreshSpinner = false
       this.errorRefreshing = false
     } catch(err) {
       this.errorRefreshing = true
@@ -479,6 +486,14 @@ export default class FaucetHeader extends Vue {
 
 .rmv-margin {
   margin: 0;
+}
+
+.refresh-icon {
+  color: #6eb1ff;
+  &:hover {
+    transform:rotate(360deg);
+    transition: all 0.5s;
+  }
 }
 
 #countdown-container {

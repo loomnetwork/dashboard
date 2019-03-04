@@ -43,7 +43,7 @@
     </b-container>
   </b-modal>
   <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" hide-footer centered no-close-on-backdrop> 
-      On your leadger, Please enter your pin code and login to the Ethereum app.
+    {{ $t('components.modals.hardware_wallet_modal.enter_pin_code') }}
   </b-modal>
 </div>
 </template>
@@ -187,8 +187,9 @@ export default class HardwareWalletModal extends Vue {
       try {
         this.setShowLoadingSpinner(true)
         this.hdWallet = await LedgerWallet()
-      } catch (error) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
+      } catch (err) {
+        this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
+        console.log("Error in LedgerWallet:", err);
         this.setShowLoadingSpinner(false)
         return
       }
@@ -196,8 +197,11 @@ export default class HardwareWalletModal extends Vue {
     
     try {
       await this.hdWallet.init(path)
-    } catch (error) {
-      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
+    } catch (err) {
+      this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
+      console.log("Error when trying to init hd wallet:", err);
+      this.setShowLoadingSpinner(false)
+      return
     }
 
     let i = 0
@@ -212,7 +216,8 @@ export default class HardwareWalletModal extends Vue {
         })
         i++
       } catch(err) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+        this.setErrorMsg({msg: "Error loading your wallet accounts. Please try again.", forever: false, report:true, cause:err})
+        console.log("Error when trying to get accounts:", err);
         return
       }
     }
@@ -265,7 +270,8 @@ export default class HardwareWalletModal extends Vue {
       this.setShowLoadingSpinner(true)
       this.hdWallet = await LedgerWallet()
     } catch(err) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      this.setShowLoadingSpinner(false)
       return
     }
     this.$refs.modalRef.show()

@@ -108,15 +108,15 @@ export default {
     },
     setWalletType(state, payload) {
       state.walletType = payload
-      localStorage.setItem("walletType", payload)
-      localStorage.setItem("selectedLedgerPath", null)      
+      sessionStorage.setItem("walletType", payload)
+      sessionStorage.setItem("selectedLedgerPath", null)      
     },
     setSelectedAccount(state, payload) {
       state.selectedAccount = payload
     },
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
-      localStorage.removeItem("selectedLedgerPath")
+      sessionStorage.removeItem("selectedLedgerPath")
     }
   },
   actions: {
@@ -161,11 +161,11 @@ export default {
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
-      localStorage.setItem('privatekey', privateKeyString)
+      sessionStorage.setItem('privatekey', privateKeyString)
       commit('setIsLoggedIn', true)
     },
     async clearPrivateKey({ commit }, payload) {
-      localStorage.removeItem('privatekey')
+      sessionStorage.removeItem('privatekey')
       commit('setIsLoggedIn', false)
     },
     async checkIfConnected({state, dispatch}) {        

@@ -92,7 +92,7 @@ function defaultChainId() {
 }
 
 const getChainUrls = () => {
-  let chainUrlsJSON = localStorage.getItem('chainUrls')
+  let chainUrlsJSON = sessionStorage.getItem('chainUrls')
   let chainUrls
   if (!chainUrlsJSON) {
     chainUrls = [
@@ -109,7 +109,7 @@ const getChainUrls = () => {
 }
 
 const getChainIndex = (chainUrls) => {
-  let chainIndex = localStorage.getItem('chainIndex')
+  let chainIndex = sessionStorage.getItem('chainIndex')
   if (!chainIndex || chainIndex >= chainUrls.length) chainIndex = 0
   return chainIndex
 }
@@ -220,7 +220,7 @@ export default {
       if (existingIndex >= 0) {
         if (state.chainIndex === existingIndex) return false
         state.chainIndex = existingIndex
-        localStorage.setItem('chainIndex', state.chainIndex)
+        sessionStorage.setItem('chainIndex', state.chainIndex)
       } else {
         let websockt, rpc
         if (payload.url.startsWith('ws')) {
@@ -240,8 +240,8 @@ export default {
         state.chainUrls = chains
         state.chainIndex = state.chainUrls.length - 1
       }
-      localStorage.setItem('chainIndex', state.chainIndex)
-      localStorage.setItem('chainUrls', JSON.stringify(state.chainUrls))
+      sessionStorage.setItem('chainIndex', state.chainIndex)
+      sessionStorage.setItem('chainUrls', JSON.stringify(state.chainUrls))
       
       return true
     },
@@ -279,7 +279,7 @@ export default {
       if (!rootState.DPOS.web3) {    
         await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
-      const privateKeyString = localStorage.getItem('privatekey')
+      const privateKeyString = sessionStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
@@ -466,7 +466,7 @@ export default {
       return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {
-      const privateKeyString = localStorage.getItem('privatekey')
+      const privateKeyString = sessionStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
@@ -584,7 +584,7 @@ export default {
     async init({ state, commit, rootState }, payload) {
 
       let privateKey
-      let privateKeyString = localStorage.getItem('privatekey')
+      let privateKeyString = sessionStorage.getItem('privatekey')
 
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })

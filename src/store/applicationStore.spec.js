@@ -15,8 +15,8 @@ const { mutations } = require('./applicationStore')
 function mockWindow() {
     global.window  = new WindowMock();
     window.location.host = "http://localhost"
-    global.localStorage  = global.window.localStorage;
-    localStorage.setItem('userIsLoggedIn', false)
+    global.sessionStorage  = global.window.sessionStorage;
+    sessionStorage.setItem('userIsLoggedIn', false)
 }
 
 describe('mutations', () => {

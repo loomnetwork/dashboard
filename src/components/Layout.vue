@@ -132,7 +132,7 @@ export default class Layout extends Vue {
   }
 
   beforeMount() {
-    if(localStorage.getItem("privatekey")) {
+    if(sessionStorage.getItem("privatekey")) {
       this.setUserIsLoggedIn(true)
     }
   }

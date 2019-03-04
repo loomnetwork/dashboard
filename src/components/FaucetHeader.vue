@@ -254,7 +254,7 @@ export default class FaucetHeader extends Vue {
 
   logOut() {
     this.clearPrivateKey()
-    localStorage.removeItem("userIsLoggedIn")
+    sessionStorage.removeItem("userIsLoggedIn")
     this.setUserIsLoggedIn(false)
     this.setMappingError(null)
     this.setMappingStatus(null)

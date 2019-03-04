@@ -173,7 +173,7 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
 
-  if(to.meta.requireLogIn && !localStorage.getItem('privatekey')) {
+  if(to.meta.requireLogIn && !sessionStorage.getItem('privatekey')) {
 
     if(to.name !== 'account') {
       store.dispatch('setError', "Login required")

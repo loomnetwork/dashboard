@@ -351,7 +351,7 @@ export default class MyAccount extends Vue {
 
   async refresh(poll) {    
     console.log('refreshing...')
-    this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
+    this.userAccount.address = getAddress(sessionStorage.getItem('privatekey'))
     let loomBalance = await this.getDappchainLoomBalance()    
     let mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,

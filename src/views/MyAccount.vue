@@ -98,7 +98,7 @@
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
                                 <div v-if="unclaimDepositTokens > 0">
-                                <span> {{$t('views.my_account.tokens_pending_deposit',{pendingWithdrawAmount:unclaimDepositTokens} )}} </span>
+                                <span> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </span>
                                 <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
                                 </div>
                                 <div v-if="unclaimWithdrawTokensETH > 0">

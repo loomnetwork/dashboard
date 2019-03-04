@@ -95,7 +95,13 @@
       "withdraw": "Withdraw",
       "use_maximum": "Use maximum",
       "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
-      "withdraw_to_metamask": "Withdraw to your wallet"
+      "withdraw_to_metamask": "Withdraw to your wallet",
+      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update automatically.",
+      "tokens_pending_withdraw": "You have {pendingDepositAmount} pending tokens. Please withdraw first.",
+      "tokens_pending_deposit": "You have {pendingWithdrawAmount} pending tokens. Please deposit first.",
+      "reclaim_deposit": "Reclaim Deposit Tokens",
+      "withdraw_pending": "Withdraw pending tokens"
+
     },
     "my_delegations": {
       "no_delegations": "No Delegations"

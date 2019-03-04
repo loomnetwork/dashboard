@@ -89,7 +89,7 @@
                                 </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
-                                <TransferStepper 
+                                <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -97,15 +97,13 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
-                                <div>
-                                <!-- <div v-if="unclaimDepositTokens > 0"> -->
-                                Unclaimed deposit tokens: <span> {{unclaimDepositTokens}} </span>
-                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">Reclaim Deposit Tokens!</b-btn>
+                                <div v-if="unclaimDepositTokens > 0">
+                                <span> {{$t('views.my_account.tokens_pending_deposit',{pendingWithdrawAmount:unclaimDepositTokens} )}} </span>
+                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
                                 </div>
-                                <div>
-                                <!-- <div v-if="unclaimWithdrawTokens > 0"> -->
-                                Unclaimed withdrawal tokens: <span> {{unclaimWithdrawTokensETH}} </span>
-                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler">Reclaim Withdrawal Tokens!</b-btn>
+                                <div v-if="unclaimWithdrawTokensETH > 0">
+                                <span> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </span>
+                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.withdraw_pending')}} </b-btn>
                                 </div>
                               </b-tab>
                             </b-tabs>
@@ -384,8 +382,8 @@ export default class MyAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
-    this.unclaimDepositTokens = unclaimAmount
-    console.log("unclaimAmount account",unclaimAmount);
+    this.unclaimDepositTokens = unclaimAmount.toNumber()
+    console.log("unclaimAmount account",unclaimAmount.toNumber());
 
   }
 
@@ -399,11 +397,12 @@ export default class MyAccount extends Vue {
   async checkPendingWithdrawalReceipt() {
     const { signature, amount } = await this.getPendingWithdrawalReceipt()
     this.unclaimWithdrawTokens = amount
-    this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
-    this.unclaimSignature = signature
-    console.log("sig", signature);
-    console.log("amount", amount);
-    
+    if (amount != null) {
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
+      this.unclaimSignature = signature
+      console.log("sig", signature);
+      console.log("amount", amount);
+    }
   }
 
   async reclaimWithdrawHandler() {

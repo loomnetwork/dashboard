@@ -581,7 +581,7 @@ export default {
       const user = state.dposUser
       try {
         let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
-        return unclaimAmount.toNumber()
+        return unclaimAmount
       } catch (err) {
         console.log("Error check unclaim loom tokens", err);
         commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true, cause:err})

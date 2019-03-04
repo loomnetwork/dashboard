@@ -570,10 +570,8 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
-        commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
-        throw Error(err.toString())
-      
+        commit('setMappingError', err.message)
+        throw Error(err.message.toString())
       }
     },
     async init({ state, commit, rootState }, payload) {

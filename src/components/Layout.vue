@@ -133,7 +133,8 @@ export default class Layout extends Vue {
 
   beforeMount() {
     if(localStorage.getItem("privatekey")) {
-      this.setUserIsLoggedIn(true)
+      // this.setUserIsLoggedIn(true)
+      this.$router.push({ path: '/login' })
     }
   }
 

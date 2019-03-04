@@ -9,7 +9,6 @@
         <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
-
         <div class="container-fluid mb-5 rmv-padding">
           <div class="row d-flex justify-content-center mb-auto">
             <div class="col">
@@ -134,23 +133,28 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ]),    
     ...DPOSStore.mapState([
       'isLoggedIn',
-      'walletType'
+      'walletType',
+      'mappingSuccess'
     ]),
     ...mapGetters([
       'getPrivateKey'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
-    ])    
+    ])
   },
   methods: {    
     ...mapActions(['signOut', 'setPrivateKey']),
-    ...DPOSStore.mapActions(['storePrivateKeyFromSeed']),
+    ...DPOSStore.mapActions(['storePrivateKeyFromSeed','initializeDependencies']),
     ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
     ...DappChainStore.mapActions([
       'addChainUrl'
     ]),    
-    ...mapMutations(['setUserIsLoggedIn'])
+    ...mapMutations(['setUserIsLoggedIn']),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ]) 
   }
 })
 export default class FirstPage extends Vue {
@@ -162,10 +166,12 @@ export default class FirstPage extends Vue {
 
   async selectWallet(wallet) {
     if(wallet === "ledger") {
+      this.setWalletType("ledger")
+
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
-      if(this.userIsLoggedIn) await this.gotoAccount()
+      await this.initializeDependencies()
     } else {
       return
     }
@@ -178,6 +184,8 @@ export default class FirstPage extends Vue {
   signOutHandler() {
     this.signOut()
     this.$router.push('/')
+    this.setMappingError(null)
+    this.setMappingStatus(null)
   }
 
   async onLoginAccount() {
@@ -186,17 +194,6 @@ export default class FirstPage extends Vue {
     } else if (this.currentStatus === this.STATUS.RESTORE_ACCOUNT) {
       this.openRestoreAccountModal()
     }
-  }
-
-  async gotoAccount() {
-    this.$root.$emit('login')
-    if(this.isLoggedIn) {
-      this.$router.push({
-        name: 'account'
-      })
-      return true
-    }
-    return false
   }
 
   openCreateAccountModal() {
@@ -280,9 +277,6 @@ export default class FirstPage extends Vue {
 
   async onWalletConfig() {
     this.setWalletType("ledger")
-    if(this.userIsLoggedIn && this.walletType) {
-      await this.gotoAccount()
-    }
   }
 
 }</script>

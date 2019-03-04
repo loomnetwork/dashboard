@@ -276,24 +276,29 @@ export default {
       }
     },
     async initDposUser({ state, rootState, getters, dispatch, commit }) {
-      if (!rootState.DPOS.web3) {
-        await dispatch("DPOS/initializeDependencies", null, { root: true })
+      if (!rootState.DPOS.web3) {    
+        await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
       const privateKeyString = localStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
       }
-      
       const network = state.chainUrls[state.chainIndex].network
-      const user = await DPOSUser.createMetamaskUserAsync(		
+      let user 
+      try { 
+        user = await DPOSUser.createMetamaskUserAsync(		
         rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,
         network,
         GatewayJSON.networks[network].address,
         LoomTokenJSON.networks[network].address
-      );
+        );
+      } catch(err) {
+        commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
+        
+      }
       state.dposUser = user
     },
     async depositAsync({ state, dispatch }, payload) {
@@ -521,23 +526,30 @@ export default {
       return dpos2
     },
     async ensureIdentityMappingExists({ rootState, state, dispatch, commit }, payload) {
+      
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
-
+      
       if(!state.localAddress) return
       let metamaskAddress = ""
 
       if(payload) {
-        metamaskAddress = payload.currentAddress
+        metamaskAddress = payload.currentAddress.toLowerCase()
       } else {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
-
       try {
+        commit("DPOS/setStatus", "check_mapping", {root: true})
+        commit('setMappingError', null)
+        commit('setMappingStatus', null)
         const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
-        const mappedEthAddress = mapping.to.local.toString()   
+        const mappedEthAddress = mapping.to.local.toString()
+
+        console.log("metamaskAddress", metamaskAddress);
+        
         let dappchainAddress = mappedEthAddress.toLowerCase()
+        console.log("dappchainAddress", dappchainAddress);
         if(dappchainAddress !== metamaskAddress) {
           commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: false}, {root: true})
           commit('setMappingStatus', 'INCOMPATIBLE_MAPPING')
@@ -547,7 +559,7 @@ export default {
         if(state.mappingStatus == 'INCOMPATIBLE_MAPPING') {
           commit('setMappingError', null)
           commit('setMappingStatus', null)
-        }         
+        }
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
         console.error("Error ensuring mapping exists: ", err)
@@ -563,7 +575,10 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
+        commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
         commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
+        throw Error(err.toString())
+      
       }
     },
     async init({ state, commit, rootState }, payload) {

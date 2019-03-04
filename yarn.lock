@@ -642,45 +642,38 @@
 "@ledgerhq/devices@^4.39.0":
   version "4.39.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.39.0.tgz#47d23a1a58004da162e007e0c456ab2119038c7d"
-  integrity sha512-2Jd7CVvMJDZxxaSpQpfOMeGWf7M0f6nZqZQWfjsUDQHw45Kunck101pXr6U/5UejJiLl/fhyLqvaXz0X0cs+1A==
   dependencies:
     "@ledgerhq/errors" "^4.39.0"
 
 "@ledgerhq/devices@^4.41.1":
   version "4.41.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.41.1.tgz#a5bfa17aa9d0f0dc48506d765356d36edeef1fd9"
-  integrity sha512-8WDj38iR1Fow2JoEG9w8rJouJcXXObw3KeTrh3fUzZ0qap4o8Q3HIc8i1Hr6XGxAjX64YmtebTJil3HjiNNMtQ==
   dependencies:
     "@ledgerhq/errors" "^4.41.1"
 
 "@ledgerhq/errors@^4.39.0":
   version "4.39.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.39.0.tgz#10b9889f78df94ce36a4b34d9a3a45aac77be0e9"
-  integrity sha512-kBr2rnoYDACRCxTLtEufE4oCvYj6vx2oFWVVjwskBxYsF5LC9R8Mbg5C4GgvDweiWW4Io8HA9p9jCsOfdCDygg==
 
 "@ledgerhq/errors@^4.41.1":
   version "4.41.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.41.1.tgz#8047464bf81c755dc7239b0ffb73fbf17a1c97aa"
-  integrity sha512-MKYzYNT5AKKZu2Ss0QrMXUS7Zri1F0HpNI3yKGjnhXEVxtr2fvxFXKgqdw7sdo+cLtkbNTJhiclemt0e0HtL0Q==
 
 "@ledgerhq/hw-app-eth@^4.41.0":
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-4.41.0.tgz#45f19de84cc67c51a56e7cd6aca357684e3fea60"
-  integrity sha512-wphegy39v0BXDuJ67Xg3j1yzYDbv6zBL7F8Ptjym/xpR+Vpr3nFCc4BIZZMvNNK0FuiUCTb+fdH7XHisBKecJQ==
   dependencies:
     "@ledgerhq/hw-transport" "^4.39.0"
 
 "@ledgerhq/hw-app-eth@^4.41.1":
   version "4.41.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-4.41.1.tgz#286777a5620fde5cfa23de3dab43600bcd95df55"
-  integrity sha512-G38appZPtScWZzgZnDo6+hh9MUwJxWIaAbTng0Y+ravulSjrwJgOYPUQ+rEbkt0tej5t7lcsev7CQHMxFageEQ==
   dependencies:
     "@ledgerhq/hw-transport" "^4.41.1"
 
 "@ledgerhq/hw-transport-u2f@^4.41.1":
   version "4.41.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-u2f/-/hw-transport-u2f-4.41.1.tgz#b6e51063ed13204d26b44bb9a7034e1fb83800cd"
-  integrity sha512-dWfWR7hHJh6pMfytlwmnKtr/0Sm3XJ5D/Ml/oEVgBC7LtClO0fVIu1MmnBWcTB1it3G0aQgu/7ptjxHnUInlpA==
   dependencies:
     "@ledgerhq/errors" "^4.41.1"
     "@ledgerhq/hw-transport" "^4.41.1"
@@ -689,7 +682,6 @@
 "@ledgerhq/hw-transport@^4.39.0":
   version "4.39.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.39.0.tgz#602c6ea3fef56d1df205274ea742b4cf85613f6c"
-  integrity sha512-XkVAy2SFRDdE3qQGGVxB7RQdsdIx1fcoRNReU7NQXK59fYqxue+ZoiGtynEoHq9RKMg8EBG2kBXSVEh1iPdOlA==
   dependencies:
     "@ledgerhq/devices" "^4.39.0"
     "@ledgerhq/errors" "^4.39.0"
@@ -698,7 +690,6 @@
 "@ledgerhq/hw-transport@^4.41.1":
   version "4.41.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.41.1.tgz#1c5cfa38a87d58bbb9fcc9fa0b4e8763365afeb9"
-  integrity sha512-0Q4djKCebQ0EAtkrYtD5vN7az580RY0LG3hzDwUabN8EqLWdSJElgB6OfYJk+wHUZAnVNFwXKRZ15cCFdbXExw==
   dependencies:
     "@ledgerhq/devices" "^4.41.1"
     "@ledgerhq/errors" "^4.41.1"
@@ -707,7 +698,6 @@
 "@ledgerhq/web3-subprovider@^4.41.1":
   version "4.41.1"
   resolved "https://registry.yarnpkg.com/@ledgerhq/web3-subprovider/-/web3-subprovider-4.41.1.tgz#b33f5fd080fab9977679dad8ff83b608c65d7dfb"
-  integrity sha512-7JUTlhDn+GjxTekWP2Q+hCmWlT8demF8OLEa156Vr/sNlMMdxCDq/gN5BXegS2XOMnhQORSQRMHILzY9zWaVEQ==
   dependencies:
     "@ledgerhq/hw-app-eth" "^4.41.1"
     "@ledgerhq/hw-transport" "^4.41.1"
@@ -4506,7 +4496,6 @@ ethers@4.0.0-beta.1:
 ethers@^4.0.26, ethers@^4.0.9:
   version "4.0.26"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.26.tgz#a4b17184a0ed3db9c88d1b6d28beaa7d0e0ba3e4"
-  integrity sha512-3hK4S8eAGhuWZ/feip5z17MswjGgjb4lEPJqWO/O0dNqToYLSHhvu6gGQPs8d9f+XfpEB2EYexfF0qjhWiZjUA==
   dependencies:
     "@types/node" "^10.3.2"
     aes-js "3.0.0"
@@ -6701,10 +6690,9 @@ lolex@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-3.1.0.tgz#1a7feb2fefd75b3e3a7f79f0e110d9476e294434"
 
-loom-js@1.44.1:
-  version "1.44.1"
-  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.44.1.tgz#dd137518257a294e9e249ce9d6fc1638f2c1cc4c"
-  integrity sha512-TxAqY7uuEVJRO7hv2leqgZDmXtIt9I56+/qQ0lduwG7ON0OPPZT0j1/hB4iEFpcAA3wMBj6s6LfETCrbH3Z+FQ==
+loom-js@1.46.1:
+  version "1.46.1"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.46.1.tgz#5600947297aef588f532366ce7bc9d202a1dab36"
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

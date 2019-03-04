@@ -43,7 +43,7 @@
     "date-fns": "^1.29.0",
     "ethers": "^4.0.26",
     "google-protobuf": "^3.6.0",
-    "loom-js": "1.44.1",
+    "loom-js": "1.46.1",
     "ledger-wallet-provider": "loomnetwork/ledger-wallet-provider.git",
     "node-sass": "^4.9.0",
     "protoc": "^1.0.3",

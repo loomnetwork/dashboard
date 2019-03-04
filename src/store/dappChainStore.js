@@ -574,6 +574,32 @@ export default {
         throw Error(err.message.toString())
       }
     },
+    async getUnclaimedLoomTokens({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
+        return unclaimAmount.toNumber()
+      } catch (err) {
+        console.log("Error check unclaim loom tokens", err);
+        throw new Error(err.message)
+      }
+    },
+    async reclaimDeposit({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      const dappchainGateway = user.dappchainGateway
+      try {
+        await dappchainGateway.reclaimDepositorTokensAsync()
+      } catch (err) {
+        console.log("Error reclaiming tokens", err);
+        throw new Error(err.message)
+      }
+    },
     async init({ state, commit, rootState }, payload) {
 
       let privateKey

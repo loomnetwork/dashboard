@@ -96,6 +96,10 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
+                                <div v-if="unclaimTokens > 0">
+                                Unclaimed tokens: <span> {{unclaimTokens}} </span>
+                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">Reclaim Tokens!</b-btn>
+                                </div>
                               </b-tab>
                             </b-tabs>
                           </b-card>
@@ -234,7 +238,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getAccumulatedStakingAmount',
       'init',
       'checkMappingCompatability',
-      'getDpos2'
+      'getDpos2',
+      'getUnclaimedLoomTokens',
+      'reclaimDeposit'
     ])
   }
 })
@@ -247,6 +253,7 @@ export default class MyAccount extends Vue {
   amountToApprove = ""
   withdrawAmount = ""
   currentAllowance = 0
+  unclaimTokens = 0
 
     emptyHistory = [
     {
@@ -311,6 +318,7 @@ export default class MyAccount extends Vue {
   async mounted() {
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
+    await this.checkUnclaimedLoomTokens()
   }
 
   destroyed() {
@@ -358,6 +366,24 @@ export default class MyAccount extends Vue {
     this.$refs.delegateModalRef.show(null, '')
   }
 
+  async checkUnclaimedLoomTokens() {
+    try {
+      let unclaimAmount = await this.getUnclaimedLoomTokens()
+      this.unclaimTokens = unclaimAmount
+      console.log("unclaimAmount account",unclaimAmount);
+    } catch (error) {
+      this.setErrorMsg("Checking unclamed tokens error", error)
+    }
+  }
+
+  async reclaimDepositHandler() {
+    try {
+      let result = await this.reclaimDeposit()
+      console.log("result",result);
+    } catch (err) {
+      this.setErrorMsg("Error reclaiming tokens", err);
+    }
+  }
 
   async connectFromModal() {
     try {

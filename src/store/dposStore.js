@@ -130,6 +130,8 @@ export default {
     setCachedEvents(state, payload) {
       state.cachedGatewayEvents = payload
       localStorage.setItem("cachedEvents", JSON.stringify(payload))
+
+    },
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
       localStorage.removeItem("selectedLedgerPath")

@@ -187,7 +187,8 @@ export default class HardwareWalletModal extends Vue {
       try {
         this.setShowLoadingSpinner(true)
         this.hdWallet = await LedgerWallet()
-      } catch (error) {
+      } catch (err) {
+        this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
         console.log("Error in LedgerWallet:", err);
         this.setShowLoadingSpinner(false)
         return
@@ -196,7 +197,8 @@ export default class HardwareWalletModal extends Vue {
     
     try {
       await this.hdWallet.init(path)
-    } catch (error) {
+    } catch (err) {
+      this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
       console.log("Error when trying to init hd wallet:", err);
       this.setShowLoadingSpinner(false)
       return
@@ -214,6 +216,7 @@ export default class HardwareWalletModal extends Vue {
         })
         i++
       } catch(err) {
+        this.setErrorMsg({msg: "Error loading your wallet accounts. Please try again.", forever: false, report:true, cause:err})
         console.log("Error when trying to get accounts:", err);
         return
       }

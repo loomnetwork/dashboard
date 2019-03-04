@@ -148,6 +148,7 @@ export default {
           await dispatch("DappChain/addMappingAsync", null, { root: true })
           commit("setShowLoadingSpinner", false)
           commit("setMappingSuccess", true)
+          commit("setSignWalletModal", false)
         } catch(err) {
           commit("setSignWalletModal", false)
           commit("setAlreadyMappedModal", true)

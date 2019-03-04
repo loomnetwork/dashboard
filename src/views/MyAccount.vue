@@ -81,6 +81,7 @@
                                   :balance="userBalance.mainnetBalance" 
                                   :transferAction="approveDeposit"
                                   :resolveTxSuccess="executeDeposit"
+                                  :pendingWithdrawAction="checkPendingWithdrawalReceipt"
                                   >
                                   <template #pendingMessage><p>Approving deposit...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
@@ -109,6 +110,9 @@
                               </b-tab>
                             </b-tabs>
                           </b-card>
+                          <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
+                            {{ $t('views.my_account.wait_tx') }}
+                        </b-modal> 
                         </div>
                       </div>
                     </b-card-body>
@@ -388,6 +392,8 @@ export default class MyAccount extends Vue {
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
     console.log("result",result);
+    this.$root.$emit("bv::show::modal", "wait-tx")
+    await this.refresh(true)
   }
 
   async checkPendingWithdrawalReceipt() {
@@ -395,11 +401,16 @@ export default class MyAccount extends Vue {
     this.unclaimWithdrawTokens = amount
     this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
     this.unclaimSignature = signature
+    console.log("sig", signature);
+    console.log("amount", amount);
+    
   }
 
   async reclaimWithdrawHandler() {
     let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
     console.log("reclaimWithdrawHandler result", result);
+    this.$root.$emit("bv::show::modal", "wait-tx")
+    await this.refresh(true)
   }
 
   async connectFromModal() {

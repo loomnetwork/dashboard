@@ -301,34 +301,29 @@ export default {
       }
       state.dposUser = user
     },
-    async depositAsync({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      // const mappingExist = await dispatch('ensureIdentityMappingExists')
-      // if (!mappingExist) {
-      //   console.log('Did not mapped with dAppChain Address')
-      //   await await dispatch('addMappingAsync')
-      // }
-      
-      const {amount} = payload
+    /**
+     * 
+     * @param {store} param0 
+     * @param {{amount}} payload 
+     * @returns {Promise<TransactionReceipt>}
+     */
+    depositAsync({ state }, {amount}) {
+      console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(amount, 'ether')
-      const tx = await user.depositAsync(new BN(weiAmount, 10))
-      await tx.wait()
+      const weiAmount = state.web3.utils.toWei(amount, 'ether')
+      return user.depositAsync(new BN(weiAmount, 10))
     },
-    async withdrawAsync({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      const {amount} = payload
+    /**
+     * 
+     * @param {store} param0 
+     * @param {{amount}} payload 
+     * @returns {Promise<TransactionReceipt>}
+     */
+    async withdrawAsync({ state }, {amount}) {
+      console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
       let weiAmount = state.web3.utils.toWei(amount, 'ether')
-      const tx = await user.withdrawAsync(new BN(weiAmount, 10))
-      await tx.wait()
-
+      return user.withdrawAsync(new BN(weiAmount, 10))
     },
     async approveAsync({ state, dispatch }, payload) {
 

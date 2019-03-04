@@ -44,13 +44,15 @@
     <div v-else-if="step==3" class="complete-transfer">
       <div v-if="!resolveTxSuccess || txSuccessPromise" class="pending">
         <b-spinner variant="primary" label="Spinning"/>
-        <p><slot name="confirmingMessage">Approval detected. Waiting for Ethereum confirmation.</slot>
-        Tx: <a :href="etherscanTxUrl" class="hash">{{txHash}}</a></p>
+        <p>
+          <slot name="confirmingMessage">Approval detected.</slot>
+          <a target="_blank" :href="etherscanTxUrl" class="hash">{{txHash}}</a>
+        </p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">
         <p><slot name="successTxt">Transaction succeeded.</slot><br/>
-        Tx: <a :href="etherscanTxUrl" class="hash">{{txHash}}</a></p>
+        Tx: <a target="_blank" :href="etherscanTxUrl" class="hash">{{txHash}}</a></p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
     </div>

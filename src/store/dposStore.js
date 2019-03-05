@@ -52,7 +52,7 @@ const defaultState = () => {
       // { key: 'Slashes', sortable: true },
     ],
     prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
-    latestBlockNumber: 0,
+    latestBlockNumber: null,
     cachedEvents: []
   }
 }
@@ -63,7 +63,7 @@ export default {
   state: defaultState(),
   getters: {
     getLatestBlockNumber(state) {
-      return state.latestBlockNumber || JSON.parse(localStorage.getItem("latestBlockNumber")) || 0
+      return state.latestBlockNumber || JSON.parse(localStorage.getItem("latestBlockNumber"))
     },
     getCachedEvents(state) {
       return state.cachedEvents || JSON.parse(localStorage.getItem("cachedEvents")) || []
@@ -79,7 +79,7 @@ export default {
     setConnectedToMetamask(state, payload) {
       state.connectedToMetamask = payload
     },
-    setWeb3(state, payload) {
+    async setWeb3(state, payload) {
       state.web3 = payload
     },
     setUserBalance(state, payload) {
@@ -166,12 +166,25 @@ export default {
           await dispatch("DappChain/addMappingAsync", null, { root: true })
           commit("setShowLoadingSpinner", false)
           commit("setMappingSuccess", true)
-        } catch(err) {
           commit("setSignWalletModal", false)
-          commit("setAlreadyMappedModal", true)
+        } catch(err) {
+          console.log("add mapping async error", err);
+          commit("setSignWalletModal", false)
+          if (err.message.includes("identity mapping already exists")) {
+            commit("setAlreadyMappedModal", true)
+          } else {
+            commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
+          }
         }
       } else if((state.status == 'no_mapping' && state.mappingError !== undefined)) {
-        commit("setAlreadyMappedModal", true)
+        commit("setSignWalletModal", false)
+        if (err.message.includes("identity mapping already exists")) {
+          commit("setAlreadyMappedModal", true)
+        } else {
+          commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
+        }
+      } else if (state.status == 'mapped') {
+        commit("setMappingSuccess", true)
       } 
       commit("setShowLoadingSpinner", false)
     },
@@ -348,11 +361,11 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
 
-      const { origin, target, validator, amount} = payload
+      const { origin, target, amount} = payload
       const user = rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, validator, amount)
+        await user.redelegateAsync(origin, target, amount)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)

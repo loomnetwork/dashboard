@@ -303,34 +303,29 @@ export default {
       }
       state.dposUser = user
     },
-    async depositAsync({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      // const mappingExist = await dispatch('ensureIdentityMappingExists')
-      // if (!mappingExist) {
-      //   console.log('Did not mapped with dAppChain Address')
-      //   await await dispatch('addMappingAsync')
-      // }
-      
-      const {amount} = payload
+    /**
+     * 
+     * @param {store} param0 
+     * @param {{amount}} payload 
+     * @returns {Promise<TransactionReceipt>}
+     */
+    depositAsync({ state }, {amount}) {
+      console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(amount, 'ether')
-      const tx = await user.depositAsync(new BN(weiAmount, 10))
-      await tx.wait()
+      const weiAmount = state.web3.utils.toWei(amount, 'ether')
+      return user.depositAsync(new BN(weiAmount, 10))
     },
-    async withdrawAsync({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      const {amount} = payload
+    /**
+     * 
+     * @param {store} param0 
+     * @param {{amount}} payload 
+     * @returns {Promise<TransactionReceipt>}
+     */
+    async withdrawAsync({ state }, {amount}) {
+      console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
       let weiAmount = state.web3.utils.toWei(amount, 'ether')
-      const tx = await user.withdrawAsync(new BN(weiAmount, 10))
-      await tx.wait()
-
+      return user.withdrawAsync(new BN(weiAmount, 10))
     },
     async approveAsync({ state, dispatch }, payload) {
 
@@ -545,7 +540,7 @@ export default {
         commit("DPOS/setStatus", "check_mapping", {root: true})
         commit('setMappingError', null)
         commit('setMappingStatus', null)
-        const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
+        const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)  
         const mappedEthAddress = mapping.to.local.toString()
 
         console.log("metamaskAddress", metamaskAddress);
@@ -577,10 +572,8 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
-        commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
-        throw Error(err.toString())
-      
+        commit('setMappingError', err.message)
+        throw Error(err.message.toString())
       }
     },
     async init({ state, commit, rootState }, payload) {

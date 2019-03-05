@@ -2,13 +2,14 @@
   <div class="faucet">
     <div class="faucet-content">
       <div class="container mb-5 column py-3 p-3 d-flex">
-        <h1>{{ $t('views.history.trade_history') }}</h1>
+        <h1>{{ $t('views.history.your_history') }}</h1>
         <div class="py-3">
           <div v-if="showHistoryTable"><faucet-table :items="history"></faucet-table></div>
           <div v-else>
             <h5>
-              You haven't made any trades yet
+              No activity detected in the last <span class="highlight">{{blockOffset}}</span> blocks
             </h5>
+            <h6>To search for events further back, please <a class="query-past-events" @click="goBackFurther">click here</a></h6>
             <small>Head over to the <router-link to="/validators">validators page</router-link> to get started</small>
           </div>
         </div>
@@ -61,6 +62,8 @@
     // "ERC20Received" = Deposit?
     // "TokenWithdrawn" = Withdraw?
 
+    blockOffset = 10000
+
     history = null
 
     async mounted() {
@@ -72,6 +75,11 @@
         // Query the latest 10k blocks
         await this.queryEvents()
       }
+    }
+
+    async goBackFurther() {
+      if(this.blockOffset < 10000*10) this.blockOffset+= 10000
+      await this.queryEvents()
     }
 
     async updateCachedEvents() {
@@ -101,7 +109,7 @@
       // Filter based on event type and user address
       let results = events.filter((event) => {
         return event.returnValues.from === this.currentMetamaskAddress ||
-              event.returnValues.owner === this.currentMetamaskAddress
+               event.returnValues.owner === this.currentMetamaskAddress        
       }).map((event) => {
         let type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
         let amount = event.returnValues.amount || event.returnValues.value || 0 
@@ -139,10 +147,13 @@
       let blockNumber = await this.web3.eth.getBlockNumber()
 
       // Fetch latest events
+
+      console.log("Fetching events with offset: ", this.blockOffset)
+
       let events = await this.GatewayInstance.getPastEvents(
         "allEvents",
         {
-          fromBlock: blockNumber-10000,
+          fromBlock: blockNumber-this.blockOffset,
           toBlock: blockNumber
         }
       )
@@ -150,7 +161,7 @@
       // Filter based on event type and user address
       let results = events.filter((event) => {
         return event.returnValues.from === this.currentMetamaskAddress ||
-              event.returnValues.owner === this.currentMetamaskAddress
+               event.returnValues.owner === this.currentMetamaskAddress        
       }).map((event) => {
         let type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
         let amount = event.returnValues.amount || event.returnValues.value || 0 
@@ -186,5 +197,9 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+  .query-past-events {
+    color: #007bff !important;
+    cursor: pointer;
   }
 </style>

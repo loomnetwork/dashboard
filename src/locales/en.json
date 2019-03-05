@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },
     "history": {
-      "trade_history": "Trade History",
+      "your_history": "Your History",
       "sort_by": "Sort by:",
       "item_1": "Item 1",
       "item_2": "Item 2",
@@ -176,7 +176,9 @@
       "your_account_appears_to_be": "Your account appears to be mapped with the following address:",
       "but_your_current_account_address": "but your current account address is:",
       "please_change_your_metamask_account": "Please change your Metamask account",
-      "please_check_your_metamask_account": "Please check your Metamask account and/or network"
+      "please_check_your_metamask_account": "Please check your Metamask account and/or network",
+      "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
+      "already_mapped": " Your selected accout is already mapped. Please select new account."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
@@ -206,6 +208,10 @@
       },
       "success_modal": {
         "success": "Success"
+      },
+      "hardware_wallet_modal": {
+        "unlock_hardware_wallet": "Unlock Hardware wallet",
+        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
       }
     },
     "blockExplorer": {

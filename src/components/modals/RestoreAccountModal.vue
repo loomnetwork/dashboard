@@ -20,6 +20,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+const bip39 = require('bip39')
+
 @Component({
 })
 
@@ -27,6 +29,13 @@ export default class RestoreAccountModal extends Vue {
   seeds = "";
   errorMessage = "";
   okHandler() {
+
+    let seedPhraseIsValid = bip39.validateMnemonic(this.seeds)
+    if(!seedPhraseIsValid) {
+      this.errorMessage = "Invalid seed phrase"
+      return
+    }
+
     const seedList = this.seeds.split(' ')
     if (seedList.length !== 12) {
       this.errorMessage = "Not 12 words..."

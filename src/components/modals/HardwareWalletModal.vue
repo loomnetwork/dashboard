@@ -16,7 +16,7 @@
 
         <b-card no-body class="wallet-config-container">
           <b-form-group v-if="accounts">
-            <div class="table-container">
+            <div class="table-container address-table">
               <table class="table b-table table-striped table-hover">
                 <tbody>
                   <b-form-radio-group v-model="selectedAddress"
@@ -43,7 +43,7 @@
     </b-container>
   </b-modal>
   <b-modal id="unlock-ledger-modal"  title="Unlock Hardware wallet" hide-footer centered no-close-on-backdrop> 
-      On your leadger, Please enter your pin code and login to the Ethereum app.
+    {{ $t('components.modals.hardware_wallet_modal.enter_pin_code') }}
   </b-modal>
 </div>
 </template>
@@ -72,6 +72,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
   },
   methods: {
     ...dposStore.mapMutations(['setCurrentMetamaskAddress', 
+                              'setConnectedToMetamask',
                               'setWeb3',
                               'setSelectedAccount', 
                               'setShowLoadingSpinner', 
@@ -83,7 +84,8 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ...dposStore.mapActions(['checkMappingAccountStatus']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
-      'init'
+      'init',
+      'registerWeb3'
     ]),
     },
   computed: {
@@ -101,7 +103,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
 export default class HardwareWalletModal extends Vue {
 
   hdWallet = undefined
-  maxAddresses = 10
+  maxAddresses = 99
   errorMsg = null
   accounts = []
 
@@ -135,7 +137,14 @@ export default class HardwareWalletModal extends Vue {
     }
     this.setSelectedLedgerPath(path)
     this.web3js = await initWeb3SelectedWallet(path)
+
+    // assert web3 address is the actual user selected address. Until we fully test/trust this thing...
+    const web3account = (await this.web3js.eth.getAccounts())[0]
+    console.assert(web3account === selectedAddress, 
+      `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
     this.setWeb3(this.web3js)
+    this.registerWeb3({web3: this.web3js})
+    this.setConnectedToMetamask(true)
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)
     if (this.mappingSuccess) {
@@ -187,8 +196,9 @@ export default class HardwareWalletModal extends Vue {
       try {
         this.setShowLoadingSpinner(true)
         this.hdWallet = await LedgerWallet()
-      } catch (error) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
+      } catch (err) {
+        this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
+        console.log("Error in LedgerWallet:", err);
         this.setShowLoadingSpinner(false)
         return
       }
@@ -196,8 +206,11 @@ export default class HardwareWalletModal extends Vue {
     
     try {
       await this.hdWallet.init(path)
-    } catch (error) {
-      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")  
+    } catch (err) {
+      this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
+      console.log("Error when trying to init hd wallet:", err);
+      this.setShowLoadingSpinner(false)
+      return
     }
 
     let i = 0
@@ -212,7 +225,8 @@ export default class HardwareWalletModal extends Vue {
         })
         i++
       } catch(err) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+        this.setErrorMsg({msg: "Error loading your wallet accounts. Please try again.", forever: false, report:true, cause:err})
+        console.log("Error when trying to get accounts:", err);
         return
       }
     }
@@ -265,7 +279,8 @@ export default class HardwareWalletModal extends Vue {
       this.setShowLoadingSpinner(true)
       this.hdWallet = await LedgerWallet()
     } catch(err) {
-        this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      this.setShowLoadingSpinner(false)
       return
     }
     this.$refs.modalRef.show()
@@ -301,6 +316,11 @@ label {
       width: 150px;
     }
   }
+}
+
+.address-table {
+  max-height: 280px;
+  overflow-y: scroll;
 }
 .wallet-config-container {
    width: 100%;

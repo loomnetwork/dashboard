@@ -100,8 +100,7 @@
       "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
       "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
       "reclaim_deposit": "Reclaim Deposit Tokens",
-      "withdraw_pending": "Complete Withdrawal"
-
+      "complete_withdraw": "Complete Withdrawal"
     },
     "my_delegations": {
       "no_delegations": "No Delegations"

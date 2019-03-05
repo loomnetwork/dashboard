@@ -103,7 +103,7 @@
                                 </div>
                                 <div v-if="unclaimWithdrawTokensETH > 0">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.withdraw_pending')}} </b-btn>
+                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
                                 </div>
                               </b-tab>
                             </b-tabs>
@@ -392,7 +392,7 @@ export default class MyAccount extends Vue {
     await this.checkPendingWithdrawalReceipt()
     await this.refresh(true)
   }
-  
+
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
     console.log("result",result);

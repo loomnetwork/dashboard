@@ -87,7 +87,12 @@
                                   <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
                                 </TransferStepper>
                               </b-tab>
+                              
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
+                                <template slot="title">
+                                  <span class="tab-title">Withdraw</span>
+                                  <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
+                                </template>
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
                                   @done="afterWithdrawalDone"
                                   :balance="userBalance.loomBalance" 
@@ -687,6 +692,10 @@ export default class MyAccount extends Vue {
 
   body {
     overflow-y: scroll;
+  }
+
+  .text-red {
+    color: #dc3545;
   }
 
   .custom-divider {

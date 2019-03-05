@@ -44,13 +44,15 @@
     <div v-else-if="step==3" class="complete-transfer">
       <div v-if="!resolveTxSuccess || txSuccessPromise" class="pending">
         <b-spinner variant="primary" label="Spinning"/>
-        <p><slot name="confirmingMessage">Approval detected. Waiting for Ethereum confirmation.</slot>
-        Tx: <a :href="etherscanTxUrl" class="hash">{{txHash}}</a></p>
+        <p>
+          <slot name="confirmingMessage">Approval detected.</slot>
+          <a target="_blank" :href="etherscanApprovalUrl" class="hash">{{txHash}}</a>
+        </p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">
-        <p><slot name="successTxt">Transaction succeeded.</slot><br/>
-        Tx: <a :href="etherscanTxUrl" class="hash">{{txHash}}</a></p>
+        <p><slot name="successTxt">Transaction sent:</slot><br/>
+        Tx: <a target="_blank" :href="etherscanDepositUrl" class="hash">{{txHash}}</a></p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
     </div>
@@ -73,7 +75,8 @@ export default class TransferStepper extends Vue {
   transferAmount = 0;
   tx = null;
   txHash = ''
-  etherscanTxUrl = ''
+  etherscanApprovalUrl = ''
+  etherscanDepositUrl = ''
   // {Promise} approval/execution promise
   approvalPromise = null;
   // set to true when approvalPromise fails
@@ -85,7 +88,9 @@ export default class TransferStepper extends Vue {
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
-      tx => this.transferExecuted(tx),
+      async (tx) => {
+        this.transferExecuted(tx)
+      },
       error => this.transferFailed(error)
     );
     this.step = 2;
@@ -95,10 +100,14 @@ export default class TransferStepper extends Vue {
     console.log("transfer executed " + tx.hash)
     this.tx = tx
     this.txHash = tx.hash
-    this.etherscanTxUrl = `https://etherscan.io/tx/${tx.hash}`
+    this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
     if (this.resolveTxSuccess) {
       this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
-      this.txSuccessPromise.then(() => this.transferSuccessful(), console.error)
+      this.txSuccessPromise.then((tx) => {
+    
+        this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
+        this.transferSuccessful(), console.error
+      })
     }
     this.step = 3;
   }

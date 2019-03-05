@@ -83,9 +83,9 @@
                                   :resolveTxSuccess="executeDeposit"
                                   :pendingWithdrawAction="checkPendingWithdrawalReceipt"
                                   >
-                                  <template #pendingMessage><p>Approving deposit...</p></template>
+                                  <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
-                                 <template #confirmingMessage>Approval detected. Completing transfer</template>
+                                  <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
                                 </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
@@ -350,6 +350,7 @@ export default class MyAccount extends Vue {
       address: this.userEthAddr
     })
     this.allowance = parseFloat(await this.checkAllowance())
+    this.currentAllowance = this.allowance
 
     let isLoading = false
     let stakedAmount = await this.getAccumulatedStakingAmount()  
@@ -470,7 +471,7 @@ export default class MyAccount extends Vue {
     console.assert(this.web3, "Expected web3 to be initialized")   
     const user = this.dposUser
     const gateway = user.ethereumGateway
-    const address = this.userAccount.address      
+    const address = this.userAccount.address    
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
       return this.web3.utils.fromWei(allowance.toString())
@@ -622,10 +623,11 @@ export default class MyAccount extends Vue {
     return approval
   }
 
-  executeDeposit(amount,approvalTx) {
+  async executeDeposit(amount,approvalTx) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
-      
+    
+    await approvalTx.wait()
     const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
     return this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
@@ -634,7 +636,7 @@ export default class MyAccount extends Vue {
 
   async completeDeposit() {
     this.setShowLoadingSpinner(true)
-    const weiAmount = new BN(this.web3.utils.toWei(this.allowance.toString(), 'ether'), 10)
+    const weiAmount = new BN(this.web3.utils.toWei(new BN(this.allowance), 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address

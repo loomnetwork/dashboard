@@ -72,6 +72,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
   },
   methods: {
     ...dposStore.mapMutations(['setCurrentMetamaskAddress', 
+                              'setConnectedToMetamask',
                               'setWeb3',
                               'setSelectedAccount', 
                               'setShowLoadingSpinner', 
@@ -83,7 +84,8 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ...dposStore.mapActions(['checkMappingAccountStatus']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
-      'init'
+      'init',
+      'registerWeb3'
     ]),
     },
   computed: {
@@ -141,6 +143,8 @@ export default class HardwareWalletModal extends Vue {
     console.assert(web3account === selectedAddress, 
       `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
     this.setWeb3(this.web3js)
+    this.registerWeb3({web3: this.web3js})
+    this.setConnectedToMetamask(true)
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)
     if (this.mappingSuccess) {

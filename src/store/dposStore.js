@@ -70,7 +70,7 @@ export default {
     setConnectedToMetamask(state, payload) {
       state.connectedToMetamask = payload
     },
-    setWeb3(state, payload) {
+    async setWeb3(state, payload) {
       state.web3 = payload
     },
     setUserBalance(state, payload) {
@@ -165,6 +165,8 @@ export default {
         } else {
           commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
         }
+      } else if (state.status == 'mapped') {
+        commit("setMappingSuccess", true)
       } 
       commit("setShowLoadingSpinner", false)
     },
@@ -341,11 +343,11 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
 
-      const { origin, target, validator, amount} = payload
+      const { origin, target, amount} = payload
       const user = rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, validator, amount)
+        await user.redelegateAsync(origin, target, amount)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)

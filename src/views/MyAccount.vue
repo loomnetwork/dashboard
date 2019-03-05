@@ -88,9 +88,8 @@
                                 </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
-                                <!-- <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" -->
-                                <TransferStepper
-                                  @done="checkPendingWithdrawalReceipt"
+                                <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
+                                  @done="afterWithdrawalDone"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -99,11 +98,11 @@
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
                                 <div v-if="unclaimDepositTokens > 0">
-                                <span> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </span>
+                                <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
                                 <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
                                 </div>
                                 <div v-if="unclaimWithdrawTokensETH > 0">
-                                <span> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </span>
+                                <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
                                 <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.withdraw_pending')}} </b-btn>
                                 </div>
                               </b-tab>
@@ -389,6 +388,11 @@ export default class MyAccount extends Vue {
 
   }
 
+  async afterWithdrawalDone () {
+    await this.checkPendingWithdrawalReceipt()
+    await this.refresh(true)
+  }
+  
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
     console.log("result",result);

@@ -583,8 +583,8 @@ export default class MyAccount extends Vue {
 
   async completeDeposit() {
     this.setShowLoadingSpinner(true)
-    const weiAmount = new BN(this.web3.utils.toWei(new BN(this.allowance), 'ether'), 10)
     try {
+      let weiAmount = new BN(this.web3.utils.toWei(""+this.allowance, 'ether'), 10)
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )

@@ -322,7 +322,7 @@ export default {
     async withdrawAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(new BN(amount), 'ether')
+      let weiAmount = state.web3.utils.toWei(amount, 'ether')
       return user.withdrawAsync(new BN(weiAmount, 10))
     },
     async approveAsync({ state, dispatch }, payload) {

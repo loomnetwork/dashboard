@@ -81,7 +81,6 @@
                                   :balance="userBalance.mainnetBalance" 
                                   :transferAction="approveDeposit"
                                   :resolveTxSuccess="executeDeposit"
-                                  :pendingWithdrawAction="checkPendingWithdrawalReceipt"
                                   >
                                   <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
                                   <template #failueMessage><p>Approval failed.</p></template>
@@ -89,7 +88,9 @@
                                 </TransferStepper>
                               </b-tab>
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
-                                <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
+                                <!-- <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" -->
+                                <TransferStepper
+                                  @done="checkPendingWithdrawalReceipt"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -396,6 +397,7 @@ export default class MyAccount extends Vue {
   }
 
   async checkPendingWithdrawalReceipt() {
+    console.log("checking....");
     const { signature, amount } = await this.getPendingWithdrawalReceipt()
     this.unclaimWithdrawTokens = amount
     if (amount != null) {
@@ -407,10 +409,15 @@ export default class MyAccount extends Vue {
   }
 
   async reclaimWithdrawHandler() {
-    let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
-    console.log("reclaimWithdrawHandler result", result);
-    this.$root.$emit("bv::show::modal", "wait-tx")
-    await this.refresh(true)
+    try {
+      let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
+      console.log("reclaimWithdrawHandler result", result);
+      this.$root.$emit("bv::show::modal", "wait-tx")
+      await this.refresh(true)
+    } catch (err) {
+      this.setErrorMsg(err.message)
+      console.error(err)
+    }
   }
 
   async connectFromModal() {

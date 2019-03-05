@@ -123,6 +123,7 @@ export default class TransferStepper extends Vue {
     }
     this.approvalPromise = null;
     this.hasTransferFailed = true;
+    this.$emit('done');
   }
 
   retryTransfer() {

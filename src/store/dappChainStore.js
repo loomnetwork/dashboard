@@ -611,8 +611,6 @@ export default {
         if(!receipt) return { signature: null, amount: null }
         const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
         const amount = receipt.tokenAmount
-        console.log("signature", signature);
-        console.log("amount", amount);
         return  { signature: signature, amount: amount }
       } catch (err) {
         console.log("Error get pending withdrawal receipt", err);
@@ -631,7 +629,7 @@ export default {
         return  result
       } catch (err) {
         console.log("Error withdrawal coin from gateway", err);
-        commit('setErrorMsg', 'Error withdrawal coin from gateway', { root: true, cause:err})       
+        throw Error(err.message)       
       }
     },
 

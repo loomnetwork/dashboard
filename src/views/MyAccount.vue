@@ -383,7 +383,6 @@ export default class MyAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
-    debugger
     this.unclaimDepositTokens = unclaimAmount.toNumber()
     console.log("unclaimAmount account",unclaimAmount.toNumber());
 

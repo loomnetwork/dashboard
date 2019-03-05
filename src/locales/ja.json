@@ -95,7 +95,12 @@
       "withdraw": "出金する",
       "use_maximum": "全額使用する",
       "transfer_to_plasmachain_for_staking": "PlasmaChainへ移転してステーキング",
-      "withdraw_to_metamask": "ウォレットへ出金"
+      "withdraw_to_metamask": "ウォレットへ出金",
+      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
+      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
+      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
+      "reclaim_deposit": "Reclaim Deposit Tokens",
+      "complete_withdraw": "Complete Withdrawal"
     },
     "my_delegations": {
       "no_delegations": "委任はありません"

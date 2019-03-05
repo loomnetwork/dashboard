@@ -383,6 +383,7 @@ export default class MyAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
+    debugger
     this.unclaimDepositTokens = unclaimAmount.toNumber()
     console.log("unclaimAmount account",unclaimAmount.toNumber());
 
@@ -623,7 +624,7 @@ export default class MyAccount extends Vue {
     const { web3, dposUser} = this
     const ethereumLoom  = dposUser.ethereumLoom
     const ethereumGateway  = dposUser._ethereumGateway
-    const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
+    const weiAmount = new BN(this.web3.utils.toWei(new BN(amount), 'ether'), 10)
     log('approve', ethereumGateway.address, weiAmount.toString())
     const approval = await ethereumLoom.functions.approve(
             ethereumGateway.address,

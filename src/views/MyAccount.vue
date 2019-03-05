@@ -87,8 +87,14 @@
                                   <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
                                 </TransferStepper>
                               </b-tab>
+                              
                               <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0">
-                                <TransferStepper 
+                                <template slot="title">
+                                  <span class="tab-title">Withdraw</span>
+                                  <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
+                                </template>
+                                <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
+                                  @done="afterWithdrawalDone"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -96,9 +102,20 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
+                                <div v-if="unclaimDepositTokens > 0">
+                                <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+                                </div>
+                                <div v-if="unclaimWithdrawTokensETH > 0">
+                                <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
+                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                </div>
                               </b-tab>
                             </b-tabs>
                           </b-card>
+                          <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
+                            {{ $t('views.my_account.wait_tx') }}
+                        </b-modal> 
                         </div>
                       </div>
                     </b-card-body>
@@ -234,7 +251,11 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getAccumulatedStakingAmount',
       'init',
       'checkMappingCompatability',
-      'getDpos2'
+      'getDpos2',
+      'getUnclaimedLoomTokens',
+      'reclaimDeposit',
+      'getPendingWithdrawalReceipt',
+      'withdrawCoinGatewayAsync'
     ])
   }
 })
@@ -247,29 +268,33 @@ export default class MyAccount extends Vue {
   amountToApprove = ""
   withdrawAmount = ""
   currentAllowance = 0
+  unclaimDepositTokens = 0
+  unclaimWithdrawTokens = 0
+  unclaimWithdrawTokensETH = 0
+  unclaimSignature = ""
 
-    emptyHistory = [
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
+  emptyHistory = [
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
   ]
 
   history = [
@@ -311,6 +336,8 @@ export default class MyAccount extends Vue {
   async mounted() {
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
+    await this.checkUnclaimedLoomTokens()
+    await this.checkPendingWithdrawalReceipt()
   }
 
   destroyed() {
@@ -359,6 +386,48 @@ export default class MyAccount extends Vue {
     this.$refs.delegateModalRef.show(null, '')
   }
 
+  async checkUnclaimedLoomTokens() {
+    let unclaimAmount = await this.getUnclaimedLoomTokens()
+    this.unclaimDepositTokens = unclaimAmount.toNumber()
+    console.log("unclaimAmount account",unclaimAmount.toNumber());
+
+  }
+
+  async afterWithdrawalDone () {
+    await this.checkPendingWithdrawalReceipt()
+    await this.refresh(true)
+  }
+
+  async reclaimDepositHandler() {
+    let result = await this.reclaimDeposit()
+    console.log("result",result);
+    this.$root.$emit("bv::show::modal", "wait-tx")
+    await this.refresh(true)
+  }
+
+  async checkPendingWithdrawalReceipt() {
+    console.log("checking....");
+    const { signature, amount } = await this.getPendingWithdrawalReceipt()
+    this.unclaimWithdrawTokens = amount
+    if (amount != null) {
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
+      this.unclaimSignature = signature
+      console.log("sig", signature);
+      console.log("amount", amount);
+    }
+  }
+
+  async reclaimWithdrawHandler() {
+    try {
+      let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
+      console.log("reclaimWithdrawHandler result", result);
+      this.$root.$emit("bv::show::modal", "wait-tx")
+      await this.refresh(true)
+    } catch (err) {
+      this.setErrorMsg(err.message)
+      console.error(err)
+    }
+  }
 
   async connectFromModal() {
     try {
@@ -559,7 +628,7 @@ export default class MyAccount extends Vue {
     const { web3, dposUser} = this
     const ethereumLoom  = dposUser.ethereumLoom
     const ethereumGateway  = dposUser._ethereumGateway
-    const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
+    const weiAmount = new BN(this.web3.utils.toWei(new BN(amount), 'ether'), 10)
     log('approve', ethereumGateway.address, weiAmount.toString())
     const approval = await ethereumLoom.functions.approve(
             ethereumGateway.address,
@@ -623,6 +692,10 @@ export default class MyAccount extends Vue {
 
   body {
     overflow-y: scroll;
+  }
+
+  .text-red {
+    color: #dc3545;
   }
 
   .custom-divider {

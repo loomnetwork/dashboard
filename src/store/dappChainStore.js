@@ -322,7 +322,7 @@ export default {
     async withdrawAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(amount, 'ether')
+      let weiAmount = state.web3.utils.toWei(new BN(amount), 'ether')
       return user.withdrawAsync(new BN(weiAmount, 10))
     },
     async approveAsync({ state, dispatch }, payload) {
@@ -576,6 +576,65 @@ export default {
         throw Error(err.message.toString())
       }
     },
+    async getUnclaimedLoomTokens({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
+        return unclaimAmount
+      } catch (err) {
+        console.log("Error check unclaim loom tokens", err);
+        commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true, cause:err})
+      }
+    },
+    async reclaimDeposit({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      const dappchainGateway = user.dappchainGateway
+      try {
+        await dappchainGateway.reclaimDepositorTokensAsync()
+      } catch (err) {
+        console.log("Error reclaiming tokens", err);
+        commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
+      }
+    },
+
+    async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        const receipt = await user.getPendingWithdrawalReceiptAsync()
+        if(!receipt) return { signature: null, amount: null }
+        const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+        const amount = receipt.tokenAmount
+        return  { signature: signature, amount: amount }
+      } catch (err) {
+        console.log("Error get pending withdrawal receipt", err);
+        commit('setErrorMsg', 'Error get pending withdrawal receipt', { root: true, cause:err})       
+      }
+    },
+
+    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
+        console.log("result", result);
+        return  result
+      } catch (err) {
+        console.log("Error withdrawal coin from gateway", err);
+        throw Error(err.message)       
+      }
+    },
+
     async init({ state, commit, rootState }, payload) {
 
       let privateKey

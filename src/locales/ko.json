@@ -107,14 +107,14 @@
       "no_delegations": "위임 내역 없음"
     },
     "redelegate": {
-      "redelegate": "Redelegate",
+      "redelegate": "다시 위임하기",
       "from": "보내는 사람",
       "to": "받는 사람"
     },
     "rewards": {
-      "unclaimed_rewards": "Unclaimed rewards:",
+      "unclaimed_rewards": "요청하지 않은 보상:",
       "you_have_yet_to_receive": "You have yet to receive any rewards",
-      "claim_reward": "Claim Reward"
+      "claim_reward": "보상 요청하기"
     },
     "validator_detail": {
       "state": "상태:",
@@ -147,7 +147,7 @@
       "twitter": "트위터",
       "telegram": "텔레그램",
       "email": "이메일",
-      "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
+      "loom_network_is_a_platform": "Loom Network는 이더리움 기반의 PaaS(Platform as a Service)로, 개발자들이 대규모의 탈중앙화 애플리케이션을 실행할 수 있도록 합니다. 이를 통해 개발자들은 세계에서 가장 안전한 퍼블릭 블록체인의 신뢰성 및 보안을 가지는 DApp을 만들 수 있습니다. 상용 수준의 서비스를 운영하는 데에 필요한 컴퓨팅 자원을 제공하면서 말이지요. Loom은 새로운 탈중앙화 웹의 토큰화된 애플리케이션 프로토콜을 목표로 합니다."
     },
     "faucet_header": {
       "eth_connected": "이더리움 연결됨",
@@ -164,7 +164,7 @@
       "dashboard": "대시보드",
       "wallet": "지갑",
       "my_staking": "내 스테이킹",
-      "my_stakes": "My Stakes",
+      "my_stakes": "내 스테이크",
       "status": "상태",
       "block_explorer": "블록 탐색기"
     },

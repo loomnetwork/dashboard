@@ -89,57 +89,58 @@ export default class TransferStepper extends Vue {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
       async (tx) => {
-        console.log("in approvalPromise then");
         this.transferExecuted(tx)
       },
       error => this.transferFailed(error)
     );
-    console.log("out approvalPromise then");
     this.step = 2;
   }
 
   transferExecuted(tx) {
-    console.log("transfer executed " + tx.hash)
-    this.tx = tx
-    this.txHash = tx.hash
-    this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
-    console.log("this.resolveTxSuccess", this.resolveTxSuccess);
-    
-    if (this.resolveTxSuccess) {
-      // resolved of deposit
-      console.log("in this.resolveTxSuccess");
+    if (tx) {
+      this.tx = tx
+      this.txHash = tx.hash
+      this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
       
-      this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
-      console.log("this.txSuccessPromise",this.txSuccessPromise);
-      
-      this.txSuccessPromise.then((tx) => {
-        console.log("in this.resolveTxSuccess then");
-        this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
-        this.transferSuccessful(), console.error
-      })
-      console.log("in this.resolveTxSuccess after then");
+      if (this.resolveTxSuccess) {
+        // resolved of deposit
+        this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )        
+        this.txSuccessPromise.then((tx) => {
+          this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
+          this.transferSuccessful(), console.error
+        })
 
+      } else {
+        // resolved of withdraw
+        this.$emit('withdrawalDone'); //this will call afterWithdrawalDone() of myAccount page
+      }
+      this.step = 3;
     } else {
-      console.log("this.resolveTxSuccess else");
-      // resolved of withdraw
-      this.$emit('withdrawalDone'); //this will call checkPendingWithdrawalReceipt() of myAccount page
+      // withdraw fail: in IF case of executeWithdrawal()
+      this.transferFailed(new Error("signature, amount didn't get update yet."))
     }
-    console.log("out of if resolveTxSuccess");
-    this.step = 3;
+
   }
 
   transferFailed(error) {
-    if (error.message.indexOf("User denied transaction signature") >= 1) {
+    if (error.message.includes("User denied transaction signature")) {
       this.errorMessage = "You rejected the transaction"
+      this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page 
+      return    
+    } 
+    else if(error.message.includes("signature, amount didn't get update yet") || this.resolveTxSuccess == undefined) {
+      this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page      
+      return
     }
     else {
       this.errorMessage = "Transfer failed for unknown reason..."
       console.error('transferFailed',error)
       // report to sentry
     }
+    
     this.approvalPromise = null;
     this.hasTransferFailed = true;
-    this.$emit('withdrawalDone'); //this will call checkPendingWithdrawalReceipt() of myAccount page
+    
   }
 
   retryTransfer() {

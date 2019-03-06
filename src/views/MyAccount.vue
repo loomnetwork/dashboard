@@ -95,6 +95,7 @@
                                 </template>
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
                                   @withdrawalDone="afterWithdrawalDone"
+                                  @withdrawalFailed="afterWithdrawalFailed"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -346,6 +347,10 @@ export default class MyAccount extends Vue {
     this.currentAllowance = await this.checkAllowance()
     await this.checkUnclaimedLoomTokens()
     await this.checkPendingWithdrawalReceipt()
+    if (this.receipt) {
+      this.hasReceiptHandler(this.receipt)
+    }
+
   }
 
   destroyed() {
@@ -404,14 +409,19 @@ export default class MyAccount extends Vue {
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.checkPendingWithdrawalReceipt()
-    console.log("this.receipt after withdraw done",this.receipt);
-    this.setWithdrewSignature(this.receipt.signature)
+    if(this.receipt){
+      this.setWithdrewSignature(this.receipt.signature)
+    }
+    await this.refresh(true)
+  }
+
+  async afterWithdrawalFailed () {
+    await this.checkPendingWithdrawalReceipt()
     await this.refresh(true)
   }
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
-    console.log("result",result);
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.refresh(true)
   }
@@ -419,19 +429,12 @@ export default class MyAccount extends Vue {
   async checkPendingWithdrawalReceipt() {
     console.log("checking....");
     this.receipt = await this.getPendingWithdrawalReceipt()
-    this.unclaimWithdrawTokens = this.receipt.amount
-    if (this.receipt != null) {
-      // have a pending receipt
-      this.hasReceiptHandler(this.receipt)
-      console.log("sig", this.receipt.signature);
-      console.log("amount", this.receipt.amount);
-    }
   }
 
   hasReceiptHandler(receipt) {
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
-    // if(receipt.signature) {
       // have pending withdrawal
+      this.unclaimWithdrawTokens = receipt.amount
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())
       this.unclaimSignature = receipt.signature
     } else if (receipt.amount) {
@@ -442,8 +445,8 @@ export default class MyAccount extends Vue {
 
   async reclaimWithdrawHandler() {
     try {
-      let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
-      console.log("reclaimWithdrawHandler result", result);
+      let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
+      await tx.wait()
       this.$root.$emit("bv::show::modal", "wait-tx")
       await this.refresh(true)
     } catch (err) {
@@ -667,23 +670,21 @@ export default class MyAccount extends Vue {
 
   }
 
-  executeWithdrawal(amount) {
+  async executeWithdrawal(amount) {
     // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
-    // note:  withdrawAsync returns Promise<TransactionReceipt>
-    return this.withdrawAsync({amount})
-  }
-
-
-  resolveWithdrawSuccess(txReceipt) {
-    // return new Promise((resolve) => setTimeout(resolve,10000))
-    // todo
-    // const address = [GatewayAddress,userEthAddress]
-    // const topics = ?
-    // const txHash txReceipt.transactionHash
-    // return new Promise((resolve,reject) => {
-    //   const sub = web3.eth.subscribe('logs',{address,topics});
-    //   sub.on('data',(result) => resolve() && sub.unsubscribe());
-    // })
+    // note:  withdrawAsync returns Promise<TransactionReceipt>    
+    await this.checkPendingWithdrawalReceipt()
+    if (this.receipt) {
+      // have a pending receipt
+      this.hasReceiptHandler(this.receipt)
+      console.log("sig", this.receipt.signature);
+      console.log("amount", this.receipt.amount);
+      return
+    } else {
+      let tx = await this.withdrawAsync({amount})
+      await tx.wait()
+      return tx
+    }
   }
 }
 </script>

@@ -354,7 +354,7 @@ export default class MyAccount extends Vue {
       web3: this.web3,
       address: this.userEthAddr
     })
-    this.allowance = parseFloat(await this.checkAllowance())
+    this.allowance = parseInt(await this.checkAllowance())
     this.currentAllowance = this.allowance
 
     let isLoading = false
@@ -363,8 +363,8 @@ export default class MyAccount extends Vue {
     await this.getDpos2()
     this.setUserBalance({
       isLoading,
-      loomBalance: parseFloat(loomBalance),
-      mainnetBalance: parseFloat(mainnetBalance),
+      loomBalance: parseInt(loomBalance),
+      mainnetBalance: parseInt(mainnetBalance),
       stakedAmount
     })
   }

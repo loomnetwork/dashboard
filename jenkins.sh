@@ -3,7 +3,9 @@
 
 export SENTRY_ORG=loom-network
 export SENTRY_PROJECT=loomgames-frontend
-export SENTRY_AUTH_TOKEN=cdee406313f047fd89156b6c0cf0b30e45112161ec424b81925782f53625e70b
+#export SENTRY_AUTH_TOKEN= #this is on the CI SERVER
+
+
 
 PRESET_DEV="dev-dashboard.dappchains.com"
 PRESET_STAGE="rinkeby-dashboard.dappchains.com" #future production
@@ -49,11 +51,13 @@ rm -rf dist
 
 yarn run build
 
+./node_modules/@sentry/cli/sentry-cli releases new $REV
+
 #temp hack to have all the cards ! 
 mkdir -p dist/faucet
 cd dist
-aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.map" --exclude "*.html" --exclude "*" --include "*.html"
-aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.map" --exclude "*.html" --cache-control 'max-age=86400'
+aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
+aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
 
 # TODO get the one for the faucet
 #if [ ! -z "${AWS_DISTRIBUTION_ID}" ]; then

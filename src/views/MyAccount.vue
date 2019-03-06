@@ -404,8 +404,6 @@ export default class MyAccount extends Vue {
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
     this.unclaimDepositTokens = unclaimAmount.toNumber()
-    console.log("unclaimAmount account",unclaimAmount.toNumber());
-
   }
 
   async afterWithdrawalDone () {
@@ -435,7 +433,6 @@ export default class MyAccount extends Vue {
   }
 
   async checkPendingWithdrawalReceipt() {
-    console.log("checking....");
     this.receipt = await this.getPendingWithdrawalReceipt()
   }
 
@@ -454,11 +451,8 @@ export default class MyAccount extends Vue {
   async reclaimWithdrawHandler() {
     try {
       this.isWithdrawalInprogress = true
-      let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
-      console.log("tx before wait", tx);
-      
+      let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
       await tx.wait()
-      console.log("tx after wait", tx);
       this.$root.$emit("bv::show::modal", "wait-tx")
       this.isWithdrawalInprogress = false
       await this.checkPendingWithdrawalReceipt()
@@ -697,8 +691,6 @@ export default class MyAccount extends Vue {
     if (this.receipt) {
       // have a pending receipt
       this.hasReceiptHandler(this.receipt)
-      console.log("sig", this.receipt.signature);
-      console.log("amount", this.receipt.amount);
       return
     } else {
       let tx = await this.withdrawAsync({amount})

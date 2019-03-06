@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。"
     },
     "history": {
-      "trade_history": "交易记录",
+      "your_history": "Your History",
       "sort_by": "排序方式：",
       "item_1": "第 1 项",
       "item_2": "第 2 项",
@@ -91,6 +91,7 @@
       "connect_to_deposit_funds": "连接以存币",
       "no_mapping_detected": "未检测到映射",
       "map_accounts": "映射账户",
+      "history": "History",
       "deposit": "存入",
       "withdraw": "取出",
       "use_maximum": "输入全部余额",
@@ -170,7 +171,8 @@
     "faucet_sidebar": {
       "my_account": "我的账户",
       "my_delegations": "我的委托",
-      "rewards": "奖励"
+      "rewards": "奖励",
+      "history": "History"
     },
     "layout": {
       "metamask_error": "Metamask 错误！？",

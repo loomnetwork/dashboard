@@ -99,7 +99,7 @@ export default class TransferStepper extends Vue {
     return this.gatewayBusy === false &&
         Number.isInteger(intAmount) && 
         intAmount > 0 &&
-        intAmount < this.balance
+        intAmount <= this.balance
   }
   
   startTransfer() {

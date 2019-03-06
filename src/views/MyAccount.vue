@@ -94,7 +94,7 @@
                                   <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
                                 </template>
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
-                                  @done="afterWithdrawalDone"
+                                  @withdrawalDone="afterWithdrawalDone"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -279,6 +279,7 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
+  receipt = null
 
   emptyHistory = [
   {
@@ -401,7 +402,10 @@ export default class MyAccount extends Vue {
   }
 
   async afterWithdrawalDone () {
+    this.$root.$emit("bv::show::modal", "wait-tx")
     await this.checkPendingWithdrawalReceipt()
+    console.log("this.receipt after withdraw done",this.receipt);
+    this.setWithdrewSignature(this.receipt.signature)
     await this.refresh(true)
   }
 
@@ -414,13 +418,13 @@ export default class MyAccount extends Vue {
 
   async checkPendingWithdrawalReceipt() {
     console.log("checking....");
-    const receipt = await this.getPendingWithdrawalReceipt()
-    this.unclaimWithdrawTokens = receipt.amount
-    if (receipt != null) {
+    this.receipt = await this.getPendingWithdrawalReceipt()
+    this.unclaimWithdrawTokens = this.receipt.amount
+    if (this.receipt != null) {
       // have a pending receipt
-      this.hasReceiptHandler(receipt)
-      console.log("sig", receipt.signature);
-      console.log("amount", receipt.amount);
+      this.hasReceiptHandler(this.receipt)
+      console.log("sig", this.receipt.signature);
+      console.log("amount", this.receipt.amount);
     }
   }
 
@@ -477,28 +481,6 @@ export default class MyAccount extends Vue {
 
     this.setShowLoadingSpinner(false)
     
-  }
-
-  async withdrawHandler() {
-    
-    if(this.withdrawAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.setShowLoadingSpinner(true)
-
-    try {
-      await this.withdrawAsync({amount: this.withdrawAmount})
-      this.setSuccess("Withdraw successfull")
-    } catch(err) {
-      console.error("Withdraw failed, error: ", err)
-      this.setError({msg: "Withdraw failed, please try again", err})
-    }
-    this.withdrawAmount = ""
-
-    this.setShowLoadingSpinner(false)
-
   }
 
   async checkAllowance() {    

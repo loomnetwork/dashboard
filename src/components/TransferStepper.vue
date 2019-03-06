@@ -89,10 +89,12 @@ export default class TransferStepper extends Vue {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
       async (tx) => {
+        console.log("in approvalPromise then");
         this.transferExecuted(tx)
       },
       error => this.transferFailed(error)
     );
+    console.log("out approvalPromise then");
     this.step = 2;
   }
 
@@ -101,15 +103,28 @@ export default class TransferStepper extends Vue {
     this.tx = tx
     this.txHash = tx.hash
     this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
-    if (this.resolveTxSuccess) {
-      this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
-      this.txSuccessPromise.then((tx) => {
+    console.log("this.resolveTxSuccess", this.resolveTxSuccess);
     
+    if (this.resolveTxSuccess) {
+      // resolved of deposit
+      console.log("in this.resolveTxSuccess");
+      
+      this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
+      console.log("this.txSuccessPromise",this.txSuccessPromise);
+      
+      this.txSuccessPromise.then((tx) => {
+        console.log("in this.resolveTxSuccess then");
         this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
         this.transferSuccessful(), console.error
-        this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
       })
+      console.log("in this.resolveTxSuccess after then");
+
+    } else {
+      console.log("this.resolveTxSuccess else");
+      // resolved of withdraw
+      this.$emit('withdrawalDone'); //this will call checkPendingWithdrawalReceipt() of myAccount page
     }
+    console.log("out of if resolveTxSuccess");
     this.step = 3;
   }
 
@@ -124,7 +139,7 @@ export default class TransferStepper extends Vue {
     }
     this.approvalPromise = null;
     this.hasTransferFailed = true;
-    this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
+    this.$emit('withdrawalDone'); //this will call checkPendingWithdrawalReceipt() of myAccount page
   }
 
   retryTransfer() {

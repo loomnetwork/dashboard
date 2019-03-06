@@ -73,7 +73,49 @@ module.exports = {
   },
   configureWebpack: config => {
     console.log('nodeenv:', process.env.NODE_ENV)
-    return {devtool: 'source-map'}
+    let plugins = []
+    // if(process.env.NODE_ENV !== 'development') plugins.push(
+    //   new PrerenderSpaPlugin({
+    //     staticDir: path.resolve(__dirname, 'dist'),
+    //     routes: ['/', '/browse', '/trading', '/cards', '/earlybacker'],
+    //     server: {
+    //       // Normally a free port is autodetected, but feel free to set this if needed.
+    //       port: 8001
+    //     },
+    //     renderer: new Renderer({
+    //       // renderAfterElementExists: '#app'
+    //       // Wait to render until a specified event is fired on the document.
+    //       // renderAfterDocumentEvent: 'render-event',
+    //       renderAfterTime: 5000,
+    //           // headless: false,
+    //         maxConcurrentRoutes: 1
+    //     })
+    //   })
+    // )
+    config.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            ecma: undefined,
+            warnings: false,
+            parse: {},
+            compress: {},
+            mangle: false, // Note `mangle.properties` is `false` by default.
+            module: false,
+            output: null,
+            toplevel: false,
+            nameCache: null,
+            ie8: false,
+            keep_classnames: undefined,
+            keep_fnames: false,
+            safari10: false,
+          },
+        }),
+      ]
+    }    
+    return {
+      plugins: plugins
+    }
   },
   chainWebpack: config => {
     config.module.rules.delete('eslint');

@@ -32,7 +32,7 @@
       "by_staking_your_tokens_with": "by staking your tokens with a validator.",
       "why_is_staking_important_for": "Why is staking important for PlasmaChain?",
       "as_plasma_chain_runs_a_delegated": "As PlasmaChain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for PlasmaChain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.",
-      "how_can_i_stake_my": "How can I stake my LOOM tokens on PlasmaChain?",
+      "how_can_i_stake_my": "PlasmaChain에 제 LOOM 토큰을 스테이킹하려면 어떻게 해야 하나요?",
       "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
       "create_an_account": "계정 생성",
       "generate_a_private_key": "개인 키 생성",

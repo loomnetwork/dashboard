@@ -33,7 +33,6 @@ const defaultState = () => {
     showSignWalletModal: false,
     showAlreadyMappedModal: false,
     mappingSuccess: false,
-    lastOracleSignature: null,
     gatewayBusy: false,
     userBalance: {
       isLoading: true,
@@ -119,9 +118,6 @@ export default {
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
       localStorage.removeItem("selectedLedgerPath")
-    },
-    setLastOracleSignature(state, signature) {
-      state.lastOracleSignature = signature
     },
     setGatewayBusy(state, busy) {
       state.gatewayBusy = busy

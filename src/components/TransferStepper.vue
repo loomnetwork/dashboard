@@ -25,11 +25,11 @@
             />
           </b-col>
           <b-col>
-            <b-btn variant="outline-primary" @click="transferAmount = balance">all ({{balance}})</b-btn>
+            <b-btn variant="outline-primary" @click="transferAmount = Math.floor(balance)">all ({{balance}})</b-btn>
           </b-col>
         </b-row>
       </b-container>
-      <b-btn @click="startTransfer" variant="primary" :disabled="!transferAmount ||transferAmount <= 0 || transferAmount > balance ">Transfer</b-btn>
+      <b-btn @click="startTransfer" variant="primary" :disabled="canTransfer === false">Transfer</b-btn>
     </div>
     <div v-else-if="step==2" class="approve-transfer">
       <div v-if="approvalPromise" class="pending">
@@ -60,6 +60,10 @@
 </template>
 <script>
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { createNamespacedHelpers } from 'vuex'
+
+const DPOSStore = createNamespacedHelpers('DPOS')
+
 
 @Component({
   props: [
@@ -67,7 +71,12 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
     "transferAction",   // function (amount) => Promise<TransactionReceipt>
     "resolveTxSuccess", // function (TransactionReceipt) => Promise<void>
     "executionTitle"
-  ]
+  ],
+  computed: {
+    ...DPOSStore.mapState([
+      'gatewayBusy',
+    ]),
+  }
 })
 export default class TransferStepper extends Vue {
   errorMessage = ''
@@ -85,6 +94,14 @@ export default class TransferStepper extends Vue {
   // only used when resolveTxSuccess is provided
   txSuccessPromise = null;
 
+  get canTransfer() {
+    let intAmount = parseInt(this.transferAmount)
+    return this.gatewayBusy === false &&
+        Number.isInteger(intAmount) && 
+        intAmount > 0 &&
+        intAmount < this.balance
+  }
+  
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(

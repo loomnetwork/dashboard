@@ -29,7 +29,7 @@
                           <div class="balance-container mt-2">
                             <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
                             <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong></h6>
-                            <div v-if="allowance"><small ><fa icon="fa exclamation-triangle"/> {{allowance}} LOOM out of mainnet balance awaiting transfer to plasmachain account</small> <b-btn size="sm" variant="outline-primary" style="display: inline-block;margin-left: 12px;" @click="completeDeposit">resume deposit</b-btn></div>                        
+                            <div v-if="allowance && !gatewayBusy"><small ><fa icon="fa exclamation-triangle"/> {{allowance}} LOOM out of mainnet balance awaiting transfer to plasmachain account</small> <b-btn size="sm" variant="outline-primary" style="display: inline-block;margin-left: 12px;" @click="completeDeposit">resume deposit</b-btn></div>                        
                             <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>                            
                           </div>                          
                         </div>
@@ -102,11 +102,11 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
-                                <div v-if="unclaimDepositTokens > 0">
+                                <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
                                 <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
                                 </div>
-                                <div v-if="unclaimWithdrawTokensETH > 0">
+                                <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
                                 <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
                                 </div>
@@ -369,19 +369,6 @@ export default class MyAccount extends Vue {
       mainnetBalance: parseFloat(mainnetBalance),
       stakedAmount
     })
-  }
-
-  async initWeb3() {
-    
-    if(window.ethereum) {
-      try {
-        await this.connectMetamask()
-      } catch(err) {
-        this.$refs.metamaskModalRef.show()  
-      }
-    } else {
-      this.$refs.metamaskModalRef.show()
-    }
   }
 
   openRequestDelegateModal() {

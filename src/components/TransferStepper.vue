@@ -110,6 +110,7 @@ export default class TransferStepper extends Vue {
       })
     }
     this.step = 3;
+    this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
   }
 
   transferFailed(error) {
@@ -123,6 +124,7 @@ export default class TransferStepper extends Vue {
     }
     this.approvalPromise = null;
     this.hasTransferFailed = true;
+    this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
   }
 
   retryTransfer() {

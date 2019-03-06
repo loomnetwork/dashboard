@@ -95,7 +95,12 @@
       "withdraw": "取出",
       "use_maximum": "输入全部余额",
       "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
-      "withdraw_to_metamask": "取回到你的钱包"
+      "withdraw_to_metamask": "取回到你的钱包",
+      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
+      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
+      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
+      "reclaim_deposit": "Reclaim Deposit Tokens",
+      "complete_withdraw": "Complete Withdrawal"
     },
     "my_delegations": {
       "no_delegations": "暂无委托"

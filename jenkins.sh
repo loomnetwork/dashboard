@@ -51,6 +51,10 @@ rm -rf dist
 
 yarn run build
 
+REV=`git rev-parse --short HEAD`
+
+export RELEASE=$REV
+
 ./node_modules/@sentry/cli/sentry-cli releases new $REV
 
 #temp hack to have all the cards ! 

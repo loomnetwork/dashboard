@@ -618,6 +618,7 @@ export default class MyAccount extends Vue {
     const ethereumLoom  = dposUser.ethereumLoom
     const ethereumGateway  = dposUser._ethereumGateway
     const weiAmount = new BN(this.web3.utils.toWei(new BN(amount), 'ether'), 10)
+    this.setGatewayBusy(true)
     log('approve', ethereumGateway.address, weiAmount.toString())
     const approval = await ethereumLoom.functions.approve(
             ethereumGateway.address,
@@ -625,21 +626,25 @@ export default class MyAccount extends Vue {
 
     //const receipt = await approval.wait()
     log('approvalTX', approval)
+    // we still need to execute deposit so keep gatewayBusy = true
     return approval
   }
 
   async executeDeposit(amount,approvalTx) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
-    
+    this.setGatewayBusy(true)
     await approvalTx.wait()
     const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
-    return this.dposUser._ethereumGateway.functions.depositERC20(
+    let result = await this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
+    this.setGatewayBusy(false)
+    return result
   }
 
   async completeDeposit() {
+    this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
     const weiAmount = new BN(this.web3.utils.toWei(new BN(this.allowance), 'ether'), 10)
     try {
@@ -650,7 +655,7 @@ export default class MyAccount extends Vue {
     } catch (error) {
       console.error(error)
     }
-
+    this.setGatewayBusy(false)
     this.setShowLoadingSpinner(false)
 
   }

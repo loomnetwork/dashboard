@@ -423,6 +423,7 @@ export default class MyAccount extends Vue {
       console.log("reclaimWithdrawHandler result", result);
       this.$root.$emit("bv::show::modal", "wait-tx")
       await this.refresh(true)
+      this.unclaimWithdrawTokens = 0
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)

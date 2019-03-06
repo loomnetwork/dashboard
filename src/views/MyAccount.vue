@@ -183,6 +183,7 @@ import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers
 import Web3 from 'web3'
 import BN from 'bn.js'
 import debug from 'debug'
+import { setTimeout } from 'timers';
 
 // should move this
 Vue.use(VueClipboard)
@@ -338,6 +339,11 @@ export default class MyAccount extends Vue {
     this.currentAllowance = await this.checkAllowance()
     await this.checkUnclaimedLoomTokens()
     await this.checkPendingWithdrawalReceipt()
+
+    this.$root.$on('done', async () => {
+      this.refresh()
+    })        
+
   }
 
   destroyed() {
@@ -346,27 +352,10 @@ export default class MyAccount extends Vue {
     }
   }
 
-  async refresh(poll) {    
-    console.log('refreshing balances...')
-    this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
-    let loomBalance = await this.getDappchainLoomBalance()    
-    let mainnetBalance = await this.getMetamaskLoomBalance({
-      web3: this.web3,
-      address: this.userEthAddr
-    })
-    this.allowance = parseFloat(await this.checkAllowance())
-    this.currentAllowance = this.allowance
-
-    let isLoading = false
-    let stakedAmount = await this.getAccumulatedStakingAmount()  
-      
-    await this.getDpos2()
-    this.setUserBalance({
-      isLoading,
-      loomBalance: parseFloat(loomBalance),
-      mainnetBalance: parseFloat(mainnetBalance),
-      stakedAmount
-    })
+  async refresh(poll) {
+    setTimeout(() => {
+      this.$root.$emit("refreshBalances")
+    }, 3000)
   }
 
   async initWeb3() {
@@ -645,9 +634,11 @@ export default class MyAccount extends Vue {
     
     await approvalTx.wait()
     const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
-    return this.dposUser._ethereumGateway.functions.depositERC20(
+    this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
-    )
+    ).then((tx) => {
+      return tx.wait()
+    })
   }
 
   async completeDeposit() {
@@ -666,10 +657,13 @@ export default class MyAccount extends Vue {
 
   }
 
-  executeWithdrawal(amount) {
+  async executeWithdrawal(amount) {
     // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
     // note:  withdrawAsync returns Promise<TransactionReceipt>
-    return this.withdrawAsync({amount})
+    let tx = await this.withdrawAsync({amount})
+    await tx.wait()
+    this.refresh()
+    return tx
   }
 
 

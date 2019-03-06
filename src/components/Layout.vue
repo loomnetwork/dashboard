@@ -122,12 +122,8 @@ export default class Layout extends Vue {
   ]
 
   created() {
-    this.$router.beforeEach((to, from, next) => {
-      this.$Progress.start()
-      next()
-    })
     this.$router.afterEach((to, from) => {
-      this.$Progress.finish()
+      this.$root.$emit("refreshBalances")
     })
   }
 
@@ -178,13 +174,9 @@ export default class Layout extends Vue {
 
   async mounted() {
 
-    if(this.$route.meta.requireDeps) {
-      this.attemptToInitialize()     
-    } else {
-      this.$root.$on('login', async () => {
-        this.attemptToInitialize()
-      })
-    }      
+    this.$root.$on('login', async () => {
+      this.attemptToInitialize()
+    })
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', async (accounts) => {
@@ -199,6 +191,7 @@ export default class Layout extends Vue {
     try {
       await this.initializeDependencies()
       this.$root.$emit("initialized")
+      this.$root.$emit("refreshBalances")
     } catch(err) {
       this.$root.$emit("logout")
       this.setMappingError(null)

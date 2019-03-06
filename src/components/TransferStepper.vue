@@ -104,13 +104,14 @@ export default class TransferStepper extends Vue {
     if (this.resolveTxSuccess) {
       this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
       this.txSuccessPromise.then((tx) => {
-    
         this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
-        this.transferSuccessful(), console.error
+        this.txSuccessPromise = null
+        this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
       })
+    } else {
+      this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
     }
     this.step = 3;
-    this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
   }
 
   transferFailed(error) {

@@ -126,7 +126,7 @@
       "unlocked": "已解除锁定"
     },
     "validator_list": {
-      "no_validators_available_please_try": "暂无验证者可选，请稍后再试",
+      "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
       "validators": "验证者"
     }
   },

@@ -126,7 +126,7 @@
       "unlocked": "Unlocked"
     },
     "validator_list": {
-      "no_validators_available_please_try": "위임 가능한 검증자가 없습니다. 나중에 다시 시도해주세요.",
+      "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
       "validators": "검증자"
     }
   },

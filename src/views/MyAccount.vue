@@ -216,6 +216,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DPOSStore.mapState([
       'status',
       'userBalance',
+      'gatewayBusy',
+      'lastOracleSignature',
       'connectedToMetamask',
       'currentMetamaskAddress'
     ]),
@@ -232,12 +234,13 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DPOSStore.mapActions([
       'checkIfConnected',
-      'getValidatorList'
     ]),
     ...DPOSStore.mapMutations([
       'setWeb3',
       'setShowLoadingSpinner',
       'setConnectedToMetamask',
+      'setLastOracleSignature',
+      'setGatewayBusy',
       'setUserBalance'
     ]),
     ...DappChainStore.mapActions([
@@ -271,7 +274,6 @@ export default class MyAccount extends Vue {
   unclaimDepositTokens = 0
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
-  unclaimSignature = ""
 
   emptyHistory = [
   {
@@ -411,7 +413,7 @@ export default class MyAccount extends Vue {
     this.unclaimWithdrawTokens = amount
     if (amount != null) {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
-      this.unclaimSignature = signature
+      this.setLastOracleSignature(signature)
       console.log("sig", signature);
       console.log("amount", amount);
     }
@@ -419,7 +421,7 @@ export default class MyAccount extends Vue {
 
   async reclaimWithdrawHandler() {
     try {
-      let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
+      let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.lastOracleSignature})
       console.log("reclaimWithdrawHandler result", result);
       this.$root.$emit("bv::show::modal", "wait-tx")
       await this.refresh(true)

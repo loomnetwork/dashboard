@@ -222,7 +222,11 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapState([
       'LoomTokenInstance',
       'dAppChainClient'
-    ])
+    ]),
+    withdrewSignature: function() {
+      let signature = localStorage.getItem('withdrewSignature')
+      return signature
+    }
   },
   methods: {
     ...mapMutations(['setErrorMsg', 'setSuccessMsg']),
@@ -239,6 +243,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setShowLoadingSpinner',
       'setConnectedToMetamask',
       'setUserBalance'
+    ]),
+    ...DappChainStore.mapMutations([
+      'setWithdrewSignature',
     ]),
     ...DappChainStore.mapActions([
       'registerWeb3',
@@ -407,13 +414,25 @@ export default class MyAccount extends Vue {
 
   async checkPendingWithdrawalReceipt() {
     console.log("checking....");
-    const { signature, amount } = await this.getPendingWithdrawalReceipt()
-    this.unclaimWithdrawTokens = amount
-    if (amount != null) {
-      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
-      this.unclaimSignature = signature
-      console.log("sig", signature);
-      console.log("amount", amount);
+    const receipt = await this.getPendingWithdrawalReceipt()
+    this.unclaimWithdrawTokens = receipt.amount
+    if (receipt != null) {
+      // have a pending receipt
+      this.hasReceiptHandler(receipt)
+      console.log("sig", receipt.signature);
+      console.log("amount", receipt.amount);
+    }
+  }
+
+  hasReceiptHandler(receipt) {
+    if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
+    // if(receipt.signature) {
+      // have pending withdrawal
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())
+      this.unclaimSignature = receipt.signature
+    } else if (receipt.amount) {
+      // signature, amount didn't get update yet. need to wait for oracle update
+      this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
   }
 

@@ -209,6 +209,13 @@ export default {
     },
     setDappChainConnected(state, payload) {
       state.isConnectedToDappChain = payload
+    },
+    setWithdrewSignature(state, payload) {
+      if(!payload) {
+        localStorage.removeItem('withdrewSignature');
+      } else {
+        localStorage.setItem('withdrewSignature', payload)
+      }
     }
   },
   actions: {

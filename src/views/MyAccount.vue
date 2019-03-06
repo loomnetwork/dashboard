@@ -109,7 +109,8 @@
                                 </div>
                                 <div v-if="unclaimWithdrawTokensETH > 0">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning"/>
                                 </div>
                               </b-tab>
                             </b-tabs>
@@ -281,6 +282,7 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
   receipt = null
+  isWithdrawalInprogress = false
 
   emptyHistory = [
   {
@@ -449,12 +451,14 @@ export default class MyAccount extends Vue {
 
   async reclaimWithdrawHandler() {
     try {
+      this.isWithdrawalInprogress = true
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
       console.log("tx before wait", tx);
       
       await tx.wait()
       console.log("tx after wait", tx);
       this.$root.$emit("bv::show::modal", "wait-tx")
+      this.isWithdrawalInprogress = false
       await this.checkPendingWithdrawalReceipt()
       if(this.receipt){
         this.setWithdrewSignature(this.receipt.signature)
@@ -464,6 +468,7 @@ export default class MyAccount extends Vue {
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)
+      this.isWithdrawalInprogress = false
     }
   }
 

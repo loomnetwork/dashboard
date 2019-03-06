@@ -5,7 +5,7 @@
              :show="!!showChromeWarning"
              class="text-center rmv-margin"
              ref="errorMsg">
-      <span>Ledger is experiencing timeout (U2F) errors with Chrome 72 (and latest Chromium Browsers - Brave and Opera), if you experience issues, try downgrading Chrome: <a href="https://support.ledger.com/hc/en-us/articles/360018810413-U2F-timeout-in-Chrome-browser" target="_blank">https://support.ledger.com/hc/en-us/articles/360018810413-U2F-timeout-in-Chrome-browser</a></span>
+      <span>Ledger is experiencing timeout (U2F) errors with Chrome 72, please try upgrading or switching to Opera or Brave.</span>
     </b-alert>    
     <b-alert variant="danger"
                dismissible

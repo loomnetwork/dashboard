@@ -137,6 +137,7 @@ const defaultState = () => {
     dAppChainClient: undefined,
     LoomTokenNetwork: undefined,
     LoomTokenInstance: undefined,
+    GatewayInstance: undefined,
     dposUser: undefined,
     dpos2: undefined,
     mappingStatus: undefined,
@@ -253,6 +254,7 @@ export default {
         const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LoomTokenNetwork.address)
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
+        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GatewayJSON.networks[network].address)
       } catch (err) {
         console.error(err)
       }

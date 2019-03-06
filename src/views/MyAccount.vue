@@ -109,8 +109,10 @@
                                 </div>
                                 <div v-if="unclaimWithdrawTokensETH > 0">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
-                                <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning"/>
+                                <div class="center-children">                                  
+                                  <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                  <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+                                </div>                                
                                 </div>
                               </b-tab>
                             </b-tabs>
@@ -833,7 +835,15 @@ export default class MyAccount extends Vue {
         height: 180px;
       }
     }
-  }  
+  }
+
+  .center-children {
+    display: flex;
+    align-items: center;
+    button {
+      margin-right: 12px;
+    }
+  }
 
 </style>
 

@@ -279,31 +279,36 @@ export default class FaucetHeader extends Vue {
   }
 
   mounted() { 
-    this.$root.$on('initialized', async () => {
+
+    // Start election cycle timer
+    await this.updateTimeUntilElectionCycle()
+    this.startTimer()
+
+    // Listen to refreshBalances event
+    this.$root.$on('refreshBalances', async () => {
       await this.pollingHandler()
-    })    
+    })
 
     this.$root.$on('logout', () => {
-      this.deleteIntervals()
       this.logOut()
     })
 
   }
 
-  async pollingHandler() {
-    if(this.userIsLoggedIn) {
-      this.startPolling()
-       // Get time until next election cycle
-       await this.updateTimeUntilElectionCycle()
-       this.startTimer()
-    } else {
-      this.$root.$on('login', async () => {
-        this.startPolling()
-        await this.updateTimeUntilElectionCycle()
-        this.startTimer()        
-      })
-    }
-  }
+  // async pollingHandler() {
+  //   if(this.userIsLoggedIn) {
+  //     this.startPolling()
+  //      // Get time until next election cycle
+  //      await this.updateTimeUntilElectionCycle()
+  //      this.startTimer()
+  //   } else {
+  //     this.$root.$on('login', async () => {
+  //       this.startPolling()
+  //       await this.updateTimeUntilElectionCycle()
+  //       this.startTimer()
+  //     })
+  //   }
+  // }
 
   startTimer() {
     this.timerRefreshInterval = setInterval(async () => this.decreaseTimer(), 1000)

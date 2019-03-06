@@ -411,12 +411,16 @@ export default class MyAccount extends Vue {
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
+      this.unclaimWithdrawTokensETH = 0
     }
     await this.refresh(true)
   }
 
   async afterWithdrawalFailed () {
     await this.checkPendingWithdrawalReceipt()
+    if(this.receipt) {
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
+    }
     await this.refresh(true)
   }
 
@@ -446,8 +450,16 @@ export default class MyAccount extends Vue {
   async reclaimWithdrawHandler() {
     try {
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
+      console.log("tx before wait", tx);
+      
       await tx.wait()
+      console.log("tx after wait", tx);
       this.$root.$emit("bv::show::modal", "wait-tx")
+      await this.checkPendingWithdrawalReceipt()
+      if(this.receipt){
+        this.setWithdrewSignature(this.receipt.signature)
+      }
+      this.unclaimWithdrawTokensETH = 0
       await this.refresh(true)
     } catch (err) {
       this.setErrorMsg(err.message)

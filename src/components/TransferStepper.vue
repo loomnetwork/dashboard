@@ -36,10 +36,10 @@
         <b-spinner variant="primary" label="Spinning"/>
         <p><slot name="pendingMessage"></slot></p>
       </div>
-      <div v-else-if="hasTransferFailed" class="failure">
+      <!-- <div v-else-if="hasTransferFailed" class="failure">
         <p><slot name="failureMessage">{{errorMessage}}</slot></p>
         <b-btn @click="retryTransfer">Retry</b-btn>
-      </div>
+      </div> -->
     </div>
     <div v-else-if="step==3" class="complete-transfer">
       <div v-if="!resolveTxSuccess || txSuccessPromise" class="pending">
@@ -126,11 +126,9 @@ export default class TransferStepper extends Vue {
     if (error.message.includes("User denied transaction signature")) {
       this.errorMessage = "You rejected the transaction"
       this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page 
-      return    
     } 
     else if(error.message.includes("signature, amount didn't get update yet") || this.resolveTxSuccess == undefined) {
       this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page      
-      return
     }
     else {
       this.errorMessage = "Transfer failed for unknown reason..."

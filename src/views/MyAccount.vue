@@ -413,6 +413,7 @@ export default class MyAccount extends Vue {
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
+      this.unclaimSignature = this.receipt.signature
       this.unclaimWithdrawTokensETH = 0
     }
     await this.refresh(true)
@@ -422,6 +423,7 @@ export default class MyAccount extends Vue {
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt) {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
+      this.unclaimSignature = this.receipt.signature
     }
     await this.refresh(true)
   }
@@ -462,6 +464,7 @@ export default class MyAccount extends Vue {
       await this.checkPendingWithdrawalReceipt()
       if(this.receipt){
         this.setWithdrewSignature(this.receipt.signature)
+        this.unclaimSignature = this.receipt.signature
       }
       this.unclaimWithdrawTokensETH = 0
       await this.refresh(true)

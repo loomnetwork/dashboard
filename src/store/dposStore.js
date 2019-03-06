@@ -51,7 +51,9 @@ const defaultState = () => {
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"]
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
+    latestBlockNumber: null,
+    cachedEvents: []
   }
 }
 
@@ -59,7 +61,14 @@ const defaultState = () => {
 export default {
   namespaced: true,
   state: defaultState(),
-  getters: {},
+  getters: {
+    getLatestBlockNumber(state) {
+      return state.latestBlockNumber || JSON.parse(localStorage.getItem("latestBlockNumber"))
+    },
+    getCachedEvents(state) {
+      return state.cachedEvents || JSON.parse(localStorage.getItem("cachedEvents")) || []
+    }
+  },  
   mutations: {
     setIsLoggedIn(state, payload) {
       state.isLoggedIn = payload
@@ -113,6 +122,15 @@ export default {
     },
     setSelectedAccount(state, payload) {
       state.selectedAccount = payload
+    },
+    setLatesBlockNumber(state, payload) {
+      state.latestBlockNumber = payload
+      localStorage.setItem("latestBlockNumber", JSON.stringify(payload))
+    },
+    setCachedEvents(state, payload) {
+      state.cachedGatewayEvents = payload
+      localStorage.setItem("cachedEvents", JSON.stringify(payload))
+
     },
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload

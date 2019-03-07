@@ -32,7 +32,7 @@ module.exports = {
   },
   runtimeCompiler: true,
   devServer: {
-    // https: true,
+    https: true,
     proxy: {
       '^/auth/*': {
         target: proxyUrl,

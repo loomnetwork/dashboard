@@ -12,6 +12,7 @@
       </h4>
     </header>
     <div v-if="step==1" class="set-amount">
+          <form>
       <b-container style="margin: 16px 0;padding: 0;">
         <b-row>
           <b-col>
@@ -20,7 +21,8 @@
               :placeholder="'max. ' + balance"
               v-model="transferAmount"
               :max="balance"
-              :min="0"
+              :min="1"
+              pattern="[1-9]\d*"
               step="1"
             />
           </b-col>
@@ -29,7 +31,8 @@
           </b-col>
         </b-row>
       </b-container>
-      <b-btn @click="startTransfer" variant="primary" :disabled="!transferAmount ||transferAmount <= 0 || transferAmount > balance ">Transfer</b-btn>
+      <b-btn @click="startTransfer" variant="primary" :disabled="! (Number.isInteger(new Number(transferAmount)) && transferAmount > 0 && transferAmount < balance) ">Transfer</b-btn>
+        </form>
     </div>
     <div v-else-if="step==2" class="approve-transfer">
       <div v-if="approvalPromise" class="pending">
@@ -72,7 +75,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 export default class TransferStepper extends Vue {
   errorMessage = ''
   step = 1;
-  transferAmount = 0;
+  transferAmount = 1;
   tx = null;
   txHash = ''
   etherscanApprovalUrl = ''
@@ -190,5 +193,8 @@ export default class TransferStepper extends Vue {
 }
 .hash {
   font-family: monospace;font-size: 16px;text-decoration: underline;
+}
+input:invalid {
+  background-color: red;
 }
 </style>

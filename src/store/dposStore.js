@@ -33,6 +33,7 @@ const defaultState = () => {
     showSignWalletModal: false,
     showAlreadyMappedModal: false,
     mappingSuccess: false,
+    gatewayBusy: false,
     userBalance: {
       isLoading: true,
       loomBalance: 0,
@@ -135,6 +136,9 @@ export default {
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
       sessionStorage.removeItem("selectedLedgerPath")
+    },
+    setGatewayBusy(state, busy) {
+      state.gatewayBusy = busy
     }
   },
   actions: {

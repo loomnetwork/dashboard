@@ -3,7 +3,12 @@ import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
 import BigNumber from 'bignumber.js';
 
+import Debug from "debug"
 
+Debug.enable("dashboard.dpos")
+const debug = Debug("dashboard.dpos")
+
+const DAILY_WITHDRAW_LIMIT = 500000
 
 const dynamicSort = (property) => {
   let sortOrder = 1
@@ -24,6 +29,8 @@ const defaultState = () => {
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
+    history: null,
+    withdrawLimit: DAILY_WITHDRAW_LIMIT,
     validators: null,
     status: "check_mapping",
     walletType: undefined,
@@ -376,9 +383,71 @@ export default {
         commit("setErrorMsg", {msg: "Failed to redelegate stake", forever: false,report:true,cause:err}, {root: true})
       }
 
+    },
+
+    async loadEthereumHistory({commit, getters, state}, {web3, gatewayInstance, address}) {
+      debug("loading history")
+      const cachedEvents = getters.getCachedEvents
+      // Get latest mined block from Ethereum
+      const toBlock = await web3.eth.getBlockNumber()
+      const fromBlock = toBlock - 7000
+
+      const eventsToNames = {
+        ERC20Received: "Deposit",
+        TokenWithdrawn: "Withdraw"
+      }
+      debug("loading history block range ",fromBlock, toBlock  )
+
+      // Fetch latest events
+      state.history = gatewayInstance.getPastEvents("allEvents", { fromBlock, toBlock })
+      .then((events) => {
+        debug("got %s events", events.length)
+        // Filter based on event type and user address
+        let results = events.filter((event) => {
+          return event.returnValues.from === address ||
+                  event.returnValues.owner === address        
+        })
+        .map((event) => {
+          let type = eventsToNames[event.event] ||  "Other"
+          let amount = event.returnValues.amount || event.returnValues.value || 0 
+          return {
+            "Block #" : event.blockNumber,
+            "Event"   : type,
+            "Amount"  : formatToCrypto(amount),
+            "Tx Hash" : event.transactionHash
+            }
+        })
+
+        // Combine cached events with new events
+        const mergedEvents = cachedEvents.concat(results)
+        debug('merged events', mergedEvents.length)
+          
+        // Store results
+        commit("setLatesBlockNumber", toBlock)
+        commit("setCachedEvents", mergedEvents)
+
+        // Display trades in the UI
+        return mergedEvents
+      })
+      .catch(e => {
+        console.error("error loading eth history", e)
+        throw e
+      })
+    },
+
+    async updateDailyWithdrawLimit({state}, history) {
+      // TODO externalise this
+      const limit = history
+        .filter(item => item.Event === "Withdraw") // and date is today
+        .reduce(
+          (left, item) => left - parseInt(item.Amount,10), 
+          DAILY_WITHDRAW_LIMIT
+        )
+      state.withdrawLimit =  Math.max(0, limit)
+      debug('state.withdrawLimit', state.withdrawLimit)
+      return state.withdrawLimit
     }
 
-  }
-
+  },
 
 }

@@ -6,6 +6,7 @@ import store from './store'
 import FirstPage from './views/FirstPage.vue'
 import MyAccount from './views/MyAccount.vue'
 import MyDelegations from './views/MyDelegations.vue'
+import History from './views/History.vue'
 import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
@@ -103,6 +104,15 @@ const router = new VueRouter({
         }      
       },
       {
+        path: 'history',
+        name: 'history',
+        component: History,
+        meta: {
+          requireLogIn: true,
+          requireDeps: true
+        }      
+      },      
+      {
         path: 'redelegate',
         name: 'redelegate',
         component: Redelegate,
@@ -173,7 +183,7 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
 
-  if(to.meta.requireLogIn && !localStorage.getItem('privatekey')) {
+  if(to.meta.requireLogIn && !sessionStorage.getItem('privatekey')) {
 
     if(to.name !== 'account') {
       store.dispatch('setError', "Login required")

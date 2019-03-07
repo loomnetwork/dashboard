@@ -1,12 +1,5 @@
 <template>
   <div id="faucet-header" @login="startPolling" ref="header" class="header">
-    <b-alert variant="warning"
-             dismissible
-             :show="!!showChromeWarning"
-             class="text-center rmv-margin"
-             ref="errorMsg">
-      <span>Ledger is experiencing timeout (U2F) errors with Chrome 72, please try upgrading or switching to Opera or Brave.</span>
-    </b-alert>    
     <b-alert variant="danger"
                dismissible
                :show="!!showErrorMsg"
@@ -259,7 +252,7 @@ export default class FaucetHeader extends Vue {
 
   logOut() {
     this.clearPrivateKey()
-    localStorage.removeItem("userIsLoggedIn")
+    sessionStorage.removeItem("userIsLoggedIn")
     this.setUserIsLoggedIn(false)
     this.setMappingError(null)
     this.setMappingStatus(null)
@@ -354,13 +347,6 @@ export default class FaucetHeader extends Vue {
 
   get loginText() {
     return this.userIsLoggedIn ? 'Log Out' : 'Log In'
-  }
-
-  get showChromeWarning() {
-    let agent = navigator.userAgent.toLowerCase()
-    let isChrome = /chrome|crios/.test(agent) && ! /edge|opr\//.test(agent)
-    let isBrave = isChrome && window.navigator.plugins.length === 0 && window.navigator.mimeTypes.length === 0
-    return isChrome && !isBrave
   }
 
   async refresh() {

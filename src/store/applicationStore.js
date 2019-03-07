@@ -38,16 +38,16 @@ export const state = {
 }
 
 function isUserLoggedIn() {
-  return JSON.parse(localStorage.getItem('userIsLoggedIn')) ? true : false
+  return JSON.parse(sessionStorage.getItem('userIsLoggedIn')) ? true : false
 }
 
 export const getters = {
   getPrivateKey(state) {
     if (state.privateKey) return state.privateKey
-    return localStorage.getItem('privatekey')
+    return sessionStorage.getItem('privatekey')
   },
   getUserIsLoggedIn(state) {    
-    return JSON.parse(localStorage.getItem('userIsLoggedIn'))
+    return JSON.parse(sessionStorage.getItem('userIsLoggedIn'))
   },  
 }
 
@@ -131,10 +131,10 @@ export const actions = {
     try {
       state.privateKey = null
       state.vaultClientToken = ''
-      localStorage.removeItem('privatekey')
-      localStorage.removeItem('vaultToken')
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('userIsLoggedIn')
+      sessionStorage.removeItem('privatekey')
+      sessionStorage.removeItem('vaultToken')
+      sessionStorage.removeItem('accessToken')
+      sessionStorage.removeItem('userIsLoggedIn')
       commit('setUserIsLoggedIn', false)
       commit('setSuccessMsg', 'You have successfully signed out')
     } catch (err) {
@@ -160,8 +160,8 @@ export const actions = {
     await instance.get(`${base}v1/entcubbyhole/loomauth`)
       .then(responseKey => {
         state.privateKey = responseKey.data.data.privatekey
-        localStorage.setItem('privatekey', responseKey.data.data.privatekey)
-        localStorage.setItem('userIsLoggedIn', true)
+        sessionStorage.setItem('privatekey', responseKey.data.data.privatekey)
+        sessionStorage.setItem('userIsLoggedIn', true)
         commit('setUserIsLoggedIn', true)
       })
       .catch(err => {
@@ -194,7 +194,7 @@ export const actions = {
       base = 'https://vault.delegatecall.com/'
     }
 
-    const vaultToken = localStorage.getItem('vaultToken')
+    const vaultToken = sessionStorage.getItem('vaultToken')
     let instance = axios.create({
       headers: { 'X-Vault-Token': vaultToken }
     })
@@ -206,8 +206,8 @@ export const actions = {
         }
       )
       state.privateKey = privateKeyString
-      localStorage.setItem('privatekey', privateKeyString)
-      localStorage.setItem('userIsLoggedIn', true)
+      sessionStorage.setItem('privatekey', privateKeyString)
+      sessionStorage.setItem('userIsLoggedIn', true)
       commit('setUserIsLoggedIn', true)
     } catch (err) {
       console.error(err)

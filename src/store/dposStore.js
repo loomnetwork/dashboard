@@ -1,3 +1,4 @@
+import axios from 'axios'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
@@ -61,7 +62,10 @@ const defaultState = () => {
     ],
     prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
     latestBlockNumber: null,
-    cachedEvents: []
+    cachedEvents: [],
+    dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
+    historyPromise: null,
+    dappChainEvents: []
   }
 }
 
@@ -146,6 +150,12 @@ export default {
     },
     setGatewayBusy(state, busy) {
       state.gatewayBusy = busy
+    },
+    setHistoryPromise(state, payload) {
+      state.historyPromise = payload
+    },
+    setDappChainEvents(state, payload) {
+      state.dappChainEvents = payload
     }
   },
   actions: {
@@ -382,6 +392,57 @@ export default {
         console.error(err)
         commit("setErrorMsg", {msg: "Failed to redelegate stake", forever: false,report:true,cause:err}, {root: true})
       }
+
+    },
+
+    async fetchDappChainEvents({ state, commit, dispatch }, payload) {
+
+      let historyPromise = axios.get(`${state.dappChainEventUrl}/eth:${state.currentMetamaskAddress}`)
+      // Store the unresolved promise
+      commit("setHistoryPromise", historyPromise)
+      
+      historyPromise.then((response) => {
+
+        return response.data.txs.filter((tx) => {
+
+          // Filter based on these events
+          if(tx.topic === "event:WithdrawLoomCoin" ||
+             tx.topic === "event:MainnetDepositEvent" ||
+             tx.topic === "event:MainnetWithdrawalEvent") { return tx }
+    
+        }).map((tx) => {
+          let type = ""
+          switch(tx.topic) {
+            case "event:MainnetDepositEvent":
+              type = "Deposit"
+              break
+            case "event:MainnetWithdrawalEvent":
+              type = "Withdraw"
+              break
+            case "event:WithdrawLoomCoin":
+              type = "Withdraw Begun"
+              break
+            default:
+              break
+          } 
+  
+          let amount = tx.token_amount
+
+          // Return events in this format
+          return {
+            "Block #" : tx.block_height,
+            "Event"   : type,
+            "Amount"  : formatToCrypto(amount),
+            "Tx Hash" : tx.tx_hash
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(err)
+      })
+      .then((results) => {
+        commit("setDappChainEvents", results)
+      })
 
     },
 

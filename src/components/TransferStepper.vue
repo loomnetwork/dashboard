@@ -12,6 +12,7 @@
       </h4>
     </header>
     <div v-if="step==1" class="set-amount">
+          <form>
       <b-container style="margin: 16px 0;padding: 0;">
         <b-row>
           <b-col>
@@ -20,8 +21,10 @@
               :placeholder="'max. ' + balance"
               v-model="transferAmount"
               :max="balance"
-              :min="0"
+              :min="1"
+              pattern="[1-9]\d*"
               step="1"
+              @keyup="validateAmount"
             />
           </b-col>
           <b-col>
@@ -29,7 +32,9 @@
           </b-col>
         </b-row>
       </b-container>
-      <b-btn @click="startTransfer" variant="primary" :disabled="canTransfer === false">Transfer</b-btn>
+      <b-btn @click="startTransfer" variant="primary" :disabled="amountErrors.length > 0">Transfer</b-btn>
+      &nbsp;<span class="error" v-for="e in amountErrors" :key="e">- {{e}} </span>
+        </form>
     </div>
     <div v-else-if="step==2" class="approve-transfer">
       <div v-if="approvalPromise" class="pending">
@@ -81,7 +86,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class TransferStepper extends Vue {
   errorMessage = ''
   step = 1;
-  transferAmount = 0;
+  transferAmount = 1;
   tx = null;
   txHash = ''
   etherscanApprovalUrl = ''
@@ -94,14 +99,25 @@ export default class TransferStepper extends Vue {
   // only used when resolveTxSuccess is provided
   txSuccessPromise = null;
 
-  get canTransfer() {
-    let intAmount = parseInt(this.transferAmount)
-    return this.gatewayBusy === false &&
-        Number.isInteger(intAmount) && 
-        intAmount > 0 &&
-        intAmount <= this.balance
+  amountErrors = []
+
+  validateAmount() {
+    const errors = []
+    const num = new Number(this.transferAmount)
+    const int = Math.floor(num)
+    if (int != num) {
+      errors.push('Only round amounts allowed')
+    }
+    if (int < 1) {
+      errors.push('At least 1 loom')
+    }
+    if (int > this.balance) {
+      errors.push('Mot enough funds in your account')
+    }
+    this.amountErrors = errors
   }
-  
+
+
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
@@ -226,5 +242,13 @@ export default class TransferStepper extends Vue {
 }
 .hash {
   font-family: monospace;font-size: 16px;text-decoration: underline;
+}
+input:invalid {
+  border: 1px solid red;
+  color: red;
+
+}
+.error {
+  color: red;
 }
 </style>

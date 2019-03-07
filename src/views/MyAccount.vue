@@ -388,8 +388,8 @@ export default class MyAccount extends Vue {
     await this.getDpos2()
     this.setUserBalance({
       isLoading,
-      loomBalance: parseInt(loomBalance),
-      mainnetBalance: parseInt(mainnetBalance),
+      loomBalance: loomBalance,
+      mainnetBalance: mainnetBalance,
       stakedAmount
     })
   }
@@ -637,13 +637,16 @@ export default class MyAccount extends Vue {
     }
   }
 
+
   async approveDeposit(amount) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
     const { web3, dposUser} = this
     const ethereumLoom  = dposUser.ethereumLoom
     const ethereumGateway  = dposUser._ethereumGateway
-    const weiAmount = new BN(this.web3.utils.toWei(new BN(amount), 'ether'), 10)
+    const tokens = new BN( "" + parseInt(amount,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
+    log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
     this.setGatewayBusy(true)
     log('approve', ethereumGateway.address, weiAmount.toString())
     const approval = await ethereumLoom.functions.approve(
@@ -661,7 +664,8 @@ export default class MyAccount extends Vue {
     console.assert(this.web3, "Expected web3 to be initialized")
     this.setGatewayBusy(true)
     await approvalTx.wait()
-    const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
+    const tokens = new BN( "" + parseInt(amount,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     let result = await this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
@@ -672,7 +676,8 @@ export default class MyAccount extends Vue {
   async completeDeposit() {
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const weiAmount = new BN(this.web3.utils.toWei(new BN(this.allowance), 'ether'), 10)
+    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address

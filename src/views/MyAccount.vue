@@ -385,8 +385,8 @@ export default class MyAccount extends Vue {
     await this.getDpos2()
     this.setUserBalance({
       isLoading,
-      loomBalance: parseInt(loomBalance),
-      mainnetBalance: parseInt(mainnetBalance),
+      loomBalance: loomBalance,
+      mainnetBalance: mainnetBalance,
       stakedAmount
     })
   }

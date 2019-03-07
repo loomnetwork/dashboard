@@ -312,8 +312,9 @@ export default {
     depositAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      const weiAmount = state.web3.utils.toWei(amount, 'ether')
-      return user.depositAsync(new BN(weiAmount, 10))
+      const tokens = new BN( "" + parseInt(amount,10)) 
+      const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
+      return user.depositAsync(weiAmount)
     },
     /**
      * 
@@ -324,8 +325,9 @@ export default {
     async withdrawAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(new BN(amount), 'ether')
-      return user.withdrawAsync(new BN(weiAmount, 10))
+      const tokens = new BN( "" + parseInt(amount,10)) 
+      const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
+      return user.withdrawAsync(weiAmount)
     },
     async approveAsync({ state, dispatch }, payload) {
 

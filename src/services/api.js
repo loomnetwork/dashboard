@@ -5,6 +5,7 @@ import { getDomainType } from '../utils'
 export default class ApiClient {
 
   constructor() {
+    this.baseUrl = this.getBaseUrl()
   }
 
   getBaseUrl() {
@@ -54,7 +55,7 @@ export default class ApiClient {
   post(endpoint, useHeaders, payload) {
     return axios({
       method: 'post',
-      url: endpoint,
+      url: this.baseUrl + endpoint,
       headers: useHeaders ? this.getHeaders() : {},
       data: payload
     })
@@ -63,7 +64,7 @@ export default class ApiClient {
   get(endpoint, useHeaders) {
     return axios({
       method: 'get',
-      url: endpoint,
+      url: this.baseUrl + endpoint,
       headers: useHeaders ? this.getHeaders() : {}
     })
   }

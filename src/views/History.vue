@@ -113,7 +113,6 @@
 
     // "ERC20Received" = Deposit?
     // "TokenWithdrawn" = Withdraw?
-    api = new ApiClient()
     blockOffset = 10000
     history = null
 

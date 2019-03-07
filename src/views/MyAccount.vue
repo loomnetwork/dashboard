@@ -76,7 +76,10 @@
                         <div style="width:100%">
                           <b-card no-body v-if="metamaskConnected">
                             <b-tabs card>
-                              <b-tab title="Deposit" v-if="userBalance.mainnetBalance > 0" active>
+                              <b-tab title="Deposit" v-if="!oracleEnabled" active>
+                                Plasmachain wallet is undergoing scheduled upgrades... 
+                              </b-tab>
+                              <b-tab title="Deposit" v-if="userBalance.mainnetBalance > 0 && oracleEnabled" active>
                                 <TransferStepper 
                                   :balance="userBalance.mainnetBalance" 
                                   :transferAction="approveDeposit"
@@ -88,7 +91,7 @@
                                 </TransferStepper>
                               </b-tab>
                               
-                              <b-tab title="Withdraw" v-if="userBalance.loomBalance > 0 || unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0">
+                              <b-tab title="Withdraw" v-if="oracleEnabled && (userBalance.loomBalance > 0 || unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0)">
                                 <template slot="title">
                                   <span class="tab-title">Withdraw</span>
                                   <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
@@ -272,6 +275,7 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
+  oracleEnabled = false
 
   emptyHistory = [
   {

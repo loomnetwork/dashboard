@@ -210,6 +210,13 @@ export default {
     },
     setDappChainConnected(state, payload) {
       state.isConnectedToDappChain = payload
+    },
+    setWithdrewSignature(state, payload) {
+      if(!payload) {
+        localStorage.removeItem('withdrewSignature');
+      } else {
+        localStorage.setItem('withdrewSignature', payload)
+      }
     }
   },
   actions: {
@@ -612,7 +619,7 @@ export default {
       const user = state.dposUser
       try {
         const receipt = await user.getPendingWithdrawalReceiptAsync()
-        if(!receipt) return { signature: null, amount: null }
+        if(!receipt) return null
         const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
         const amount = receipt.tokenAmount
         return  { signature: signature, amount: amount }

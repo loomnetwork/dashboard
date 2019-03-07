@@ -94,7 +94,8 @@
                                   <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
                                 </template>
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
-                                  @done="afterWithdrawalDone"
+                                  @withdrawalDone="afterWithdrawalDone"
+                                  @withdrawalFailed="afterWithdrawalFailed"
                                   :balance="userBalance.loomBalance" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
@@ -108,7 +109,10 @@
                                 </div>
                                 <div v-if="unclaimWithdrawTokensETH > 0">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-                                <b-btn variant="outline-primary" @click="reclaimWithdrawHandler"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                <div class="center-children">                                  
+                                  <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                  <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+                                </div>                                
                                 </div>
                               </b-tab>
                             </b-tabs>
@@ -222,7 +226,11 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapState([
       'LoomTokenInstance',
       'dAppChainClient'
-    ])
+    ]),
+    withdrewSignature: function() {
+      let signature = localStorage.getItem('withdrewSignature')
+      return signature
+    }
   },
   methods: {
     ...mapMutations(['setErrorMsg', 'setSuccessMsg']),
@@ -239,6 +247,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setShowLoadingSpinner',
       'setConnectedToMetamask',
       'setUserBalance'
+    ]),
+    ...DappChainStore.mapMutations([
+      'setWithdrewSignature',
     ]),
     ...DappChainStore.mapActions([
       'registerWeb3',
@@ -272,6 +283,8 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
+  receipt = null
+  isWithdrawalInprogress = false
 
   emptyHistory = [
   {
@@ -338,6 +351,10 @@ export default class MyAccount extends Vue {
     this.currentAllowance = await this.checkAllowance()
     await this.checkUnclaimedLoomTokens()
     await this.checkPendingWithdrawalReceipt()
+    if (this.receipt) {
+      this.hasReceiptHandler(this.receipt)
+    }
+
   }
 
   destroyed() {
@@ -389,43 +406,68 @@ export default class MyAccount extends Vue {
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
     this.unclaimDepositTokens = unclaimAmount.toNumber()
-    console.log("unclaimAmount account",unclaimAmount.toNumber());
-
   }
 
   async afterWithdrawalDone () {
+    this.$root.$emit("bv::show::modal", "wait-tx")
     await this.checkPendingWithdrawalReceipt()
+    if(this.receipt){
+      this.setWithdrewSignature(this.receipt.signature)
+      this.unclaimSignature = this.receipt.signature
+      this.unclaimWithdrawTokensETH = 0
+    }
+    await this.refresh(true)
+  }
+
+  async afterWithdrawalFailed () {
+    await this.checkPendingWithdrawalReceipt()
+    if(this.receipt) {
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
+      this.unclaimSignature = this.receipt.signature
+    }
     await this.refresh(true)
   }
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
-    console.log("result",result);
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.refresh(true)
   }
 
   async checkPendingWithdrawalReceipt() {
-    console.log("checking....");
-    const { signature, amount } = await this.getPendingWithdrawalReceipt()
-    this.unclaimWithdrawTokens = amount
-    if (amount != null) {
-      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(amount.toString())
-      this.unclaimSignature = signature
-      console.log("sig", signature);
-      console.log("amount", amount);
+    this.receipt = await this.getPendingWithdrawalReceipt()
+  }
+
+  hasReceiptHandler(receipt) {
+    if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
+      // have pending withdrawal
+      this.unclaimWithdrawTokens = receipt.amount
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())
+      this.unclaimSignature = receipt.signature
+    } else if (receipt.amount) {
+      // signature, amount didn't get update yet. need to wait for oracle update
+      this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
   }
 
   async reclaimWithdrawHandler() {
     try {
-      let result = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})
-      console.log("reclaimWithdrawHandler result", result);
+      this.isWithdrawalInprogress = true
+      let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
+      await tx.wait()
       this.$root.$emit("bv::show::modal", "wait-tx")
+      this.isWithdrawalInprogress = false
+      await this.checkPendingWithdrawalReceipt()
+      if(this.receipt){
+        this.setWithdrewSignature(this.receipt.signature)
+        this.unclaimSignature = this.receipt.signature
+      }
+      this.unclaimWithdrawTokensETH = 0
       await this.refresh(true)
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)
+      this.isWithdrawalInprogress = false
     }
   }
 
@@ -458,28 +500,6 @@ export default class MyAccount extends Vue {
 
     this.setShowLoadingSpinner(false)
     
-  }
-
-  async withdrawHandler() {
-    
-    if(this.withdrawAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.setShowLoadingSpinner(true)
-
-    try {
-      await this.withdrawAsync({amount: this.withdrawAmount})
-      this.setSuccess("Withdraw successfull")
-    } catch(err) {
-      console.error("Withdraw failed, error: ", err)
-      this.setError({msg: "Withdraw failed, please try again", err})
-    }
-    this.withdrawAmount = ""
-
-    this.setShowLoadingSpinner(false)
-
   }
 
   async checkAllowance() {    
@@ -666,23 +686,19 @@ export default class MyAccount extends Vue {
 
   }
 
-  executeWithdrawal(amount) {
+  async executeWithdrawal(amount) {
     // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
-    // note:  withdrawAsync returns Promise<TransactionReceipt>
-    return this.withdrawAsync({amount})
-  }
-
-
-  resolveWithdrawSuccess(txReceipt) {
-    // return new Promise((resolve) => setTimeout(resolve,10000))
-    // todo
-    // const address = [GatewayAddress,userEthAddress]
-    // const topics = ?
-    // const txHash txReceipt.transactionHash
-    // return new Promise((resolve,reject) => {
-    //   const sub = web3.eth.subscribe('logs',{address,topics});
-    //   sub.on('data',(result) => resolve() && sub.unsubscribe());
-    // })
+    // note:  withdrawAsync returns Promise<TransactionReceipt>    
+    await this.checkPendingWithdrawalReceipt()
+    if (this.receipt) {
+      // have a pending receipt
+      this.hasReceiptHandler(this.receipt)
+      return
+    } else {
+      let tx = await this.withdrawAsync({amount})
+      await tx.wait()
+      return tx
+    }
   }
 }
 </script>
@@ -819,7 +835,15 @@ export default class MyAccount extends Vue {
         height: 180px;
       }
     }
-  }  
+  }
+
+  .center-children {
+    display: flex;
+    align-items: center;
+    button {
+      margin-right: 12px;
+    }
+  }
 
 </style>
 

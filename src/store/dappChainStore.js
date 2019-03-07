@@ -92,7 +92,7 @@ function defaultChainId() {
 }
 
 const getChainUrls = () => {
-  let chainUrlsJSON = localStorage.getItem('chainUrls')
+  let chainUrlsJSON = sessionStorage.getItem('chainUrls')
   let chainUrls
   if (!chainUrlsJSON) {
     chainUrls = [
@@ -109,7 +109,7 @@ const getChainUrls = () => {
 }
 
 const getChainIndex = (chainUrls) => {
-  let chainIndex = localStorage.getItem('chainIndex')
+  let chainIndex = sessionStorage.getItem('chainIndex')
   if (!chainIndex || chainIndex >= chainUrls.length) chainIndex = 0
   return chainIndex
 }
@@ -210,6 +210,13 @@ export default {
     },
     setDappChainConnected(state, payload) {
       state.isConnectedToDappChain = payload
+    },
+    setWithdrewSignature(state, payload) {
+      if(!payload) {
+        sessionStorage.removeItem('withdrewSignature');
+      } else {
+        sessionStorage.setItem('withdrewSignature', payload)
+      }
     }
   },
   actions: {
@@ -221,7 +228,7 @@ export default {
       if (existingIndex >= 0) {
         if (state.chainIndex === existingIndex) return false
         state.chainIndex = existingIndex
-        localStorage.setItem('chainIndex', state.chainIndex)
+        sessionStorage.setItem('chainIndex', state.chainIndex)
       } else {
         let websockt, rpc
         if (payload.url.startsWith('ws')) {
@@ -241,8 +248,8 @@ export default {
         state.chainUrls = chains
         state.chainIndex = state.chainUrls.length - 1
       }
-      localStorage.setItem('chainIndex', state.chainIndex)
-      localStorage.setItem('chainUrls', JSON.stringify(state.chainUrls))
+      sessionStorage.setItem('chainIndex', state.chainIndex)
+      sessionStorage.setItem('chainUrls', JSON.stringify(state.chainUrls))
       
       return true
     },
@@ -281,7 +288,7 @@ export default {
       if (!rootState.DPOS.web3) {    
         await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
-      const privateKeyString = localStorage.getItem('privatekey')
+      const privateKeyString = sessionStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
@@ -309,11 +316,14 @@ export default {
      * @param {{amount}} payload 
      * @returns {Promise<TransactionReceipt>}
      */
-    depositAsync({ state }, {amount}) {
+    async depositAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
+      commit('setGatewayBusy', true)
       const user = state.dposUser
       const weiAmount = state.web3.utils.toWei(amount, 'ether')
-      return user.depositAsync(new BN(weiAmount, 10))
+      const res = user.depositAsync(new BN(weiAmount, 10))
+      commit('setGatewayBusy', false)
+      return res
     },
     /**
      * 
@@ -325,10 +335,14 @@ export default {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
       let weiAmount = state.web3.utils.toWei(new BN(amount), 'ether')
-      return user.withdrawAsync(new BN(weiAmount, 10))
+      commit('setGatewayBusy', true)
+      let res = await user.withdrawAsync(new BN(weiAmount, 10))
+      commit('setGatewayBusy', false)
+      return res
+
     },
     async approveAsync({ state, dispatch }, payload) {
-
+      commit('setGatewayBusy', true)
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
@@ -465,7 +479,7 @@ export default {
       return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {
-      const privateKeyString = localStorage.getItem('privatekey')
+      const privateKeyString = sessionStorage.getItem('privatekey')
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
@@ -582,6 +596,7 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
+      
       const user = state.dposUser
       try {
         let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
@@ -595,6 +610,7 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
+      commit('setGatewayBusy', true)
       const user = state.dposUser
       const dappchainGateway = user.dappchainGateway
       try {
@@ -603,6 +619,7 @@ export default {
         console.log("Error reclaiming tokens", err);
         commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
       }
+      commit('setGatewayBusy', false)
     },
 
     async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
@@ -612,7 +629,7 @@ export default {
       const user = state.dposUser
       try {
         const receipt = await user.getPendingWithdrawalReceiptAsync()
-        if(!receipt) return { signature: null, amount: null }
+        if(!receipt) return null
         const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
         const amount = receipt.tokenAmount
         return  { signature: signature, amount: amount }
@@ -627,9 +644,11 @@ export default {
         await dispatch('initDposUser')
       }
       const user = state.dposUser
+      commit('setGatewayBusy', true)
       try {
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
         console.log("result", result);
+        commit('setGatewayBusy', false)
         return  result
       } catch (err) {
         console.log("Error withdrawal coin from gateway", err);
@@ -640,7 +659,7 @@ export default {
     async init({ state, commit, rootState }, payload) {
 
       let privateKey
-      let privateKeyString = localStorage.getItem('privatekey')
+      let privateKeyString = sessionStorage.getItem('privatekey')
 
       if (!privateKeyString) {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })

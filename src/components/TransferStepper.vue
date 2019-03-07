@@ -25,11 +25,11 @@
             />
           </b-col>
           <b-col>
-            <b-btn variant="outline-primary" @click="transferAmount = balance">all ({{balance}})</b-btn>
+            <b-btn variant="outline-primary" @click="transferAmount = Math.floor(balance)">all ({{balance}})</b-btn>
           </b-col>
         </b-row>
       </b-container>
-      <b-btn @click="startTransfer" variant="primary" :disabled="!transferAmount ||transferAmount <= 0 || transferAmount > balance ">Transfer</b-btn>
+      <b-btn @click="startTransfer" variant="primary" :disabled="canTransfer === false">Transfer</b-btn>
     </div>
     <div v-else-if="step==2" class="approve-transfer">
       <div v-if="approvalPromise" class="pending">
@@ -60,6 +60,10 @@
 </template>
 <script>
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { createNamespacedHelpers } from 'vuex'
+
+const DPOSStore = createNamespacedHelpers('DPOS')
+
 
 @Component({
   props: [
@@ -67,7 +71,12 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
     "transferAction",   // function (amount) => Promise<TransactionReceipt>
     "resolveTxSuccess", // function (TransactionReceipt) => Promise<void>
     "executionTitle"
-  ]
+  ],
+  computed: {
+    ...DPOSStore.mapState([
+      'gatewayBusy',
+    ]),
+  }
 })
 export default class TransferStepper extends Vue {
   errorMessage = ''
@@ -80,11 +89,19 @@ export default class TransferStepper extends Vue {
   // {Promise} approval/execution promise
   approvalPromise = null;
   // set to true when approvalPromise fails
-  hasTransferFailed;
+  hasTransferFailed = false;
   txSuccessfull = false
   // only used when resolveTxSuccess is provided
   txSuccessPromise = null;
 
+  get canTransfer() {
+    let intAmount = parseInt(this.transferAmount)
+    return this.gatewayBusy === false &&
+        Number.isInteger(intAmount) && 
+        intAmount > 0 &&
+        intAmount <= this.balance
+  }
+  
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
     this.approvalPromise = this.transferAction(this.transferAmount).then(
@@ -97,34 +114,53 @@ export default class TransferStepper extends Vue {
   }
 
   transferExecuted(tx) {
-    console.log("transfer executed " + tx.hash)
-    this.tx = tx
-    this.txHash = tx.hash
-    this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
-    if (this.resolveTxSuccess) {
-      this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )
-      this.txSuccessPromise.then((tx) => {
-    
-        this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
-        this.transferSuccessful(), console.error
-      })
+    if (tx) {
+      this.tx = tx
+      this.txHash = tx.hash
+      this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
+      
+      if (this.resolveTxSuccess) {
+        // resolved of deposit
+        this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )        
+        this.txSuccessPromise.then((tx) => {
+          this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
+          this.transferSuccessful(), console.error
+        })
+
+      } else {
+        // resolved of withdraw
+        this.$emit('withdrawalDone'); //this will call afterWithdrawalDone() of myAccount page
+      }
+      this.step = 3;
+    } else {
+      // withdraw fail: in IF case of executeWithdrawal()
+      this.transferFailed(new Error("signature, amount didn't get update yet."))
     }
-    this.step = 3;
-    this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
+
   }
 
   transferFailed(error) {
-    if (error.message.indexOf("User denied transaction signature") >= 1) {
+    if (error.message.includes("User denied transaction signature")) {
       this.errorMessage = "You rejected the transaction"
+      this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page 
+      if (this.resolveTxSuccess) {
+        // set to true only deposit case, this will shoe retry button
+        this.hasTransferFailed = true;
+      }
+    } 
+    else if(error.message.includes("signature, amount didn't get update yet") || this.resolveTxSuccess == undefined) {
+      this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page      
     }
     else {
       this.errorMessage = "Transfer failed for unknown reason..."
       console.error('transferFailed',error)
+      this.hasTransferFailed = true;
       // report to sentry
     }
+    
     this.approvalPromise = null;
-    this.hasTransferFailed = true;
-    this.$emit('done'); //this will call checkPendingWithdrawalReceipt() of myAccount page
+   
+    
   }
 
   retryTransfer() {

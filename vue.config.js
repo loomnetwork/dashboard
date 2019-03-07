@@ -96,6 +96,7 @@ module.exports = {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
+            sourceMap: true,
             ecma: undefined,
             warnings: false,
             parse: {},

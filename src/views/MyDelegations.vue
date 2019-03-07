@@ -94,10 +94,11 @@ export default class MyDelegations extends Vue {
 
     const candidates = await this.dposUser.listCandidatesAsync()
 
-    for (let delegation of delegationsArray) {
-        const c = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
-        this.delegations.push(
-              { 
+    this.delegations = delegationsArray
+      .filter(d => !d.amount.isZero())
+      .map(d => {
+        let candidate = candidates.find(c => c.address.equals(d.validator))
+        return { 
                 "Name": c.name,
                 "Amount": `${formatToCrypto(delegation.amount)}`,
                 "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
@@ -105,8 +106,8 @@ export default class MyDelegations extends Vue {
                 "Locktime": `${new Date(delegation.lockTime * 1000)}`,
                 "State": `${this.states[delegation.state]}`,
                 _cellVariants: { Status: 'active'}
-              })
-    }
+              }     
+      })
 
     this.loading = false
   }

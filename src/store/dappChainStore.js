@@ -213,9 +213,9 @@ export default {
     },
     setWithdrewSignature(state, payload) {
       if(!payload) {
-        localStorage.removeItem('withdrewSignature');
+        sessionStorage.removeItem('withdrewSignature');
       } else {
-        localStorage.setItem('withdrewSignature', payload)
+        sessionStorage.setItem('withdrewSignature', payload)
       }
     }
   },

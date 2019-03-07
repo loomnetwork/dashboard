@@ -176,6 +176,9 @@ export default class Layout extends Vue {
 
   async mounted() {
 
+    // Clear any remaining local storage
+    localStorage.clear()
+      
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
     } else {

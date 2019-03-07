@@ -49,6 +49,8 @@ echo "Using bucket $BUCKET_PATH."
 # bundle exec middleman s3_sync --build --bucket=$BUCKET_PATH
 rm -rf dist
 
+export NODE_OPTIONS="--max-old-space-size=8048"
+
 yarn run build
 
 REV=`git rev-parse --short HEAD`

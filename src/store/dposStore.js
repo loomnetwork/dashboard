@@ -33,6 +33,7 @@ const defaultState = () => {
     showSignWalletModal: false,
     showAlreadyMappedModal: false,
     mappingSuccess: false,
+    gatewayBusy: false,
     userBalance: {
       isLoading: true,
       loomBalance: 0,
@@ -63,10 +64,10 @@ export default {
   state: defaultState(),
   getters: {
     getLatestBlockNumber(state) {
-      return state.latestBlockNumber || JSON.parse(localStorage.getItem("latestBlockNumber"))
+      return state.latestBlockNumber || JSON.parse(sessionStorage.getItem("latestBlockNumber"))
     },
     getCachedEvents(state) {
-      return state.cachedEvents || JSON.parse(localStorage.getItem("cachedEvents")) || []
+      return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents")) || []
     }
   },  
   mutations: {
@@ -117,24 +118,27 @@ export default {
     },
     setWalletType(state, payload) {
       state.walletType = payload
-      localStorage.setItem("walletType", payload)
-      localStorage.setItem("selectedLedgerPath", null)      
+      sessionStorage.setItem("walletType", payload)
+      sessionStorage.setItem("selectedLedgerPath", null)      
     },
     setSelectedAccount(state, payload) {
       state.selectedAccount = payload
     },
     setLatesBlockNumber(state, payload) {
       state.latestBlockNumber = payload
-      localStorage.setItem("latestBlockNumber", JSON.stringify(payload))
+      sessionStorage.setItem("latestBlockNumber", JSON.stringify(payload))
     },
     setCachedEvents(state, payload) {
       state.cachedGatewayEvents = payload
-      localStorage.setItem("cachedEvents", JSON.stringify(payload))
+      sessionStorage.setItem("cachedEvents", JSON.stringify(payload))
 
     },
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
-      localStorage.removeItem("selectedLedgerPath")
+      sessionStorage.removeItem("selectedLedgerPath")
+    },
+    setGatewayBusy(state, busy) {
+      state.gatewayBusy = busy
     }
   },
   actions: {
@@ -191,11 +195,11 @@ export default {
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
-      localStorage.setItem('privatekey', privateKeyString)
+      sessionStorage.setItem('privatekey', privateKeyString)
       commit('setIsLoggedIn', true)
     },
     async clearPrivateKey({ commit }, payload) {
-      localStorage.removeItem('privatekey')
+      sessionStorage.removeItem('privatekey')
       commit('setIsLoggedIn', false)
     },
     async checkIfConnected({state, dispatch}) {        

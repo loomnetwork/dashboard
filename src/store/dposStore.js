@@ -51,7 +51,9 @@ const defaultState = () => {
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"]
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
+    latestBlockNumber: null,
+    cachedEvents: []
   }
 }
 
@@ -59,7 +61,14 @@ const defaultState = () => {
 export default {
   namespaced: true,
   state: defaultState(),
-  getters: {},
+  getters: {
+    getLatestBlockNumber(state) {
+      return state.latestBlockNumber || JSON.parse(sessionStorage.getItem("latestBlockNumber"))
+    },
+    getCachedEvents(state) {
+      return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents")) || []
+    }
+  },  
   mutations: {
     setIsLoggedIn(state, payload) {
       state.isLoggedIn = payload
@@ -70,7 +79,7 @@ export default {
     setConnectedToMetamask(state, payload) {
       state.connectedToMetamask = payload
     },
-    setWeb3(state, payload) {
+    async setWeb3(state, payload) {
       state.web3 = payload
     },
     setUserBalance(state, payload) {
@@ -114,6 +123,15 @@ export default {
     setSelectedAccount(state, payload) {
       state.selectedAccount = payload
     },
+    setLatesBlockNumber(state, payload) {
+      state.latestBlockNumber = payload
+      sessionStorage.setItem("latestBlockNumber", JSON.stringify(payload))
+    },
+    setCachedEvents(state, payload) {
+      state.cachedGatewayEvents = payload
+      sessionStorage.setItem("cachedEvents", JSON.stringify(payload))
+
+    },
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
       sessionStorage.removeItem("selectedLedgerPath")
@@ -150,11 +168,23 @@ export default {
           commit("setMappingSuccess", true)
           commit("setSignWalletModal", false)
         } catch(err) {
+          console.log("add mapping async error", err);
           commit("setSignWalletModal", false)
-          commit("setAlreadyMappedModal", true)
+          if (err.message.includes("identity mapping already exists")) {
+            commit("setAlreadyMappedModal", true)
+          } else {
+            commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
+          }
         }
       } else if((state.status == 'no_mapping' && state.mappingError !== undefined)) {
-        commit("setAlreadyMappedModal", true)
+        commit("setSignWalletModal", false)
+        if (err.message.includes("identity mapping already exists")) {
+          commit("setAlreadyMappedModal", true)
+        } else {
+          commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
+        }
+      } else if (state.status == 'mapped') {
+        commit("setMappingSuccess", true)
       } 
       commit("setShowLoadingSpinner", false)
     },
@@ -331,11 +361,11 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
 
-      const { origin, target, validator, amount} = payload
+      const { origin, target, amount} = payload
       const user = rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, validator, amount)
+        await user.redelegateAsync(origin, target, amount)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)

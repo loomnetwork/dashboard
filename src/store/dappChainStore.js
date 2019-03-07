@@ -137,6 +137,7 @@ const defaultState = () => {
     dAppChainClient: undefined,
     LoomTokenNetwork: undefined,
     LoomTokenInstance: undefined,
+    GatewayInstance: undefined,
     dposUser: undefined,
     dpos2: undefined,
     mappingStatus: undefined,
@@ -209,6 +210,13 @@ export default {
     },
     setDappChainConnected(state, payload) {
       state.isConnectedToDappChain = payload
+    },
+    setWithdrewSignature(state, payload) {
+      if(!payload) {
+        localStorage.removeItem('withdrewSignature');
+      } else {
+        localStorage.setItem('withdrewSignature', payload)
+      }
     }
   },
   actions: {
@@ -253,6 +261,7 @@ export default {
         const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LoomTokenNetwork.address)
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
+        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GatewayJSON.networks[network].address)
       } catch (err) {
         console.error(err)
       }
@@ -301,34 +310,29 @@ export default {
       }
       state.dposUser = user
     },
-    async depositAsync({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      // const mappingExist = await dispatch('ensureIdentityMappingExists')
-      // if (!mappingExist) {
-      //   console.log('Did not mapped with dAppChain Address')
-      //   await await dispatch('addMappingAsync')
-      // }
-      
-      const {amount} = payload
+    /**
+     * 
+     * @param {store} param0 
+     * @param {{amount}} payload 
+     * @returns {Promise<TransactionReceipt>}
+     */
+    depositAsync({ state }, {amount}) {
+      console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(amount, 'ether')
-      const tx = await user.depositAsync(new BN(weiAmount, 10))
-      await tx.wait()
+      const weiAmount = state.web3.utils.toWei(amount, 'ether')
+      return user.depositAsync(new BN(weiAmount, 10))
     },
-    async withdrawAsync({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-
-      const {amount} = payload
+    /**
+     * 
+     * @param {store} param0 
+     * @param {{amount}} payload 
+     * @returns {Promise<TransactionReceipt>}
+     */
+    async withdrawAsync({ state }, {amount}) {
+      console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
-      let weiAmount = state.web3.utils.toWei(amount, 'ether')
-      const tx = await user.withdrawAsync(new BN(weiAmount, 10))
-      await tx.wait()
-
+      let weiAmount = state.web3.utils.toWei(new BN(amount), 'ether')
+      return user.withdrawAsync(new BN(weiAmount, 10))
     },
     async approveAsync({ state, dispatch }, payload) {
 
@@ -398,8 +402,10 @@ export default {
       // For each validator, get their staked tokens
       let stakedTokens = {}
       for (let i in dpos2Delegations) {
+        if (dpos2Delegations[i].delegationsArray.length != 0) {
           let address = dpos2Delegations[i].delegationsArray[0].validator.local.toString()
           stakedTokens[address] = dpos2Delegations[i].delegationTotal
+        }
       }
 
       let validators = []
@@ -443,7 +449,7 @@ export default {
               validator.personalStake = v.whitelistAmount.toString()
 
               // how much tokens staked by delegators
-              validator.delegatedStake = stakedTokens[addr].toString() 
+              validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : 0
       
               // Voting Power is the whitelist plus the tokens w/ bonuses
               validator.votingPower = v.delegationTotal.toString()
@@ -543,7 +549,7 @@ export default {
         commit("DPOS/setStatus", "check_mapping", {root: true})
         commit('setMappingError', null)
         commit('setMappingStatus', null)
-        const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)        
+        const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)  
         const mappedEthAddress = mapping.to.local.toString()
 
         console.log("metamaskAddress", metamaskAddress);
@@ -575,12 +581,69 @@ export default {
         await state.dposUser.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
-        commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
-        commit('setErrorMsg', {msg: "Failed establishing mapping", forever: false, report:true, cause: err}, {root: true})
-        throw Error(err.toString())
-      
+        commit('setMappingError', err.message)
+        throw Error(err.message.toString())
       }
     },
+    async getUnclaimedLoomTokens({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
+        return unclaimAmount
+      } catch (err) {
+        console.log("Error check unclaim loom tokens", err);
+        commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true, cause:err})
+      }
+    },
+    async reclaimDeposit({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      const dappchainGateway = user.dappchainGateway
+      try {
+        await dappchainGateway.reclaimDepositorTokensAsync()
+      } catch (err) {
+        console.log("Error reclaiming tokens", err);
+        commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
+      }
+    },
+
+    async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        const receipt = await user.getPendingWithdrawalReceiptAsync()
+        if(!receipt) return null
+        const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+        const amount = receipt.tokenAmount
+        return  { signature: signature, amount: amount }
+      } catch (err) {
+        console.log("Error get pending withdrawal receipt", err);
+        commit('setErrorMsg', 'Error get pending withdrawal receipt', { root: true, cause:err})       
+      }
+    },
+
+    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }
+      const user = state.dposUser
+      try {
+        const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
+        console.log("result", result);
+        return  result
+      } catch (err) {
+        console.log("Error withdrawal coin from gateway", err);
+        throw Error(err.message)       
+      }
+    },
+
     async init({ state, commit, rootState }, payload) {
 
       let privateKey

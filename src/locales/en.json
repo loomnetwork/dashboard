@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },
     "history": {
-      "trade_history": "Trade History",
+      "your_history": "Your History",
       "sort_by": "Sort by:",
       "item_1": "Item 1",
       "item_2": "Item 2",
@@ -91,11 +91,17 @@
       "connect_to_deposit_funds": "Connect to deposit funds",
       "no_mapping_detected": "No mapping detected",
       "map_accounts": "Map accounts",
+      "history": "History",
       "deposit": "Deposit",
       "withdraw": "Withdraw",
       "use_maximum": "Use maximum",
       "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
-      "withdraw_to_metamask": "Withdraw to your wallet"
+      "withdraw_to_metamask": "Withdraw to your wallet",
+      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
+      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
+      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
+      "reclaim_deposit": "Reclaim Deposit Tokens",
+      "complete_withdraw": "Complete Withdrawal"
     },
     "my_delegations": {
       "no_delegations": "No Delegations"
@@ -121,7 +127,7 @@
       "unlocked": "Unlocked"
     },
     "validator_list": {
-      "no_validators_available_please_try": "No validators available, please try again later",
+      "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
       "validators": "Validators"
     }
   },
@@ -165,16 +171,17 @@
     "faucet_sidebar": {
       "my_account": "My Account",
       "my_delegations": "My Delegations",
-      "rewards": "Rewards"
+      "rewards": "Rewards",
+      "history": "History"
     },
     "layout": {
       "metamask_error": "Metamask error!?",
       "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
       "mapping_error": "Mapping error!?",
-      "your_account_appears_to_be": "Your account appears to be mapped with the following address:",
-      "but_your_current_account_address": "but your current account address is:",
-      "please_change_your_metamask_account": "Please change your Metamask account",
-      "please_check_your_metamask_account": "Please check your Metamask account and/or network",
+      "your_account_appears_to_be": "Your DappChain account appears to be mapped with the following Ethereum address:",
+      "but_your_current_account_address": "but your current Ethereum account address is:",
+      "please_change_your_metamask_account": "Please change your Ethereum account",
+      "please_check_your_metamask_account": "Please check your Ethereum account and/or network",
       "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": " Your selected accout is already mapped. Please select new account."
     },

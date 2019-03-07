@@ -43,8 +43,8 @@
     "date-fns": "^1.29.0",
     "ethers": "^4.0.26",
     "google-protobuf": "^3.6.0",
-    "loom-js": "1.44.1",
     "ledger-wallet-provider": "loomnetwork/ledger-wallet-provider.git",
+    "loom-js": "1.46.2",
     "node-sass": "^4.9.0",
     "protoc": "^1.0.3",
     "raven-js": "^3.27.0",
@@ -77,7 +77,7 @@
   },
   "devDependencies": {
     "@prerenderer/renderer-jsdom": "^0.2.0",
-    "@sentry/webpack-plugin": "^1.6.1",
+    "@sentry/webpack-plugin": "^1.6.2",
     "@vue/cli-plugin-babel": "^3.0.0-beta.15",
     "@vue/cli-plugin-eslint": "^3.0.0-beta.15",
     "@vue/cli-plugin-typescript": "^3.0.0-beta.15",

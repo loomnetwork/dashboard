@@ -6,6 +6,7 @@ import store from './store'
 import FirstPage from './views/FirstPage.vue'
 import MyAccount from './views/MyAccount.vue'
 import MyDelegations from './views/MyDelegations.vue'
+import History from './views/History.vue'
 import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
@@ -102,6 +103,15 @@ const router = new VueRouter({
           requireDeps: true
         }      
       },
+      {
+        path: 'history',
+        name: 'history',
+        component: History,
+        meta: {
+          requireLogIn: true,
+          requireDeps: true
+        }      
+      },      
       {
         path: 'redelegate',
         name: 'redelegate',

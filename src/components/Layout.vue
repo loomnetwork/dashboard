@@ -66,7 +66,8 @@ import { isIP } from 'net';
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
-      'setCurrentMetamaskAddress'      
+      'setCurrentMetamaskAddress',
+      'setWalletType'
     ]),
     ...DappChainStore.mapMutations([
       'setMappingError',
@@ -132,9 +133,7 @@ export default class Layout extends Vue {
   }
 
   beforeMount() {
-    if(sessionStorage.getItem("privatekey")) {
-      this.setUserIsLoggedIn(true)
-    }
+    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
   }
 
   @Watch('mappingSuccess')

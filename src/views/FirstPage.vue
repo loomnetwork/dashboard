@@ -384,28 +384,28 @@ $theme-colors: (
     background-color: transparent;
     padding: 20px;
   }
+}
 
-  .wallet-provider-container {
-    .col {
-      position: relative;
-      img {
-        width: 96px;
-        height: auto;
-        margin-bottom: 12px;
-      }
-      span.qa {        
-        display: inline-block;
-        line-height: 20px;        
-        right: 12px;
-        bottom: 12px;
-        position: absolute;
-        font-weight: bold;
-        width: 20px;
-        height: 20px;
-        color: white;
-        background-color: grey;
-        border-radius: 50%;
-      }
+.wallet-provider-container {
+  .col {
+    position: relative;
+    img {
+      width: 96px;
+      height: auto;
+      margin-bottom: 12px;
+    }
+    span.qa {        
+      display: inline-block;
+      line-height: 20px;        
+      right: 12px;
+      bottom: 12px;
+      position: absolute;
+      font-weight: bold;
+      width: 20px;
+      height: 20px;
+      color: white;
+      background-color: grey;
+      border-radius: 50%;
     }
   }
 }

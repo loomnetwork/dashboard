@@ -24,6 +24,7 @@
               :min="1"
               pattern="[1-9]\d*"
               step="1"
+              @keyup="validateAmount"
             />
           </b-col>
           <b-col>
@@ -31,7 +32,8 @@
           </b-col>
         </b-row>
       </b-container>
-      <b-btn @click="startTransfer" variant="primary" :disabled="! (Number.isInteger(new Number(transferAmount)) && transferAmount > 0 && transferAmount < balance) ">Transfer</b-btn>
+      <b-btn @click="startTransfer" variant="primary" :disabled="amountErrors.length > 0">Transfer</b-btn>
+      &nbsp;<span class="error" v-for="e in amountErrors" :key="e">- {{e}} </span>
         </form>
     </div>
     <div v-else-if="step==2" class="approve-transfer">
@@ -87,6 +89,24 @@ export default class TransferStepper extends Vue {
   txSuccessfull = false
   // only used when resolveTxSuccess is provided
   txSuccessPromise = null;
+
+  amountErrors = []
+
+  validateAmount() {
+    const errors = []
+    const num = new Number(this.transferAmount)
+    const int = Math.floor(num)
+    if (int != num) {
+      errors.push('Only round amounts allowed')
+    }
+    if (int < 1) {
+      errors.push('At least 1 loom')
+    }
+    if (int > this.balance) {
+      errors.push('Mot enough funds in your account')
+    }
+    this.amountErrors = errors
+  }
 
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
@@ -195,6 +215,11 @@ export default class TransferStepper extends Vue {
   font-family: monospace;font-size: 16px;text-decoration: underline;
 }
 input:invalid {
-  background-color: red;
+  border: 1px solid red;
+  color: red;
+
+}
+.error {
+  color: red;
 }
 </style>

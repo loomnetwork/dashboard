@@ -96,7 +96,7 @@
                                   <span class="tab-title">Withdraw</span>
                                   <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
                                 </template>
-                                <p>Please note that withdrawk is subject to a daily limit of 500k LOOM. You have {{withdrawLimit}} allowance.</p>
+                                <p>Please note that withdrawal is subject to a daily limit of 500k LOOM. You have {{withdrawLimit}} allowance left.</p>
 
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
                                   @withdrawalDone="afterWithdrawalDone"

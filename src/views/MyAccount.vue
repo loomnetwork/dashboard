@@ -77,7 +77,7 @@
                           <b-card no-body v-if="metamaskConnected">
                             <b-tabs card>
                               <b-tab title="Deposit" v-if="!oracleEnabled" active>
-                                Plasmachain wallet is undergoing scheduled upgrades... 
+                                Plasmachain wallet is undergoing scheduled upgrades... Please check back in 1-2 hours.
                               </b-tab>
                               <b-tab title="Deposit" v-if="userBalance.mainnetBalance > 0 && oracleEnabled" active>
                                 <TransferStepper 

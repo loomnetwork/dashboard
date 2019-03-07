@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 const LocaleStore = {
   state: {
-    locale: localStorage.getItem('locale') || 'en'
+    locale: sessionStorage.getItem('locale') || 'en'
   },
   getters: {
     locale(state) {
@@ -18,7 +18,7 @@ const LocaleStore = {
   mutations: {
     setLocale(state, locale) {
       state.locale = locale
-      localStorage.setItem('locale', locale)
+      sessionStorage.setItem('locale', locale)
     }
   },
   actions: {

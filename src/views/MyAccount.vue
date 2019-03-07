@@ -229,7 +229,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'dAppChainClient'
     ]),
     withdrewSignature: function() {
-      let signature = localStorage.getItem('withdrewSignature')
+      let signature = sessionStorage.getItem('withdrewSignature')
       return signature
     }
   },
@@ -366,7 +366,7 @@ export default class MyAccount extends Vue {
 
   async refresh(poll) {    
     console.log('refreshing balances...')
-    this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
+    this.userAccount.address = getAddress(sessionStorage.getItem('privatekey'))
     let loomBalance = await this.getDappchainLoomBalance()    
     let mainnetBalance = await this.getMetamaskLoomBalance({
       web3: this.web3,

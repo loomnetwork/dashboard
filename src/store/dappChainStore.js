@@ -316,11 +316,14 @@ export default {
      * @param {{amount}} payload 
      * @returns {Promise<TransactionReceipt>}
      */
-    depositAsync({ state }, {amount}) {
+    async depositAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
+      commit('setGatewayBusy', true)
       const user = state.dposUser
       const weiAmount = state.web3.utils.toWei(amount, 'ether')
-      return user.depositAsync(new BN(weiAmount, 10))
+      const res = user.depositAsync(new BN(weiAmount, 10))
+      commit('setGatewayBusy', false)
+      return res
     },
     /**
      * 
@@ -332,10 +335,14 @@ export default {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
       let weiAmount = state.web3.utils.toWei(new BN(amount), 'ether')
-      return user.withdrawAsync(new BN(weiAmount, 10))
+      commit('setGatewayBusy', true)
+      let res = await user.withdrawAsync(new BN(weiAmount, 10))
+      commit('setGatewayBusy', false)
+      return res
+
     },
     async approveAsync({ state, dispatch }, payload) {
-
+      commit('setGatewayBusy', true)
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
@@ -589,6 +596,7 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
+      
       const user = state.dposUser
       try {
         let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
@@ -602,6 +610,7 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
+      commit('setGatewayBusy', true)
       const user = state.dposUser
       const dappchainGateway = user.dappchainGateway
       try {
@@ -610,6 +619,7 @@ export default {
         console.log("Error reclaiming tokens", err);
         commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
       }
+      commit('setGatewayBusy', false)
     },
 
     async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
@@ -634,9 +644,11 @@ export default {
         await dispatch('initDposUser')
       }
       const user = state.dposUser
+      commit('setGatewayBusy', true)
       try {
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
         console.log("result", result);
+        commit('setGatewayBusy', false)
         return  result
       } catch (err) {
         console.log("Error withdrawal coin from gateway", err);

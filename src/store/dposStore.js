@@ -1,9 +1,15 @@
+import axios from 'axios'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
 import BigNumber from 'bignumber.js';
 
+import Debug from "debug"
 
+Debug.enable("dashboard.dpos")
+const debug = Debug("dashboard.dpos")
+
+const DAILY_WITHDRAW_LIMIT = 500000
 
 const dynamicSort = (property) => {
   let sortOrder = 1
@@ -24,6 +30,8 @@ const defaultState = () => {
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
+    history: null,
+    withdrawLimit: DAILY_WITHDRAW_LIMIT,
     validators: null,
     status: "check_mapping",
     walletType: undefined,
@@ -54,7 +62,10 @@ const defaultState = () => {
     ],
     prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
     latestBlockNumber: null,
-    cachedEvents: []
+    cachedEvents: [],
+    dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
+    historyPromise: null,
+    dappChainEvents: []
   }
 }
 
@@ -139,6 +150,12 @@ export default {
     },
     setGatewayBusy(state, busy) {
       state.gatewayBusy = busy
+    },
+    setHistoryPromise(state, payload) {
+      state.historyPromise = payload
+    },
+    setDappChainEvents(state, payload) {
+      state.dappChainEvents = payload
     }
   },
   actions: {
@@ -376,9 +393,122 @@ export default {
         commit("setErrorMsg", {msg: "Failed to redelegate stake", forever: false,report:true,cause:err}, {root: true})
       }
 
+    },
+
+    async fetchDappChainEvents({ state, commit, dispatch }, payload) {
+
+      let historyPromise = axios.get(`${state.dappChainEventUrl}/eth:${state.currentMetamaskAddress}`)
+      // Store the unresolved promise
+      commit("setHistoryPromise", historyPromise)
+      
+      historyPromise.then((response) => {
+
+        return response.data.txs.filter((tx) => {
+
+          // Filter based on these events
+          if(tx.topic === "event:WithdrawLoomCoin" ||
+             tx.topic === "event:MainnetDepositEvent" ||
+             tx.topic === "event:MainnetWithdrawalEvent") { return tx }
+    
+        }).map((tx) => {
+          let type = ""
+          switch(tx.topic) {
+            case "event:MainnetDepositEvent":
+              type = "Deposit"
+              break
+            case "event:MainnetWithdrawalEvent":
+              type = "Withdraw"
+              break
+            case "event:WithdrawLoomCoin":
+              type = "Withdraw Begun"
+              break
+            default:
+              break
+          } 
+  
+          let amount = tx.token_amount
+
+          // Return events in this format
+          return {
+            "Block #" : tx.block_height,
+            "Event"   : type,
+            "Amount"  : formatToCrypto(amount),
+            "Tx Hash" : tx.tx_hash
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(err)
+      })
+      .then((results) => {
+        commit("setDappChainEvents", results)
+      })
+
+    },
+
+    async loadEthereumHistory({commit, getters, state}, {web3, gatewayInstance, address}) {
+      debug("loading history")
+      const cachedEvents = getters.getCachedEvents
+      // Get latest mined block from Ethereum
+      const toBlock = await web3.eth.getBlockNumber()
+      const fromBlock = toBlock - 7000
+
+      const eventsToNames = {
+        ERC20Received: "Deposit",
+        TokenWithdrawn: "Withdraw"
+      }
+      debug("loading history block range ",fromBlock, toBlock  )
+
+      // Fetch latest events
+      state.history = gatewayInstance.getPastEvents("allEvents", { fromBlock, toBlock })
+      .then((events) => {
+        debug("got %s events", events.length)
+        // Filter based on event type and user address
+        let results = events.filter((event) => {
+          return event.returnValues.from === address ||
+                  event.returnValues.owner === address        
+        })
+        .map((event) => {
+          let type = eventsToNames[event.event] ||  "Other"
+          let amount = event.returnValues.amount || event.returnValues.value || 0 
+          return {
+            "Block #" : event.blockNumber,
+            "Event"   : type,
+            "Amount"  : formatToCrypto(amount),
+            "Tx Hash" : event.transactionHash
+            }
+        })
+
+        // Combine cached events with new events
+        const mergedEvents = cachedEvents.concat(results)
+        debug('merged events', mergedEvents.length)
+          
+        // Store results
+        commit("setLatesBlockNumber", toBlock)
+        commit("setCachedEvents", mergedEvents)
+
+        // Display trades in the UI
+        return mergedEvents
+      })
+      .catch(e => {
+        console.error("error loading eth history", e)
+        throw e
+      })
+    },
+
+    async updateDailyWithdrawLimit({state}, history) {
+      // TODO externalise this
+      const limit = history
+        .filter(item => item.Event === "Withdraw") // and date is today
+        .reduce(
+          (left, item) => left - parseInt(item.Amount,10), 
+          DAILY_WITHDRAW_LIMIT
+        )
+      state.withdrawLimit =  Math.max(0, limit)
+      debug('state.withdrawLimit', state.withdrawLimit)
+      return state.withdrawLimit
     }
 
-  }
-
+  },
 
 }

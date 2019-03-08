@@ -4,6 +4,8 @@ import { state, getters, mutations, actions } from './applicationStore'
 import DappChainStore from './dappChainStore'
 import DPOSStore from './dposStore'
 
+import { dposStorePlugin } from "./dposPlugin";
+
 Vue.use(Vuex)
 
 const LocaleStore = {
@@ -36,6 +38,7 @@ const store = new Vuex.Store({
     DappChain: DappChainStore,
     DPOS: DPOSStore,
     Locale: LocaleStore
-  }
+  },
+  plugins:[dposStorePlugin]
 })
 export default store

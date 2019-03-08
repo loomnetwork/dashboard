@@ -1,5 +1,6 @@
 <template>
   <b-table
+    responsive
     id="faucet-table"
     table-active="table-active"
     tr-class="spacer"
@@ -39,21 +40,6 @@ export default class FaucetTable extends Vue {
 
   .table-active {
     color: #0dcd9b !important;
-  }
-
-  tbody tr {
-    position: relative;
-  }
-
-  tbody td:first-child::before {
-    content: "";
-    background-image: url("../assets/ethereum-icon.svg");
-    background-size: contain;
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    display: block;
-    left: -4px;
   }
 
   tbody tr :first-child  {

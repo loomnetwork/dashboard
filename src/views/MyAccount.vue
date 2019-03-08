@@ -96,10 +96,12 @@
                                   <span class="tab-title">Withdraw</span>
                                   <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
                                 </template>
+                                <p>Please note that withdrawal is subject to a daily limit of 500k LOOM. You have {{withdrawLimit}} allowance left.</p>
+
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
                                   @withdrawalDone="afterWithdrawalDone"
                                   @withdrawalFailed="afterWithdrawalFailed"
-                                  :balance="userBalance.loomBalance" 
+                                  :balance="Math.min(userBalance.loomBalance,withdrawLimit)" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
                                     <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
@@ -225,7 +227,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'userBalance',
       'gatewayBusy',
       'connectedToMetamask',
-      'currentMetamaskAddress'
+      'currentMetamaskAddress',
+      'withdrawLimit',
     ]),
     ...DappChainStore.mapState([
       'LoomTokenInstance',
@@ -287,7 +290,7 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
-  oracleEnabled = false
+  oracleEnabled = true
   receipt = null
   isWithdrawalInprogress = false
 
@@ -385,8 +388,8 @@ export default class MyAccount extends Vue {
     await this.getDpos2()
     this.setUserBalance({
       isLoading,
-      loomBalance: parseInt(loomBalance),
-      mainnetBalance: parseInt(mainnetBalance),
+      loomBalance: loomBalance,
+      mainnetBalance: mainnetBalance,
       stakedAmount
     })
   }
@@ -634,13 +637,16 @@ export default class MyAccount extends Vue {
     }
   }
 
+
   async approveDeposit(amount) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
     const { web3, dposUser} = this
     const ethereumLoom  = dposUser.ethereumLoom
     const ethereumGateway  = dposUser._ethereumGateway
-    const weiAmount = new BN(this.web3.utils.toWei(new BN(amount), 'ether'), 10)
+    const tokens = new BN( "" + parseInt(amount,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
+    log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
     this.setGatewayBusy(true)
     log('approve', ethereumGateway.address, weiAmount.toString())
     const approval = await ethereumLoom.functions.approve(
@@ -658,7 +664,8 @@ export default class MyAccount extends Vue {
     console.assert(this.web3, "Expected web3 to be initialized")
     this.setGatewayBusy(true)
     await approvalTx.wait()
-    const weiAmount = new BN(this.web3.utils.toWei(amount, 'ether'), 10)
+    const tokens = new BN( "" + parseInt(amount,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     let result = await this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
@@ -669,7 +676,8 @@ export default class MyAccount extends Vue {
   async completeDeposit() {
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const weiAmount = new BN(this.web3.utils.toWei(new BN(this.allowance), 'ether'), 10)
+    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
@@ -685,17 +693,22 @@ export default class MyAccount extends Vue {
 
   async executeWithdrawal(amount) {
     // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
-    // note:  withdrawAsync returns Promise<TransactionReceipt>    
-    await this.checkPendingWithdrawalReceipt()
-    if (this.receipt) {
-      // have a pending receipt
-      this.hasReceiptHandler(this.receipt)
-      return
-    } else {
-      let tx = await this.withdrawAsync({amount})
-      await tx.wait()
-      return tx
+    // note:  withdrawAsync returns Promise<TransactionReceipt> 
+    try {
+      await this.checkPendingWithdrawalReceipt()
+      if (this.receipt) {
+        // have a pending receipt
+        this.hasReceiptHandler(this.receipt)
+        return
+      } else {
+        let tx = await this.withdrawAsync({amount})
+        await tx.wait()
+        return tx
+      }
+    } catch (e) {
+      console.error(e)
     }
+
   }
 }
 </script>

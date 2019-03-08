@@ -449,13 +449,16 @@ export default {
     async loadEthereumHistory({commit, getters, state}, {web3, gatewayInstance, address}) {
       debug("loading history")
       const cachedEvents = getters.getCachedEvents
+
+      const firstBlock = await getFirstBlock(address)
+      debug("first block for %s is %s",address,firstBlock)
         
       // Get latest mined block from Ethereum
       // TODO we should make sure cached events dont contain blockNumber null (pending events)
       const toBlock = await web3.eth.getBlockNumber()
       const fromBlock = (cachedEvents.length) ? 
         cachedEvents[0].blockNumber + 1 :
-        toBlock - 7000
+        firstBlock
 
       debug("loading history block range ", fromBlock, toBlock  )
 
@@ -489,7 +492,7 @@ export default {
     async updateDailyWithdrawLimit({state}, history) {
       // TODO externalise this
       const limit = history
-        .filter(item => item.Event === "Withdraw") // and date is today
+        .filter(item => item.event === "TokenWithdrawn") // and date is today
         .reduce(
           (left, item) => left - parseInt(item.Amount,10), 
           DAILY_WITHDRAW_LIMIT
@@ -497,8 +500,29 @@ export default {
       state.withdrawLimit =  Math.max(0, limit)
       debug('state.withdrawLimit', state.withdrawLimit)
       return state.withdrawLimit
-    }
+    },
 
   },
 
+}
+
+
+/**
+ * fetches the first block an address appears in>
+ * credits https://github.com/shawntabrizi/ETH-Balance-Graph
+ * @param {*} address 
+ */
+async function getFirstBlock(address) {
+  try {
+      let response = await axios.get("//api.etherscan.io/api?module=account&action=txlist&address=" + address + "&startblock=0&page=1&offset=1&sort=asc");
+      let {result} = response.data;
+      if (result.length > 0) {
+          return result[0].blockNumber;
+      } else {
+          return -1;
+      }
+  } catch (error) {
+      console.error(error);
+      return -1;
+  }
 }

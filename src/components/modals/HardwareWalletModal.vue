@@ -5,13 +5,16 @@
       <b-row class="my-1 align-items-center min-height">
         <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
         <div v-if="componentLoaded" class="dropdown-container mb-4">
-          <v-autocomplete :items="filteredPaths"
-                         v-model="selectedPath"
-                         :get-label="getLabel"
-                         :component-item="dropdownTemplate"
-                         @item-selected="selectItem"
-                         @update-items="updateItems">
-          </v-autocomplete>
+          <b-form>
+            <b-form-select
+              class="mb-2 mr-sm-2 mb-sm-0"
+              :value="null"
+              v-model="selectedPath"
+              :options="filteredPaths"
+              id="inlineFormCustomSelectPref">
+              <option slot="first" :value="null">Select a path</option>
+            </b-form-select>
+          </b-form>
         </div>
 
         <b-card no-body class="wallet-config-container">
@@ -24,11 +27,14 @@
                                       name="radiosStacked">
                     <tr v-for="(account, index) in accounts" :key="index" @click="selectAccount(account, index)">
                       <td>{{account.index}}</td>
-                      <td>{{formatAddress(account.account.getChecksumAddressString())}}</td>
+                      <td>{{formatAddress(account.account)}}</td>
                       <td>{{formatBalance(account.balance)}}</td>
                       <td><b-form-radio :value="index"></b-form-radio></td>
                     </tr>
                   </b-form-radio-group>
+                  <div v-if="accounts.length > 0" class="pagination-container">
+                    <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" size="md" />
+                  </div>
                 </tbody>
               </table>
             </div>
@@ -38,7 +44,7 @@
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span v-if="errorMsg" class="text-error  mt-2" variant="error">{{errorMsg}}</span>
-        <b-button class="btn proceed-btn" :disabled="selectedAddress < 0" variant="primary" @click="okHandler">Proceed</b-button>
+        <b-button class="btn proceed-btn" :disabled="selectedAddress < 0 || disableProgressBtn" variant="primary" @click="okHandler">Proceed</b-button>
       </b-row>
     </b-container>
   </b-modal>
@@ -50,7 +56,7 @@
 
 <script>
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import LoadingSpinner from '../LoadingSpinner'
 import DropdownTemplate from './DropdownTemplate'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
@@ -59,7 +65,7 @@ import { pathsArr as hdPaths } from "@/services/ledger/paths"
 var HookedWalletProvider = require('web3-provider-engine/subproviders/hooked-wallet');
 
 import { formatToCrypto } from '../../utils'
-import { initWeb3Hardware, initWeb3SelectedWallet } from '../../services/initWeb3'
+import { initWeb3Hardware, initWeb3SelectedWallet, initWeb3SelectedWalletBeta } from '../../services/initWeb3'
 import { setTimeout } from 'timers';
 import { throws } from 'assert';
 
@@ -95,15 +101,22 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ]),
     ...dposStore.mapState([
       'status', 
-      'mappingSuccess'
+      'mappingSuccess',
+      'selectedAccount'
     ]),
   }
 })
 
+
 export default class HardwareWalletModal extends Vue {
 
+  // Pagination
+  rows = 25
+  perPage = 5
+  currentPage = 1
+
   hdWallet = undefined
-  maxAddresses = 99
+  maxAddresses = 25
   errorMsg = null
   accounts = []
 
@@ -111,32 +124,67 @@ export default class HardwareWalletModal extends Vue {
   paths = []
   filteredPaths = []
   addresses = []
-  selectedPath = hdPaths.paths[0]
+  selectedPath = null
   selectedAddress = -1
   dropdownTemplate = DropdownTemplate
   componentLoaded = false
+  disableProgressBtn = false
 
   web3js = undefined
 
-  async okHandler() {
-    let selectedAddress = this.accounts[this.selectedAddress].account.getChecksumAddressString()
-    let offset = this.selectedAddress
-    this.setCurrentMetamaskAddress(selectedAddress)
-    console.log("selectedAddress",selectedAddress);
+
+  @Watch('currentPage')
+    onCurrentPageChange(newValue, oldValue) {      
+    if(newValue) {
+      this.updateAddresses()
+    }
+  }
+
+  @Watch('selectedPath')
+    onPathChange(newValue, oldValue) {      
+    if(newValue) {
+      this.updateAddresses()
+      // this.selectPath(newValue)
+    }
+  }
+
+  async updateAddresses() {
+    this.showLoadingSpinner = true
+    this.path = this.selectedPath.replace('m/','')
+    let offset = this.currentPage * this.perPage
+    if(this.path === "44'/60'") {
+      // Ethereum addresses (Ledger live)
+      this.path =  `44'/60'/${offset}'/0/0`
+    }
+    else if(this.path === "44'/60'/0'") {
+      // Ethereum addresses (legacy)
+      this.path = `${this.path}/${offset}`
+    }
     
-    this.web3js.eth.defaultAccount = selectedAddress
-    let path =this.selectedPath.path.replace('m/','')
-    // https://github.com/LedgerHQ/ledger-live-desktop/issues/1185
-    if(path === "44'/60'") {
-      // ledger live
-      path =  `44'/60'/${offset}'/0/0`
-    }
-    else if(path === "44'/60'/0'") {
-      // legacy
-      path =  `${path}/${offset}`
-    }
-    this.setSelectedLedgerPath(path)
-    this.web3js = await initWeb3SelectedWallet(path)
+    let results = await initWeb3SelectedWalletBeta(this.path)
+    this.accounts = results.map((account, index) => {
+      return {
+        index: index,
+        account: account,
+        balance: 'loading'
+        }
+    })
+
+    if(this.accounts.length > 0) this.getBalances()
+    this.showLoadingSpinner = false
+  }
+
+  onPaginationChange() {
+    console.log("the current page", this.currentPage)
+  }
+
+  async okHandler() {
+    this.disableProgressBtn = true
+    let selectedAddress = this.selectedAccount.account
+    this.setCurrentMetamaskAddress(selectedAddress)
+
+    this.setSelectedLedgerPath(this.path)
+    this.web3js = await initWeb3SelectedWallet(this.path)
 
     // assert web3 address is the actual user selected address. Until we fully test/trust this thing...
     const web3account = (await this.web3js.eth.getAccounts())[0]
@@ -147,6 +195,7 @@ export default class HardwareWalletModal extends Vue {
     this.setConnectedToMetamask(true)
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)
+    this.disableProgressBtn = false
     if (this.mappingSuccess) {
       this.$emit('ok');
       this.$router.push({
@@ -165,7 +214,7 @@ export default class HardwareWalletModal extends Vue {
 
   mounted() {
     this.paths = hdPaths.paths
-    this.filteredPaths = hdPaths.paths
+    this.filteredPaths = hdPaths.paths.map((item) => { return { value: item.path, text: item.label } })
   }
 
   getLabel(item) {
@@ -192,46 +241,56 @@ export default class HardwareWalletModal extends Vue {
   async selectPath(path) {
     this.accounts = []
     this.selectedAddress = -1
+
     if(typeof this.hdWallet ===  "undefined") {
       try {
-        this.setShowLoadingSpinner(true)
+        this.showLoadingSpinner = true
         this.hdWallet = await LedgerWallet()
       } catch (err) {
         this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
         console.log("Error in LedgerWallet:", err);
-        this.setShowLoadingSpinner(false)
+        this.showLoadingSpinner = false
         return
       }
     }
-    
+
     try {
+      this.showLoadingSpinner = true
       await this.hdWallet.init(path)
     } catch (err) {
       this.setErrorMsg({msg: "Can't connect to your wallet. Please try again.", forever: false, report:true, cause:err})
       console.log("Error when trying to init hd wallet:", err);
-      this.setShowLoadingSpinner(false)
+      this.showLoadingSpinner = false
       return
     }
 
     let i = 0
     let accountsTemp = []
-    while (i < this.maxAddresses) {
-      try {
-        let account = await this.hdWallet.getAccount(i)
-        accountsTemp.push({
+    while (i <= this.maxAddresses) {
+      let account = this.hdWallet.getAccount(i)
+      accountsTemp.push(account)
+      i++
+    }
+
+    Promise.all(accountsTemp).then((values) => {
+
+      this.accounts = values.map((account) => {
+        return {
           index: i,
           account: account,
           balance: 'loading'
-        })
-        i++
-      } catch(err) {
-        this.setErrorMsg({msg: "Error loading your wallet accounts. Please try again.", forever: false, report:true, cause:err})
-        console.log("Error when trying to get accounts:", err);
-        return
-      }
-    }
-    this.accounts = accountsTemp
-    if(this.accounts.length > 0) await this.getBalances()
+         }
+      })
+
+      if(this.accounts.length > 0) return this.getBalances() 
+
+    }).catch((err) => {
+      this.setErrorMsg({msg: "Error loading your wallet accounts. Please try again.", forever: false, report:true, cause:err})
+      console.log("Error when trying to get accounts:", err);
+      this.showLoadingSpinner = false
+    }).then(async () => {
+      this.showLoadingSpinner = false
+    })
 
   }
 
@@ -254,11 +313,11 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async getBalances() {
-    this.accounts.forEach(account => {
+    this.accounts.forEach(item => {
       this.web3js.eth
-        .getBalance(account.account.getChecksumAddressString())
+        .getBalance(item.account)
         .then(balance => {
-          account.balance = balance
+          item.balance = balance
         })
     })
   }
@@ -276,15 +335,15 @@ export default class HardwareWalletModal extends Vue {
     this.componentLoaded = true
     await this.setWeb3Instance()
     try {
-      this.setShowLoadingSpinner(true)
+      this.showLoadingSpinner = true
       this.hdWallet = await LedgerWallet()
     } catch(err) {
       this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
-      this.setShowLoadingSpinner(false)
+      this.showLoadingSpinner = false
       return
     }
     this.$refs.modalRef.show()
-    this.setShowLoadingSpinner(false)
+    this.showLoadingSpinner = false
   }
 
 }
@@ -315,6 +374,16 @@ label {
     .btn {
       width: 150px;
     }
+  }
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  .pagination {
+    margin: 0;
   }
 }
 
@@ -354,33 +423,10 @@ label {
 
 .dropdown-container {
   width: 100%;
-  .v-autocomplete {
+  input {
     width: 100%;
-    input {
-      width: 100%;
-      border: 2px solid #f2f1f3;
-      padding: 4px 12px;
-    }
-  }
-
-  .v-autocomplete-list {
-    width: 100%;
-    max-height: 240px;
-    overflow-y: auto;
-    z-index: 999;
-    background-color: #ffffff;
     border: 2px solid #f2f1f3;
-    .v-autocomplete-list-item {
-      cursor: pointer;
-      padding: 6px 12px;
-      border-bottom: 2px solid #f2f1f3;
-      &:last-child {
-        border-bottom: none;
-      }
-      &:hover {
-        background-color: #eeeeee;
-      }
-    }
+    padding: 4px 12px;
   }
 }
 

@@ -290,7 +290,7 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
-  oracleEnabled = false
+  oracleEnabled = true
   receipt = null
   isWithdrawalInprogress = false
 
@@ -693,17 +693,23 @@ export default class MyAccount extends Vue {
 
   async executeWithdrawal(amount) {
     // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
-    // note:  withdrawAsync returns Promise<TransactionReceipt>    
-    await this.checkPendingWithdrawalReceipt()
-    if (this.receipt) {
-      // have a pending receipt
-      this.hasReceiptHandler(this.receipt)
-      return
-    } else {
-      let tx = await this.withdrawAsync({amount})
-      await tx.wait()
-      return tx
+    // note:  withdrawAsync returns Promise<TransactionReceipt> 
+    try {
+      await this.checkPendingWithdrawalReceipt()
+      debugger
+      if (this.receipt) {
+        // have a pending receipt
+        this.hasReceiptHandler(this.receipt)
+        return
+      } else {
+        let tx = await this.withdrawAsync({amount})
+        await tx.wait()
+        return tx
+      }
+    } catch (e) {
+      console.error(e)
     }
+
   }
 }
 </script>

@@ -250,5 +250,11 @@
         "pending": "Pending"
       }
     }
+  },
+  "ethereum": {
+    "event": {
+      "ERC20Received": "Deposit",
+      "TokenWithdrawn": "Withdraw"
+    }
   }
 }

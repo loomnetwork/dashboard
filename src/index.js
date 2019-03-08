@@ -27,6 +27,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import { formatToCrypto } from './utils'
+
 require('./assets/scss/main.scss')
 
 const progressBarOptions = {
@@ -55,6 +57,14 @@ Vue.component('fa', FontAwesomeIcon)
 Vue.config.productionTip = false
 
 sync(store, router)
+
+
+
+Vue.filter('weiToToken', function (value) {
+  if (!value) return ''
+  return formatToCrypto(value)
+})
+
 
 export default new Vue({
   router,

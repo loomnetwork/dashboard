@@ -332,7 +332,7 @@ export default {
      * @param {{amount}} payload 
      * @returns {Promise<TransactionReceipt>}
      */
-    async withdrawAsync({ state }, {amount}) {
+    async withdrawAsync({ state, commit }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       const user = state.dposUser
       const tokens = new BN( "" + parseInt(amount,10)) 

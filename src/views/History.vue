@@ -13,7 +13,7 @@
                 </h4>
               </a>              
             </b-card-header>
-            <b-collapse :visible="showHistoryTable" id="accordion3" accordion="my-accordion" role="tabpanel">
+            <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
               <b-card-body>
                 <div class="row">
                   <div class="col">
@@ -26,7 +26,7 @@
                           :items="getEthHistory"
                           :fields="ethereumFields" >
                           <template slot="event" slot-scope="row">
-                            {{ $t(row.item.event) }}
+                            {{ $t( "ethereum.event." + row.item.event) }}
                           </template>
                           <template slot="amount" slot-scope="row">
                             {{ row.item.returnValues.amount || row.item.returnValues.value | weiToToken }}
@@ -38,6 +38,7 @@
                             <h5>
                               No activity detected in the last <span class="highlight">{{blockOffset}}</span> blocks
                             </h5>
+                            <small>Head over to the <router-link to="/validators">validators page</router-link> to get started</small>
                           </template>         
                         <div slot="table-busy" class="text-center">
                           <b-spinner class="align-middle" />
@@ -45,10 +46,6 @@
                         </div>
                       </b-table>
                     </div>
-                    <div>
-                      <h6>To search for events further back, please <a class="query-past-events" @click="goBackFurther">click here</a></h6>
-                      <small>Head over to the <router-link to="/validators">validators page</router-link> to get started</small>
-                    </div>    
                   </div>
                 </div>
               </b-card-body>
@@ -157,11 +154,6 @@
 
     async __mounted() {
       await this.fetchDappChainEvents()
-    }
-
-    async goBackFurther() {
-      if(this.blockOffset < 10000*10) this.blockOffset+= 10000
-      await this.queryEvents()
     }
 
     get showDappChainHistoryTable() {

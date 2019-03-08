@@ -94,14 +94,14 @@
       "history": "History",
       "deposit": "입금",
       "withdraw": "인출",
-      "use_maximum": "Use maximum",
-      "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
+      "use_maximum": "전액 사용하기",
+      "transfer_to_plasmachain_for_staking": "PlasmaChain에 전송하여 스테이킹",
       "withdraw_to_metamask": "내 지갑으로 인출하기",
       "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
       "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
       "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
       "reclaim_deposit": "Reclaim Deposit Tokens",
-      "complete_withdraw": "Complete Withdrawal"
+      "complete_withdraw": "출금 완료"
     },
     "my_delegations": {
       "no_delegations": "위임 내역 없음"
@@ -113,7 +113,7 @@
     },
     "rewards": {
       "unclaimed_rewards": "요청하지 않은 보상:",
-      "you_have_yet_to_receive": "You have yet to receive any rewards",
+      "you_have_yet_to_receive": "아직 받은 보상이 없습니다.",
       "claim_reward": "보상 요청하기"
     },
     "validator_detail": {
@@ -176,7 +176,7 @@
     },
     "layout": {
       "metamask_error": "MetaMask 오류!?",
-      "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
+      "please_enable_metamask_or_switch": "MetaMask를 활성화하거나, 지원되는 브라우저를 사용해 주세요.",
       "mapping_error": "매핑 오류!?",
       "your_account_appears_to_be": "Your DappChain account appears to be mapped with the following Ethereum address:",
       "but_your_current_account_address": "but your current Ethereum account address is:",
@@ -247,7 +247,7 @@
       "transaction_list": {
         "filter_by": "분류 기준",
         "most_old": "Most old",
-        "pending": "Pending"
+        "pending": "처리 중"
       }
     }
   }

@@ -96,10 +96,12 @@
                                   <span class="tab-title">Withdraw</span>
                                   <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
                                 </template>
+                                <p>Please note that withdrawal is subject to a daily limit of 500k LOOM. You have {{withdrawLimit}} allowance left.</p>
+
                                 <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
                                   @withdrawalDone="afterWithdrawalDone"
                                   @withdrawalFailed="afterWithdrawalFailed"
-                                  :balance="userBalance.loomBalance" 
+                                  :balance="Math.min(userBalance.loomBalance,withdrawLimit)" 
                                   :transferAction="executeWithdrawal"
                                   executionTitle="Execute transfer">
                                     <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
@@ -225,7 +227,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'userBalance',
       'gatewayBusy',
       'connectedToMetamask',
-      'currentMetamaskAddress'
+      'currentMetamaskAddress',
+      'withdrawLimit',
     ]),
     ...DappChainStore.mapState([
       'LoomTokenInstance',

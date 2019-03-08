@@ -8,7 +8,7 @@
     },
     "candidate_list": {
       "candidates": "후보",
-      "no_candidates": "후보가 없습니다"
+      "no_candidates": "후보가 없습니다."
     },
     "first_page": {
       "please_log_in": "로그인하세요",
@@ -122,9 +122,9 @@
       "amount_delegated_loom": "{amountDelegated} LOOM",
       "updated_amount": "갱신된 양:",
       "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "Timelock Tier:",
-      "timelock": "Timelock:",
-      "unlocked": "Unlocked"
+      "timelock_tier": "선택 가능한 타임락:",
+      "timelock": "타임락:",
+      "unlocked": "잠금 해제됨"
     },
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
@@ -197,8 +197,8 @@
       "faucet_delegate_modal": {
         "amount": "수량:",
         "locktime_bonuses": "락업 기간 / 보너스:",
-        "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
-        "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
+        "warning_please_note_that_any": "경고: 추가로 위임할 경우, 기존의 위임에 덮어씌워지니 주의하세요!",
+        "warning_please_note_that_un_delegating": "경고: 위임을 취소할 경우, 스테이킹 기간 중에 얻은 보상을 받을 수 없습니다."
       },
       "restore_account_modal": {
         "please_type_in_your_seed": "아래 입력 칸에 시드 문자를 입력해주세요.",

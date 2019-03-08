@@ -290,7 +290,7 @@ export default class MyAccount extends Vue {
   unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
-  oracleEnabled = true
+  oracleEnabled = false
   receipt = null
   isWithdrawalInprogress = false
 

@@ -70,9 +70,9 @@
       "once_i_un_delegate_how_long": "위임을 취소한 뒤에, 제 토큰을 완전히 되찾는 데 얼마나 걸리나요?",
       "at_launch_delegators_funds_will": "출시 단계에서, 위임자의 자금은 2주 후에 완전히 풀릴 것입니다. 이는 악의가 있는 후보에게 스테이킹하여 검증 권한을 얻을 확률을 올린 뒤에 바로 위임을 취소하는 상황을 막기 위한 보안 정책입니다. 이 부분에 대해서는 활발히 연구 중이며, 향후 몇 개월에 걸쳐 반복할 계획입니다.",
       "are_there_any_ways_to": "위임된 토큰을 잃을 수도 있나요?",
-      "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
+      "yes_if_the_protocol_rules": "네. 프로토콜 규칙을 준수하지 않을 경우, 검증자는 '처벌' 받을 수 있습니다. 즉, 그들의 풀에 위임된 토큰과 스테이킹 된 토큰 일부를 몰수하게 됩니다. 이러한 처벌은 악의적인 행동을 방지하고, 모두가 같은 규칙에 따라 행동하는 네트워크를 유지하는 데 도움을 줍니다. 이 시스템은 부정직하고 잘못된 행동을 하면 오히려 더 큰 비용이 들도록 설계되었습니다. 예를 들어, 유효하지 않은 블록 전송, 이중 지급 시도 및(또는) 다운 타임 발생의 경우, 처벌을 받게 됩니다. 처벌 조건이 확실히 결정되는 대로 자세한 내용을 공개할 예정입니다.",
       "where_do_the_tokens_go": "검증자들이 처벌받으면, 토큰은 어떻게 되나요?",
-      "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
+      "slashed_tokens_will_be_contributed": "몰수된 토큰은 앞으로의 블록 보상을 위한 비상금으로 환원되어 네트워크에서 검증 및 스테이킹을 하는 사람들에게 지급됩니다."
     },
     "history": {
       "your_history": "내 거래 내역",

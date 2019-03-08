@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },
     "history": {
-      "your_history": "Your History",
+      "your_history": "내 거래 내역",
       "sort_by": "정렬 기준:",
       "item_1": "아이템 1",
       "item_2": "아이템 2",
@@ -91,7 +91,7 @@
       "connect_to_deposit_funds": "연결하여 자금 입금하기",
       "no_mapping_detected": "발견된 매핑이 없습니다.",
       "map_accounts": "계정 매핑",
-      "history": "History",
+      "history": "거래 내역",
       "deposit": "입금",
       "withdraw": "인출",
       "use_maximum": "전액 사용하기",
@@ -172,7 +172,7 @@
       "my_account": "내 계정",
       "my_delegations": "내 위임",
       "rewards": "보상",
-      "history": "History"
+      "history": "거래 내역"
     },
     "layout": {
       "metamask_error": "MetaMask 오류!?",

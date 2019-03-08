@@ -97,10 +97,10 @@
       "use_maximum": "전액 사용하기",
       "transfer_to_plasmachain_for_staking": "PlasmaChain에 전송하여 스테이킹",
       "withdraw_to_metamask": "내 지갑으로 인출하기",
-      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
-      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
-      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
-      "reclaim_deposit": "Reclaim Deposit Tokens",
+      "wait_tx": "트랜잭션이 대기열에 있습니다. 트랜잭션이 확인된 후, 잔액이 업데이트될 때까지 잠시 기다려 주세요.",
+      "tokens_pending_deposit": "입금 처리 중인 {pendingDepositAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 입금을 완료해주세요.",
+      "tokens_pending_withdraw": "출금 처리 중인 {pendingWithdrawAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 출금을 완료해주세요.",
+      "reclaim_deposit": "예치된 토큰 회수하기",
       "complete_withdraw": "출금 완료"
     },
     "my_delegations": {
@@ -127,7 +127,7 @@
       "unlocked": "Unlocked"
     },
     "validator_list": {
-      "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
+      "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
       "validators": "검증자"
     }
   },
@@ -178,16 +178,16 @@
       "metamask_error": "MetaMask 오류!?",
       "please_enable_metamask_or_switch": "MetaMask를 활성화하거나, 지원되는 브라우저를 사용해 주세요.",
       "mapping_error": "매핑 오류!?",
-      "your_account_appears_to_be": "Your DappChain account appears to be mapped with the following Ethereum address:",
-      "but_your_current_account_address": "but your current Ethereum account address is:",
-      "please_change_your_metamask_account": "Please change your Ethereum account",
-      "please_check_your_metamask_account": "Please check your Ethereum account and/or network",
-      "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
-      "already_mapped": " Your selected accout is already mapped. Please select new account."
+      "your_account_appears_to_be": "당신의 DappChain 계정이 다음 이더리움 주소에 매핑된 것으로 확인됩니다:",
+      "but_your_current_account_address": "하지만 당신의 현재 이더리움 계정 주소는 다음과 같습니다: ",
+      "please_change_your_metamask_account": "이더리움 계좌를 변경해주세요.",
+      "please_check_your_metamask_account": "이더리움 계좌 및(또는) 네트워크를 확인해주세요.",
+      "sign_wallet": "당신의 {walletType}에서, 이더리움 계좌를 확인하기 위해 메시지에 서명하세요. (가스 비용 없음)",
+      "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "잠시만 기다려주세요, Loomy가 처리 중입니다!",
-      "this_could_take_several_minutes": "This could take several minutes. Please don't close or refresh your browser"
+      "this_could_take_several_minutes": "이 작업은 몇 분 정도 걸릴 수 있습니다. 브라우저를 닫거나 새로고침하지 마십시오."
     },
     "modals": {
       "confirm_seed_modal": {

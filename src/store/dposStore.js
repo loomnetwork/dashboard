@@ -449,15 +449,15 @@ export default {
     async loadEthereumHistory({commit, getters, state}, {web3, gatewayInstance, address}) {
       debug("loading history")
       const cachedEvents = getters.getCachedEvents
+        
       // Get latest mined block from Ethereum
+      // TODO we should make sure cached events dont contain blockNumber null (pending events)
       const toBlock = await web3.eth.getBlockNumber()
-      const fromBlock = toBlock - 7000
+      const fromBlock = (cachedEvents.length) ? 
+        cachedEvents[0].blockNumber + 1 :
+        toBlock - 7000
 
-      const eventsToNames = {
-        ERC20Received: "Deposit",
-        TokenWithdrawn: "Withdraw"
-      }
-      debug("loading history block range ",fromBlock, toBlock  )
+      debug("loading history block range ", fromBlock, toBlock  )
 
       // Fetch latest events
       state.history = gatewayInstance.getPastEvents("allEvents", { fromBlock, toBlock })
@@ -467,16 +467,6 @@ export default {
         let results = events.filter((event) => {
           return event.returnValues.from === address ||
                   event.returnValues.owner === address        
-        })
-        .map((event) => {
-          let type = eventsToNames[event.event] ||  "Other"
-          let amount = event.returnValues.amount || event.returnValues.value || 0 
-          return {
-            "Block #" : event.blockNumber,
-            "Event"   : type,
-            "Amount"  : formatToCrypto(amount),
-            "Tx Hash" : event.transactionHash
-            }
         })
 
         // Combine cached events with new events

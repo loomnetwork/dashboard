@@ -17,11 +17,35 @@
               <b-card-body>
                 <div class="row">
                   <div class="col">
-                    <div id="ethereum-table" v-if="showHistoryTable"><faucet-table :items="history"></faucet-table></div>
-                    <div v-else>
-                      <h5>
-                        No activity detected in the last <span class="highlight">{{blockOffset}}</span> blocks
-                      </h5>
+                    <div id="ethereum-table" class="faucet-table">
+                        <b-table
+                          responsive
+                          table-active="table-active"
+                          tr-class="spacer"
+                          :busy="loadingEthHistory" 
+                          :items="getEthHistory"
+                          :fields="ethereumFields" >
+                          <template slot="event" slot-scope="row">
+                            {{ $t(row.item.event) }}
+                          </template>
+                          <template slot="amount" slot-scope="row">
+                            {{ row.item.returnValues.amount || row.item.returnValues.value | weiToToken }}
+                          </template>
+                          <template slot="transactionHash" slot-scope="row">
+                            <a class="hash" target="_blank" :href="'https://etherscan.io/tx/' + row.item.transactionHash" :title="row.item.transactionHash">{{ row.item.transactionHash }}</a>
+                          </template>
+                          <template slot="empty">
+                            <h5>
+                              No activity detected in the last <span class="highlight">{{blockOffset}}</span> blocks
+                            </h5>
+                          </template>         
+                        <div slot="table-busy" class="text-center">
+                          <b-spinner class="align-middle" />
+                          <strong>Loading...</strong>
+                        </div>
+                      </b-table>
+                    </div>
+                    <div>
                       <h6>To search for events further back, please <a class="query-past-events" @click="goBackFurther">click here</a></h6>
                       <small>Head over to the <router-link to="/validators">validators page</router-link> to get started</small>
                     </div>    
@@ -92,6 +116,7 @@
        cachedEvents: "getCachedEvents"
      }),
      ...DPOSStore.mapState([
+       "history",
        "currentMetamaskAddress",
        "showLoadingSpinner",
        "dappChainEventUrl",
@@ -114,131 +139,29 @@
     // "ERC20Received" = Deposit?
     // "TokenWithdrawn" = Withdraw?
     blockOffset = 10000
-    history = null
 
-    async mounted() {
-      
+    ethereumFields = [
+      {key:"blockNumber",label:"Block #"},
+      {key:"event",label:"Event"},
+      {key:"amount",label:"Amount"},
+      {key:"transactionHash",label:"Tx Hash"},
+    ]
+
+    loadingEthHistory = false
+
+    getEthHistory() {
+      this.loadingEthHistory = true
+      this.history.then(() => this.loadingEthHistory = false)
+      return this.history
+    }
+
+    async __mounted() {
       await this.fetchDappChainEvents()
-
-      // Check if there are any cached events
-      if(this.latestBlockNumber && this.cachedEvents.length > 0) {
-        // Query from latest block in cache
-        await this.updateCachedEvents()
-      } else {
-        // Query the latest 10k blocks
-        await this.queryEvents()
-      }
     }
 
     async goBackFurther() {
       if(this.blockOffset < 10000*10) this.blockOffset+= 10000
       await this.queryEvents()
-    }
-
-    async updateCachedEvents() {
-
-      // Ensure web3 and Gateway contract exist
-      if(!this.web3 ||
-         !this.GatewayInstance ||
-         !this.currentMetamaskAddress) return
-
-      this.setShowLoadingSpinner(true)
-
-      // Filter based on user's address (does not seem to work)
-      // let filter = { from: this.currentMetamaskAddress }
-
-      // Get latest mined block from Ethereum
-      let blockNumber = await this.web3.eth.getBlockNumber()
-
-      // Fetch latest events
-      let events = await this.GatewayInstance.getPastEvents(
-        "allEvents",
-        {
-          fromBlock: this.latestBlockNumber,
-          toBlock: blockNumber
-        }
-      )
-
-      // Filter based on event type and user address
-      let results = events.filter((event) => {
-        return event.returnValues.from === this.currentMetamaskAddress ||
-               event.returnValues.owner === this.currentMetamaskAddress        
-      }).map((event) => {
-        let type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
-        let amount = event.returnValues.amount || event.returnValues.value || 0 
-        return {
-          "Block #" : event.blockNumber,
-          "Event"   : type,
-          "Amount"  : formatToCrypto(amount),
-          "Tx Hash" : event.transactionHash
-          }
-      })
-
-      // Combine cached events with new events
-      const mergedEvents = this.cachedEvents.concat(results)
-        
-      // Store results
-      this.setLatesBlockNumber(blockNumber)
-      this.setCachedEvents(mergedEvents)
-
-      // Display trades in the UI
-      this.history = mergedEvents
-
-      this.setShowLoadingSpinner(false)
-
-    }
-
-    async queryEvents() {
-      if(!this.web3 ||
-         !this.GatewayInstance ||
-         !this.currentMetamaskAddress) return
-
-      this.setShowLoadingSpinner(true)
-
-      // Filter based on user's address (does not seem to work)
-      // let filter = { from: this.currentMetamaskAddress }
-      let blockNumber = await this.web3.eth.getBlockNumber()
-
-      // Fetch latest events
-
-      console.log("Fetching events with offset: ", this.blockOffset)
-
-      let events = await this.GatewayInstance.getPastEvents(
-        "allEvents",
-        {
-          fromBlock: blockNumber-this.blockOffset,
-          toBlock: blockNumber
-        }
-      )
-
-      // Filter based on event type and user address
-      let results = events.filter((event) => {
-        return event.returnValues.from === this.currentMetamaskAddress ||
-               event.returnValues.owner === this.currentMetamaskAddress        
-      }).map((event) => {
-        let type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
-        let amount = event.returnValues.amount || event.returnValues.value || 0 
-        return {
-          "Block #" : event.blockNumber,
-          "Event"   : type,
-          "Amount"  : formatToCrypto(amount),
-          "Tx Hash" : event.transactionHash
-          }
-      })
-     
-      // Store results
-      this.setLatesBlockNumber(blockNumber)
-      this.setCachedEvents(results)
-
-      // Display trades in the UI
-      this.history = results
-
-      this.setShowLoadingSpinner(false)
-
-    }
-
-    get showHistoryTable() {
-      return this.history && this.history.length > 0
     }
 
     get showDappChainHistoryTable() {
@@ -264,6 +187,14 @@
     margin: 0px;
     padding: 12px 1.25rem;
   }  
+
+  .hash {
+        display: block;
+    max-width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 </style>
 <style lang="scss">
   // Uncomment to show Ethereum logo

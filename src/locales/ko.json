@@ -122,8 +122,8 @@
       "amount_delegated_loom": "{amountDelegated} LOOM",
       "updated_amount": "갱신된 양:",
       "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "선택 가능한 타임락:",
-      "timelock": "타임락:",
+      "timelock_tier": "선택 가능한 락업 기간:",
+      "timelock": "락업 기간:",
       "unlocked": "잠금 해제됨"
     },
     "validator_list": {

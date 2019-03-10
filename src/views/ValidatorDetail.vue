@@ -50,7 +50,10 @@
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
               </div> -->
               <div v-if="!isBootstrap" class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!( canDelegate && delegationState === 'Bonded' )">Delegate</b-button>
+                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!( canDelegate && delegationState == 'Bonded')">
+                  <b-spinner v-if="delegationState != 'Bonded'" type="border" style="color: white;" small />                  
+                  Delegate
+                </b-button>
                 <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
                 <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
                 <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
@@ -78,6 +81,7 @@ import RedelegateModal from '../components/modals/RedelegateModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import { clearInterval } from 'timers';
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -146,6 +150,7 @@ export default class ValidatorDetail extends Vue {
   locktime = 0
 
   refreshInterval = null
+  validatorStateInterval = null
   
   lockTimeTiers = [
     "2 weeks",
@@ -166,8 +171,25 @@ export default class ValidatorDetail extends Vue {
     }
   }
 
+  beforeDestroy() {
+    clearInterval(refreshInterval)
+    clearInterval(validatorStateInterval)    
+  }
+
   async mounted() {
 
+    if(this.canDelegate) {
+      this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 5000)
+    }
+    if(this.hasDelegation && this.delegation.lockTime > 0) {
+      this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
+    }
+
+    this.finished = true
+
+  }
+
+  async refreshValidatorState() {
     if(this.canDelegate) {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
@@ -176,12 +198,6 @@ export default class ValidatorDetail extends Vue {
         this.hasDelegation = false     
       }
     }
-    if(this.hasDelegation && this.delegation.lockTime > 0) {
-      this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
-    }    
-
-    this.finished = true
-
   }
 
   async delegateHandler() {

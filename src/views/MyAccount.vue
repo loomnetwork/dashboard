@@ -369,6 +369,10 @@ export default class MyAccount extends Vue {
 
   }
 
+  async refresh(poll) {    
+    this.$emit('refreshBalances') 
+  }
+
   destroyed() {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval)

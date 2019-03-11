@@ -51,7 +51,7 @@
         <b-spinner variant="primary" label="Spinning"/>
         <p>
           <slot name="confirmingMessage">Approval detected.</slot>
-          <a target="_blank" :href="etherscanApprovalUrl" class="hash">{{txHash}}</a>
+          <a style="display:block" target="_blank" :href="etherscanApprovalUrl" class="hash">{{txHash}}</a>
         </p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>

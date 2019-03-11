@@ -103,6 +103,7 @@
                                   @withdrawalFailed="afterWithdrawalFailed"
                                   :balance="Math.min(userBalance.loomBalance,withdrawLimit)" 
                                   :transferAction="executeWithdrawal"
+                                  :resolveTxSuccess="resolveWithdraw"
                                   executionTitle="Execute transfer">
                                     <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
                                     <template #failueMessage>Withdrawal failed... retry?</template>
@@ -702,13 +703,16 @@ export default class MyAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        await tx.wait()
+        //await tx.wait()
         return tx
       }
     } catch (e) {
       console.error(e)
     }
+  }
 
+  resolveWithdraw(amount, tx) {
+    return tx.wait()
   }
 }
 </script>

@@ -696,7 +696,6 @@ export default class MyAccount extends Vue {
     // note:  withdrawAsync returns Promise<TransactionReceipt> 
     try {
       await this.checkPendingWithdrawalReceipt()
-      debugger
       if (this.receipt) {
         // have a pending receipt
         this.hasReceiptHandler(this.receipt)

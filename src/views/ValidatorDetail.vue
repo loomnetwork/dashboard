@@ -51,7 +51,7 @@
               </div> -->
               <div v-if="!isBootstrap" class="col col-sm-12 col-md-9 right-container text-right">
                 <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!( canDelegate && delegationState == 'Bonding')">
-                  <b-spinner v-if="delegationState != 'Bonded'" type="border" style="color: white;" small />                  
+                  <b-spinner v-if="delegationState != 'Bonding'" type="border" style="color: white;" small />                  
                   Delegate
                 </b-button>
                 <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>

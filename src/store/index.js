@@ -4,11 +4,13 @@ import { state, getters, mutations, actions } from './applicationStore'
 import DappChainStore from './dappChainStore'
 import DPOSStore from './dposStore'
 
+import { dposStorePlugin } from "./dposPlugin";
+
 Vue.use(Vuex)
 
 const LocaleStore = {
   state: {
-    locale: localStorage.getItem('locale') || 'en'
+    locale: sessionStorage.getItem('locale') || 'en'
   },
   getters: {
     locale(state) {
@@ -18,7 +20,7 @@ const LocaleStore = {
   mutations: {
     setLocale(state, locale) {
       state.locale = locale
-      localStorage.setItem('locale', locale)
+      sessionStorage.setItem('locale', locale)
     }
   },
   actions: {
@@ -36,6 +38,7 @@ const store = new Vuex.Store({
     DappChain: DappChainStore,
     DPOS: DPOSStore,
     Locale: LocaleStore
-  }
+  },
+  plugins:[dposStorePlugin]
 })
 export default store

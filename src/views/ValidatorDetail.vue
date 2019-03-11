@@ -50,11 +50,14 @@
                 <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
               </div> -->
               <div v-if="!isBootstrap" class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!( canDelegate && delegationState === 'Bonded' )">Delegate</b-button>
+                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!( canDelegate && delegationState == 'Bonding')">
+                  <b-spinner v-if="delegationState != 'Bonding'" type="border" style="color: white;" small />                  
+                  Delegate
+                </b-button>
                 <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
-                <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
+                <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState == 'Bonding'">Un-delegate</b-button>
                 <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
-                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal" :disabled="!hasDelegation || !canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Redelegate</b-button>
+                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal" :disabled="!hasDelegation || !canDelegate || (delegationState == 'Bonding' && amountDelegated != 0)">Redelegate</b-button>
                 <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
               </div>
             </div>
@@ -78,6 +81,7 @@ import RedelegateModal from '../components/modals/RedelegateModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import { clearInterval } from 'timers';
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -146,6 +150,7 @@ export default class ValidatorDetail extends Vue {
   locktime = 0
 
   refreshInterval = null
+  validatorStateInterval = null
   
   lockTimeTiers = [
     "2 weeks",
@@ -154,6 +159,7 @@ export default class ValidatorDetail extends Vue {
     "1 year"
   ]
 
+// TODO fix bonding states once unbonded is added
   states = ["Bonding", "Bonded", "Unbounding"]
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
@@ -166,22 +172,35 @@ export default class ValidatorDetail extends Vue {
     }
   }
 
+  beforeDestroy() {
+    clearInterval(this.refreshInterval)
+    clearInterval(this.validatorStateInterval)    
+  }
+
   async mounted() {
 
     if(this.canDelegate) {
+      this.refreshValidatorState()
+      this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
+    }
+    if(this.hasDelegation && this.delegation.lockTime > 0) {
+      this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
+    }
+
+    this.finished = true
+
+  }
+
+  async refreshValidatorState() {
+    if(this.canDelegate) {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
+        console.log('delegation', this.delegation)
         this.checkHasDelegation()      
       } catch(err) {
         this.hasDelegation = false     
       }
     }
-    if(this.hasDelegation && this.delegation.lockTime > 0) {
-      this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
-    }    
-
-    this.finished = true
-
   }
 
   async delegateHandler() {

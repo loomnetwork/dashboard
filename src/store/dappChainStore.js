@@ -97,6 +97,7 @@ const getChainUrls = () => {
   if (!chainUrlsJSON) {
     chainUrls = [
       clientNetwork['plasma'],
+      clientNetwork['asia1'],
       clientNetwork['4'],      
       clientNetwork['stage'],
       clientNetwork['loomv2a'],

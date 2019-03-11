@@ -386,6 +386,7 @@ export default class MyAccount extends Vue {
 
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
+    this.$emit('refreshBalances')
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -651,6 +652,7 @@ export default class MyAccount extends Vue {
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
     this.setGatewayBusy(false)
+    this.$emit('refreshBalances')
     return result
   }
 
@@ -667,6 +669,7 @@ export default class MyAccount extends Vue {
     } catch (error) {
       console.error(error)
     }
+    this.$emit('refreshBalances')
     this.setGatewayBusy(false)
     this.setShowLoadingSpinner(false)
 

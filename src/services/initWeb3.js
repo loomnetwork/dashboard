@@ -81,6 +81,31 @@ export const initWeb3SelectedWallet = (path) => {
 
 }
 
+/**
+ * 
+ * @param {*} path 
+ */
+export const initWeb3SelectedWalletBeta = (path) => {
+  return new Promise(
+    async (resolve, reject) => {          
+      const engine = new ProviderEngine();
+      const getTransport = () => TransportU2F.create();
+      const ledger = createLedgerSubprovider(getTransport, {
+        networkId:1,
+        accountsLength: 5,
+        path
+      });
+      let accounts = ledger.getAccounts((err, val) => {
+        if(err) reject(err)
+        resolve(val)
+      })
+    }
+  )
+
+}
+
+
+
 export const initWeb3 = () => {
 
   return new Promise(

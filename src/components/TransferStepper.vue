@@ -192,7 +192,7 @@ export default class TransferStepper extends Vue {
 
   reset() {
     this.step = 1
-    this.transferAmount = 0
+    this.transferAmount = 1
     this.hasTransferFailed = false
     this.tx = null;
     this.txHash = '';

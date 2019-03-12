@@ -108,10 +108,10 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
-                                <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
+                                <!-- <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
                                 <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
-                                </div>
+                                </div> -->
                                 <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
                                 <div class="center-children">                                  
@@ -124,7 +124,11 @@
                           </b-card>
                           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
                             {{ $t('views.my_account.wait_tx') }}
-                        </b-modal> 
+                          </b-modal> 
+                          <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
+                            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+                            <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+                          </b-modal>                           
                         </div>
                       </div>
                     </b-card-body>
@@ -401,6 +405,7 @@ export default class MyAccount extends Vue {
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
     this.unclaimDepositTokens = unclaimAmount.toNumber()
+    if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }
 
   async afterWithdrawalDone () {
@@ -425,6 +430,7 @@ export default class MyAccount extends Vue {
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
+    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.refresh(true)
   }

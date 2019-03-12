@@ -30,10 +30,6 @@
               <h5>
                 {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
               </h5>
-              <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
-              <!-- <h5>
-                {{ $t('views.validator_detail.timelock_tier') }} <span class="highlight">{{lockTimeTier}}</span>
-              </h5> -->
               <h5 class="mb-4">
                 {{ $t('views.validator_detail.timelock') }} <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
                 <span v-else class="highlight">{{ $t('views.validator_detail.unlocked') }}</span>
@@ -366,12 +362,6 @@ export default class ValidatorDetail extends Vue {
   openRedelegateModal() {
     let index = this.$route.params.index
     this.$refs.redelegateModalRef.show(this.validator.Address)
-    // this.$router.push({
-    //   path: '/redelegate',
-    //   params: {
-    //     index
-    //   }
-    // })
   }
 
 }</script>

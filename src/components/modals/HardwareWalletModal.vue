@@ -165,7 +165,6 @@ export default class HardwareWalletModal extends Vue {
     let results = await initWeb3SelectedWalletBeta(this.path)
     this.accounts = results.map((account, index) => {
       return {
-        index: index,
         account: account,
         balance: 'loading'
         }
@@ -277,7 +276,6 @@ export default class HardwareWalletModal extends Vue {
 
       this.accounts = values.map((account) => {
         return {
-          index: i,
           account: account,
           balance: 'loading'
          }

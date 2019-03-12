@@ -41,20 +41,16 @@
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
             <div class="row justify-content-end validator-action-container">
-              <!-- <div class="col col-sm-12 col-md-3">
-                <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">{{ $t('views.rewards.claim_reward') }}</b-button>
-                <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
-              </div> -->
-              <div v-if="!isBootstrap" class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!( canDelegate && delegationState == 'Bonding')">
-                  <b-spinner v-if="delegationState != 'Bonding'" type="border" style="color: white;" small />                  
-                  Delegate
-                </b-button>
-                <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
-                <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState == 'Bonding'">Un-delegate</b-button>
-                <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
-                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal" :disabled="!hasDelegation || !canDelegate || (delegationState == 'Bonding' && amountDelegated != 0)">Redelegate</b-button>
-                <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
+              <div class="right-container text-right">
+                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="canDelegate === false">
+                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
+                    Delegate
+                  </b-button>
+                  <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
+                  <b-button id="redelegateBtn" class="px-5 py-2 mx-3" variant="outline-info" @click="openRedelegateModal" :disabled="canRedelegate === false">Redelegate</b-button>
+                  <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
+                  <b-button id="undelegateBtn" class="px-5 py-2" variant="outline-danger" @click="openRequestUnbondModal" :disabled="canUndelegate === false">Un-delegate</b-button>
+                  <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
               </div>
             </div>
           </div>
@@ -63,7 +59,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import Vue from 'vue'
 import ApiClient from '../services/faucet-api'

@@ -121,6 +121,7 @@ export default class HardwareWalletModal extends Vue {
   accounts = []
 
   showLoadingSpinner = false
+  path = ""
   paths = []
   filteredPaths = []
   addresses = []
@@ -151,7 +152,7 @@ export default class HardwareWalletModal extends Vue {
   async updateAddresses() {
     this.showLoadingSpinner = true
     this.path = this.selectedPath.replace('m/','')
-    let offset = this.currentPage * this.perPage
+    let offset = (this.currentPage - 1) * this.perPage
     if(this.path === "44'/60'") {
       // Ethereum addresses (Ledger live)
       this.path =  `44'/60'/${offset}'/0/0`

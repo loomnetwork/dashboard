@@ -175,7 +175,7 @@ export default class ValidatorDetail extends Vue {
 
   async mounted() {
 
-    if(this.canDelegate) {
+    if(this.isReallyLoggedIn) {
       this.refreshValidatorState()
       this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
     }
@@ -188,7 +188,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   async refreshValidatorState() {
-    if(this.canDelegate) {
+    if(this.isReallyLoggedIn) {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
         console.log('delegation', this.delegation)
@@ -300,8 +300,36 @@ export default class ValidatorDetail extends Vue {
   async redelegateHandler() {
   }
 
-  get canDelegate() {
+  get isReallyLoggedIn() {
     return this.userIsLoggedIn && this.getPrivateKey
+  }
+
+  get canDelegate() {
+    return this.userIsLoggedIn && 
+      this.getPrivateKey && 
+      this.isBootstrap === false && 
+      (
+        // hack around initial bonding state (no state "unbonded")
+        (this.hasDelegation === false && this.delegationState == 'Bonding') || 
+        // normal rule
+        (this.hasDelegation === true && this.delegationState == 'Bonded' )
+      )
+  }
+
+  get canUndelegate() {
+    return this.userIsLoggedIn && 
+      this.getPrivateKey && 
+      this.isBootstrap === false &&
+      this.hasDelegation &&
+      this.delegationState != 'Bonding'
+  }
+
+  get canRedelegate() {
+    return this.userIsLoggedIn && 
+      this.getPrivateKey && 
+      this.hasDelegation &&
+      this.delegationState != 'Bonding' &&
+      this.amountDelegated != 0
   }
 
   get amountDelegated() {

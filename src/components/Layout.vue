@@ -282,10 +282,6 @@ export default class Layout extends Vue {
 
 <style lang="scss">
 
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
-
   .rmv-spacing {
     margin: 0px;
     padding: 0px;

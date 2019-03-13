@@ -108,12 +108,14 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "No previous delegation detected"
       return
     }
+    this.isLoading = true
 
     await this.redelegateAsync({
       origin: this.origin.Address, 
       target: this.target.Address, 
       amount: this.delegation.amount})
 
+    this.isLoading = false
     // this.$emit("ok")
     this.$refs.modalRef.hide()
 

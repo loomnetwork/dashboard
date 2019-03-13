@@ -175,6 +175,7 @@
       "history": "History"
     },
     "layout": {
+      "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "MetaMaskのエラー!?",
       "please_enable_metamask_or_switch": "MetaMaskの使用を可能にするか、サポート済みのブラウザに切り替えてください。",
       "mapping_error": "マッピングのエラー!?",

@@ -170,10 +170,10 @@ export default class FirstPage extends Vue {
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
+      this.$root.$emit("login") 
     } else {
       return
     }
-    this.$root.$emit("login") 
   }
 
   async openLoginModal() {

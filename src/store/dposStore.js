@@ -230,11 +230,12 @@ export default {
         commit("setWeb3", web3js)
         commit("setCurrentMetamaskAddress", metamaskAccount)
       } else if(state.walletType === "ledger") {
-        if(selectedLedgerPath) {
-          let web3js = await initWeb3SelectedWallet(selectedLedgerPath)
+        if(state.selectedLedgerPath) {
+          let web3js = await initWeb3SelectedWallet(state.selectedLedgerPath)
           commit("setWeb3", web3js)
         } else {
-          throw "No HD path selected"
+          console.error("no HD path selected")
+          throw new Error("No HD path selected")
         }
       }
       commit("setConnectedToMetamask", true)  

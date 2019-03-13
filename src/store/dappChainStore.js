@@ -310,6 +310,30 @@ export default {
       }
       state.dposUser = user
     },
+    // TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
+    async switchDposUser({ state, rootState, getters, dispatch, commit }, payload) {
+      const privateKeyString = sessionStorage.getItem('privatekey')
+      if (!privateKeyString) {
+        // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
+        throw new Error('No Private Key, Login again')
+      }
+      const network = state.chainUrls[state.chainIndex].network
+      let user 
+      try { 
+        user = await DPOSUser.createMetamaskUserAsync(		
+        payload.web3,
+        getters.dappchainEndpoint,
+        privateKeyString,
+        network,
+        GatewayJSON.networks[network].address,
+        LoomTokenJSON.networks[network].address
+        );
+      } catch(err) {
+        commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
+        
+      }
+      state.dposUser = user
+    },
     /**
      * 
      * @param {store} param0 
@@ -632,8 +656,9 @@ export default {
         const receipt = await user.getPendingWithdrawalReceiptAsync()
         if(!receipt) return null
         const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+        const owner = CryptoUtils.bytesToHexAddr(receipt.tokenOwner.local.bytes)
         const amount = receipt.tokenAmount
-        return  { signature: signature, amount: amount }
+        return  { signature: signature, amount: amount, tokenOwner: owner }
       } catch (err) {
         console.log("Error get pending withdrawal receipt", err);
         commit('setErrorMsg', 'Error get pending withdrawal receipt', { root: true, cause:err})       
@@ -644,7 +669,8 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
-      const user = state.dposUser
+
+      var user = state.dposUser
       commit('setGatewayBusy', true)
       try {
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)

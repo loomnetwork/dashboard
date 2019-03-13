@@ -279,7 +279,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
       'getPendingWithdrawalReceipt',
-      'withdrawCoinGatewayAsync'
+      'withdrawCoinGatewayAsync',
+      'switchDposUser'
     ])
   }
 })
@@ -426,7 +427,7 @@ export default class MyAccount extends Vue {
     this.receipt = await this.getPendingWithdrawalReceipt()
   }
 
-  hasReceiptHandler(receipt) {
+  async hasReceiptHandler(receipt) {
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
@@ -436,9 +437,33 @@ export default class MyAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
+    let ethAddr = this.dposUser._wallet._address
+    // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
+    if (receipt.tokenOwner != ethAddr) {
+      this.mismatchedReceiptHandler(receipt, ethAddr)
+    }
+  }
+
+  async mismatchedReceiptHandler(receipt, ethAddr) {
+    // this is necessary to prevent reloading when metamask changes accounts
+    window.resolvingMismatchedReceipt = true
+
+    console.log('receipt: ', receipt.tokenOwner)
+    console.log('mapped address:', ethAddr)
+
+    let r = confirm(`A pending withdraw requires you to switch ETH accounts to: ${receipt.tokenOwner}. Please change your account and then click OK`)
+    if (r) {
+      let tempUser = await this.switchDposUser({web3: window.web3})
+      this.reclaimWithdrawHandler()
+    }
   }
 
   async reclaimWithdrawHandler() {
+    // var localAddr = CryptoUtils.bytesToHexAddr(this.dposUser._address.local.bytes)
+    // let mappedAddr = await this.dposUser._wallet._address
+    // let ethAddr = CryptoUtils.bytesToHexAddr(mappedAddr.to.local.bytes)
+    let ethAddr = this.dposUser._wallet._address
+    console.log('current eth addr: ', ethAddr)
     try {
       this.isWithdrawalInprogress = true
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      

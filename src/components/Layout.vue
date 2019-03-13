@@ -195,6 +195,12 @@ export default class Layout extends Vue {
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
+        
+        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove. 
+        if (window.resolvingMismatchedReceipt) {
+          return;
+        }
+
         if (this.currentMetamaskAddress && 
           this.currentMetamaskAddress !== accounts[0] ) {
                 localStorage.clear()

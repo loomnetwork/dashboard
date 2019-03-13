@@ -331,6 +331,7 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async show(myWeb3) {
+    this.setShowLoadingSpinner(false)
     this.componentLoaded = true
     await this.setWeb3Instance()
     try {

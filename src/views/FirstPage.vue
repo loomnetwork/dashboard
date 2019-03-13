@@ -166,10 +166,23 @@ export default class FirstPage extends Vue {
 
   async selectWallet(wallet) {
     if(wallet === "ledger") {
-      this.setWalletType("ledger")
-     this.$refs.hardwareWalletConfigRef.show() 
+      
+      try {
+        this.$refs.hardwareWalletConfigRef.show()
+        this.setWalletType("ledger")
+      } catch(err) {
+        this.setShowLoadingSpinner(false)
+        console.log(err)
+      }
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
+      if(window.ethereum) {
+        window.ethereum.on('accountsChanged', async (accounts) => {
+          if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
+          this.setCurrentMetamaskAddress(accounts[0])
+        })
+      }
+      await this.initializeDependencies()
     } else {
       return
     }

@@ -185,25 +185,13 @@ export default class Layout extends Vue {
     // Clear any remaining local storage
     localStorage.clear()
       
-    if(this.$route.meta.requireDeps) {
-      this.attemptToInitialize()     
-    } else {
-      this.$root.$on('login', async () => {
-        this.attemptToInitialize()
-      })
-    }      
-    
-    if(window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts) => {
-        if (this.currentMetamaskAddress && 
-          this.currentMetamaskAddress !== accounts[0] ) {
-                localStorage.clear()
-                this.metamaskChangeAlert = true
-                window.ethereum.removeAllListeners()
-        }
-
-      })
-    }
+    // if(this.$route.meta.requireDeps) {
+    //   this.attemptToInitialize()     
+    // } else {
+    //   this.$root.$on('login', async () => {
+    //     this.attemptToInitialize()
+    //   })
+    // } 
 
   }
 

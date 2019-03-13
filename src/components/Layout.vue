@@ -1,27 +1,31 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
-    <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
+  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">
+    <!-- <faucet-header v- on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <faucet-header v-on:update:chain="refresh()"></faucet-header>    
-    <div class="content container-fluid">      
+    <div class="content">
       <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
       <div class="row">
         <div v-show="showSidebar" class="col-lg-3">
           <faucet-sidebar></faucet-sidebar>      
-        </div>
+        </div>        
         <div :class="contentClass">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
           </b-modal>
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.already_mapped') }}
-          </b-modal> 
-          <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-          <router-view></router-view>
+          </b-modal>
+          <transition name="router-anim" enter-active-class="animated fadeIn fast" leave-active-class="animated fadeOut fast">
+            <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+          </transition>
+          <transition name="router-anim" enter-active-class="animated fadeInUp faster" leave-active-class="animated fadeOutDown faster">
+            <router-view></router-view>
+          </transition>
         </div>        
       </div>          
     </div>    
-    <faucet-footer></faucet-footer>
+    <!-- <faucet-footer></faucet-footer> -->
      <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
         <div class="d-block text-center">
           <p>{{ $t('components.layout.metamask_changed')}}</p>
@@ -286,6 +290,13 @@ export default class Layout extends Vue {
   .highlight {
     color: #f0ad4e;
   }
+
+
+  .custom-container {
+    width: 100%;
+    display: flex;
+    align-items: center;  
+  }  
 
   .container-fluid {
     max-width: 1200px;

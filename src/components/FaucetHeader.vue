@@ -11,7 +11,7 @@
       <span class="text-dark" v-html="this.$store.state.successMsg"></span>
     </b-alert>   
     <b-navbar toggleable="md" type="dark">
-      <div class="container-fluid d-flex justify-content-between ensure-padded">        
+      <div class="custom-container justify-content-between ensure-padded">        
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
             {{ $t('components.faucet_header.plasmachain_dashboard') }}
@@ -50,7 +50,7 @@
       </div>
     </b-navbar> 
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
-      <div class="container-fluid ensure-padded">
+      <div class="custom-container ensure-padded">
 
         <div class="col" v-if="userIsLoggedIn">
           <b-navbar-nav v-if="formattedTimeUntilElectionCycle">
@@ -78,7 +78,7 @@
                   <b-spinner v-if="showRefreshSpinner" type="border" small />
                   <a v-if="!showRefreshSpinner" @click="refresh"> <fa :icon="['fas', 'sync']" class="refresh-icon"/></a>
               </b-nav-item>
-              <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
+              <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left px-3">
                 <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
               </b-nav-item>          
             </div>

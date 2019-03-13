@@ -5,7 +5,7 @@
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex">
             <div v-if="loading === false && delegations.length > 0">
-              <faucet-table :items="delegations"/>
+              <faucet-table :items="delegations" @row-clicked="showValidatorDetail"/>
             </div>
             <div v-if="loading === false && delegations.length == 0">
               <h2>{{ $t('views.my_delegations.no_delegations') }}</h2>
@@ -129,6 +129,9 @@ export default class MyDelegations extends Vue {
     return formattedTime
   }
 
+  showValidatorDetail(record, index) {
+    this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)
+  }
 
 }</script>
 

@@ -278,31 +278,23 @@ export default class FaucetHeader extends Vue {
     }
   }
 
-  mounted() { 
+  async mounted() { 
+
+    // Start election cycle timer
     this.$root.$on('initialized', async () => {
-      await this.pollingHandler()
+      await this.updateTimeUntilElectionCycle()
+      this.startTimer()
     })    
 
+    // Listen to refreshBalances event
+    this.$root.$on('refreshBalances', async () => {
+      await this.refresh()
+    })
+
     this.$root.$on('logout', () => {
-      this.deleteIntervals()
       this.logOut()
     })
 
-  }
-
-  async pollingHandler() {
-    if(this.userIsLoggedIn) {
-      this.startPolling()
-       // Get time until next election cycle
-       await this.updateTimeUntilElectionCycle()
-       this.startTimer()
-    } else {
-      this.$root.$on('login', async () => {
-        this.startPolling()
-        await this.updateTimeUntilElectionCycle()
-        this.startTimer()        
-      })
-    }
   }
 
   startTimer() {

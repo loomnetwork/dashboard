@@ -193,6 +193,7 @@ import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers
 import Web3 from 'web3'
 import BN from 'bn.js'
 import debug from 'debug'
+import { setTimeout } from 'timers';
 
 // should move this
 Vue.use(VueClipboard)
@@ -353,46 +354,30 @@ export default class MyAccount extends Vue {
     onClickWithNoMapping: "No mapping detected, please click \"Map Accounts\" or refresh the page"
   }
 
-
-
   async mounted() {
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
     await this.checkUnclaimedLoomTokens()
     await this.checkPendingWithdrawalReceipt()
+
+    this.$root.$on('done', async () => {
+      this.refresh()
+    })
+    
     if (this.receipt) {
       this.hasReceiptHandler(this.receipt)
     }
 
   }
 
+  async refresh(poll) {    
+    this.$emit('refreshBalances') 
+  }
+
   destroyed() {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval)
     }
-  }
-
-  async refresh(poll) {    
-    console.log('refreshing balances...')
-    this.userAccount.address = getAddress(sessionStorage.getItem('privatekey'))
-    let loomBalance = await this.getDappchainLoomBalance()    
-    let mainnetBalance = await this.getMetamaskLoomBalance({
-      web3: this.web3,
-      address: this.userEthAddr
-    })
-    this.allowance = parseInt(await this.checkAllowance())
-    this.currentAllowance = this.allowance
-
-    let isLoading = false
-    let stakedAmount = await this.getAccumulatedStakingAmount()  
-      
-    await this.getDpos2()
-    this.setUserBalance({
-      isLoading,
-      loomBalance: loomBalance,
-      mainnetBalance: mainnetBalance,
-      stakedAmount
-    })
   }
 
   openRequestDelegateModal() {
@@ -406,6 +391,7 @@ export default class MyAccount extends Vue {
 
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
+    this.$emit('refreshBalances')
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -671,6 +657,7 @@ export default class MyAccount extends Vue {
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
     this.setGatewayBusy(false)
+    this.$emit('refreshBalances')
     return result
   }
 
@@ -687,6 +674,7 @@ export default class MyAccount extends Vue {
     } catch (error) {
       console.error(error)
     }
+    this.$emit('refreshBalances')
     this.setGatewayBusy(false)
     this.setShowLoadingSpinner(false)
 

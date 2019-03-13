@@ -199,9 +199,11 @@ export default class ValidatorDetail extends Vue {
     this.checkHasDelegation()
     this.currentLockTimeTier = this.delegation.lockTimeTier
 
+    this.$root.$emit("refreshBalances")
+
     // show modal
     this.$root.$emit("bv::hide::modal", "success-modal")
-
+    
   }
 
   checkHasDelegation() {
@@ -293,6 +295,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   async redelegateHandler() {
+    this.$root.$emit("refreshBalances")
   }
 
   get isReallyLoggedIn() {

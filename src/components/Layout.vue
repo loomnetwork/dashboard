@@ -133,12 +133,8 @@ export default class Layout extends Vue {
   ]
 
   created() {
-    this.$router.beforeEach((to, from, next) => {
-      this.$Progress.start()
-      next()
-    })
     this.$router.afterEach((to, from) => {
-      this.$Progress.finish()
+      this.$root.$emit("refreshBalances")
     })
   }
 
@@ -220,6 +216,7 @@ export default class Layout extends Vue {
     try {
       await this.initializeDependencies()
       this.$root.$emit("initialized")
+      this.$root.$emit("refreshBalances")
     } catch(err) {
       this.$root.$emit("logout")
       this.setMappingError(null)

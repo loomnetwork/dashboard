@@ -22,6 +22,12 @@
       </div>          
     </div>    
     <faucet-footer></faucet-footer>
+     <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
+        <div class="d-block text-center">
+          <p>{{ $t('components.layout.metamask_changed')}}</p>
+        </div>
+        <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
+     </b-modal>
   </div>  
 </template>
 
@@ -88,6 +94,7 @@ import { isIP } from 'net';
     ...DPOSStore.mapState([
       'showSidebar',
       'web3',
+      "currentMetamaskAddress",
       'metamaskDisabled',
       'showLoadingSpinner',
       'showAlreadyMappedModal',
@@ -100,7 +107,10 @@ import { isIP } from 'net';
   },
 })
 
-export default class Layout extends Vue {  
+export default class Layout extends Vue { 
+
+  metamaskChangeAlert = false
+
   pendingModalTitle = 'Continue with your approved Loom'
   isOpen = true
   preload = false
@@ -188,13 +198,23 @@ export default class Layout extends Vue {
     }      
     
     if(window.ethereum) {
-      window.ethereum.on('accountsChanged', async (accounts) => {
-        if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
-        this.setCurrentMetamaskAddress(accounts[0])
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (this.currentMetamaskAddress && 
+          this.currentMetamaskAddress !== accounts[0] ) {
+                localStorage.clear()
+                this.metamaskChangeAlert = true
+                window.ethereum.removeAllListeners()
+        }
+
       })
     }
 
   }
+
+  async restart() {
+      window.location.reload(true)
+  }
+
 
   async attemptToInitialize() {
     try {

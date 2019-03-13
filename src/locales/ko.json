@@ -175,6 +175,7 @@
       "history": "거래 내역"
     },
     "layout": {
+      "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "MetaMask 오류!?",
       "please_enable_metamask_or_switch": "MetaMask를 활성화하거나, 지원되는 브라우저를 사용해 주세요.",
       "mapping_error": "매핑 오류!?",

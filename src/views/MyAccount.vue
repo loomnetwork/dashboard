@@ -109,10 +109,10 @@
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
-                                <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
+                                <!-- <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
                                 <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
-                                </div>
+                                </div> -->
                                 <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
                                 <div class="center-children">                                  
@@ -125,7 +125,11 @@
                           </b-card>
                           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
                             {{ $t('views.my_account.wait_tx') }}
-                        </b-modal> 
+                          </b-modal> 
+                          <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
+                            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+                            <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+                          </b-modal>                           
                         </div>
                       </div>
                     </b-card-body>
@@ -275,7 +279,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
       'getPendingWithdrawalReceipt',
-      'withdrawCoinGatewayAsync'
+      'withdrawCoinGatewayAsync',
+      'switchDposUser'
     ])
   }
 })
@@ -387,6 +392,7 @@ export default class MyAccount extends Vue {
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
     this.unclaimDepositTokens = unclaimAmount.toNumber()
+    if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }
 
   async afterWithdrawalDone () {
@@ -412,6 +418,7 @@ export default class MyAccount extends Vue {
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
+    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.refresh(true)
   }
@@ -420,7 +427,7 @@ export default class MyAccount extends Vue {
     this.receipt = await this.getPendingWithdrawalReceipt()
   }
 
-  hasReceiptHandler(receipt) {
+  async hasReceiptHandler(receipt) {
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
@@ -430,9 +437,33 @@ export default class MyAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
+    let ethAddr = this.dposUser._wallet._address
+    // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
+    if (receipt.tokenOwner != ethAddr) {
+      this.mismatchedReceiptHandler(receipt, ethAddr)
+    }
+  }
+
+  async mismatchedReceiptHandler(receipt, ethAddr) {
+    // this is necessary to prevent reloading when metamask changes accounts
+    window.resolvingMismatchedReceipt = true
+
+    console.log('receipt: ', receipt.tokenOwner)
+    console.log('mapped address:', ethAddr)
+
+    let r = confirm(`A pending withdraw requires you to switch ETH accounts to: ${receipt.tokenOwner}. Please change your account and then click OK`)
+    if (r) {
+      let tempUser = await this.switchDposUser({web3: window.web3})
+      this.reclaimWithdrawHandler()
+    }
   }
 
   async reclaimWithdrawHandler() {
+    // var localAddr = CryptoUtils.bytesToHexAddr(this.dposUser._address.local.bytes)
+    // let mappedAddr = await this.dposUser._wallet._address
+    // let ethAddr = CryptoUtils.bytesToHexAddr(mappedAddr.to.local.bytes)
+    let ethAddr = this.dposUser._wallet._address
+    console.log('current eth addr: ', ethAddr)
     try {
       this.isWithdrawalInprogress = true
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      

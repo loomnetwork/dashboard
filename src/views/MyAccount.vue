@@ -445,7 +445,13 @@ export default class MyAccount extends Vue {
         this.unclaimSignature = this.receipt.signature
       }
       this.unclaimWithdrawTokensETH = 0
-      await this.refresh(true)
+      await this.refresh(true) 
+
+      // TODO: this is added for fixing mismatched receipts, remove once users are fixed. 
+      if (window.resolvingMismatchedReceipt) {
+        alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
+        window.location.reload(true)
+      }
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)

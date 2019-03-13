@@ -11,7 +11,7 @@
       <span class="text-dark" v-html="this.$store.state.successMsg"></span>
     </b-alert>   
     <b-navbar toggleable="md" type="dark">
-      <div class="custom-container justify-content-between ensure-padded">        
+      <div class="container-fluid justify-content-between ensure-padded">        
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
             {{ $t('components.faucet_header.plasmachain_dashboard') }}
@@ -50,7 +50,7 @@
       </div>
     </b-navbar> 
     <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
-      <div class="custom-container ensure-padded">
+      <div class="container-fluid ensure-padded">
 
         <div class="col" v-if="userIsLoggedIn">
           <b-navbar-nav v-if="formattedTimeUntilElectionCycle">

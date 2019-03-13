@@ -2,7 +2,7 @@
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">
     <!-- <faucet-header v- on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <faucet-header v-on:update:chain="refresh()"></faucet-header>    
-    <div class="content">
+    <div class="container-fluid content">
       <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
       <div class="row">
@@ -25,7 +25,7 @@
         </div>        
       </div>          
     </div>    
-    <!-- <faucet-footer></faucet-footer> -->
+    <faucet-footer></faucet-footer>
      <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
         <div class="d-block text-center">
           <p>{{ $t('components.layout.metamask_changed')}}</p>
@@ -281,6 +281,10 @@ export default class Layout extends Vue {
 </style>
 
 <style lang="scss">
+
+  body {
+    font-family: 'Roboto', sans-serif;
+  }
 
   .rmv-spacing {
     margin: 0px;

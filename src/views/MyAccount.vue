@@ -103,15 +103,16 @@
                                   @withdrawalFailed="afterWithdrawalFailed"
                                   :balance="Math.min(userBalance.loomBalance,withdrawLimit)" 
                                   :transferAction="executeWithdrawal"
+                                  :resolveTxSuccess="resolveWithdraw"
                                   executionTitle="Execute transfer">
                                     <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
                                     <template #failueMessage>Withdrawal failed... retry?</template>
                                     <template #confirmingMessage>Waiting for ethereum confirmation</template>
                                 </TransferStepper>
-                                <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
+                                <!-- <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
                                 <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
-                                </div>
+                                </div> -->
                                 <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
                                 <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
                                 <div class="center-children">                                  
@@ -124,7 +125,11 @@
                           </b-card>
                           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
                             {{ $t('views.my_account.wait_tx') }}
-                        </b-modal> 
+                          </b-modal> 
+                          <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
+                            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+                            <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+                          </b-modal>                           
                         </div>
                       </div>
                     </b-card-body>
@@ -192,6 +197,7 @@ import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers
 import Web3 from 'web3'
 import BN from 'bn.js'
 import debug from 'debug'
+import { setTimeout } from 'timers';
 
 // should move this
 Vue.use(VueClipboard)
@@ -273,7 +279,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
       'getPendingWithdrawalReceipt',
-      'withdrawCoinGatewayAsync'
+      'withdrawCoinGatewayAsync',
+      'switchDposUser'
     ])
   }
 })
@@ -352,46 +359,30 @@ export default class MyAccount extends Vue {
     onClickWithNoMapping: "No mapping detected, please click \"Map Accounts\" or refresh the page"
   }
 
-
-
   async mounted() {
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
     await this.checkUnclaimedLoomTokens()
     await this.checkPendingWithdrawalReceipt()
+
+    this.$root.$on('done', async () => {
+      this.refresh()
+    })
+    
     if (this.receipt) {
       this.hasReceiptHandler(this.receipt)
     }
 
   }
 
+  async refresh(poll) {    
+    this.$emit('refreshBalances') 
+  }
+
   destroyed() {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval)
     }
-  }
-
-  async refresh(poll) {    
-    console.log('refreshing balances...')
-    this.userAccount.address = getAddress(sessionStorage.getItem('privatekey'))
-    let loomBalance = await this.getDappchainLoomBalance()    
-    let mainnetBalance = await this.getMetamaskLoomBalance({
-      web3: this.web3,
-      address: this.userEthAddr
-    })
-    this.allowance = parseInt(await this.checkAllowance())
-    this.currentAllowance = this.allowance
-
-    let isLoading = false
-    let stakedAmount = await this.getAccumulatedStakingAmount()  
-      
-    await this.getDpos2()
-    this.setUserBalance({
-      isLoading,
-      loomBalance: loomBalance,
-      mainnetBalance: mainnetBalance,
-      stakedAmount
-    })
   }
 
   openRequestDelegateModal() {
@@ -401,10 +392,12 @@ export default class MyAccount extends Vue {
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
     this.unclaimDepositTokens = unclaimAmount.toNumber()
+    if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }
 
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
+    this.$emit('refreshBalances')
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -425,6 +418,7 @@ export default class MyAccount extends Vue {
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
+    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.refresh(true)
   }
@@ -433,7 +427,7 @@ export default class MyAccount extends Vue {
     this.receipt = await this.getPendingWithdrawalReceipt()
   }
 
-  hasReceiptHandler(receipt) {
+  async hasReceiptHandler(receipt) {
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
@@ -443,9 +437,33 @@ export default class MyAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
+    let ethAddr = this.dposUser._wallet._address
+    // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
+    if (receipt.tokenOwner != ethAddr) {
+      this.mismatchedReceiptHandler(receipt, ethAddr)
+    }
+  }
+
+  async mismatchedReceiptHandler(receipt, ethAddr) {
+    // this is necessary to prevent reloading when metamask changes accounts
+    window.resolvingMismatchedReceipt = true
+
+    console.log('receipt: ', receipt.tokenOwner)
+    console.log('mapped address:', ethAddr)
+
+    let r = confirm(`A pending withdraw requires you to switch ETH accounts to: ${receipt.tokenOwner}. Please change your account and then click OK`)
+    if (r) {
+      let tempUser = await this.switchDposUser({web3: window.web3})
+      this.reclaimWithdrawHandler()
+    }
   }
 
   async reclaimWithdrawHandler() {
+    // var localAddr = CryptoUtils.bytesToHexAddr(this.dposUser._address.local.bytes)
+    // let mappedAddr = await this.dposUser._wallet._address
+    // let ethAddr = CryptoUtils.bytesToHexAddr(mappedAddr.to.local.bytes)
+    let ethAddr = this.dposUser._wallet._address
+    console.log('current eth addr: ', ethAddr)
     try {
       this.isWithdrawalInprogress = true
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
@@ -458,7 +476,13 @@ export default class MyAccount extends Vue {
         this.unclaimSignature = this.receipt.signature
       }
       this.unclaimWithdrawTokensETH = 0
-      await this.refresh(true)
+      await this.refresh(true) 
+
+      // TODO: this is added for fixing mismatched receipts, remove once users are fixed. 
+      if (window.resolvingMismatchedReceipt) {
+        alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
+        window.location.reload(true)
+      }
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)
@@ -670,6 +694,7 @@ export default class MyAccount extends Vue {
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
     this.setGatewayBusy(false)
+    this.$emit('refreshBalances')
     return result
   }
 
@@ -686,6 +711,7 @@ export default class MyAccount extends Vue {
     } catch (error) {
       console.error(error)
     }
+    this.$emit('refreshBalances')
     this.setGatewayBusy(false)
     this.setShowLoadingSpinner(false)
 
@@ -702,13 +728,16 @@ export default class MyAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        await tx.wait()
+        //await tx.wait()
         return tx
       }
     } catch (e) {
       console.error(e)
     }
+  }
 
+  resolveWithdraw(amount, tx) {
+    return tx.wait()
   }
 }
 </script>

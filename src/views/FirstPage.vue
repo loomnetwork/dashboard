@@ -167,11 +167,10 @@ export default class FirstPage extends Vue {
   async selectWallet(wallet) {
     if(wallet === "ledger") {
       this.setWalletType("ledger")
-
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
-      await this.initializeDependencies()
+      this.$root.$emit("login") 
     } else {
       return
     }

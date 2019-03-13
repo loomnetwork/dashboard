@@ -175,6 +175,7 @@
       "history": "History"
     },
     "layout": {
+      "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "Metamask error!?",
       "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
       "mapping_error": "Mapping error!?",

@@ -288,7 +288,7 @@ export default class FirstPage extends Vue {
   }
 
   async onWalletConfig() {
-    this.setWalletType("ledger")
+    await this.initializeDependencies()
   }
 
 }</script>

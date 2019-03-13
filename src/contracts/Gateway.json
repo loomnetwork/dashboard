@@ -795,6 +795,11 @@
       "address": "0x682721650515Bac4b46801E06C3B3848132c78F6",
       "transactionHash": "0xb5926758f27bccdd35943e44704b98ac9ee224676ca8fed75a1e42c081d28124"
     },
+    "asia1": {
+      "events": {},
+      "links": {},
+      "address": "0x2b10E027243e4D1C3EE9347B413Cee02380B3d15"
+    },
     "loomv2a": {
       "events": {},
       "links": {},

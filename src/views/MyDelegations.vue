@@ -102,7 +102,7 @@ export default class MyDelegations extends Vue {
     const candidates = await this.dposUser.listCandidatesAsync()
 
     this.delegations = delegationsArray
-      .filter(d => !d.amount.isZero())
+      .filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
       .map(delegation => {
         let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
         return { 

@@ -175,6 +175,7 @@
       "history": "History"
     },
     "layout": {
+      "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "Metamask 错误！？",
       "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
       "mapping_error": "映射错误！？",

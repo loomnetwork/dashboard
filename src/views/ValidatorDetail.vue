@@ -209,6 +209,9 @@ export default class ValidatorDetail extends Vue {
 
     this.$root.$emit("refreshBalances")
 
+    // refresh validator
+    this.refreshValidatorState()
+
     // show modal
     this.$root.$emit("bv::hide::modal", "success-modal")
     
@@ -390,7 +393,7 @@ export default class ValidatorDetail extends Vue {
   }
   
   openRequestDelegationUpdateModal() {
-    this.$refs.delegateModalRef.show(this.validator.Address, '')
+    this.$refs.delegateModalRef.show(this.validator.Address, '', this.amountDelegated, this.delegation.lockTimeTier)
   }
 
   openRequestUnbondModal() {

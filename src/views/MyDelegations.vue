@@ -71,7 +71,7 @@ import { initWeb3 } from '../services/initWeb3'
 })
 export default class MyDelegations extends Vue {
   delegations = []
-  states = ["Bonding", "Bonded", "Unbounding"]
+  states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
   loading = true
 
   async mounted() {

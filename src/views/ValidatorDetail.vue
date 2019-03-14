@@ -22,7 +22,7 @@
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn && !validator.isBootstrap">
               <h5>
-                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState}}</span>
+                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState === "Bonding" && !hasDelegation ? "Unbonded" : delegationState}}</span>
               </h5>
               <h5>
                 {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>

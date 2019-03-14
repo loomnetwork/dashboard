@@ -25,36 +25,37 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 
-const bip39 = require("bip39");
+const bip39 = require('bip39')
 
-@Component({})
+@Component({
+})
+
 export default class RestoreAccountModal extends Vue {
   seeds = "";
   errorMessage = "";
   okHandler() {
-    let seedPhraseIsValid = bip39.validateMnemonic(this.seeds);
-    if (!seedPhraseIsValid) {
-      this.errorMessage = "Invalid seed phrase";
-      return;
+    let seedPhraseIsValid = bip39.validateMnemonic(this.seeds)
+    if(!seedPhraseIsValid) {
+      this.errorMessage = "Invalid seed phrase"
+      return
     }
 
-    const seedList = this.seeds.split(" ");
+    const seedList = this.seeds.split(' ')
     if (seedList.length !== 12) {
-      this.errorMessage = "Not 12 words...";
+      this.errorMessage = "Not 12 words..."
     } else {
-      this.errorMessage = "";
-      this.$emit("ok", this.seeds);
-      this.$refs.modalRef.hide();
+      this.errorMessage = ""
+      this.$emit('ok', this.seeds);
+      this.$refs.modalRef.hide()
     }
   }
   show() {
-    this.$refs.modalRef.show();
+    this.$refs.modalRef.show()
   }
-}
-</script>
+}</script>
 <style lang="scss">
 label {
   color: gray;
@@ -71,7 +72,7 @@ label {
       color: gray;
     }
   }
-  .modal-body {
+  .col-sm-3, .col-sm-9 {
     .col-sm-3,
     .col-sm-9 {
       padding: 0;

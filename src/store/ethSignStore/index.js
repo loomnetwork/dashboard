@@ -83,7 +83,12 @@ const actions = {
         throw Error("Mapped address isn't valid")
       }
 
-      console.info('Mapping exists for', state.ethereumAddress, 'is', mappings.to.local.toString())
+      console.info('Mapping exists', {
+        from: mappings.from,
+        fromLocal: mappings.from.local.toString(),
+        to: mappings.to,
+        toLocal: mappings.to.local.toString()
+      })
 
       commit('setIsMappingOk', true)
     } catch (err) {

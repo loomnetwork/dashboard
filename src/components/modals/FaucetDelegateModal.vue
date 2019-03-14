@@ -93,7 +93,6 @@ export default class FaucetDelegateModal extends Vue {
   ]
 
   async requestDelegate() {
-    console.log('sd')
 
     if(this.delegationDetail.amount <= 0) {
       this.setError("Invalid amount")

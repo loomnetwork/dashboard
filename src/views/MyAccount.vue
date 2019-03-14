@@ -439,7 +439,7 @@ export default class MyAccount extends Vue {
     }
     let ethAddr = this.dposUser._wallet._address
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
-    if (receipt.tokenOwner != ethAddr) {
+    if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
       this.mismatchedReceiptHandler(receipt, ethAddr)
     }
   }

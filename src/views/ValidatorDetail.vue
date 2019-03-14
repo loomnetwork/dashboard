@@ -27,7 +27,7 @@
               <h5>
                 {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
               </h5>
-              <h5>
+              <h5 v-if="updatedAmount > 0">
                 {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
               </h5>
               <h5 class="mb-4">

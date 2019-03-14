@@ -296,7 +296,7 @@ export default {
       const network = state.chainUrls[state.chainIndex].network
       let user 
       try { 
-        user = await DPOSUser.createMetamaskUserAsync(		
+	user = await DPOSUser.createEthSignMetamaskUserAsync(
         rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,
@@ -320,7 +320,7 @@ export default {
       const network = state.chainUrls[state.chainIndex].network
       let user 
       try { 
-        user = await DPOSUser.createMetamaskUserAsync(		
+	user = await DPOSUser.createEthSignMetamaskUserAsync(
         payload.web3,
         getters.dappchainEndpoint,
         privateKeyString,

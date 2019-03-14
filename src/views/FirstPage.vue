@@ -1,6 +1,6 @@
 <!-- PlasmaChain Delegators -->
 <template>
-  <div class="">
+  <div class>
     <div class="faucet-content pt-5">
       <main>
         <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
@@ -18,78 +18,99 @@
                     <b-tab>
                       <template slot="title">
                         <span class="tab-title">1. Login to PlasmaChain</span>
-                        <b-spinner v-if="showTabSpinner" type="border" small />
+                        <b-spinner v-if="showTabSpinner" type="border" small/>
                         <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>
                       </template>
-                        <div class="row">
-                          <img src="../assets/loomy-player-one.png" class="loomy-graphic">
-                        </div>
+                      <div class="row">
+                        <img src="../assets/loomy-player-one.png" class="loomy-graphic">
+                      </div>
                       <div class="row pt-4 pb-4">
                         <div class="col text-center">
-                          <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
+                          <b-button
+                            class="mb-3"
+                            style="width: 250px"
+                            variant="primary"
+                            @click="newUser"
+                          >{{ $t('views.first_page.new_user') }}</b-button>
                         </div>
                         <div class="col">
                           <div class="button-inner-container">
-                            <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
+                            <b-button
+                              class="mb-3"
+                              variant="primary"
+                              style="width: 250px"
+                              @click="returningUser"
+                            >{{ $t('views.first_page.returning_user') }}</b-button>
                           </div>
                         </div>
                       </div>
                       <div class="row">
-                          <b-button v-b-toggle.collapse1 variant="warning" v-if="!isProduction">Diagnostic Options</b-button>
-                          <b-collapse id="collapse1" class="mt-2">
-                            <b-card>
-                              <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"
-                                v-if="!isProduction"
-                                :allowedUrls="chainUrls"
-                                :serverUrl="currentChain"
-                                @urlClicked="onUserInputUrl"
-                                @urlInput="onUserInputUrl"/>
-                
-                            </b-card>
-                          </b-collapse>
-                         
-                       </div>                      
+                        <b-button
+                          v-b-toggle.collapse1
+                          variant="warning"
+                          v-if="!isProduction"
+                        >Diagnostic Options</b-button>
+                        <b-collapse id="collapse1" class="mt-2">
+                          <b-card>
+                            <ChainSelector
+                              style="width: 250px; margin: 0 auto;"
+                              class="connection-status"
+                              v-if="!isProduction"
+                              :allowedUrls="chainUrls"
+                              :serverUrl="currentChain"
+                              @urlClicked="onUserInputUrl"
+                              @urlInput="onUserInputUrl"
+                            />
+                          </b-card>
+                        </b-collapse>
+                      </div>
                     </b-tab>
                     <b-tab :disabled="!userIsLoggedIn">
                       <template slot="title">
                         <span class="tab-title">2. Login to Ethereum</span>
-                      </template>                      
+                      </template>
                       <div class="row wallet-provider-container">
                         <div class="col">
-                          <b-card class="wallet-selection-card text-center" @click="selectWallet('ledger')">
+                          <b-card
+                            class="wallet-selection-card text-center"
+                            @click="selectWallet('ledger')"
+                          >
                             <img src="../assets/ledger_logo.svg">
-                            <p>
-                              Connect & sign via your <br>
-                              hardware wallet                      
+                            <p>Connect & sign via your
+                              <br>hardware wallet
                             </p>
-                            <span id="ledgerInfo" class="qa">? </span>
-                            <b-tooltip target="ledgerInfo" placement="bottom" title="Click here to connect with your Ledger hardware wallet"></b-tooltip>
+                            <span id="ledgerInfo" class="qa">?</span>
+                            <b-tooltip
+                              target="ledgerInfo"
+                              placement="bottom"
+                              title="Click here to connect with your Ledger hardware wallet"
+                            ></b-tooltip>
                           </b-card>
                         </div>
                         <div class="col">
-                          <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                          <b-card
+                            class="wallet-selection-card text-center"
+                            @click="selectWallet('metamask')"
+                          >
                             <img src="../assets/metamask_logo.png">
-                            <p>
-                              Connect & sign via your browser <br>
-                              or extension                      
+                            <p>Connect & sign via your browser
+                              <br>or extension
                             </p>
-                            <span id="metamaskInfo" class="qa">? </span>
-                            <b-tooltip target="metamaskInfo" placement="bottom" title="Click here to connect with your Metamask wallet"></b-tooltip>
-                          </b-card>                  
-                        </div>                
-                      </div>                      
+                            <span id="metamaskInfo" class="qa">?</span>
+                            <b-tooltip
+                              target="metamaskInfo"
+                              placement="bottom"
+                              title="Click here to connect with your Metamask wallet"
+                            ></b-tooltip>
+                          </b-card>
+                        </div>
+                      </div>
                     </b-tab>
                   </b-tabs>
                 </b-card>
               </div>
-
-
-
-
-
             </div>
           </div>
-
         </div>
       </main>
     </div>
@@ -97,22 +118,29 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 // import ApiClient from '../services/faucet-api'
-import { Component, Watch } from 'vue-property-decorator'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
-import ChainSelector from '../components/ChainSelector'
-import SeedPhraseModal from '../components/modals/SeedPhraseModal'
-import ConfirmSeedModal from '../components/modals/ConfirmSeedModal'
-import RestoreAccountModal from '../components/modals/RestoreAccountModal'
-import HardwareWalletModal from '../components/modals/HardwareWalletModal'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { setInterval } from 'timers';
-const bip39 = require('bip39')
+import { Component, Watch } from "vue-property-decorator";
+import FaucetHeader from "../components/FaucetHeader";
+import FaucetFooter from "../components/FaucetFooter";
+import ChainSelector from "../components/ChainSelector";
+import SeedPhraseModal from "../components/modals/SeedPhraseModal";
+import ConfirmSeedModal from "../components/modals/ConfirmSeedModal";
+import RestoreAccountModal from "../components/modals/RestoreAccountModal";
+import HardwareWalletModal from "../components/modals/HardwareWalletModal";
+import {
+  mapGetters,
+  mapState,
+  mapActions,
+  mapMutations,
+  createNamespacedHelpers
+} from "vuex";
+import { setInterval, setTimeout } from "timers";
+const bip39 = require("bip39");
 
-const DPOSStore = createNamespacedHelpers('DPOS')
-const DappChainStore = createNamespacedHelpers('DappChain')
+const DPOSStore = createNamespacedHelpers("DPOS");
+const DappChainStore = createNamespacedHelpers("DappChain");
+const EthSignStore = createNamespacedHelpers("EthSign");
 
 @Component({
   components: {
@@ -125,189 +153,187 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     RestoreAccountModal
   },
   computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DappChainStore.mapState([
-      'chainUrls'
-    ]),    
-    ...DPOSStore.mapState([
-      'isLoggedIn',
-      'walletType',
-      'mappingSuccess'
-    ]),
-    ...mapGetters([
-      'getPrivateKey'
-    ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-    ])
+    ...mapState(["userIsLoggedIn"]),
+    ...DappChainStore.mapState(["chainUrls"]),
+    ...DPOSStore.mapState(["isLoggedIn", "walletType", "mappingSuccess"]),
+    ...mapGetters(["getPrivateKey"]),
+    ...DappChainStore.mapGetters(["currentChain"])
   },
-  methods: {    
-    ...mapActions(['signOut', 'setPrivateKey']),
-    ...DPOSStore.mapActions(['storePrivateKeyFromSeed','initializeDependencies']),
-    ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
-    ...DappChainStore.mapActions([
-      'addChainUrl'
-    ]),    
-    ...mapMutations(['setUserIsLoggedIn']),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ]) 
+  methods: {
+    ...EthSignStore.mapActions([
+      "createClient",
+      "createAddressMapper",
+      "checkMapping",
+      "createLoomProvider"
+    ]),
+    ...mapActions(["signOut", "setPrivateKey"]),
+    ...DPOSStore.mapActions([
+      "storePrivateKeyFromSeed",
+      "initializeDependencies"
+    ]),
+    ...DPOSStore.mapMutations(["setShowLoadingSpinner", "setWalletType"]),
+    ...DappChainStore.mapActions(["addChainUrl"]),
+    ...mapMutations(["setUserIsLoggedIn"]),
+    ...DappChainStore.mapMutations(["setMappingError", "setMappingStatus"])
   }
 })
 export default class FirstPage extends Vue {
-  seedPhrases = []
-  activeTab = 0
-  currentStatus = this.STATUS.NONE
-  showTabSpinner = false
-  isProduction = window.location.hostname === "dashboard.dappchains.com"
+  seedPhrases = [];
+  activeTab = 0;
+  currentStatus = this.STATUS.NONE;
+  showTabSpinner = false;
+  isProduction = window.location.hostname === "dashboard.dappchains.com";
 
   async selectWallet(wallet) {
-    if(wallet === "ledger") {
-      this.setWalletType("ledger")
-     this.$refs.hardwareWalletConfigRef.show() 
-    } else if(wallet === "metamask") {
-      this.setWalletType("metamask")
-      this.$root.$emit("login") 
+    if (wallet === "ledger") {
+      this.setWalletType("ledger");
+      this.$refs.hardwareWalletConfigRef.show();
+    } else if (wallet === "metamask") {
+      this.setWalletType("metamask");
+      this.$root.$emit("login");
     } else {
-      return
+      return;
     }
   }
 
   async openLoginModal() {
-    this.$root.$emit('bv::show::modal', 'login-account-modal')
+    this.$root.$emit("bv::show::modal", "login-account-modal");
   }
 
   signOutHandler() {
-    this.signOut()
-    this.$router.push('/')
-    this.setMappingError(null)
-    this.setMappingStatus(null)
+    this.signOut();
+    this.$router.push("/");
+    this.setMappingError(null);
+    this.setMappingStatus(null);
   }
 
   async onLoginAccount() {
     if (this.currentStatus === this.STATUS.CREATE_ACCOUNT) {
-      this.openCreateAccountModal()
+      this.openCreateAccountModal();
     } else if (this.currentStatus === this.STATUS.RESTORE_ACCOUNT) {
-      this.openRestoreAccountModal()
+      this.openRestoreAccountModal();
     }
   }
 
   openCreateAccountModal() {
-    this.currentStatus = this.STATUS.CREATE_ACCOUNT
+    this.currentStatus = this.STATUS.CREATE_ACCOUNT;
     if (this.userIsLoggedIn) {
-      this.$refs.seedPhraseRef.show()
+      this.$refs.seedPhraseRef.show();
     } else {
-      this.openLoginModal()
+      this.openLoginModal();
     }
   }
 
   onGenerateSeeds(seeds) {
-    this.seedPhrases = seeds
-    this.$refs.confirmSeedRef.show(seeds)
+    this.seedPhrases = seeds;
+    this.$refs.confirmSeedRef.show(seeds);
   }
 
   onConnectionUrlChanged(newUrl) {
-    this.$emit('update:chain')
+    this.$emit("update:chain");
     // this.blockchain.setServerUrl(newUrl)
   }
 
-  async onUserInputUrl(url){
+  async onUserInputUrl(url) {
     if (await this.addChainUrl({ url })) {
-      this.onConnectionUrlChanged(url)
+      this.onConnectionUrlChanged(url);
     }
-  }  
+  }
 
   async onConfirmSeeds() {
-    this.currentStatus = this.STATUS.NONE
-    const mnemonic = this.seedPhrases.join(' ')
-    const seed = bip39.mnemonicToSeed(mnemonic)
+    this.currentStatus = this.STATUS.NONE;
+    const mnemonic = this.seedPhrases.join(" ");
+    const seed = bip39.mnemonicToSeed(mnemonic);
     await this.storePrivateKeyFromSeed({
       seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab()
+    });
+    this.setUserIsLoggedIn(true);
+    this.switchTab();
   }
 
   newUser() {
-    this.$refs.seedPhraseRef.show()
+    this.$refs.seedPhraseRef.show();
   }
 
   returningUser() {
-    this.$refs.restoreAccountModal.show()
+    this.$refs.restoreAccountModal.show();
   }
 
   openRestoreAccountModal() {
-    this.currentStatus = this.STATUS.RESTORE_ACCOUNT
+    this.currentStatus = this.STATUS.RESTORE_ACCOUNT;
     if (this.userIsLoggedIn) {
-      this.$refs.restoreAccountModal.show()
+      this.$refs.restoreAccountModal.show();
     } else {
-      this.openLoginModal()
+      this.openLoginModal();
     }
   }
 
   async onRestoreAccount(mnemonic) {
-    this.currentStatus = this.STATUS.NONE
-    const seed = bip39.mnemonicToSeed(mnemonic)
+    this.currentStatus = this.STATUS.NONE;
+    const seed = bip39.mnemonicToSeed(mnemonic);
     await this.storePrivateKeyFromSeed({
       seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab() 
+    });
+    this.setUserIsLoggedIn(true);
+    this.switchTab();
   }
 
   switchTab() {
-    this.showTabSpinner = true
-    setTimeout(() => {
-      this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
-      this.showTabSpinner = false
-    }, 1000)
+    this.showTabSpinner = true;
+    setTimeout(async () => {
+      this.activeTab === 0 ? (this.activeTab = 1) : (this.activeTab = 0);
+      this.showTabSpinner = false;
+
+      // Load EthSign stuff
+      await this.createClient();
+      await this.createAddressMapper();
+      await this.checkMapping();
+      await this.createLoomProvider();
+    }, 1000);
   }
 
   get STATUS() {
     return {
-      NONE: 'NONE',
-      CREATE_ACCOUNT: 'CREATE_ACCOUNT',
-      RESTORE_ACCOUNT: 'RESTORE_ACCOUNT'
-    }
+      NONE: "NONE",
+      CREATE_ACCOUNT: "CREATE_ACCOUNT",
+      RESTORE_ACCOUNT: "RESTORE_ACCOUNT"
+    };
   }
 
   async onWalletConfig() {
-    this.setWalletType("ledger")
+    this.setWalletType("ledger");
   }
-
-}</script>
+}
+</script>
 
 
 <style lang="scss" scoped>
-  .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-left: 2px solid #f2f1f3;
-  }
-  .banner-container .col {
-    padding: 0 36px;
-  }
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 2px solid #f2f1f3;
+}
+.banner-container .col {
+  padding: 0 36px;
+}
 
-  .button-inner-container {
-    width: 250px;
-  }
+.button-inner-container {
+  width: 250px;
+}
 
-  .rmv-padding {
-    padding: 0 !important;
-  }
+.rmv-padding {
+  padding: 0 !important;
+}
 </style>
 
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
+@import url("https://use.typekit.net/nbq4wog.css");
 
 $theme-colors: (
   //primary: #007bff,
-  primary: #02819b,
+    primary: #02819b,
   secondary: #4bc0c8,
   success: #5cb85c,
   info: #5bc0de,
@@ -361,7 +387,8 @@ $theme-colors: (
     justify-content: center;
   }
   color: gray;
-  h3,h1 {
+  h3,
+  h1 {
     color: gray;
   }
   .bottom-border {
@@ -375,7 +402,7 @@ $theme-colors: (
   }
   .no-bottom-border {
     border-bottom: 0;
-  }  
+  }
   .button {
     border-left: 0;
     border-right: 0;
@@ -393,9 +420,9 @@ $theme-colors: (
       height: auto;
       margin-bottom: 12px;
     }
-    span.qa {        
+    span.qa {
       display: inline-block;
-      line-height: 20px;        
+      line-height: 20px;
       right: 12px;
       bottom: 12px;
       position: absolute;
@@ -408,7 +435,6 @@ $theme-colors: (
     }
   }
 }
-
 </style>
 <style>
 body {

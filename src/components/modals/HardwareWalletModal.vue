@@ -25,7 +25,7 @@
                   <b-form-radio-group v-model="selectedAddress"
                                       stacked
                                       name="radiosStacked">
-                    <tr v-for="(account, index) in accounts" :key="index" @click="selectAccount(account, index)">
+                    <tr v-for="(account, index) in accounts" :key="index" @click="selectAccount(account)">
                       <td>{{account.index}}</td>
                       <td>{{formatAddress(account.account)}}</td>
                       <td>{{formatBalance(account.balance)}}</td>
@@ -122,6 +122,7 @@ export default class HardwareWalletModal extends Vue {
 
   showLoadingSpinner = false
   path = ""
+  derivationPath = ""
   paths = []
   filteredPaths = []
   addresses = []
@@ -151,27 +152,34 @@ export default class HardwareWalletModal extends Vue {
 
   async updateAddresses() {
     this.showLoadingSpinner = true
-    this.path = this.selectedPath.replace('m/','')
+    this.derivationPath = this.selectedPath.replace('m/','')
     let offset = (this.currentPage - 1) * this.perPage
-    if(this.path === "44'/60'") {
-      // Ethereum addresses (Ledger live)
-      this.path =  `44'/60'/${offset}'/0/0`
-    }
-    else if(this.path === "44'/60'/0'") {
-      // Ethereum addresses (legacy)
-      this.path = `${this.path}/${offset}`
-    }
-    
-    let results = await initWeb3SelectedWalletBeta(this.path)
+
+    let results = await initWeb3SelectedWalletBeta(this.calculatePath(offset))
     this.accounts = results.map((account, index) => {
+      let offsetIndex = offset + index
       return {
         account: account,
-        balance: 'loading'
+        balance: 'loading',
+        index: offsetIndex,
+        path: this.calculatePath(offsetIndex)
         }
     })
 
     if(this.accounts.length > 0) this.getBalances()
     this.showLoadingSpinner = false
+  }
+
+  calculatePath(offset) {
+    if(this.derivationPath === "44'/60'") {
+      // Ethereum addresses (Ledger live)
+      return `44'/60'/${offset}'/0/0`
+    }
+    else if(this.derivationPath === "44'/60'/0'") {
+      // Ethereum addresses (legacy)
+      return `${this.derivationPath}/${offset}`
+    }
+    
   }
 
   onPaginationChange() {
@@ -293,8 +301,9 @@ export default class HardwareWalletModal extends Vue {
 
   }
 
-  selectAccount(account, index) {
+  selectAccount(account) {
     this.setSelectedAccount(account)
+    this.path = account.path
   }
 
   loadAddresses(path) {

@@ -111,12 +111,12 @@ const dappChainStore = createNamespacedHelpers('DappChain')
 export default class HardwareWalletModal extends Vue {
 
   // Pagination
-  rows = 25
-  perPage = 5
+  rows = 100
+  perPage = 10
   currentPage = 1
 
   hdWallet = undefined
-  maxAddresses = 25
+  maxAddresses = 100
   errorMsg = null
   accounts = []
 

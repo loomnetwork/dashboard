@@ -159,7 +159,7 @@ export default class ValidatorDetail extends Vue {
   ]
 
 // TODO fix bonding states once unbonded is added
-  states = ["Bonding", "Bonded", "Unbounding"]
+  states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {

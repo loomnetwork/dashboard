@@ -42,10 +42,18 @@
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
             <div class="row justify-content-end validator-action-container">
               <div class="right-container text-right">
+                  <template v-if="!hasDelegation">
                   <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="canDelegate === false">
                     <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
                     Delegate
                   </b-button>
+                  </template>
+                  <template v-else>
+                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegationUpdateModal" :disabled="canDelegate === false">
+                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
+                    Update delagation
+                  </b-button>
+                  </template>
                   <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
                   <b-button id="redelegateBtn" class="px-5 py-2 mx-3" variant="outline-info" @click="openRedelegateModal" :disabled="canRedelegate === false">Redelegate</b-button>
                   <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
@@ -200,6 +208,9 @@ export default class ValidatorDetail extends Vue {
     this.currentLockTimeTier = this.delegation.lockTimeTier
 
     this.$root.$emit("refreshBalances")
+
+    // refresh validator
+    this.refreshValidatorState()
 
     // show modal
     this.$root.$emit("bv::hide::modal", "success-modal")
@@ -380,10 +391,15 @@ export default class ValidatorDetail extends Vue {
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(this.validator.Address, '')
   }
+  
+  openRequestDelegationUpdateModal() {
+    this.$refs.delegateModalRef.show(this.validator.Address, '', this.amountDelegated, this.delegation.lockTimeTier)
+  }
 
   openRequestUnbondModal() {
     this.$refs.delegateModalRef.show(this.validator.Address, 'unbond')
   }
+  
 
   openRedelegateModal() {
     let index = this.$route.params.index

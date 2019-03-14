@@ -7,18 +7,18 @@
       <div v-else>
         <b-row class="my-1 mb-3">
           <b-col sm="3"><label>{{ $t('components.modals.faucet_delegate_modal.amount') }}</label></b-col>
-          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" type="number" value="0" min="0"></b-form-input></b-col>
+          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" :state="delegationDetail && delegationDetail.amount && delegationDetail.amount > minAmount" type="number"   :min="minAmount"></b-form-input></b-col>
         </b-row>
         <b-row class="my-1" v-if="!unbond" key="range">
           <b-col sm="6"><label id="lockTimeReward" for="locktime">{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label></b-col>
           <b-col sm="6"><span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span></b-col>
-          <b-col><b-form-input v-model="locktimeTierVal" :min="locktimeTier || 0" max="3" value="0" :formatter="formatRangeInput" id="locktime" type="range" data-toggle="tooltip"></b-form-input></b-col>
+          <b-col><b-form-input v-model="locktimeTierVal" :min="minLockTimeTier" max="3" :formatter="formatRangeInput" id="locktime" type="range" data-toggle="tooltip"></b-form-input></b-col>
           <b-tooltip target="lockTimeReward" placement="bottom" title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"></b-tooltip>
         </b-row>
       </div>
     </b-container>
     <div slot="modal-footer" class="w-100">
-      <b-button v-if="!loading" style="width: 160px; float: right;" variant="primary" @click="requestDelegate">{{okTitle}}</b-button>
+      <b-button v-if="!loading" style="width: 160px; float: right;" variant="primary" :disabled="!isAmountValid" @click="requestDelegate">{{okTitle}}</b-button>
     </div>
   </b-modal>
 </template>
@@ -92,6 +92,9 @@ export default class FaucetDelegateModal extends Vue {
     "x4"
   ]
 
+  minAmount = 0
+  minLockTimeTier = 0
+
   async requestDelegate() {
 
     if(this.delegationDetail.amount <= 0) {
@@ -124,7 +127,14 @@ export default class FaucetDelegateModal extends Vue {
     }
   }
 
-  show(address, type) {
+  get isAmountValid() {
+    return this.delegationDetail && new Number(this.delegationDetail.amount) > 0
+  }
+
+  show(address, type ='', minAmount = 0, minLockTimeTier = 0) {
+    this.minAmount = minAmount
+    this.minLockTimeTier = minLockTimeTier
+    this.locktimeTierVal = minLockTimeTier
     if(!address) {
       if(this.validators && this.validators.length > 0) {
         this.formattedValidators = this.validators.map((v) => {

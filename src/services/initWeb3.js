@@ -92,7 +92,7 @@ export const initWeb3SelectedWalletBeta = (path) => {
       const getTransport = () => TransportU2F.create();
       const ledger = createLedgerSubprovider(getTransport, {
         networkId:1,
-        accountsLength: 10,
+        accountsLength: 5,
         path
       });
       let accounts = ledger.getAccounts((err, val) => {

@@ -217,7 +217,7 @@
       },
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "解锁硬件钱包",
-        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
+        "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。"
       }
     },
     "blockExplorer": {

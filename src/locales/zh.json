@@ -98,7 +98,7 @@
       "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
       "withdraw_to_metamask": "取回到你的钱包",
       "wait_tx": "你的交易正在等候操作。请稍等几分钟，你的余额将在交易确认后更新。",
-      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
+      "tokens_pending_deposit": "你有一笔{pendingDepositAmount} 个代币的待处理存款。必须完成此笔存款后才可以进行下一笔。",
       "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
       "reclaim_deposit": "Reclaim Deposit Tokens",
       "complete_withdraw": "Complete Withdrawal"

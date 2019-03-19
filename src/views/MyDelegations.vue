@@ -90,13 +90,6 @@ export default class MyDelegations extends Vue {
   async getDelegationList() {
     this.loading = true    
 
-    try{
-      let test = await this.dposUser.listDelegatorDelegations()
-      console.log('list delegation', test)
-    } catch (err) {
-      console.log
-    }
-
     const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
 
     const candidates = await this.dposUser.listCandidatesAsync()

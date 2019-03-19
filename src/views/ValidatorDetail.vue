@@ -1,80 +1,107 @@
 <template>
-  <div class="faucet">        
-    <div class="faucet-content">
-      <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
-      <redelegate-modal ref="redelegateModalRef"
-                        @ok="redelegateHandler"
-                        :hasDelegation="hasDelegation"
-                        :delegation="delegation"
-                        :validators="validators"
-                        :originValidator="validator">
+  <div class="validator-details">        
+    <div class="faucet-content" style="min-height: 80vh;">
+      <faucet-delegate-modal ref="delegateModalRef"
+        @onDelegate="delegateHandler"  
+        :locktimeTier="0" 
+        :hasDelegation="delegations.length > 0"></faucet-delegate-modal>
+      <redelegate-modal
+        @ok="redelegateHandler"
+        v-on:hide="redelegationRequest = null"
+        :validators="validators"
+        :originDelegation="redelegationRequest"
+        :originValidator="validator">
       </redelegate-modal>
       <success-modal></success-modal>
-      <div>
         <main>
           <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
-          <div class="container mb-2 column py-3 p-3 d-flex bottom-border">
-            <h1>
+          <div class="container mb-2 column py-3 p-3 bottom-border">
+            <h1 class="h2">
               {{validator.Name }}
-              <span> {{isBootstrap ? "(bootstrap)" : ''}}</span>
+              <small class="text-muted" v-if="isBootstrap">bootstrap</small>
             </h1>
             <input type="text" ref="address" :value="validator.Address" tabindex='-1' aria-hidden='true' style="position: absolute; left: -9999px">
-            <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
-            <div v-if="userIsLoggedIn && !validator.isBootstrap">
-              <h5>
-                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState === "Bonding" && !hasDelegation ? "Unbonded" : delegationState}}</span>
-              </h5>
-              <h5>
-                {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
-              </h5>
-              <h5 v-if="updatedAmount > 0">
-                {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
-              </h5>
-              <h5 class="mb-4">
-                {{ $t('views.validator_detail.timelock') }} 
-                <span v-if="unlockTime.seconds > 0 " class="highlight">{{unlockTime.seconds | interval}}</span>
-                <span v-else class="highlight">{{ $t('views.validator_detail.unlocked') }}</span>
-              </h5>
-            </div>
-            <a :href="renderValidatorWebsite" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
-            <p class="text-gray">{{validator.Description || 'No Description'}}</p>
+            <h6><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h6>
+            
+            <a :href="$options.filters.validatorWebsite(validator)" target="_blank" class="text-gray">{{validator | validatorWebsite}}</a>
+            <p class="lead">{{validator.Description}}</p>
           </div>
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
-            <div class="row justify-content-end validator-action-container">
-              <div class="right-container text-right">
-                  <template v-if="!hasDelegation">
-                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="canDelegate === false">
-                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
-                    Delegate
-                  </b-button>
+          </div>
+          <div v-if="isReallyLoggedIn && (!isBootstrap || (isBootstrap && delegations.length))" class="delegations-panel container">
+            <h6>Your delegations</h6>
+
+            <b-table
+                  show-empty
+                  stacked="md"
+                  :items="delegations"
+                  :fields="delgationFields"
+                >
+                <template slot="empty" slot-scope="scope">
+                <div role="alert" aria-live="polite"><div class="text-center my-2">
+                  you haven't made any delegations to this validato yetr<br><br>
+                   <b-button v-if="canDelegate" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="canDelegate === false">
+                    {{ $t("delegation.delegate") }}
+                    </b-button>
+                </div></div>
+              </template>
+                  <template slot="state" slot-scope="row">
+
+                    <div v-if="row.item.state !== 1" class="spinner-border spinner-border-sm" role="status">
+                      <span class="sr-only">pending...</span>
+                    </div>
+                    {{ row.item.state | delegationState }}
                   </template>
-                  <template v-else>
-                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegationUpdateModal" :disabled="canDelegate === false">
-                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
-                    Update delagation
-                  </b-button>
+
+                  <template slot="amount" slot-scope="row">
+                    {{ (row.item.amount.isZero() ? row.item.updateAmount : row.item.amount) | tokenAmount }}
                   </template>
-                  <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
-                  <b-button id="redelegateBtn" class="px-5 py-2 mx-3" variant="outline-info" @click="openRedelegateModal" :disabled="canRedelegate === false">Redelegate</b-button>
-                  <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
-                  <b-button id="undelegateBtn" class="px-5 py-2" variant="outline-danger" @click="openRequestUnbondModal" :disabled="canUndelegate === false">Un-delegate</b-button>
-                  <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
-              </div>
-            </div>
+                  <template slot="lockTimeTier" slot-scope="row">
+                     {{row.item.lockTimeTier | lockTimeTier }}
+                  </template>
+                  <template slot="unlockTime" slot-scope="row">
+                    {{ row.item.lockTime | timeFromNow }}
+                  </template>
+                  <template slot="bonus" slot-scope="row">
+                     x{{row.item.lockTimeTier | lockTimeBonus }}
+                  </template>
+                  <template slot="actions" slot-scope="row">
+                    <b-button 
+                      :disabled="row.item.state !== 1"
+                      size="sm"
+                      variant="outline-primary" 
+                      @click="openRequestDelegationUpdateModal">
+                      {{ $t("delegation.update") }}
+                    </b-button>
+                    <b-button v-b-tooltip 
+                                          :disabled="row.item.state !== 1"
+                      size="sm"
+                      title="Redelegate from/to another delegator" 
+                      variant="outline-info" 
+                      @click="openRedelegateModal(row.item)">
+                      {{ $t("delegation.redelegate") }}</b-button>
+                    <b-button v-b-tooltip 
+                                          :disabled="row.item.state !== 1"
+                      size="sm"
+                      title="Withdraw your delegated tokens"
+                      variant="outline-danger" 
+                      @click="openRequestUnbondModal(row.value)">
+                      {{ $t("delegation.undelegate") }}</b-button>
+                  </template>
+                </b-table>
+
+
+
           </div>
         </main>
-      </div>
     </div>
   </div>
 </template>
 <script>
 import Vue from 'vue'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import SuccessModal from '../components/modals/SuccessModal'
 import RedelegateModal from '../components/modals/RedelegateModal'
@@ -87,8 +114,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 @Component({
   components: {
     FaucetTable,
-    FaucetHeader,
-    FaucetFooter,
     SuccessModal,
     RedelegateModal,
     FaucetDelegateModal,
@@ -105,10 +130,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...mapGetters([
       'getPrivateKey'
     ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-      'currentRPCUrl',
-    ])
   },
   methods: {
     ...mapActions([
@@ -124,6 +145,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
       'checkDelegationAsync',
+      'getDelegatorDelegations',
       'claimRewardAsync',
       'getDpos2'
     ])
@@ -135,20 +157,30 @@ export default class ValidatorDetail extends Vue {
     { key: 'personalStake', label: 'Validator Personal Stake'},
     { key: 'delegatedStake', label: 'Delegators Stake'},
     { key: 'totalStaked', label: 'Total Staked'},
-    // { key: 'votingPower', label: 'Reward Power'},
     { key: 'Fees', sortable: false },
+  ]
+
+  delgationFields = [
+    { key: "state", label:"State"},
+    { key: "amount", label:"Stake"},
+    { key: "lockTimeTier", label:"Lock Tier"},
+    { key: "unlockTime", label:"Unlock time"},
+    { key: "bonus", label:"Reward"},
+    { key: 'actions', label: 'Actions' },
   ]
   validator = {}
 
-  hasDelegation = false
-  delegation = {}
+  delegations = []
 
   finished = false
 
-  currentLockTimeTier = 0
-  locktime = 0
-  refreshInterval = null
-  validatorStateInterval = null
+  redelegationRequest = null
+
+  get hasDelegations() {
+    return this.delegations && this.delegations.length > 0
+  }
+
+
 
   unlockTime = {
     seconds: 0,
@@ -160,11 +192,10 @@ export default class ValidatorDetail extends Vue {
     "6 months",
     "1 year"
   ]
-
+  // lockTime in days
+  // note: This should be gotten from loom-js/dpos
   lockDays = [14,90,180,365]
-
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
-  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {
     let name = this.$route.params.index
@@ -184,31 +215,33 @@ export default class ValidatorDetail extends Vue {
   async mounted() {
 
     if(this.isReallyLoggedIn) {
-      this.refreshValidatorState()
-      this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
+      await this.refreshValidatorState()
+      //this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
     }
     this.finished = true
-
   }
 
   async refreshValidatorState() {
     if(this.isReallyLoggedIn) {
       try {
-        this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
+        this.delegations = await this.getDelegatorDelegations(this.validator.Address)
         console.log('delegation', this.delegation)
-        this.checkHasDelegation()     
-        this.setupLockTimeLeft() 
       } catch(err) {
-        this.hasDelegation = false     
+        console.error("error while getting delegations: "+ err.mesage)
+        throw err
       }
     }
   }
 
-  async delegateHandler() {
-    this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
-    this.checkHasDelegation()
-    this.currentLockTimeTier = this.delegation.lockTimeTier
+  async refreshDelegations() {
+    if(this.isReallyLoggedIn) {
+      throw new Error("not logged in")
+    }
+    this.delegations = await this.getDelegatorDelegations(this.validator.Address)
+  }
 
+  async delegateHandler() {
+    this.refreshDelegations()
     this.$root.$emit("refreshBalances")
 
     // refresh validator
@@ -219,36 +252,6 @@ export default class ValidatorDetail extends Vue {
     
   }
 
-  checkHasDelegation() {
-    this.hasDelegation = ! (this.delegation.amount.isZero() && this.delegation.updatedAmount.isZero())
-  }
-
-  setupLockTimeLeft() {
-    const lockSeconds = 86400 * this.lockDays[this.delegation.lockTimeTier]
-    const unlockTimestamp = parseInt(this.delegation.lockTime,10)
-    this.lockTimeExpired = unlockTimestamp*1000 > Date.now()
-    this.unlockTime.seconds = unlockTimestamp - Math.floor(Date.now()/1000)
-    
-    if (this.updateLockTimeInterval) {
-       clearInterval(this.updateLockTimeInterval)
-    }
-    // if time left more than a day no need for interval stuff
-    if (this.unlockTime.seconds > 0 && this.unlockTime.seconds < 86400) {
-      this.updateLockTimeInterval = setInterval(() => this.updateLockTime(), 60*1000)      
-    }
-  }
-
-  /**
-   * 
-   * only used in case time left to unlock lower thasn a day, to update the count down
-   */
-  updateLockTime() {
-    if (this.unlockTime.seconds <= 0 && this.updateLockTimeInterval) {
-      clearInterval(this.updateLockTimeInterval)
-      return
-    }
-    this.unlockTime.seconds  -= 1;
-  }
 
   copyAddress() {
     this.$refs.address.select();    
@@ -258,45 +261,6 @@ export default class ValidatorDetail extends Vue {
     }
     else {
         this.setSuccess("Somehow copy  didn't work...sorry")
-    }
-  }
-
-  async refresh() {
-    await this.getDpos2()
-    this.getValidators()
-  }
-
-  async getValidators() {
-    try {
-      const validators = await this.getValidatorsAsync()
-      if (validators.length === 0) {
-        return null
-      }
-      const validatorList = []
-      for (let i in validators) {
-        const validator = validators[i]
-        validatorList.push({
-          Name: "Validator #" + (parseInt(i) + 1),
-          Address: validator.address,
-          Status: validator.active ? "Active" : "Inactive",
-          Stake: (validator.stake/100 || '0'),
-          Weight: (validator.weight || '0') + '%',
-          Fees: (validator.fee || '0') + '%',
-          Uptime: (validator.uptime || '0') + '%',
-          Slashes: (validator.slashes || '0') + '%',
-          Description: (validator.description) || null,
-          Website: (validator.website) || null,
-          _cellVariants: validator.active ? { Status: 'active'} : undefined,
-          pubKey: (validator.pubKey),
-          personalStake: validator.personalStake,
-          delegatedStake: validator.delegatedStake,
-        })
-      }
-      commit("setValidators", validatorList)
-      return validatorList
-    } catch(err) {
-      this.$log(err, "")
-      dispatch("setError", "Fetching validators failed", {root: true})
     }
   }
 
@@ -314,6 +278,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   async redelegateHandler() {
+    this.refreshValidatorState()
     this.$root.$emit("refreshBalances")
   }
 
@@ -327,69 +292,32 @@ export default class ValidatorDetail extends Vue {
       this.isBootstrap === false && 
       (
         // hack around initial bonding state (no state "unbonded")
-        (this.hasDelegation === false && this.delegationState == 'Bonding') || 
+        (this.hasDelegations === false) || 
         // normal rule
-        (this.hasDelegation === true && this.delegationState == 'Bonded' )
+        (this.hasDelegations === true && this.delegationState == 'Bonded' )
       )
   }
 
-  get canUndelegate() {
-    return this.userIsLoggedIn && 
-      this.getPrivateKey && 
-      this.isBootstrap === false &&
-      this.hasDelegation &&
-      this.delegationState != 'Bonding'
-  }
 
-  get canRedelegate() {
-    return this.userIsLoggedIn && 
-      this.getPrivateKey && 
-      this.hasDelegation &&
-      this.delegationState != 'Bonding' &&
-      this.amountDelegated != 0
-  }
+  // get amountDelegated() {
+  //   return this.delegation && this.delegation.amount ? this.delegation.amount/10**18 : 0
+  // }
 
-  get amountDelegated() {
-    return this.delegation && this.delegation.amount ? this.delegation.amount/10**18 : 0
-  }
 
-  get updatedAmount() {
-    return this.delegation && this.delegation.updateAmount ? this.delegation.updateAmount/10**18 : 0
-  }
+  // get formatLocktime() {    
+  //   if(!this.delegation.lockTime) return 0
+  //   let date = new Date(this.delegation.lockTime*1000)
+  //   let hours = date.getHours()
+  //   let minutes = "0" + date.getMinutes()
+  //   let seconds = "0" + date.getSeconds()
+  //   let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
+  //   return formattedTime
+  // }
 
-  get delegationState() {
-    return this.states[this.delegation.state]
-  }
 
-  get lockTimeTier() { 
-    return this.lockTimeTiers[this.delegation.lockTimeTier]
-  }
-
-  get disableNode() {
-    return this.prohibitedNodes.indexOf(this.validator.Name) > -1 ? true : false
-  }
-
-  get formatLocktime() {    
-    if(!this.delegation.lockTime) return 0
-    let date = new Date(this.delegation.lockTime*1000)
-    let hours = date.getHours()
-    let minutes = "0" + date.getMinutes()
-    let seconds = "0" + date.getSeconds()
-    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
-    return formattedTime
-  }
-
-  get renderValidatorWebsite() {
-    if(!this.validator.Website) return "https://loomx.io/"
-    if(this.validator.Website.includes("http")) {
-      return this.validator.Website
-    } else {
-     return "https://" + this.validator.Website
-    }
-  }
 
   get canClaimReward() {
-    return this.hasDelegation && this.this.unlockTime.second <= 0
+    return this.hasDelegations && this.this.unlockTime.second <= 0
   }
 
   get isBootstrap() {
@@ -400,8 +328,8 @@ export default class ValidatorDetail extends Vue {
     this.$refs.delegateModalRef.show(this.validator.Address, '')
   }
   
-  openRequestDelegationUpdateModal() {
-    this.$refs.delegateModalRef.show(this.validator.Address, '', this.amountDelegated, this.delegation.lockTimeTier)
+  openRequestDelegationUpdateModal(delegation) {
+    this.$refs.delegateModalRef.show(this.validator.Address, '', delegation.amount, delegation.lockTimeTier)
   }
 
   openRequestUnbondModal() {
@@ -409,15 +337,14 @@ export default class ValidatorDetail extends Vue {
   }
   
 
-  openRedelegateModal() {
-    let index = this.$route.params.index
-    this.$refs.redelegateModalRef.show(this.validator.Address)
+  openRedelegateModal(delegation) {
+    this.redelegationRequest = delegation
   }
 
-}</script>
+}
+</script>
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
 
 $theme-colors: (
   //primary: #007bff,
@@ -431,6 +358,29 @@ $theme-colors: (
   dark: #122a38
 );
 
+.delegations-panel {
+  .b-table.table > thead > tr > th {
+    font-size: 0.8em;
+    color: rgba(0, 0, 0, 0.68);
+  }
+}
+
+h1 {
+  margin-top: 24px;
+}
+
+.delegations-panel {
+  margin-top: 24px;
+}
+
+td[data-label=Actions] > div {
+  display: flex;
+  >button {
+    flex:1;
+    margin: 0 4px;
+  }
+}
+
 .faucet {
   main {
     margin-left: 0;
@@ -443,9 +393,7 @@ $theme-colors: (
     .column {
       flex-direction: column;
     }
-    h4, h1 {
-      color: gray;
-    }
+   
     h1 {
       a {
         svg {

@@ -504,22 +504,35 @@ export default {
       return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {
-      const privateKeyString = sessionStorage.getItem('privatekey')
-      if (!privateKeyString) {
-        // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw new Error('No Private Key, Login again')
-      }
-
-      const dpos2 = await dispatch('getDpos2', {
-        privateKey: privateKeyString
-      })
-      const privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
-      const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-      const chainId = state.chainUrls[state.chainIndex].network
-      const result = dpos2.checkDelegationAsync(
-        new Address(chainId, LocalAddress.fromPublicKey(CryptoUtils.B64ToUint8Array(payload.validator))),
-        new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
-      return result
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }   
+      const validator = LocalAddress.fromPublicKey(
+        CryptoUtils.B64ToUint8Array(payload.validator)
+      ).toString().toLowerCase()
+      // IDelegatorDelegations\
+      const result = await state.dposUser.listDelegatorDelegations()
+      const d = result.delegationsArray
+        // reauested validator only
+        .filter(d => validator === d.validator.local.toString().toLowerCase())
+        // take out empty delegations
+        .filter(d => ! (d.amount.isZero() && d.updateAmount.isZero()))
+        // extra safeguard if any elements, the last one is the actual delegation.
+        .reverse()[0] || undefined
+      return d
+    },
+    async getDelegatorDelegations({ state, dispatch},addressString) {
+      if (!state.dposUser) {
+        await dispatch('initDposUser')
+      }   
+      const validator = addressString.toLowerCase()
+      // IDelegatorDelegations\
+      const result = await state.dposUser.listDelegatorDelegations()
+      return result.delegationsArray
+        // reauested validator only
+        .filter(d => validator === d.validator.local.toString().toLowerCase())
+        // take out empty delegations
+        .filter(d => ! (d.amount.isZero() && d.updateAmount.isZero()))
     },
     async getDpos2({ state, commit }, payload) {
       if (!payload && state.dpos2) {

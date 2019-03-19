@@ -185,10 +185,10 @@ export default class FaucetHeader extends Vue {
   async mounted() { 
 
     // Start election cycle timer
-    this.$root.$on('initialized', async () => {
-      await this.updateTimeUntilElectionCycle()
-      this.startTimer()
-    })    
+    // this.$root.$on('initialized', async () => {
+    //   await this.updateTimeUntilElectionCycle()
+    //   this.startTimer()
+    // })
 
     // Listen to refreshBalances event
     this.$root.$on('refreshBalances', async () => {

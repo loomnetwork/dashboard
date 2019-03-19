@@ -8,6 +8,7 @@ import RavenVue from 'raven-js/plugins/vue'
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/browser'
+import Progress from 'vue-multiple-progress'
 
 import FontAwesome from '@fortawesome/fontawesome'
 import BrandsFontAwesome from '@fortawesome/fontawesome-free-brands'
@@ -51,6 +52,7 @@ Vue.use(VueProgressBar, progressBarOptions)
 Vue.use(BootstrapVue)
 Vue.use(VueAwesomeSwiper, {})
 Vue.use(Autocomplete)
+Vue.use(Progress)
 FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)
 Vue.component('fa', FontAwesomeIcon)
 Vue.config.productionTip = false

@@ -29,6 +29,19 @@
 
     </b-card>
 
+    <b-card title="Election Cycle" class="animated zoomIn faster mb-4">
+      <vm-progress type="circle" :percentage="timerValue">
+        <small><strong>{{formattedTimeUntilElectionCycle}}</strong></small>
+      </vm-progress>
+    </b-card>
+
+    <b-card title="Rewards" class="animated zoomIn faster mb-4">
+      <h5 class="highlight">
+        {{rewardsValue}}
+        <loom-icon :color="'#f0ad4e'"/>
+      </h5>
+    </b-card>
+
     <b-card title="Delegations" id="delegations-container" class="animated zoomIn faster">
 
       <b-card v-for="(delegation, idx) in delegations" :key="'delegations' + idx" no-body class="mb-1">
@@ -94,10 +107,16 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DPOSStore.mapState([
       'userBalance',
       'gatewayBusy',
+      'rewardsResults',
+      'timeUntilElectionCycle',
       'states'
     ]) 
   },
   methods: {
+    ...DPOSStore.mapActions([
+      'getTimeUntilElectionsAsync',
+      'queryRewards'
+    ])
   }
 })
 
@@ -105,10 +124,20 @@ export default class MobileAccount extends Vue {
 
   delegations = []
   allowance = 0
+
+  // Election timer
+  electionCycleTimer = undefined
+  timerRefreshInterval = null
+  formattedTimeUntilElectionCycle = null
+  timeLeft = 600
   
   async mounted() {
     this.delegations = await this.getDelegations()
     // this.allowance = await this.checkAllowance()
+    await this.queryRewards()
+    await this.updateTimeUntilElectionCycle()
+    this.startTimer()
+
   }
 
   async checkAllowance() {    
@@ -201,6 +230,49 @@ export default class MobileAccount extends Vue {
     // this.setShowLoadingSpinner(false)
   }
 
+  startTimer() {
+    this.timerRefreshInterval = setInterval(async () => this.decreaseTimer(), 1000)
+  }
+
+  async decreaseTimer() {
+    if(this.electionCycleTimer) {
+      let timeLeft = parseInt(this.electionCycleTimer)      
+      if(timeLeft > 0) {
+        timeLeft--
+        this.timeLeft = timeLeft
+        this.electionCycleTimer = timeLeft.toString()
+        this.showTimeUntilElectionCycle()
+      } else {
+        await this.updateTimeUntilElectionCycle()
+      }
+    }
+  } 
+
+  async updateTimeUntilElectionCycle() {
+    await this.getTimeUntilElectionsAsync()
+    this.electionCycleTimer = this.timeUntilElectionCycle    
+  }
+
+  showTimeUntilElectionCycle() {    
+    if(this.electionCycleTimer) {
+      let timeLeft = this.electionCycleTimer
+      let date = new Date(null)
+      date.setSeconds(timeLeft)
+      let result = date.toISOString().substr(11, 8)
+      this.formattedTimeUntilElectionCycle = result
+    } else {
+      this.formattedTimeUntilElectionCycle = ""      
+    }
+  }  
+
+  get timerValue() {
+    return this.timeLeft ? parseInt(this.timeLeft/600 * 100) : 0
+  }
+
+  get rewardsValue() {
+    return this.rewardsResults ? (this.rewardsResults.toString() + " LOOM") : "0.00"
+  }
+  
 
 }
 

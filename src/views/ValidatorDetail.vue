@@ -22,7 +22,7 @@
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn && !validator.isBootstrap">
               <h5>
-                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState}}</span>
+                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState === "Bonding" && !hasDelegation ? "Unbonded" : delegationState}}</span>
               </h5>
               <h5>
                 {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
@@ -224,13 +224,10 @@ export default class ValidatorDetail extends Vue {
   }
 
   setupLockTimeLeft() {
-    console.log("setupLockTimeLeft")
     const lockSeconds = 86400 * this.lockDays[this.delegation.lockTimeTier]
-    const lockedSince = parseInt(this.delegation.lockTime,10)
-    const now = Math.floor(new Date().getTime()/1000)
-    this.unlockTime.seconds = (lockedSince + lockSeconds) - now
-    this.lockTimeExpired = this.lockSecondsLeft <= 0
-    console.log(this.unlockTime)
+    const unlockTimestamp = parseInt(this.delegation.lockTime,10)
+    this.lockTimeExpired = unlockTimestamp*1000 > Date.now()
+    this.unlockTime.seconds = unlockTimestamp - Math.floor(Date.now()/1000)
     
     if (this.updateLockTimeInterval) {
        clearInterval(this.updateLockTimeInterval)
@@ -246,8 +243,8 @@ export default class ValidatorDetail extends Vue {
    * only used in case time left to unlock lower thasn a day, to update the count down
    */
   updateLockTime() {
-    if (this.unlockTime.seconds <= 0) {
-      if (this.updateLockTimeInterval) clearInterval(this.updateLockTimeInterval)
+    if (this.unlockTime.seconds <= 0 && this.updateLockTimeInterval) {
+      clearInterval(this.updateLockTimeInterval)
       return
     }
     this.unlockTime.seconds  -= 1;

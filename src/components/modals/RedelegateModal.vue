@@ -1,6 +1,6 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop
-  no-close-on-esc :hide-header-close="isLoading"
+  <b-modal title="Redelegate" hide-footer centered no-close-on-backdrop
+  no-close-on-esc :hide-header-close="isLoading" v-model="visibility"
   >
     <div v-if="isLoading" class="pb-4">
       <loading-spinner :showBackdrop="true"></loading-spinner>
@@ -38,7 +38,7 @@
 
 <script>
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import RedelegateDropdownTemplate from './RedelegateDropdownTemplate'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
@@ -48,8 +48,9 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 
 @Component({
   props: {
-     validators: { required: true },
-     originValidator: Object,
+     validators: {required:true},
+     originValidator: {required:true},
+     originDelegation: Object
   },
   components: {
     LoadingSpinner,
@@ -70,29 +71,34 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ])
   }
 })
-
 export default class RedelegateModal extends Vue {
 
   dropdownTemplate = RedelegateDropdownTemplate
 
-  filteredOriginItems = []
-  filteredTargetItems = []
-  origin = {}
-  target = {}
-  delegation = {}
+  filteredOriginItems = this.validators
+  filteredTargetItems = this.validators
+  delegation = this.originDelegation
+  origin = this.originValidator
+  target = this.validators[0]
   isLoading = false
   originHasDelegation = false
-
   errorMsg = ""
   originErrorMsg = ""
 
-  async show() {
-    if(this.validators.length <= 0 ) return
-    this.origin = this.originValidator || this.validators[0]
-    this.target = this.validators[0]
-    this.filteredOriginItems = this.validators
-    this.filteredTargetItems = this.validators
-    this.$refs.modalRef.show()
+  @Watch("originDelegation")
+  onDelegationChange(nu, old) {
+    this.delegation = nu
+  } 
+
+  get visibility() {
+    // truthy
+    return !!this.delegation
+  }
+  set visibility(visible) {
+    if (!visible) {
+      this.delegation = null
+      this.$emit("hide")
+    }
   }
 
   async okHandler() {
@@ -106,10 +112,6 @@ export default class RedelegateModal extends Vue {
       return
     }
 
-    if(!this.originHasDelegation || this.delegation.amount <= 0) {
-      this.errorMsg = "No previous delegation detected"
-      return
-    }
     this.isLoading = true
 
     await this.redelegateAsync({
@@ -118,14 +120,12 @@ export default class RedelegateModal extends Vue {
       amount: this.delegation.amount})
 
     this.isLoading = false
-    // this.$emit("ok")
-    this.$refs.modalRef.hide()
-
+    this.visibility = false
+    this.$emit("ok")
   }  
 
   getLabel(item) {
-    if(!item) return
-    return item.Name
+    return (item) ? item.Name : ""
   }
 
   updateOriginItems(query) {
@@ -161,14 +161,14 @@ export default class RedelegateModal extends Vue {
   }
 
   async selectOriginItem(item) {
-    if(!item) return
-    const {pubKey} = item
-    if(!pubKey) return
-    this.isLoading = true
-    this.delegation = await this.queryDelegation(pubKey)
-    this.originHasDelegation = parseInt(this.delegation.amount) > 0 ? true : false
-    this.originErrorMsg = !this.originHasDelegation ? "You don't have any existing delegations on this validator" : "" 
-    this.isLoading = false
+    // if(!item) return
+    // const {pubKey} = item
+    // if(!pubKey) return
+    // this.isLoading = true
+    // this.delegation = await this.queryDelegation(pubKey)
+    // this.originHasDelegation = parseInt(this.delegation.amount) > 0 ? true : false
+    // this.originErrorMsg = !this.originHasDelegation ? "You don't have any existing delegations on this validator" : "" 
+    // this.isLoading = false
   }
 
   async selectTargetItem(item) {

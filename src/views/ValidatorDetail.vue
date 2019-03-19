@@ -220,7 +220,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   checkHasDelegation() {
-    this.hasDelegation = this.delegation.amount.toString() != 0
+    this.hasDelegation = ! (this.delegation.amount.isZero() && this.delegation.updatedAmount.isZero())
   }
 
   setupLockTimeLeft() {

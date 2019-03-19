@@ -251,5 +251,14 @@
         "pending": "Pending"
       }
     }
+  },
+  "delegation":{
+    "update": "Update",
+    "delegate": "Delegate",
+    "undelegate": "Undelegate",
+    "redelegate": "Redelegate",
+    "redelegating": "Redelegating",
+    "bonding": "Bonding",
+    "unbonding": "Unbonding"
   }
 }

@@ -9,8 +9,6 @@ import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/browser'
 
-import moment from  "moment";
-import durationFormatSetup from "moment-duration-format";
 
 
 import FontAwesome from '@fortawesome/fontawesome'
@@ -31,7 +29,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-durationFormatSetup(moment)
+import * as filters from "./filters";
+
+
 
 require('./assets/scss/main.scss')
 
@@ -62,10 +62,7 @@ Vue.config.productionTip = false
 
 sync(store, router)
 
-Vue.filter('interval', function (value) {
-  if (!value) return ''
-  return  moment.duration(value, "seconds").format();
-})
+filters.initFilters()
 
 export default new Vue({
   router,

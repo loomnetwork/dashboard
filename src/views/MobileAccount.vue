@@ -7,10 +7,10 @@
               bg-variant="warning"
               text-variant="white"
               header="Warning"
-              class="text-center">
+              class="text-center mb-3">
         <b-card-text>
-          {{allowance}} LOOM awaiting transfer to plasmachain account.
-          <b-btn size="sm" @click="completeDeposit">Resume Deposit</b-btn>
+          <p class="warning-copy mb-2">{{currentAllowance}} LOOM awaiting transfer to plasmachain account.</p>
+          <b-btn size="sm" variant="primary" @click="completeDeposit">Resume Deposit</b-btn>
         </b-card-text>
       </b-card>      
 
@@ -109,15 +109,18 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'gatewayBusy',
       'rewardsResults',
       'timeUntilElectionCycle',
-      'states'
+      'states',
+      'currentMetamaskAddress'
     ]) 
   },
   methods: {
     ...DPOSStore.mapActions([
       'getTimeUntilElectionsAsync',
-      'queryRewards',
+      'queryRewards'
+    ]),
+    ...DPOSStore.mapMutations([
       'setGatewayBusy',
-      'setShowLoadingSpinner'
+      'setShowLoadingSpinner'      
     ])
   }
 })
@@ -147,7 +150,7 @@ export default class MobileAccount extends Vue {
     const gateway = user.ethereumGateway
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return this.web3.utils.fromWei(allowance.toString())
+      return parseInt(this.web3.utils.fromWei(allowance.toString()))
     } catch(err) {
       console.error("Error checking allowance", err)
       return 0
@@ -285,6 +288,10 @@ export default class MobileAccount extends Vue {
 
 h3 {
   color: #02020202;
+}
+
+.warning-copy {
+  color: #ffffff;
 }
 
 </style>

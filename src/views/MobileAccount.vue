@@ -162,41 +162,6 @@ export default class MobileAccount extends Vue {
     const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
     const candidates = await this.dposUser.listCandidatesAsync()
 
-    return [
-      {
-        "Name": "Shipchain",
-        "Amount": "300",
-        "Update Amount": "450",
-        "Height": "329",
-        "Locktime": "1/11/2019",
-        "State": "Bonded" 
-      },
-      {
-        "Name": "BitFish",
-        "Amount": "300",
-        "Update Amount": "450",
-        "Height": "329",
-        "Locktime": "1/11/2019",
-        "State": "Bonded" 
-      },
-      {
-        "Name": "BlockTower",
-        "Amount": "300",
-        "Update Amount": "450",
-        "Height": "329",
-        "Locktime": "1/11/2019",
-        "State": "Bonded" 
-      },
-      {
-        "Name": "Mythos",
-        "Amount": "300",
-        "Update Amount": "450",
-        "Height": "329",
-        "Locktime": "1/11/2019",
-        "State": "Bonded" 
-      },                  
-    ]
-
     return delegationsArray.filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
            .map(delegation => {
             let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())

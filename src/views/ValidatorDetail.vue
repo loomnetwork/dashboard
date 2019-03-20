@@ -22,16 +22,17 @@
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn && !validator.isBootstrap">
               <h5>
-                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState}}</span>
+                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState === "Bonding" && !hasDelegation ? "Unbonded" : delegationState}}</span>
               </h5>
               <h5>
                 {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
               </h5>
-              <h5>
+              <h5 v-if="updatedAmount > 0">
                 {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
               </h5>
               <h5 class="mb-4">
-                {{ $t('views.validator_detail.timelock') }} <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
+                {{ $t('views.validator_detail.timelock') }} 
+                <span v-if="unlockTime.seconds > 0 " class="highlight">{{unlockTime.seconds | interval}}</span>
                 <span v-else class="highlight">{{ $t('views.validator_detail.unlocked') }}</span>
               </h5>
             </div>
@@ -80,7 +81,6 @@ import RedelegateModal from '../components/modals/RedelegateModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { clearInterval } from 'timers';
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -144,13 +144,16 @@ export default class ValidatorDetail extends Vue {
   delegation = {}
 
   finished = false
-  lockTimeExpired = false
+
   currentLockTimeTier = 0
   locktime = 0
-
   refreshInterval = null
   validatorStateInterval = null
-  
+
+  unlockTime = {
+    seconds: 0,
+  }
+
   lockTimeTiers = [
     "2 weeks",
     "3 months",
@@ -158,8 +161,9 @@ export default class ValidatorDetail extends Vue {
     "1 year"
   ]
 
-// TODO fix bonding states once unbonded is added
-  states = ["Bonding", "Bonded", "Unbounding"]
+  lockDays = [14,90,180,365]
+
+  states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {
@@ -172,8 +176,9 @@ export default class ValidatorDetail extends Vue {
   }
 
   beforeDestroy() {
-    clearInterval(this.refreshInterval)
-    clearInterval(this.validatorStateInterval)    
+    ['refreshInterval',
+    'validatorStateInterval',
+    'updateLockTimeInterval'].filter(ref => ref in this).forEach(ref => clearInterval(ref))
   }
 
   async mounted() {
@@ -182,10 +187,6 @@ export default class ValidatorDetail extends Vue {
       this.refreshValidatorState()
       this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
     }
-    if(this.hasDelegation && this.delegation.lockTime > 0) {
-      this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
-    }
-
     this.finished = true
 
   }
@@ -195,7 +196,8 @@ export default class ValidatorDetail extends Vue {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
         console.log('delegation', this.delegation)
-        this.checkHasDelegation()      
+        this.checkHasDelegation()     
+        this.setupLockTimeLeft() 
       } catch(err) {
         this.hasDelegation = false     
       }
@@ -218,28 +220,34 @@ export default class ValidatorDetail extends Vue {
   }
 
   checkHasDelegation() {
-    this.hasDelegation = this.delegation.amount.toString() != 0
+    this.hasDelegation = ! (this.delegation.amount.isZero() && this.delegation.updatedAmount.isZero())
   }
 
-  updateLocktime() {
-    let tl = parseInt(this.delegation.lockTime)
-    let lt = new Date(tl*1000).getTime()
-    // let lt = new Date("Jan 5, 2021 15:37:25").getTime()
-    let now = new Date().getTime()
-    let distance = lt - now
-
-    let days = Math.floor(distance / (1000 * 60 * 60 * 24))
-    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
-    this.locktime = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
-    this.lockTimeExpired = this.checkLockTime(lt)
-
+  setupLockTimeLeft() {
+    const lockSeconds = 86400 * this.lockDays[this.delegation.lockTimeTier]
+    const unlockTimestamp = parseInt(this.delegation.lockTime,10)
+    this.lockTimeExpired = unlockTimestamp*1000 > Date.now()
+    this.unlockTime.seconds = unlockTimestamp - Math.floor(Date.now()/1000)
+    
+    if (this.updateLockTimeInterval) {
+       clearInterval(this.updateLockTimeInterval)
+    }
+    // if time left more than a day no need for interval stuff
+    if (this.unlockTime.seconds > 0 && this.unlockTime.seconds < 86400) {
+      this.updateLockTimeInterval = setInterval(() => this.updateLockTime(), 60*1000)      
+    }
   }
 
-  checkLockTime(locktime) {
-    return locktime < new Date().getTime() ? true : false
+  /**
+   * 
+   * only used in case time left to unlock lower thasn a day, to update the count down
+   */
+  updateLockTime() {
+    if (this.unlockTime.seconds <= 0 && this.updateLockTimeInterval) {
+      clearInterval(this.updateLockTimeInterval)
+      return
+    }
+    this.unlockTime.seconds  -= 1;
   }
 
   copyAddress() {
@@ -381,7 +389,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get canClaimReward() {
-    return this.hasDelegation && this.lockTimeExpired ? true : false
+    return this.hasDelegation && this.this.unlockTime.second <= 0
   }
 
   get isBootstrap() {

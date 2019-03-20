@@ -29,7 +29,7 @@
                           <div class="balance-container mt-2">
                             <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
                             <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong></h6>
-                            <div v-if="allowance && !gatewayBusy"><small ><fa icon="fa exclamation-triangle"/> {{allowance}} LOOM out of mainnet balance awaiting transfer to plasmachain account</small> <b-btn size="sm" variant="outline-primary" style="display: inline-block;margin-left: 12px;" @click="completeDeposit">resume deposit</b-btn></div>                        
+                            <div v-if="currentAllowance && !gatewayBusy"><small ><fa icon="fa exclamation-triangle"/> {{currentAllowance}} LOOM out of mainnet balance awaiting transfer to plasmachain account</small> <b-btn size="sm" variant="outline-primary" style="display: inline-block;margin-left: 12px;" @click="completeDeposit">resume deposit</b-btn></div>                        
                             <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>                            
                           </div>                          
                         </div>
@@ -288,7 +288,6 @@ export default class MyAccount extends Vue {
   userAccount = {
     address: "",
   }
-  allowance = ""
   transferAmount = ""
   amountToApprove = ""
   withdrawAmount = ""
@@ -529,7 +528,7 @@ export default class MyAccount extends Vue {
     const address = this.userAccount.address    
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return this.web3.utils.fromWei(allowance.toString())
+      return parseInt(this.web3.utils.fromWei(allowance.toString()))
     } catch(err) {
       console.error("Error checking allowance", err)
       return ''

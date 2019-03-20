@@ -15,24 +15,18 @@
               <div>
                 <b-card no-body>
                   <b-tabs card v-model="activeTab">
-                    <b-tab>
+                    <b-tab id="login-tab">
                       <template slot="title">
                         <span class="tab-title">1. Login to PlasmaChain</span>
                         <b-spinner v-if="showTabSpinner" type="border" small />
                         <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>
                       </template>
-                        <div class="row">
-                          <img src="../assets/loomy-player-one.png" class="loomy-graphic">
-                        </div>
-                      <div class="row pt-4 pb-4">
-                        <div class="col text-center">
-                          <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
-                        </div>
-                        <div class="col">
-                          <div class="button-inner-container">
-                            <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
-                          </div>
-                        </div>
+                      <div class="row">
+                        <img src="../assets/loomy-player-one.png" class="loomy-graphic">
+                      </div>
+                      <div class="actions">
+                          <b-button variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
+                          <b-button variant="primary"  @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
                       </div>
                       <div class="row">
                           <b-button v-b-toggle.collapse1 variant="warning" v-if="!isProduction">Diagnostic Options</b-button>
@@ -278,9 +272,8 @@ export default class FirstPage extends Vue {
     this.setWalletType("ledger")
   }
 
-}</script>
-
-
+}
+</script>
 <style lang="scss" scoped>
   .button-container {
     display: flex;
@@ -299,23 +292,39 @@ export default class FirstPage extends Vue {
   .rmv-padding {
     padding: 0 !important;
   }
+
+  #login-tab {
+    .actions {
+      display: flex;
+      justify-content: center;
+      button {
+        width: 250px;
+        margin:16px;
+      }
+    }
+  }
+
+  @media (max-width: 767px) { 
+    #login-tab {
+      .actions {
+      display: flex;
+      flex-direction: column;
+        button {
+          width:100%;
+          margin:8px 0;
+        }
+      }
+    }
+
+  }
+
+
 </style>
 
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
 
-$theme-colors: (
-  //primary: #007bff,
-  primary: #02819b,
-  secondary: #4bc0c8,
-  success: #5cb85c,
-  info: #5bc0de,
-  warning: #f0ad4e,
-  danger: #d9534f,
-  light: #f0f5fd,
-  dark: #122a38
-);
+
 
 .header {
   .navbar {

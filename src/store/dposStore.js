@@ -439,7 +439,7 @@ export default {
           }
         })
       })
-      .catch((error) => {
+      .catch((err) => {
         console.error(err)
       })
       .then((results) => {

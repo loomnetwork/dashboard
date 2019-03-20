@@ -145,7 +145,7 @@ export default class Layout extends Vue {
     onMappingSuccessChange(newValue, oldValue) {
     if(newValue && this.walletType === 'metamask') {
       this.$router.push({
-        name: 'mobileaccount'
+        name: 'account'
       })
     }
   }
@@ -154,7 +154,7 @@ export default class Layout extends Vue {
     onMappedChange(newValue, oldValue) {
     if(newValue === 'mapped' && this.walletType === 'metamask') {
       this.$router.push({
-        name: 'mobileaccount'
+        name: 'account'
       })
     }
   }

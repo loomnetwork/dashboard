@@ -3,7 +3,7 @@
     
     <b-card title="Balance" class="animated zoomIn faster mb-4">
 
-      <b-card v-if="allowance && !gatewayBusy"
+      <b-card v-if="currentAllowance && !gatewayBusy"
               bg-variant="warning"
               text-variant="white"
               header="Warning"
@@ -115,7 +115,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
   methods: {
     ...DPOSStore.mapActions([
       'getTimeUntilElectionsAsync',
-      'queryRewards'
+      'queryRewards',
+      'setGatewayBusy',
+      'setShowLoadingSpinner'
     ])
   }
 })
@@ -123,7 +125,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 export default class MobileAccount extends Vue {
 
   delegations = []
-  allowance = 0
+  currentAllowance = 0
 
   // Election timer
   electionCycleTimer = undefined
@@ -133,7 +135,7 @@ export default class MobileAccount extends Vue {
   
   async mounted() {
     this.delegations = await this.getDelegations()
-    // this.allowance = await this.checkAllowance()
+    this.currentAllowance = await this.checkAllowance()
     await this.queryRewards()
     await this.updateTimeUntilElectionCycle()
     this.startTimer()
@@ -213,21 +215,21 @@ export default class MobileAccount extends Vue {
   }
 
   async completeDeposit() {
-    // this.setGatewayBusy(true)
-    // this.setShowLoadingSpinner(true)
-    // const tokens = new BN( "" + parseInt(this.allowance,10)) 
-    // const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    // try {
-    //   await this.dposUser._ethereumGateway.functions.depositERC20(
-    //     weiAmount.toString(), this.dposUser.ethereumLoom.address
-    //   )
-    //   this.allowance = 0
-    // } catch (error) {
-    //   console.error(error)
-    // }
-    // this.$emit('refreshBalances')
-    // this.setGatewayBusy(false)
-    // this.setShowLoadingSpinner(false)
+    this.setGatewayBusy(true)
+    this.setShowLoadingSpinner(true)
+    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
+    try {
+      await this.dposUser._ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), this.dposUser.ethereumLoom.address
+      )
+      this.allowance = 0
+    } catch (error) {
+      console.error(error)
+    }
+    this.$emit('refreshBalances')
+    this.setGatewayBusy(false)
+    this.setShowLoadingSpinner(false)
   }
 
   startTimer() {

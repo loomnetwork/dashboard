@@ -1,15 +1,14 @@
 <template>
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
-    <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>    
+    <faucet-header v-on:update:chain="refresh()"></faucet-header>
     <div class="content container-fluid">      
       <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
       <div class="row">
-        <div v-show="showSidebar" class="col-lg-3">
-          <faucet-sidebar></faucet-sidebar>      
-        </div>
-        <div :class="contentClass">
+        <!-- <div v-show="showSidebar" class="col-lg-3">
+          <faucet-sidebar></faucet-sidebar>     
+        </div> -->
+        <div class="col rmv-spacing">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
           </b-modal>
@@ -21,7 +20,7 @@
         </div>        
       </div>          
     </div>    
-    <faucet-footer></faucet-footer>
+    <!-- <faucet-footer></faucet-footer> -->
      <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
         <div class="d-block text-center">
           <p>{{ $t('components.layout.metamask_changed')}}</p>
@@ -146,7 +145,7 @@ export default class Layout extends Vue {
     onMappingSuccessChange(newValue, oldValue) {
     if(newValue && this.walletType === 'metamask') {
       this.$router.push({
-        name: 'account'
+        name: 'mobileaccount'
       })
     }
   }
@@ -155,7 +154,7 @@ export default class Layout extends Vue {
     onMappedChange(newValue, oldValue) {
     if(newValue === 'mapped' && this.walletType === 'metamask') {
       this.$router.push({
-        name: 'account'
+        name: 'mobileaccount'
       })
     }
   }
@@ -292,11 +291,6 @@ export default class Layout extends Vue {
   .highlight {
     color: #f0ad4e;
   }
-
-  .container-fluid {
-    max-width: 1200px;
-    padding: 0 24px !important;
-  }  
 
   @media (max-width: 576px) {
   }

@@ -13,6 +13,7 @@ import ValidatorDetail from './views/ValidatorDetail.vue'
 import CandidateList from './views/CandidateList.vue'
 import CandidateDetail from './views/CandidateDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
+import MobileAccount from './views/MobileAccount.vue'
 import Rewards from './views/Rewards.vue'
 import Help from './views/Help.vue'
 
@@ -166,6 +167,11 @@ const router = new VueRouter({
         name: 'blockexplorer',
         component: BlockExplorer
       },
+      {
+        path: 'mobile-account',
+        name: 'mobileaccount',
+        component: MobileAccount
+      },      
       {
         path: '/',
         redirect: '/account'

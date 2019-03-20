@@ -8,6 +8,7 @@ import RavenVue from 'raven-js/plugins/vue'
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/browser'
+import Progress from 'vue-multiple-progress'
 
 import moment from  "moment";
 import durationFormatSetup from "moment-duration-format";
@@ -24,6 +25,7 @@ import 'v-autocomplete/dist/v-autocomplete.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'swiper/dist/css/swiper.css'
+import 'animate.css/animate.css'
 
 import ApiClient from './services/faucet-api'
 import { i18n } from './i18n'
@@ -56,6 +58,7 @@ Vue.use(VueProgressBar, progressBarOptions)
 Vue.use(BootstrapVue)
 Vue.use(VueAwesomeSwiper, {})
 Vue.use(Autocomplete)
+Vue.use(Progress)
 FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)
 Vue.component('fa', FontAwesomeIcon)
 Vue.config.productionTip = false

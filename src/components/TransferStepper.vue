@@ -1,7 +1,7 @@
 <template>
 <div>
   <b-button v-b-modal.modalPrevent @click="show = !show">{{buttonLabel}}</b-button>
-  <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" busy="true" 
+  <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
     no-close-on-esc
     no-close-on-backdrop
     hide-header-close

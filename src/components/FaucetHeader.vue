@@ -24,25 +24,18 @@
           <b-collapse is-nav id="nav_collapse">
 
             <!-- Right aligned nav items -->
-            <b-navbar-nav class="ml-auto">
+            <b-navbar-nav class="mobile-nav ml-auto">
               
-              <b-nav-form>
-                <b-nav-item :hidden="false">
-                  <router-link to="/account" class="router text-light hover-warning">{{ $t('views.history.home') }}</router-link>
-                </b-nav-item>
-                <b-nav-item :hidden="isLoggedIn">
-                  <router-link to="/validators" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-                </b-nav-item>
-                <b-nav-item :hidden="true">
-                  <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.explorer') }}</router-link>
-                </b-nav-item>   
-                <b-nav-item :hidden="false">
-                  <router-link to="/faq" class="router text-light hover-warning">{{ $t('components.faucet_header.f_a_q') }}</router-link>
-                </b-nav-item>
-                <b-nav-item :hidden="false">
-                  <LangSwitcher/>
-                </b-nav-item>
-              </b-nav-form>
+              <li>
+                <h5>
+                  <router-link to="/account" class="router text-light hover-warning">Account</router-link>
+                </h5>
+              </li>
+              <li>
+                <h5>
+                  <router-link to="/history" class="router text-light hover-warning">History</router-link>
+                </h5>
+              </li>
 
             </b-navbar-nav>
           </b-collapse>        
@@ -354,6 +347,7 @@ export default class FaucetHeader extends Vue {
     width: 100%;
     .navbar-brand {
       position: absolute;
+      top: 4px;
       left: 50%;
       margin: 0;
       transform: translateX(-50%);
@@ -472,12 +466,18 @@ a.hover-warning:hover {
 }
 
 .navbar-toggler {
-  visibility: hidden;
   border: 0px;
   position: relative;
   right: 0px;
   margin-left: auto;
   padding-right: 0;  
+}
+
+.mobile-nav {
+  text-align: center;
+  li {
+    list-style: none;
+  } 
 }
 
 </style>

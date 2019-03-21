@@ -13,7 +13,9 @@
               {{ $t('components.layout.already_mapped') }}
           </b-modal> 
           <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+          <transition name="page" mode="out-in">
           <router-view></router-view>
+          </transition>
         </div>        
       </div>          
     </div>    
@@ -236,6 +238,16 @@ export default class Layout extends Vue {
     display: flex;
     align-items: stretch;
   }
+
+.page-enter-active, .page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.page-enter, .page-leave-to {
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
 
 </style>
 

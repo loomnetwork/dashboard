@@ -1,25 +1,55 @@
 <template>
-  <div class="faucet">
-    <div class="faucet-content">
-      <div>
-        <main>
-          <div class="container mb-5 column py-3 p-3 d-flex" v-if="validators !== null && validators.length > 0">
-            <h1>{{ $t('views.validator_list.validators') }}</h1>
-            <p><fa icon="info-circle" fixed-width /> Staking is disabled on bootstrap validators.</p>
-            <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
-          </div>
-          <div v-else-if="validators !== null && validators.length == 0">
-            <h2>
-              {{ $t('views.validator_list.no_validators_available_please_try') }}
-            </h2>
-          </div>
-          <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
-            <loading-spinner :showBackdrop="true"></loading-spinner>
-          </div>
-        </main>
-      </div>
+  <main class="validators">
+    <header>
+      <h1>{{ $t('views.validator_list.validators') }}</h1>
+    </header>
+    <div class="content" v-if="validators && validators.length > 0">
+      <p><fa icon="info-circle" fixed-width /> {{ $t("Staking is disabled on bootstrap validators.")}}</p>
+      <template v-if="isSmallDevice">
+        <b-list-group>
+          <b-list-group-item class="flex-column align-items-start" 
+            :class="{disabled:validator.isBoostrap}"
+            v-for="validator in validators" :key="validator.Name">
+            <header class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{validator.Name}}</h5>
+              <small :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</small>
+            </header>
+            <dl>
+              <dt>Fees</dt>
+              <dd>{{validator.Fees}}</dd>
+              <dt>Total Stakes</dt>
+              <dd>{{validator.totalStaked}}</dd>
+              <dt>Your Stakes</dt>
+              <dd>0.00</dd>
+            </dl>
+            <footer>
+              <b-button size="sm" variant="outline-primary">more</b-button>
+              <b-button size="sm" variant="outline-primary">Stake</b-button>
+            </footer>
+          </b-list-group-item>  
+        </b-list-group>
+        <b-card v-for="validator in validators" :key="validator.Name" :title="validator.Name">
+          <b-card-sub-title class="mb-2" :class="{'node-active': validator.Status === 'Active'}">{{validator.Status}}</b-card-sub-title>
+          <b-card-text>
+            <dl>
+              <dt>Fees</dt>
+              <dd>{{validator.Fees}}</dd>
+              <dt>Total Stakes</dt>
+              <dd>{{validator.totalStaked}}</dd>
+              <dt>Your Stakes</dt>
+              <dd>0.00</dd>
+            </dl>
+          </b-card-text>
+        </b-card>
+      </template>
+      <template v-else>
+        <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
+      </template>
     </div>
-  </div>
+    <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
+      <loading-spinner :showBackdrop="true"></loading-spinner>
+    </div>
+  </main>
 </template>
 
 <script>

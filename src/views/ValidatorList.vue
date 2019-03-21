@@ -104,19 +104,74 @@ export default class ValidatorList extends Vue {
 </script>
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
 
-$theme-colors: (
-  //primary: #007bff,
-  primary: #02819b,
-  secondary: #4bc0c8,
-  success: #5cb85c,
-  info: #5bc0de,
-  warning: #f0ad4e,
-  danger: #d9534f,
-  light: #f0f5fd,
-  dark: #122a38
-);
+main.validators {
+  // ther should be global class for page titles
+  header > h1 {
+    color: #5246d5;
+    font-size: 1.35em;
+    text-align: center;
+    margin: 16px -14px;
+    font-weight: normal;
+    border-bottom: 1px solid #ededed;
+    padding-bottom: 16px;
+  }
+
+  .list-group-item {
+      padding-top: 16px;
+    > header {
+      margin-bottom: 4px;
+
+    }
+    .active {
+        color: green
+    }
+    > footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+      > button {
+        width: 25%;
+        margin-left: 4px 
+      }
+    }
+  }
+
+
+  .card {
+    margin: 16px 0;
+
+    .active {
+      color: green
+    }
+  }
+  .card-title {
+    font-size: 1.1em;
+  }
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  dt,dd {
+    flex: 50%;
+    margin: 0;
+    border-top: 1px solid #ededed;
+    padding: 4px 0;
+  }
+  dt {
+    font-size: 0.8em;
+    line-height: 24px;
+    font-weight: normal;
+  }
+  dd {
+    font-size: 1em;
+    line-height: 24px;
+    text-align: right;
+    font-weight: normal;
+    color: black;
+  }
+}
 
 .faucet {
   main {
@@ -146,10 +201,8 @@ $theme-colors: (
       opacity: 0.5
     }
   }
-
-
 }
-  body {
-    overflow-y: scroll;
-  }
+body {
+  overflow-y: scroll;
+}
 </style>

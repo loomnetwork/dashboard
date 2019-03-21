@@ -437,15 +437,15 @@ export default {
       ])
 
       // For each validator, get their staked tokens
-      let stakedTokens = {}
-      for (let i in dpos2Delegations) {
-        if (dpos2Delegations[i].delegationsArray.length != 0) {
-          let address = dpos2Delegations[i].delegationsArray[0].validator.local.toString()
-          stakedTokens[address] = dpos2Delegations[i].delegationTotal
-        }
-      }
+      const stakedTokens = dpos2Delegations
+        .filter(d => d.delegationsArray.length > 0)
+        .reduce((map,entry) => {
+          const address = entry.delegationsArray[0].validator.local.toString()
+          map[address] = entry.delegationTotal
+          return map
+        }, {})
 
-      let validators = []
+      const validators = []
       for (let candidate of dpos2Candidates) {
           let addr = candidate.address.local.toString()
 
@@ -483,7 +483,7 @@ export default {
               // How much was validator personally staked
               validator.personalStake = v.whitelistAmount.toString()
               // how much tokens staked by delegators
-              validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : 0
+              validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : "0"
               // Voting Power is the whitelist plus the tokens w/ bonuses
               validator.votingPower = v.delegationTotal.toString()
               validator.delegationsTotal = new BN(v.delegationTotal).sub(v.whitelistAmount).toString()

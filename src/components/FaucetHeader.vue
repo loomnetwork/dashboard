@@ -36,6 +36,11 @@
                   <router-link to="/history" class="router text-light hover-warning">History</router-link>
                 </h5>
               </li>
+              <li>
+                <h5>
+                  <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
+                </h5>
+              </li>
 
             </b-navbar-nav>
           </b-collapse>        

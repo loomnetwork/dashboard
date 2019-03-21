@@ -32,7 +32,7 @@ const defaultState = () => {
     currentMetamaskAddress: undefined,
     history: null,
     withdrawLimit: DAILY_WITHDRAW_LIMIT,
-    validators: null,
+    validators: [],
     status: "check_mapping",
     walletType: undefined,
     selectedAccount: undefined,
@@ -50,6 +50,8 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
+    // timestamp millis
+    nextElectionTime: 0,
     validatorFields: [
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
@@ -127,6 +129,9 @@ export default {
     },
     setTimeUntilElectionCycle(state, payload) {
       state.timeUntilElectionCycle = payload
+    },
+    setNextElectionTime(state, millis) {
+      state.nextElectionTime = millis
     },
     setWalletType(state, payload) {
       state.walletType = payload
@@ -361,7 +366,9 @@ export default {
       }
       
     },    
-
+    // this can be moved out as is automatically called once dposUser is set
+    // actually instead of depending on dposUser we should depend on dpos contract
+    // (if we want to display timer in "anonymous" session)
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
       
       if(!rootState.DappChain.dposUser) {
@@ -372,7 +379,9 @@ export default {
 
       try {
         const result = await user.getTimeUntilElectionsAsync()
+        debug("next election in %s seconds", result.toString())
         commit("setTimeUntilElectionCycle", result.toString())
+        commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))
       } catch(err) {
         console.error(err)
       }

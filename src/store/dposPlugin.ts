@@ -1,19 +1,41 @@
 import Debug from "debug"
 import { fromEventPattern, Observable, combineLatest } from "rxjs";
 import { filter, switchMap, tap } from "rxjs/operators";
+import { Store } from "vuex";
+import { setTimeout } from "timers";
 
 Debug.enable("dashboard.dpos.rx")
 
 const debug = Debug("dashboard.dpos.rx")
 
-export function dposStorePlugin(store) {
+export function dposStorePlugin(store:Store<any>) {
 
-    buildLoadHistoryTrigger(store);
-    buildWithdrawLimitTrigger(store);
+    // As soon as we have a dposUser getTimeUntilElectionsAsync
+    store.watch(
+        (state) => state.DappChain.dposUser,
+        // we never set dpos2 to null. I assume...
+        (dpos) => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
+    )
+    
+    // When ever timeUntilElectionCycle is refreshed, refresh validators
+    store.watch(
+        (state) => state.DPOS.timeUntilElectionCycle,
+        (time:string) => {
+            // assuming string...
+            const seconds = parseInt(time,10)
+            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"),seconds*1000)
+            // refresh validators
+            store.dispatch("DappChain/getValidatorsAsync")
+        },
+    )
+
+    buildLoadHistoryTrigger(store)
+    buildWithdrawLimitTrigger(store)
 }
 
 
-function observeState(store, stateGetter): Observable<any> {
+
+function observeState(store:Store<any>, stateGetter): Observable<any> {
     // init with noop
     // unwatchFn is the fn returned by vuex .watch()
     let off = () => { }

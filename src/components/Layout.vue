@@ -5,9 +5,6 @@
       <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
       <div class="row">
-        <!-- <div v-show="showSidebar" class="col-lg-3">
-          <faucet-sidebar></faucet-sidebar>     
-        </div> -->
         <div class="col rmv-spacing">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
@@ -20,7 +17,6 @@
         </div>        
       </div>          
     </div>    
-    <!-- <faucet-footer></faucet-footer> -->
      <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
         <div class="d-block text-center">
           <p>{{ $t('components.layout.metamask_changed')}}</p>
@@ -43,9 +39,6 @@ import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
-import { initWeb3 } from '../services/initWeb3'
-import { isIP } from 'net';
-
 @Component({
   components: {
     FaucetHeader,
@@ -59,20 +52,12 @@ import { isIP } from 'net';
   },
   methods: {
     ...mapMutations([
-      'setUserIsLoggedIn',
       'setErrorMsg'
     ]),
     ...DappChainStore.mapActions([
-      'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapActions([
       'initializeDependencies',
-      'checkMappingAccountStatus'
-    ]),
-    ...DPOSStore.mapMutations([
-      'setConnectedToMetamask',
-      'setCurrentMetamaskAddress',
-      'setWalletType'
     ]),
     ...DappChainStore.mapMutations([
       'setMappingError',
@@ -85,21 +70,16 @@ import { isIP } from 'net';
     ]),
     ...DappChainStore.mapState([
       'account',
-      'metamaskStatus',
       'metamaskError',
-      'mappingStatus',
       'mappingError'
     ]),
     ...DPOSStore.mapState([
       'showSidebar',
-      'web3',
       "currentMetamaskAddress",
-      'metamaskDisabled',
       'showLoadingSpinner',
       'showAlreadyMappedModal',
       'showSignWalletModal',
       'mappingSuccess',
-      'isLoggedIn',
       'walletType',
       'status'
     ])    
@@ -110,9 +90,6 @@ export default class Layout extends Vue {
 
   metamaskChangeAlert = false
 
-  pendingModalTitle = 'Continue with your approved Loom'
-  isOpen = true
-  preload = false
   loginEmail = ''
   routeArray = [
     {
@@ -132,9 +109,7 @@ export default class Layout extends Vue {
   ]
 
   created() {
-    this.$router.afterEach((to, from) => {
-      this.$root.$emit("refreshBalances")
-    })
+    this.$router.afterEach((to, from) => this.$root.$emit("refreshBalances"))
   }
 
   beforeMount() {
@@ -170,12 +145,11 @@ export default class Layout extends Vue {
   }
 
   @Watch('showSignWalletModal')
-    onSignLedgerModalChange(newValue, oldValue) {      
+  onSignLedgerModalChange(newValue, oldValue) {      
     if(newValue) {
         this.$root.$emit("bv::show::modal", "sign-wallet-modal")
     } else {
         this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
-
     }
   }
 
@@ -229,18 +203,6 @@ export default class Layout extends Vue {
     }           
   }
 
-  onLoginHandler() {
-    this.$auth.initAuthInstance()
-  }
-
-  get showErrorMsg() {
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: 'error' } : false
-  }
-
-  get showSuccessMsg() {
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: 'success' } : false
-  }
-
   get getClassNameForStyling() {
     let className = "";
     const self = this;
@@ -252,12 +214,8 @@ export default class Layout extends Vue {
     })
     return className;
   }
-
-  get contentClass() {
-    return this.showSidebar ? 'col-lg-9' : 'col-lg-12'
-  }
-
-}</script>
+}
+</script>
 
 <style lang="scss" scoped>
   #layout {

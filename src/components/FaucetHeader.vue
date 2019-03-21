@@ -337,7 +337,8 @@ export default class FaucetHeader extends Vue {
       }, waitTime * 1000)
     }
   }
-}</script>
+}
+</script>
 <style lang="scss">
 .header {
   background: #5756e6;
@@ -451,15 +452,6 @@ a.hover-warning:hover {
 .metamask-status-error {
   background-color: #e62e2e;
 }
-
-// #balance::after {
-//   position: absolute;
-//   content: "Staked / Available";
-//   font-size: 9px;
-//   color: #ffffff;
-//   bottom: 6px;
-//   left: 8px;
-// }
 
 .add-border-left {
   border-left: 2px solid #f2f1f3;

@@ -9,6 +9,10 @@ import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
 import { ethers } from 'ethers'
+import Debug from "debug"
+
+Debug.enable("dashboard.dapp")
+const debug = Debug("dashboard.dapp")
 
 const coinMultiplier = new BN(10).pow(new BN(18));
 

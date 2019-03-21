@@ -27,8 +27,6 @@ import Vue from 'vue'
 import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 const DappChainStore = createNamespacedHelpers('DappChain')
@@ -36,16 +34,14 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 
 import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
 
+
 @Component({
   components: {
     FaucetTable,
-    FaucetHeader,
-    FaucetFooter,
     LoadingSpinner,
   },
   computed: {
     ...DPOSStore.mapState([
-      'validators',
       'validatorFields'
     ])
   },

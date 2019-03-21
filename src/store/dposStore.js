@@ -65,7 +65,8 @@ const defaultState = () => {
     cachedEvents: [],
     dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
     historyPromise: null,
-    dappChainEvents: []
+    dappChainEvents: [],
+    states: ["Bonding", "Bonded", "Unbounding", "Redelegating"]
   }
 }
 
@@ -438,7 +439,7 @@ export default {
           }
         })
       })
-      .catch((error) => {
+      .catch((err) => {
         console.error(err)
       })
       .then((results) => {

@@ -6,13 +6,14 @@ import store from './store'
 import FirstPage from './views/FirstPage.vue'
 import MyAccount from './views/MyAccount.vue'
 import MyDelegations from './views/MyDelegations.vue'
-import History from './views/History.vue'
+import History from './views/MobileHistory.vue'
 import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
 import CandidateList from './views/CandidateList.vue'
 import CandidateDetail from './views/CandidateDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
+import MobileAccount from './views/MobileAccount.vue'
 import Rewards from './views/Rewards.vue'
 import Help from './views/Help.vue'
 
@@ -88,7 +89,7 @@ const router = new VueRouter({
       {
         path: 'account',
         name: 'account',
-        component: MyAccount,
+        component: MobileAccount,
         meta: {
           requireLogIn: true,
           requireDeps: true

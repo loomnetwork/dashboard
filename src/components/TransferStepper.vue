@@ -1,8 +1,17 @@
 <template>
-  <div>
+<div>
+  <b-button v-b-modal.modalPrevent @click="show = !show">{{buttonLabel}}</b-button>
+  <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
+    no-close-on-esc
+    no-close-on-backdrop
+    hide-header-close
+    hide-footer
+    >
+    <template slot="modal-title">{{buttonLabel}}
+    </template>
     <header class="stepper-header">
       <h4 :class="{ active: step == 1 }">
-        <i>1</i> Select amount
+        <i>1</i> Set amount
       </h4>
       <h4 :class="{ active: step == 2 }">
         <i>2</i> {{ executionTitle || "Approve transfer"}}
@@ -12,7 +21,7 @@
       </h4>
     </header>
     <div v-if="step==1" class="set-amount">
-          <form>
+      <form>
       <b-container style="margin: 16px 0;padding: 0;">
         <b-row>
           <b-col>
@@ -32,9 +41,13 @@
           </b-col>
         </b-row>
       </b-container>
-      <b-btn @click="startTransfer" variant="primary" :disabled="amountErrors.length > 0">Transfer</b-btn>
-      &nbsp;<span class="error" v-for="e in amountErrors" :key="e">- {{e}} </span>
-        </form>
+      <div class="error" v-for="e in amountErrors" :key="e">- {{e}} </div>
+      <footer style="display:flex">
+        <b-btn @click="show = false">Cancel</b-btn>
+        <span style="flex:1"></span>
+        <b-btn @click="startTransfer" variant="primary" :disabled="amountErrors.length > 0">Next</b-btn>
+      </footer>
+      </form>
     </div>
     <div v-else-if="step==2" class="approve-transfer">
       <div v-if="approvalPromise" class="pending">
@@ -61,10 +74,11 @@
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
     </div>
+  </b-modal>
   </div>
 </template>
 <script>
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { createNamespacedHelpers } from 'vuex'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -75,7 +89,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     "balance",          // number
     "transferAction",   // function (amount) => Promise<TransactionReceipt>
     "resolveTxSuccess", // function (TransactionReceipt) => Promise<void>
-    "executionTitle"
+    "executionTitle",
+    "buttonLabel"
   ],
   computed: {
     ...DPOSStore.mapState([
@@ -84,6 +99,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
   }
 })
 export default class TransferStepper extends Vue {
+  show = false
   errorMessage = ''
   step = 1;
   transferAmount = 1;
@@ -205,6 +221,9 @@ export default class TransferStepper extends Vue {
 }
 </script>
 <style lang="scss">
+
+
+
 .stepper-header {
   display: flex;
   > h4 {
@@ -251,4 +270,50 @@ input:invalid {
 .error {
   color: red;
 }
+
+
+  // Medium devices (tablets, 768px and up)
+  // todo make this mobile first
+  @media (max-width: 767px) { 
+    #gateway-transfer > .modal-dialog{
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      bottom: 0;
+      > .modal-content {
+        height: 100vh;
+        width: 100vw;
+      }
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+      }
+
+    }
+    #gateway-transfer .modal {
+    padding: 0 !important;
+    }
+    #gateway-transfer .modal-dialog {
+        max-width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    #gateway-transfer .modal-content {
+        border: 0;
+        border-radius: 0;
+        min-height: 100%;
+        height: auto;
+    }
+    .stepper-header {
+      display: block;
+
+      > h4 {
+        width:auto;
+      }
+      > h4:not(.active) {
+        display: none;
+      }
+    }
+
+  }
 </style>

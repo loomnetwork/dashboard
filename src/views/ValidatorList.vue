@@ -7,40 +7,16 @@
       <p><fa icon="info-circle" fixed-width /> {{ $t("Staking is disabled on bootstrap validators.")}}</p>
       <template v-if="isSmallDevice">
         <b-list-group>
-          <b-list-group-item class="flex-column align-items-start" 
+          <b-list-group-item 
+            v-for="validator in validators" :key="validator.Name"
             :class="{disabled:validator.isBoostrap}"
-            v-for="validator in validators" :key="validator.Name">
-            <header class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">{{validator.Name}}</h5>
-              <small :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</small>
-            </header>
-            <dl>
-              <dt>Fees</dt>
-              <dd>{{validator.Fees}}</dd>
-              <dt>Total Stakes</dt>
-              <dd>{{validator.totalStaked}}</dd>
-              <dt>Your Stakes</dt>
-              <dd>0.00</dd>
-            </dl>
-            <footer>
-              <b-button size="sm" variant="outline-primary">more</b-button>
-              <b-button size="sm" variant="outline-primary">Stake</b-button>
-            </footer>
+            >
+              <h6>{{validator.Name}}</h6>
+              <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
+              <div class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
+              <div class="fee"><label>Fee</label>{{validator.Fees}}</div>
           </b-list-group-item>  
         </b-list-group>
-        <b-card v-for="validator in validators" :key="validator.Name" :title="validator.Name">
-          <b-card-sub-title class="mb-2" :class="{'node-active': validator.Status === 'Active'}">{{validator.Status}}</b-card-sub-title>
-          <b-card-text>
-            <dl>
-              <dt>Fees</dt>
-              <dd>{{validator.Fees}}</dd>
-              <dt>Total Stakes</dt>
-              <dd>{{validator.totalStaked}}</dd>
-              <dt>Your Stakes</dt>
-              <dd>0.00</dd>
-            </dl>
-          </b-card-text>
-        </b-card>
       </template>
       <template v-else>
         <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
@@ -118,59 +94,41 @@ main.validators {
   }
 
   .list-group-item {
-      padding-top: 16px;
-    > header {
-      margin-bottom: 4px;
-
+    padding-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    > h6 {
+      flex: 1
     }
-    .active {
+    .stakes > label {
+      display: block;
+      display: none;
+      margin: 0;
+      font-size: 12px;
+      line-height: 12px;
+      text-align: right;
+    }
+    .fee > label {
+      display: inline-block;
+      margin: 0;
+      font-size: 12px;
+      line-height: 24px;
+      text-align: right;
+      vertical-align: bottom;
+      margin-right: 7px;
+      font-weight: bold;
+      color: rgba(128, 128, 128, 0.58);
+    }
+    .status {
+      flex: 50%;
+      font-size: 0.8em;
+      &.active {
         color: green
-    }
-    > footer {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 8px;
-      > button {
-        width: 25%;
-        margin-left: 4px 
       }
     }
   }
 
-
-  .card {
-    margin: 16px 0;
-
-    .active {
-      color: green
-    }
-  }
-  .card-title {
-    font-size: 1.1em;
-  }
-  dl {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  dt,dd {
-    flex: 50%;
-    margin: 0;
-    border-top: 1px solid #ededed;
-    padding: 4px 0;
-  }
-  dt {
-    font-size: 0.8em;
-    line-height: 24px;
-    font-weight: normal;
-  }
-  dd {
-    font-size: 1em;
-    line-height: 24px;
-    text-align: right;
-    font-weight: normal;
-    color: black;
-  }
 }
 
 .faucet {

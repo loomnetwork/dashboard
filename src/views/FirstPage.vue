@@ -254,7 +254,13 @@ export default class FirstPage extends Vue {
 
   switchTab() {
     this.showTabSpinner = true
+
     setTimeout(() => {
+      if (window.web3.currentProvider.isTrust) {
+        this.setWalletType("metamask")
+        this.$root.$emit("login") 
+      }
+      
       this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
       this.showTabSpinner = false
     }, 1000)

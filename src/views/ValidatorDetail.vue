@@ -1,18 +1,72 @@
 <template>
-  <div class="faucet">        
-    <div class="faucet-content">
+  <main class="validator">
+    <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
+    <header>
+      <h1><router-link to="../validators" style="color: inherit;">{{ $t('views.validator_list.validators') }}</router-link></h1>
+    </header>
+    <section class="validator-details">
+      <header>
+      <h1>{{validator.name }}<span> {{validator.isBootstrap ? "(bootstrap)" : ''}}</span></h1>
+      <p v-if="validator.description" style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0">
+        {{validator.description}}
+      </p>
+      <a :href="validator.website | url" target="_blank">{{validator.website | domain}} <fa icon="external-link-alt"/></a>
+      </header>
+      <dl>
+        <dt>{{ $t('views.validator_detail.state') }}</dt>
+        <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
+        <dt>Delegators Stake</dt>
+        <dd>{{validator.delegatedStake | tokenAmount}}</dd>
+        <dt>Total Staked</dt>
+        <dd>{{validator.totalStaked | tokenAmount}}</dd>
+        <dt>Fee</dt>
+        <dd>{{validator.fee}}</dd>
+      </dl>
+    </section>
+    <section v-if="userIsLoggedIn" class="user-stakes">
+      <h6>{{ $t('My stakes') }} </h6>
+      <p class="no-stakes" v-if="delegations.length === 0">
+        {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
+      </p>
+      <b-list-group v-if="validatorDelegations.length">
+          <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
+            <dl>
+              <dt>{{ $t('views.validator_detail.state') }}</dt>
+              <dd>{{delegation.state | delegationState}}</dd>
+              <dt>{{ $t('views.validator_detail.amount_delegated') }}</dt>
+              <dd>{{delegation.amount | tokenAmount}}</dd>
+              <dt>Timelock</dt>
+              <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
+              <dt>Unlock time</dt>
+              <dd>{{delegation.lockTime | date('seconds')}}</dd>
+            </dl>
+            <footer class="actions">
+              <b-button-group style="display: flex;">
+                <b-button variant="outline-primary" :disabled="delegation.state !== 1">{{ $t('Update') }}</b-button>
+                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                  @click="openRedelegateModal(delegation)"
+                >{{ $t('Redelegate') }}</b-button>
+                <b-button variant="outline-primary" :disabled="delegation.state !== 1">{{ $t('Undelegate') }}</b-button>
+              </b-button-group>
+            </footer>
+          </b-list-group-item>
+      </b-list-group>
+      <p v-else class="no-stakes">{{ $t("You haven't staked with {name} yet.", {name: validator.name}) }}<br/>
+        <b-button class="btn-lg">{{ $t("Stake my tokens") }}</b-button>
+      </p>
+      <!--
+      <footer v-if="isSmallDevice && validatorDelegations.length === 0">
+        <b-button class="bt-lg">{{ $t("Stake my tokens") }}</b-button>
+      </footer>
+      -->
+      <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef"
-                        @ok="redelegateHandler"
-                        :hasDelegation="hasDelegation"
-                        :delegation="delegation"
-                        :validators="validators"
-                        :originValidator="validator">
+                        @ok="redelegateHandler">
       </redelegate-modal>
       <success-modal></success-modal>
-      <div>
-        <main>
-          <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
+    </section>
+<!-- 
           <div class="container mb-2 column py-3 p-3 d-flex bottom-border">
             <h1>
               {{validator.Name }}
@@ -63,18 +117,16 @@
               </div>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
-  </div>
+  -->
+
+    
+
+  </main>
 </template>
 <script>
 import Vue from 'vue'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import SuccessModal from '../components/modals/SuccessModal'
 import RedelegateModal from '../components/modals/RedelegateModal'
@@ -87,8 +139,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 @Component({
   components: {
     FaucetTable,
-    FaucetHeader,
-    FaucetFooter,
     SuccessModal,
     RedelegateModal,
     FaucetDelegateModal,
@@ -100,15 +150,14 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DPOSStore.mapState([
       'prohibitedNodes',
-      'validators'
+      'delegations'
+    ]),
+    ...DappChainStore.mapState([
+      'validators',
     ]),
     ...mapGetters([
       'getPrivateKey'
     ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-      'currentRPCUrl',
-    ])
   },
   methods: {
     ...mapActions([
@@ -118,18 +167,17 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setErrorMsg'
     ]),
     ...DPOSStore.mapActions([
-      'getValidatorList',
       'redelegateAsync'
     ]),
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
-      'checkDelegationAsync',
       'claimRewardAsync',
       'getDpos2'
     ])
   }
 })
 export default class ValidatorDetail extends Vue {
+  isSmallDevice = window.innerWidth < 600
   fields = [
     { key: 'Status' },
     { key: 'personalStake', label: 'Validator Personal Stake'},
@@ -138,10 +186,9 @@ export default class ValidatorDetail extends Vue {
     // { key: 'votingPower', label: 'Reward Power'},
     { key: 'Fees', sortable: false },
   ]
-  validator = {}
+  validatorName = ""
 
   hasDelegation = false
-  delegation = {}
 
   finished = false
 
@@ -164,15 +211,26 @@ export default class ValidatorDetail extends Vue {
   lockDays = [14,90,180,365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
-  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {
-    let name = this.$route.params.index
-    if(!this.validators || this.validators.length <= 0) await this.getValidatorList()
-    this.validator = this.validators.find(v => v.Name === name)
-    if(this.validator === undefined) {
+    this.validatorName = this.$route.params.index
+  }
+
+  /**
+   * @returns {IValidator && ICandidate}
+   */
+  get validator() {
+    const v = this.validators.find(v => v.name === this.validatorName)
+    // todo add state.loadingValidators:boolean
+    if(v === undefined) {
       this.$router.push("../validators")
     }
+    return v
+  }
+
+  get validatorDelegations() {
+    const validator = this.validator
+    return validator ? this.delegations.filter(d => d.validatorStr === validator.address) : []
   }
 
   beforeDestroy() {
@@ -183,72 +241,28 @@ export default class ValidatorDetail extends Vue {
 
   async mounted() {
 
-    if(this.isReallyLoggedIn) {
-      this.refreshValidatorState()
-      this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
-    }
+    // if(this.isReallyLoggedIn) {
+    //   this.refreshValidatorState()
+    //   this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
+    // }
     this.finished = true
 
   }
 
-  async refreshValidatorState() {
-    if(this.isReallyLoggedIn) {
-      try {
-        this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
-        console.log('delegation', this.delegation)
-        this.checkHasDelegation()     
-        this.setupLockTimeLeft() 
-      } catch(err) {
-        this.hasDelegation = false     
-      }
-    }
-  }
-
   async delegateHandler() {
+    return false
     this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
     this.checkHasDelegation()
     this.currentLockTimeTier = this.delegation.lockTimeTier
 
     this.$root.$emit("refreshBalances")
 
-    // refresh validator
-    this.refreshValidatorState()
 
     // show modal
     this.$root.$emit("bv::hide::modal", "success-modal")
     
   }
 
-  checkHasDelegation() {
-    this.hasDelegation = ! (this.delegation.amount.isZero() && this.delegation.updatedAmount.isZero())
-  }
-
-  setupLockTimeLeft() {
-    const lockSeconds = 86400 * this.lockDays[this.delegation.lockTimeTier]
-    const unlockTimestamp = parseInt(this.delegation.lockTime,10)
-    this.lockTimeExpired = unlockTimestamp*1000 > Date.now()
-    this.unlockTime.seconds = unlockTimestamp - Math.floor(Date.now()/1000)
-    
-    if (this.updateLockTimeInterval) {
-       clearInterval(this.updateLockTimeInterval)
-    }
-    // if time left more than a day no need for interval stuff
-    if (this.unlockTime.seconds > 0 && this.unlockTime.seconds < 86400) {
-      this.updateLockTimeInterval = setInterval(() => this.updateLockTime(), 60*1000)      
-    }
-  }
-
-  /**
-   * 
-   * only used in case time left to unlock lower thasn a day, to update the count down
-   */
-  updateLockTime() {
-    if (this.unlockTime.seconds <= 0 && this.updateLockTimeInterval) {
-      clearInterval(this.updateLockTimeInterval)
-      return
-    }
-    this.unlockTime.seconds  -= 1;
-  }
 
   copyAddress() {
     this.$refs.address.select();    
@@ -261,44 +275,6 @@ export default class ValidatorDetail extends Vue {
     }
   }
 
-  async refresh() {
-    await this.getDpos2()
-    this.getValidators()
-  }
-
-  async getValidators() {
-    try {
-      const validators = await this.getValidatorsAsync()
-      if (validators.length === 0) {
-        return null
-      }
-      const validatorList = []
-      for (let i in validators) {
-        const validator = validators[i]
-        validatorList.push({
-          Name: "Validator #" + (parseInt(i) + 1),
-          Address: validator.address,
-          Status: validator.active ? "Active" : "Inactive",
-          Stake: (validator.stake/100 || '0'),
-          Weight: (validator.weight || '0') + '%',
-          Fees: (validator.fee || '0') + '%',
-          Uptime: (validator.uptime || '0') + '%',
-          Slashes: (validator.slashes || '0') + '%',
-          Description: (validator.description) || null,
-          Website: (validator.website) || null,
-          _cellVariants: validator.active ? { Status: 'active'} : undefined,
-          pubKey: (validator.pubKey),
-          personalStake: validator.personalStake,
-          delegatedStake: validator.delegatedStake,
-        })
-      }
-      commit("setValidators", validatorList)
-      return validatorList
-    } catch(err) {
-      this.$log(err, "")
-      dispatch("setError", "Fetching validators failed", {root: true})
-    }
-  }
 
   async claimRewardHandler() {
     this.finished = false
@@ -314,6 +290,8 @@ export default class ValidatorDetail extends Vue {
   }
 
   async redelegateHandler() {
+    // plugin listens to actions and refreshes accordingly
+    return false
     this.$root.$emit("refreshBalances")
   }
 
@@ -361,32 +339,8 @@ export default class ValidatorDetail extends Vue {
     return this.states[this.delegation.state]
   }
 
-  get lockTimeTier() { 
-    return this.lockTimeTiers[this.delegation.lockTimeTier]
-  }
-
-  get disableNode() {
-    return this.prohibitedNodes.indexOf(this.validator.Name) > -1 ? true : false
-  }
-
-  get formatLocktime() {    
-    if(!this.delegation.lockTime) return 0
-    let date = new Date(this.delegation.lockTime*1000)
-    let hours = date.getHours()
-    let minutes = "0" + date.getMinutes()
-    let seconds = "0" + date.getSeconds()
-    let formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
-    return formattedTime
-  }
-
-  get renderValidatorWebsite() {
-    if(!this.validator.Website) return "https://loomx.io/"
-    if(this.validator.Website.includes("http")) {
-      return this.validator.Website
-    } else {
-     return "https://" + this.validator.Website
-    }
-  }
+ 
+ 
 
   get canClaimReward() {
     return this.hasDelegation && this.this.unlockTime.second <= 0
@@ -400,8 +354,8 @@ export default class ValidatorDetail extends Vue {
     this.$refs.delegateModalRef.show(this.validator.Address, '')
   }
   
-  openRequestDelegationUpdateModal() {
-    this.$refs.delegateModalRef.show(this.validator.Address, '', this.amountDelegated, this.delegation.lockTimeTier)
+  openRequestDelegationUpdateModal(delegation) {
+    this.$refs.delegateModalRef.show(delegation)
   }
 
   openRequestUnbondModal() {
@@ -409,59 +363,97 @@ export default class ValidatorDetail extends Vue {
   }
   
 
-  openRedelegateModal() {
-    let index = this.$route.params.index
-    this.$refs.redelegateModalRef.show(this.validator.Address)
+  openRedelegateModal(delegation) {
+    this.$refs.redelegateModalRef.show(delegation)
   }
 
-}</script>
+}
+</script>
 
 <style lang="scss">
 @import url('https://use.typekit.net/nbq4wog.css');
 
-$theme-colors: (
-  //primary: #007bff,
-  primary: #02819b,
-  secondary: #4bc0c8,
-  success: #5cb85c,
-  info: #5bc0de,
-  warning: #f0ad4e,
-  danger: #d9534f,
-  light: #f0f5fd,
-  dark: #122a38
-);
 
-.faucet {
-  main {
-    margin-left: 0;
-    min-height: 620px;
-    .bottom-border {
-      border-bottom: 2px solid lightgray;
+main.validator {
+  // for the "stake my tokens button"
+  padding-bottom: 82px;
+  // ther should be global class for page titles
+  > header > .back {
+    position: absolute;
+    left: 0;
+  }
+  > header > h1 {
+    color: #5246d5;
+    font-size: 1.35em;
+    text-align: center;
+    margin: 16px -14px 0;
+    font-weight: normal;
+    border-bottom: 1px solid #ededed;
+    padding-bottom: 16px;
+  }
+
+
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    dt,dd {
+      flex: 50%;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+      line-height: 24px;
+      padding: 8px 0 8px;
+      margin: 0;
+    }
+    dt {
+      font-weight: normal
+    }
+    dd {
+      font-weight: 500;
+      text-align: right;
     }
   }
-  .faucet-content {
-    .column {
-      flex-direction: column;
+
+  .validator-details {
+    margin: 0 -15px;
+    padding: 15px;
+    background: #fff;
+    border-bottom: 1px solid #dfdfdf;
+    > header {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      > h1 {
+      color: black;
+      font-size: 1.8em;
+      }
+      
     }
-    h4, h1 {
-      color: gray;
-    }
-    h1 {
-      a {
-        svg {
-          font-size: 24px;
-          position: relative;
-          bottom: 4px;
-        }
+
+  }
+
+  .user-stakes {
+    margin-top: 15px;
+    .no-stakes {
+      text-align: center;
+      button {
+        background-color: #5448da;
+        border-color: #5448da;
+            margin-top: 15px;
       }
     }
-    .text-gray {
-      color: gray;
+    > footer {
+      position: fixed;
+      bottom: 0;
+      padding: 8px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      background: #00bcd47d;
+      box-shadow: 0px -1px 5px grey;
+      > button {
+        background-color: #5448da;
+        border-color: #5448da
+      }
     }
-    .bottom-border {
-      border-bottom: 2px solid lightgray;
-    }
-  }
+  }  
 }
 
 .loading-backdrop {
@@ -477,9 +469,4 @@ $theme-colors: (
   z-index: 999;
 }
 
-</style>
-<style>
-body {
-  overflow-y: scroll;
-}
 </style>

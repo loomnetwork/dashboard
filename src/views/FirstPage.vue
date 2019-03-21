@@ -256,7 +256,7 @@ export default class FirstPage extends Vue {
     this.showTabSpinner = true
 
     setTimeout(() => {
-      if (window.web3.currentProvider.isTrust) {
+      if ((window.web3 && window.web3.currentProvider.isTrust) || !!window.imToken) {
         this.setWalletType("metamask")
         this.$root.$emit("login") 
       }

@@ -49,41 +49,29 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
     ...mapMutations([
       'setErrorMsg'
     ]),
-    ...DPOSStore.mapMutations([
-      'setValidators'
-    ]),
-    ...DPOSStore.mapActions([
-      'getValidatorList'
-    ]),
-    ...DappChainStore.mapActions([
-      'getValidatorsAsync',
-      'getDpos2'
+    ...DPOSStore.mapGetters([
+      'getFormattedValidators'
     ])
   }
 })
 export default class ValidatorList extends Vue {
+  isSmallDevice = window.innerWidth < 600
 
-  async mounted() {
-    await this.refresh()
+  get validators() {
+    return this.getFormattedValidators()
   }
-
-  async refresh() {
-    await this.getDpos2()
-    await this.getValidatorList()
-  }
-
   /**
    * adds class bootstrap node if is bootstrap
    */
   validatorCssClass( item, type) {
-    console.log(34943034)
     return item.isBoostrap ? ['boostrap-validator'] : []
   } 
 
   showValidatorDetail(record, index) {
     this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)
   }
-}</script>
+}
+</script>
 
 <style lang="scss">
 @import url('https://use.typekit.net/nbq4wog.css');

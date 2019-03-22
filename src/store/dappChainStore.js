@@ -51,16 +51,6 @@ const clientNetwork = {
     websockt: 'ws://localhost:46658/websocket',
     queryws: 'ws://localhost:46658/queryws'
   },
-  'loomv2a': {
-    network: 'loomv2a',
-    websockt: 'ws://loomv2a.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2a.dappchains.com:46658/queryws'
-  },  
-  'loomv2b': {
-    network: 'loomv2b',
-    websockt: 'ws://loomv2b.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2b.dappchains.com:46658/queryws'
-  },
   'default': {
     network: 'default',
     websockt: 'ws://test-z-us1.dappchains.com:46658/websocket',
@@ -95,8 +85,6 @@ const getChainUrls = () => {
       clientNetwork['plasma'],
       clientNetwork['4'],      
       clientNetwork['stage'],
-      clientNetwork['loomv2a'],
-      clientNetwork['loomv2b']
     ]
   } else {
     chainUrls = JSON.parse(chainUrlsJSON)
@@ -167,14 +155,6 @@ export default {
     currentRPCUrl(state) {
       const network = state.chainUrls[state.chainIndex]
       return 'https://' + getServerUrl(network) + '/rpc'
-      // if (network.rpc) return network.rpc
-      // if (network.websockt) {
-      //   const splited = network.websockt.split('://')
-      //   if (splited[1]) {
-      //     return 'https://' + splited[1].split('/')[0] + '/rpc'
-      //   }
-      // }
-      // return ''
     },
     defaultNetworkId,
     dappchainEndpoint(state) {
@@ -188,8 +168,6 @@ export default {
       state.account = payload.account
       state.dAppChainClient = payload.dAppChainClient
       state.localAddress = payload.localAddress
-      // state.LoomTokenNetwork = payload.LoomTokenNetwork
-      // state.LoomTokenInstance = payload.LoomTokenInstance
     },
     setWeb3(state, payload) {
       state.web3 = payload

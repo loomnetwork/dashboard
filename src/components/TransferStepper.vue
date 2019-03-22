@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-button v-b-modal.modalPrevent @click="show = !show">{{buttonLabel}}</b-button>
+  <b-button v-b-modal.modalPrevent variant="primary" @click="show = !show">{{buttonLabel}}</b-button>
   <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
     no-close-on-esc
     no-close-on-backdrop
@@ -71,7 +71,7 @@
       <div v-else-if="resolveTxSuccess" class="failure">
         <p><slot name="successTxt">Transaction sent:</slot><br/>
         Tx: <a target="_blank" :href="etherscanDepositUrl" class="hash">{{txHash}}</a></p>
-        <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
+        <b-btn v-if="txSuccessPromise === null" @click="hide" variant="outline-primary">close</b-btn>
       </div>
     </div>
   </b-modal>
@@ -143,6 +143,10 @@ export default class TransferStepper extends Vue {
       error => this.transferFailed(error)
     );
     this.step = 2;
+  }
+
+  hide() {
+    this.$root.$emit("bv::hide::modal", "gateway-transfer")
   }
 
   transferExecuted(tx) {

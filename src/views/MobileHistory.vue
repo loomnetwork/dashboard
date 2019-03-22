@@ -2,7 +2,7 @@
 
   <div class="py-4">
 
-    <b-card title="Ethereum events" id="history-items-container" class="animated zoomIn faster mb-3">
+    <b-card title="Ethereum events" id="history-items-container" class="mb-3">
 
       <div v-if="showHistoryTable">
         <b-card v-for="(item, idx) in history" :key="'item' + idx" no-body class="mb-1">
@@ -34,7 +34,7 @@
 
     </b-card>
 
-    <b-card title="DappChain events" id="history-items-container" class="animated zoomIn faster mb-3">
+    <b-card title="DappChain events" id="history-items-container" class="mb-3">
 
       <div v-if="showDappChainHistoryTable">
         <b-card v-for="(item, idx) in dappChainEvents" :key="'item' + idx" no-body class="mb-1">

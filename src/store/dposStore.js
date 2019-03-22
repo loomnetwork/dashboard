@@ -68,7 +68,8 @@ const defaultState = () => {
     dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
     historyPromise: null,
     dappChainEvents: [],
-    states: ["Bonding", "Bonded", "Unbounding", "Redelegating"]
+    states: ["Bonding", "Bonded", "Unbounding", "Redelegating"],
+    delegations: [],
   }
 }
 
@@ -306,6 +307,11 @@ export default {
       }      
       commit("setWeb3", web3js)
     },
+    /**
+     * @deprecated use get state.DappChain.validators which is automatically refreshed
+     * when needed
+     * @param {*} param0 
+     */
     async getValidatorList({dispatch, commit, state}) {
       try {
         const validators = await dispatch("DappChain/getValidatorsAsync", null, {root: true})
@@ -371,6 +377,18 @@ export default {
         commit("setValidators", [])
         dispatch("setError", {msg:"Fetching validators failed",report:true,cause:err}, {root: true})        
       }
+    },
+    async listDelegatorDelegations({ state, rootState }) {
+      const dposUser = rootState.DappChain.dposUser
+      console.assert(!!dposUser, "expected dposUser to be initialised")
+      const { amount, weightedAmount, delegationsArray } = await dposUser.listDelegatorDelegations()
+      state.delegations = delegationsArray
+        .filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
+        // add string address to make it easy to compare
+        .map( d => Object.assign(d, {
+          validatorStr:d.validator.local.toString(),
+        }))
+      return state.delegations
     },
     async queryRewards({ rootState, dispatch, commit }) {
       

@@ -36,7 +36,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 @Component({
   props: {
     locktimeTier: Number,
-    hasDelegation: Boolean
   },
   components: {
     LoadingSpinner
@@ -49,9 +48,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'currentChain',
       'currentRPCUrl',
     ]),
-    ...DPOSStore.mapState([
-      'validators'
-    ])
+    ...DappChainStore.mapState([
+      'validators',
+    ]),
   },
   methods: {
     ...mapActions([
@@ -139,8 +138,8 @@ export default class FaucetDelegateModal extends Vue {
       if(this.validators && this.validators.length > 0) {
         this.formattedValidators = this.validators.map((v) => {
           return {
-            text: v.Name || v.Address,
-            value: v.Address
+            text: v.name || v.name,
+            value: v.address
           }
         })
       }
@@ -184,10 +183,10 @@ export default class FaucetDelegateModal extends Vue {
       default:
         break
     }
-
   }
 
-}</script>
+}
+</script>
 <style lang="scss">
 label {
   color: gray;

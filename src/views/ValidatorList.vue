@@ -10,6 +10,7 @@
           <b-list-group-item 
             v-for="validator in validators" :key="validator.Name"
             :class="{disabled:validator.isBoostrap}"
+            @click="showValidatorDetail(validator)"
             >
               <h6>{{validator.Name}}</h6>
               <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>

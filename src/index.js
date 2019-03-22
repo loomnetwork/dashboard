@@ -35,6 +35,8 @@ import store from './store'
 
 durationFormatSetup(moment)
 
+import { initFilters } from './filters'
+
 require('./assets/scss/main.scss')
 
 const progressBarOptions = {
@@ -69,6 +71,8 @@ Vue.filter('interval', function (value) {
   if (!value) return ''
   return  moment.duration(value, "seconds").format();
 })
+
+initFilters()
 
 export default new Vue({
   router,

@@ -133,6 +133,7 @@ const defaultState = () => {
   return {
     web3: undefined,
     account: undefined,
+    accountStakesTotal: null,
     localAddress: undefined,
     count: 0,
     networkId: defaultNetworkId(),
@@ -501,6 +502,7 @@ export default {
       }      
       const totalDelegation = await state.dposUser.getTotalDelegationAsync()
       const amount = formatToCrypto(totalDelegation.amount)
+      state.accountStakesTotal = totalDelegation.amount
       return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {

@@ -35,92 +35,43 @@
               <dd>{{delegation.state | delegationState}}</dd>
               <dt>{{ $t('views.validator_detail.amount_delegated') }}</dt>
               <dd>{{delegation.amount | tokenAmount}}</dd>
-              <dt>Timelock</dt>
+              <dt>{{ $t('views.validator_detail.updated_amount') }}</dt>
+              <dd>{{delegation.updateAmount | tokenAmount}}</dd>
+              <dt>{{ $t('views.validator_detail.timelock_tier') }}</dt>
               <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
               <dt>Unlock time</dt>
               <dd>{{delegation.lockTime | date('seconds')}}</dd>
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1">{{ $t('Update') }}</b-button>
+                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                  @click="openRequestDelegationUpdateModal(delegation)"
+                >{{ $t('Update') }}</b-button>
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1">{{ $t('Undelegate') }}</b-button>
+                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                  @click="openRequestUnbondModal(delegation)"
+                >{{ $t('Undelegate') }}</b-button>
               </b-button-group>
             </footer>
           </b-list-group-item>
       </b-list-group>
       <p v-else class="no-stakes">{{ $t("You haven't staked with {name} yet.", {name: validator.name}) }}<br/>
-        <b-button class="btn-lg">{{ $t("Stake my tokens") }}</b-button>
+        <b-button class="btn-lg"
+          @click="openRequestDelegateModal()"
+        >{{ $t("Stake my tokens") }}</b-button>
       </p>
-      <!--
+      <!-- or:
       <footer v-if="isSmallDevice && validatorDelegations.length === 0">
         <b-button class="bt-lg">{{ $t("Stake my tokens") }}</b-button>
       </footer>
       -->
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
-      <redelegate-modal ref="redelegateModalRef"
-                        @ok="redelegateHandler">
-      </redelegate-modal>
+      <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
       <success-modal></success-modal>
     </section>
-<!-- 
-          <div class="container mb-2 column py-3 p-3 d-flex bottom-border">
-            <h1>
-              {{validator.Name }}
-              <span> {{isBootstrap ? "(bootstrap)" : ''}}</span>
-            </h1>
-            <input type="text" ref="address" :value="validator.Address" tabindex='-1' aria-hidden='true' style="position: absolute; left: -9999px">
-            <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
-            <div v-if="userIsLoggedIn && !validator.isBootstrap">
-              <h5>
-                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState === "Bonding" && !hasDelegation ? "Unbonded" : delegationState}}</span>
-              </h5>
-              <h5>
-                {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
-              </h5>
-              <h5 v-if="updatedAmount > 0">
-                {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
-              </h5>
-              <h5 class="mb-4">
-                {{ $t('views.validator_detail.timelock') }} 
-                <span v-if="unlockTime.seconds > 0 " class="highlight">{{unlockTime.seconds | interval}}</span>
-                <span v-else class="highlight">{{ $t('views.validator_detail.unlocked') }}</span>
-              </h5>
-            </div>
-            <a :href="renderValidatorWebsite" target="_blank" class="text-gray"><u>{{validator.Website || 'No Website'}}</u></a>
-            <p class="text-gray">{{validator.Description || 'No Description'}}</p>
-          </div>
-          <div class="container">
-            <faucet-table :items="[validator]" :fields="fields"></faucet-table>
-            <div class="row justify-content-end validator-action-container">
-              <div class="right-container text-right">
-                  <template v-if="!hasDelegation">
-                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="canDelegate === false">
-                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
-                    Delegate
-                  </b-button>
-                  </template>
-                  <template v-else>
-                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegationUpdateModal" :disabled="canDelegate === false">
-                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
-                    Update delagation
-                  </b-button>
-                  </template>
-                  <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
-                  <b-button id="redelegateBtn" class="px-5 py-2 mx-3" variant="outline-info" @click="openRedelegateModal" :disabled="canRedelegate === false">Redelegate</b-button>
-                  <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
-                  <b-button id="undelegateBtn" class="px-5 py-2" variant="outline-danger" @click="openRequestUnbondModal" :disabled="canUndelegate === false">Un-delegate</b-button>
-                  <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
-              </div>
-            </div>
-          </div>
-  -->
-
-    
-
   </main>
 </template>
 <script>

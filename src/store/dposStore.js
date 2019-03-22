@@ -54,11 +54,7 @@ const defaultState = () => {
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
       { key: 'totalStaked', sortable: true, label: "Total Staked" },
-      // { key: 'votingPower', sortable: true, label: "Reward Power" },
-      // { key: 'Weight', sortable: true },
       { key: 'Fees', sortable: true },
-      // { key: 'Uptime', sortable: true },
-      // { key: 'Slashes', sortable: true },
     ],
     prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
     latestBlockNumber: null,
@@ -185,7 +181,6 @@ export default {
     setCachedEvents(state, payload) {
       state.cachedGatewayEvents = payload
       sessionStorage.setItem("cachedEvents", JSON.stringify(payload))
-
     },
     setSelectedLedgerPath(state, payload) {
       state.selectedLedgerPath = payload
@@ -232,7 +227,7 @@ export default {
           commit("setMappingSuccess", true)
           commit("setSignWalletModal", false)
         } catch(err) {
-          console.log("add mapping async error", err);
+          console.error("add mapping async error", err);
           commit("setSignWalletModal", false)
           if (err.message.includes("identity mapping already exists")) {
             commit("setAlreadyMappedModal", true)
@@ -361,10 +356,6 @@ export default {
               Status: validator.active ? 'active' : 'inactive',
               Name:  isBootstrap ? "danger" : undefined
             },
-            // UNUSED VARIABLES !!!
-            // Weight: (validator.weight || '0') + '%',
-            // Uptime: (validator.uptime || '0') + '%',
-            // Slashes: (validator.slashes || '0') + '%',
           })
 
         }

@@ -42,7 +42,7 @@ export function dposStorePlugin(store: Store<any>) {
     ]
     store.subscribeAction({
         after(action) {
-            if (delegationActions.includes(action.type)) {
+            if (delegationActions.find(a =>a === action.type)) {
                 store.dispatch("DPOS/listDelegatorDelegations")
                 store.dispatch("DappChain/getDappchainLoomBalance")
                 // this might not be needed since listDelegatorDelegations

@@ -9,6 +9,10 @@ import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/browser'
 
+import moment from  "moment";
+import durationFormatSetup from "moment-duration-format";
+
+
 import FontAwesome from '@fortawesome/fontawesome'
 import BrandsFontAwesome from '@fortawesome/fontawesome-free-brands'
 import SolidFontAwesome from '@fortawesome/fontawesome-free-solid'
@@ -26,6 +30,8 @@ import { i18n } from './i18n'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+
+durationFormatSetup(moment)
 
 require('./assets/scss/main.scss')
 
@@ -55,6 +61,11 @@ Vue.component('fa', FontAwesomeIcon)
 Vue.config.productionTip = false
 
 sync(store, router)
+
+Vue.filter('interval', function (value) {
+  if (!value) return ''
+  return  moment.duration(value, "seconds").format();
+})
 
 export default new Vue({
   router,

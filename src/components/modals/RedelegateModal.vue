@@ -1,5 +1,7 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop>
+  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop
+  no-close-on-esc :hide-header-close="isLoading"
+  >
     <div v-if="isLoading" class="pb-4">
       <loading-spinner :showBackdrop="true"></loading-spinner>
     </div>      

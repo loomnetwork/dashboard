@@ -34,7 +34,7 @@ export function dposStorePlugin(store: Store<any>) {
     )
 
     // On user delegation actions
-    // refresh user delegations
+    // refresh user delegations balance and stakes
     const delegationActions = [
         "DPOS/redelegateAsync",
         "DappChain/delegateAsync",
@@ -44,6 +44,10 @@ export function dposStorePlugin(store: Store<any>) {
         after(action) {
             if (delegationActions.includes(action.type)) {
                 store.dispatch("DPOS/listDelegatorDelegations")
+                store.dispatch("DappChain/getDappchainLoomBalance")
+                // this might not be needed since listDelegatorDelegations
+                // returns total
+                store.dispatch("DappChain/getAccumulatedStakingAmount")
             }
         }
     })

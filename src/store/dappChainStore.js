@@ -9,6 +9,10 @@ import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
 import { ethers } from 'ethers'
+import Debug from "debug"
+
+Debug.enable("dashboard.dapp")
+const debug = Debug("dashboard.dapp")
 
 const coinMultiplier = new BN(10).pow(new BN(18));
 
@@ -144,7 +148,8 @@ const defaultState = () => {
     mappingError: undefined,
     metamaskStatus: undefined,
     metamaskError: undefined,
-    isConnectedToDappChain: false
+    isConnectedToDappChain: false,
+    validators: [],
   }
 }
 
@@ -473,26 +478,21 @@ export default {
           // If there is a validator, set its stakes to the corresponding amounts.
           if (v !== undefined) {
               validator.active = true
-
               // Tokens amount of tokens staked (sum of personal and delegated)
               validator.totalStaked = new BN(v.whitelistAmount).add(new BN(stakedTokens[addr])).toString()
-
               // How much was validator personally staked
               validator.personalStake = v.whitelistAmount.toString()
-
               // how much tokens staked by delegators
               validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : 0
-      
               // Voting Power is the whitelist plus the tokens w/ bonuses
               validator.votingPower = v.delegationTotal.toString()
-
               validator.delegationsTotal = new BN(v.delegationTotal).sub(v.whitelistAmount).toString()
           }
-          
-
           validators.push(validator)
       }
 
+      state.validators = validators
+      debug("validators refreshed")
       return validators
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {

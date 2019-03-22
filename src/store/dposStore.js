@@ -32,7 +32,7 @@ const defaultState = () => {
     currentMetamaskAddress: undefined,
     history: null,
     withdrawLimit: DAILY_WITHDRAW_LIMIT,
-    validators: null,
+    validators: [],
     status: "check_mapping",
     walletType: undefined,
     selectedAccount: undefined,
@@ -50,6 +50,8 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
+    // timestamp millis
+    nextElectionTime: 0,
     validatorFields: [
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
@@ -80,7 +82,45 @@ export default {
     },
     getCachedEvents(state) {
       return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents")) || []
-    }
+    },
+    getFormattedValidators(state, getters, rootState) {
+
+      return rootState.DappChain.validators.map((validator) => {
+
+        let Weight = 0
+        if ( validator.name.startsWith("plasma-") )  {
+          Weight = 1
+        } else if( validator.name === "" ) {
+          Weight = 2
+        }
+        // Check if bootstrap val
+        const validatorName = validator.name !== "" ? validator.name : validator.address
+        const isBootstrap = state.prohibitedNodes.includes(validatorName)
+        return {
+          Address: validator.address,
+          pubKey: (validator.pubKey),
+          // Active / Inactive validator
+          Status: validator.active ? "Active" : "Inactive",
+          totalStaked: formatToCrypto(validator.totalStaked),
+          delegationsTotal: formatToCrypto(validator.delegationsTotal),
+          personalStake: formatToCrypto(validator.personalStake),
+          delegatedStake: formatToCrypto(validator.delegatedStake),
+          // Whitelist + Tokens Staked * Bonuses
+          votingPower: formatToCrypto(validator.votingPower || 0),
+          // Validator MEtadata
+          Name: validatorName,
+          Description: (validator.description) || null,
+          Website: (validator.website) || null,
+          Fees: isBootstrap ? 'N/A' : (validator.fee  || '0') + '%',
+          isBootstrap,
+          Weight,            
+          _cellVariants:  {
+            Status: validator.active ? 'active' : 'inactive',
+            Name:  isBootstrap ? "danger" : undefined
+          },
+        }
+      }).sort(dynamicSort("Weight"))
+    },
   },  
   mutations: {
     setIsLoggedIn(state, payload) {
@@ -127,6 +167,9 @@ export default {
     },
     setTimeUntilElectionCycle(state, payload) {
       state.timeUntilElectionCycle = payload
+    },
+    setNextElectionTime(state, millis) {
+      state.nextElectionTime = millis
     },
     setWalletType(state, payload) {
       state.walletType = payload
@@ -361,7 +404,9 @@ export default {
       }
       
     },    
-
+    // this can be moved out as is automatically called once dposUser is set
+    // actually instead of depending on dposUser we should depend on dpos contract
+    // (if we want to display timer in "anonymous" session)
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
       
       if(!rootState.DappChain.dposUser) {
@@ -372,7 +417,9 @@ export default {
 
       try {
         const result = await user.getTimeUntilElectionsAsync()
+        debug("next election in %s seconds", result.toString())
         commit("setTimeUntilElectionCycle", result.toString())
+        commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))
       } catch(err) {
         console.error(err)
       }

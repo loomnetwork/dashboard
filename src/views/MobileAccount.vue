@@ -127,6 +127,8 @@ const log = debug('mobileaccount')
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
+const ELECTION_CYCLE_MILLIS = 600000
+
 @Component({
   components: {
     LoomIcon,
@@ -143,14 +145,13 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'userBalance',
       'gatewayBusy',
       'rewardsResults',
-      'timeUntilElectionCycle',
+      'nextElectionTime',
       'states',
       'currentMetamaskAddress'
     ]) 
   },
   methods: {
     ...DPOSStore.mapActions([
-      'getTimeUntilElectionsAsync',
       'queryRewards'
     ]),
     ...DPOSStore.mapMutations([
@@ -165,11 +166,9 @@ export default class MobileAccount extends Vue {
   delegations = []
   currentAllowance = 0
 
-  // Election timer
-  electionCycleTimer = undefined
   timerRefreshInterval = null
   formattedTimeUntilElectionCycle = null
-  timeLeft = 600
+  timeLeft = 0
 
   // gateway related
   // unclaimed tokens
@@ -183,12 +182,10 @@ export default class MobileAccount extends Vue {
   withdrawLimit = 0
   
   async mounted() {
+    this.startTimer()
     this.delegations = await this.getDelegations()
     this.currentAllowance = await this.checkAllowance()
     await this.queryRewards()
-    await this.updateTimeUntilElectionCycle()
-    this.startTimer()
-
   }
 
   async checkAllowance() {    
@@ -247,42 +244,14 @@ export default class MobileAccount extends Vue {
   }
 
   startTimer() {
-    this.timerRefreshInterval = setInterval(async () => this.decreaseTimer(), 1000)
+    this.timerRefreshInterval = setInterval(() => this.refreshTimer(), 1000)
   }
-
-  async decreaseTimer() {
-    if(this.electionCycleTimer) {
-      let timeLeft = parseInt(this.electionCycleTimer)      
-      if(timeLeft > 0) {
-        timeLeft--
-        this.timeLeft = timeLeft
-        this.electionCycleTimer = timeLeft.toString()
-        this.showTimeUntilElectionCycle()
-      } else {
-        await this.updateTimeUntilElectionCycle()
-      }
-    }
+  refreshTimer() {
+    this.timeLeft = this.nextElectionTime - Date.now()
   } 
 
-  async updateTimeUntilElectionCycle() {
-    await this.getTimeUntilElectionsAsync()
-    this.electionCycleTimer = this.timeUntilElectionCycle    
-  }
-
-  showTimeUntilElectionCycle() {    
-    if(this.electionCycleTimer) {
-      let timeLeft = this.electionCycleTimer
-      let date = new Date(null)
-      date.setSeconds(timeLeft)
-      let result = date.toISOString().substr(11, 8)
-      this.formattedTimeUntilElectionCycle = result
-    } else {
-      this.formattedTimeUntilElectionCycle = ""      
-    }
-  }  
-
   get timerValue() {
-    return this.timeLeft ? parseInt(this.timeLeft/600 * 100) : 0
+    return this.timeLeft > 0 ? Math.round((this.timeLeft * 100)/ELECTION_CYCLE_MILLIS)  : 0
   }
 
   get rewardsValue() {

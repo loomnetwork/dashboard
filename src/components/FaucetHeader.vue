@@ -36,6 +36,11 @@
                   <router-link to="/history" class="router text-light hover-warning">History</router-link>
                 </h5>
               </li>
+              <li>
+                <h5>
+                  <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
+                </h5>
+              </li>
 
             </b-navbar-nav>
           </b-collapse>        
@@ -337,7 +342,8 @@ export default class FaucetHeader extends Vue {
       }, waitTime * 1000)
     }
   }
-}</script>
+}
+</script>
 <style lang="scss">
 .header {
   background: #5756e6;
@@ -451,15 +457,6 @@ a.hover-warning:hover {
 .metamask-status-error {
   background-color: #e62e2e;
 }
-
-// #balance::after {
-//   position: absolute;
-//   content: "Staked / Available";
-//   font-size: 9px;
-//   color: #ffffff;
-//   bottom: 6px;
-//   left: 8px;
-// }
 
 .add-border-left {
   border-left: 2px solid #f2f1f3;

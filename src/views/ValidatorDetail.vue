@@ -84,6 +84,8 @@ import RedelegateModal from '../components/modals/RedelegateModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
 import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import { formatToCrypto } from '@/utils.js';
+
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -143,10 +145,7 @@ export default class ValidatorDetail extends Vue {
 
   finished = false
 
-  currentLockTimeTier = 0
   locktime = 0
-  refreshInterval = null
-  validatorStateInterval = null
 
   unlockTime = {
     seconds: 0,
@@ -184,36 +183,15 @@ export default class ValidatorDetail extends Vue {
     return validator ? this.delegations.filter(d => d.validatorStr === validator.address) : []
   }
 
-  beforeDestroy() {
-    ['refreshInterval',
-    'validatorStateInterval',
-    'updateLockTimeInterval'].filter(ref => ref in this).forEach(ref => clearInterval(ref))
-  }
-
   async mounted() {
-
-    // if(this.isReallyLoggedIn) {
-    //   this.refreshValidatorState()
-    //   this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
-    // }
     this.finished = true
-
   }
 
   async delegateHandler() {
-    return false
-    this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
-    this.checkHasDelegation()
-    this.currentLockTimeTier = this.delegation.lockTimeTier
-
     this.$root.$emit("refreshBalances")
-
-
-    // show modal
+    // show success modal
     this.$root.$emit("bv::hide::modal", "success-modal")
-    
   }
-
 
   copyAddress() {
     this.$refs.address.select();    
@@ -225,7 +203,6 @@ export default class ValidatorDetail extends Vue {
         this.setSuccess("Somehow copy  didn't work...sorry")
     }
   }
-
 
   async claimRewardHandler() {
     this.finished = false
@@ -250,70 +227,30 @@ export default class ValidatorDetail extends Vue {
     return this.userIsLoggedIn && this.getPrivateKey
   }
 
-  get canDelegate() {
-    return this.userIsLoggedIn && 
-      this.getPrivateKey && 
-      this.isBootstrap === false && 
-      (
-        // hack around initial bonding state (no state "unbonded")
-        (this.hasDelegation === false && this.delegationState == 'Bonding') || 
-        // normal rule
-        (this.hasDelegation === true && this.delegationState == 'Bonded' )
-      )
-  }
-
-  get canUndelegate() {
-    return this.userIsLoggedIn && 
-      this.getPrivateKey && 
-      this.isBootstrap === false &&
-      this.hasDelegation &&
-      this.delegationState != 'Bonding'
-  }
-
-  get canRedelegate() {
-    return this.userIsLoggedIn && 
-      this.getPrivateKey && 
-      this.hasDelegation &&
-      this.delegationState != 'Bonding' &&
-      this.amountDelegated != 0
-  }
-
-  get amountDelegated() {
-    return this.delegation && this.delegation.amount ? this.delegation.amount/10**18 : 0
-  }
-
-  get updatedAmount() {
-    return this.delegation && this.delegation.updateAmount ? this.delegation.updateAmount/10**18 : 0
-  }
-
-  get delegationState() {
-    return this.states[this.delegation.state]
-  }
-
- 
- 
-
   get canClaimReward() {
     return this.hasDelegation && this.this.unlockTime.second <= 0
   }
 
   get isBootstrap() {
-    return this.prohibitedNodes.includes(this.validator.Name)
+    return this.prohibitedNodes.includes(this.validator.name)
   }
 
   openRequestDelegateModal() {
-    this.$refs.delegateModalRef.show(this.validator.Address, '')
+    this.$refs.delegateModalRef.show(this.validator.address, '')
   }
   
   openRequestDelegationUpdateModal(delegation) {
-    this.$refs.delegateModalRef.show(delegation)
+    this.$refs.delegateModalRef.show(
+      this.validator.address, 
+      '',
+      formatToCrypto(delegation.amount), 
+      delegation.lockTimeTier)
   }
 
   openRequestUnbondModal() {
-    this.$refs.delegateModalRef.show(this.validator.Address, 'unbond')
+    this.$refs.delegateModalRef.show(this.validator.address, 'unbond')
   }
   
-
   openRedelegateModal(delegation) {
     this.$refs.redelegateModalRef.show(delegation)
   }

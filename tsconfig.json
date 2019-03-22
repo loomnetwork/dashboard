@@ -21,6 +21,10 @@
       ]
     }
   },
+  "files": [
+    "./src/shims-vue.d.ts",
+    "./src/shims-vue.plugins.d.ts",
+  ],
   "include": [
     "src/**/*.ts",
     "src/**/*.vue"

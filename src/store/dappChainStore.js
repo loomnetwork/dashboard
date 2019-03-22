@@ -9,6 +9,10 @@ import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
 import { ethers } from 'ethers'
+import Debug from "debug"
+
+Debug.enable("dashboard.dapp")
+const debug = Debug("dashboard.dapp")
 
 const coinMultiplier = new BN(10).pow(new BN(18));
 
@@ -129,6 +133,7 @@ const defaultState = () => {
   return {
     web3: undefined,
     account: undefined,
+    accountStakesTotal: null,
     localAddress: undefined,
     count: 0,
     networkId: defaultNetworkId(),
@@ -144,7 +149,8 @@ const defaultState = () => {
     mappingError: undefined,
     metamaskStatus: undefined,
     metamaskError: undefined,
-    isConnectedToDappChain: false
+    isConnectedToDappChain: false,
+    validators: [],
   }
 }
 
@@ -450,15 +456,15 @@ export default {
       ])
 
       // For each validator, get their staked tokens
-      let stakedTokens = {}
-      for (let i in dpos2Delegations) {
-        if (dpos2Delegations[i].delegationsArray.length != 0) {
-          let address = dpos2Delegations[i].delegationsArray[0].validator.local.toString()
-          stakedTokens[address] = dpos2Delegations[i].delegationTotal
-        }
-      }
+      const stakedTokens = dpos2Delegations
+        .filter(d => d.delegationsArray.length > 0)
+        .reduce((map,entry) => {
+          const address = entry.delegationsArray[0].validator.local.toString()
+          map[address] = entry.delegationTotal
+          return map
+        }, {})
 
-      let validators = []
+      const validators = []
       for (let candidate of dpos2Candidates) {
           let addr = candidate.address.local.toString()
 
@@ -491,26 +497,21 @@ export default {
           // If there is a validator, set its stakes to the corresponding amounts.
           if (v !== undefined) {
               validator.active = true
-
               // Tokens amount of tokens staked (sum of personal and delegated)
               validator.totalStaked = new BN(v.whitelistAmount).add(new BN(stakedTokens[addr])).toString()
-
               // How much was validator personally staked
               validator.personalStake = v.whitelistAmount.toString()
-
               // how much tokens staked by delegators
-              validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : 0
-      
+              validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : "0"
               // Voting Power is the whitelist plus the tokens w/ bonuses
               validator.votingPower = v.delegationTotal.toString()
-
               validator.delegationsTotal = new BN(v.delegationTotal).sub(v.whitelistAmount).toString()
           }
-          
-
           validators.push(validator)
       }
 
+      state.validators = validators
+      debug("validators refreshed")
       return validators
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
@@ -519,6 +520,7 @@ export default {
       }      
       const totalDelegation = await state.dposUser.getTotalDelegationAsync()
       const amount = formatToCrypto(totalDelegation.amount)
+      state.accountStakesTotal = totalDelegation.amount
       return amount
     },
     async checkDelegationAsync({ state, dispatch}, payload) {

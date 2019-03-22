@@ -389,7 +389,9 @@ export default class MyAccount extends Vue {
   }
 
   async checkUnclaimedLoomTokens() {
+    console.log('dappchain address: ', this.dposUser._wallet._address)
     let unclaimAmount = await this.getUnclaimedLoomTokens()
+    console.log('unclaimed amount', unclaimAmount)
     this.unclaimDepositTokens = unclaimAmount.toNumber()
     if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }

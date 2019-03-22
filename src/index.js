@@ -13,7 +13,6 @@ import Progress from 'vue-multiple-progress'
 import moment from  "moment";
 import durationFormatSetup from "moment-duration-format";
 
-
 import FontAwesome from '@fortawesome/fontawesome'
 import BrandsFontAwesome from '@fortawesome/fontawesome-free-brands'
 import SolidFontAwesome from '@fortawesome/fontawesome-free-solid'
@@ -32,10 +31,10 @@ import { i18n } from './i18n'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { initFilters } from './filters'
 
 durationFormatSetup(moment)
 
-import { initFilters } from './filters'
 
 require('./assets/scss/main.scss')
 

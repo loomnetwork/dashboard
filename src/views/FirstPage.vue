@@ -76,14 +76,8 @@
                   </b-tabs>
                 </b-card>
               </div>
-
-
-
-
-
             </div>
           </div>
-
         </div>
       </main>
     </div>
@@ -92,7 +86,6 @@
 
 <script>
 import Vue from 'vue'
-// import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'

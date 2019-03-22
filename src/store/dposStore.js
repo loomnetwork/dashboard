@@ -1,12 +1,10 @@
 import axios from 'axios'
-const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
+const { CryptoUtils } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
-import BigNumber from 'bignumber.js';
 
 import Debug from "debug"
 
-Debug.enable("dashboard.dpos")
 const debug = Debug("dashboard.dpos")
 
 const DAILY_WITHDRAW_LIMIT = 500000

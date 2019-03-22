@@ -10,9 +10,9 @@ import TransactionList from '../components/blockExplorer/TransactionList.vue'
 
 import { Blockchain } from '../components/blockExplorer/blockchain'
 
-import FaucetSidebar from '../components/FaucetSidebar.vue'
-import FaucetHeader from '../components/FaucetHeader.vue'
-import FaucetFooter from '../components/FaucetFooter.vue'
+import FaucetSidebar from '@/components/FaucetSidebar.vue'
+import FaucetHeader from '@/components/FaucetHeader.vue'
+import FaucetFooter from '@/components/FaucetFooter.vue'
 
 export enum BlockExplorerView {
   Blocks = 'blocks',

@@ -61,9 +61,6 @@ export function getValueOfUnit(unit) {
   return new BigNumber(unitValue, 10)
 }
 
-
-const web3js = new Web3(Web3.currentProvider)
-
 export const getDomainType = function() {
   const host = window.location.host
   if (host && !host.includes('local')) {
@@ -100,6 +97,5 @@ export function getRandomInt(min, max) {
 export const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-
 
 export const EMAIL_REGEX = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/

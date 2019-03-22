@@ -44,7 +44,8 @@ export default class ConfirmSeedModal extends Vue {
     this.seedList = seeds
     this.$refs.modalRef.show()
   }
-}</script>
+}
+</script>
 <style lang="scss">
 label {
   color: gray;

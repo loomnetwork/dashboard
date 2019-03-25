@@ -49,7 +49,7 @@
                 >{{ $t('Update') }}</b-button>
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
-                >{{ $t('Redelegate') }}</b-button>
+                >{{ $t('redelegate.redelegate') }}</b-button>
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRequestUnbondModal(delegation)"
                 >{{ $t('Undelegate') }}</b-button>
@@ -57,7 +57,7 @@
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-else class="no-stakes">{{ $t("You haven't staked with {name} yet.", {name: validator.name}) }}<br/>
+      <p v-else-if="!isBootstrap" class="no-stakes">{{ $t("You haven't staked with {name} yet.", {name: validator.name}) }}<br/>
         <b-button class="btn-lg"
           @click="openRequestDelegateModal()"
         >{{ $t("Stake my tokens") }}</b-button>

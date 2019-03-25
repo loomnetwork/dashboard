@@ -97,9 +97,9 @@
       "use_maximum": "全額使用する",
       "transfer_to_plasmachain_for_staking": "PlasmaChainへ移転してステーキング",
       "withdraw_to_metamask": "ウォレットへ出金",
-      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
-      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
-      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
+      "wait_tx": "あなたのトランザクションは現在処理待機中です。トランザクションが確認後に残高が更新されますので、数分お待ちください。",
+      "tokens_pending_deposit": "{pendingDepositAmount} トークンのデポジットが未処理です。まずこのデポジットを完了してから、他の処理を行なって下さい。",
+      "tokens_pending_withdraw": "{pendingWithdrawAmount} トークンの出金が未処理です。まずこの出金を完了してから、他の処理を行なって下さい。",
       "reclaim_deposit": "Reclaim Deposit Tokens",
       "complete_withdraw": "Complete Withdrawal"
     },
@@ -172,7 +172,7 @@
       "my_account": "マイアカウント",
       "my_delegations": "委任について",
       "rewards": "報酬",
-      "history": "History"
+      "history": "履歴"
     },
     "layout": {
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
@@ -216,8 +216,8 @@
         "success": "成功!!"
       },
       "hardware_wallet_modal": {
-        "unlock_hardware_wallet": "Unlock Hardware wallet",
-        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
+        "unlock_hardware_wallet": "ハードウェアウォレットをアンロック",
+        "enter_pin_code": "あなたのledgerでPINコードを入力し、Ethereumアプリにログインして下さい。"
       }
     },
     "blockExplorer": {

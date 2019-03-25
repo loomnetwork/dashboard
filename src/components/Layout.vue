@@ -241,6 +241,7 @@ export default class Layout extends Vue {
 
 .page-enter-active, .page-leave-active {
   transition: opacity 0.3s, transform 0.3s;
+  transition-delay: 0.5s;
 }
 
 .page-enter, .page-leave-to {

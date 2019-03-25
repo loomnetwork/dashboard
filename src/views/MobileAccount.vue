@@ -1,47 +1,55 @@
 <template>
-  <div class="py-4">
+  <div id="mobile-account">
     
-    <b-card title="Balance" class="animated zoomIn faster mb-4">
+    <b-card title="Balance" class="mb-4" no-body>
+      <b-card-header class="custom-card-header d-flex justify-content-between">
+        <h4>Balance</h4>
+        <a v-if="!showRefreshSpinner" @click="refresh"> <fa :icon="['fas', 'sync']" class="refresh-icon"/></a>
+        <b-spinner v-else type="border" small />
+      </b-card-header>  
+      <b-card-body>
+        <b-card v-if="currentAllowance && !gatewayBusy"
+                bg-variant="warning"
+                text-variant="white"
+                header="Warning"
+                class="text-center mb-3">
+          <b-card-text>
+            <p class="warning-copy mb-2">{{currentAllowance}} LOOM awaiting transfer to plasmachain account.</p>
+            <b-btn size="sm" variant="primary" @click="completeDeposit">Resume Deposit</b-btn>
+          </b-card-text>
+        </b-card>      
 
-      <b-card v-if="currentAllowance && !gatewayBusy"
-              bg-variant="warning"
-              text-variant="white"
-              header="Warning"
-              class="text-center mb-3">
-        <b-card-text>
-          <p class="warning-copy mb-2">{{currentAllowance}} LOOM awaiting transfer to plasmachain account.</p>
-          <b-btn size="sm" variant="primary" @click="completeDeposit">Resume Deposit</b-btn>
-        </b-card-text>
-      </b-card>      
-
-      <div class="p3">
-        <h6>{{ $t('views.my_account.mainnet') }}</h6>
-        <h5 class="highlight">
-          {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
-          <loom-icon :color="'#f0ad4e'"/>
-        </h5>
-        <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
-        <h5 class="highlight">
-          {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
-          <loom-icon :color="'#f0ad4e'"/>
-        </h5>
-        <!-- unclaimed -->
-        <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
-          <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-          <div class="center-children">                                  
-            <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
-            <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
-          </div>                                
+        <div class="p3">
+          <h6>{{ $t('views.my_account.mainnet') }}</h6>
+          <h5 class="highlight">
+            {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
+            <loom-icon :color="'#f0ad4e'"/>
+          </h5>
+          <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
+          <h5 class="highlight">
+            {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
+            <loom-icon :color="'#f0ad4e'"/>
+          </h5>
+          <!-- unclaimed -->
+          <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
+            <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
+            <div class="center-children">                                  
+              <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+              <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+            </div>                                
+          </div>
+          <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
+            {{ $t('views.my_account.wait_tx') }}
+          </b-modal> 
+          <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
+            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+            <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+          </b-modal>
         </div>
-        <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
-          {{ $t('views.my_account.wait_tx') }}
-        </b-modal> 
-        <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
-          <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
-          <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
-        </b-modal>
+      </b-card-body>
+      <b-card-footer class="custom-card-footer">
         <!-- deposit withdraw -->
-        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" style="display: flex;justify-content: space-between;margin-top: 16px;">
+        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" class="d-flex justify-content-between">
           <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
             :balance="userBalance.mainnetBalance" 
             :transferAction="approveDeposit"
@@ -65,24 +73,24 @@
               <template #confirmingMessage>Waiting for ethereum confirmation</template>
           </TransferStepper>
         </footer>
-      </div>
+      </b-card-footer>      
 
     </b-card>
 
-    <b-card title="Election Cycle" class="animated zoomIn faster mb-4">
-      <vm-progress type="circle" :percentage="timerValue">
-        <small><strong>{{formattedTimeUntilElectionCycle}}</strong></small>
-      </vm-progress>
+    <b-card title="Election Cycle" class="mb-4">
+        <h6>Time left</h6>
+        <h5 v-if="formattedTimeUntilElectionCycle" class="highlight">{{formattedTimeUntilElectionCycle}}</h5>
+        <b-spinner v-else variant="primary" label="Spinning"/>
     </b-card>
 
-    <b-card title="Rewards" class="animated zoomIn faster mb-4">
+    <b-card title="Rewards" class="mb-4">
       <h5 class="highlight">
         {{rewardsValue}}
         <loom-icon :color="'#f0ad4e'"/>
       </h5>
     </b-card>
 
-    <b-card title="Delegations" id="delegations-container" class="animated zoomIn faster">
+    <b-card title="Delegations" id="delegations-container">
 
       <b-card v-for="(delegation, idx) in delegations" :key="'delegations' + idx" no-body class="mb-1">
         <b-card-header @click="toggleAccordion(idx)"
@@ -104,6 +112,12 @@
         </b-collapse>
       </b-card>
     </b-card>
+
+    <div class="button-container">
+      <b-button class="btn-lg" @click="$router.push({ path: '/validators' })">
+        Stake tokens
+      </b-button>
+    </div>
 
   </div>
 </template>
@@ -145,6 +159,7 @@ const ELECTION_CYCLE_MILLIS = 600000
       'userBalance',
       'gatewayBusy',
       'rewardsResults',
+      'timeUntilElectionCycle',
       'nextElectionTime',
       'states',
       'currentMetamaskAddress'
@@ -152,7 +167,8 @@ const ELECTION_CYCLE_MILLIS = 600000
   },
   methods: {
     ...DPOSStore.mapActions([
-      'queryRewards'
+      'queryRewards',
+      'getTimeUntilElectionsAsync'
     ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
@@ -180,14 +196,25 @@ export default class MobileAccount extends Vue {
   receipt = null
   isWithdrawalInprogress = false
   withdrawLimit = 0
+
+  showRefreshSpinner = false
   
   async mounted() {
+    await this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
     this.currentAllowance = await this.checkAllowance()
     await this.queryRewards()
   }
 
+  refresh() {
+    this.showRefreshSpinner = true
+    this.$emit('refreshBalances')
+    setTimeout(() => {
+      this.showRefreshSpinner = false
+    }, 2000)
+  }
+  
   async checkAllowance() {    
     const user = this.dposUser
     const gateway = user.ethereumGateway
@@ -244,11 +271,8 @@ export default class MobileAccount extends Vue {
   }
 
   startTimer() {
-    this.timerRefreshInterval = setInterval(() => this.refreshTimer(), 1000)
+    this.timerRefreshInterval = setInterval(() => this.decreaseTimer(), 1000)
   }
-  refreshTimer() {
-    this.timeLeft = this.nextElectionTime - Date.now()
-  } 
 
   get timerValue() {
     return this.timeLeft > 0 ? Math.round((this.timeLeft * 100)/ELECTION_CYCLE_MILLIS)  : 0
@@ -257,6 +281,39 @@ export default class MobileAccount extends Vue {
   get rewardsValue() {
     return this.rewardsResults ? (this.rewardsResults.toString() + " LOOM") : "0.00"
   }
+
+
+  async updateTimeUntilElectionCycle() {
+    await this.getTimeUntilElectionsAsync()
+    this.electionCycleTimer = this.timeUntilElectionCycle
+  }
+
+  async decreaseTimer() {
+    if(this.electionCycleTimer) {
+      let timeLeft = parseInt(this.electionCycleTimer)      
+      if(timeLeft > 0) {
+        timeLeft--
+        this.timeLeft = timeLeft
+        this.electionCycleTimer = timeLeft.toString()
+        this.showTimeUntilElectionCycle()
+      } else {
+        await this.updateTimeUntilElectionCycle()
+      }
+    }
+    
+  }
+
+  showTimeUntilElectionCycle() {    
+    if(this.electionCycleTimer) {
+      let timeLeft = this.electionCycleTimer
+      let date = new Date(null)
+      date.setSeconds(timeLeft)
+      let result = date.toISOString().substr(11, 8)
+      this.formattedTimeUntilElectionCycle = result
+    } else {
+      this.formattedTimeUntilElectionCycle = ""      
+    }
+  }  
   
   // gateway
 
@@ -496,6 +553,15 @@ export default class MobileAccount extends Vue {
   resolveWithdraw(amount, tx) {
     return tx.wait()
   }
+
+  destroyed() {
+    this.deleteIntervals()
+  }
+
+  deleteIntervals() {
+    if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)    
+  }
+
 }
 
 </script>
@@ -503,12 +569,41 @@ export default class MobileAccount extends Vue {
 <style lang="scss" scoped>
 @import url("https://use.typekit.net/nbq4wog.css");
 
+#mobile-account {
+  padding-top: 1.5rem;
+  padding-bottom: 5.5rem;
+}
+
 h3 {
   color: #02020202;
 }
 
 .warning-copy {
   color: #ffffff;
+}
+
+.button-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 12px;
+  left: 0px;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px -3px 8px 0px;
+  button {
+    margin: 0 auto;
+    display: block;
+    background-color: #4e4fd2;    
+  }
+}
+
+.custom-card-header {
+  padding-bottom: 0px;
+  border: none;
+}
+
+.custom-card-header, .custom-card-footer {
+  background-color: #ffffff;
 }
 
 </style>
@@ -519,4 +614,10 @@ h3 {
       background-color: #fff;
     }
   }
+
+  div > .card {
+    border: none;
+    box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+  }
+
 </style>

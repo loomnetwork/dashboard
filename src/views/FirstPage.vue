@@ -1,7 +1,7 @@
 <!-- PlasmaChain Delegators -->
 <template>
   <div class="">
-    <div class="faucet-content pt-5">
+    <div class="pt-3">
       <main>
         <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
         <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
@@ -10,79 +10,32 @@
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
         <div class="container-fluid mb-5 rmv-padding">
-          <div class="row d-flex justify-content-center mb-auto">
-            <div class="col">
-              <div>
-                <b-card no-body>
-                  <b-tabs card v-model="activeTab">
-                    <b-tab id="login-tab">
-                      <template slot="title">
-                        <span class="tab-title">1. Login to PlasmaChain</span>
-                        <b-spinner v-if="showTabSpinner" type="border" small />
-                        <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>
-                      </template>
-                      <div class="row">
-                        <img src="../assets/loomy-player-one.png" class="loomy-graphic">
-                      </div>
-                      <div class="actions">
-                          <b-button variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
-                          <b-button variant="primary"  @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
-                      </div>
-                      <div class="row">
-                          <b-button v-b-toggle.collapse1 variant="warning" v-if="!isProduction">Diagnostic Options</b-button>
-                          <b-collapse id="collapse1" class="mt-2">
-                            <b-card>
-                              <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"
-                                v-if="!isProduction"
-                                :allowedUrls="chainUrls"
-                                :serverUrl="currentChain"
-                                @urlClicked="onUserInputUrl"
-                                @urlInput="onUserInputUrl"/>
-                
-                            </b-card>
-                          </b-collapse>
-                         
-                       </div>                      
-                    </b-tab>
-                    <b-tab :disabled="!userIsLoggedIn">
-                      <template slot="title">
-                        <span class="tab-title">2. Login to Ethereum</span>
-                      </template>                      
-                      <div class="row wallet-provider-container">
-                        <div class="col">
-                          <b-card class="wallet-selection-card text-center" @click="selectWallet('ledger')">
-                            <img src="../assets/ledger_logo.svg">
-                            <p>
-                              Connect & sign via your <br>
-                              hardware wallet                      
-                            </p>
-                            <span id="ledgerInfo" class="qa">? </span>
-                            <b-tooltip target="ledgerInfo" placement="bottom" title="Click here to connect with your Ledger hardware wallet"></b-tooltip>
-                          </b-card>
-                        </div>
-                        <div class="col">
-                          <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
-                            <img src="../assets/metamask_logo.png">
-                            <p>
-                              Connect & sign via your browser <br>
-                              or extension                      
-                            </p>
-                            <span id="metamaskInfo" class="qa">? </span>
-                            <b-tooltip target="metamaskInfo" placement="bottom" title="Click here to connect with your Metamask wallet"></b-tooltip>
-                          </b-card>                  
-                        </div>                
-                      </div>                      
-                    </b-tab>
-                  </b-tabs>
+     
+          <b-card title="Select wallet">
+            <div class="row wallet-provider-container">
+              <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center mb-3" @click="selectWallet('ledger')">
+                  <h5>Ledger</h5>
+                  <img src="../assets/ledger_logo.svg">
+                  <small>
+                    Connect & sign via your <br>
+                    hardware wallet                      
+                  </small>
                 </b-card>
               </div>
+              <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                  <h5>Metamask</h5>
+                  <img src="../assets/metamask_logo.png">
+                  <small>
+                    Connect & sign via your browser <br>
+                    or extension                      
+                  </small>
+                </b-card>                  
+              </div>                
+            </div>  
+          </b-card>
 
-
-
-
-
-            </div>
-          </div>
 
         </div>
       </main>
@@ -161,9 +114,11 @@ export default class FirstPage extends Vue {
   async selectWallet(wallet) {
     if(wallet === "ledger") {
       this.setWalletType("ledger")
+      this.setUserIsLoggedIn(true)
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
+      this.setUserIsLoggedIn(true)
       this.$root.$emit("login") 
     } else {
       return
@@ -401,12 +356,15 @@ export default class FirstPage extends Vue {
 }
 
 .wallet-provider-container {
-  .col {
+  .wallet-selection-card {
     position: relative;
     img {
-      width: 96px;
+      width: 72px;
       height: auto;
       margin-bottom: 12px;
+    }
+    small {
+      display: block;
     }
     span.qa {        
       display: inline-block;

@@ -11,8 +11,10 @@
           </b-modal>
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.already_mapped') }}
-          </b-modal> 
-          <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+          </b-modal>
+          <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+          </transition>
           <transition name="page" mode="out-in">
           <router-view></router-view>
           </transition>

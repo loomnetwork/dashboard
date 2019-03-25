@@ -601,7 +601,7 @@ export default {
         commit("DPOS/setStatus", "check_mapping", {root: true})
         commit('setMappingError', null)
         commit('setMappingStatus', null)
-        const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)  
+        const mapping = await state.dposUser.addressMapper.getMappingAsync(`eth:${metamaskAddress}`)
         const mappedEthAddress = mapping.to.local.toString()
 
         console.log("metamaskAddress", metamaskAddress);

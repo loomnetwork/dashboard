@@ -227,6 +227,9 @@ export default {
       commit("setAlreadyMappedModal", false)
       if (state.status == 'no_mapping' && state.mappingError == undefined) {
         try {
+
+          // Generate seed
+
           commit("setSignWalletModal", true)
           commit("setShowLoadingSpinner", true)
           await dispatch("DappChain/addMappingAsync", null, { root: true })

@@ -41,7 +41,11 @@
                   <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
                 </h5>
               </b-nav-item>
-
+              <b-nav-item v-if="userIsLoggedIn">
+                <h5>
+                  <a @click="logOut" class="router text-light hover-warning">Sign out</a>
+                </h5>
+              </b-nav-item>
             </b-navbar-nav>
           </b-collapse>        
         </div>

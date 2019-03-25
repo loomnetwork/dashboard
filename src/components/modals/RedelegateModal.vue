@@ -1,5 +1,7 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop>
+  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop
+  no-close-on-esc :hide-header-close="isLoading"
+  >
     <div v-if="isLoading" class="pb-4">
       <loading-spinner :showBackdrop="true"></loading-spinner>
     </div>      
@@ -108,10 +110,14 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "No previous delegation detected"
       return
     }
+    this.isLoading = true
 
+    await this.redelegateAsync({
+      origin: this.origin.Address, 
+      target: this.target.Address, 
+      amount: this.delegation.amount})
 
-    await redelegateAsync(this.origin.pubKey, this.target.pubKey, this.delegation.amount)
-
+    this.isLoading = false
     // this.$emit("ok")
     this.$refs.modalRef.hide()
 

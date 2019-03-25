@@ -15,8 +15,10 @@
         <a @click="$router.push({path: '/validators'})">
           <b-navbar-brand>
             {{ $t('components.faucet_header.plasmachain_dashboard') }}
-            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.connected') }}</span>
-            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.disconnected') }}</span>
+            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.eth_connected') }}</span>
+            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.eth_disconnected') }}</span>
+            <span v-if="connectedToDappChain" class="metamask-status">{{ $t('components.faucet_header.dapp_connected') }}</span>
+            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.dapp_disconnected') }}</span>
           </b-navbar-brand>
         </a>
         <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
@@ -37,6 +39,9 @@
               </b-nav-item>   
               <b-nav-item :hidden="false">
                 <router-link to="/faq" class="router text-light hover-warning">{{ $t('components.faucet_header.f_a_q') }}</router-link>
+              </b-nav-item>
+              <b-nav-item :hidden="false">
+                <LangSwitcher/>
               </b-nav-item>
             </b-nav-form>
 
@@ -61,15 +66,19 @@
         <div class="col">          
           <b-navbar-nav>
             <div class="sub-menu-links" v-if="!errorRefreshing">
-              <b-nav-item v-if="isLoggedIn">
-                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.mainnetBalance}}</strong></span>
+              <b-nav-item v-if="isLoggedIn" class="mr-3">
+                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.mainnetBalance}}</strong></span>
                 <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
-                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{formatLoomBalance}}</strong></span>
+                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : formatLoomBalance}}</strong></span>
                 <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
-                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.stakedAmount}}</strong></span>
+                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
                 <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
               </b-nav-item>
-              <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left">
+              <b-nav-item v-if="isLoggedIn" class="mr-3">
+                  <b-spinner v-if="showRefreshSpinner" type="border" small />
+                  <a v-if="!showRefreshSpinner" @click="refresh"> <fa :icon="['fas', 'sync']" class="refresh-icon"/></a>
+              </b-nav-item>
+              <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
                 <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
               </b-nav-item>          
             </div>
@@ -144,16 +153,18 @@
 
 <script>
 import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import ChainSelector from './ChainSelector'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import LangSwitcher from './LangSwitcher'
 
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
-    ChainSelector
+    ChainSelector,
+    LangSwitcher
   },
   props: {
     hideDashboard: {
@@ -186,7 +197,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setUserIsLoggedIn'
     ]),
     ...DPOSStore.mapMutations([
-      'setUserBalance'
+      'setUserBalance',
+      'setShowLoadingSpinner'
     ]),
     ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
     ...DappChainStore.mapActions([
@@ -195,6 +207,10 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getMetamaskLoomBalance',
       'getAccumulatedStakingAmount'
     ]),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ]) 
     
   },
   computed: {
@@ -213,6 +229,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
+      'isConnectedToDappChain',
+      'mappingStatus'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
@@ -227,14 +245,19 @@ export default class FaucetHeader extends Vue {
   formattedTimeUntilElectionCycle = null
   timeLeft = 600
   errorRefreshing = false
+  connectedToDappChain = false 
 
   electionCycleTimer = undefined
+  showRefreshSpinner = false
 
   logOut() {
     this.clearPrivateKey()
-    localStorage.removeItem("userIsLoggedIn")
+    sessionStorage.removeItem("userIsLoggedIn")
     this.setUserIsLoggedIn(false)
-    this.$router.push({ path: '/login' })
+    this.setMappingError(null)
+    this.setMappingStatus(null)
+    this.setShowLoadingSpinner(false)
+    window.location.reload(true)
   }
 
   login() {
@@ -246,22 +269,29 @@ export default class FaucetHeader extends Vue {
     // this.$root.$emit('bv::show::modal', 'login-account-modal')
   }
 
-  async mounted() {
-    if(this.userIsLoggedIn) {
-      this.startPolling()
-       // Get time until next election cycle
-       await this.updateTimeUntilElectionCycle()
-       this.startTimer()
+  @Watch('isConnectedToDappChain')
+    onConnectingToDappChainChange(newValue, oldValue) {
+    if(newValue) {
+      this.connectedToDappChain = true
     } else {
-      this.$root.$on('login', async () => {
-        this.startPolling()
-        await this.updateTimeUntilElectionCycle()
-        this.startTimer()        
-      })
+      this.connectedToDappChain = false
     }
+  }
+
+  async mounted() { 
+
+    // Start election cycle timer
+    this.$root.$on('initialized', async () => {
+      await this.updateTimeUntilElectionCycle()
+      this.startTimer()
+    })    
+
+    // Listen to refreshBalances event
+    this.$root.$on('refreshBalances', async () => {
+      await this.refresh()
+    })
 
     this.$root.$on('logout', () => {
-      this.deleteIntervals()
       this.logOut()
     })
 
@@ -292,7 +322,7 @@ export default class FaucetHeader extends Vue {
   }
 
   startPolling() {
-    if(this.userIsLoggedIn && this.status === "mapped") {
+    if(this.userIsLoggedIn) {
       this.refreshInterval = setInterval(async () => this.refresh(), 5000)
     }
   }
@@ -314,17 +344,21 @@ export default class FaucetHeader extends Vue {
   async refresh() {
     if(this.status !== 'mapped') return
     try {
+      this.showRefreshSpinner = true
       let loomBalance = await this.getDappchainLoomBalance()
       let mainnetBalance = await this.getMetamaskLoomBalance({
         web3: this.web3,
         address: this.currentMetamaskAddress
       })
       let stakedAmount = await this.getAccumulatedStakingAmount()
+      let isLoading = false
       this.setUserBalance({
+        isLoading,
         loomBalance,
         mainnetBalance,
         stakedAmount
       })
+      this.showRefreshSpinner = false
       this.errorRefreshing = false
     } catch(err) {
       this.errorRefreshing = true
@@ -428,10 +462,23 @@ export default class FaucetHeader extends Vue {
   }
 }
 
+.rmv-margin {
+  margin: 0;
+}
+
+.refresh-icon {
+  color: #6eb1ff;
+  &:hover {
+    transform:rotate(360deg);
+    transition: all 0.5s;
+  }
+}
+
 #countdown-container {
   display: flex;
   justify-content: center;
   align-content: center;
+  margin-right: auto;
 }
 
 .sign-out-link {  
@@ -454,7 +501,7 @@ a.hover-warning:hover {
 }
 
 .custom-alert {
-  position: fixed;
+  position: absolute;
   width: 100%;  
   font-weight: 600;
   margin-bottom: 0px;

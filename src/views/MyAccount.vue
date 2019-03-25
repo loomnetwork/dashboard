@@ -28,8 +28,9 @@
                           </div>                          
                           <div class="balance-container mt-2">
                             <h5><strong>{{ $t('views.my_account.balance') }}</strong></h5>
-                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.mainnetBalance + " LOOM"}}</strong></h6>
-                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.loomBalance + " LOOM"}}</strong></h6>                            
+                            <h6>{{ $t('views.my_account.mainnet') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}</strong></h6>
+                            <div v-if="currentAllowance && !gatewayBusy"><small ><fa icon="fa exclamation-triangle"/> {{currentAllowance}} LOOM out of mainnet balance awaiting transfer to plasmachain account</small> <b-btn size="sm" variant="outline-primary" style="display: inline-block;margin-left: 12px;" @click="completeDeposit">resume deposit</b-btn></div>                        
+                            <h6>{{ $t('views.my_account.plasmachain') }} <strong>{{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}</strong></h6>                            
                           </div>                          
                         </div>
                         <div class="col text-center" style="display:none">
@@ -67,99 +68,71 @@
                           </h4>
                         </a>                     
                       </div>
-                      <div class="col-md-6 deposit-error-container">
-                        <span v-if="!metamaskConnected">
-                          {{ $t('views.my_account.no_mapping_detected') }}
-                        </span>
-                      </div>
                     </div>
                   </b-card-header>
 
                     <b-card-body>
                       <div class="row mt-4 mb-4">
-                        <div class="col-md-8 offset-md-2">
-                          <!-- Map Accounts -->
-                          <div v-if="status != 'mapped'">
-                            <div id="map-accounts">
-                              <!-- <span class="idx-symbol">{{ $t('views.my_account.1') }}</span> -->
-                              <div class="d-flex flex-row align-items-center mb-3">
-                                <div class="mx-2" style="width: 250px">
-                                  <h5 class="rmv-spacing">{{ $t('views.my_account.connect_to_deposit_funds') }}</h5>
+                        <div style="width:100%">
+                          <b-card no-body v-if="metamaskConnected">
+                            <b-tabs card>
+                              <b-tab title="Deposit" v-if="!oracleEnabled" active>
+                                Plasmachain wallet is undergoing scheduled upgrades... Please check back in 1-2 hours.
+                              </b-tab>
+                              <b-tab title="Deposit" v-if="userBalance.mainnetBalance > 0 && oracleEnabled" active>
+                                <TransferStepper 
+                                  :balance="userBalance.mainnetBalance" 
+                                  :transferAction="approveDeposit"
+                                  :resolveTxSuccess="executeDeposit"
+                                  >
+                                  <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
+                                  <template #failueMessage><p>Approval failed.</p></template>
+                                  <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
+                                </TransferStepper>
+                              </b-tab>
+                              
+                              <b-tab title="Withdraw" v-if="oracleEnabled && (userBalance.loomBalance > 0 || unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0)">
+                                <template slot="title">
+                                  <span class="tab-title">Withdraw</span>
+                                  <fa icon="info-circle" v-if="unclaimWithdrawTokensETH > 0 || unclaimDepositTokens > 0" class="tab-icon text-red"/>
+                                </template>
+                                <p>Please note that withdrawal is subject to a daily limit of 500k LOOM. You have {{withdrawLimit}} allowance left.</p>
+
+                                <TransferStepper v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0"
+                                  @withdrawalDone="afterWithdrawalDone"
+                                  @withdrawalFailed="afterWithdrawalFailed"
+                                  :balance="Math.min(userBalance.loomBalance,withdrawLimit)" 
+                                  :transferAction="executeWithdrawal"
+                                  :resolveTxSuccess="resolveWithdraw"
+                                  executionTitle="Execute transfer">
+                                    <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
+                                    <template #failueMessage>Withdrawal failed... retry?</template>
+                                    <template #confirmingMessage>Waiting for ethereum confirmation</template>
+                                </TransferStepper>
+                                <!-- <div v-if="unclaimDepositTokens > 0 && !gatewayBusy">
+                                <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+                                <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+                                </div> -->
+                                <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
+                                <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
+                                <div class="center-children">                                  
+                                  <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+                                  <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+                                </div>                                
                                 </div>
-                                <b-button style="width: 160px" variant="primary" @click="addMappingHandler">{{ $t('views.my_account.map_accounts') }}</b-button>                            
-                              </div>
-                            </div>
-
-                            <hr class="custom-divider">
-                          </div>
-
-                          <!-- Allowance -->
-                          <!-- <div id="allowance">
-                            <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <span class="idx-symbol">{{ $t('views.my_account.2') }}</span>
-                            <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.approve_amount') }}</h5>
-                            <div class="d-flex flex-row align-items-center">                              
-                              <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.allowed_amount_to_deposit') }}</span>
-                                <b-form-input :placeholder="'max. ' + mainnetBalance" v-model="amountToApprove" class="w-100"/>
-                                <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="amountToApprove=mainnetBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
-                                </div>
-                              </div>
-                              <b-button style="width: 160px" variant="primary" @click="approveAmount(amountToApprove)">{{ $t('views.my_account.approve') }}</b-button>
-                            </div>                                                    
-                            
-                            <div class="d-flex flex-row mb-3">
-                              <div class="mx-2" style="width: 250px">
-                                <h6 class="rmv-spacing">{{ $t('views.my_account.current_allowance_current_allowance', {currentAllowance0: currentAllowance || 0 }) }}</h6>
-                              </div>   
-                            </div> 
-                          </div> -->
-
-                          <!-- <hr class="custom-divider"> -->
-
-                          <!-- Deposit -->
-                          <div id="deposit">
-                            <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <!-- <span class="idx-symbol">{{ $t('views.my_account.2') }}</span> -->
-                            <!-- <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.deposit') }}</h5> -->
-                            <div class="d-flex flex-row align-items-center">
-                              <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.transfer_to_plasmachain_for_staking') }}</span>
-                                <b-form-input :placeholder="'max. ' + userBalance.mainnetBalance" v-model="transferAmount" class="w-100"/>
-                                <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="transferAmount=userBalance.mainnetBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
-                                </div>
-                              </div>
-                              <b-button id="depositBtn" style="width: 160px" variant="primary" @click="depositHandler">{{ $t('views.my_account.deposit') }}</b-button>
-                              <b-tooltip v-if="!isLoading" target="depositBtn" placement="right" title="In order to delegate tokens to a choosen validator, you will first need to deposit token onto plasma chain"></b-tooltip>
-                            </div>
-                          </div>
-
-                          <!-- Withdraw -->
-                          <div id="withdraw">
-                            <div @click="setError(errors['onClickWithNoMapping'])" :class="depositStepClass"></div>
-                            <!-- <span class="idx-symbol">{{ $t('views.my_account.2') }}</span> -->
-                            <!-- <h5 class="rmv-spacing mx-2">{{ $t('views.my_account.deposit') }}</h5> -->
-                            <div class="d-flex flex-row align-items-center">
-                              <div class="mx-2" style="width: 250px">                                
-                                <span class="text-small text-gray">{{ $t('views.my_account.withdraw_to_metamask') }}</span>
-                                <b-form-input :placeholder="'max. ' + userBalance.loomBalance" v-model="withdrawAmount" class="w-100"/>
-                                <div class="d-flex flex-row justify-content-end">
-                                  <b-button class="text-small pt-0" variant="link" @click="withdrawAmount=userBalance.loomBalance">{{ $t('views.my_account.use_maximum') }}</b-button>
-                                </div>
-                              </div>
-                              <b-button id="withdrawBtn" style="width: 160px" variant="primary" @click="withdrawHandler">{{ $t('views.my_account.withdraw') }}</b-button>
-                              <b-tooltip v-if="!isLoading" target="withdrawBtn" placement="right" title="Click here to withdraw tokens from plasmachain back to your choosen wallet"></b-tooltip>
-                            </div>
-                          </div>
-
-
-                        
+                              </b-tab>
+                            </b-tabs>
+                          </b-card>
+                          <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
+                            {{ $t('views.my_account.wait_tx') }}
+                          </b-modal> 
+                          <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
+                            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+                            <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
+                          </b-modal>                           
                         </div>
                       </div>
                     </b-card-body>
-
                 </b-card>
                 <!-- TODO: Add History page if required -->
                 <!-- <b-card no-body class="mb-3">
@@ -217,13 +190,22 @@ import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
+import TransferStepper from '../components/TransferStepper'
 import { getBalance, getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+
+import Web3 from 'web3'
+import BN from 'bn.js'
+import debug from 'debug'
+import { setTimeout } from 'timers';
+
+// should move this
+Vue.use(VueClipboard)
+
+const log = debug('myaccount')
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
-import Web3 from 'web3'
 
-Vue.use(VueClipboard)
 
 @Component({
   components: {
@@ -233,6 +215,7 @@ Vue.use(VueClipboard)
     FaucetFooter,
     FaucetDelegateModal,
     FaucetSidebar,
+    TransferStepper,
     LoadingSpinner
   },
   computed: {
@@ -248,13 +231,19 @@ Vue.use(VueClipboard)
     ...DPOSStore.mapState([
       'status',
       'userBalance',
+      'gatewayBusy',
       'connectedToMetamask',
-      'currentMetamaskAddress'
+      'currentMetamaskAddress',
+      'withdrawLimit',
     ]),
     ...DappChainStore.mapState([
       'LoomTokenInstance',
       'dAppChainClient'
-    ])
+    ]),
+    withdrewSignature: function() {
+      let signature = sessionStorage.getItem('withdrewSignature')
+      return signature
+    }
   },
   methods: {
     ...mapMutations(['setErrorMsg', 'setSuccessMsg']),
@@ -264,12 +253,16 @@ Vue.use(VueClipboard)
     ]),
     ...DPOSStore.mapActions([
       'checkIfConnected',
-      'getValidatorList'
     ]),
     ...DPOSStore.mapMutations([
       'setWeb3',
       'setShowLoadingSpinner',
-      'setConnectedToMetamask'
+      'setConnectedToMetamask',
+      'setGatewayBusy',
+      'setUserBalance'
+    ]),
+    ...DappChainStore.mapMutations([
+      'setWithdrewSignature',
     ]),
     ...DappChainStore.mapActions([
       'registerWeb3',
@@ -279,45 +272,56 @@ Vue.use(VueClipboard)
       'addMappingAsync',
       'getDappchainLoomBalance',
       'getMetamaskLoomBalance',
+      'getAccumulatedStakingAmount',
       'init',
-      'checkMappingCompatability'
+      'checkMappingCompatability',
+      'getDpos2',
+      'getUnclaimedLoomTokens',
+      'reclaimDeposit',
+      'getPendingWithdrawalReceipt',
+      'withdrawCoinGatewayAsync',
+      'switchDposUser'
     ])
   }
 })
 export default class MyAccount extends Vue {
   userAccount = {
     address: "",
-    balance: 0,
   }
-
-  mainnetBalance = 0
   transferAmount = ""
   amountToApprove = ""
   withdrawAmount = ""
   currentAllowance = 0
+  unclaimDepositTokens = 0
+  unclaimWithdrawTokens = 0
+  unclaimWithdrawTokensETH = 0
+  unclaimSignature = ""
+  oracleEnabled = true
+  receipt = null
+  isWithdrawalInprogress = false
 
-    emptyHistory = [
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
-    {
-      ID: " ",
-      Date: " ",
-      Amount: " ",
-      To: " ",
-      From: " "
-    },
+  emptyHistory = [
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
+  {
+    ID: " ",
+    Date: " ",
+    Amount: " ",
+    To: " ",
+    From: " "
+  },
   ]
 
   history = [
@@ -354,11 +358,24 @@ export default class MyAccount extends Vue {
     onClickWithNoMapping: "No mapping detected, please click \"Map Accounts\" or refresh the page"
   }
 
-
-
   async mounted() {
     await this.refresh(true)
     this.currentAllowance = await this.checkAllowance()
+    await this.checkUnclaimedLoomTokens()
+    await this.checkPendingWithdrawalReceipt()
+
+    this.$root.$on('done', async () => {
+      this.refresh()
+    })
+    
+    if (this.receipt) {
+      this.hasReceiptHandler(this.receipt)
+    }
+
+  }
+
+  async refresh(poll) {    
+    this.$emit('refreshBalances') 
   }
 
   destroyed() {
@@ -367,32 +384,112 @@ export default class MyAccount extends Vue {
     }
   }
 
-  async refresh(poll) {    
-    this.userAccount.address = getAddress(localStorage.getItem('privatekey'))
-    this.userAccount.balance = await this.getDappchainLoomBalance()    
-    this.mainnetBalance = await this.getMetamaskLoomBalance({
-      web3: this.web3,
-      address: this.userEthAddr
-    })
-  }
-
-  async initWeb3() {
-    
-    if(window.ethereum) {
-      try {
-        await this.connectMetamask()
-      } catch(err) {
-        this.$refs.metamaskModalRef.show()  
-      }
-    } else {
-      this.$refs.metamaskModalRef.show()
-    }
-  }
-
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(null, '')
   }
 
+  async checkUnclaimedLoomTokens() {
+    console.log('dappchain address: ', this.dposUser._wallet._address)
+    let unclaimAmount = await this.getUnclaimedLoomTokens()
+    console.log('unclaimed amount', unclaimAmount.toNumber())
+    this.unclaimDepositTokens = unclaimAmount.toNumber()
+    if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+  }
+
+  async afterWithdrawalDone () {
+    this.$root.$emit("bv::show::modal", "wait-tx")
+    this.$emit('refreshBalances')
+    await this.checkPendingWithdrawalReceipt()
+    if(this.receipt){
+      this.setWithdrewSignature(this.receipt.signature)
+      this.unclaimSignature = this.receipt.signature
+      this.unclaimWithdrawTokensETH = 0
+    }
+    await this.refresh(true)
+  }
+
+  async afterWithdrawalFailed () {
+    await this.checkPendingWithdrawalReceipt()
+    if(this.receipt) {
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
+      this.unclaimSignature = this.receipt.signature
+    }
+    await this.refresh(true)
+  }
+
+  async reclaimDepositHandler() {
+    let result = await this.reclaimDeposit()
+    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
+    this.$root.$emit("bv::show::modal", "wait-tx")
+    await this.refresh(true)
+  }
+
+  async checkPendingWithdrawalReceipt() {
+    this.receipt = await this.getPendingWithdrawalReceipt()
+  }
+
+  async hasReceiptHandler(receipt) {
+    if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
+      // have pending withdrawal
+      this.unclaimWithdrawTokens = receipt.amount
+      this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())
+      this.unclaimSignature = receipt.signature
+    } else if (receipt.amount) {
+      // signature, amount didn't get update yet. need to wait for oracle update
+      this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
+    }
+    let ethAddr = this.dposUser._wallet._address
+    // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
+    if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
+      this.mismatchedReceiptHandler(receipt, ethAddr)
+    }
+  }
+
+  async mismatchedReceiptHandler(receipt, ethAddr) {
+    // this is necessary to prevent reloading when metamask changes accounts
+    window.resolvingMismatchedReceipt = true
+
+    console.log('receipt: ', receipt.tokenOwner)
+    console.log('mapped address:', ethAddr)
+
+    let r = confirm(`A pending withdraw requires you to switch ETH accounts to: ${receipt.tokenOwner}. Please change your account and then click OK`)
+    if (r) {
+      let tempUser = await this.switchDposUser({web3: window.web3})
+      this.reclaimWithdrawHandler()
+    }
+  }
+
+  async reclaimWithdrawHandler() {
+    // var localAddr = CryptoUtils.bytesToHexAddr(this.dposUser._address.local.bytes)
+    // let mappedAddr = await this.dposUser._wallet._address
+    // let ethAddr = CryptoUtils.bytesToHexAddr(mappedAddr.to.local.bytes)
+    let ethAddr = this.dposUser._wallet._address
+    console.log('current eth addr: ', ethAddr)
+    try {
+      this.isWithdrawalInprogress = true
+      let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
+      await tx.wait()
+      this.$root.$emit("bv::show::modal", "wait-tx")
+      this.isWithdrawalInprogress = false
+      await this.checkPendingWithdrawalReceipt()
+      if(this.receipt){
+        this.setWithdrewSignature(this.receipt.signature)
+        this.unclaimSignature = this.receipt.signature
+      }
+      this.unclaimWithdrawTokensETH = 0
+      await this.refresh(true) 
+
+      // TODO: this is added for fixing mismatched receipts, remove once users are fixed. 
+      if (window.resolvingMismatchedReceipt) {
+        alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
+        window.location.reload(true)
+      }
+    } catch (err) {
+      this.setErrorMsg(err.message)
+      console.error(err)
+      this.isWithdrawalInprogress = false
+    }
+  }
 
   async connectFromModal() {
     try {
@@ -410,7 +507,7 @@ export default class MyAccount extends Vue {
       return
     }
 
-    this.isLoading = true
+    this.setShowLoadingSpinner(true)
     
     try {
       await this.depositAsync({amount: this.transferAmount})
@@ -420,41 +517,23 @@ export default class MyAccount extends Vue {
       this.setError({msg: "Deposit failed, please try again", err})
     }
     this.transferAmount = ""
-    this.isLoading = false
-  }
 
-  async withdrawHandler() {
+    this.setShowLoadingSpinner(false)
     
-    if(this.withdrawAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.isLoading = true
-
-    try {
-      await this.withdrawAsync({amount: this.withdrawAmount})
-      this.setSuccess("Withdraw successfull")
-    } catch(err) {
-      console.error("Withdraw failed, error: ", err)
-      this.setError({msg: "Withdraw failed, please try again", err})
-    }
-    this.withdrawAmount = ""
-    this.isLoading = false
-
   }
 
   async checkAllowance() {    
-    if(!this.dposUser) return      
-      const user = this.dposUser
-      const gateway = user.ethereumGateway
-      const address = this.userAccount.address      
+    console.assert(this.dposUser, "Expected dposUser to be initialized")
+    console.assert(this.web3, "Expected web3 to be initialized")   
+    const user = this.dposUser
+    const gateway = user.ethereumGateway
+    const address = this.userAccount.address    
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return allowance.toString()
+      return parseInt(this.web3.utils.fromWei(allowance.toString()))
     } catch(err) {
       console.error("Error checking allowance", err)
-      return
+      return ''
     }
   }
 
@@ -582,13 +661,97 @@ export default class MyAccount extends Vue {
       return 'Transfer'
     }
   }
-}</script>
+
+
+  async approveDeposit(amount) {
+    console.assert(this.dposUser, "Expected dposUser to be initialized")
+    console.assert(this.web3, "Expected web3 to be initialized")
+    const { web3, dposUser} = this
+    const ethereumLoom  = dposUser.ethereumLoom
+    const ethereumGateway  = dposUser._ethereumGateway
+    const tokens = new BN( "" + parseInt(amount,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
+    log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
+    this.setGatewayBusy(true)
+    log('approve', ethereumGateway.address, weiAmount.toString())
+    const approval = await ethereumLoom.functions.approve(
+            ethereumGateway.address,
+            weiAmount.toString())
+
+    //const receipt = await approval.wait()
+    log('approvalTX', approval)
+    // we still need to execute deposit so keep gatewayBusy = true
+    return approval
+  }
+
+  async executeDeposit(amount,approvalTx) {
+    console.assert(this.dposUser, "Expected dposUser to be initialized")
+    console.assert(this.web3, "Expected web3 to be initialized")
+    this.setGatewayBusy(true)
+    await approvalTx.wait()
+    const tokens = new BN( "" + parseInt(amount,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
+    let result = await this.dposUser._ethereumGateway.functions.depositERC20(
+      weiAmount.toString(), this.dposUser.ethereumLoom.address
+    )
+    this.setGatewayBusy(false)
+    this.$emit('refreshBalances')
+    return result
+  }
+
+  async completeDeposit() {
+    this.setGatewayBusy(true)
+    this.setShowLoadingSpinner(true)
+    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
+    try {
+      await this.dposUser._ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), this.dposUser.ethereumLoom.address
+      )
+      this.allowance = 0
+    } catch (error) {
+      console.error(error)
+    }
+    this.$emit('refreshBalances')
+    this.setGatewayBusy(false)
+    this.setShowLoadingSpinner(false)
+
+  }
+
+  async executeWithdrawal(amount) {
+    // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
+    // note:  withdrawAsync returns Promise<TransactionReceipt> 
+    try {
+      await this.checkPendingWithdrawalReceipt()
+      if (this.receipt) {
+        // have a pending receipt
+        this.hasReceiptHandler(this.receipt)
+        return
+      } else {
+        let tx = await this.withdrawAsync({amount})
+        //await tx.wait()
+        return tx
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  resolveWithdraw(amount, tx) {
+    return tx.wait()
+  }
+}
+</script>
 
 
 <style lang="scss" scoped>
 
   body {
     overflow-y: scroll;
+  }
+
+  .text-red {
+    color: #dc3545;
   }
 
   .custom-divider {
@@ -669,7 +832,7 @@ export default class MyAccount extends Vue {
     right: 0px;
     width: 100%;
     height: 100%;
-    z-index: 900;
+    z-index: 190;
     background-color: #ffffff;
     opacity: 0.5;
   }
@@ -712,7 +875,15 @@ export default class MyAccount extends Vue {
         height: 180px;
       }
     }
-  }  
+  }
+
+  .center-children {
+    display: flex;
+    align-items: center;
+    button {
+      margin-right: 12px;
+    }
+  }
 
 </style>
 

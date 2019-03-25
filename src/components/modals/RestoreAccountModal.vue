@@ -6,7 +6,7 @@
         <p class="color-grey">{{ $t('components.modals.restore_account_modal.note_the_phrase_is_case') }}</p>
       </b-row>
       <b-row class="my-1 align-items-center">
-        <b-form-input v-model="seeds" :rows="3" type="text"></b-form-input>
+        <b-form-input v-model="seeds" :rows="3" type="text" autocomplete="off"></b-form-input>
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
         <span class="text-error  mt-2" variant="error">{{errorMessage}}</span>
@@ -20,6 +20,8 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 
+const bip39 = require('bip39')
+
 @Component({
 })
 
@@ -27,6 +29,13 @@ export default class RestoreAccountModal extends Vue {
   seeds = "";
   errorMessage = "";
   okHandler() {
+
+    let seedPhraseIsValid = bip39.validateMnemonic(this.seeds)
+    if(!seedPhraseIsValid) {
+      this.errorMessage = "Invalid seed phrase"
+      return
+    }
+
     const seedList = this.seeds.split(' ')
     if (seedList.length !== 12) {
       this.errorMessage = "Not 12 words..."

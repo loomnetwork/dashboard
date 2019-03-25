@@ -1,5 +1,6 @@
 <template>
   <b-table
+    responsive
     id="faucet-table"
     table-active="table-active"
     tr-class="spacer"
@@ -7,8 +8,8 @@
     :fields="fields"
     :sort-by="sortBy"
     :sort-desc="sortDesc"
-    @row-clicked="rowClickHandler"
-  ></b-table>
+    @row-clicked="rowClickHandler">
+  </b-table>
 </template>
 
 <script>

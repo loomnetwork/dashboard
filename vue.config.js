@@ -3,6 +3,7 @@ var PrerenderSpaPlugin = require('prerender-spa-plugin')
 var path = require('path')
 const Renderer = PrerenderSpaPlugin.PuppeteerRenderer
 const SentryCliPlugin = require('@sentry/webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 var baseUrl = '/'
 /*
@@ -31,6 +32,7 @@ module.exports = {
   },
   runtimeCompiler: true,
   devServer: {
+    https: true,
     proxy: {
       '^/auth/*': {
         target: proxyUrl,
@@ -90,6 +92,28 @@ module.exports = {
     //     })
     //   })
     // )
+    config.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            sourceMap: true,
+            ecma: undefined,
+            warnings: false,
+            parse: {},
+            compress: {},
+            mangle: false, // Note `mangle.properties` is `false` by default.
+            module: false,
+            output: null,
+            toplevel: false,
+            nameCache: null,
+            ie8: false,
+            keep_classnames: undefined,
+            keep_fnames: false,
+            safari10: false,
+          },
+        }),
+      ]
+    }    
     return {
       plugins: plugins
     }
@@ -97,5 +121,14 @@ module.exports = {
   chainWebpack: config => {
     config.module.rules.delete('eslint');
     config.resolve.set('symlinks', false); // makes yarn link loom-js work
+    config.module.rules.delete('uglify');
+
+    // config
+    //     .plugin('uglify')
+    //     .tap(args => {
+    //       console.log("uglify args", args)
+    //       args.mangle = false
+    //       return args
+    // })
   }
 }

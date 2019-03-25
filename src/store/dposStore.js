@@ -1,9 +1,15 @@
+import axios from 'axios'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
 import BigNumber from 'bignumber.js';
 
+import Debug from "debug"
 
+Debug.enable("dashboard.dpos")
+const debug = Debug("dashboard.dpos")
+
+const DAILY_WITHDRAW_LIMIT = 500000
 
 const dynamicSort = (property) => {
   let sortOrder = 1
@@ -24,11 +30,20 @@ const defaultState = () => {
     connectedToMetamask: false,
     web3: undefined,
     currentMetamaskAddress: undefined,
+    history: null,
+    withdrawLimit: DAILY_WITHDRAW_LIMIT,
     validators: null,
     status: "check_mapping",
+    walletType: undefined,
+    selectedAccount: undefined,
     metamaskDisabled: false,
     showLoadingSpinner: false,
+    showSignWalletModal: false,
+    showAlreadyMappedModal: false,
+    mappingSuccess: false,
+    gatewayBusy: false,
     userBalance: {
+      isLoading: true,
       loomBalance: 0,
       mainnetBalance: 0,
       stakedAmount: 0
@@ -38,14 +53,19 @@ const defaultState = () => {
     validatorFields: [
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
-      { key: 'delegationsTotal', sortable: true, label: "Delegations total" },
-      { key: 'votingPower', sortable: true, label: "Voting power"  },
+      { key: 'totalStaked', sortable: true, label: "Total Staked" },
+      // { key: 'votingPower', sortable: true, label: "Reward Power" },
       // { key: 'Weight', sortable: true },
       { key: 'Fees', sortable: true },
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "Validator #4", "test-z-us1-dappchains-2-aws0"]
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
+    latestBlockNumber: null,
+    cachedEvents: [],
+    dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
+    historyPromise: null,
+    dappChainEvents: []
   }
 }
 
@@ -53,7 +73,14 @@ const defaultState = () => {
 export default {
   namespaced: true,
   state: defaultState(),
-  getters: {},
+  getters: {
+    getLatestBlockNumber(state) {
+      return state.latestBlockNumber || JSON.parse(sessionStorage.getItem("latestBlockNumber"))
+    },
+    getCachedEvents(state) {
+      return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents")) || []
+    }
+  },  
   mutations: {
     setIsLoggedIn(state, payload) {
       state.isLoggedIn = payload
@@ -64,7 +91,7 @@ export default {
     setConnectedToMetamask(state, payload) {
       state.connectedToMetamask = payload
     },
-    setWeb3(state, payload) {
+    async setWeb3(state, payload) {
       state.web3 = payload
     },
     setUserBalance(state, payload) {
@@ -85,27 +112,61 @@ export default {
     setShowLoadingSpinner(state, payload) {
       state.showLoadingSpinner = payload
     },
+    setSignWalletModal(state, payload) {
+      state.showSignWalletModal = payload
+    },
+    setAlreadyMappedModal(state, payload) {
+      state.showAlreadyMappedModal = payload
+    },
+    setMappingSuccess(state, payload) {
+      state.mappingSuccess = payload
+    },
     setRewardsResults(state, payload) {
       state.rewardsResults = payload
     },
     setTimeUntilElectionCycle(state, payload) {
       state.timeUntilElectionCycle = payload
+    },
+    setWalletType(state, payload) {
+      state.walletType = payload
+      sessionStorage.setItem("walletType", payload)
+      sessionStorage.setItem("selectedLedgerPath", null)      
+    },
+    setSelectedAccount(state, payload) {
+      state.selectedAccount = payload
+    },
+    setLatesBlockNumber(state, payload) {
+      state.latestBlockNumber = payload
+      sessionStorage.setItem("latestBlockNumber", JSON.stringify(payload))
+    },
+    setCachedEvents(state, payload) {
+      state.cachedGatewayEvents = payload
+      sessionStorage.setItem("cachedEvents", JSON.stringify(payload))
+
+    },
+    setSelectedLedgerPath(state, payload) {
+      state.selectedLedgerPath = payload
+      sessionStorage.removeItem("selectedLedgerPath")
+    },
+    setGatewayBusy(state, busy) {
+      state.gatewayBusy = busy
+    },
+    setHistoryPromise(state, payload) {
+      state.historyPromise = payload
+    },
+    setDappChainEvents(state, payload) {
+      state.dappChainEvents = payload
     }
   },
   actions: {
-    async initializeDependencies({ commit, dispatch }, payload) {
+    async initializeDependencies({ state, commit, dispatch }, payload) {
       commit("setShowLoadingSpinner", true)
       try {
-        let web3js = await initWeb3()
-        commit("setConnectedToMetamask", true)
-        commit("setWeb3", web3js, null)
-        let accounts = await web3js.eth.getAccounts()
-        let metamaskAccount = accounts[0]
-        commit("setCurrentMetamaskAddress", metamaskAccount)
-        await dispatch("DappChain/init", null, { root: true })
-        await dispatch("DappChain/registerWeb3", {web3: web3js}, { root: true })
+        await dispatch("initWeb3Local")
         await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
+        await dispatch("checkMappingAccountStatus")
+
       } catch(err) {
         if(err.message === "no Metamask installation detected") {
           commit("setMetamaskDisabled", true)
@@ -116,19 +177,72 @@ export default {
       }      
       commit("setShowLoadingSpinner", false)
     },
+    async checkMappingAccountStatus({ state, commit, dispatch }) {
+      commit("setSignWalletModal", false)
+      commit("setAlreadyMappedModal", false)
+      if (state.status == 'no_mapping' && state.mappingError == undefined) {
+        try {
+          commit("setSignWalletModal", true)
+          commit("setShowLoadingSpinner", true)
+          await dispatch("DappChain/addMappingAsync", null, { root: true })
+          commit("setShowLoadingSpinner", false)
+          commit("setMappingSuccess", true)
+          commit("setSignWalletModal", false)
+        } catch(err) {
+          console.log("add mapping async error", err);
+          commit("setSignWalletModal", false)
+          if (err.message.includes("identity mapping already exists")) {
+            commit("setAlreadyMappedModal", true)
+          } else {
+            commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
+          }
+        }
+      } else if((state.status == 'no_mapping' && state.mappingError !== undefined)) {
+        commit("setSignWalletModal", false)
+        if (err.message.includes("identity mapping already exists")) {
+          commit("setAlreadyMappedModal", true)
+        } else {
+          commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
+        }
+      } else if (state.status == 'mapped') {
+        commit("setMappingSuccess", true)
+      } 
+      commit("setShowLoadingSpinner", false)
+    },
     async storePrivateKeyFromSeed({ commit }, payload) {
       const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
-      localStorage.setItem('privatekey', privateKeyString)
+      sessionStorage.setItem('privatekey', privateKeyString)
       commit('setIsLoggedIn', true)
     },
     async clearPrivateKey({ commit }, payload) {
-      localStorage.removeItem('privatekey')
+      sessionStorage.removeItem('privatekey')
       commit('setIsLoggedIn', false)
     },
     async checkIfConnected({state, dispatch}) {        
       if(!state.web3) await dispatch("initWeb3")
     },
+    async initWeb3Local({commit, state, dispatch}){
+      if(state.walletType === "metamask") {
+        let web3js = await initWeb3()
+        let accounts = await web3js.eth.getAccounts()
+        let metamaskAccount = accounts[0]
+        commit("setWeb3", web3js)
+        commit("setCurrentMetamaskAddress", metamaskAccount)
+      } else if(state.walletType === "ledger") {
+        if(state.selectedLedgerPath) {
+          let web3js = await initWeb3SelectedWallet(state.selectedLedgerPath)
+          commit("setWeb3", web3js)
+        } else {
+          console.error("no HD path selected")
+          throw new Error("No HD path selected")
+        }
+      }
+      commit("setConnectedToMetamask", true)  
+      await dispatch("DappChain/init", null, { root: true })
+      await dispatch("DappChain/registerWeb3", {web3: state.web3}, { root: true })
+    },
+
     async initWeb3({rootState, dispatch, commit}) {    
       let web3js
       if (window.ethereum) {
@@ -158,36 +272,51 @@ export default {
         for (let i in validators) {
 
           let weight = 0
-          if(validators[i].name.startsWith("plasma-")) 
-          {
+          if ( validators[i].name.startsWith("plasma-") )  {
             weight = 1
-          } else if(validators[i].name === "") {
+          } else if( validators[i].name === "" ) {
             weight = 2
           }
 
           const validator = validators[i]
-          const validatorName = validators[i].name == "" ? "Validator #" + (parseInt(i) + 1) : validators[i].name
+
+          // Check if bootstrap val
+          const validatorName = validator.name !== "" ? validator.name : validator.address
           const isBootstrap = state.prohibitedNodes.includes(validatorName)
           validatorList.push({
-            Name: validatorName,
             Address: validator.address,
+            pubKey: (validator.pubKey),
+            // Active / Inactive validator
             Status: validator.active ? "Active" : "Inactive",
-            Stake: (formatToCrypto(validator.stake) || '0'),
-            votingPower: formatToCrypto(validator.stake || 0),
+
+            totalStaked: formatToCrypto(validator.totalStaked),
+
             delegationsTotal: formatToCrypto(validator.delegationsTotal),
-            Weight: (validator.weight || '0') + '%',
-            Fees: isBootstrap ? 'N/A' : (validator.fee/100 || '0') + '%',
-            Uptime: (validator.uptime || '0') + '%',
-            Slashes: (validator.slashes || '0') + '%',
+
+            personalStake: formatToCrypto(validator.personalStake),
+
+            delegatedStake: formatToCrypto(validator.delegatedStake),
+
+            // Whitelist + Tokens Staked * Bonuses
+            votingPower: formatToCrypto(validator.votingPower || 0),
+
+
+            // Validator MEtadata
+            Name: validatorName,
             Description: (validator.description) || null,
             Website: (validator.website) || null,
+            Fees: isBootstrap ? 'N/A' : (validator.fee  || '0') + '%',
+
+            isBootstrap,
             Weight: weight || 0,            
             _cellVariants:  {
-              Status: validator.active ? 'active' : undefined,
+              Status: validator.active ? 'active' : 'inactive',
               Name:  isBootstrap ? "danger" : undefined
             },
-            isBootstrap,
-            pubKey: (validator.pubKey)
+            // UNUSED VARIABLES !!!
+            // Weight: (validator.weight || '0') + '%',
+            // Uptime: (validator.uptime || '0') + '%',
+            // Slashes: (validator.slashes || '0') + '%',
           })
 
         }
@@ -254,20 +383,133 @@ export default {
         await dispatch("DappChain/initDposUser", null, { root: true })
       }
 
-      const { origin, target, validator, amount} = payload
+      const { origin, target, amount} = payload
       const user = rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, validator, amount)
+        await user.redelegateAsync(origin, target, amount)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)
         commit("setErrorMsg", {msg: "Failed to redelegate stake", forever: false,report:true,cause:err}, {root: true})
       }
 
+    },
+
+    async fetchDappChainEvents({ state, commit, dispatch }, payload) {
+
+      let historyPromise = axios.get(`${state.dappChainEventUrl}/eth:${state.currentMetamaskAddress}`)
+      // Store the unresolved promise
+      commit("setHistoryPromise", historyPromise)
+      
+      historyPromise.then((response) => {
+
+        return response.data.txs.filter((tx) => {
+
+          // Filter based on these events
+          if(tx.topic === "event:WithdrawLoomCoin" ||
+             tx.topic === "event:MainnetDepositEvent" ||
+             tx.topic === "event:MainnetWithdrawalEvent") { return tx }
+    
+        }).map((tx) => {
+          let type = ""
+          switch(tx.topic) {
+            case "event:MainnetDepositEvent":
+              type = "Deposit"
+              break
+            case "event:MainnetWithdrawalEvent":
+              type = "Withdraw"
+              break
+            case "event:WithdrawLoomCoin":
+              type = "Withdraw Begun"
+              break
+            default:
+              break
+          } 
+  
+          let amount = tx.token_amount
+
+          // Return events in this format
+          return {
+            "Block #" : tx.block_height,
+            "Event"   : type,
+            "Amount"  : formatToCrypto(amount),
+            "Tx Hash" : tx.tx_hash
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(err)
+      })
+      .then((results) => {
+        commit("setDappChainEvents", results)
+      })
+
+    },
+
+    async loadEthereumHistory({commit, getters, state}, {web3, gatewayInstance, address}) {
+      debug("loading history")
+      const cachedEvents = getters.getCachedEvents
+      // Get latest mined block from Ethereum
+      const toBlock = await web3.eth.getBlockNumber()
+      const fromBlock = toBlock - 7000
+
+      const eventsToNames = {
+        ERC20Received: "Deposit",
+        TokenWithdrawn: "Withdraw"
+      }
+      debug("loading history block range ",fromBlock, toBlock  )
+
+      // Fetch latest events
+      state.history = gatewayInstance.getPastEvents("allEvents", { fromBlock, toBlock })
+      .then((events) => {
+        debug("got %s events", events.length)
+        // Filter based on event type and user address
+        let results = events.filter((event) => {
+          return event.returnValues.from === address ||
+                  event.returnValues.owner === address        
+        })
+        .map((event) => {
+          let type = eventsToNames[event.event] ||  "Other"
+          let amount = event.returnValues.amount || event.returnValues.value || 0 
+          return {
+            "Block #" : event.blockNumber,
+            "Event"   : type,
+            "Amount"  : formatToCrypto(amount),
+            "Tx Hash" : event.transactionHash
+            }
+        })
+
+        // Combine cached events with new events
+        const mergedEvents = cachedEvents.concat(results)
+        debug('merged events', mergedEvents.length)
+          
+        // Store results
+        commit("setLatesBlockNumber", toBlock)
+        commit("setCachedEvents", mergedEvents)
+
+        // Display trades in the UI
+        return mergedEvents
+      })
+      .catch(e => {
+        console.error("error loading eth history", e)
+        throw e
+      })
+    },
+
+    async updateDailyWithdrawLimit({state}, history) {
+      // TODO externalise this
+      const limit = history
+        .filter(item => item.Event === "Withdraw") // and date is today
+        .reduce(
+          (left, item) => left - parseInt(item.Amount,10), 
+          DAILY_WITHDRAW_LIMIT
+        )
+      state.withdrawLimit =  Math.max(0, limit)
+      debug('state.withdrawLimit', state.withdrawLimit)
+      return state.withdrawLimit
     }
 
-  }
-
+  },
 
 }

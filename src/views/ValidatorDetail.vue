@@ -22,20 +22,17 @@
             <h4><a @click="copyAddress">{{validator.Address}} <fa :icon="['fas', 'copy']" class="text-grey" fixed-width/></a></h4>
             <div v-if="userIsLoggedIn && !validator.isBootstrap">
               <h5>
-                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState}}</span>
+                {{ $t('views.validator_detail.state') }} <span class="highlight">{{delegationState === "Bonding" && !hasDelegation ? "Unbonded" : delegationState}}</span>
               </h5>
               <h5>
                 {{ $t('views.validator_detail.amount_delegated') }} <span class="highlight">{{ $t('views.validator_detail.amount_delegated_loom', {amountDelegated:amountDelegated}) }}</span>
               </h5>
-              <h5>
+              <h5 v-if="updatedAmount > 0">
                 {{ $t('views.validator_detail.updated_amount') }} <span class="highlight">{{ $t('views.validator_detail.updated_amount_loom', {updatedAmount:updatedAmount}) }}</span>
               </h5>
-              <!-- Hide timelock tier for now: incorrect 1 year timelock iier -->
-              <!-- <h5>
-                {{ $t('views.validator_detail.timelock_tier') }} <span class="highlight">{{lockTimeTier}}</span>
-              </h5> -->
               <h5 class="mb-4">
-                {{ $t('views.validator_detail.timelock') }} <span v-if="!lockTimeExpired" class="highlight">{{locktime}}</span>
+                {{ $t('views.validator_detail.timelock') }} 
+                <span v-if="unlockTime.seconds > 0 " class="highlight">{{unlockTime.seconds | interval}}</span>
                 <span v-else class="highlight">{{ $t('views.validator_detail.unlocked') }}</span>
               </h5>
             </div>
@@ -45,17 +42,24 @@
           <div class="container">
             <faucet-table :items="[validator]" :fields="fields"></faucet-table>
             <div class="row justify-content-end validator-action-container">
-              <!-- <div class="col col-sm-12 col-md-3">
-                <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="!canClaimReward">{{ $t('views.rewards.claim_reward') }}</b-button>
-                <b-tooltip target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip>
-              </div> -->
-              <div v-if="!isBootstrap" class="col col-sm-12 col-md-9 right-container text-right">
-                <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="!canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Delegate</b-button>
-                <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
-                <b-button id="undelegateBtn" class="px-5 py-2 mx-3" variant="primary" @click="openRequestUnbondModal" :disabled="!canDelegate || !hasDelegation || delegationState != 'Bonded'">Un-delegate</b-button>
-                <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
-                <b-button id="redelegateBtn" class="px-5 py-2" variant="primary" @click="openRedelegateModal" :disabled="!hasDelegation || !canDelegate || (delegationState != 'Bonded' && amountDelegated != 0)">Redelegate</b-button>
-                <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
+              <div class="right-container text-right">
+                  <template v-if="!hasDelegation">
+                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegateModal" :disabled="canDelegate === false">
+                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
+                    Delegate
+                  </b-button>
+                  </template>
+                  <template v-else>
+                  <b-button id="delegateBtn" class="px-5 py-2" variant="primary" @click="openRequestDelegationUpdateModal" :disabled="canDelegate === false">
+                    <b-spinner v-if="hasDelegation && delegationState === 'Bonding'" type="border" style="color: white;" small />                  
+                    Update delagation
+                  </b-button>
+                  </template>
+                  <b-tooltip target="delegateBtn" placement="bottom" title="Transfer tokens to this validator"></b-tooltip>
+                  <b-button id="redelegateBtn" class="px-5 py-2 mx-3" variant="outline-info" @click="openRedelegateModal" :disabled="canRedelegate === false">Redelegate</b-button>
+                  <b-tooltip target="redelegateBtn" placement="bottom" title="Redelegate from/to another delegator"></b-tooltip>
+                  <b-button id="undelegateBtn" class="px-5 py-2" variant="outline-danger" @click="openRequestUnbondModal" :disabled="canUndelegate === false">Un-delegate</b-button>
+                  <b-tooltip target="undelegateBtn" placement="bottom" title="Withdraw your delegated tokens"></b-tooltip>
               </div>
             </div>
           </div>
@@ -64,7 +68,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import Vue from 'vue'
 import ApiClient from '../services/faucet-api'
@@ -121,19 +124,19 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
       'checkDelegationAsync',
-      'claimRewardAsync'
+      'claimRewardAsync',
+      'getDpos2'
     ])
   }
 })
 export default class ValidatorDetail extends Vue {
   fields = [
-    { key: 'Status', sortable: false },
-    { key: 'delegationsTotal', sortable: true , label: 'Delegations Total'},
-    { key: 'votingPower', sortable: true , label: 'Voting Power'},
-    // { key: 'Weight', sortable: false },
+    { key: 'Status' },
+    { key: 'personalStake', label: 'Validator Personal Stake'},
+    { key: 'delegatedStake', label: 'Delegators Stake'},
+    { key: 'totalStaked', label: 'Total Staked'},
+    // { key: 'votingPower', label: 'Reward Power'},
     { key: 'Fees', sortable: false },
-    // { key: 'Uptime', sortable: false },
-    // { key: 'Slashes', sortable: false },
   ]
   validator = {}
 
@@ -141,12 +144,16 @@ export default class ValidatorDetail extends Vue {
   delegation = {}
 
   finished = false
-  lockTimeExpired = false
+
   currentLockTimeTier = 0
   locktime = 0
-
   refreshInterval = null
-  
+  validatorStateInterval = null
+
+  unlockTime = {
+    seconds: 0,
+  }
+
   lockTimeTiers = [
     "2 weeks",
     "3 months",
@@ -154,31 +161,47 @@ export default class ValidatorDetail extends Vue {
     "1 year"
   ]
 
-  states = ["Bonding", "Bonded", "Unbounding"]
+  lockDays = [14,90,180,365]
 
+  states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
+  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async beforeMount() {
-    let index = this.$route.params.index
-    if(this.validators.length <= 0) await this.getValidatorList()
-    this.validator = this.validators[index]
+    let name = this.$route.params.index
+    if(!this.validators || this.validators.length <= 0) await this.getValidatorList()
+    this.validator = this.validators.find(v => v.Name === name)
+    if(this.validator === undefined) {
+      this.$router.push("../validators")
+    }
+  }
+
+  beforeDestroy() {
+    ['refreshInterval',
+    'validatorStateInterval',
+    'updateLockTimeInterval'].filter(ref => ref in this).forEach(ref => clearInterval(ref))
   }
 
   async mounted() {
 
-    if(this.canDelegate) {
+    if(this.isReallyLoggedIn) {
+      this.refreshValidatorState()
+      this.validatorStateInterval = setInterval(() => this.refreshValidatorState(), 30000)
+    }
+    this.finished = true
+
+  }
+
+  async refreshValidatorState() {
+    if(this.isReallyLoggedIn) {
       try {
         this.delegation = await this.checkDelegationAsync({validator: this.validator.pubKey})
-        this.checkHasDelegation()      
+        console.log('delegation', this.delegation)
+        this.checkHasDelegation()     
+        this.setupLockTimeLeft() 
       } catch(err) {
         this.hasDelegation = false     
       }
     }
-    if(this.hasDelegation && this.delegation.lockTime > 0) {
-      this.refreshInterval = setInterval(() => this.updateLocktime(), 1000)      
-    }    
-
-    this.finished = true
-
   }
 
   async delegateHandler() {
@@ -186,34 +209,45 @@ export default class ValidatorDetail extends Vue {
     this.checkHasDelegation()
     this.currentLockTimeTier = this.delegation.lockTimeTier
 
+    this.$root.$emit("refreshBalances")
+
+    // refresh validator
+    this.refreshValidatorState()
+
     // show modal
     this.$root.$emit("bv::hide::modal", "success-modal")
-
+    
   }
 
   checkHasDelegation() {
-    this.hasDelegation = this.delegation.amount.toString() != 0
+    this.hasDelegation = ! (this.delegation.amount.isZero() && this.delegation.updatedAmount.isZero())
   }
 
-  updateLocktime() {
-    let tl = parseInt(this.delegation.lockTime)
-    let lt = new Date(tl*1000).getTime()
-    // let lt = new Date("Jan 5, 2021 15:37:25").getTime()
-    let now = new Date().getTime()
-    let distance = lt - now
-
-    let days = Math.floor(distance / (1000 * 60 * 60 * 24))
-    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
-    this.locktime = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
-    this.lockTimeExpired = this.checkLockTime(lt)
-
+  setupLockTimeLeft() {
+    const lockSeconds = 86400 * this.lockDays[this.delegation.lockTimeTier]
+    const unlockTimestamp = parseInt(this.delegation.lockTime,10)
+    this.lockTimeExpired = unlockTimestamp*1000 > Date.now()
+    this.unlockTime.seconds = unlockTimestamp - Math.floor(Date.now()/1000)
+    
+    if (this.updateLockTimeInterval) {
+       clearInterval(this.updateLockTimeInterval)
+    }
+    // if time left more than a day no need for interval stuff
+    if (this.unlockTime.seconds > 0 && this.unlockTime.seconds < 86400) {
+      this.updateLockTimeInterval = setInterval(() => this.updateLockTime(), 60*1000)      
+    }
   }
 
-  checkLockTime(locktime) {
-    return locktime < new Date().getTime() ? true : false
+  /**
+   * 
+   * only used in case time left to unlock lower thasn a day, to update the count down
+   */
+  updateLockTime() {
+    if (this.unlockTime.seconds <= 0 && this.updateLockTimeInterval) {
+      clearInterval(this.updateLockTimeInterval)
+      return
+    }
+    this.unlockTime.seconds  -= 1;
   }
 
   copyAddress() {
@@ -228,6 +262,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   async refresh() {
+    await this.getDpos2()
     this.getValidators()
   }
 
@@ -252,7 +287,9 @@ export default class ValidatorDetail extends Vue {
           Description: (validator.description) || null,
           Website: (validator.website) || null,
           _cellVariants: validator.active ? { Status: 'active'} : undefined,
-          pubKey: (validator.pubKey)
+          pubKey: (validator.pubKey),
+          personalStake: validator.personalStake,
+          delegatedStake: validator.delegatedStake,
         })
       }
       commit("setValidators", validatorList)
@@ -277,10 +314,39 @@ export default class ValidatorDetail extends Vue {
   }
 
   async redelegateHandler() {
+    this.$root.$emit("refreshBalances")
+  }
+
+  get isReallyLoggedIn() {
+    return this.userIsLoggedIn && this.getPrivateKey
   }
 
   get canDelegate() {
-    return this.userIsLoggedIn && this.getPrivateKey
+    return this.userIsLoggedIn && 
+      this.getPrivateKey && 
+      this.isBootstrap === false && 
+      (
+        // hack around initial bonding state (no state "unbonded")
+        (this.hasDelegation === false && this.delegationState == 'Bonding') || 
+        // normal rule
+        (this.hasDelegation === true && this.delegationState == 'Bonded' )
+      )
+  }
+
+  get canUndelegate() {
+    return this.userIsLoggedIn && 
+      this.getPrivateKey && 
+      this.isBootstrap === false &&
+      this.hasDelegation &&
+      this.delegationState != 'Bonding'
+  }
+
+  get canRedelegate() {
+    return this.userIsLoggedIn && 
+      this.getPrivateKey && 
+      this.hasDelegation &&
+      this.delegationState != 'Bonding' &&
+      this.amountDelegated != 0
   }
 
   get amountDelegated() {
@@ -323,7 +389,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get canClaimReward() {
-    return this.hasDelegation && this.lockTimeExpired ? true : false
+    return this.hasDelegation && this.this.unlockTime.second <= 0
   }
 
   get isBootstrap() {
@@ -333,20 +399,19 @@ export default class ValidatorDetail extends Vue {
   openRequestDelegateModal() {
     this.$refs.delegateModalRef.show(this.validator.Address, '')
   }
+  
+  openRequestDelegationUpdateModal() {
+    this.$refs.delegateModalRef.show(this.validator.Address, '', this.amountDelegated, this.delegation.lockTimeTier)
+  }
 
   openRequestUnbondModal() {
     this.$refs.delegateModalRef.show(this.validator.Address, 'unbond')
   }
+  
 
   openRedelegateModal() {
     let index = this.$route.params.index
     this.$refs.redelegateModalRef.show(this.validator.Address)
-    // this.$router.push({
-    //   path: '/redelegate',
-    //   params: {
-    //     index
-    //   }
-    // })
   }
 
 }</script>

@@ -3,56 +3,31 @@
     <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <faucet-header v-on:update:chain="refresh()"></faucet-header>    
     <div class="content container-fluid">      
-      <div v-if="metamaskDisabled && userIsLoggedIn" class="disabled-overlay">
-        <div>           
-          <div class="network-error-container mb-3">
-            <img src="../assets/metamask-error-graphic.png"/>
-          </div>
-          <h4>
-            {{ $t('components.layout.metamask_error') }}
-          </h4>
-          <div>
-            <span>
-              {{ $t('components.layout.please_enable_metamask_or_switch') }}
-            </span>
-          </div>              
-        </div>
-      </div>
-      <div v-if="mappingStatus == 'INCOMPATIBLE_MAPPING' && userIsLoggedIn" class="disabled-overlay">
-        <div>           
-          <div class="network-error-container mb-3">
-            <img src="../assets/network-error-graphic.png"/>
-          </div>
-          <h4>
-            {{ $t('components.layout.mapping_error') }}
-          </h4>
-          <div v-if="mappingError">
-
-            {{ $t('components.layout.your_account_appears_to_be') }} <br>
-            <span class="address">{{mappingError.mappedEthAddress}}</span> <br>
-            {{ $t('components.layout.but_your_current_account_address') }} <br>
-            <span class="address">{{mappingError.metamaskAddress}}</span> <br>
-            {{ $t('components.layout.please_change_your_metamask_account') }}
-
-          </div>
-          <div v-else>
-            <span>
-              {{ $t('components.layout.please_check_your_metamask_account') }}
-            </span>
-          </div>              
-        </div>
-      </div>         
+      <warning-overlay type="metamask"></warning-overlay>
+      <warning-overlay type="mapping"></warning-overlay>
       <div class="row">
         <div v-show="showSidebar" class="col-lg-3">
           <faucet-sidebar></faucet-sidebar>      
         </div>
         <div :class="contentClass">
+          <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
+              {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
+          </b-modal>
+          <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
+              {{ $t('components.layout.already_mapped') }}
+          </b-modal> 
           <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
           <router-view></router-view>
         </div>        
       </div>          
     </div>    
     <faucet-footer></faucet-footer>
+     <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
+        <div class="d-block text-center">
+          <p>{{ $t('components.layout.metamask_changed')}}</p>
+        </div>
+        <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
+     </b-modal>
   </div>  
 </template>
 
@@ -65,7 +40,7 @@ import FaucetHeader from '@/components/FaucetHeader'
 import FaucetSidebar from '../components/FaucetSidebar'
 import FaucetFooter from '@/components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
-
+import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -77,47 +52,36 @@ import { isIP } from 'net';
     FaucetHeader,
     FaucetSidebar,
     FaucetFooter,
-    LoadingSpinner
+    LoadingSpinner,
+    WarningOverlay
   },
   props: {
     data: Object,
   },
   methods: {
-    ...mapActions([
-      // 'registerWeb3',
-      // 'updateContractState',
-      // 'checkNetwork',
-      'checkLottery',
-      'checkCryptoBacker'      
-    ]),
     ...mapMutations([
       'setUserIsLoggedIn',
       'setErrorMsg'
     ]),
     ...DappChainStore.mapActions([
-      'init',
-      'initDposUser',
-      'setMetamaskStatus',
-      'setMetamaskError',
       'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapActions([
-      'initializeDependencies'
+      'initializeDependencies',
+      'checkMappingAccountStatus'
     ]),
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
-      'setWeb3',
-      'setCurrentMetamaskAddress'      
-    ])
+      'setCurrentMetamaskAddress',
+      'setWalletType'
+    ]),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ])    
   },  
   computed: {
     ...mapState([
-      'alternateBackground',
-      'hasPendingApprove',
-      'pendingApprove',
-      'showAnnouncement',
-      'showLottery',
-      'showCryptoBacker',
       'userIsLoggedIn'
     ]),
     ...DappChainStore.mapState([
@@ -130,13 +94,23 @@ import { isIP } from 'net';
     ...DPOSStore.mapState([
       'showSidebar',
       'web3',
+      "currentMetamaskAddress",
       'metamaskDisabled',
-      'showLoadingSpinner'
+      'showLoadingSpinner',
+      'showAlreadyMappedModal',
+      'showSignWalletModal',
+      'mappingSuccess',
+      'isLoggedIn',
+      'walletType',
+      'status'
     ])    
   },
 })
 
-export default class Layout extends Vue {  
+export default class Layout extends Vue { 
+
+  metamaskChangeAlert = false
+
   pendingModalTitle = 'Continue with your approved Loom'
   isOpen = true
   preload = false
@@ -158,59 +132,105 @@ export default class Layout extends Vue {
     }
   ]
 
-  // Hide crypto backer modal
-  // @Watch('showCryptoBacker')
-  // onShowCryptoBackerChanged(newValue, oldValue) {
-  //   if(newValue) {
-  //     this.$root.$emit('bv::show::modal', 'crypto-backer')
-  //   }
-  // }
-
   created() {
-    this.$router.beforeEach((to, from, next) => {
-      this.$Progress.start()
-      next()
-    })
     this.$router.afterEach((to, from) => {
-      this.$Progress.finish()
+      this.$root.$emit("refreshBalances")
     })
   }
 
   beforeMount() {
-    if(localStorage.getItem("privatekey")) {
-      this.setUserIsLoggedIn(true)
+    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
+  }
+
+  @Watch('mappingSuccess')
+    onMappingSuccessChange(newValue, oldValue) {
+    if(newValue && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('status')
+    onMappedChange(newValue, oldValue) {
+    if(newValue === 'mapped' && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('showAlreadyMappedModal')
+    onAlreadyMappedModalChange(newValue, oldValue) {
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "already-mapped")
+    } else {
+        this.$root.$emit("bv::hide::modal", "already-mapped")
+
+    }
+  }
+
+  @Watch('showSignWalletModal')
+    onSignLedgerModalChange(newValue, oldValue) {      
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "sign-wallet-modal")
+    } else {
+        this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
+
     }
   }
 
   async mounted() {
 
+    // Clear any remaining local storage
+    localStorage.clear()
+      
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
     } else {
       this.$root.$on('login', async () => {
         this.attemptToInitialize()
-      })      
-    }
+      })
+    }      
     
     if(window.ethereum) {
-      window.ethereum.on('accountsChanged', async (accounts) => {
-        if(this.userIsLoggedIn) this.ensureIdentityMappingExists({currentAddress: accounts[0]})
-        this.setCurrentMetamaskAddress(accounts[0])
+      window.ethereum.on('accountsChanged', (accounts) => {
+        
+        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove. 
+        if (window.resolvingMismatchedReceipt) {
+          return;
+        }
+
+        if (this.currentMetamaskAddress && 
+          this.currentMetamaskAddress !== accounts[0] ) {
+                localStorage.clear()
+                this.metamaskChangeAlert = true
+                window.ethereum.removeAllListeners()
+        }
+
       })
     }
 
   }
 
+  async restart() {
+      window.location.reload(true)
+  }
+
+
   async attemptToInitialize() {
     try {
       await this.initializeDependencies()
+      this.$root.$emit("initialized")
+      this.$root.$emit("refreshBalances")
     } catch(err) {
       this.$root.$emit("logout")
+      this.setMappingError(null)
+      this.setMappingStatus(null)
     }           
   }
 
   onLoginHandler() {
-    console.log('Logged in')
     this.$auth.initAuthInstance()
   }
 
@@ -248,6 +268,7 @@ export default class Layout extends Vue {
   }
   .content {
     display: flex;
+    position: relative;
     flex: 1;
     justify-content: center;
     .row {
@@ -258,46 +279,6 @@ export default class Layout extends Vue {
     display: flex;
     align-items: stretch;
   }
-
-  .disabled-overlay {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
-    background-color: rgba(255,255,255,0.8);    
-    z-index: 9999;
-    text-align: center;
-    h4 {
-      color: #eb2230 !important;
-      margin-bottom: 6px;
-    }
-    .address {
-      color: #5756e6;
-      background-color: #ffd1de;
-      border-radius: 3px;
-      padding: 3px 6px;
-      font-weight: bold;
-    }
-    .network-error-container {
-      width: 180px;
-      height: 180px;
-      margin: 0 auto;
-      overflow: hidden;
-      border: 4px solid #5756e6;
-      border-radius: 50%;
-      background: rgb(238,174,202);
-      background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);   
-      img {      
-        height: 180px;
-      }
-    }
-  }  
 
 </style>
 

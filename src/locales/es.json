@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
     },
     "history": {
-      "trade_history": "Trade History",
+      "your_history": "Your History",
       "sort_by": "Sort by:",
       "item_1": "Item 1",
       "item_2": "Item 2",
@@ -91,6 +91,7 @@
       "connect_to_deposit_funds": "Connect to deposit funds",
       "no_mapping_detected": "No mapping detected",
       "map_accounts": "Map accounts",
+      "history": "History",
       "deposit": "Deposit",
       "withdraw": "Withdraw",
       "use_maximum": "Use maximum",
@@ -170,9 +171,11 @@
     "faucet_sidebar": {
       "my_account": "My Account",
       "my_delegations": "My Delegations",
-      "rewards": "Rewards"
+      "rewards": "Rewards",
+      "history": "History"
     },
     "layout": {
+      "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "Metamask error!?",
       "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
       "mapping_error": "Mapping error!?",

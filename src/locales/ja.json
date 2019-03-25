@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "没収されたトークンは、今後のブロック報酬のための準備金へと還元され、ネットワークの検証およびステーキングを行う人々へと支払われることになります。"
     },
     "history": {
-      "your_history": "Your History",
+      "your_history": "あなたの履歴",
       "sort_by": "並び替え:",
       "item_1": "アイテム 1",
       "item_2": "アイテム 2",
@@ -91,7 +91,7 @@
       "connect_to_deposit_funds": "接続して資金をデポジット",
       "no_mapping_detected": "マッピングが検出できません",
       "map_accounts": "アカウントをマップ",
-      "history": "History",
+      "history": "履歴",
       "deposit": "デポジット",
       "withdraw": "出金する",
       "use_maximum": "全額使用する",

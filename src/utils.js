@@ -99,3 +99,15 @@ export const sleep = (milliseconds) => {
 }
 
 export const EMAIL_REGEX = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+
+const capitalize = s => {
+  if (typeof s !== "string") return ""
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+ export const simpleMutations = stateName => ({
+  [`set${capitalize(stateName)}`]: (state, payload) => (state[stateName] = payload)
+})
+
+ export const buildMutationsFromState = state =>
+  Object.assign({}, ...Object.keys(state).map(name => simpleMutations(name)))

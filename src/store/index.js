@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { state, getters, mutations, actions } from './applicationStore'
 import DappChainStore from './dappChainStore'
 import DPOSStore from './dposStore'
+import { EthSignStore } from './ethSignStore'
 
 import { dposStorePlugin } from "./dposPlugin";
 
@@ -37,7 +38,8 @@ const store = new Vuex.Store({
   modules: {
     DappChain: DappChainStore,
     DPOS: DPOSStore,
-    Locale: LocaleStore
+    Locale: LocaleStore,
+    EthSign: EthSignStore
   },
   plugins:[dposStorePlugin]
 })

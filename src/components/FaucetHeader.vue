@@ -26,21 +26,21 @@
             <!-- Right aligned nav items -->
             <b-navbar-nav class="mobile-nav ml-auto">
               
-              <li>
+              <b-nav-item>
                 <h5>
                   <router-link to="/account" class="router text-light hover-warning">Account</router-link>
                 </h5>
-              </li>
-              <li>
+              </b-nav-item>
+              <b-nav-item>
                 <h5>
                   <router-link to="/history" class="router text-light hover-warning">History</router-link>
                 </h5>
-              </li>
-              <li>
+              </b-nav-item>
+              <b-nav-item>
                 <h5>
                   <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
                 </h5>
-              </li>
+              </b-nav-item>
 
             </b-navbar-nav>
           </b-collapse>        
@@ -178,6 +178,10 @@ export default class FaucetHeader extends Vue {
     } else {
       this.connectedToDappChain = false
     }
+  }
+
+  testHide() {
+    this.$emit("bv::toggle::collapse", "nav_collapse", false);
   }
 
   async mounted() { 

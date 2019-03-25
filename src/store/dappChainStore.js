@@ -270,9 +270,18 @@ export default {
         throw new Error('No Private Key, Login again')
       }
       const network = state.chainUrls[state.chainIndex].network
-      let user 
-      try { 
-        user = await DPOSUser.createMetamaskUserAsync(		
+      let user
+
+      let dposConstructor
+
+      if (['dev', 'local'].includes(getDomainType())) {
+        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
+      } else {
+        dposConstructor = DPOSUser.createMetamaskUserAsync
+      }
+
+      try {
+        user = await dposConstructor(
         rootState.DPOS.web3,
         getters.dappchainEndpoint,
         privateKeyString,
@@ -282,7 +291,7 @@ export default {
         );
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
-        
+
       }
       state.dposUser = user
     },
@@ -294,9 +303,18 @@ export default {
         throw new Error('No Private Key, Login again')
       }
       const network = state.chainUrls[state.chainIndex].network
-      let user 
-      try { 
-        user = await DPOSUser.createMetamaskUserAsync(		
+      let user
+
+      let dposConstructor
+
+      if (['dev', 'local'].includes(getDomainType())) {
+        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
+      } else {
+        dposConstructor = DPOSUser.createMetamaskUserAsync
+      }
+
+      try {
+        user = await dposConstructor(
         payload.web3,
         getters.dappchainEndpoint,
         privateKeyString,

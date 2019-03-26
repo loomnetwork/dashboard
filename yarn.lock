@@ -6694,9 +6694,9 @@ lolex@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-3.1.0.tgz#1a7feb2fefd75b3e3a7f79f0e110d9476e294434"
 
-loom-js@^1.49.1:
-  version "1.49.1"
-  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.49.1.tgz#d5bf4ec2aa265d3f984cf84360969adc76c461e7"
+loom-js@^1.49.2:
+  version "1.49.2"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.49.2.tgz#6c9195b707c7b5adee880ce67d522a8bb84d03e2"
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

@@ -37,6 +37,14 @@
           </b-card>
 
 
+          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
+                      v-if="!isProduction"
+                      :allowedUrls="chainUrls"
+                      :serverUrl="currentChain"
+                      @urlClicked="onUserInputUrl"
+                      @urlInput="onUserInputUrl"/>
+
+
         </div>
       </main>
     </div>

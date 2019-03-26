@@ -304,21 +304,26 @@ export default {
 
       let dposConstructor
 
-      if (['dev', 'local'].includes(getDomainType())) {
+      let isDev = ['dev', 'local'].includes(getDomainType())
+      
+      if (isDev) {
         dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
       } else {
         dposConstructor = DPOSUser.createMetamaskUserAsync
       }
 
-      try {
-        user = await dposConstructor(
+      let dposParams = [
         rootState.DPOS.web3,
         getters.dappchainEndpoint,
-        privateKeyString,
         network,
         GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
-        );
+        LoomTokenJSON.networks[network].address     
+      ]
+
+      if(isDev) dposParams[2] = privateKeyString
+
+      try {
+        user = await dposConstructor(...dposParams);
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
 
@@ -601,7 +606,12 @@ export default {
         commit("DPOS/setStatus", "check_mapping", {root: true})
         commit('setMappingError', null)
         commit('setMappingStatus', null)
-        const mapping = await state.dposUser.addressMapper.getMappingAsync(`eth:${metamaskAddress}`)
+
+        let addressMapper = await Contracts.AddressMapper.createAsync(state.dAppChainClient, state.localAddress)
+        let chainId = state.currentChainId
+        let address = new Address("eth", LocalAddress.fromHexString(metamaskAddress))
+        const mapping = await addressMapper.getMappingAsync(address)
+ 
         const mappedEthAddress = mapping.to.local.toString()
 
         console.log("metamaskAddress", metamaskAddress);

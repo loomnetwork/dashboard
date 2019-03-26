@@ -302,33 +302,53 @@ export default {
       const network = state.chainUrls[state.chainIndex].network
       let user
 
-      let dposConstructor
+      // Use default behaviour on production
+      if(!['dev', 'local'].includes(getDomainType())) {
 
-      let isDev = ['dev', 'local'].includes(getDomainType())
-      
-      if (isDev) {
-        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
+        try {
+          user = await DPOSUser.createMetamaskUserAsync(		
+            rootState.DPOS.web3,
+            getters.dappchainEndpoint,
+            privateKeyString,
+            network,
+            GatewayJSON.networks[network].address,
+            LoomTokenJSON.networks[network].address
+            );
+        } catch(err) {
+          console.log(err)
+        }
+
       } else {
-        dposConstructor = DPOSUser.createMetamaskUserAsync
+
+        try {
+          if(state.status === "mapped") {
+            // If the user already has an account: 
+            // 1. Initialize without private key (from seed phrase)
+            // using createEthSignMetamaskUserAsync
+            
+            user = await DPOSUser.createEthSignMetamaskUserAsync(
+              rootState.DPOS.web3,
+              getters.dappchainEndpoint,
+              network,
+              GatewayJSON.networks[network].address,
+              LoomTokenJSON.networks[network].address
+            )
+  
+          } else if(state.status === "no_mapping") { 
+            // If the user does not have an account:
+            // 1. Generate a new seed phrase and corresponding private key
+            // 2. Initialize DPOSUser with createMetamaskUserAsync
+  
+          } else {
+            commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause: null}, {root: true})
+          }
+        } catch(err) {
+          console.log(err)
+          commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true}) 
+        }
+
       }
 
-      let dposParams = [
-        rootState.DPOS.web3,
-        getters.dappchainEndpoint,
-        network,
-        GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address     
-      ]
-
-      if(isDev) dposParams[2] = privateKeyString
-
-      try {
-        user = await dposConstructor(...dposParams);
-      } catch(err) {
-        commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
-
-      }
-      state.dposUser = user
     },
     // TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
     async switchDposUser({ state, rootState, getters, dispatch, commit }, payload) {
@@ -590,10 +610,6 @@ export default {
     },
     async ensureIdentityMappingExists({ rootState, state, dispatch, commit }, payload) {
       
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-      
       if(!state.localAddress) return
       let metamaskAddress = ""
 
@@ -608,10 +624,8 @@ export default {
         commit('setMappingStatus', null)
 
         let addressMapper = await Contracts.AddressMapper.createAsync(state.dAppChainClient, state.localAddress)
-        let chainId = state.currentChainId
         let address = new Address("eth", LocalAddress.fromHexString(metamaskAddress))
         const mapping = await addressMapper.getMappingAsync(address)
- 
         const mappedEthAddress = mapping.to.local.toString()
 
         console.log("metamaskAddress", metamaskAddress);

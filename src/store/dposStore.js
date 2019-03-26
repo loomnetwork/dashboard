@@ -209,8 +209,8 @@ export default {
       commit("setShowLoadingSpinner", true)
       try {
         await dispatch("initWeb3Local")
-        await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
+        await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("checkMappingAccountStatus")
 
       } catch(err) {

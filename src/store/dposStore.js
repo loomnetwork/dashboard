@@ -2,7 +2,8 @@ import axios from 'axios'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
+const bip39 = require('bip39')
 
 import Debug from "debug"
 
@@ -229,6 +230,9 @@ export default {
         try {
 
           // Generate seed
+          const mnemonic = bip39.generateMnemonic()
+          const seeds = mnemonic.split(" ")
+          const seedsLine = mnemonic
 
           commit("setSignWalletModal", true)
           commit("setShowLoadingSpinner", true)

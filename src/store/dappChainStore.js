@@ -5,7 +5,7 @@ import {
   SignedTxMiddleware, DPOSUser, Helpers
 } from 'loom-js'
 
-import { getMetamaskSigner } from "loom-js/dist/solidity-helpers"
+import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 
 import ApiClient from '../services/api'
 import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
@@ -607,7 +607,8 @@ export default {
         commit('setMappingError', null)
         commit('setMappingStatus', null)
         
-        let addressMapper = await Contracts.AddressMapper.createAsync(client, "")
+        let dashboardAddress = new Address("default", LocalAddress.fromHexString(rootState.DPOS.dashboardAddress))
+        let addressMapper = await Contracts.AddressMapper.createAsync(client, dashboardAddress)
         commit("DPOS/setMapper", addressMapper, { root: true })
         let address = new Address("eth", LocalAddress.fromHexString(metamaskAddress))
         const mapping = await addressMapper.getMappingAsync(address)
@@ -627,11 +628,11 @@ export default {
       const address = LocalAddress.fromPublicKey(publicKey)
       const ethAddr = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       const wallet = getMetamaskSigner(rootState.DPOS.web3.currentProvider)
-
+      const signer = new EthersSigner(wallet)
       await rootState.DPOS.mapper.addIdentityMappingAsync(
-        new Address("default", LocalAddress.fromHexString(address)),
+        new Address("default", address),
         new Address("eth", LocalAddress.fromHexString(ethAddr)),
-        wallet
+        signer 
       )
     },
     async addMappingAsync({ state, dispatch, commit }, payload) {

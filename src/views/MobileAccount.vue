@@ -50,6 +50,7 @@
       <b-card-footer class="custom-card-footer">
         <!-- deposit withdraw -->
         <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" class="d-flex justify-content-between">
+          <b-button-group class="gateway" style="display: flex;">
           <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
             :balance="userBalance.mainnetBalance" 
             :transferAction="approveDeposit"
@@ -60,10 +61,10 @@
             <template #failueMessage><p>Approval failed.</p></template>
             <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
           </TransferStepper>
-          <TransferStepper 
+          <TransferStepper  v-if="userBalance.loomBalance > 0 && oracleEnabled"
             @withdrawalDone="afterWithdrawalDone"
             @withdrawalFailed="afterWithdrawalFailed"
-            :balance="Math.min(userBalance.loomBalance,withdrawLimit)" 
+            :balance="userBalance.loomBalance" 
             :transferAction="executeWithdrawal"
             :resolveTxSuccess="resolveWithdraw"
             buttonLabel="Withdraw" 
@@ -72,6 +73,7 @@
               <template #failueMessage>Withdrawal failed... retry?</template>
               <template #confirmingMessage>Waiting for ethereum confirmation</template>
           </TransferStepper>
+          </b-button-group>
         </footer>
       </b-card-footer>      
 
@@ -566,8 +568,7 @@ export default class MobileAccount extends Vue {
 
 </script>
 
-<style lang="scss" scoped>
-@import url("https://use.typekit.net/nbq4wog.css");
+<style lang="scss">
 
 #mobile-account {
   padding-top: 1.5rem;
@@ -604,6 +605,26 @@ h3 {
 
 .custom-card-header, .custom-card-footer {
   background-color: #ffffff;
+}
+
+.gateway {
+  width: 100%
+}
+.gateway.btn-group > div {
+  flex: 1;
+  .btn {
+    display:block;
+    width:100%;
+  }
+}
+.gateway.btn-group div:not(:last-child) .btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.gateway.btn-group div:last-child .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px; 
 }
 
 </style>

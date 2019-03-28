@@ -596,7 +596,7 @@ export default {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
 
-      if(!rootState.DPOS.client) await dispatch("createClient")
+      if(!rootState.DPOS.client) await dispatch("createClient", rootState.DPOS.dashboardPrivateKey)
       const client = rootState.DPOS.client
       const contractAddr = await client.getContractAddressAsync('addressmapper')
 
@@ -622,16 +622,23 @@ export default {
       }
       commit("DPOS/setStatus", "mapped", {root: true})
     },
-    async createNewPlasmaUser({ rootState }) {
+    async createNewPlasmaUser({ rootState, dispatch }) {
       const privateKey = CryptoUtils.generatePrivateKey()
+      const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
+      await dispatch("createClient", privateKeyString)
       const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
       const address = LocalAddress.fromPublicKey(publicKey)
       const ethAddr = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       const wallet = getMetamaskSigner(rootState.DPOS.web3.currentProvider)
       const signer = new EthersSigner(wallet)
-      await rootState.DPOS.mapper.addIdentityMappingAsync(
-        new Address("default", address),
-        new Address("eth", LocalAddress.fromHexString(ethAddr)),
+
+      let one = new Address("default", address)
+      let two = new Address("eth", LocalAddress.fromHexString(ethAddr)) 
+      const client = rootState.DPOS.client
+      let addressMapper = await Contracts.AddressMapper.createAsync(client, one)
+      await addressMapper.addIdentityMappingAsync(
+        one,
+        two,
         signer 
       )
     },
@@ -711,8 +718,9 @@ export default {
         throw Error(err.message)       
       }
     },
-    async createClient({ rootState,state, commit }) {
-      let privateKeyString = rootState.DPOS.dashboardPrivateKey
+    async createClient({ rootState,state, commit }, payload) {
+
+      let privateKeyString = payload
       let privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
 
       const networkConfig = state.chainUrls[state.chainIndex]

@@ -130,6 +130,33 @@ const getServerUrl = (chain) => {
   return ''
 }
 
+const createClient = (state, privateKeyString) => {
+
+  let privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
+
+  const networkConfig = state.chainUrls[state.chainIndex]
+
+  let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+  let client
+  if (networkConfig.websockt) {
+    client = new Client(networkConfig.network, networkConfig.websockt, networkConfig.queryws)
+  } else {
+    client = new Client(networkConfig.network,
+      createJSONRPCClient({
+        protocols: [{ url: networkConfig.rpc }]
+      }),
+      networkConfig.queryws
+    )
+  }
+  client.txMiddleware = [
+    new NonceTxMiddleware(publicKey, client),
+    new SignedTxMiddleware(privateKey)
+  ]
+
+  return client
+
+}
+
 const defaultState = () => {
   const chainUrls = getChainUrls()
   const chainIndex = getChainIndex(chainUrls)
@@ -596,8 +623,9 @@ export default {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
 
-      if(!rootState.DPOS.client) await dispatch("createClient", rootState.DPOS.dashboardPrivateKey)
-      const client = rootState.DPOS.client
+      const client = createClient(state, rootState.DPOS.dashboardPrivateKey)
+      commit("DPOS/setClient", client, { root: true })
+
       const contractAddr = await client.getContractAddressAsync('addressmapper')
 
       const dappchainAddress = rootGetters["DPOS/getDashboardAddressAsLocalAddress"]
@@ -622,10 +650,9 @@ export default {
       }
       commit("DPOS/setStatus", "mapped", {root: true})
     },
-    async createNewPlasmaUser({ rootState, dispatch }) {
+    async createNewPlasmaUser({ state, rootState, dispatch }) {
       const privateKey = CryptoUtils.generatePrivateKey()
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
-      await dispatch("createClient", privateKeyString)
       const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
       const address = LocalAddress.fromPublicKey(publicKey)
       const ethAddr = rootState.DPOS.currentMetamaskAddress.toLowerCase()
@@ -634,7 +661,7 @@ export default {
 
       let one = new Address("default", address)
       let two = new Address("eth", LocalAddress.fromHexString(ethAddr)) 
-      const client = rootState.DPOS.client
+      const client = createClient(state, privateKeyString)
       let addressMapper = await Contracts.AddressMapper.createAsync(client, one)
       await addressMapper.addIdentityMappingAsync(
         one,
@@ -717,33 +744,6 @@ export default {
         console.log("Error withdrawal coin from gateway", err);
         throw Error(err.message)       
       }
-    },
-    async createClient({ rootState,state, commit }, payload) {
-
-      let privateKeyString = payload
-      let privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
-
-      const networkConfig = state.chainUrls[state.chainIndex]
-
-      let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-      let client
-      if (networkConfig.websockt) {
-        client = new Client(networkConfig.network, networkConfig.websockt, networkConfig.queryws)
-      } else {
-        client = new Client(networkConfig.network,
-          createJSONRPCClient({
-            protocols: [{ url: networkConfig.rpc }]
-          }),
-          networkConfig.queryws
-        )
-      }
-      client.txMiddleware = [
-        new NonceTxMiddleware(publicKey, client),
-        new SignedTxMiddleware(privateKey)
-      ]
-
-      commit("DPOS/setClient", client, { root: true })
-
     },
     async init({ state, commit, rootState }, payload) {
 

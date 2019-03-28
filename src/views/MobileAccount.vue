@@ -103,7 +103,7 @@
         <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
           <b-card-body>
             <ul>
-              <li>Update amount: {{delegation["Update Amount"]}}</li>
+              <li v-if="delegation['Update Amount'] !== '0.00'">Update amount: {{delegation["Update Amount"]}}</li>
               <li>Height: {{delegation["Height"]}}</li>
               <li>Locktime: {{delegation["Locktime"]}}</li>
               <li>State: {{delegation["State"]}}</li>

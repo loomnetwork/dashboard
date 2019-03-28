@@ -114,7 +114,7 @@
     </b-card>
 
     <div class="button-container">
-      <b-button class="btn-lg" @click="$router.push({ path: '/validators' })">
+      <b-button @click="$router.push({ path: '/validators' })">
         Stake tokens
       </b-button>
     </div>

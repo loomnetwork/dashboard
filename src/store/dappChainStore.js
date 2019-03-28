@@ -2,8 +2,11 @@
 import Web3 from 'web3'
 import {
   LoomProvider, CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, Web3Signer, NonceTxMiddleware,
-  SignedTxMiddleware, DPOSUser
+  SignedTxMiddleware, DPOSUser, Helpers
 } from 'loom-js'
+
+import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
+
 import ApiClient from '../services/api'
 import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
@@ -223,6 +226,9 @@ export default {
       } else {
         sessionStorage.setItem('withdrewSignature', payload)
       }
+    },
+    setDPOSUser(state, payload) {
+      state.dposUser = payload
     }
   },
   actions: {
@@ -294,36 +300,34 @@ export default {
       if (!rootState.DPOS.web3) {    
         await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
-      const privateKeyString = sessionStorage.getItem('privatekey')
-      if (!privateKeyString) {
-        // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw new Error('No Private Key, Login again')
-      }
+ 
       const network = state.chainUrls[state.chainIndex].network
       let user
 
-      let dposConstructor
-
-      if (['dev', 'local'].includes(getDomainType())) {
-        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
-      } else {
-        dposConstructor = DPOSUser.createMetamaskUserAsync
-      }
-
       try {
-        user = await dposConstructor(
-        rootState.DPOS.web3,
-        getters.dappchainEndpoint,
-        privateKeyString,
-        network,
-        GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
-        );
-      } catch(err) {
-        commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
 
+        // If the user already has an account: 
+        // 1. Initialize without private key (from seed phrase)
+        // using createEthSignMetamaskUserAsync
+
+        user = await DPOSUser.createEthSignMetamaskUserAsync(
+          rootState.DPOS.web3,
+          getters.dappchainEndpoint,
+          network,
+          GatewayJSON.networks[network].address,
+          LoomTokenJSON.networks[network].address
+        )
+        
+        commit("setDPOSUser", user)
+
+      } catch(err) {
+
+        console.log(err)
+        commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true}) 
       }
-      state.dposUser = user
+
+
+
     },
     // TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
     async switchDposUser({ state, rootState, getters, dispatch, commit }, payload) {
@@ -583,41 +587,33 @@ export default {
       commit('setDappChainConnected', true)
       return dpos2
     },
-    async ensureIdentityMappingExists({ rootState, state, dispatch, commit }, payload) {
-      
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
-      
-      if(!state.localAddress) return
-      let metamaskAddress = ""
+    async ensureIdentityMappingExists({ rootState, state, dispatch, commit, rootGetters }, payload) {
 
+      let metamaskAddress = ""
       if(payload) {
         metamaskAddress = payload.currentAddress.toLowerCase()
       } else {
         metamaskAddress = rootState.DPOS.currentMetamaskAddress.toLowerCase()
       }
+
+      if(!rootState.DPOS.client) await dispatch("createClient")
+      const client = rootState.DPOS.client
+      const contractAddr = await client.getContractAddressAsync('addressmapper')
+
+      const dappchainAddress = rootGetters["DPOS/getDashboardAddressAsLocalAddress"]
+
       try {
         commit("DPOS/setStatus", "check_mapping", {root: true})
         commit('setMappingError', null)
         commit('setMappingStatus', null)
-        const mapping = await state.dposUser.addressMapper.getMappingAsync(state.localAddress)  
+        
+        let dashboardAddress = new Address("default", LocalAddress.fromHexString(rootState.DPOS.dashboardAddress))
+        let addressMapper = await Contracts.AddressMapper.createAsync(client, dashboardAddress)
+        commit("DPOS/setMapper", addressMapper, { root: true })
+        let address = new Address("eth", LocalAddress.fromHexString(metamaskAddress))
+        const mapping = await addressMapper.getMappingAsync(address)
         const mappedEthAddress = mapping.to.local.toString()
 
-        console.log("metamaskAddress", metamaskAddress);
-        
-        let dappchainAddress = mappedEthAddress.toLowerCase()
-        console.log("dappchainAddress", dappchainAddress);
-        if(dappchainAddress !== metamaskAddress) {
-          commit('setErrorMsg', {msg: `Existing mapping does not match`, forever: false}, {root: true})
-          commit('setMappingStatus', 'INCOMPATIBLE_MAPPING')
-          commit('setMappingError', { dappchainAddress, metamaskAddress, mappedEthAddress })
-          return
-        }
-        if(state.mappingStatus == 'INCOMPATIBLE_MAPPING') {
-          commit('setMappingError', null)
-          commit('setMappingStatus', null)
-        }
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
         console.error("Error ensuring mapping exists: ", err)
@@ -625,6 +621,19 @@ export default {
         return
       }
       commit("DPOS/setStatus", "mapped", {root: true})
+    },
+    async createNewPlasmaUser({ rootState }) {
+      const privateKey = CryptoUtils.generatePrivateKey()
+      const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+      const address = LocalAddress.fromPublicKey(publicKey)
+      const ethAddr = rootState.DPOS.currentMetamaskAddress.toLowerCase()
+      const wallet = getMetamaskSigner(rootState.DPOS.web3.currentProvider)
+      const signer = new EthersSigner(wallet)
+      await rootState.DPOS.mapper.addIdentityMappingAsync(
+        new Address("default", address),
+        new Address("eth", LocalAddress.fromHexString(ethAddr)),
+        signer 
+      )
     },
     async addMappingAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
@@ -702,7 +711,32 @@ export default {
         throw Error(err.message)       
       }
     },
+    async createClient({ rootState,state, commit }) {
+      let privateKeyString = rootState.DPOS.dashboardPrivateKey
+      let privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
 
+      const networkConfig = state.chainUrls[state.chainIndex]
+
+      let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+      let client
+      if (networkConfig.websockt) {
+        client = new Client(networkConfig.network, networkConfig.websockt, networkConfig.queryws)
+      } else {
+        client = new Client(networkConfig.network,
+          createJSONRPCClient({
+            protocols: [{ url: networkConfig.rpc }]
+          }),
+          networkConfig.queryws
+        )
+      }
+      client.txMiddleware = [
+        new NonceTxMiddleware(publicKey, client),
+        new SignedTxMiddleware(privateKey)
+      ]
+
+      commit("DPOS/setClient", client, { root: true })
+
+    },
     async init({ state, commit, rootState }, payload) {
 
       let privateKey

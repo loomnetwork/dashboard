@@ -2,7 +2,8 @@ import axios from 'axios'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
+const bip39 = require('bip39')
 
 import Debug from "debug"
 
@@ -70,6 +71,10 @@ const defaultState = () => {
     dappChainEvents: [],
     states: ["Bonding", "Bonded", "Unbounding", "Redelegating"],
     delegations: [],
+    dashboardPrivateKey: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
+    dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
+    client: null,
+    mapper: null
   }
 }
 
@@ -83,6 +88,9 @@ export default {
     },
     getCachedEvents(state) {
       return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents")) || []
+    },
+    getDashboardAddressAsLocalAddress(state) {
+      return LocalAddress.fromHexString(state.dashboardAddress)
     },
     getFormattedValidators(state, getters, rootState) {
 
@@ -201,6 +209,12 @@ export default {
     },
     setDappChainEvents(state, payload) {
       state.dappChainEvents = payload
+    },
+    setClient(state, payload) {
+      state.client = payload
+    },
+    setMapper(state, payload) {
+      state.mapper = payload
     }
   },
   actions: {
@@ -208,9 +222,9 @@ export default {
       commit("setShowLoadingSpinner", true)
       try {
         await dispatch("initWeb3Local")
-        await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
         await dispatch("checkMappingAccountStatus")
+        await dispatch("DappChain/initDposUser", null, { root: true })
 
       } catch(err) {
         if(err.message === "no Metamask installation detected") {
@@ -227,9 +241,11 @@ export default {
       commit("setAlreadyMappedModal", false)
       if (state.status == 'no_mapping' && state.mappingError == undefined) {
         try {
+          
           commit("setSignWalletModal", true)
           commit("setShowLoadingSpinner", true)
-          await dispatch("DappChain/addMappingAsync", null, { root: true })
+          await dispatch("DappChain/createNewPlasmaUser", null, { root: true })
+          // await dispatch("DappChain/addMappingAsync", null, { root: true })
           commit("setShowLoadingSpinner", false)
           commit("setMappingSuccess", true)
           commit("setSignWalletModal", false)

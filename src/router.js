@@ -182,23 +182,4 @@ const router = new VueRouter({
   }
 })
 
-router.beforeEach(async (to, from, next) => {
-
-  if(to.meta.requireLogIn && !sessionStorage.getItem('privatekey')) {
-
-    if(to.name !== 'account') {
-      store.dispatch('setError', "Login required")
-    }
-
-    next('/login')
-    return
-  }
-
-  next()
-
-})
-
-// router.afterEach((to, from, next) => {
-// })
-
 export default router

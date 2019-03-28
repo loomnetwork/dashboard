@@ -6694,10 +6694,9 @@ lolex@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-3.1.0.tgz#1a7feb2fefd75b3e3a7f79f0e110d9476e294434"
 
-loom-js@^1.47.0:
-  version "1.47.0"
-  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.47.0.tgz#308a40f3675ae26f273192c7654c83949a172e07"
-  integrity sha512-JDs8bnoWDe4rguMA2ykC4/rsBT5BUPmj0Mn15LB7r8c6fdCK21pJVhs3hjtqxaw+Vf5g3qeH58lLkJbY3k4m8w==
+loom-js@^1.49.4444:
+  version "1.49.4"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.49.4.tgz#652195ef1004cf2b89d27cdb425c704b868954b4"
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"
@@ -7091,7 +7090,6 @@ mock-fs@^4.1.0:
 moment-duration-format@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/moment-duration-format/-/moment-duration-format-2.2.2.tgz#b957612de26016c9ad9eb6087c054573e5127779"
-  integrity sha1-uVdhLeJgFsmtnrYIfAVFc+USd3k=
 
 moment@^2.10.2, moment@^2.24.0:
   version "2.24.0"

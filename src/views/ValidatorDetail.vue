@@ -68,7 +68,7 @@
       </footer>
       -->
       <!-- dialogs -->
-      <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :locktimeTier="currentLockTimeTier" :hasDelegation="hasDelegation"></faucet-delegate-modal>
+      <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
       <success-modal></success-modal>
     </section>

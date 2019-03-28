@@ -150,15 +150,13 @@ export default class FaucetDelegateModal extends Vue {
       this.okTitle = "Un-delegate"
       this.delegationDetail = {
         amount: '',
-        from: address,
-        to: getAddress(this.getPrivateKey),
+        from: address
       }
     } else {
       this.unbond = false
       this.okTitle = "Delegate"
       this.delegationDetail = {
         amount: '',
-        from: getAddress(this.getPrivateKey),
         to: address
       }
     }

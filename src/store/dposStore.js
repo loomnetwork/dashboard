@@ -419,7 +419,11 @@ export default {
         const formattedResult = formatToCrypto(result)
         commit("setRewardsResults", formattedResult)
       } catch(err) {
-        commit("setErrorMsg", {msg: "Failed querying rewards", forever: false,report:true,cause:err}, {root: true})
+        if(err.includes("distribution")) { 
+          commit("setRewardsResults", 0)
+         } else {
+          commit("setErrorMsg", {msg: "Failed querying rewards", forever: false,report:true,cause:err}, {root: true})
+        }
       }
       
     },

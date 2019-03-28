@@ -419,7 +419,7 @@ export default {
         const formattedResult = formatToCrypto(result)
         commit("setRewardsResults", formattedResult)
       } catch(err) {
-        if(err.includes("distribution")) { 
+        if(err.message.includes("Distribution record not found")) { 
           commit("setRewardsResults", 0)
          } else {
           commit("setErrorMsg", {msg: "Failed querying rewards", forever: false,report:true,cause:err}, {root: true})

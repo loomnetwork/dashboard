@@ -57,7 +57,8 @@
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-else class="no-stakes">{{ $t("You haven't staked with {name} yet.", {name: validator.name}) }}<br/>
+      <p v-else class="no-stakes">
+        {{ $t("You haven't staked with" + validator.name +  " yet.") }}<br/>
         <b-button class="btn-lg"
           @click="openRequestDelegateModal()"
         >{{ $t("Stake my tokens") }}</b-button>

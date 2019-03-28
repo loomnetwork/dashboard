@@ -16,6 +16,13 @@
       <b-navbar toggleable="md" type="dark">
         <div class="container-fluid d-flex justify-content-between ensure-padded">        
 
+          <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
+            <strong>
+              Back
+            </strong>
+          </a>
+
+
           <b-navbar-brand href="#">
             <loom-icon :color="'#ffffff'"/>
           </b-navbar-brand>
@@ -235,6 +242,10 @@ export default class FaucetHeader extends Vue {
     if(this.userIsLoggedIn) {
       this.refreshInterval = setInterval(async () => this.refresh(), 5000)
     }
+  }
+
+  get showBackButton() {
+    return this.$route.path.includes("login") ? false : true
   }
   
   destroyed() {
@@ -483,6 +494,12 @@ a.hover-warning:hover {
   li {
     list-style: none;
   } 
+}
+
+.back-btn {
+  strong {
+    color: #ffffff;
+  }
 }
 
 </style>

@@ -58,16 +58,11 @@
           </b-list-group-item>
       </b-list-group>
       <p v-else class="no-stakes">
-        {{ $t("You haven't staked with" + validator.name +  " yet.") }}<br/>
+        {{ $t("views.validator_details.no_stakes", {name:validator.name}) }}<br/>
         <b-button class="btn-lg"
           @click="openRequestDelegateModal()"
         >{{ $t("Stake my tokens") }}</b-button>
       </p>
-      <!-- or:
-      <footer v-if="isSmallDevice && validatorDelegations.length === 0">
-        <b-button class="bt-lg">{{ $t("Stake my tokens") }}</b-button>
-      </footer>
-      -->
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>

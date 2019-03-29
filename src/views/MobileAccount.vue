@@ -172,6 +172,10 @@ const ELECTION_CYCLE_MILLIS = 600000
       'queryRewards',
       'getTimeUntilElectionsAsync'
     ]),
+    ...DappChainStore.mapActions([
+      'getPendingWithdrawalReceipt',
+      'withdrawAsync'
+    ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
       'setShowLoadingSpinner'      

@@ -5,7 +5,10 @@
     <b-card title="Ethereum events" id="history-items-container" class="mb-3">
 
       <div v-if="showHistoryTable">
-        <b-card v-for="(item, idx) in history" :key="'item' + idx" no-body class="mb-1">
+        <b-card v-for="(item, idx) in history"
+                :key="'item' + idx"
+                no-body class="mb-1"
+                :class="latestBlockNumber - item['Block #'] < 10 ? 'animated flash slow infinite' : '' ">
           <b-card-header @click="toggleAccordion(idx)"
                         header-tag="header"
                         class="d-flex justify-content-between p-2"
@@ -17,7 +20,7 @@
             <b-card-body>
               <ul>
                 <li v-if="latestBlockNumber - item['Block #'] < 10">
-                  <strong class="block-confirmation-msg animated flash slow infinite">
+                  <strong class="block-confirmation-msg">
                     Blocks confirmations: {{(latestBlockNumber - item["Block #"]) + 1}}
                   </strong>
                 </li>
@@ -152,7 +155,7 @@
     }
 
     destroyed() {
-      if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)          
+      if(this.pollInterval) clearInterval(this.pollInterval)          
     }
 
     pollLatestBlockNumber() {

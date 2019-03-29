@@ -52,8 +52,8 @@ const clientNetwork = {
   },
   'local': {
     network: 'default',
-    websockt: 'wss://localhost:46658/websocket',
-    queryws: 'wss://localhost:46658/queryws'
+    websockt: 'ws://localhost:46658/websocket',
+    queryws: 'ws://localhost:46658/queryws'
   },
   'default': {
     network: 'default',

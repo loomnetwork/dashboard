@@ -17,6 +17,8 @@ import BN from 'bn.js'
 const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
+const LOOM_ADDRESS = ""
+const GW_ADDRESS = ""
 /*
 network config
 1: mainnet
@@ -47,23 +49,11 @@ const clientNetwork = {
     network: 'default',
     websockt: 'wss://test-z-us1.dappchains.com/websocket',
     queryws: 'wss://test-z-us1.dappchains.com/queryws'
-    // websockt: 'wss://plasma.dappchains.com/websocket',
-    // queryws: 'wss://plasma.dappchains.com/queryws'
   },
   'local': {
     network: 'default',
-    websockt: 'ws://localhost:46658/websocket',
-    queryws: 'ws://localhost:46658/queryws'
-  },
-  'loomv2a': {
-    network: 'loomv2a',
-    websockt: 'ws://loomv2a.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2a.dappchains.com:46658/queryws'
-  },  
-  'loomv2b': {
-    network: 'loomv2b',
-    websockt: 'ws://loomv2b.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2b.dappchains.com:46658/queryws'
+    websockt: 'wss://localhost:46658/websocket',
+    queryws: 'wss://localhost:46658/queryws'
   },
   'default': {
     network: 'default',
@@ -99,8 +89,7 @@ const getChainUrls = () => {
       clientNetwork['plasma'],
       clientNetwork['4'],      
       clientNetwork['stage'],
-      clientNetwork['loomv2a'],
-      clientNetwork['loomv2b']
+      clientNetwork['local']
     ]
   } else {
     chainUrls = JSON.parse(chainUrlsJSON)
@@ -256,12 +245,13 @@ export default {
     registerWeb3({ commit, state, getters }, payload) {
       try {
         commit('setWeb3', payload.web3)
+        // these are filled on yarn serve/build
         const network = state.chainUrls[state.chainIndex].network
-        const LoomTokenNetwork = LoomTokenJSON.networks[network]
+        const LoomTokenNetwork = LOOM_ADDRESS || LoomTokenJSON.networks[network]
         const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LoomTokenNetwork.address)
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
-        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GatewayJSON.networks[network].address)
+        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GW_ADDRESS || GatewayJSON.networks[network].address)
       } catch (err) {
         console.error(err)
       }

@@ -17,6 +17,8 @@ import BN from 'bn.js'
 const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
+const LOOM_ADDRESS = ""
+const GW_ADDRESS = ""
 /*
 network config
 1: mainnet
@@ -256,12 +258,13 @@ export default {
     registerWeb3({ commit, state, getters }, payload) {
       try {
         commit('setWeb3', payload.web3)
+        // these are filled on yarn serve/build
         const network = state.chainUrls[state.chainIndex].network
-        const LoomTokenNetwork = LoomTokenJSON.networks[network]
+        const LoomTokenNetwork = LOOM_ADDRESS || LoomTokenJSON.networks[network]
         const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LoomTokenNetwork.address)
         state.LoomTokenNetwork = LoomTokenNetwork
         state.LoomTokenInstance = LoomTokenInstance
-        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GatewayJSON.networks[network].address)
+        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GW_ADDRESS || GatewayJSON.networks[network].address)
       } catch (err) {
         console.error(err)
       }

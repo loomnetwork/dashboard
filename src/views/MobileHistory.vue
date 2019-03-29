@@ -16,6 +16,11 @@
           <b-collapse :id="'history-item' + idx" accordion="my-accordion" role="tabpanel">
             <b-card-body>
               <ul>
+                <li>
+                  <strong class="block-confirmation-msg animated flash slow infinite">
+                    Blocks confirmations: {{latestBlockNumber - item["Block #"]}}
+                  </strong>
+                </li>
                 <li>Block #: {{item["Block #"]}}</li>
                 <li>Amount: {{item["Amount"]}}</li>
                 <li>Tx Hash: {{item["Tx Hash"]}}</li>
@@ -121,7 +126,17 @@
     blockOffset = 10000
     history = null
 
+    pollInterval = null
+    pollingBlockNumber = 0
+
     async mounted() {
+
+      await this.refresh()
+      this.pollLatestBlockNumber()
+
+    }
+
+    async refresh() {
       
       await this.fetchDappChainEvents()
 
@@ -133,7 +148,19 @@
         // Query the latest 10k blocks
         await this.queryEvents()
       }
+
     }
+
+    destroyed() {
+      if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)          
+    }
+
+    pollLatestBlockNumber() {
+      this.pollInterval = setInterval(async () => {
+        this.refresh()
+      }, 5000)
+    }
+
 
     async goBackFurther() {
       if(this.blockOffset < 10000*10) this.blockOffset+= 10000
@@ -277,5 +304,8 @@
     .card-header {
       background-color: #fff;
     }
+  }
+  .block-confirmation-msg {
+    color: #f04e4e;
   }  
 </style>

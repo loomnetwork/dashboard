@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-button v-b-modal.modalPrevent variant="primary" @click="show = !show">{{buttonLabel}}</b-button>
+  <b-button v-b-modal.modalPrevent variant="outline-primary" @click="show = !show">{{buttonLabel}}</b-button>
   <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
     no-close-on-esc
     no-close-on-backdrop
@@ -62,10 +62,8 @@
     <div v-else-if="step==3" class="complete-transfer">
       <div v-if="!resolveTxSuccess || txSuccessPromise" class="pending">
         <b-spinner variant="primary" label="Spinning"/>
-        <p>
-          <slot name="confirmingMessage">Approval detected.</slot>
-          <a style="display:block" target="_blank" :href="etherscanApprovalUrl" class="hash">{{txHash}}</a>
-        </p>
+        <p><slot name="confirmingMessage">Approval detected.</slot><br/>
+        Tx:  <a target="_blank" :href="etherscanApprovalUrl" class="hash">{{txHash}}</a></p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">

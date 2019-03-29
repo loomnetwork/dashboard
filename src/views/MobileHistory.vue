@@ -16,9 +16,9 @@
           <b-collapse :id="'history-item' + idx" accordion="my-accordion" role="tabpanel">
             <b-card-body>
               <ul>
-                <li>
+                <li v-if="latestBlockNumber - item['Block #'] < 10">
                   <strong class="block-confirmation-msg animated flash slow infinite">
-                    Blocks confirmations: {{latestBlockNumber - item["Block #"]}}
+                    Blocks confirmations: {{(latestBlockNumber - item["Block #"]) + 1}}
                   </strong>
                 </li>
                 <li>Block #: {{item["Block #"]}}</li>
@@ -158,7 +158,7 @@
     pollLatestBlockNumber() {
       this.pollInterval = setInterval(async () => {
         this.refresh()
-      }, 5000)
+      }, 15 * 1000)
     }
 
 

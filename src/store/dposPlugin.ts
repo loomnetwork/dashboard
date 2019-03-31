@@ -2,8 +2,6 @@ import Debug from "debug"
 import { fromEventPattern, Observable, combineLatest } from "rxjs";
 import { filter, switchMap, tap } from "rxjs/operators";
 
-Debug.enable("dashboard.dpos.rx")
-
 const debug = Debug("dashboard.dpos.rx")
 
 export function dposStorePlugin(store) {

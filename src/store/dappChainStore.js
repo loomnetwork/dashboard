@@ -292,7 +292,7 @@ export default {
         privateKeyString,
         network,
         GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
+        2
         );
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
@@ -316,7 +316,7 @@ export default {
         privateKeyString,
         network,
         GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
+        2
         );
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})

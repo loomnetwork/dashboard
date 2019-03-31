@@ -1,20 +1,13 @@
 /* eslint-disable */
-import Web3 from 'web3'
 import {
-  LoomProvider, CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, Web3Signer, NonceTxMiddleware,
+  CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
   SignedTxMiddleware, DPOSUser
 } from 'loom-js'
-import ApiClient from '../services/api'
-import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
+import { getDomainType, formatToCrypto } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
-import { ethers } from 'ethers'
-
-const coinMultiplier = new BN(10).pow(new BN(18));
-
 import BN from 'bn.js'
 
-const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
 const LOOM_ADDRESS = ""

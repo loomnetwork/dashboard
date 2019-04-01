@@ -33,12 +33,12 @@
             <!-- Right aligned nav items -->
             <b-navbar-nav class="mobile-nav ml-auto">
               
-              <b-nav-item>
+              <b-nav-item v-if="userIsLoggedIn">
                 <h5>
                   <router-link to="/account" class="router text-light hover-warning">Account</router-link>
                 </h5>
               </b-nav-item>
-              <b-nav-item>
+              <b-nav-item v-if="userIsLoggedIn">
                 <h5>
                   <router-link to="/history" class="router text-light hover-warning">History</router-link>
                 </h5>

@@ -5,32 +5,13 @@
     <b-card title="Ethereum events" id="history-items-container" class="mb-3">
 
       <div v-if="showHistoryTable">
-        <b-card v-for="(item, idx) in history"
-                :key="'item' + idx"
-                no-body class="mb-1"
-                :class="latestBlockNumber - item['Block #'] < 10 ? 'animated flash slow infinite' : '' ">
-          <b-card-header @click="toggleAccordion(idx)"
-                        header-tag="header"
-                        class="d-flex justify-content-between p-2"
-                        role="tab">
-            <span>{{item["Event"]}}</span>
-            <strong>{{item["Amount"]}}</strong>
-          </b-card-header>
-          <b-collapse :id="'history-item' + idx" accordion="my-accordion" role="tabpanel">
-            <b-card-body>
-              <ul>
-                <li v-if="latestBlockNumber - item['Block #'] < 10">
-                  <strong class="block-confirmation-msg">
-                    Blocks confirmations: {{(latestBlockNumber - item["Block #"]) + 1}}
-                  </strong>
-                </li>
-                <li>Block #: {{item["Block #"]}}</li>
-                <li>Amount: {{item["Amount"]}}</li>
-                <li>Tx Hash: {{item["Tx Hash"]}}</li>
-              </ul>
-            </b-card-body>
-          </b-collapse>
-        </b-card>
+
+        <history-event v-for="(item, idx) in history"
+                       :key="'item' + idx"
+                       :latestBlock="latestBlockNumber"
+                       :event="{item, idx}"></history-event>
+
+
       </div>
       <div v-else>
         <p>
@@ -82,6 +63,7 @@
   import Vue from 'vue'
   import { Component } from 'vue-property-decorator'
   import FaucetTable from '../components/FaucetTable'
+  import HistoryEvent from '../components/HistoryEvent'
   import { mapGetters, mapState, mapActions, mapMutatioins, createNamespacedHelpers } from 'vuex'
 
   import ApiClient from '../services/api'
@@ -93,7 +75,8 @@
 
   @Component({
     components: {
-      FaucetTable
+      FaucetTable,
+      HistoryEvent
     },
     computed: {
      ...DappChainStore.mapState([
@@ -308,7 +291,4 @@
       background-color: #fff;
     }
   }
-  .block-confirmation-msg {
-    color: #f04e4e;
-  }  
 </style>

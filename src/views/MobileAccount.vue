@@ -512,6 +512,7 @@ export default class MobileAccount extends Vue {
     let result = await this.dposUser._ethereumGateway.functions.depositERC20(
       weiAmount.toString(), this.dposUser.ethereumLoom.address
     )
+    await result.wait()
     this.setGatewayBusy(false)
     this.$emit('refreshBalances')
     return result

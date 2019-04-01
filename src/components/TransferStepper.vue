@@ -64,7 +64,6 @@
         <b-spinner variant="primary" label="Spinning"/>
         <p><slot name="confirmingMessage">Approval detected.</slot><br/>
         <a target="_blank" :href="etherscanApprovalUrl" class="hash">View on EtherScan</a></p>
-        <p>Mining transaction, please access the <router-link to="/history">history page</router-link> to see the progress.</p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">

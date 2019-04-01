@@ -450,7 +450,7 @@ export default {
       const getOrCreate = (addr) => {
         let existing = nodes.find((node) => node.address === addr)
         if (!existing) {
-          existing = Object.assign({},template)
+          existing = Object.assign({},template, {address: addr})
           nodes.push(existing)
         }
         return existing
@@ -477,6 +477,9 @@ export default {
           totalStaked: new BN(node.personalStake).add(delegatedStake).toString(),
         })
       })
+      console.log(nodes)
+      // use the address for those without names 
+      nodes.filter((n) => n.name === "").forEach(n => n.name = n.address)
       return nodes
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {

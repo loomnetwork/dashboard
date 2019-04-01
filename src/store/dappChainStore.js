@@ -51,7 +51,7 @@ const clientNetwork = {
     queryws: 'wss://plasma.dappchains.com/queryws'
   },
   'stage': {
-    network: 'default',
+    network: 'us1',
     websockt: 'wss://test-z-us1.dappchains.com/websocket',
     queryws: 'wss://test-z-us1.dappchains.com/queryws'
     // websockt: 'wss://plasma.dappchains.com/websocket',
@@ -71,12 +71,7 @@ const clientNetwork = {
     network: 'loomv2b',
     websockt: 'ws://loomv2b.dappchains.com:46658/websocket',
     queryws: 'ws://loomv2b.dappchains.com:46658/queryws'
-  },
-  'default': {
-    network: 'default',
-    websockt: 'ws://test-z-us1.dappchains.com:46658/websocket',
-    queryws: 'ws://test-z-us1.dappchains.com:46658/queryws'
-  }  
+  }
 }
 
 function defaultNetworkId() {
@@ -336,7 +331,6 @@ export default {
         // If the user already has an account: 
         // 1. Initialize without private key (from seed phrase)
         // using createEthSignMetamaskUserAsync
-
         user = await DPOSUser.createEthSignMetamaskUserAsync(
           rootState.DPOS.web3,
           getters.dappchainEndpoint,
@@ -577,6 +571,7 @@ export default {
         commit('setDappChainConnected', true)
         return state.dpos2
       }
+
       const networkConfig = state.chainUrls[state.chainIndex]
 
       let privateKey
@@ -586,11 +581,12 @@ export default {
         privateKey = CryptoUtils.generatePrivateKey()
       }
 
+      let networkId = networkConfig.network === "us1" ? "default" : networkConfig.network 
       let client
       if (networkConfig.websockt) {
-        client = new Client(networkConfig.network, networkConfig.websockt, networkConfig.queryws)
+        client = new Client(networkId, networkConfig.websockt, networkConfig.queryws)
       } else {
-        client = new Client(networkConfig.network,
+        client = new Client(networkId,
           createJSONRPCClient({
             protocols: [{ url: networkConfig.rpc }]
           }),
@@ -609,7 +605,7 @@ export default {
         console.error('PlasmaChain connection error', msg)
       })
 
-      const dpos2 = await DPOS2.createAsync(client, new Address(networkConfig.network, LocalAddress.fromPublicKey(publicKey)))
+      const dpos2 = await DPOS2.createAsync(client, new Address(networkId, LocalAddress.fromPublicKey(publicKey)))
       state.dpos2 = dpos2
       commit('setDappChainConnected', true)
       return dpos2

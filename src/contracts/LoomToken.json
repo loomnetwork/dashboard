@@ -1414,6 +1414,11 @@
     "default": {
       "events": {},
       "links": {},
+      "address": "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0"
+    },
+    "us1": {
+      "events": {},
+      "links": {},
       "address": "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
     }
   },

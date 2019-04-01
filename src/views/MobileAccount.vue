@@ -496,7 +496,7 @@ export default class MobileAccount extends Vue {
     const approval = await ethereumLoom.functions.approve(
             ethereumGateway.address,
             weiAmount.toString())
-
+    await approval.wait()
     //const receipt = await approval.wait()
     log('approvalTX', approval)
     // we still need to execute deposit so keep gatewayBusy = true
@@ -507,7 +507,7 @@ export default class MobileAccount extends Vue {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
     this.setGatewayBusy(true)
-    await approvalTx.wait()
+    // await approvalTx.wait()
     const tokens = new BN( "" + parseInt(amount,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     let result = await this.dposUser._ethereumGateway.functions.depositERC20(

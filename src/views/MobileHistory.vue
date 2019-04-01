@@ -5,7 +5,10 @@
     <b-card title="Ethereum events" id="history-items-container" class="mb-3">
 
       <div v-if="showHistoryTable">
-        <b-card v-for="(item, idx) in history" :key="'item' + idx" no-body class="mb-1">
+        <b-card v-for="(item, idx) in history"
+                :key="'item' + idx"
+                no-body class="mb-1"
+                :class="latestBlockNumber - item['Block #'] < 10 ? 'animated flash slow infinite' : '' ">
           <b-card-header @click="toggleAccordion(idx)"
                         header-tag="header"
                         class="d-flex justify-content-between p-2"
@@ -16,6 +19,11 @@
           <b-collapse :id="'history-item' + idx" accordion="my-accordion" role="tabpanel">
             <b-card-body>
               <ul>
+                <li v-if="latestBlockNumber - item['Block #'] < 10">
+                  <strong class="block-confirmation-msg">
+                    Blocks confirmations: {{(latestBlockNumber - item["Block #"]) + 1}}
+                  </strong>
+                </li>
                 <li>Block #: {{item["Block #"]}}</li>
                 <li>Amount: {{item["Amount"]}}</li>
                 <li>Tx Hash: {{item["Tx Hash"]}}</li>
@@ -121,7 +129,17 @@
     blockOffset = 10000
     history = null
 
+    pollInterval = null
+    pollingBlockNumber = 0
+
     async mounted() {
+
+      await this.refresh()
+      this.pollLatestBlockNumber()
+
+    }
+
+    async refresh() {
       
       await this.fetchDappChainEvents()
 
@@ -133,7 +151,19 @@
         // Query the latest 10k blocks
         await this.queryEvents()
       }
+
     }
+
+    destroyed() {
+      if(this.pollInterval) clearInterval(this.pollInterval)          
+    }
+
+    pollLatestBlockNumber() {
+      this.pollInterval = setInterval(async () => {
+        this.refresh()
+      }, 15 * 1000)
+    }
+
 
     async goBackFurther() {
       if(this.blockOffset < 10000*10) this.blockOffset+= 10000
@@ -277,5 +307,8 @@
     .card-header {
       background-color: #fff;
     }
+  }
+  .block-confirmation-msg {
+    color: #f04e4e;
   }  
 </style>

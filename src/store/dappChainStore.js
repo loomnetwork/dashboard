@@ -106,8 +106,7 @@ const getChainUrls = () => {
       clientNetwork['plasma'],
       clientNetwork['4'],      
       clientNetwork['stage'],
-      clientNetwork['loomv2a'],
-      clientNetwork['loomv2b']
+      clientNetwork['local'],
     ]
   } else {
     chainUrls = JSON.parse(chainUrlsJSON)
@@ -204,7 +203,10 @@ export default {
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.chainIndex]
-      return 'https://' + getServerUrl(network) + '/rpc'
+      const url = new URL(network.websockt || network.rpc);
+      url.protocol =  url.protocol === "wss" ? "https" :  "http"
+      url.pathname = "rpc"
+      return url.toString()
       // if (network.rpc) return network.rpc
       // if (network.websockt) {
       //   const splited = network.websockt.split('://')
@@ -216,9 +218,12 @@ export default {
     },
     defaultNetworkId,
     dappchainEndpoint(state) {
-      const network = state.chainUrls[state.chainIndex]      
-      let protocol = state.chainIndex === "1" ? 'https://' : 'http://'
-      return 'https://' + getServerUrl(network)
+      const network = state.chainUrls[state.chainIndex]     
+      const url = new URL(network.websockt || network.rpc);
+      url.protocol =  url.protocol === "wss" ? "https" :  "http"
+      url.pathname = ""
+      // remove the root slash 
+      return url.toString().slice(0, -1)
     },
   },
   mutations: {
@@ -330,7 +335,6 @@ export default {
  
       const network = state.chainUrls[state.chainIndex].network
       let user
-
       try {
 
         // If the user already has an account: 

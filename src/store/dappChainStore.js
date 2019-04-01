@@ -157,21 +157,19 @@ export default {
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.chainIndex]
-      return 'https://' + getServerUrl(network) + '/rpc'
-      // if (network.rpc) return network.rpc
-      // if (network.websockt) {
-      //   const splited = network.websockt.split('://')
-      //   if (splited[1]) {
-      //     return 'https://' + splited[1].split('/')[0] + '/rpc'
-      //   }
-      // }
-      // return ''
+      const url = new URL(network.websockt || network.rpc);
+      url.protocol =  url.protocol === "wss" ? "https" :  "http"
+      url.pathname = "rpc"
+      return url.toString()
     },
     defaultNetworkId,
     dappchainEndpoint(state) {
-      const network = state.chainUrls[state.chainIndex]      
-      let protocol = state.chainIndex === "1" ? 'https://' : 'http://'
-      return 'https://' + getServerUrl(network)
+      const network = state.chainUrls[state.chainIndex]     
+      const url = new URL(network.websockt || network.rpc);
+      url.protocol =  url.protocol === "wss" ? "https" :  "http"
+      url.pathname = ""
+      // remove the root slash 
+      return url.toString().slice(0, -1)
     },
   },
   mutations: {

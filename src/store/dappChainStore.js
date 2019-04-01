@@ -245,9 +245,8 @@ export default {
         commit('setWeb3', payload.web3)
         // these are filled on yarn serve/build
         const network = state.chainUrls[state.chainIndex].network
-        const LoomTokenNetwork = LOOM_ADDRESS || LoomTokenJSON.networks[network]
-        const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LoomTokenNetwork.address)
-        state.LoomTokenNetwork = LoomTokenNetwork
+        const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LOOM_ADDRESS || LoomTokenJSON.networks[network].address)
+        state.LoomTokenNetwork = LoomTokenJSON.networks[network]
         state.LoomTokenInstance = LoomTokenInstance
         state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GW_ADDRESS || GatewayJSON.networks[network].address)
       } catch (err) {
@@ -289,8 +288,8 @@ export default {
         getters.dappchainEndpoint,
         privateKeyString,
         network,
-        GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
+        GW_ADDRESS || GatewayJSON.networks[network].address,
+        LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         );
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
@@ -313,8 +312,8 @@ export default {
         getters.dappchainEndpoint,
         privateKeyString,
         network,
-        GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
+        GW_ADDRESS || GatewayJSON.networks[network].address,
+        LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         );
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})

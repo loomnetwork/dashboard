@@ -7,7 +7,7 @@ export SENTRY_PROJECT=loomgames-frontend
 
 
 
-PRESET_MOBILE="m.dashboard.dappchains.com"
+PRESET_MOBILE="m-dashboard.dappchains.com"
 PRESET_DEV="dev-dashboard.dappchains.com"
 PRESET_STAGE="rinkeby-dashboard.dappchains.com" #future production
 PRESET_PROD="dashboard.dappchains.com"

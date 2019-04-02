@@ -24,7 +24,7 @@
       </dl>
     </section>
     <section v-if="userIsLoggedIn" class="user-stakes">
-      <h6>{{ $t('My stakes') }} </h6>
+      <h6 v-if="!isBootstrap">{{ $t('My stakes') }} </h6>
       <p class="no-stakes" v-if="delegations.length === 0">
         {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
       </p>
@@ -44,22 +44,22 @@
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                <b-button variant="outline-primary" :disabled="!isBootstrap && delegation.state !== 1"
                   @click="openRequestDelegationUpdateModal(delegation)"
                 >{{ $t('Update') }}</b-button>
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                <b-button variant="outline-primary" :disabled="!isBootstrap &&  delegation.state !== 1"
                   @click="openRequestUnbondModal(delegation)"
                 >{{ $t('Undelegate') }}</b-button>
               </b-button-group>
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-else class="no-stakes">
-        {{ $t("views.validator_details.no_stakes", {name:validator.name}) }}<br/>
-        <b-button class="btn-lg"
+      <p v-else-if="!isBootstrap" class="no-stakes">
+        {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
+        <b-button class="btn-lg" 
           @click="openRequestDelegateModal()"
         >{{ $t("Stake my tokens") }}</b-button>
       </p>

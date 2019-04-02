@@ -50,7 +50,7 @@
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="!isBootstrap &&  delegation.state !== 1"
+                <b-button variant="outline-primary" :disabled="!isBootstrap || d.locked || delegation.state !== 1"
                   @click="openRequestUnbondModal(delegation)"
                 >{{ $t('Undelegate') }}</b-button>
               </b-button-group>
@@ -176,7 +176,13 @@ export default class ValidatorDetail extends Vue {
 
   get validatorDelegations() {
     const validator = this.validator
-    return validator ? this.delegations.filter(d => d.validatorStr === validator.address) : []
+    if (!this.validator) return []
+    return this.delegations
+      .filter(d => d.validatorStr === validator.address)
+      .map(d => { 
+        d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
+        return d
+      })
   }
 
   async mounted() {
@@ -239,7 +245,7 @@ export default class ValidatorDetail extends Vue {
     this.$refs.delegateModalRef.show(
       this.validator.address, 
       '',
-      formatToCrypto(delegation.amount), 
+      0,//formatToCrypto(delegation.amount), 
       delegation.lockTimeTier)
   }
 

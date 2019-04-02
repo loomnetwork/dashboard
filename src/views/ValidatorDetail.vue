@@ -245,7 +245,7 @@ export default class ValidatorDetail extends Vue {
     this.$refs.delegateModalRef.show(
       this.validator.address, 
       '',
-      formatToCrypto(delegation.amount), 
+      0,//formatToCrypto(delegation.amount), 
       delegation.lockTimeTier)
   }
 

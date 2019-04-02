@@ -107,7 +107,7 @@
             <ul>
               <li v-if="delegation['Update Amount'] !== '0.00'">Update amount: {{delegation["Update Amount"]}}</li>
               <li>Height: {{delegation["Height"]}}</li>
-              <li>Locktime: {{delegation["Locktime"]}}</li>
+              <li>Unlock time: {{delegation["Locktime"]}}</li>
               <li>State: {{delegation["State"]}}</li>
             </ul>
           </b-card-body>

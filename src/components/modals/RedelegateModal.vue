@@ -1,10 +1,6 @@
 <template>
   <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop
-  no-close-on-esc :hide-header-close="isLoading"
-  >
-    <div v-if="isLoading" class="pb-4">
-      <loading-spinner :showBackdrop="true"></loading-spinner>
-    </div>      
+  no-close-on-esc>
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
@@ -44,8 +40,8 @@ const applicationStore = createNamespacedHelpers('applicationStore')
   },
   computed: {
     ...DappChainStore.mapState([
-      'validators',
-    ]),
+      "validators",
+    ])
   },
   methods: {
     ...DPOSStore.mapActions([
@@ -56,6 +52,9 @@ const applicationStore = createNamespacedHelpers('applicationStore')
     ...applicationStore.mapActions([
       "addBlockingTask",
       "removeBlockingTask",
+    ]),
+    ...DPOSStore.mapMutations([
+      "setShowLoadingSpinner"
     ])
   }
 })
@@ -66,7 +65,6 @@ export default class RedelegateModal extends Vue {
   delegation = null
   origin = {}
   target = {}
-  isLoading = false
 
   errorMsg = ""
   originErrorMsg = ""
@@ -90,13 +88,13 @@ export default class RedelegateModal extends Vue {
       return
     }
 
-    this.isLoading = true
+    this.setShowLoadingSpinner(true)
     await this.redelegateAsync({
       origin: this.origin.address, 
       target: this.target.address, 
       amount: this.delegation.amount})
 
-    this.isLoading = false
+    this.setShowLoadingSpinner(false)
     // this.$emit("ok")
     this.$refs.modalRef.hide()
 

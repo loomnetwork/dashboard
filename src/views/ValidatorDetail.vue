@@ -180,7 +180,7 @@ export default class ValidatorDetail extends Vue {
     return this.delegations
       .filter(d => d.validatorStr === validator.address)
       .map(d => { 
-        d.locked = parseInt(d.lockTime,10) > Date.now()
+        d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
         return d
       })
   }

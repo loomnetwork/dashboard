@@ -59,7 +59,7 @@
       </b-list-group>
       <p v-else-if="!isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
-        <b-button class="btn-lg" v-if="!isBootstrap"
+        <b-button class="btn-lg" 
           @click="openRequestDelegateModal()"
         >{{ $t("Stake my tokens") }}</b-button>
       </p>

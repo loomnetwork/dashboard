@@ -216,7 +216,11 @@ export default class FirstPage extends Vue {
   }
 
   mounted() {
-    if ((window.web3 && window.web3.currentProvider.isTrust) || !!window.imToken) {
+    if ((window.web3 && window.web3.currentProvider.isTrust) || 
+        !!window.imToken ||
+        (window.web3 && window.web3.currentProvider.isMetaMask) ||
+        (window.web3 && window.web3.isCobo)
+      ) {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
       this.$root.$emit("login") 

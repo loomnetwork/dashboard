@@ -176,6 +176,9 @@ const ELECTION_CYCLE_MILLIS = 600000
       'getPendingWithdrawalReceipt',
       'withdrawAsync'
     ]),
+    ...mapMutations([
+      'setErrorMsg'
+    ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
       'setShowLoadingSpinner'      
@@ -556,8 +559,9 @@ export default class MobileAccount extends Vue {
     }
   }
 
-  resolveWithdraw(amount, tx) {
-    return tx.wait()
+  async resolveWithdraw(amount, tx) {
+    let result = await tx.wait()
+    return result
   }
 
   destroyed() {

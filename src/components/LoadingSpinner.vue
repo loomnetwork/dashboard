@@ -33,7 +33,7 @@ export default class LoadingSpinner extends Vue {
 <style scoped lang="scss">
 
 .loading-backdrop {
-  position: absolute;
+  position: fixed;
   display: flex;
   align-content: center;
   justify-content: center;
@@ -41,8 +41,8 @@ export default class LoadingSpinner extends Vue {
   left: 0px;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(248, 248, 248, 0.9);
-  z-index: 999;
+  background-color: rgba(248, 248, 248, 0.98);
+  z-index: 9999;
 }
 
 @keyframes lds-dual-ring {
@@ -95,6 +95,7 @@ export default class LoadingSpinner extends Vue {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 24px;
 }
 
 .looping-loomy {

@@ -25,6 +25,12 @@
     <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
       <loading-spinner :showBackdrop="true"></loading-spinner>
     </div>
+    <header>
+      <h1>Analytics</h1>
+      <div class="content">
+        <analytics></analytics>
+      </div>
+    </header>
   </main>
 </template>
 
@@ -32,6 +38,7 @@
 import Vue from 'vue'
 import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
+import Analytics from '../components/Analytics'
 import FaucetTable from '../components/FaucetTable'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
@@ -43,6 +50,7 @@ import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
 
 @Component({
   components: {
+    Analytics,
     FaucetTable,
     LoadingSpinner,
   },

@@ -533,6 +533,22 @@ export default {
 
     },
 
+    async fetchAnalyticsData({ state, commit, dispatch }, payload) {
+
+      let dataPromise = axios.get("http://dev-api.loom.games/delegation/total?from_date&to_date")
+      // Store the unresolved promise
+      // commit("setHistoryPromise", historyPromise)
+      
+      dataPromise.then((response) => {
+        console.log("The response", response)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+
+    },
+
+
     async loadEthereumHistory({commit, getters, state}, {web3, gatewayInstance, address}) {
       debug("loading history")
       const cachedEvents = getters.getCachedEvents

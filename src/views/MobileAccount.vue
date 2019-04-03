@@ -174,6 +174,8 @@ const ELECTION_CYCLE_MILLIS = 600000
     ]),
     ...DappChainStore.mapActions([
       'getPendingWithdrawalReceipt',
+      'getUnclaimedLoomTokens',
+      'reclaimDeposit',
       'withdrawAsync'
     ]),
     ...mapMutations([
@@ -197,9 +199,7 @@ export default class MobileAccount extends Vue {
 
   // gateway related
   // unclaimed tokens
-  unclaimDepositTokens = 0
-  unclaimWithdrawTokens = 0
-  unclaimWithdrawTokensETH = 0
+  unclaimedTokens = 0
   unclaimSignature = ""
   oracleEnabled = true
   receipt = null
@@ -212,6 +212,8 @@ export default class MobileAccount extends Vue {
     await this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
+    await this.checkUnclaimedLoomTokens()
+    await this.checkPendingWithdrawalReceipt()
     this.currentAllowance = await this.checkAllowance()
     await this.queryRewards()
   }
@@ -222,18 +224,6 @@ export default class MobileAccount extends Vue {
     setTimeout(() => {
       this.showRefreshSpinner = false
     }, 2000)
-  }
-  
-  async checkAllowance() {    
-    const user = this.dposUser
-    const gateway = user.ethereumGateway
-    try {          
-      const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return parseInt(this.web3.utils.fromWei(allowance.toString()))
-    } catch(err) {
-      console.error("Error checking allowance", err)
-      return 0
-    }
   }
 
   async getDelegations() {
@@ -325,6 +315,28 @@ export default class MobileAccount extends Vue {
   }  
   
   // gateway
+
+  async checkUnclaimedLoomTokens() {
+    const unclaimedAmount = await this.getUnclaimedLoomTokens()
+    this.unclaimedTokens = unclaimedAmount.toNumber()
+    if(this.unclaimedTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+  }
+
+  async checkPendingWithdrawalReceipt() {
+    this.receipt = await this.getPendingWithdrawalReceipt()
+  }
+  
+  async checkAllowance() {    
+    const user = this.dposUser
+    const gateway = user.ethereumGateway
+    try {          
+      const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
+      return parseInt(this.web3.utils.fromWei(allowance.toString()))
+    } catch(err) {
+      console.error("Error checking allowance", err)
+      return 0
+    }
+  }
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()

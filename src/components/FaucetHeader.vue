@@ -54,12 +54,8 @@
                     <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
                   </h5>
                 </b-nav-item>              
-                <b-nav-item>
-                  <h5>
-                    <router-link to="/faq" class="router text-light hover-warning">F.A.Q</router-link>
-                  </h5>
-                </b-nav-item>
               </div>
+              <LangSwitcher/>
               <b-nav-item v-if="userIsLoggedIn">
                 <h5>
                   <a @click="logOut" class="router text-light hover-warning">Sign out</a>
@@ -507,6 +503,10 @@ a.hover-warning:hover {
 
 .mobile-nav {
   text-align: center;
+  padding: 12px 0;
+  h5 {
+    margin: 0;
+  }
   li {
     list-style: none;
   } 

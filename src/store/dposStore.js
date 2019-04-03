@@ -74,7 +74,8 @@ const defaultState = () => {
     dashboardPrivateKey: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
     dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
     client: null,
-    mapper: null
+    mapper: null,
+    analyticsData: null,
   }
 }
 
@@ -215,6 +216,9 @@ export default {
     },
     setMapper(state, payload) {
       state.mapper = payload
+    },
+    setAnalyticsData(state, payload) {
+      state.analyticsData = payload
     }
   },
   actions: {
@@ -535,16 +539,8 @@ export default {
 
     async fetchAnalyticsData({ state, commit, dispatch }, payload) {
 
-      let dataPromise = axios.get("http://dev-api.loom.games/delegation/total?from_date&to_date")
-      // Store the unresolved promise
-      // commit("setHistoryPromise", historyPromise)
-      
-      dataPromise.then((response) => {
-        console.log("The response", response)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+      let dataPromise = await axios.get("http://dev-api.loom.games/delegation/total?from_date&to_date")
+      commit("setAnalyticsData", dataPromise)
 
     },
 

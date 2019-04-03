@@ -50,7 +50,7 @@
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="!isBootstrap || d.locked || delegation.state !== 1"
+                <b-button variant="outline-primary" :disabled="delegation.state !== 1 || d.locked"
                   @click="openRequestUnbondModal(delegation)"
                 >{{ $t('Undelegate') }}</b-button>
               </b-button-group>

@@ -12,9 +12,6 @@
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.already_mapped') }}
           </b-modal>
-          <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-          </transition>
           <transition name="page" mode="out-in">
           <router-view></router-view>
           </transition>
@@ -27,6 +24,9 @@
         </div>
         <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
      </b-modal>
+    <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+      <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+    </transition>     
   </div>  
 </template>
 

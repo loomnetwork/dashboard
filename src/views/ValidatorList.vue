@@ -4,18 +4,17 @@
       <h1>{{ $t('views.validator_list.validators') }}</h1>
     </header>
     <div class="content" v-if="validators && validators.length > 0">
-      <p><fa icon="info-circle" fixed-width /> {{ $t("Staking is disabled on bootstrap validators.")}}</p>
       <template v-if="isSmallDevice">
         <b-list-group>
           <b-list-group-item 
             v-for="validator in validators" :key="validator.Name"
-            :class="{disabled:validator.isBoostrap}"
+            :disabled="!!validator.isBootstrap"
             @click="showValidatorDetail(validator)"
             >
               <h6>{{validator.Name}}</h6>
-              <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
-              <div class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
               <div class="fee"><label>Fee</label>{{validator.Fees}}</div>
+              <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
+              <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
           </b-list-group-item>  
         </b-list-group>
       </template>
@@ -65,7 +64,11 @@ export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
   get validators() {
-    return this.getFormattedValidators()
+    return this.getFormattedValidators().sort((a, b) => {
+      let aValue = a.isBootstrap ? 0 : a.totalStaked 
+      let bValue = b.isBootstrap ? 0 : b.totalStaked
+      return parseInt(aValue) - parseInt(bValue)
+    }).reverse()
   }
   /**
    * adds class bootstrap node if is bootstrap
@@ -95,12 +98,24 @@ main.validators {
   }
 
   .list-group-item {
-    padding-top: 16px;
+    padding: 0.2em 1em;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     > h6 {
       flex: 1
+    }
+    &.disabled {
+      opacity: 0.5;
+    }
+    .stakes {
+      text-align: right;
+      width: 110px;
+    }
+    .fee {
+      flex: 0;
+      font-size: 10px;
+      widows: 10px;
     }
     .stakes > label {
       display: block;
@@ -108,12 +123,12 @@ main.validators {
       margin: 0;
       font-size: 12px;
       line-height: 12px;
-      text-align: right;
+      text-align: left;
     }
     .fee > label {
       display: inline-block;
       margin: 0;
-      font-size: 12px;
+      font-size: 10px;
       line-height: 24px;
       text-align: right;
       vertical-align: bottom;

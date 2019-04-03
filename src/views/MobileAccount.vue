@@ -107,7 +107,7 @@
             <ul>
               <li v-if="delegation['Update Amount'] !== '0.00'">Update amount: {{delegation["Update Amount"]}}</li>
               <li>Height: {{delegation["Height"]}}</li>
-              <li>Locktime: {{delegation["Locktime"]}}</li>
+              <li>Unlock time: {{delegation["Locktime"]}}</li>
               <li>State: {{delegation["State"]}}</li>
             </ul>
           </b-card-body>
@@ -175,6 +175,9 @@ const ELECTION_CYCLE_MILLIS = 600000
     ...DappChainStore.mapActions([
       'getPendingWithdrawalReceipt',
       'withdrawAsync'
+    ]),
+    ...mapMutations([
+      'setErrorMsg'
     ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
@@ -556,8 +559,9 @@ export default class MobileAccount extends Vue {
     }
   }
 
-  resolveWithdraw(amount, tx) {
-    return tx.wait()
+  async resolveWithdraw(amount, tx) {
+    let result = await tx.wait()
+    return result
   }
 
   destroyed() {

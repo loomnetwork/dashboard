@@ -395,12 +395,12 @@ export default {
      */
     async depositAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
-      commit('setGatewayBusy', true)
+      commit('DPOS/setGatewayBusy', true, { root: true })
       const user = state.dposUser
       const tokens = new BN( "" + parseInt(amount,10)) 
       const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
       const res = user.depositAsync(new BN(weiAmount, 10))
-      commit('setGatewayBusy', false)
+      commit('DPOS/setGatewayBusy', false, { root: true })
       return res
     },
     /**
@@ -414,13 +414,13 @@ export default {
       const user = state.dposUser
       const tokens = new BN( "" + parseInt(amount,10)) 
       const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
-      commit('setGatewayBusy', true)
+      commit('DPOS/setGatewayBusy', true, { root: true })
       let res = await user.withdrawAsync(new BN(weiAmount, 10))
-      commit('setGatewayBusy', false)
+      commit('DPOS/setGatewayBusy', false, { root: true })
       return res
     },
     async approveAsync({ state, dispatch }, payload) {
-      commit('setGatewayBusy', true)
+      commit('DPOS/setGatewayBusy', true, { root: true })
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
@@ -698,7 +698,7 @@ export default {
       if (!state.dposUser) {
         await dispatch('initDposUser')
       }
-      commit('setGatewayBusy', true)
+      commit('DPOS/setGatewayBusy', true, { root: true })
       const user = state.dposUser
       const dappchainGateway = user.dappchainGateway
       try {
@@ -707,7 +707,7 @@ export default {
         console.log("Error reclaiming tokens", err);
         commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
       }
-      commit('setGatewayBusy', false)
+      commit('DPOS/setGatewayBusy', false, { root: true })
     },
 
     async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
@@ -734,11 +734,11 @@ export default {
       }
 
       var user = state.dposUser
-      commit('setGatewayBusy', true)
+      commit('DPOS/setGatewayBusy', true, { root: true })
       try {
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
         console.log("result", result);
-        commit('setGatewayBusy', false)
+        commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {
         console.log("Error withdrawal coin from gateway", err);

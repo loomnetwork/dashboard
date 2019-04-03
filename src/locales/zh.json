@@ -55,8 +55,8 @@
       "this_post_on_validator_and": "验证者和锁仓经济的这篇文章。",
       "what_currency_will_rewards_be": "奖励将以何种货币支付？",
       "how_do_i_claim_my": "如何领取奖励？",
-      "the_delegation_rewards_will_be": "委托奖励将由网络自动分发，你可以在 PlasmaChain 管理面板的",
-      "plasma_chain_dashboard": "“奖励“选项卡下找到",
+      "the_delegation_rewards_will_be": "委托奖励将由网络自动分发，你可以在此页面“奖励”选项卡下找到 —— ",
+      "plasma_chain_dashboard": "PlasmaChain 管理面板",
       "": "。",
       "when_will_i_receive_rewards": "我何时能收到委托的奖励？",
       "currently_validator_rewards_are_calculated": "目前，验证者奖励是在每两周的选举周期结束时计算并支付的。",
@@ -75,7 +75,7 @@
       "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。"
     },
     "history": {
-      "trade_history": "交易记录",
+      "your_history": "我的历史记录",
       "sort_by": "排序方式：",
       "item_1": "第 1 项",
       "item_2": "第 2 项",
@@ -91,16 +91,17 @@
       "connect_to_deposit_funds": "连接以存币",
       "no_mapping_detected": "未检测到映射",
       "map_accounts": "映射账户",
+      "history": "历史记录",
       "deposit": "存入",
       "withdraw": "取出",
       "use_maximum": "输入全部余额",
       "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
       "withdraw_to_metamask": "取回到你的钱包",
-      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
-      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
-      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
-      "reclaim_deposit": "Reclaim Deposit Tokens",
-      "complete_withdraw": "Complete Withdrawal"
+      "wait_tx": "你的交易正在等候操作。请稍等几分钟，你的余额将在交易确认后更新。",
+      "tokens_pending_deposit": "你有一笔{pendingDepositAmount} 个代币的待处理存款。必须完成此笔存款后才可以进行下一笔。",
+      "tokens_pending_withdraw": "你有一笔{pendingWithdrawAmount} 个代币的待处理取款。必须完成此笔取款后才可以进行下一笔。",
+      "reclaim_deposit": "取回存款代币",
+      "complete_withdraw": "完成取款"
     },
     "my_delegations": {
       "no_delegations": "暂无委托"
@@ -126,7 +127,7 @@
       "unlocked": "已解除锁定"
     },
     "validator_list": {
-      "no_validators_available_please_try": "暂无验证者可选，请稍后再试",
+      "no_validators_available_please_try": "连接到管理面板节点时出错。请稍后再查看。",
       "validators": "验证者"
     }
   },
@@ -149,10 +150,10 @@
       "loom_network_is_a_platform": "Loom Network 是一个基于以太坊的平台即服务，允许开发者运行大规模的去中心化应用程序。这使得开发者可以利用世界上最安全的公共区块链的信任和安全性，以及运行商业规模服务所需的计算资源来构建 DApp。 Loom 旨在成为新去中心化网络的代币化应用程序协议。"
     },
     "faucet_header": {
-      "eth_connected": "已连接",
-      "eth_disconnected": "未连接",
-      "dapp_connected": "PlasmaChain Connected",
-      "dapp_disconnected": "PlasmaChain Disconnected",
+      "eth_connected": "以太坊已连接",
+      "eth_disconnected": "以太坊已断开连接",
+      "dapp_connected": "PlasmaChain 已连接",
+      "dapp_disconnected": "PlasmaChain 已断开连接",
       "explorer": "浏览器",
       "f_a_q": "常见问题",
       "next_election_cycle": "下一轮选举周期：",
@@ -170,18 +171,20 @@
     "faucet_sidebar": {
       "my_account": "我的账户",
       "my_delegations": "我的委托",
-      "rewards": "奖励"
+      "rewards": "奖励",
+      "history": "历史记录"
     },
     "layout": {
+      "metamask_changed": "你刚刚切换了MetaMask帐户。 为避免任何意外行为，应用程序将重新加载",
       "metamask_error": "Metamask 错误！？",
       "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
       "mapping_error": "映射错误！？",
-      "your_account_appears_to_be": "你的帐户显示与以下地址映射：",
-      "but_your_current_account_address": "但你当前的账户地址是：",
-      "please_change_your_metamask_account": "请更改你的 Metamask 帐户",
-      "please_check_your_metamask_account": "请检查你的 Metamask 帐户和/或网络",
-      "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
-      "already_mapped": " Your selected accout is already mapped. Please select new account."
+      "your_account_appears_to_be": "你的DappChain帐户显示与以下以太坊地址映射：",
+      "but_your_current_account_address": "但你当前的以太坊账户地址是：",
+      "please_change_your_metamask_account": "请更改你的以太坊帐户",
+      "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
+      "sign_wallet": "在你的{walletType} 上，签名以确认你的以太坊身份。（不需要gas）",
+      "already_mapped": " 你选择的账户已映射。请选择新帐户。"
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "请耐心等待哟，Loomy 正在努力加载！",
@@ -213,8 +216,8 @@
         "success": "成功"
       },
       "hardware_wallet_modal": {
-        "unlock_hardware_wallet": "Unlock Hardware wallet",
-        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
+        "unlock_hardware_wallet": "解锁硬件钱包",
+        "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。"
       }
     },
     "blockExplorer": {

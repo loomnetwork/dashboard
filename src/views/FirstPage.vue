@@ -216,6 +216,7 @@ export default class FirstPage extends Vue {
   }
 
   mounted() {
+    if(!this.isMobile) return
     if ((window.web3 && window.web3.currentProvider.isTrust) || 
         !!window.imToken ||
         (window.web3 && window.web3.currentProvider.isMetaMask) ||
@@ -225,6 +226,7 @@ export default class FirstPage extends Vue {
       this.setUserIsLoggedIn(true)
       this.$root.$emit("login") 
     }
+
   }
   
   switchTab() {
@@ -242,6 +244,10 @@ export default class FirstPage extends Vue {
       CREATE_ACCOUNT: 'CREATE_ACCOUNT',
       RESTORE_ACCOUNT: 'RESTORE_ACCOUNT'
     }
+  }
+
+  get isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
   }
 
   async onWalletConfig() {

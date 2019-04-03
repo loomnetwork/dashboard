@@ -256,6 +256,9 @@ export default {
     },
     setDPOSUser(state, payload) {
       state.dposUser = payload
+    },
+    setValidators(state, payload) {
+      state.validators = payload
     }
   },
   actions: {
@@ -470,7 +473,7 @@ export default {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
     }, 
-    async getValidatorsAsync({ dispatch }) {
+    async getValidatorsAsync({ dispatch, commit }) {
       const dpos2 = await dispatch('getDpos2')
       const template = {
           address:  "",
@@ -541,7 +544,7 @@ export default {
       console.log(nodes)
       // use the address for those without names 
       nodes.filter((n) => n.name === "").forEach(n => n.name = n.address)
-      return nodes
+      commit("setValidators", nodes)
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
       if (!state.dposUser) {

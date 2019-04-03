@@ -215,6 +215,9 @@ export default {
     },
     setMapper(state, payload) {
       state.mapper = payload
+    },
+    setDelegations(state, payload) {
+      state.delegations = payload
     }
   },
   actions: {
@@ -394,17 +397,17 @@ export default {
         dispatch("setError", {msg:"Fetching validators failed",report:true,cause:err}, {root: true})        
       }
     },
-    async listDelegatorDelegations({ state, rootState }) {
+    async listDelegatorDelegations({ state, rootState, commit }) {
       const dposUser = rootState.DappChain.dposUser
       console.assert(!!dposUser, "expected dposUser to be initialised")
       const { amount, weightedAmount, delegationsArray } = await dposUser.listDelegatorDelegations()
-      state.delegations = delegationsArray
+      let filteredDelegations = delegationsArray
         .filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
         // add string address to make it easy to compare
         .map( d => Object.assign(d, {
           validatorStr:d.validator.local.toString(),
         }))
-      return state.delegations
+      commit("setDelegations", filteredDelegations)
     },
     async queryRewards({ rootState, dispatch, commit }) {
       

@@ -102,9 +102,8 @@ export default {
         } else if( validator.name === "" ) {
           Weight = 2
         }
-        // Check if bootstrap val
         const validatorName = validator.name !== "" ? validator.name : validator.address
-        const isBootstrap = state.prohibitedNodes.includes(validatorName)
+        const isBootstrap = validator.isBootstrap
         return {
           Address: validator.address,
           pubKey: (validator.pubKey),
@@ -339,19 +338,19 @@ export default {
         }
         const validatorList = []
         for (let i in validators) {
+          const validator = validators[i]
 
           let weight = 0
-          if ( validators[i].name.startsWith("plasma-") )  {
+          if ( validator.isBootstrap )  {
             weight = 1
-          } else if( validators[i].name === "" ) {
+          } else if( validator.name === "" ) {
             weight = 2
           }
 
-          const validator = validators[i]
 
           // Check if bootstrap val
           const validatorName = validator.name !== "" ? validator.name : validator.address
-          const isBootstrap = state.prohibitedNodes.includes(validatorName)
+          const isBootstrap = validator.isBootstrap
           validatorList.push({
             Address: validator.address,
             pubKey: (validator.pubKey),

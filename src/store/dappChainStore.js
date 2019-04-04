@@ -473,12 +473,13 @@ export default {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
     }, 
-    async getValidatorsAsync({ dispatch, commit }) {
+    async getValidatorsAsync({ dispatch, commit, rootState }) {
       const dpos2 = await dispatch('getDpos2')
       const template = {
           address:  "",
           pubKey: "",
           active : false,
+          isBootstrap : false,
           totalStaked: "0",
           personalStake: "0",
           votingPower: "0",
@@ -502,6 +503,7 @@ export default {
           address:  c.address.local.toString(),
           pubKey: CryptoUtils.Uint8ArrayToB64(c.pubKey),
           active : false,
+          isBootstrap: rootState.DPOS.prohibitedNodes.includes(c.name),
           name: c.name,
           website: c.website,
           description: c.description,

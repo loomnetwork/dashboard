@@ -38,7 +38,7 @@ export default class LoadingSpinner extends Vue {
   align-content: center;
   justify-content: center;
   top: 0px;
-  left: -15px;
+  left: 0px;
   bottom: 0px;
   right: 0px;
   width: 100vw;

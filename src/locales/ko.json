@@ -8,7 +8,7 @@
     },
     "candidate_list": {
       "candidates": "후보",
-      "no_candidates": "후보가 없습니다"
+      "no_candidates": "후보가 없습니다."
     },
     "first_page": {
       "please_log_in": "로그인하세요",
@@ -16,117 +16,118 @@
       "login": "로그인",
       "sign_in_with_existing_account": "기존 계정으로 로그인",
       "setup_new_account_from_scratch": "새로운 계정 설정하기",
-      "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
+      "use_seed_phrase_to_retrieve": "기존 계정을 가져오려면 시드 문자를 입력하세요.",
       "new_user": "새 사용자",
-      "returning_user": "Returning User",
+      "returning_user": "기존 사용자",
       "sign_out": "로그아웃",
       "create_account": "계정 생성",
       "restore_account": "계정 복구"
     },
     "help": {
       "what_is_plasma_chain": "PlasmaChain이 무엇인가요?",
-      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain은 사이드체인과 이더리움 메인넷 간의 트랜잭션 처리를 위한 Plasma Cash 기반의 허브입니다. 이를 통해 확장성이 뛰어난 사용자 대면 DApp을 만들 수 있으며, 체인 간 안전한 자산 이동을 가능하게 합니다.",
       "what_is_staking": "스테이킹이 무엇인가요?",
-      "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",
-      "help_secure_plasma_chain": "help secure PlasmaChain",
-      "by_staking_your_tokens_with": "by staking your tokens with a validator.",
-      "why_is_staking_important_for": "Why is staking important for PlasmaChain?",
-      "as_plasma_chain_runs_a_delegated": "As PlasmaChain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for PlasmaChain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.",
-      "how_can_i_stake_my": "How can I stake my LOOM tokens on PlasmaChain?",
-      "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
+      "when_a_user_stakes_tokens": "사용자가 토큰을 \"스테이크\"한다는 것은 그들의 토큰을 일정 시간동안 락업하여 네트워크에서 권한을 획득하고, 서비스를 수행하며, 보상을 받을 수 있다는 것을 의미합니다. LOOM 소유자는 ",
+      "help_secure_plasma_chain": "PlasmaChain이 안전하도록 돕기 위해",
+      "by_staking_your_tokens_with": " 토큰을 검증자에게 위임할 수 있습니다.",
+      "why_is_staking_important_for": "왜 PlasmaChain에게 스테이킹이 중요한가요?",
+      "as_plasma_chain_runs_a_delegated": "PlasmaChain은 위임 지분 증명(Delegated Proof of Stake, DPoS) 합의 모델을 사용하기 때문에, 스테이킹은 네트워크의 보안을 위해서 매우 중요합니다. \"위임\"을 통해, 사용자들은 검증자의 스테이킹 풀에 자신의 토큰을 위임하여 검증자를 지지합니다. 가장 큰 풀을 가진 검증자 후보들은 네트워크의 공식 검증자가 됩니다. 여러분의 LOOM 토큰을 스테이킹함으로써, 여러분은 PlasmaChain이 최고의 보안과 성능을 보장할 수 있는 최상의 검증자들을 선택하는 것을 도울 수 있습니다 (또한, 이를 통해 보상을 얻을 수도 있답니다 — 아래 내용을 확인하세요). 더 많은 사람들이 위임하고, 활발히 기여할수록, 체인은 더욱더 안전해집니다.",
+      "how_can_i_stake_my": "PlasmaChain에 제 LOOM 토큰을 스테이킹하려면 어떻게 해야 하나요?",
+      "you_can_stake_your_tokens": "PlasmaChain 대시보드에서 여러분의 토큰을 스테이킹할 수 있습니다:",
       "create_an_account": "계정 생성",
       "generate_a_private_key": "개인 키 생성",
-      "log_in_to_your_meta_mask": "Log in to your MetaMask wallet",
-      "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto PlasmaChain",
-      "choose_validators_to_stake_with": "Choose validators to stake with",
-      "how_many_tokens_are_required": "How many tokens are required to become a delegator?",
-      "there_is_no_minimum_required": "There is no minimum required amount of tokens to be a delegator. Any LOOM token holder can delegate to any validator candidate on the network.",
-      "which_validator_s_should_i_delegate": "Which validator(s) should I delegate to?",
-      "you_can_use_the": "You can use the",
-      "for_a_full_list_of": "for a full list of available validator candidates. Keep in mind that validators perform the critical services that maintain the integrity of the system — proposing new blocks, verifying transactions, and participating in governance. In researching the validators that best suit you, you will likely want to evaluate around criteria such as performance (uptime, slashes), reputation, fee % on rewards, community, etc.",
-      "do_i_lose_control_of": "Do I lose control of my tokens when I delegate them to a validator?",
-      "no_upon_delegation_your_tokens": "No. Upon delegation, your tokens will be sent to a smart contract and essentially frozen on the network for the duration of your lock-up period (which is up to you to select). When the lock-up ends, your tokens are automatically released back to you along with any additional rewards that your validator may have shared with their staking pool.",
-      "note_a_validator_never_has": "Note: a validator never has direct control of your delegated stake. They cannot move your tokens under any circumstances. For all intents and purposes, you remain the owner while your stake is temporarily assigned to the network.",
-      "can_i_delegate_to_multiple": "Can I delegate to multiple validator candidates?",
-      "yes_users_can_choose_to": "Yes. Users can choose to stake their tokens across several validators simultaneously.",
-      "will_i_earn_rewards_on": "Will I earn rewards on the tokens I delegate to a validator?",
-      "validators_earn_rewards_on_any": "Validators earn rewards on any tokens that are delegated to their staking pool. They can choose to share a portion of those rewards back to their delegators — but this is entirely up to the validator. The percentage each validator shares will be published on the",
-      "to_ensure_full_transparency_so": "to ensure full transparency, so that users can make informed decisions prior to staking. For additional info on rewards, see",
-      "this_post_on_validator_and": "this post on validator and staking economics",
-      "what_currency_will_rewards_be": "What currency will rewards be paid in?",
-      "how_do_i_claim_my": "How do I claim my rewards?",
-      "the_delegation_rewards_will_be": "The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the",
-      "plasma_chain_dashboard": "PlasmaChain 대시보드",
+      "log_in_to_your_meta_mask": "내 MetaMask 지갑에 로그인하기",
+      "deposit_loom_tokens_onto_plasma_chain": "PlasmaChain에 LOOM 토큰을 입금하세요.",
+      "choose_validators_to_stake_with": "스테이킹할 검증자 선택하기",
+      "how_many_tokens_are_required": "위임자가 되려면 토큰이 얼만큼 필요한가요?",
+      "there_is_no_minimum_required": "위임자가 되기 위한 최소 토큰 수 제한은 없습니다. LOOM 토큰을 가지고 있다면 누구든지 네트워크의 모든 검증자 후보들에게 위임할 수 있습니다.",
+      "which_validator_s_should_i_delegate": "어떤 검증자(들)에게 위임해야 하나요?",
+      "you_can_use_the": "여러분은",
+      "for_a_full_list_of": "를 통해 위임 가능한 검증자 후보 목록을 확인할 수 있습니다. 검증자들은 시스템의 무결성을 유지하는 중요한 서비스 — 새로운 블록 제안, 트랜잭션 검증 및 거버넌스 참여 — 를 수행한다는 점을 명심하세요. 여러분에게 가장 잘 맞는 검증자를 찾을 때는 성능 (업타임, 벌금), 평판, 보상 수수료 비율(%), 커뮤니티 등과 같은 기준으로 평가하면 좋습니다.",
+      "do_i_lose_control_of": "검증자에게 토큰을 위임하면 제 토큰에 대한 통제권을 잃게 되나요?",
+      "no_upon_delegation_your_tokens": "아니요. 위임 시, 여러분의 토큰은 스마트 컨트랙트로 전송되어 기본적으로 (여러분이 선택한) 락업 기간 동안 네트워크에 동결되어 있습니다. 락업 기간이 끝나면, 여러분의 검증자가 스테이킹 풀에서 공유한 추가 보상과 함께 자동으로 여러분에게 돌아옵니다.",
+      "note_a_validator_never_has": "참고: 검증자는 여러분의 위임된 토큰에 대해 직접적인 통제권을 절대 가질 수 없습니다. 그 어떤 상황에서도 검증자들은 여러분의 토큰을 옮길 수 없습니다. 사실상, 여러분의 스테이크가 일시적으로 네트워크에 할당되어있는 동안에도 여러분은 소유권을 가지고 있습니다.",
+      "can_i_delegate_to_multiple": "여러 명의 검증자 후보들에게 위임할 수 있나요?",
+      "yes_users_can_choose_to": "네. 여러 명의 검증자에게 동시에 토큰을 스테이킹할 수 있습니다.",
+      "will_i_earn_rewards_on": "검증자에게 토큰을 위임하면 보상을 얻을 수 있나요?",
+      "validators_earn_rewards_on_any": "검증자들은 그들의 스테이킹 풀에 위임된 모든 토큰에 대한 보상을 얻을 수 있습니다. 그들은 그 보상의 일부를 그들의 위임자들과 공유할 수 있습니다 — 하지만, 이는 전적으로 검증자의 선택에 달려 있습니다. 각 검증자가 공유하는 보상의 비율은 완전한 투명성을 보장하기 위해 ",
+      "to_ensure_full_transparency_so": "에 공개될 것이며, 이를 통해 사용자들은 스테이킹하기 전에 정보를 이용해 결정을 내릴 수 있습니다. 검증자 보상에 관한 추가 정보는 ",
+      "this_post_on_validator_and": "검증자와 스테이킹 경제학에 관한 이 글을 참고하세요.",
+      "what_currency_will_rewards_be": "보상은 어떤 화폐로 지급되나요?",
+      "how_do_i_claim_my": "제 보상은 어떻게 수령하나요?",
+      "the_delegation_rewards_will_be": "위임자 보상은 네트워크에서 자동으로 분배될 것이며, PlasmaChain 대시보드의 \"보상\" 탭에서 수령할 수 있습니다: ",
+      "plasma_chain_dashboard": "플라즈마체인 대시보드",
       "": ".",
-      "when_will_i_receive_rewards": "When will I receive rewards on my delegations?",
-      "currently_validator_rewards_are_calculated": "Currently, validator rewards are calculated and paid out at the end of election cycles, which run every 2 weeks.",
-      "note_this_is_an_area": "Note: this is an area of active research and we are planning to shift toward more frequent payout cycles as the network matures.",
-      "how_long_will_my_stake": "How long will my stake be locked for?",
-      "you_can_choose_from_any": "You can choose from any of the pre-defined lock-up periods — 2 weeks, 3 months, 6 months, or 1 year.",
-      "for_the_validators_that_choose": "For the validators that choose to share rewards on their staking pool, delegators will receive bonus incentives for various lock-up periods. Longer lock-ups are rewarded with higher percentages, as detailed below:",
-      "note_these_bonus_levels_are": "Note: these bonus levels are before deduction of any validator fees.",
-      "how_can_i_un_delegate_my": "How can I un-delegate my tokens?",
-      "simply_navigate_to_my_delegations": "Simply navigate to “My Delegations”, select a specific validator, and click the “Un-delegate” button:",
-      "once_i_un_delegate_how_long": "Once I un-delegate, how long will it take to regain full access to my tokens?",
-      "at_launch_delegators_funds_will": "At launch, delegators’ funds will be fully released after 2 weeks. This is a security measure to mitigate against scenarios of staking with a bad candidate to increase their odds of gaining the right to validate, and then immediately un-delegating. This is an area of active research and something we plan to iterate through over the coming months.",
-      "are_there_any_ways_to": "Are there any ways to lose some of my delegated tokens?",
-      "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
-      "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
-      "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
+      "when_will_i_receive_rewards": "제 위임에 대한 보상을 언제 받을 수 있나요?",
+      "currently_validator_rewards_are_calculated": "현재 검증자 보상은 선거 주기(2주)의 마지막에 계산되어 지급하고 있습니다.",
+      "note_this_is_an_area": "참고: 이 부분은 활발히 연구 중이며, 네트워크가 성장함에 따라 지급 주기를 더 빈번하게 할 계획입니다.",
+      "how_long_will_my_stake": "제 스테이크는 얼마 동안 락업되어 있나요?",
+      "you_can_choose_from_any": "지정된 락업 기간 중에서 선택할 수 있습니다  — 2주, 3개월, 6개월 또는 1년 중에서 선택 가능합니다.",
+      "for_the_validators_that_choose": "스테이킹 풀의 보상을 공유하기로 한 검증자들의 경우, 위임자들은 다양한 락업 기간에 대한 보너스 인센티브를 받게 됩니다. 아래와 같이 락업 기간이 길수록 더 높은 비율의 보상을 받을 수 있습니다:",
+      "note_these_bonus_levels_are": "참고: 이 보너스는 검증자의 수수료를 공제하기 전의 수치입니다.",
+      "how_can_i_un_delegate_my": "제 토큰의 위임을 취소하려면 어떻게 해야하나요?",
+      "simply_navigate_to_my_delegations": "\"내 위임\"에서 해당 검증자를 선택한 후, \"위임 취소\" 버튼을 누르세요:",
+      "once_i_un_delegate_how_long": "위임을 취소한 뒤에, 제 토큰을 완전히 되찾는 데 얼마나 걸리나요?",
+      "at_launch_delegators_funds_will": "출시 단계에서, 위임자의 자금은 2주 후에 완전히 풀릴 것입니다. 이는 악의가 있는 후보에게 스테이킹하여 검증 권한을 얻을 확률을 올린 뒤에 바로 위임을 취소하는 상황을 막기 위한 보안 정책입니다. 이 부분에 대해서는 활발히 연구 중이며, 향후 몇 개월에 걸쳐 반복할 계획입니다.",
+      "are_there_any_ways_to": "위임된 토큰을 잃을 수도 있나요?",
+      "yes_if_the_protocol_rules": "네. 프로토콜 규칙을 준수하지 않을 경우, 검증자는 '처벌' 받을 수 있습니다. 즉, 그들의 풀에 위임된 토큰과 스테이킹 된 토큰 일부를 몰수하게 됩니다. 이러한 처벌은 악의적인 행동을 방지하고, 모두가 같은 규칙에 따라 행동하는 네트워크를 유지하는 데 도움을 줍니다. 이 시스템은 부정직하고 잘못된 행동을 하면 오히려 더 큰 비용이 들도록 설계되었습니다. 예를 들어, 유효하지 않은 블록 전송, 이중 지급 시도 및(또는) 다운 타임 발생의 경우, 처벌을 받게 됩니다. 처벌 조건이 확실히 결정되는 대로 자세한 내용을 공개할 예정입니다.",
+      "where_do_the_tokens_go": "검증자들이 처벌받으면, 토큰은 어떻게 되나요?",
+      "slashed_tokens_will_be_contributed": "몰수된 토큰은 앞으로의 블록 보상을 위한 비상금으로 환원되어 네트워크에서 검증 및 스테이킹을 하는 사람들에게 지급됩니다."
     },
     "history": {
-      "trade_history": "거래 내역",
-      "sort_by": "Sort by:",
+      "your_history": "내 거래 내역",
+      "sort_by": "정렬 기준:",
       "item_1": "아이템 1",
       "item_2": "아이템 2",
       "home": "홈"
     },
     "my_account": {
-      "my_address": "My Address",
-      "balance": "Balance",
-      "mainnet": "Mainnet",
+      "my_address": "내 주소",
+      "balance": "잔액",
+      "mainnet": "메인넷",
       "plasmachain": "PlasmaChain",
-      "account_details": "Account details",
-      "deposit_withdraw": "Deposit withdraw",
-      "connect_to_deposit_funds": "Connect to deposit funds",
-      "no_mapping_detected": "No mapping detected",
-      "map_accounts": "Map accounts",
-      "deposit": "Deposit",
-      "withdraw": "Withdraw",
-      "use_maximum": "Use maximum",
-      "transfer_to_plasmachain_for_staking": "Transfer to plasmachain for staking",
-      "withdraw_to_metamask": "Withdraw to your wallet",
-      "wait_tx": "Your transaction is in queue. Please wait for few minutes then your balance will update after transaction get confirmed.",
-      "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
-      "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
-      "reclaim_deposit": "Reclaim Deposit Tokens",
-      "complete_withdraw": "Complete Withdrawal"
+      "account_details": "계정 정보",
+      "deposit_withdraw": "입출금",
+      "connect_to_deposit_funds": "연결하여 자금 입금하기",
+      "no_mapping_detected": "발견된 매핑이 없습니다.",
+      "map_accounts": "계정 매핑",
+      "history": "거래 내역",
+      "deposit": "입금",
+      "withdraw": "인출",
+      "use_maximum": "전액 사용하기",
+      "transfer_to_plasmachain_for_staking": "PlasmaChain에 전송하여 스테이킹",
+      "withdraw_to_metamask": "내 지갑으로 인출하기",
+      "wait_tx": "트랜잭션이 대기열에 있습니다. 트랜잭션이 확인된 후, 잔액이 업데이트될 때까지 잠시 기다려 주세요.",
+      "tokens_pending_deposit": "입금 처리 중인 {pendingDepositAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 입금을 완료해주세요.",
+      "tokens_pending_withdraw": "출금 처리 중인 {pendingWithdrawAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 출금을 완료해주세요.",
+      "reclaim_deposit": "예치된 토큰 회수하기",
+      "complete_withdraw": "출금 완료"
     },
     "my_delegations": {
-      "no_delegations": "No Delegations"
+      "no_delegations": "위임 내역 없음"
     },
     "redelegate": {
-      "redelegate": "Redelegate",
-      "from": "From",
-      "to": "To"
+      "redelegate": "다시 위임하기",
+      "from": "보내는 사람",
+      "to": "받는 사람"
     },
     "rewards": {
-      "unclaimed_rewards": "Unclaimed rewards:",
-      "you_have_yet_to_receive": "You have yet to receive any rewards",
-      "claim_reward": "Claim Reward"
+      "unclaimed_rewards": "요청하지 않은 보상:",
+      "you_have_yet_to_receive": "아직 받은 보상이 없습니다.",
+      "claim_reward": "보상 요청하기"
     },
     "validator_detail": {
       "state": "상태:",
-      "amount_delegated": "Amount Delegated:",
+      "amount_delegated": "위임한 양:",
       "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "Updated Amount:",
+      "updated_amount": "갱신된 양:",
       "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "Timelock Tier:",
-      "timelock": "Timelock:",
-      "unlocked": "Unlocked"
+      "timelock_tier": "선택 가능한 락업 기간:",
+      "timelock": "락업 기간:",
+      "unlocked": "잠금 해제됨"
     },
     "validator_list": {
-      "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
+      "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
       "validators": "검증자"
     }
   },
@@ -146,106 +147,108 @@
       "twitter": "트위터",
       "telegram": "텔레그램",
       "email": "이메일",
-      "loom_network_is_a_platform": "Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Loom aims to be the tokenized application protocol of the new decentralized web."
+      "loom_network_is_a_platform": "Loom Network는 이더리움 기반의 PaaS(Platform as a Service)로, 개발자들이 대규모의 탈중앙화 애플리케이션을 실행할 수 있도록 합니다. 이를 통해 개발자들은 세계에서 가장 안전한 퍼블릭 블록체인의 신뢰성 및 보안을 가지는 DApp을 만들 수 있습니다. 상용 수준의 서비스를 운영하는 데에 필요한 컴퓨팅 자원을 제공하면서 말이지요. Loom은 새로운 탈중앙화 웹의 토큰화된 애플리케이션 프로토콜을 목표로 합니다."
     },
     "faucet_header": {
-      "eth_connected": "Ethereum Connected",
-      "eth_disconnected": "Ethereum Disconnected",
-      "dapp_connected": "PlasmaChain Connected",
-      "dapp_disconnected": "PlasmaChain Disconnected",
-      "explorer": "Explorer",
+      "eth_connected": "이더리움 연결됨",
+      "eth_disconnected": "이더리움 연결 끊어짐",
+      "dapp_connected": "PlasmaChain 연결됨",
+      "dapp_disconnected": "PlasmaChain 연결 끊어짐",
+      "explorer": "탐색기",
       "f_a_q": "자주 묻는 질문",
-      "next_election_cycle": "Next election cycle:",
+      "next_election_cycle": "다음 선거 주기:",
       "plasma_chain": "PlasmaChain:",
-      "staked": "Staked:",
+      "staked": "스테이크:",
       "deposit": "입금",
-      "plasmachain_dashboard": "Plasmachain 대시보드",
+      "plasmachain_dashboard": "플라즈마체인 대시보드",
       "dashboard": "대시보드",
       "wallet": "지갑",
       "my_staking": "내 스테이킹",
-      "my_stakes": "My Stakes",
+      "my_stakes": "내 스테이크",
       "status": "상태",
-      "block_explorer": "Block Explorer"
+      "block_explorer": "블록 탐색기"
     },
     "faucet_sidebar": {
       "my_account": "내 계정",
       "my_delegations": "내 위임",
-      "rewards": "보상"
+      "rewards": "보상",
+      "history": "거래 내역"
     },
     "layout": {
-      "metamask_error": "Metamask error!?",
-      "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
-      "mapping_error": "Mapping error!?",
-      "your_account_appears_to_be": "Your DappChain account appears to be mapped with the following Ethereum address:",
-      "but_your_current_account_address": "but your current Ethereum account address is:",
-      "please_change_your_metamask_account": "Please change your Ethereum account",
-      "please_check_your_metamask_account": "Please check your Ethereum account and/or network",
-      "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
-      "already_mapped": " Your selected accout is already mapped. Please select new account."
+      "metamask_changed": "MetaMask 계정을 전환했습니다. 예기치 않은 오류를 방지하기 위해 앱을 재시작합니다.",
+      "metamask_error": "MetaMask 오류!?",
+      "please_enable_metamask_or_switch": "MetaMask를 활성화하거나, 지원되는 브라우저를 사용해 주세요.",
+      "mapping_error": "매핑 오류!?",
+      "your_account_appears_to_be": "당신의 DappChain 계정이 다음 이더리움 주소에 매핑된 것으로 확인됩니다:",
+      "but_your_current_account_address": "하지만 당신의 현재 이더리움 계정 주소는 다음과 같습니다: ",
+      "please_change_your_metamask_account": "이더리움 계좌를 변경해주세요.",
+      "please_check_your_metamask_account": "이더리움 계좌 및(또는) 네트워크를 확인해주세요.",
+      "sign_wallet": "당신의 {walletType}에서, 이더리움 계좌를 확인하기 위해 메시지에 서명하세요. (가스 비용 없음)",
+      "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요."
     },
     "loading_spinner": {
-      "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
-      "this_could_take_several_minutes": "This could take several minutes. Please don't close or refresh your browser"
+      "please_be_patient_loomy_is": "잠시만 기다려주세요, Loomy가 처리 중입니다!",
+      "this_could_take_several_minutes": "이 작업은 몇 분 정도 걸릴 수 있습니다. 브라우저를 닫거나 새로고침하지 마십시오."
     },
     "modals": {
       "confirm_seed_modal": {
-        "please_type_in_words_confirm_indexes_0": "Please type in words {confirmIndexes01}, {confirmIndexes11}, and {confirmIndexes21} to confirm",
-        "word_confirm_1": "Word{confirm1}:"
+        "please_type_in_words_confirm_indexes_0": "확인을 위해 단어 {confirmIndexes01}, {confirmIndexes11} 그리고 {confirmIndexes21}을(를) 입력해주세요.",
+        "word_confirm_1": "단어{confirm1}:"
       },
       "faucet_delegate_modal": {
-        "amount": "Amount:",
-        "locktime_bonuses": "Locktime / Bonuses:",
-        "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
-        "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
+        "amount": "수량:",
+        "locktime_bonuses": "락업 기간 / 보너스:",
+        "warning_please_note_that_any": "경고: 추가로 위임할 경우, 기존의 위임에 덮어씌워지니 주의하세요!",
+        "warning_please_note_that_un_delegating": "경고: 위임을 취소할 경우, 스테이킹 기간 중에 얻은 보상을 받을 수 없습니다."
       },
       "restore_account_modal": {
-        "please_type_in_your_seed": "Please type in your seed phrase below.",
-        "note_the_phrase_is_case": "Note: the phrase is case sensitive and each word needs to be separated by one space."
+        "please_type_in_your_seed": "아래 입력 칸에 시드 문자를 입력해주세요.",
+        "note_the_phrase_is_case": "주의: 대소문자를 구분하며, 각 단어는 공백으로 구분해야 합니다."
       },
       "seed_phrase_modal": {
-        "note_these_12_words_allow": "Note: these 12 words allow you to recover your wallet in case of loss or damage.",
-        "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
-        "write_or_print_it_out": "Write or print it out and keep in a safe place.",
-        "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
+        "note_these_12_words_allow": "주의: 지갑 분실 또는 파손 시에 이 12개의 단어로 복구할 수 있습니다.",
+        "you_must_create_a_backup_nbsp": "백업을 꼭 해두셔야 합니다!&nbsp;",
+        "write_or_print_it_out": "적어두거나 인쇄하여 안전한 곳에 보관하세요.",
+        "without_it_you_will_not": "이 시드가 없으면 문제가 생겼을 때 여러분의 토큰을 복구할 수 없습니다.",
         "copy_to_clipboard": "클립보드에 복사"
       },
       "success_modal": {
         "success": "성공"
       },
       "hardware_wallet_modal": {
-        "unlock_hardware_wallet": "Unlock Hardware wallet",
-        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
+        "unlock_hardware_wallet": "하드웨어 지갑 잠금해제",
+        "enter_pin_code": "여러분의 장부에서 핀 코드를 입력하여 이더리움 앱에 로그인하세요."
       }
     },
     "blockExplorer": {
       "block_info": {
-        "on": "On",
-        "verified": "Verified",
+        "on": "생성 날짜:",
+        "verified": "검증됨",
         "transactions": "트랜잭션"
       },
       "block_list": {
         "blocks": "블록",
-        "block_height": "Block Height:",
+        "block_height": "블록 높이:",
         "row_value": "#{rowValue}"
       },
       "decoded_tx": {
         "transaction_data": "트랜잭션 데이터:"
       },
       "transaction": {
-        "push": "Push",
+        "push": "푸시",
         "type": "타입:",
         "walker": "Walker",
-        "listing_price_1_99": "Listing Price: $1.99",
-        "rarity": "Rarity:",
-        "rare": "Rare",
-        "entry": "Entry:",
-        "return_a_zombie_to_hand": "Return a zombie to hand",
-        "sold": "Sold"
+        "listing_price_1_99": "판매 가격: $1.99",
+        "rarity": "희소성",
+        "rare": "희귀",
+        "entry": "엔트리:",
+        "return_a_zombie_to_hand": "좀비 다시 가져오기",
+        "sold": "판매 완료"
       },
       "transaction_list": {
-        "filter_by": "Filter by",
-        "most_old": "Most old",
-        "pending": "Pending"
+        "filter_by": "분류 기준",
+        "most_old": "가장 오래된 블록",
+        "pending": "처리 중"
       }
     }
   }

@@ -48,6 +48,14 @@
                   <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
                 </h5>
               </b-nav-item>
+              <div v-if="isMobile">
+                <b-nav-item>
+                  <h5>
+                    <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+                  </h5>
+                </b-nav-item>              
+              </div>
+              <LangSwitcher/>
               <b-nav-item v-if="userIsLoggedIn">
                 <h5>
                   <a @click="logOut" class="router text-light hover-warning">Sign out</a>
@@ -247,6 +255,10 @@ export default class FaucetHeader extends Vue {
   get showBackButton() {
     return this.$route.path.includes("login") ? false : true
   }
+
+  get isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
+  }  
   
   destroyed() {
     this.deleteIntervals()
@@ -491,6 +503,10 @@ a.hover-warning:hover {
 
 .mobile-nav {
   text-align: center;
+  padding: 12px 0;
+  h5 {
+    margin: 0;
+  }
   li {
     list-style: none;
   } 

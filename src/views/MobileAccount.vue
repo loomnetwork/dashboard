@@ -42,14 +42,14 @@
             {{ $t('views.my_account.wait_tx') }}
           </b-modal> 
           <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
-            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimedTokens} )}} </p>
             <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
           </b-modal>
         </div>
       </b-card-body>
       <b-card-footer class="custom-card-footer">
         <!-- deposit withdraw -->
-        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" class="d-flex justify-content-between">
+        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens == 0" class="d-flex justify-content-between">
           <b-button-group class="gateway" style="display: flex;">
           <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
             :balance="userBalance.mainnetBalance" 
@@ -200,6 +200,7 @@ export default class MobileAccount extends Vue {
   // gateway related
   // unclaimed tokens
   unclaimedTokens = 0
+  unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
   oracleEnabled = true
   receipt = null
@@ -348,8 +349,8 @@ export default class MobileAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     let unclaimAmount = await this.getUnclaimedLoomTokens()
-    this.unclaimDepositTokens = unclaimAmount.toNumber()
-    if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+    this.unclaimedTokens = unclaimAmount.toNumber()
+    if(this.unclaimedTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }
 
   async afterWithdrawalDone () {

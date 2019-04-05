@@ -139,7 +139,6 @@ import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
 
-debug.enable('mobileaccount')
 const log = debug('mobileaccount')
 
 const DappChainStore = createNamespacedHelpers('DappChain')

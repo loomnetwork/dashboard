@@ -507,8 +507,6 @@ export default class MobileAccount extends Vue {
     const ethereumGateway  = dposUser._ethereumGateway
     const tokens = new BN( "" + parseInt(amount,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    console.log("========================================")
-    console.log("LOGGING", ethereumGateway.address, weiAmount.toString(), weiAmount)
     log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
     this.setGatewayBusy(true)
     log('approve', ethereumGateway.address, weiAmount.toString())
@@ -529,7 +527,6 @@ export default class MobileAccount extends Vue {
 
       // To bypass old web3 version used by imToken
       if(err.transactionHash) {
-        console.log("Show object", err)
         return err 
       } else {
         throw err

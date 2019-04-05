@@ -133,7 +133,7 @@ export default class TransferStepper extends Vue {
   }
 
 
-  async startTransfer() {
+  startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
 
     this.approvalPromise = this.transferAction(this.transferAmount).then(

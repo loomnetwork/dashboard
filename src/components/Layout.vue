@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col rmv-spacing">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
-              {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
+              {{ $t('components.layout.sign_wallet') }}
           </b-modal>
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.already_mapped') }}

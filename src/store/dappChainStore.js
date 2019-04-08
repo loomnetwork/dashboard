@@ -691,8 +691,16 @@ export default {
       }
       
       const user = state.dposUser
+
+      const web3js = state.web3
+      const accounts = await web3js.eth.getAccounts()
+      if (accounts.length === 0) return 0
+      const address = accounts[0]
+      const formattedAddress = `eth:${address}`
+      console.log('formatted address:', formattedAddress)
       try {
-        let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync(formattedAddress)
+        console.log('unclaimed amount', unclaimAmount)
         return unclaimAmount
       } catch (err) {
         console.log("Error check unclaim loom tokens", err);

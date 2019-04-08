@@ -699,7 +699,7 @@ export default {
       const formattedAddress = `eth:${address}`
       console.log('formatted address:', formattedAddress)
       try {
-        let unclaimAmount = await user.getUnclaimedLoomTokensAsync(formattedAddress)
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync(address)
         console.log('unclaimed amount', unclaimAmount)
         return unclaimAmount
       } catch (err) {

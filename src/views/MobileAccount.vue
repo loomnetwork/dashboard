@@ -520,6 +520,7 @@ export default class MobileAccount extends Vue {
 
       // To bypass old web3 version used by imToken
       if(err.transactionHash) {
+        err.hash = err.transactionHash
         return err 
       } else {
         throw err

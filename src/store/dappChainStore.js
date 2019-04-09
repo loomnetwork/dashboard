@@ -158,7 +158,7 @@ export default {
     currentRPCUrl(state) {
       const network = state.chainUrls[state.chainIndex]
       const url = new URL(network.websockt || network.rpc);
-      url.protocol =  url.protocol === "wss" ? "https" :  "http"
+      url.protocol =  url.protocol === "wss:" ? "https" :  "http"
       url.pathname = "rpc"
       return url.toString()
     },
@@ -166,7 +166,7 @@ export default {
     dappchainEndpoint(state) {
       const network = state.chainUrls[state.chainIndex]     
       const url = new URL(network.websockt || network.rpc);
-      url.protocol =  url.protocol === "wss" ? "https" :  "http"
+      url.protocol =  url.protocol === "wss:" ? "https" :  "http"
       url.pathname = ""
       // remove the root slash 
       return url.toString().slice(0, -1)

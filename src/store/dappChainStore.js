@@ -7,20 +7,17 @@ import {
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 
 import ApiClient from '../services/api'
-import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
+import { getDomainType, formatToCrypto } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
-import { ethers } from 'ethers'
 import Debug from "debug"
 
 Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
 
-const coinMultiplier = new BN(10).pow(new BN(18));
 
 import BN from 'bn.js'
 
-const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
 const LOOM_ADDRESS = ""
@@ -155,7 +152,6 @@ function reconfigureClient(client, commit) {
   }
   const handle = middleware.Handle.bind(middleware)
   middleware.Handle = async function (txData) {
-    console.log("handle")
     commit('setShowSigningAlert', true)
     const res = await handle(txData)
     commit('setShowSigningAlert', false)

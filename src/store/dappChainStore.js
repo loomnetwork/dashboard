@@ -1,8 +1,7 @@
 /* eslint-disable */
-import Web3 from 'web3'
 import {
-  LoomProvider, CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, Web3Signer, NonceTxMiddleware,
-  SignedTxMiddleware, DPOSUser, Helpers
+  CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUser,
 } from 'loom-js'
 
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
@@ -62,16 +61,6 @@ const clientNetwork = {
     websockt: 'ws://localhost:46658/websocket',
     queryws: 'ws://localhost:46658/queryws'
   },
-  'loomv2a': {
-    network: 'loomv2a',
-    websockt: 'ws://loomv2a.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2a.dappchains.com:46658/queryws'
-  },  
-  'loomv2b': {
-    network: 'loomv2b',
-    websockt: 'ws://loomv2b.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2b.dappchains.com:46658/queryws'
-  }
 }
 
 function defaultNetworkId() {

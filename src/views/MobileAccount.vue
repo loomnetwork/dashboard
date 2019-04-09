@@ -140,6 +140,7 @@ import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
 
 const log = debug('mobileaccount')
+
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -255,13 +256,13 @@ export default class MobileAccount extends Vue {
   async completeDeposit() {
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )
-      this.allowance = 0
+      this.currentAllowance = 0
     } catch (error) {
       console.error(error)
     }
@@ -502,14 +503,29 @@ export default class MobileAccount extends Vue {
     log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
     this.setGatewayBusy(true)
     log('approve', ethereumGateway.address, weiAmount.toString())
-    const approval = await ethereumLoom.functions.approve(
-            ethereumGateway.address,
-            weiAmount.toString())
-    await approval.wait()
-    //const receipt = await approval.wait()
-    log('approvalTX', approval)
-    // we still need to execute deposit so keep gatewayBusy = true
-    return approval
+    try {
+
+      const approval = await ethereumLoom.functions.approve(
+        ethereumGateway.address,
+        weiAmount.toString()
+      )
+
+      await approval.wait()
+      //const receipt = await approval.wait()
+      log('approvalTX', approval)
+      // we still need to execute deposit so keep gatewayBusy = true
+      return approval
+
+    } catch(err) {
+
+      // To bypass old web3 version used by imToken
+      if(err.transactionHash) {
+        return err 
+      } else {
+        throw err
+      }
+    }
+  
   }
 
   async executeDeposit(amount,approvalTx) {
@@ -530,13 +546,13 @@ export default class MobileAccount extends Vue {
   async completeDeposit() {
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )
-      this.allowance = 0
+      this.currentAllowance = 0
     } catch (error) {
       console.error(error)
     }

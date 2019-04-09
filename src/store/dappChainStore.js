@@ -140,6 +140,31 @@ const createClient = (state, privateKeyString) => {
 
 }
 
+/**
+ * overrides client.middleware SignedEthTxMiddleware.Handle
+ * to notify vuex when the user has to sign
+ * @param {*} user 
+ * @param {*} _client 
+ * @param {*} commit 
+ */
+function reconfigureClient(client, commit) {
+  const middleware = client.txMiddleware.find((m) => m instanceof SignedEthTxMiddleware)
+  if (!middleware) {
+    console.warn("could not find SignedEthTxMiddleware in client.middleware for reconfiguration")
+    return client
+  }
+  const handle = middleware.Handle.bind(middleware)
+  middleware.Handle = async function (txData) {
+    console.log("handle")
+    commit('setShowSigningAlert', true)
+    const res = await handle(txData)
+    commit('setShowSigningAlert', false)
+    return res
+  }
+  return client
+}
+
+
 const defaultState = () => {
   const chainUrls = getChainUrls()
   const chainIndex = getChainIndex(chainUrls)
@@ -163,6 +188,7 @@ const defaultState = () => {
     metamaskStatus: undefined,
     metamaskError: undefined,
     isConnectedToDappChain: false,
+    showSigningAlert: false,
     validators: [],
   }
 }
@@ -245,6 +271,9 @@ export default {
     },
     setDPOSUser(state, payload) {
       state.dposUser = payload
+    },
+    setShowSigningAlert(state, payload) {
+      state.showSigningAlert = payload
     },
     setValidators(state, payload) {
       state.validators = payload
@@ -331,6 +360,7 @@ export default {
           LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         )
 
+        reconfigureClient(user._client, commit)
         commit("setDPOSUser", user)
         
       } catch(err) {

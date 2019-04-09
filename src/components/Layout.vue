@@ -1,5 +1,8 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
+  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
+    <b-modal id="sign-tx-alert" v-model="showSigningAlert"  title="Signature required" hide-footer centered no-close-on-backdrop> 
+        {{ $t('Please sign the transaction on your wallet') }}
+    </b-modal>  
     <faucet-header v-on:update:chain="refresh()"></faucet-header>
     <div class="content container-fluid">      
       <warning-overlay type="metamask"></warning-overlay>
@@ -26,7 +29,8 @@
      </b-modal>
     <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-    </transition>     
+    </transition>
+
   </div>  
 </template>
 
@@ -58,8 +62,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...mapMutations([
       'setErrorMsg'
     ]),
-    ...DappChainStore.mapActions([
-    ]),
     ...DPOSStore.mapActions([
       'initializeDependencies',
     ]),
@@ -74,6 +76,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapState([
       'account',
+      'showSigningAlert',
       'metamaskError',
       'mappingError'
     ]),

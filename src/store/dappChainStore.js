@@ -1,27 +1,23 @@
 /* eslint-disable */
-import Web3 from 'web3'
 import {
-  LoomProvider, CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, Web3Signer, NonceTxMiddleware,
-  SignedTxMiddleware, DPOSUser, Helpers
+  CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUser,
 } from 'loom-js'
 
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 
 import ApiClient from '../services/api'
-import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
+import { getDomainType, formatToCrypto } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
-import { ethers } from 'ethers'
 import Debug from "debug"
 
 Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
 
-const coinMultiplier = new BN(10).pow(new BN(18));
 
 import BN from 'bn.js'
 
-const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
 const LOOM_ADDRESS = ""
@@ -62,16 +58,6 @@ const clientNetwork = {
     websockt: 'ws://localhost:46658/websocket',
     queryws: 'ws://localhost:46658/queryws'
   },
-  'loomv2a': {
-    network: 'loomv2a',
-    websockt: 'ws://loomv2a.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2a.dappchains.com:46658/queryws'
-  },  
-  'loomv2b': {
-    network: 'loomv2b',
-    websockt: 'ws://loomv2b.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2b.dappchains.com:46658/queryws'
-  }
 }
 
 function defaultNetworkId() {
@@ -151,6 +137,30 @@ const createClient = (state, privateKeyString) => {
 
 }
 
+/**
+ * overrides client.middleware SignedEthTxMiddleware.Handle
+ * to notify vuex when the user has to sign
+ * @param {*} user 
+ * @param {*} _client 
+ * @param {*} commit 
+ */
+function reconfigureClient(client, commit) {
+  const middleware = client.txMiddleware.find((m) => m instanceof SignedEthTxMiddleware)
+  if (!middleware) {
+    console.warn("could not find SignedEthTxMiddleware in client.middleware for reconfiguration")
+    return client
+  }
+  const handle = middleware.Handle.bind(middleware)
+  middleware.Handle = async function (txData) {
+    commit('setShowSigningAlert', true)
+    const res = await handle(txData)
+    commit('setShowSigningAlert', false)
+    return res
+  }
+  return client
+}
+
+
 const defaultState = () => {
   const chainUrls = getChainUrls()
   const chainIndex = getChainIndex(chainUrls)
@@ -174,6 +184,7 @@ const defaultState = () => {
     metamaskStatus: undefined,
     metamaskError: undefined,
     isConnectedToDappChain: false,
+    showSigningAlert: false,
     validators: [],
   }
 }
@@ -256,6 +267,9 @@ export default {
     },
     setDPOSUser(state, payload) {
       state.dposUser = payload
+    },
+    setShowSigningAlert(state, payload) {
+      state.showSigningAlert = payload
     },
     setValidators(state, payload) {
       state.validators = payload
@@ -342,6 +356,7 @@ export default {
           LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         )
 
+        reconfigureClient(user._client, commit)
         commit("setDPOSUser", user)
         
       } catch(err) {

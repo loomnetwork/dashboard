@@ -86,10 +86,10 @@
     </b-card>
 
     <b-card title="Rewards" class="mb-4">
-      <h5 class="highlight">
+      <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
         <loom-icon :color="'#f0ad4e'"/>
-      </h5>
+      </router-link>
     </b-card>
 
     <b-card title="Delegations" id="delegations-container">

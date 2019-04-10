@@ -12,60 +12,75 @@
       <span class="text-dark" v-html="this.$store.state.successMsg"></span>
     </b-alert>
 
-    <nav>
-      <b-navbar toggleable="md" type="dark">
-        <div class="container-fluid d-flex justify-content-between ensure-padded">        
+    <div class="d-none d-md-block">
+      <nav class="navbar">
+        <div class="container-fluid">
+          <router-link to="/account" class="navbar-brand">
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/> Plasmachain          
+          </router-link>          
+          <form class="form-inline">
+            <LangSwitcher/>
+          </form>
+        </div>
+      </nav>
+    </div>
 
-          <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
-            <strong>
-              Back
-            </strong>
-          </a>
+    <div class="d-sm-block d-md-none">
+      <nav class="mobile-navbar">
+        <b-navbar toggleable="md" type="dark">
+          <div class="container d-flex justify-content-between ensure-padded">        
+
+            <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
+              <strong>
+                Back
+              </strong>
+            </a>
 
 
-          <b-navbar-brand href="#">
-            <loom-icon :color="'#ffffff'"/>
-          </b-navbar-brand>
+            <b-navbar-brand href="#">
+              <loom-icon :color="'#ffffff'"/>
+            </b-navbar-brand>
 
-          <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
-          <b-collapse is-nav id="nav_collapse">
+            <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
+            <b-collapse is-nav id="nav_collapse">
 
-            <!-- Right aligned nav items -->
-            <b-navbar-nav class="mobile-nav ml-auto">
-              
-              <b-nav-item v-if="userIsLoggedIn">
-                <h5>
-                  <router-link to="/account" class="router text-light hover-warning">Account</router-link>
-                </h5>
-              </b-nav-item>
-              <b-nav-item v-if="userIsLoggedIn">
-                <h5>
-                  <router-link to="/history" class="router text-light hover-warning">History</router-link>
-                </h5>
-              </b-nav-item>
-              <b-nav-item>
-                <h5>
-                  <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
-                </h5>
-              </b-nav-item>
-              <div v-if="isMobile">
+              <!-- Right aligned nav items -->
+              <b-navbar-nav class="mobile-nav ml-auto">
+                
+                <b-nav-item v-if="userIsLoggedIn">
+                  <h5>
+                    <router-link to="/account" class="router text-light hover-warning">Account</router-link>
+                  </h5>
+                </b-nav-item>
+                <b-nav-item v-if="userIsLoggedIn">
+                  <h5>
+                    <router-link to="/history" class="router text-light hover-warning">History</router-link>
+                  </h5>
+                </b-nav-item>
                 <b-nav-item>
                   <h5>
-                    <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+                    <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
                   </h5>
-                </b-nav-item>              
-              </div>
-              <LangSwitcher/>
-              <b-nav-item v-if="userIsLoggedIn">
-                <h5>
-                  <a @click="logOut" class="router text-light hover-warning">Sign out</a>
-                </h5>
-              </b-nav-item>
-            </b-navbar-nav>
-          </b-collapse>        
-        </div>
-      </b-navbar> 
-    </nav>
+                </b-nav-item>
+                <div v-if="isMobile">
+                  <b-nav-item>
+                    <h5>
+                      <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+                    </h5>
+                  </b-nav-item>              
+                </div>
+                <LangSwitcher/>
+                <b-nav-item v-if="userIsLoggedIn">
+                  <h5>
+                    <a @click="logOut" class="router text-light hover-warning">Sign out</a>
+                  </h5>
+                </b-nav-item>
+              </b-navbar-nav>
+            </b-collapse>        
+          </div>
+        </b-navbar> 
+      </nav>      
+    </div>
 
   </div>
 </template>
@@ -376,8 +391,15 @@ export default class FaucetHeader extends Vue {
 }
 </script>
 <style lang="scss">
-.header {
+
+.navbar {
   background: #5756e6;
+  .navbar-brand {
+    color: #ffffff;
+  }
+}
+
+.mobile-navbar {  
   .navbar {
     padding: 0;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
@@ -391,6 +413,7 @@ export default class FaucetHeader extends Vue {
     }
   }
 }
+
 
 .rmv-margin {
   margin: 0;
@@ -506,6 +529,7 @@ a.hover-warning:hover {
   padding: 12px 0;
   h5 {
     margin: 0;
+    font-size: 1rem;
   }
   li {
     list-style: none;

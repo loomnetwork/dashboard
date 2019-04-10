@@ -615,7 +615,7 @@ h3 {
 }
 
 .button-container {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 100%;
   background-color: #fff;

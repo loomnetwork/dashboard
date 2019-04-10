@@ -101,7 +101,7 @@ export default class LoadingSpinner extends Vue {
 }
 
 .looping-loomy {
-  width: 144px;
+  width: 96px;
   height: auto;
 }
 

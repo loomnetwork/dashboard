@@ -45,7 +45,7 @@
     .custom-select {
       background-color: transparent;
       border: none;
-      font-size: 1.25rem;
+      font-size: 1rem;
       font-weight: 500;
       color: white;
       &:focus {

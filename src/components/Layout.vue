@@ -1,7 +1,7 @@
 <template>
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
     
-    <b-alert variant="light" :show="!showSigningAlert" dismissible class="custom-notification text-center">
+    <b-alert variant="light" :show="showSigningAlert" dismissible class="custom-notification text-center">
       <strong>
         <fa :icon="['fa', 'bell']" />
         {{ $t('Please sign the transaction on your wallet') }}

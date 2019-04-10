@@ -1,29 +1,27 @@
 /* eslint-disable */
-import Web3 from 'web3'
 import {
-  LoomProvider, CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, Web3Signer, NonceTxMiddleware,
-  SignedTxMiddleware, DPOSUser, Helpers
+  CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUser,
 } from 'loom-js'
 
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 
 import ApiClient from '../services/api'
-import { getDomainType, formatToCrypto, toBigNumber, isBigNumber, getValueOfUnit } from '../utils'
+import { getDomainType, formatToCrypto } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
-import { ethers } from 'ethers'
 import Debug from "debug"
 
 Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
 
-const coinMultiplier = new BN(10).pow(new BN(18));
 
 import BN from 'bn.js'
 
-const api = new ApiClient()
 const DPOS2 = Contracts.DPOS2
 
+const LOOM_ADDRESS = ""
+const GW_ADDRESS = ""
 /*
 network config
 1: mainnet
@@ -54,24 +52,12 @@ const clientNetwork = {
     network: 'us1',
     websockt: 'wss://test-z-us1.dappchains.com/websocket',
     queryws: 'wss://test-z-us1.dappchains.com/queryws'
-    // websockt: 'wss://plasma.dappchains.com/websocket',
-    // queryws: 'wss://plasma.dappchains.com/queryws'
   },
   'local': {
     network: 'default',
     websockt: 'ws://localhost:46658/websocket',
     queryws: 'ws://localhost:46658/queryws'
   },
-  'loomv2a': {
-    network: 'loomv2a',
-    websockt: 'ws://loomv2a.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2a.dappchains.com:46658/queryws'
-  },  
-  'loomv2b': {
-    network: 'loomv2b',
-    websockt: 'ws://loomv2b.dappchains.com:46658/websocket',
-    queryws: 'ws://loomv2b.dappchains.com:46658/queryws'
-  }
 }
 
 function defaultNetworkId() {
@@ -151,6 +137,30 @@ const createClient = (state, privateKeyString) => {
 
 }
 
+/**
+ * overrides client.middleware SignedEthTxMiddleware.Handle
+ * to notify vuex when the user has to sign
+ * @param {*} user 
+ * @param {*} _client 
+ * @param {*} commit 
+ */
+function reconfigureClient(client, commit) {
+  const middleware = client.txMiddleware.find((m) => m instanceof SignedEthTxMiddleware)
+  if (!middleware) {
+    console.warn("could not find SignedEthTxMiddleware in client.middleware for reconfiguration")
+    return client
+  }
+  const handle = middleware.Handle.bind(middleware)
+  middleware.Handle = async function (txData) {
+    commit('setShowSigningAlert', true)
+    const res = await handle(txData)
+    commit('setShowSigningAlert', false)
+    return res
+  }
+  return client
+}
+
+
 const defaultState = () => {
   const chainUrls = getChainUrls()
   const chainIndex = getChainIndex(chainUrls)
@@ -174,6 +184,7 @@ const defaultState = () => {
     metamaskStatus: undefined,
     metamaskError: undefined,
     isConnectedToDappChain: false,
+    showSigningAlert: false,
     validators: [],
   }
 }
@@ -256,6 +267,12 @@ export default {
     },
     setDPOSUser(state, payload) {
       state.dposUser = payload
+    },
+    setShowSigningAlert(state, payload) {
+      state.showSigningAlert = payload
+    },
+    setValidators(state, payload) {
+      state.validators = payload
     }
   },
   actions: {
@@ -295,12 +312,12 @@ export default {
     registerWeb3({ commit, state, getters }, payload) {
       try {
         commit('setWeb3', payload.web3)
+        // these are filled on yarn serve/build
         const network = state.chainUrls[state.chainIndex].network
-        const LoomTokenNetwork = LoomTokenJSON.networks[network]
-        const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LoomTokenNetwork.address)
-        state.LoomTokenNetwork = LoomTokenNetwork
+        const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LOOM_ADDRESS || LoomTokenJSON.networks[network].address)
+        state.LoomTokenNetwork = LoomTokenJSON.networks[network]
         state.LoomTokenInstance = LoomTokenInstance
-        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GatewayJSON.networks[network].address)
+        state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GW_ADDRESS || GatewayJSON.networks[network].address)
       } catch (err) {
         console.error(err)
       }
@@ -329,22 +346,19 @@ export default {
       }
  
       const network = state.chainUrls[state.chainIndex].network
-      let user
-      try {
-
-        // If the user already has an account: 
-        // 1. Initialize without private key (from seed phrase)
-        // using createEthSignMetamaskUserAsync
-        user = await DPOSUser.createEthSignMetamaskUserAsync(
+      let user 
+      try { 
+        user = await DPOSUser.createEthSignMetamaskUserAsync(		
           rootState.DPOS.web3,
           getters.dappchainEndpoint,
           network,
-          GatewayJSON.networks[network].address,
-          LoomTokenJSON.networks[network].address
+          GW_ADDRESS || GatewayJSON.networks[network].address,
+          LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         )
-        
-        commit("setDPOSUser", user)
 
+        reconfigureClient(user._client, commit)
+        commit("setDPOSUser", user)
+        
       } catch(err) {
 
         console.log(err)
@@ -378,8 +392,8 @@ export default {
         getters.dappchainEndpoint,
         privateKeyString,
         network,
-        GatewayJSON.networks[network].address,
-        LoomTokenJSON.networks[network].address
+        GW_ADDRESS || GatewayJSON.networks[network].address,
+        LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         );
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
@@ -474,74 +488,80 @@ export default {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
     }, 
-    async getValidatorsAsync({ state, dispatch }, payload) {
+    async getValidatorsAsync({ dispatch, commit, rootState }) {
       const dpos2 = await dispatch('getDpos2')
-
+      const template = {
+          address:  "",
+          pubKey: "",
+          active : false,
+          isBootstrap : false,
+          totalStaked: "0",
+          personalStake: "0",
+          votingPower: "0",
+          delegationTotal: "0",
+          delegatedStake: "0",
+          name: "",
+          website: "",
+          description: "",
+          fee: "N/A",
+          newFee: "N/A",
+          feeDelaycounter: "N/A"
+      }
       // Get all validators, candidates and delegations
-      const [dpos2Validators,dpos2Candidates,dpos2Delegations] = await Promise.all([
+      const [validators,candidates,delegations] = await Promise.all([
         dpos2.getValidatorsAsync(),
         dpos2.getCandidatesAsync(),
         dpos2.getAllDelegations()
       ])
-
-      // For each validator, get their staked tokens
-      const stakedTokens = dpos2Delegations
-        .filter(d => d.delegationsArray.length > 0)
-        .reduce((map,entry) => {
-          const address = entry.delegationsArray[0].validator.local.toString()
-          map[address] = entry.delegationTotal
-          return map
-        }, {})
-
-      const validators = []
-      for (let candidate of dpos2Candidates) {
-          let addr = candidate.address.local.toString()
-
-          let validator = {
-            // Address info
-            address: addr,
-            pubKey: CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
-            active : false,
-
-            // TODO: Use candidate statistics 
-            // https://github.com/loomnetwork/loomchain/issues/763
-            totalStaked: 0,
-            personalStake: 0,
-            votingPower: 0,
-            delegationTotal: 0,
-            delegatedStake: 0,
-
-            // Validator metadata
-            name: candidate.name,
-            website: candidate.website,
-            description: candidate.description,
-            fee: (candidate.fee / 100).toString(),
-            newFee: (candidate.newFee / 100).toString(),
-            feeDelaycounter: candidate.feeDelayCounter.toString()
-          }
-
-          // Get the validator
-          let v = dpos2Validators.find(v => v.address.local.toString() === addr)
-
-          // If there is a validator, set its stakes to the corresponding amounts.
-          if (v !== undefined) {
-              validator.active = true
-              // Tokens amount of tokens staked (sum of personal and delegated)
-              validator.totalStaked = new BN(v.whitelistAmount).add(new BN(stakedTokens[addr])).toString()
-              // How much was validator personally staked
-              validator.personalStake = v.whitelistAmount.toString()
-              // how much tokens staked by delegators
-              validator.delegatedStake = stakedTokens[addr] ? stakedTokens[addr].toString() : "0"
-              // Voting Power is the whitelist plus the tokens w/ bonuses
-              validator.votingPower = v.delegationTotal.toString()
-              validator.delegationsTotal = new BN(v.delegationTotal).sub(v.whitelistAmount).toString()
-          }
-          validators.push(validator)
+      const nodes = candidates.map((c) => 
+        Object.assign({}, template, {
+          address:  c.address.local.toString(),
+          pubKey: CryptoUtils.Uint8ArrayToB64(c.pubKey),
+          active : false,
+          isBootstrap: rootState.DPOS.prohibitedNodes.includes(c.name),
+          name: c.name,
+          website: c.website,
+          description: c.description,
+          fee: (c.fee / 100).toString(),
+          newFee: (c.newFee / 100).toString(),
+          feeDelaycounter: c.feeDelayCounter.toString(),
+        })
+      )
+      // helper
+      const getOrCreate = (addr) => {
+        let existing = nodes.find((node) => node.address === addr)
+        if (!existing) {
+          existing = Object.assign({},template, {address: addr})
+          nodes.push(existing)
+        }
+        return existing
       }
 
-      state.validators = validators
-      debug("validators refreshed")
-      return validators
+      validators.forEach((v) => {
+        const addr = v.address.local.toString()
+        const node = getOrCreate(addr)
+        Object.assign(node, {
+            active:  true,
+            personalStake: v.whitelistAmount.toString(),
+            votingPower: v.delegationTotal.toString(),
+            delegationsTotal: v.delegationTotal.sub(v.whitelistAmount).toString()
+        })
+      })
+
+      delegations.filter((d) => d.delegationsArray.length > 0)
+      .forEach((d) => {
+        const addr = d.delegationsArray[0].validator.local.toString()
+        const delegatedStake = d.delegationTotal
+        const node = getOrCreate(addr)
+        Object.assign(node, {
+          delegatedStake: delegatedStake.toString(),
+          totalStaked: new BN(node.personalStake).add(delegatedStake).toString(),
+        })
+      })
+      console.log(nodes)
+      // use the address for those without names 
+      nodes.filter((n) => n.name === "").forEach(n => n.name = n.address)
+      commit("setValidators", nodes)
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
       if (!state.dposUser) {
@@ -686,8 +706,16 @@ export default {
       }
       
       const user = state.dposUser
+
+      const web3js = state.web3
+      const accounts = await web3js.eth.getAccounts()
+      if (accounts.length === 0) return 0
+      const address = accounts[0]
+      const formattedAddress = `eth:${address}`
+      console.log('formatted address:', formattedAddress)
       try {
-        let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync(address)
+        console.log('unclaimed amount', unclaimAmount)
         return unclaimAmount
       } catch (err) {
         console.log("Error check unclaim loom tokens", err);

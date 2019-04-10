@@ -42,14 +42,14 @@
             {{ $t('views.my_account.wait_tx') }}
           </b-modal> 
           <b-modal id="unclaimed-tokens" title="Unclaimed Tokens" hide-footer centered no-close-on-backdrop> 
-            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimDepositTokens} )}} </p>
+            <p> {{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimedTokens} )}} </p>
             <b-btn variant="outline-primary" @click="reclaimDepositHandler">{{$t('views.my_account.reclaim_deposit')}} </b-btn>
           </b-modal>
         </div>
       </b-card-body>
       <b-card-footer class="custom-card-footer">
         <!-- deposit withdraw -->
-        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimDepositTokens == 0" class="d-flex justify-content-between">
+        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero()" class="d-flex justify-content-between">
           <b-button-group class="gateway" style="display: flex;">
           <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
             :balance="userBalance.mainnetBalance" 
@@ -86,10 +86,10 @@
     </b-card>
 
     <b-card title="Rewards" class="mb-4">
-      <h5 class="highlight">
+      <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
         <loom-icon :color="'#f0ad4e'"/>
-      </h5>
+      </router-link>
     </b-card>
 
     <b-card title="Delegations" id="delegations-container">
@@ -140,6 +140,7 @@ import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
 
 const log = debug('mobileaccount')
+
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -174,6 +175,8 @@ const ELECTION_CYCLE_MILLIS = 600000
     ]),
     ...DappChainStore.mapActions([
       'getPendingWithdrawalReceipt',
+      'getUnclaimedLoomTokens',
+      'reclaimDeposit',
       'withdrawAsync'
     ]),
     ...mapMutations([
@@ -197,8 +200,7 @@ export default class MobileAccount extends Vue {
 
   // gateway related
   // unclaimed tokens
-  unclaimDepositTokens = 0
-  unclaimWithdrawTokens = 0
+  unclaimedTokens = new BN(0)
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
   oracleEnabled = true
@@ -212,6 +214,8 @@ export default class MobileAccount extends Vue {
     await this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
+    await this.checkUnclaimedLoomTokens()
+    await this.checkPendingWithdrawalReceipt()
     this.currentAllowance = await this.checkAllowance()
     await this.queryRewards()
   }
@@ -222,18 +226,6 @@ export default class MobileAccount extends Vue {
     setTimeout(() => {
       this.showRefreshSpinner = false
     }, 2000)
-  }
-  
-  async checkAllowance() {    
-    const user = this.dposUser
-    const gateway = user.ethereumGateway
-    try {          
-      const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return parseInt(this.web3.utils.fromWei(allowance.toString()))
-    } catch(err) {
-      console.error("Error checking allowance", err)
-      return 0
-    }
   }
 
   async getDelegations() {
@@ -264,13 +256,13 @@ export default class MobileAccount extends Vue {
   async completeDeposit() {
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )
-      this.allowance = 0
+      this.currentAllowance = 0
     } catch (error) {
       console.error(error)
     }
@@ -326,18 +318,33 @@ export default class MobileAccount extends Vue {
   
   // gateway
 
+  async checkUnclaimedLoomTokens() {
+    const unclaimedAmount = await this.getUnclaimedLoomTokens()
+    this.unclaimedTokens = unclaimedAmount
+    if(!this.unclaimedTokens.isZero()) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+  }
+
+  async checkPendingWithdrawalReceipt() {
+    this.receipt = await this.getPendingWithdrawalReceipt()
+  }
+  
+  async checkAllowance() {    
+    const user = this.dposUser
+    const gateway = user.ethereumGateway
+    try {          
+      const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
+      return parseInt(this.web3.utils.fromWei(allowance.toString()))
+    } catch(err) {
+      console.error("Error checking allowance", err)
+      return 0
+    }
+  }
+
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
     this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
     this.$root.$emit("bv::show::modal", "wait-tx")
     await this.refresh(true)
-  }
-
-
-  async checkUnclaimedLoomTokens() {
-    let unclaimAmount = await this.getUnclaimedLoomTokens()
-    this.unclaimDepositTokens = unclaimAmount.toNumber()
-    if(this.unclaimDepositTokens > 0) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }
 
   async afterWithdrawalDone () {
@@ -496,14 +503,30 @@ export default class MobileAccount extends Vue {
     log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
     this.setGatewayBusy(true)
     log('approve', ethereumGateway.address, weiAmount.toString())
-    const approval = await ethereumLoom.functions.approve(
-            ethereumGateway.address,
-            weiAmount.toString())
-    await approval.wait()
-    //const receipt = await approval.wait()
-    log('approvalTX', approval)
-    // we still need to execute deposit so keep gatewayBusy = true
-    return approval
+    try {
+
+      const approval = await ethereumLoom.functions.approve(
+        ethereumGateway.address,
+        weiAmount.toString()
+      )
+
+      await approval.wait()
+      //const receipt = await approval.wait()
+      log('approvalTX', approval)
+      // we still need to execute deposit so keep gatewayBusy = true
+      return approval
+
+    } catch(err) {
+
+      // To bypass old web3 version used by imToken
+      if(err.transactionHash) {
+        err.hash = err.transactionHash
+        return err 
+      } else {
+        throw err
+      }
+    }
+  
   }
 
   async executeDeposit(amount,approvalTx) {
@@ -524,13 +547,13 @@ export default class MobileAccount extends Vue {
   async completeDeposit() {
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.allowance,10)) 
+    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )
-      this.allowance = 0
+      this.currentAllowance = 0
     } catch (error) {
       console.error(error)
     }
@@ -592,7 +615,7 @@ h3 {
 }
 
 .button-container {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 100%;
   background-color: #fff;

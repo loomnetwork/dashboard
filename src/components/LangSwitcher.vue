@@ -40,9 +40,13 @@
 
 <style lang="scss" scoped>
   .locale-changer {
+    max-width: 120px;
+    margin: 0 auto;
     .custom-select {
       background-color: transparent;
       border: none;
+      font-size: 1rem;
+      font-weight: 500;
       color: white;
       &:focus {
         box-shadow: none;

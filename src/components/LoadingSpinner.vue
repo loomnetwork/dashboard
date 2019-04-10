@@ -41,8 +41,10 @@ export default class LoadingSpinner extends Vue {
   left: 0px;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(248, 248, 248, 0.98);
-  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
+  z-index: 999;
 }
 
 @keyframes lds-dual-ring {
@@ -99,7 +101,7 @@ export default class LoadingSpinner extends Vue {
 }
 
 .looping-loomy {
-  width: 144px;
+  width: 96px;
   height: auto;
 }
 

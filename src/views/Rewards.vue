@@ -69,6 +69,7 @@ export default class ValidatorDetail extends Vue {
     try {
       await this.claimRewardsAsync()
       this.setSuccessMsg({msg: "Successfully claimed rewards!" + this.rewardsResults.toString(), forever: false})
+      await this.queryRewards()
     } catch(err) {
       this.setErrorMsg({msg: "Claiming reward failed", forever: false, report:true, cause:err})
     }

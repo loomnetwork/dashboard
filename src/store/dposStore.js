@@ -63,10 +63,10 @@ const defaultState = () => {
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0"],
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "plasma-5", "Validator #4", "test-z-us1-dappchains-2-aws0"],
     latestBlockNumber: null,
     cachedEvents: [],
-    dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
+    dappChainEventUrl: "//dev-api.loom.games/plasma/address",
     historyPromise: null,
     dappChainEvents: [],
     states: ["Bonding", "Bonded", "Unbounding", "Redelegating"],
@@ -103,9 +103,8 @@ export default {
         } else if( validator.name === "" ) {
           Weight = 2
         }
-        // Check if bootstrap val
         const validatorName = validator.name !== "" ? validator.name : validator.address
-        const isBootstrap = state.prohibitedNodes.includes(validatorName)
+        const isBootstrap = validator.isBootstrap
         return {
           Address: validator.address,
           pubKey: (validator.pubKey),
@@ -219,6 +218,9 @@ export default {
     },
     setAnalyticsData(state, payload) {
       state.analyticsData = payload
+    },
+    setDelegations(state, payload) {
+      state.delegations = payload
     }
   },
   actions: {
@@ -340,19 +342,19 @@ export default {
         }
         const validatorList = []
         for (let i in validators) {
+          const validator = validators[i]
 
           let weight = 0
-          if ( validators[i].name.startsWith("plasma-") )  {
+          if ( validator.isBootstrap )  {
             weight = 1
-          } else if( validators[i].name === "" ) {
+          } else if( validator.name === "" ) {
             weight = 2
           }
 
-          const validator = validators[i]
 
           // Check if bootstrap val
           const validatorName = validator.name !== "" ? validator.name : validator.address
-          const isBootstrap = state.prohibitedNodes.includes(validatorName)
+          const isBootstrap = validator.isBootstrap
           validatorList.push({
             Address: validator.address,
             pubKey: (validator.pubKey),
@@ -398,17 +400,17 @@ export default {
         dispatch("setError", {msg:"Fetching validators failed",report:true,cause:err}, {root: true})        
       }
     },
-    async listDelegatorDelegations({ state, rootState }) {
+    async listDelegatorDelegations({ state, rootState, commit }) {
       const dposUser = rootState.DappChain.dposUser
       console.assert(!!dposUser, "expected dposUser to be initialised")
       const { amount, weightedAmount, delegationsArray } = await dposUser.listDelegatorDelegations()
-      state.delegations = delegationsArray
+      let filteredDelegations = delegationsArray
         .filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
         // add string address to make it easy to compare
         .map( d => Object.assign(d, {
           validatorStr:d.validator.local.toString(),
         }))
-      return state.delegations
+      commit("setDelegations", filteredDelegations)
     },
     async queryRewards({ rootState, dispatch, commit }) {
       

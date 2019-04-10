@@ -173,7 +173,8 @@
       "my_account": "My Account",
       "my_delegations": "My Delegations",
       "rewards": "Rewards",
-      "history": "History"
+      "history": "History",
+      "faq": "F.A.Q"
     },
     "layout": {
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
@@ -184,7 +185,7 @@
       "but_your_current_account_address": "but your current Ethereum account address is:",
       "please_change_your_metamask_account": "Please change your Ethereum account",
       "please_check_your_metamask_account": "Please check your Ethereum account and/or network",
-      "sign_wallet": "On your {walletType}, Sign the message to confirm your Ethereum identity. (No gas required)",
+      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": " Your selected accout is already mapped. Please select new account."
     },
     "loading_spinner": {

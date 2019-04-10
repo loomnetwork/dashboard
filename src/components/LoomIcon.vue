@@ -1,5 +1,5 @@
 <template>
-  <svg class="wrapper" width="24px" height="21px" viewBox="0 0 24 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <svg class="wrapper" :width="width || '24px'" :height="height || '21px'" viewBox="0 0 24 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
       <title>logo_svg_22x19</title>
       <desc>Created with Sketch.</desc>
@@ -20,7 +20,9 @@ import { Component, Watch } from 'vue-property-decorator'
 
 @Component({
   props: {
-    color: String
+    color: String,
+    width: String,
+    height: String,
   }  
 })
 export default class LoomIcon extends Vue {

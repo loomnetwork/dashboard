@@ -105,7 +105,7 @@ export default class RedelegateModal extends Vue {
   }
 
   updateTargetItems(query) {
-    const validators = this.validators
+    const validators = this.validators.filter(v => !v.isBootstrap)
     const origin = this.origin
     const str = (query||"").toLowerCase()
     if(str.length > 0) {

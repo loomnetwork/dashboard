@@ -173,7 +173,8 @@
       "my_account": "My Account",
       "my_delegations": "My Delegations",
       "rewards": "Rewards",
-      "history": "History"
+      "history": "History",
+      "faq": "F.A.Q"
     },
     "layout": {
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",

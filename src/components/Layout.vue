@@ -1,14 +1,17 @@
 <template>
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
-    <b-modal id="sign-tx-alert" v-model="showSigningAlert"  title="Signature required" hide-footer centered no-close-on-backdrop> 
-        {{ $t('Please sign the transaction on your wallet') }}
-    </b-modal>  
+    
+    <b-alert variant="warning" :show="showSigningAlert" dismissible class="custom-alert text-center">{{ $t('Please sign the transaction on your wallet') }}</b-alert>
+
     <faucet-header v-on:update:chain="refresh()"></faucet-header>
-    <div class="content container-fluid">      
-      <warning-overlay type="metamask"></warning-overlay>
+    <div class="content">      
+		  <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
-      <div class="row">
-        <div class="col rmv-spacing">
+      <div class="d-none d-lg-block">
+        <faucet-sidebar></faucet-sidebar> 
+      </div>
+      <div class="main-container">
+        <div class="inner-container container">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.sign_wallet') }}
           </b-modal>
@@ -18,8 +21,8 @@
           <transition name="page" mode="out-in">
           <router-view></router-view>
           </transition>
-        </div>        
-      </div>          
+        </div>
+      </div> 
     </div>    
      <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
         <div class="d-block text-center">
@@ -254,6 +257,13 @@ export default class Layout extends Vue {
   transform: translateX(-30%);
 }
 
+.main-container {
+	width: 100%;
+  .inner-container {
+    position: relative;
+    height: 100%;
+  }
+}
 
 </style>
 

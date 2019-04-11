@@ -1,9 +1,10 @@
 import Debug from "debug"
-import { fromEventPattern, Observable, combineLatest } from "rxjs";
+import { fromEventPattern, Observable, combineLatest, pipe } from "rxjs";
 import { filter, switchMap, tap, map, take } from "rxjs/operators";
 import { Store } from "vuex";
 import { setTimeout } from "timers";
 import { DPOSUser } from "loom-js";
+import { Contract } from "ethers";
 
 Debug.enable("dashboard.dpos.rx")
 
@@ -12,11 +13,9 @@ const debug = Debug("dashboard.dpos.rx")
 export function dposStorePlugin(store: Store<any>) {
 
     // As soon as we have a dposUser getTimeUntilElectionsAsync
-    store.watch(
-        (state) => state.DappChain.dposUser,
-        // we never set dpos2 to null. I assume...
-        () => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
-    )
+    observeState(store,(state) => state.DappChain.dposUser)
+    .pipe(take(1))
+    .subscribe(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"))
 
     // Whenever timeUntilElectionCycle is refreshed, 
     // refresh validators and user delegations
@@ -43,7 +42,7 @@ export function dposStorePlugin(store: Store<any>) {
     ]
     store.subscribeAction({
         after(action) {
-            if (delegationActions.find(a =>a === action.type)) {
+            if (delegationActions.find(a => a === action.type)) {
                 store.dispatch("DPOS/listDelegatorDelegations")
                 store.dispatch("DappChain/getDappchainLoomBalance")
                 // this might not be needed since listDelegatorDelegations
@@ -55,7 +54,7 @@ export function dposStorePlugin(store: Store<any>) {
 
     buildLoadHistoryTrigger(store)
     buildWithdrawLimitTrigger(store)
-    listenToDepositApproval(store)
+    listenToGatewayEvents(store)
 }
 
 
@@ -81,16 +80,16 @@ function buildLoadHistoryTrigger(store) {
         observeState(store, (state) => state.DPOS.web3),
         observeState(store, (state) => state.DappChain.GatewayInstance),
         observeState(store, (state) => state.DPOS.currentMetamaskAddress),
-    )
-    .subscribe(([web3, gatewayInstance, address]) => {
-        debug("all 3 available", address)
-        store.dispatch("DPOS/loadEthereumHistory", { web3, gatewayInstance, address })
-    })
+    ).pipe(take(1))
+        .subscribe(([web3, gatewayInstance, address]) => {
+            debug("all 3 available", address)
+            store.dispatch("DPOS/loadEthereumHistory", { web3, gatewayInstance, address })
+        })
     // if loadEthereumHistory arguments (3) change only once per session, we should unsubscribe
 }
 
 function buildWithdrawLimitTrigger(store) {
-    const d = observeState(store, (state) => state.DPOS.history)
+    observeState(store, (state) => state.DPOS.history)
         .pipe(
             filter(val => val instanceof Promise),
             // TODO should handle promise failure or the pipe explodes
@@ -111,29 +110,46 @@ function buildWithdrawLimitTrigger(store) {
  * when an approval is confirmed triggers notifies the state
  * @param store 
  */
-function listenToDepositApproval(store: Store<any>) {
+function listenToGatewayEvents(store) {
 
-    combineLatest(
-        observeState(store, (state) => state.DappChain.dposUser),
-        observeState(store, (state) => state.DappChain.GatewayInstance),
-        observeState(store, (state) => state.DPOS.currentMetamaskAddress),
-    )
+    observeState(store, (state) => state.DappChain.dposUser)
     // assuming only one DPOS session per page load
     .pipe(take(1))
-    .subscribe(([dposUser, gw, account]) => {
-        const loom = (dposUser as DPOSUser).ethereumLoom
-        const filter = loom.filters.Approval(account, gw.address)
-        loom.on(filter, (from, to, weiAmount) => {
-            console.log('I received ' + weiAmount.toString() + ' tokens from ' + from);
-            store.commit("DPOS/setDepositApproved", weiAmount)
-        });
-
+    .subscribe((dposUser:DPOSUser) => {
+        const loom =  dposUser.ethereumLoom
+        const gw = dposUser.ethereumGateway
+        const account = dposUser.ethAddress
+        listenToDepositApproval(account, gw, loom, store)
+        listenToDeposit(account, gw, loom, store)
     })
 
 }
 
-
-
-
-
-
+function listenToDepositApproval(account, gw: Contract, loom: Contract, store: Store<any>) {
+    const filter = loom.filters.Approval(account, gw.address)
+    loom.on(filter, (from, to, weiAmount) => {
+        console.log('approval ' + weiAmount.toString() + ' tokens from ' + from);
+        store.commit("DPOS/setShowDepositApproved", true)
+        // empty pendingTx
+        // todo: theoratically not necessary but test hash, we never no...
+        store.commit("DPOS/setPendingTx", null)
+    });
+}
+function listenToDeposit(account, gw: Contract, loom: Contract, store: Store<any>) {
+    const filter = loom.filters.Transfer(account, gw.address)
+    loom.on(filter, (from, to, amount) => {
+        console.log('transfer ' + amount.toString() + ' tokens from ' + from + ' to ' + to);
+        //store.state.DPOS.
+        store.commit("DPOS/setShowDepositConfirmed", true)
+        store.commit("DPOS/setPendingTx", null)
+    });
+    // const filter = gw.filters.ERC20Received(account, amount, gwaddr)
+    // gw.on(filter, (from, weiAmount) => {
+    //     console.log('gw received ' + weiAmount.toString() + ' tokens from ' + from);
+    //     //store.state.DPOS.
+    //     store.commit("DPOS/setShowDepositConfirmed", true)
+    //     store.commit("DPOS/setPendingTx", null)
+    //     // tell user deposit to gateway seuccesfull and plasma balance will update after 10 confirmation
+    //     //store.dispatch("")
+    // });
+}

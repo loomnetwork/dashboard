@@ -1,9 +1,7 @@
 import axios from 'axios'
-const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
+const { CryptoUtils, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
-import BigNumber from 'bignumber.js'
-const bip39 = require('bip39')
 
 import {ethers} from "ethers"
 
@@ -14,9 +12,6 @@ Debug.enable("dashboard.dpos")
 const debug = Debug("dashboard.dpos")
 
 const DAILY_WITHDRAW_LIMIT = 500000
-
-// using ethers big number for stuff related to ethers contracts (dposUser gateway/loom)
-const ZERO_ETHBN = new ethers.utils.BigNumber(0)
 
 const dynamicSort = (property) => {
   let sortOrder = 1
@@ -81,7 +76,10 @@ const defaultState = () => {
     dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
     client: null,
     mapper: null,
-    depositApproved: ZERO_ETHBN,
+    showDepositForm: false,
+    showDepositApproved: false,
+    showDepositConfirmed: false,
+    pendingTx: null,
   }
 }
 
@@ -90,10 +88,6 @@ export default {
   namespaced: true,
   state: defaultState(),
   getters: {
-    showDepositApprovalSuccess(state) {
-      debugger
-      return state.depositApproved !== null && state.depositApproved.gt(ZERO_ETHBN)
-    },
     getLatestBlockNumber(state) {
       return state.latestBlockNumber || JSON.parse(sessionStorage.getItem("latestBlockNumber"))
     },
@@ -229,8 +223,17 @@ export default {
     setDelegations(state, payload) {
       state.delegations = payload
     },
-    setDepositApproved(state, weiAmount) {
-      state.depositApproved = weiAmount
+    setShowDepositForm(state, playload) {
+      state.showDepositForm = playload
+    },
+    setShowDepositApproved(state, playload) {
+      state.showDepositApproved = playload
+    },
+    setShowDepositConfirmed(state, playload) {
+      state.showDepositConfirmed = playload
+    },
+    setPendingTx(state, info) {
+      state.pendingTx = info
     }
   },
   actions: {
@@ -612,27 +615,93 @@ export default {
       return state.withdrawLimit
     },
     /**
-     * this dsoes not check for approved amount or whatever
-     * just executes the call
+     * sends an approval request and does not wait for a confirmation
+     * as we listen to confirmations on the contract
+     * @param {*} param0 
+     * @param {*} tokenAmount 
+     * @see dposPlugin
+     */
+    async approveDeposit({rootState, commit}, tokenAmount) {
+      const dposUser = rootState.DappChain.dposUser
+      console.assert(dposUser, "Expected dposUser to be initialized")
+      const loom  = dposUser.ethereumLoom
+      const gw  = dposUser._ethereumGateway
+      const wei = ethers.utils.parseEther(""+tokenAmount)
+      debug('approve', gw.address, wei.toString(), wei)
+      await executeTx(
+        commit,
+        "deposit approval",
+        () => loom.functions.approve( gw.address, wei.toString())
+      )
+    },
+    /**
+     * deposits amount: min(allowance, floor(ballance))
+     * if amount > 0
      * todo handle error
      * 
      * @param {Store} param0 
      * @param {ethers.utils.BigNumber} weiAmount 
      */
-    async executeDeposit({state, rootState, commit}, weiAmount) {
+    async executeDeposit({rootState, commit}) {
       const dposUser = rootState.DappChain.dposUser
       console.assert(dposUser, "Expected dposUser to be initialized")
-      commit("setGatewayBusy",true)
-      debug("depositERC20",  weiAmount.toString(), dposUser.ethereumLoom.address)
-      const result = await dposUser._ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), dposUser.ethereumLoom.address
+      const loom  = dposUser.ethereumLoom
+      const gw = dposUser.ethereumGateway
+      const account = dposUser.ethAddress
+      const rawAmount = await Promise.all([
+          loom.balanceOf(account),
+          loom.allowance(account, gw.address)
+        ])
+        .then(([balance, allowance]) => { 
+          debug("balance %s allowance %s", balance.toString(), allowance.toString())
+          return allowance.lt(balance) ? allowance : balance
+        })
+
+      // rounding... 
+      const amount = rawAmount.sub(rawAmount.mod(ethers.constants.WeiPerEther))
+      if (amount.isZero()) {
+        throw new Error('No allowance or insufisient funds')
+      }
+      debug("depositERC20 %s ", amount.toString(), loom.address)
+
+      await executeTx(
+        commit,
+        "deposit",
+        () => gw.functions.depositERC20(amount.toString(), loom.address)
       )
-      // we should keep gateway busy until transaction success
-      commit("setGatewayBusy",false)
-      return result
     },
   },
 
 
 
+}
+
+/**
+ * 
+ * @param {*} commit 
+ * @param {*} type 
+ * @param {*} fn 
+ * @see approveDeposit
+ * @see executeDeposit
+ */
+async function executeTx(commit,type,fn) {
+  let pendingTx = {type, hash:""}; 
+  commit("setGatewayBusy",true)
+  try {
+    const tx = await fn()
+    debug('pending tx', tx.hash)
+    pendingTx.hash = tx.hash
+
+  } catch(err) {
+    // imToken funky output
+    if(err.transactionHash) {
+      pendingTx.hash = err.transactionHash
+    } else {
+      commit("setGatewayBusy",false)
+      throw err
+    }
+  }
+
+  commit("setPendingTx", pendingTx)
+  commit("setGatewayBusy",false)
 }

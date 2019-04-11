@@ -117,7 +117,7 @@ export default class FirstPage extends Vue {
   activeTab = 0
   currentStatus = this.STATUS.NONE
   showTabSpinner = false
-  isProduction = window.location.hostname === "dashboard.dappchains.com" || "m-dashboard.dappchains.com"
+  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   async selectWallet(wallet) {
     if(wallet === "ledger") {

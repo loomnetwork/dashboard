@@ -176,6 +176,15 @@
       "history": "History",
       "faq": "F.A.Q"
     },
+    "gateway": {
+      "approval": {
+        "success": "The deposit approval for {tokenAmout} LOOM was successfull. click complete deposit to continue"
+      },
+      "deposit": {
+        "pending": "Deposit transaction successfully sent. you will be notified once it is confirmed",
+        "failure": "Deposit failed..."
+      }
+    },
     "layout": {
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "Metamask error!?",

@@ -39,6 +39,7 @@
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
+    <DepositApprovalSuccess />
   </div>  
 </template>
 
@@ -53,6 +54,9 @@ import FaucetFooter from '@/components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
+
+import DepositApprovalSuccess from '@/components/gateway/DepositApprovalSuccess'
+
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
@@ -61,7 +65,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     FaucetSidebar,
     FaucetFooter,
     LoadingSpinner,
-    WarningOverlay
+    WarningOverlay,
+    DepositApprovalSuccess,
   },
   props: {
     data: Object,

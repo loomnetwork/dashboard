@@ -177,11 +177,13 @@
       "faq": "F.A.Q"
     },
     "gateway": {
+      "complete_deposit": "Complete deposit",
       "approval": {
         "success": "The deposit approval for {tokenAmout} LOOM was successfull. click complete deposit to continue"
       },
       "deposit": {
         "pending": "Deposit transaction successfully sent. you will be notified once it is confirmed",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 block confirmations",
         "failure": "Deposit failed..."
       }
     },

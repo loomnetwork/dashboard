@@ -56,11 +56,27 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 export default class ValidatorDetail extends Vue {
 
   hideTooltip = false
+  pollInterval = null
 
   async mounted() {
+    await this.refresh()
+    this.startPolling()
+  }
+
+  async refresh() {
     this.setShowLoadingSpinner(true)
     await this.queryRewards()
     this.setShowLoadingSpinner(false)
+  }
+
+  startPolling() {
+    this.pollInterval = setInterval(async () => {
+      this.refresh()
+    }, 15 * 1000)
+  }
+
+  destroyed() {
+    if(this.pollInterval) clearInterval(this.pollInterval)          
   }
 
   async claimRewardHandler() {

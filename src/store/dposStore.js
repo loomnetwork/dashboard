@@ -5,12 +5,18 @@ import { initWeb3 } from '../services/initWeb3'
 import BigNumber from 'bignumber.js'
 const bip39 = require('bip39')
 
+import {ethers} from "ethers"
+
 import Debug from "debug"
+import { Store } from 'vuex';
 
 Debug.enable("dashboard.dpos")
 const debug = Debug("dashboard.dpos")
 
 const DAILY_WITHDRAW_LIMIT = 500000
+
+// using ethers big number for stuff related to ethers contracts (dposUser gateway/loom)
+const ZERO_ETHBN = new ethers.utils.BigNumber(0)
 
 const dynamicSort = (property) => {
   let sortOrder = 1
@@ -74,7 +80,8 @@ const defaultState = () => {
     dashboardPrivateKey: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
     dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
     client: null,
-    mapper: null
+    mapper: null,
+    depositApproved: ZERO_ETHBN,
   }
 }
 
@@ -83,6 +90,10 @@ export default {
   namespaced: true,
   state: defaultState(),
   getters: {
+    showDepositApprovalSuccess(state) {
+      debugger
+      return state.depositApproved !== null && state.depositApproved.gt(ZERO_ETHBN)
+    },
     getLatestBlockNumber(state) {
       return state.latestBlockNumber || JSON.parse(sessionStorage.getItem("latestBlockNumber"))
     },
@@ -217,6 +228,9 @@ export default {
     },
     setDelegations(state, payload) {
       state.delegations = payload
+    },
+    setDepositApproved(state, weiAmount) {
+      state.depositApproved = weiAmount
     }
   },
   actions: {
@@ -596,8 +610,29 @@ export default {
       state.withdrawLimit =  Math.max(0, limit)
       debug('state.withdrawLimit', state.withdrawLimit)
       return state.withdrawLimit
-    }
-
+    },
+    /**
+     * this dsoes not check for approved amount or whatever
+     * just executes the call
+     * todo handle error
+     * 
+     * @param {Store} param0 
+     * @param {ethers.utils.BigNumber} weiAmount 
+     */
+    async executeDeposit({state, rootState, commit}, weiAmount) {
+      const dposUser = rootState.DappChain.dposUser
+      console.assert(dposUser, "Expected dposUser to be initialized")
+      commit("setGatewayBusy",true)
+      debug("depositERC20",  weiAmount.toString(), dposUser.ethereumLoom.address)
+      const result = await dposUser._ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), dposUser.ethereumLoom.address
+      )
+      // we should keep gateway busy until transaction success
+      commit("setGatewayBusy",false)
+      return result
+    },
   },
+
+
 
 }

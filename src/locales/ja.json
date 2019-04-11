@@ -124,7 +124,8 @@
       "updated_amount_loom": "{updatedAmount} LOOM",
       "timelock_tier": "タイムロックを選択:",
       "timelock": "タイムロック:",
-      "unlocked": "アンロック済み"
+      "unlocked": "アンロック済み",
+      "no_stakes": "You have not yet staked with {name}"
     },
     "validator_list": {
       "no_validators_available_please_try": "ダッシュ ボードのノードへの接続中にエラーが発生しました。後ほど再度確認してください。",
@@ -172,7 +173,8 @@
       "my_account": "マイアカウント",
       "my_delegations": "委任について",
       "rewards": "報酬",
-      "history": "履歴"
+      "history": "履歴",
+      "faq": "F.A.Q"
     },
     "layout": {
       "metamask_changed": "MetaMaskアカウントが切り替わりました。予期せぬ動作を避けるため、このアプリはリロードを行います。",
@@ -183,7 +185,7 @@
       "but_your_current_account_address": "しかし現在あなたのEthereumアカウントアドレスは:",
       "please_change_your_metamask_account": "Ethereumのアカウントを変更してください",
       "please_check_your_metamask_account": "Ethereumのアカウントやネットワークをチェックしてください",
-      "sign_wallet": "{walletType} 上で本人確認のために署名を行なって下さい。(ガスはかかりません)",
+      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": "選択したアカウントはすでにマッピング済みです。新しいアカウントを選択して下さい。"
     },
     "loading_spinner": {

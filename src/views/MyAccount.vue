@@ -708,7 +708,7 @@ export default class MyAccount extends Vue {
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )
-      this.allowance = 0
+      this.currentAllowance = 0
     } catch (error) {
       console.error(error)
     }

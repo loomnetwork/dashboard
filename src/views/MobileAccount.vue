@@ -48,19 +48,14 @@
         </div>
       </b-card-body>
       <b-card-footer class="custom-card-footer">
+        <DepositForm />
+        <a v-if="pendingTx" style="display: flex;align-items: center;" :href="`https://etherscan.io/tx/${pendingTx.hash}`" target="_blank">
+          <b-spinner variant="primary" style="margin-right:16px;"></b-spinner> <span>pending: {{pendingTx.type}}</span>
+        </a>
         <!-- deposit withdraw -->
-        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero()" class="d-flex justify-content-between">
+        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero() && !pendingTx" class="d-flex justify-content-between">
           <b-button-group class="gateway" style="display: flex;">
-          <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
-            :balance="userBalance.mainnetBalance" 
-            :transferAction="approveDeposit"
-            :resolveTxSuccess="executeDeposit"
-            buttonLabel="Deposit" 
-            >
-            <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
-            <template #failueMessage><p>Approval failed.</p></template>
-            <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
-          </TransferStepper>
+             <b-btn variant="outline-primary" @click="setShowDepositForm(true)">{{ $t("components.faucet_header.deposit")}}</b-btn>
           <TransferStepper  v-if="userBalance.loomBalance > 0 && oracleEnabled"
             @withdrawalDone="afterWithdrawalDone"
             @withdrawalFailed="afterWithdrawalFailed"
@@ -138,6 +133,7 @@ import debug from 'debug'
 import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
+import DepositForm from '@/components/gateway/DepositForm'
 
 const log = debug('mobileaccount')
 
@@ -151,7 +147,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     LoomIcon,
     FaucetTable,
     TransferStepper,
-
+    DepositForm,
   },
   computed: {
     ...DappChainStore.mapState([
@@ -165,7 +161,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'timeUntilElectionCycle',
       'nextElectionTime',
       'states',
-      'currentMetamaskAddress'
+      'currentMetamaskAddress',
+      "pendingTx"
     ]) 
   },
   methods: {
@@ -185,7 +182,8 @@ const ELECTION_CYCLE_MILLIS = 600000
     ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
-      'setShowLoadingSpinner'      
+      'setShowLoadingSpinner',
+      'setShowDepositForm',
     ])
   }
 })
@@ -511,7 +509,7 @@ export default class MobileAccount extends Vue {
         weiAmount.toString()
       )
 
-      await approval.wait()
+     // await approval.wait()
       //const receipt = await approval.wait()
       log('approvalTX', approval)
       // we still need to execute deposit so keep gatewayBusy = true

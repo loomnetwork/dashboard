@@ -20,8 +20,9 @@ import BN from 'bn.js'
 
 const DPOS2 = Contracts.DPOS2
 
-const LOOM_ADDRESS = ""
-const GW_ADDRESS = ""
+// todo revert after
+const LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
+const GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
 /*
 network config
 1: mainnet
@@ -49,7 +50,7 @@ const clientNetwork = {
     queryws: 'wss://plasma.dappchains.com/queryws'
   },
   'stage': {
-    network: 'us1',
+    network: 'default',
     websockt: 'wss://test-z-us1.dappchains.com/websocket',
     queryws: 'wss://test-z-us1.dappchains.com/queryws'
   },

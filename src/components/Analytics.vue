@@ -52,10 +52,9 @@
         }
       }
 
-      let timeIntervalChunks = this.analyticsData.data.data.map((x, idx) => {
-        if(idx % 10 === 0) {
-          return x
-        }
+      let timeIntervalChunks = this.analyticsData.data.data.filter((x, idx) => idx % 10 === 0).map((item) => {
+        let int = parseInt(item.delegationTotal)
+        return (int / 10 ** 18)
       })
 
       let config = {
@@ -69,7 +68,7 @@
               "rgba(255, 206, 86, 1)",
               "rgba(153, 102, 255, 1)",
             ],
-            label: 'Total Tiers'
+            label: "Total Tiers"
           }],
           labels: tierKeys
         },
@@ -82,16 +81,10 @@
         type: 'bar',
         data: {
           datasets: [{
-            data: tierAmount,
-            backgroundColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(153, 102, 255, 1)",
-            ],
-            label: 'Total Tiers'
+            data: timeIntervalChunks,
+            label: "Amount of LOOM staked"
           }],
-          labels: tierKeys
+          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
         },
         options: {
           responsive: true

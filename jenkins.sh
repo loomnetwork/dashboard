@@ -69,6 +69,10 @@ cd dist
 aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
 aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
 
+# TODO: temp testing only
+aws s3 sync . s3://m.dashboard.dappchains.com --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
+aws s3 sync . s3://m.dashboard.dappchains.com --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
+
 # TODO get the one for the faucet
 #if [ ! -z "${AWS_DISTRIBUTION_ID}" ]; then
 #  aws cloudfront create-invalidation --distribution-id ${AWS_DISTRIBUTION_ID} --paths /\*

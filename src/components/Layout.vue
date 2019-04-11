@@ -39,7 +39,9 @@
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
-    <DepositApprovalSuccess />
+    <!-- gateway -->
+    <DepositApproved />
+    <DepositConfirmed />
   </div>  
 </template>
 
@@ -55,7 +57,8 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
 
-import DepositApprovalSuccess from '@/components/gateway/DepositApprovalSuccess'
+import DepositApproved from '@/components/gateway/DepositApproved'
+import DepositConfirmed from '@/components/gateway/DepositConfirmed'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -66,7 +69,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     FaucetFooter,
     LoadingSpinner,
     WarningOverlay,
-    DepositApprovalSuccess,
+    DepositApproved,
+    DepositConfirmed,
   },
   props: {
     data: Object,

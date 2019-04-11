@@ -1,8 +1,9 @@
 import Debug from "debug"
 import { fromEventPattern, Observable, combineLatest } from "rxjs";
-import { filter, switchMap, tap } from "rxjs/operators";
+import { filter, switchMap, tap, map, take } from "rxjs/operators";
 import { Store } from "vuex";
 import { setTimeout } from "timers";
+import { DPOSUser } from "loom-js";
 
 Debug.enable("dashboard.dpos.rx")
 
@@ -54,10 +55,15 @@ export function dposStorePlugin(store: Store<any>) {
 
     buildLoadHistoryTrigger(store)
     buildWithdrawLimitTrigger(store)
+    listenToDepositApproval(store)
 }
 
 
-
+/**
+ * helper to make vuex watchers observable
+ * @param store 
+ * @param stateGetter 
+ */
 function observeState(store: Store<any>, stateGetter): Observable<any> {
     // init with noop
     // unwatchFn is the fn returned by vuex .watch()
@@ -71,23 +77,19 @@ function observeState(store: Store<any>, stateGetter): Observable<any> {
 
 
 function buildLoadHistoryTrigger(store) {
-    debug("buildLoadHistoryTrigger")
-
     combineLatest(
         observeState(store, (state) => state.DPOS.web3),
         observeState(store, (state) => state.DappChain.GatewayInstance),
         observeState(store, (state) => state.DPOS.currentMetamaskAddress),
     )
-        .subscribe(([web3, gatewayInstance, address]) => {
-            debug("all 3 available", address)
-            store.dispatch("DPOS/loadEthereumHistory", { web3, gatewayInstance, address })
-        })
+    .subscribe(([web3, gatewayInstance, address]) => {
+        debug("all 3 available", address)
+        store.dispatch("DPOS/loadEthereumHistory", { web3, gatewayInstance, address })
+    })
     // if loadEthereumHistory arguments (3) change only once per session, we should unsubscribe
 }
 
 function buildWithdrawLimitTrigger(store) {
-    debug("buildWithdrawLimitTrigger")
-
     const d = observeState(store, (state) => state.DPOS.history)
         .pipe(
             filter(val => val instanceof Promise),
@@ -100,6 +102,37 @@ function buildWithdrawLimitTrigger(store) {
             store.dispatch("DPOS/updateDailyWithdrawLimit", history)
         })
 }
+
+
+/**
+ * Once DappChain.dposUser, DappChain.GatewayInstance amd DPOS.currentMetamaskAddress
+ * are set in the state, 
+ * listens to Approval events on the loom contract ethereum side,
+ * when an approval is confirmed triggers notifies the state
+ * @param store 
+ */
+function listenToDepositApproval(store: Store<any>) {
+
+    combineLatest(
+        observeState(store, (state) => state.DappChain.dposUser),
+        observeState(store, (state) => state.DappChain.GatewayInstance),
+        observeState(store, (state) => state.DPOS.currentMetamaskAddress),
+    )
+    // assuming only one DPOS session per page load
+    .pipe(take(1))
+    .subscribe(([dposUser, gw, account]) => {
+        const loom = (dposUser as DPOSUser).ethereumLoom
+        const filter = loom.filters.Approval(account, gw.address)
+        loom.on(filter, (from, to, weiAmount) => {
+            console.log('I received ' + weiAmount.toString() + ' tokens from ' + from);
+            store.commit("DPOS/setDepositApproved", weiAmount)
+        });
+
+    })
+
+}
+
+
 
 
 

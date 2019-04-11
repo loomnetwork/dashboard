@@ -531,6 +531,7 @@ export default class MobileAccount extends Vue {
   }
 
   async executeDeposit(amount,approvalTx) {
+    return approvalTx
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
     this.setGatewayBusy(true)

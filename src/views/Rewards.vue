@@ -95,7 +95,7 @@ export default class ValidatorDetail extends Vue {
 
   get displayResults() {
     if(!this.rewardsResults) return ""
-    if(parseInt(this.rewardsResults) > 0) {
+    if(parseInt(this.rewardsResults) === 0) {
       return this.rewardsResults.toString()
     } else {
       return ""  

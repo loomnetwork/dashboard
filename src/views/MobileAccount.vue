@@ -177,7 +177,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'getPendingWithdrawalReceipt',
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
-      'withdrawAsync'
+      'withdrawAsync',
+      'withdrawCoinGatewayAsync'
     ]),
     ...mapMutations([
       'setErrorMsg'

@@ -185,6 +185,11 @@ export default class TransferStepper extends Vue {
     else if(error.message.includes("signature, amount didn't get update yet") || this.resolveTxSuccess == undefined) {
       this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page      
     }
+    else if (error.message.includes("Ledger") || error.message.includes("U2F")) {
+      this.errorMessage = "Please update your Ledger firmware AND enable Contract Data setting on your device."
+      console.error('transferFailed',error)
+      this.hasTransferFailed = true;
+    }
     else {
       this.errorMessage = "Transfer failed for unknown reason..."
       console.error('transferFailed',error)

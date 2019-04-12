@@ -64,6 +64,9 @@ export default class FaucetFooter extends Vue {
       color: #495057; 
     }    
   }
+  a {
+    color: #495057;
+  }
   @media (max-width: 529px) {
     & {
       position: relative;
@@ -130,9 +133,7 @@ p {
   color: white;
 }
 
-a {
-  color: #495057;
-}
+
 
 a.hover-warning:hover {
   text-decoration: none;

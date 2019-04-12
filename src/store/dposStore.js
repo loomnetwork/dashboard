@@ -2,7 +2,8 @@ import axios from 'axios'
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
+const bip39 = require('bip39')
 
 import Debug from "debug"
 
@@ -32,7 +33,7 @@ const defaultState = () => {
     currentMetamaskAddress: undefined,
     history: null,
     withdrawLimit: DAILY_WITHDRAW_LIMIT,
-    validators: null,
+    validators: [],
     status: "check_mapping",
     walletType: undefined,
     selectedAccount: undefined,
@@ -50,6 +51,8 @@ const defaultState = () => {
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
+    // timestamp millis
+    nextElectionTime: 0,
     validatorFields: [
       { key: 'Name', sortable: true },
       { key: 'Status', sortable: true },
@@ -60,12 +63,18 @@ const defaultState = () => {
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
-    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "Validator #4", "test-z-us1-dappchains-2-aws0", 'plasma-5'],
+    prohibitedNodes: ["plasma-0", "plasma-1", "plasma-2", "plasma-3", "plasma-4", "plasma-5", "Validator #4", "test-z-us1-dappchains-2-aws0"],
     latestBlockNumber: null,
     cachedEvents: [],
-    dappChainEventUrl: "http://dev-api.loom.games/plasma/address",
+    dappChainEventUrl: "//dev-api.loom.games/plasma/address",
     historyPromise: null,
-    dappChainEvents: []
+    dappChainEvents: [],
+    states: ["Bonding", "Bonded", "Unbounding", "Redelegating"],
+    delegations: [],
+    dashboardPrivateKey: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
+    dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
+    client: null,
+    mapper: null
   }
 }
 
@@ -79,7 +88,47 @@ export default {
     },
     getCachedEvents(state) {
       return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents")) || []
-    }
+    },
+    getDashboardAddressAsLocalAddress(state) {
+      return LocalAddress.fromHexString(state.dashboardAddress)
+    },
+    getFormattedValidators(state, getters, rootState) {
+
+      return rootState.DappChain.validators.map((validator) => {
+
+        let Weight = 0
+        if ( validator.name.startsWith("plasma-") )  {
+          Weight = 1
+        } else if( validator.name === "" ) {
+          Weight = 2
+        }
+        const validatorName = validator.name !== "" ? validator.name : validator.address
+        const isBootstrap = validator.isBootstrap
+        return {
+          Address: validator.address,
+          pubKey: (validator.pubKey),
+          // Active / Inactive validator
+          Status: validator.active ? "Active" : "Inactive",
+          totalStaked: formatToCrypto(validator.totalStaked),
+          delegationsTotal: formatToCrypto(validator.delegationsTotal),
+          personalStake: formatToCrypto(validator.personalStake),
+          delegatedStake: formatToCrypto(validator.delegatedStake),
+          // Whitelist + Tokens Staked * Bonuses
+          votingPower: formatToCrypto(validator.votingPower || 0),
+          // Validator MEtadata
+          Name: validatorName,
+          Description: (validator.description) || null,
+          Website: (validator.website) || null,
+          Fees: isBootstrap ? 'N/A' : (validator.fee  || '0') + '%',
+          isBootstrap,
+          Weight,            
+          _cellVariants:  {
+            Status: validator.active ? 'active' : 'inactive',
+            Name:  isBootstrap ? "danger" : undefined
+          },
+        }
+      }).sort(dynamicSort("Weight"))
+    },
   },  
   mutations: {
     setIsLoggedIn(state, payload) {
@@ -127,6 +176,9 @@ export default {
     setTimeUntilElectionCycle(state, payload) {
       state.timeUntilElectionCycle = payload
     },
+    setNextElectionTime(state, millis) {
+      state.nextElectionTime = millis
+    },
     setWalletType(state, payload) {
       state.walletType = payload
       sessionStorage.setItem("walletType", payload)
@@ -156,6 +208,15 @@ export default {
     },
     setDappChainEvents(state, payload) {
       state.dappChainEvents = payload
+    },
+    setClient(state, payload) {
+      state.client = payload
+    },
+    setMapper(state, payload) {
+      state.mapper = payload
+    },
+    setDelegations(state, payload) {
+      state.delegations = payload
     }
   },
   actions: {
@@ -163,9 +224,9 @@ export default {
       commit("setShowLoadingSpinner", true)
       try {
         await dispatch("initWeb3Local")
-        await dispatch("DappChain/initDposUser", null, { root: true })
         await dispatch("DappChain/ensureIdentityMappingExists", null, { root: true })
         await dispatch("checkMappingAccountStatus")
+        await dispatch("DappChain/initDposUser", null, { root: true })
 
       } catch(err) {
         if(err.message === "no Metamask installation detected") {
@@ -182,9 +243,11 @@ export default {
       commit("setAlreadyMappedModal", false)
       if (state.status == 'no_mapping' && state.mappingError == undefined) {
         try {
+          
           commit("setSignWalletModal", true)
           commit("setShowLoadingSpinner", true)
-          await dispatch("DappChain/addMappingAsync", null, { root: true })
+          await dispatch("DappChain/createNewPlasmaUser", null, { root: true })
+          // await dispatch("DappChain/addMappingAsync", null, { root: true })
           commit("setShowLoadingSpinner", false)
           commit("setMappingSuccess", true)
           commit("setSignWalletModal", false)
@@ -262,6 +325,11 @@ export default {
       }      
       commit("setWeb3", web3js)
     },
+    /**
+     * @deprecated use get state.DappChain.validators which is automatically refreshed
+     * when needed
+     * @param {*} param0 
+     */
     async getValidatorList({dispatch, commit, state}) {
       try {
         const validators = await dispatch("DappChain/getValidatorsAsync", null, {root: true})
@@ -270,19 +338,19 @@ export default {
         }
         const validatorList = []
         for (let i in validators) {
+          const validator = validators[i]
 
           let weight = 0
-          if ( validators[i].name.startsWith("plasma-") )  {
+          if ( validator.isBootstrap )  {
             weight = 1
-          } else if( validators[i].name === "" ) {
+          } else if( validator.name === "" ) {
             weight = 2
           }
 
-          const validator = validators[i]
 
           // Check if bootstrap val
           const validatorName = validator.name !== "" ? validator.name : validator.address
-          const isBootstrap = state.prohibitedNodes.includes(validatorName)
+          const isBootstrap = validator.isBootstrap
           validatorList.push({
             Address: validator.address,
             pubKey: (validator.pubKey),
@@ -328,6 +396,18 @@ export default {
         dispatch("setError", {msg:"Fetching validators failed",report:true,cause:err}, {root: true})        
       }
     },
+    async listDelegatorDelegations({ state, rootState, commit }) {
+      const dposUser = rootState.DappChain.dposUser
+      console.assert(!!dposUser, "expected dposUser to be initialised")
+      const { amount, weightedAmount, delegationsArray } = await dposUser.listDelegatorDelegations()
+      let filteredDelegations = delegationsArray
+        .filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
+        // add string address to make it easy to compare
+        .map( d => Object.assign(d, {
+          validatorStr:d.validator.local.toString(),
+        }))
+      commit("setDelegations", filteredDelegations)
+    },
     async queryRewards({ rootState, dispatch, commit }) {
       
       if(!rootState.DappChain.dposUser) {
@@ -341,7 +421,11 @@ export default {
         const formattedResult = formatToCrypto(result)
         commit("setRewardsResults", formattedResult)
       } catch(err) {
-        commit("setErrorMsg", {msg: "Failed querying rewards", forever: false,report:true,cause:err}, {root: true})
+        if(err.message.includes("Distribution record not found")) { 
+          commit("setRewardsResults", 0)
+         } else {
+          commit("setErrorMsg", {msg: "Failed querying rewards", forever: false,report:true,cause:err}, {root: true})
+        }
       }
       
     },
@@ -360,7 +444,9 @@ export default {
       }
       
     },    
-
+    // this can be moved out as is automatically called once dposUser is set
+    // actually instead of depending on dposUser we should depend on dpos contract
+    // (if we want to display timer in "anonymous" session)
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
       
       if(!rootState.DappChain.dposUser) {
@@ -371,7 +457,9 @@ export default {
 
       try {
         const result = await user.getTimeUntilElectionsAsync()
+        debug("next election in %s seconds", result.toString())
         commit("setTimeUntilElectionCycle", result.toString())
+        commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))
       } catch(err) {
         console.error(err)
       }
@@ -438,7 +526,7 @@ export default {
           }
         })
       })
-      .catch((error) => {
+      .catch((err) => {
         console.error(err)
       })
       .then((results) => {

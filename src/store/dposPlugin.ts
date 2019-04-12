@@ -1,19 +1,64 @@
 import Debug from "debug"
 import { fromEventPattern, Observable, combineLatest } from "rxjs";
 import { filter, switchMap, tap } from "rxjs/operators";
+import { Store } from "vuex";
+import { setTimeout } from "timers";
 
 Debug.enable("dashboard.dpos.rx")
 
 const debug = Debug("dashboard.dpos.rx")
 
-export function dposStorePlugin(store) {
+export function dposStorePlugin(store: Store<any>) {
 
-    buildLoadHistoryTrigger(store);
-    buildWithdrawLimitTrigger(store);
+    // As soon as we have a dposUser getTimeUntilElectionsAsync
+    store.watch(
+        (state) => state.DappChain.dposUser,
+        // we never set dpos2 to null. I assume...
+        () => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
+    )
+
+    // Whenever timeUntilElectionCycle is refreshed, 
+    // refresh validators and user delegations
+    // could also check unclaimedTokens, allowance...etc
+    store.watch(
+        (state) => state.DPOS.timeUntilElectionCycle,
+        (time: string) => {
+            // assuming string...
+            const seconds = parseInt(time, 10)
+            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), seconds * 1000)
+            debug("getting validators")
+            store.dispatch("DappChain/getValidatorsAsync")
+            debug("getting listDelegatorDelegations")
+            store.dispatch("DPOS/listDelegatorDelegations")
+        },
+    )
+
+    // On user delegation actions
+    // refresh user delegations balance and stakes
+    const delegationActions = [
+        "DPOS/redelegateAsync",
+        "DappChain/delegateAsync",
+        "DappChain/undelegateAsync",
+    ]
+    store.subscribeAction({
+        after(action) {
+            if (delegationActions.find(a =>a === action.type)) {
+                store.dispatch("DPOS/listDelegatorDelegations")
+                store.dispatch("DappChain/getDappchainLoomBalance")
+                // this might not be needed since listDelegatorDelegations
+                // returns total
+                store.dispatch("DappChain/getAccumulatedStakingAmount")
+            }
+        }
+    })
+
+    buildLoadHistoryTrigger(store)
+    buildWithdrawLimitTrigger(store)
 }
 
 
-function observeState(store, stateGetter): Observable<any> {
+
+function observeState(store: Store<any>, stateGetter): Observable<any> {
     // init with noop
     // unwatchFn is the fn returned by vuex .watch()
     let off = () => { }
@@ -48,7 +93,7 @@ function buildWithdrawLimitTrigger(store) {
             filter(val => val instanceof Promise),
             // TODO should handle promise failure or the pipe explodes
             switchMap(promise => promise),
-            tap(()=> debug("history loaded")),
+            tap(() => debug("history loaded")),
         )
         .subscribe((history) => {
             debug("history loaded", history);

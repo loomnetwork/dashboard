@@ -7,7 +7,7 @@
       <div v-else>
         <b-row class="my-1 mb-3">
           <b-col sm="3"><label>{{ $t('components.modals.faucet_delegate_modal.amount') }}</label></b-col>
-          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" :state="delegationDetail && delegationDetail.amount && delegationDetail.amount > minAmount" type="number"   :min="minAmount"></b-form-input></b-col>
+          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" :state="delegationDetail && delegationDetail.amount && delegationDetail.amount > minAmount && delegationDetail.amount <= userBalance.loomBalance" type="number" :min="minAmount" :max="userBalance.loomBalance"></b-form-input></b-col>
         </b-row>
         <b-row class="my-1" v-if="!unbond" key="range">
           <b-col sm="6"><label id="lockTimeReward" for="locktime">{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label></b-col>
@@ -36,7 +36,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 @Component({
   props: {
     locktimeTier: Number,
-    hasDelegation: Boolean
   },
   components: {
     LoadingSpinner
@@ -49,8 +48,11 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'currentChain',
       'currentRPCUrl',
     ]),
+    ...DappChainStore.mapState([
+      'validators',
+    ]),
     ...DPOSStore.mapState([
-      'validators'
+      'userBalance'
     ])
   },
   methods: {
@@ -139,8 +141,8 @@ export default class FaucetDelegateModal extends Vue {
       if(this.validators && this.validators.length > 0) {
         this.formattedValidators = this.validators.map((v) => {
           return {
-            text: v.Name || v.Address,
-            value: v.Address
+            text: v.name || v.name,
+            value: v.address
           }
         })
       }
@@ -151,15 +153,13 @@ export default class FaucetDelegateModal extends Vue {
       this.okTitle = "Un-delegate"
       this.delegationDetail = {
         amount: '',
-        from: address,
-        to: getAddress(this.getPrivateKey),
+        from: address
       }
     } else {
       this.unbond = false
       this.okTitle = "Delegate"
       this.delegationDetail = {
         amount: '',
-        from: getAddress(this.getPrivateKey),
         to: address
       }
     }
@@ -184,10 +184,10 @@ export default class FaucetDelegateModal extends Vue {
       default:
         break
     }
-
   }
 
-}</script>
+}
+</script>
 <style lang="scss">
 label {
   color: gray;

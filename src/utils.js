@@ -84,8 +84,11 @@ export const getNetworkType = async function() {
 }
 
 export const formatToCrypto = (amount) => {
-  let conversion = new BigNumber(amount / 10 ** 18)
-  return conversion.toFormat(2)
+  const conversion = new BigNumber(amount / 10 ** 18, 10)
+  // show gwei if less than one
+  return conversion.lt(1) && conversion.gt(0) ?
+    conversion.toFormat(9) :
+    conversion.toFormat(2)
 }
 
 export const DOMAIN_NETWORK_ID = {
@@ -103,3 +106,15 @@ export const sleep = (milliseconds) => {
 
 
 export const EMAIL_REGEX = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+
+const capitalize = s => {
+  if (typeof s !== "string") return ""
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+ export const simpleMutations = stateName => ({
+  [`set${capitalize(stateName)}`]: (state, payload) => (state[stateName] = payload)
+})
+
+ export const buildMutationsFromState = state =>
+  Object.assign({}, ...Object.keys(state).map(name => simpleMutations(name)))

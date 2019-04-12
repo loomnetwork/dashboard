@@ -7,6 +7,7 @@ export SENTRY_PROJECT=loomgames-frontend
 
 
 
+PRESET_MOBILE="m-dashboard.dappchains.com"
 PRESET_DEV="dev-dashboard.dappchains.com"
 PRESET_STAGE="rinkeby-dashboard.dappchains.com" #future production
 PRESET_PROD="dashboard.dappchains.com"
@@ -31,6 +32,9 @@ case "$BRANCH_CHOICE" in
   ;;
   origin/develop|develop)
     FAUCET_PATH="${PRESET_DEV}"
+  ;;
+  origin/mobile-ui|mobile-ui)
+    FAUCET_PATH="${PRESET_MOBILE}"
   ;;
   *)
     echo "Sanity check failed. You are trying to deploy from branch $GIT_BRANCH. Is that intended? If so add it to jenkins.sh so that it does the right thing."

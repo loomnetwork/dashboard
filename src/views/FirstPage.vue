@@ -1,7 +1,7 @@
 <!-- PlasmaChain Delegators -->
 <template>
   <div class="">
-    <div class="faucet-content pt-5">
+    <div class="pt-3">
       <main>
         <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
         <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
@@ -10,85 +10,40 @@
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
         <div class="container-fluid mb-5 rmv-padding">
-          <div class="row d-flex justify-content-center mb-auto">
-            <div class="col">
-              <div>
-                <b-card no-body>
-                  <b-tabs card v-model="activeTab">
-                    <b-tab>
-                      <template slot="title">
-                        <span class="tab-title">1. Login to PlasmaChain</span>
-                        <b-spinner v-if="showTabSpinner" type="border" small />
-                        <fa v-if="userIsLoggedIn && !showTabSpinner" icon="check" class="tab-icon"/>
-                      </template>
-                        <div class="row">
-                          <img src="../assets/loomy-player-one.png" class="loomy-graphic">
-                        </div>
-                      <div class="row pt-4 pb-4">
-                        <div class="col text-center">
-                          <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">{{ $t('views.first_page.new_user') }}</b-button>
-                        </div>
-                        <div class="col">
-                          <div class="button-inner-container">
-                            <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">{{ $t('views.first_page.returning_user') }}</b-button>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                          <b-button v-b-toggle.collapse1 variant="warning" v-if="!isProduction">Diagnostic Options</b-button>
-                          <b-collapse id="collapse1" class="mt-2">
-                            <b-card>
-                              <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"
-                                v-if="!isProduction"
-                                :allowedUrls="chainUrls"
-                                :serverUrl="currentChain"
-                                @urlClicked="onUserInputUrl"
-                                @urlInput="onUserInputUrl"/>
-                
-                            </b-card>
-                          </b-collapse>
-                         
-                       </div>                      
-                    </b-tab>
-                    <b-tab :disabled="!userIsLoggedIn">
-                      <template slot="title">
-                        <span class="tab-title">2. Login to Ethereum</span>
-                      </template>                      
-                      <div class="row wallet-provider-container">
-                        <div class="col">
-                          <b-card class="wallet-selection-card text-center" @click="selectWallet('ledger')">
-                            <img src="../assets/ledger_logo.svg">
-                            <p>
-                              Connect & sign via your <br>
-                              hardware wallet                      
-                            </p>
-                            <span id="ledgerInfo" class="qa">? </span>
-                            <b-tooltip target="ledgerInfo" placement="bottom" title="Click here to connect with your Ledger hardware wallet"></b-tooltip>
-                          </b-card>
-                        </div>
-                        <div class="col">
-                          <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
-                            <img src="../assets/metamask_logo.png">
-                            <p>
-                              Connect & sign via your browser <br>
-                              or extension                      
-                            </p>
-                            <span id="metamaskInfo" class="qa">? </span>
-                            <b-tooltip target="metamaskInfo" placement="bottom" title="Click here to connect with your Metamask wallet"></b-tooltip>
-                          </b-card>                  
-                        </div>                
-                      </div>                      
-                    </b-tab>
-                  </b-tabs>
+     
+          <b-card title="Select wallet">
+            <div class="row wallet-provider-container">
+              <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center mb-3" @click="selectWallet('ledger')">
+                  <h5>Ledger</h5>
+                  <img src="../assets/ledger_logo.svg">
+                  <small>
+                    Connect & sign via your <br>
+                    hardware wallet                      
+                  </small>
                 </b-card>
               </div>
+              <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                  <h5>Metamask</h5>
+                  <img src="../assets/metamask_logo.png">
+                  <small>
+                    Connect & sign via your browser <br>
+                    or extension                      
+                  </small>
+                </b-card>                  
+              </div>                
+            </div>  
+          </b-card>
 
 
+          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
+                      v-if="!isProduction"
+                      :allowedUrls="chainUrls"
+                      :serverUrl="currentChain"
+                      @urlClicked="onUserInputUrl"
+                      @urlInput="onUserInputUrl"/>
 
-
-
-            </div>
-          </div>
 
         </div>
       </main>
@@ -167,9 +122,11 @@ export default class FirstPage extends Vue {
   async selectWallet(wallet) {
     if(wallet === "ledger") {
       this.setWalletType("ledger")
+      this.setUserIsLoggedIn(true)
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
+      this.setUserIsLoggedIn(true)
       this.$root.$emit("login") 
     } else {
       return
@@ -258,8 +215,23 @@ export default class FirstPage extends Vue {
     this.switchTab() 
   }
 
+  mounted() {
+    if(!this.isMobile) return
+    if ((window.web3 && window.web3.currentProvider.isTrust) || 
+        !!window.imToken ||
+        (window.web3 && window.web3.currentProvider.isMetaMask) ||
+        (window.web3 && window.web3.isCobo)
+      ) {
+      this.setWalletType("metamask")
+      this.setUserIsLoggedIn(true)
+      this.$root.$emit("login") 
+    }
+
+  }
+  
   switchTab() {
     this.showTabSpinner = true
+
     setTimeout(() => {
       this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
       this.showTabSpinner = false
@@ -274,13 +246,16 @@ export default class FirstPage extends Vue {
     }
   }
 
+  get isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
+  }
+
   async onWalletConfig() {
     this.setWalletType("ledger")
   }
 
-}</script>
-
-
+}
+</script>
 <style lang="scss" scoped>
   .button-container {
     display: flex;
@@ -299,23 +274,39 @@ export default class FirstPage extends Vue {
   .rmv-padding {
     padding: 0 !important;
   }
+
+  #login-tab {
+    .actions {
+      display: flex;
+      justify-content: center;
+      button {
+        width: 250px;
+        margin:16px;
+      }
+    }
+  }
+
+  @media (max-width: 767px) { 
+    #login-tab {
+      .actions {
+      display: flex;
+      flex-direction: column;
+        button {
+          width:100%;
+          margin:8px 0;
+        }
+      }
+    }
+
+  }
+
+
 </style>
 
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
 
-$theme-colors: (
-  //primary: #007bff,
-  primary: #02819b,
-  secondary: #4bc0c8,
-  success: #5cb85c,
-  info: #5bc0de,
-  warning: #f0ad4e,
-  danger: #d9534f,
-  light: #f0f5fd,
-  dark: #122a38
-);
+
 
 .header {
   .navbar {
@@ -386,12 +377,15 @@ $theme-colors: (
 }
 
 .wallet-provider-container {
-  .col {
+  .wallet-selection-card {
     position: relative;
     img {
-      width: 96px;
+      width: 72px;
       height: auto;
       margin-bottom: 12px;
+    }
+    small {
+      display: block;
     }
     span.qa {        
       display: inline-block;

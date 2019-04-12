@@ -1,5 +1,6 @@
 <template>
   <div id="faucet-header" @login="startPolling" ref="header" class="header">
+
     <b-alert variant="danger"
                dismissible
                :show="!!showErrorMsg"
@@ -9,145 +10,78 @@
       </b-alert>
       <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
       <span class="text-dark" v-html="this.$store.state.successMsg"></span>
-    </b-alert>   
-    <b-navbar toggleable="md" type="dark">
-      <div class="container-fluid d-flex justify-content-between ensure-padded">        
-        <a @click="$router.push({path: '/validators'})">
-          <b-navbar-brand>
-            {{ $t('components.faucet_header.plasmachain_dashboard') }}
-            <span v-if="connectedToMetamask" class="metamask-status">{{ $t('components.faucet_header.eth_connected') }}</span>
-            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.eth_disconnected') }}</span>
-            <span v-if="connectedToDappChain" class="metamask-status">{{ $t('components.faucet_header.dapp_connected') }}</span>
-            <span v-else class="metamask-status metamask-status-error">{{ $t('components.faucet_header.dapp_disconnected') }}</span>
-          </b-navbar-brand>
-        </a>
-        <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
-        <b-collapse is-nav id="nav_collapse">
-
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            
-            <b-nav-form>
-              <b-nav-item :hidden="false">
-                <router-link to="/account" class="router text-light hover-warning">{{ $t('views.history.home') }}</router-link>
-              </b-nav-item>
-              <b-nav-item :hidden="isLoggedIn">
-                <router-link to="/validators" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-              </b-nav-item>
-              <b-nav-item :hidden="true">
-                <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.explorer') }}</router-link>
-              </b-nav-item>   
-              <b-nav-item :hidden="false">
-                <router-link to="/faq" class="router text-light hover-warning">{{ $t('components.faucet_header.f_a_q') }}</router-link>
-              </b-nav-item>
-              <b-nav-item :hidden="false">
-                <LangSwitcher/>
-              </b-nav-item>
-            </b-nav-form>
-
-          </b-navbar-nav>
-        </b-collapse>        
-      </div>
-    </b-navbar> 
-    <b-navbar type="dark" variant="primary" class="top-nav" toggleable>
-      <div class="container-fluid ensure-padded">
-
-        <div class="col" v-if="userIsLoggedIn">
-          <b-navbar-nav v-if="formattedTimeUntilElectionCycle">
-            <div id="countdown-container">
-              <progress :value="timeLeft" max="600" ref="electionCycleProgressBar"></progress>
-            </div>            
-            <b-tooltip target="countdown-container" placement="bottom">
-              <span>{{ $t('components.faucet_header.next_election_cycle') }}</span> <strong class="highlight">{{formattedTimeUntilElectionCycle}}</strong>
-            </b-tooltip>
-          </b-navbar-nav>      
-        </div>
-
-        <div class="col">          
-          <b-navbar-nav>
-            <div class="sub-menu-links" v-if="!errorRefreshing">
-              <b-nav-item v-if="isLoggedIn" class="mr-3">
-                <span id="mainnetBalance" class="mr-2">{{ $t('views.my_account.mainnet') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.mainnetBalance}}</strong></span>
-                <b-tooltip target="mainnetBalance" placement="bottom" title="This is your current balance in your connected wallet"></b-tooltip>
-                <span id="dappchainBalance" class="mr-2">{{ $t('components.faucet_header.plasma_chain') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : formatLoomBalance}}</strong></span>
-                <b-tooltip target="dappchainBalance" placement="bottom" title="This is the amount currently deposited to plasmachain"></b-tooltip>
-                <span id="stakedAmount">{{ $t('components.faucet_header.staked') }} <strong class="highlight">{{this.userBalance.isLoading ? 'loading' : this.userBalance.stakedAmount}}</strong></span>
-                <b-tooltip target="stakedAmount" placement="bottom" title="This is the total amount you have staked to validators"></b-tooltip>
-              </b-nav-item>
-              <b-nav-item v-if="isLoggedIn" class="mr-3">
-                  <b-spinner v-if="showRefreshSpinner" type="border" small />
-                  <a v-if="!showRefreshSpinner" @click="refresh"> <fa :icon="['fas', 'sync']" class="refresh-icon"/></a>
-              </b-nav-item>
-              <b-nav-item v-if="isLoggedIn" :hidden="false" class="add-border-left pl-3">
-                <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
-              </b-nav-item>          
-            </div>
-            <!-- <b-nav-item :hidden="false" style="margin-left: auto;">
-              <a @click="logOut" class="sign-out-link">{{ $t('views.first_page.sign_out') }}</a>
-            </b-nav-item>                  -->
-            <!-- <b-nav-item-dropdown id="balance" style="margin-left: auto;" :text="balance" right>
-              <router-link to="/blockexplorer" class="router text-light hover-warning">
-                <b-dropdown-item href="#">{{ $t('components.faucet_header.deposit') }}</b-dropdown-item>
-              </router-link>
-              <b-dropdown-item href="#">{{ $t('views.my_account.withdraw') }}</b-dropdown-item>
-              <b-dropdown-item @click="logOut">{{ $t('views.first_page.sign_out') }}</b-dropdown-item>
-            </b-nav-item-dropdown> -->
-          </b-navbar-nav>
-        </div>
-      </div>
-    </b-navbar>        
-    <!-- <nav class="block-foreground d-flex navbar navbar-dark navbar-expand-md ext-uppercase app-navbar mb-0 justify-content-between">
-      <div class="container d-flex justify-content-between">
-        <a class="navbar-brand col-lg-3 col-md-3" href="https://loomx.io/">
-          {{ $t('components.faucet_header.plasmachain_dashboard') }}
-        </a>
-        <b-collapse is-nav id="nav_dropdown_collapse">
-          <b-nav class="col-lg-5 offset-md-1 col-md-6">
-            <login-account-modal ref="loginAccountRef" @onLogin="onLoginAccount"/>
-            <b-nav-item :hidden="hideDashboard">
-              <router-link to="/account" class="router text-light hover-warning">{{ $t('components.faucet_header.dashboard') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideWallet">
-              <router-link to="/account" class="router text-light hover-warning">{{ $t('components.faucet_header.wallet') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideValidators">
-              <router-link to="/" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideMyStaking">
-              <router-link to="/validators" class="router text-light hover-warning">{{ $t('components.faucet_header.my_staking') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="hideBlockExplorer">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.block_explorer') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('views.validator_list.validators') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.my_stakes') }}</router-link>
-            </b-nav-item>
-            <b-nav-item :hidden="false">
-              <router-link to="/blockexplorer" class="router text-light hover-warning">{{ $t('components.faucet_header.status') }}</router-link>
-            </b-nav-item>                              
-          </b-nav>
-        </b-collapse>
-        <b-nav class="offset-lg-2 col-lg-2 col-md-2">
-          <b-nav-item :hidden="hideLogOut">
-            <a @click.prevent="login" class="router text-light hover-warning">{{loginText}}</a>
-          </b-nav-item>      
-        </b-nav>        
-      </div>
-      <b-alert variant="danger"
-               dismissible
-               :show="!!showErrorMsg"
-               class="custom-alert"
-               ref="errorMsg"
-      >
-        {{this.$store.state.errorMsg}}
-      </b-alert>
-      <b-alert variant="success" class="custom-alert" dismissible :show="!!showSuccessMsg" ref="successMsg">
-      <span class="text-dark" v-html="this.$store.state.successMsg"></span>
     </b-alert>
-    </nav> -->  
+
+    <div class="d-none d-md-block">
+      <nav class="navbar">
+        <div class="container-fluid">
+          <router-link to="/account" class="navbar-brand">
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/> Plasmachain          
+          </router-link>          
+          <form class="form-inline">
+            <LangSwitcher/>
+          </form>
+        </div>
+      </nav>
+    </div>
+
+    <div class="d-sm-block d-md-none">
+      <nav class="mobile-navbar">
+        <b-navbar toggleable="md" type="dark">
+          <div class="container d-flex justify-content-between ensure-padded">        
+
+            <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
+              <strong>
+                Back
+              </strong>
+            </a>
+
+
+            <b-navbar-brand href="#">
+              <loom-icon :color="'#ffffff'"/>
+            </b-navbar-brand>
+
+            <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
+            <b-collapse is-nav id="nav_collapse">
+
+              <!-- Right aligned nav items -->
+              <b-navbar-nav class="mobile-nav ml-auto">
+                
+                <b-nav-item v-if="userIsLoggedIn">
+                  <h5>
+                    <router-link to="/account" class="router text-light hover-warning">Account</router-link>
+                  </h5>
+                </b-nav-item>
+                <b-nav-item v-if="userIsLoggedIn">
+                  <h5>
+                    <router-link to="/history" class="router text-light hover-warning">History</router-link>
+                  </h5>
+                </b-nav-item>
+                <b-nav-item>
+                  <h5>
+                    <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
+                  </h5>
+                </b-nav-item>
+                <div v-if="isMobile">
+                  <b-nav-item>
+                    <h5>
+                      <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+                    </h5>
+                  </b-nav-item>              
+                </div>
+                <LangSwitcher/>
+                <b-nav-item v-if="userIsLoggedIn">
+                  <h5>
+                    <a @click="logOut" class="router text-light hover-warning">Sign out</a>
+                  </h5>
+                </b-nav-item>
+              </b-navbar-nav>
+            </b-collapse>        
+          </div>
+        </b-navbar> 
+      </nav>      
+    </div>
+
   </div>
 </template>
 
@@ -155,6 +89,7 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import ChainSelector from './ChainSelector'
+import LoomIcon from '@/components/LoomIcon'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import LangSwitcher from './LangSwitcher'
 
@@ -164,7 +99,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 @Component({
   components: {
     ChainSelector,
-    LangSwitcher
+    LangSwitcher,
+    LoomIcon
   },
   props: {
     hideDashboard: {
@@ -278,13 +214,17 @@ export default class FaucetHeader extends Vue {
     }
   }
 
+  testHide() {
+    this.$emit("bv::toggle::collapse", "nav_collapse", false);
+  }
+
   async mounted() { 
 
     // Start election cycle timer
-    this.$root.$on('initialized', async () => {
-      await this.updateTimeUntilElectionCycle()
-      this.startTimer()
-    })    
+    // this.$root.$on('initialized', async () => {
+    //   await this.updateTimeUntilElectionCycle()
+    //   this.startTimer()
+    // })
 
     // Listen to refreshBalances event
     this.$root.$on('refreshBalances', async () => {
@@ -326,6 +266,14 @@ export default class FaucetHeader extends Vue {
       this.refreshInterval = setInterval(async () => this.refresh(), 5000)
     }
   }
+
+  get showBackButton() {
+    return this.$route.path.includes("login") ? false : true
+  }
+
+  get isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
+  }  
   
   destroyed() {
     this.deleteIntervals()
@@ -440,27 +388,32 @@ export default class FaucetHeader extends Vue {
       }, waitTime * 1000)
     }
   }
-}</script>
+}
+</script>
 <style lang="scss">
-.header {
+
+.navbar {
   background: #5756e6;
+  .navbar-brand {
+    color: #ffffff;
+  }
+}
+
+.mobile-navbar {  
   .navbar {
     padding: 0;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
     width: 100%;
     .navbar-brand {
-      display: block;
-      padding: 0;
-      img {
-        height: 56px;
-      };
-      .router {
-        color: white;
-        font-size: 18px;
-      }
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      margin: 0;
+      transform: translateX(-50%);
     }
   }
 }
+
 
 .rmv-margin {
   margin: 0;
@@ -559,17 +512,34 @@ a.hover-warning:hover {
   background-color: #e62e2e;
 }
 
-// #balance::after {
-//   position: absolute;
-//   content: "Staked / Available";
-//   font-size: 9px;
-//   color: #ffffff;
-//   bottom: 6px;
-//   left: 8px;
-// }
-
 .add-border-left {
   border-left: 2px solid #f2f1f3;
+}
+
+.navbar-toggler {
+  border: 0px;
+  position: relative;
+  right: 0px;
+  margin-left: auto;
+  padding-right: 0;  
+}
+
+.mobile-nav {
+  text-align: center;
+  padding: 12px 0;
+  h5 {
+    margin: 0;
+    font-size: 1rem;
+  }
+  li {
+    list-style: none;
+  } 
+}
+
+.back-btn {
+  strong {
+    color: #ffffff;
+  }
 }
 
 </style>

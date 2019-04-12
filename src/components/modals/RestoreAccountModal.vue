@@ -2,15 +2,23 @@
   <b-modal id="restore-account-modal" ref="modalRef" title="Restore Account" hide-footer centered>
     <b-container fluid>
       <b-row class="my-1 align-items-center">
-        <p class="color-grey">{{ $t('components.modals.restore_account_modal.please_type_in_your_seed') }}</p>
-        <p class="color-grey">{{ $t('components.modals.restore_account_modal.note_the_phrase_is_case') }}</p>
+        <p
+          class="color-grey"
+        >{{ $t('components.modals.restore_account_modal.please_type_in_your_seed') }}</p>
+        <p
+          class="color-grey"
+        >{{ $t('components.modals.restore_account_modal.note_the_phrase_is_case') }}</p>
       </b-row>
       <b-row class="my-1 align-items-center">
-        <b-form-input v-model="seeds" :rows="3" type="text" autocomplete="off"></b-form-input>
+        <b-form-input v-model="seeds" :rows="3" type="text" autocomplete="off" autofocus></b-form-input>
       </b-row>
       <b-row class="my-1 justify-content-between pt-4">
-        <span class="text-error  mt-2" variant="error">{{errorMessage}}</span>
-        <b-button class="btn" variant="primary" @click="okHandler">{{ $t('views.first_page.restore_account') }}</b-button>
+        <span class="text-error mt-2" variant="error">{{errorMessage}}</span>
+        <b-button
+          class="btn"
+          variant="primary"
+          @click="okHandler"
+        >{{ $t('views.first_page.restore_account') }}</b-button>
       </b-row>
     </b-container>
   </b-modal>
@@ -29,7 +37,6 @@ export default class RestoreAccountModal extends Vue {
   seeds = "";
   errorMessage = "";
   okHandler() {
-
     let seedPhraseIsValid = bip39.validateMnemonic(this.seeds)
     if(!seedPhraseIsValid) {
       this.errorMessage = "Invalid seed phrase"
@@ -65,8 +72,9 @@ label {
       color: gray;
     }
   }
-  .modal-body {
-    .col-sm-3, .col-sm-9 {
+  .col-sm-3, .col-sm-9 {
+    .col-sm-3,
+    .col-sm-9 {
       padding: 0;
     }
     .text-error {

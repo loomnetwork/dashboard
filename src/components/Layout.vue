@@ -1,33 +1,44 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">        
-    <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>    
-    <div class="content container-fluid">      
-      <warning-overlay type="metamask"></warning-overlay>
+  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
+    
+    <b-alert variant="light" :show="showSigningAlert" dismissible class="custom-notification text-center">
+      <strong>
+        <fa :icon="['fa', 'bell']" />
+        {{ $t('Please sign the transaction on your wallet') }}
+      </strong>
+    </b-alert>
+
+    <faucet-header v-on:update:chain="refresh()"></faucet-header>
+    <div class="content">      
+		  <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
-      <div class="row">
-        <div v-show="showSidebar" class="col-lg-3">
-          <faucet-sidebar></faucet-sidebar>      
-        </div>
-        <div :class="contentClass">
+      <div class="d-none d-lg-block">
+        <faucet-sidebar></faucet-sidebar> 
+      </div>
+      <div class="main-container">
+        <div class="inner-container container">
           <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
-              {{ $t('components.layout.sign_wallet', {walletType:walletType}) }}
+              {{ $t('components.layout.sign_wallet') }}
           </b-modal>
           <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
               {{ $t('components.layout.already_mapped') }}
-          </b-modal> 
-          <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+          </b-modal>
+          <transition name="page" mode="out-in">
           <router-view></router-view>
-        </div>        
-      </div>          
+          </transition>
+        </div>
+      </div> 
     </div>    
-    <faucet-footer></faucet-footer>
      <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
         <div class="d-block text-center">
           <p>{{ $t('components.layout.metamask_changed')}}</p>
         </div>
         <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
      </b-modal>
+    <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+      <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+    </transition>
+
   </div>  
 </template>
 
@@ -44,9 +55,6 @@ import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
-import { initWeb3 } from '../services/initWeb3'
-import { isIP } from 'net';
-
 @Component({
   components: {
     FaucetHeader,
@@ -60,20 +68,10 @@ import { isIP } from 'net';
   },
   methods: {
     ...mapMutations([
-      'setUserIsLoggedIn',
       'setErrorMsg'
-    ]),
-    ...DappChainStore.mapActions([
-      'ensureIdentityMappingExists'
     ]),
     ...DPOSStore.mapActions([
       'initializeDependencies',
-      'checkMappingAccountStatus'
-    ]),
-    ...DPOSStore.mapMutations([
-      'setConnectedToMetamask',
-      'setCurrentMetamaskAddress',
-      'setWalletType'
     ]),
     ...DappChainStore.mapMutations([
       'setMappingError',
@@ -86,21 +84,17 @@ import { isIP } from 'net';
     ]),
     ...DappChainStore.mapState([
       'account',
-      'metamaskStatus',
+      'showSigningAlert',
       'metamaskError',
-      'mappingStatus',
       'mappingError'
     ]),
     ...DPOSStore.mapState([
       'showSidebar',
-      'web3',
       "currentMetamaskAddress",
-      'metamaskDisabled',
       'showLoadingSpinner',
       'showAlreadyMappedModal',
       'showSignWalletModal',
       'mappingSuccess',
-      'isLoggedIn',
       'walletType',
       'status'
     ])    
@@ -111,9 +105,6 @@ export default class Layout extends Vue {
 
   metamaskChangeAlert = false
 
-  pendingModalTitle = 'Continue with your approved Loom'
-  isOpen = true
-  preload = false
   loginEmail = ''
   routeArray = [
     {
@@ -133,9 +124,7 @@ export default class Layout extends Vue {
   ]
 
   created() {
-    this.$router.afterEach((to, from) => {
-      this.$root.$emit("refreshBalances")
-    })
+    this.$router.afterEach((to, from) => this.$root.$emit("refreshBalances"))
   }
 
   beforeMount() {
@@ -171,12 +160,11 @@ export default class Layout extends Vue {
   }
 
   @Watch('showSignWalletModal')
-    onSignLedgerModalChange(newValue, oldValue) {      
+  onSignLedgerModalChange(newValue, oldValue) {      
     if(newValue) {
         this.$root.$emit("bv::show::modal", "sign-wallet-modal")
     } else {
         this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
-
     }
   }
 
@@ -230,18 +218,6 @@ export default class Layout extends Vue {
     }           
   }
 
-  onLoginHandler() {
-    this.$auth.initAuthInstance()
-  }
-
-  get showErrorMsg() {
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: 'error' } : false
-  }
-
-  get showSuccessMsg() {
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: 'success' } : false
-  }
-
   get getClassNameForStyling() {
     let className = "";
     const self = this;
@@ -253,12 +229,8 @@ export default class Layout extends Vue {
     })
     return className;
   }
-
-  get contentClass() {
-    return this.showSidebar ? 'col-lg-9' : 'col-lg-12'
-  }
-
-}</script>
+}
+</script>
 
 <style lang="scss" scoped>
   #layout {
@@ -280,6 +252,34 @@ export default class Layout extends Vue {
     align-items: stretch;
   }
 
+.page-enter-active, .page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+  transition-delay: 0.5s;
+}
+
+.page-enter, .page-leave-to {
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
+.main-container {
+	width: 100%;
+  .inner-container {
+    position: relative;
+    height: 100%;
+  }
+}
+
+.custom-notification {
+  position: absolute;
+  z-index: 10100;
+  width: 90%;
+  margin-top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
+
 </style>
 
 <style lang="scss">
@@ -292,11 +292,6 @@ export default class Layout extends Vue {
   .highlight {
     color: #f0ad4e;
   }
-
-  .container-fluid {
-    max-width: 1200px;
-    padding: 0 24px !important;
-  }  
 
   @media (max-width: 576px) {
   }

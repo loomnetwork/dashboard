@@ -646,10 +646,17 @@
   dependencies:
     "@ledgerhq/errors" "^4.50.0"
 
-"@ledgerhq/errors@^4.50.0":
+"@ledgerhq/errors@^4.46.0", "@ledgerhq/errors@^4.50.0":
   version "4.50.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.50.0.tgz#d330e396d47bbbe474fe0adfa087eeb7edd76912"
   integrity sha512-Xg5GTDUWprVJ5zCWtfESLfI1qyr09JQH8pLtWDCkz3GxlwnFPtMAvKB9qUoc2Ou4zJ9DfsZdS8KaZ/2VKXkYGA==
+
+"@ledgerhq/hw-app-eth@4.48.0":
+  version "4.48.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-4.48.0.tgz#230f67c2c06ba6bd4176b7b2b1ad46e5efdde505"
+  integrity sha512-lNdQOFDeAda8f/X6qP27FCtfhUX5eMuaL23aqfqu5Pfp92/FiHTkE2SOTcO0bjQK3/KsIF/ZSDzxtWvv8vkgkA==
+  dependencies:
+    "@ledgerhq/hw-transport" "^4.48.0"
 
 "@ledgerhq/hw-app-eth@^4.50.0":
   version "4.50.0"
@@ -657,6 +664,15 @@
   integrity sha512-4d7i1+tnIEP6v/bwMLRcDuDj44ZQeXisAAOglaTQh7Ub9hW3iOZhzLNYDawY8Ro/7Txg/PTwNZwbrgvclS9BGQ==
   dependencies:
     "@ledgerhq/hw-transport" "^4.50.0"
+
+"@ledgerhq/hw-transport-u2f@4.46.0":
+  version "4.46.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-u2f/-/hw-transport-u2f-4.46.0.tgz#3a83e313028bbb0330fdcabd4b202e5ffc2b39e2"
+  integrity sha512-x10l/3iHXEM1l9jLW4s+SGoZ3ZMEwFz733dI0UU5UoF2Vjl/7eQwPYsYK9WxUiQ7E0Vbh9bebnfWnHkm4B/OJQ==
+  dependencies:
+    "@ledgerhq/errors" "^4.46.0"
+    "@ledgerhq/hw-transport" "^4.46.0"
+    u2f-api "0.2.7"
 
 "@ledgerhq/hw-transport-u2f@^4.50.0":
   version "4.50.0"
@@ -667,7 +683,7 @@
     "@ledgerhq/hw-transport" "^4.50.0"
     u2f-api "0.2.7"
 
-"@ledgerhq/hw-transport@^4.50.0":
+"@ledgerhq/hw-transport@^4.46.0", "@ledgerhq/hw-transport@^4.48.0", "@ledgerhq/hw-transport@^4.50.0":
   version "4.50.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.50.0.tgz#2b4c8e9954a9fe7e616cb936ae105fa1de776095"
   integrity sha512-NDbTOkoAphL9er46wjni2CVn+s8ZfyDVgj2dVS00L/NYA3ajVX21DrRGMEI8P5/kdLx4KfID4Z1wsa6Hefj3EQ==
@@ -676,7 +692,7 @@
     "@ledgerhq/errors" "^4.50.0"
     events "^3.0.0"
 
-"@ledgerhq/web3-subprovider@^4.50.0":
+"@ledgerhq/web3-subprovider@^4.48.0":
   version "4.50.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/web3-subprovider/-/web3-subprovider-4.50.0.tgz#48dc223453586a5bf77cd7fe41577245bdb8b8f5"
   integrity sha512-RqXxB6O5PBGxfVfYMnUdSUfEsjR0aQDK3UP8USLQ7GsTp4Y+k+r4Rmlyp8WUpu2cMZxE+blfSYh6IBdGTyyo/g==

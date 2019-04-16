@@ -20,8 +20,6 @@ import BN from 'bn.js'
 
 const DPOS2 = Contracts.DPOS2
 
-// todo revert after
-const LOOM_ADDRESS = ""
 const GW_ADDRESS = ""
 /*
 network config
@@ -175,8 +173,6 @@ const defaultState = () => {
     chainUrls: chainUrls,
     chainIndex: chainIndex,
     dAppChainClient: undefined,
-    LoomTokenNetwork: undefined,
-    LoomTokenInstance: undefined,
     GatewayInstance: undefined,
     dposUser: undefined,
     dpos2: undefined,
@@ -238,8 +234,6 @@ export default {
       state.account = payload.account
       state.dAppChainClient = payload.dAppChainClient
       state.localAddress = payload.localAddress
-      // state.LoomTokenNetwork = payload.LoomTokenNetwork
-      // state.LoomTokenInstance = payload.LoomTokenInstance
     },
     setWeb3(state, payload) {
       state.web3 = payload
@@ -315,9 +309,6 @@ export default {
         commit('setWeb3', payload.web3)
         // these are filled on yarn serve/build
         const network = state.chainUrls[state.chainIndex].network
-        const LoomTokenInstance = new payload.web3.eth.Contract(LoomTokenJSON.abi, LOOM_ADDRESS || LoomTokenJSON.networks[network].address)
-        state.LoomTokenNetwork = LoomTokenJSON.networks[network]
-        state.LoomTokenInstance = LoomTokenInstance
         state.GatewayInstance = new payload.web3.eth.Contract(GatewayJSON.abi, GW_ADDRESS || GatewayJSON.networks[network].address)
       } catch (err) {
         console.error(err)
@@ -326,12 +317,22 @@ export default {
     async getMetamaskLoomBalance({ state , commit}, payload) {
       if (!state.web3) return 0
 
+      if (!state.dposUser) {
+        try {
+          await dispatch('initDposUser')
+        } catch (err) {
+          console.error("Error getting Loom balance", err)
+          return 0
+        }
+      }
       const web3js = state.web3
       const accounts = await web3js.eth.getAccounts()
       if (accounts.length === 0) return 0
       const address = accounts[0]
       try {
-        let balance = web3js.utils.fromWei(await state.LoomTokenInstance.methods
+        let loomWei = await state.dposUser.ethereumLoom.methods
+
+        let balance = web3js.utils.fromWei(await state.dposUser.ethereumLoom.methods
           .balanceOf(address)
           .call({ from: address }))
       let limitDecimals = parseFloat(balance).toFixed(2)

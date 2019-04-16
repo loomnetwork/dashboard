@@ -19,17 +19,19 @@ const debug = Debug("dashboard.dapp")
 import BN from 'bn.js'
 
 const DPOS2 = Contracts.DPOS2
+let LOOM_ADDRESS = ""
+let GW_ADDRESS = ""
 
 const hostname = window.location.hostname 
 if (hostname === "dashboard.dappchains.com") {
-  const LOOM_ADDRESS = ""
-  const GW_ADDRESS = ""
+  LOOM_ADDRESS = ""
+  GW_ADDRESS = ""
 } else if ( hostname === "dev-dashboard.dappchains.com") {
-  const LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
-  const GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
+  LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
+  GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
 } else {
-  const LOOM_ADDRESS = ""
-  const GW_ADDRESS = ""
+  LOOM_ADDRESS = ""
+  GW_ADDRESS = ""
 }
 
 /*

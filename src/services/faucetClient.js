@@ -14,7 +14,7 @@ const {
 
 const BN = require('bn.js')
 
-const DPOS2 = Contracts.DPOS2
+const DPOS3 = Contracts.DPOS3
 const Coin = Contracts.Coin
 // const MyRinkebyTokenJSON = require('../contracts/MyRinkebyToken.json')
 // const MyRinkebyCoinJSON = require('../contracts/MyRinkebyCoin.json')
@@ -72,7 +72,7 @@ export default class FaucetClient {
   static async createAsync(privateKey) {
     const userAccount = loadUserAccount(privateKey)
     const { account, client } = userAccount
-    const userDPoS = await DPOS2.createAsync(client, account)
+    const userDPoS = await DPOS3.createAsync(client, account)
 
     const coin = await Coin.createAsync(client, account)
 

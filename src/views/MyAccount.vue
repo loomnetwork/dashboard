@@ -275,7 +275,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getAccumulatedStakingAmount',
       'init',
       'checkMappingCompatability',
-      'getDpos2',
+      'getDpos3',
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
       'getPendingWithdrawalReceipt',

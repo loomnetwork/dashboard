@@ -231,7 +231,7 @@ export default class MobileAccount extends Vue {
 
   async getDelegations() {
 
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
+    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkAllDelegationsAsync()
     const candidates = await this.dposUser.listCandidatesAsync()
 
     return delegationsArray.filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))

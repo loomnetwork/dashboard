@@ -53,7 +53,7 @@ import { initWeb3 } from '../services/initWeb3'
       'setCurrentMetamaskAddress'
     ]),
     ...DappChainStore.mapActions([
-      'getDpos2'
+      'getDpos3'
     ])
   },
   computed: {
@@ -83,7 +83,7 @@ export default class MyDelegations extends Vue {
   }
 
   async refresh() {
-    await this.getDpos2()
+    await this.getDpos3()
     await this.getDelegationList()
   }
 
@@ -91,7 +91,7 @@ export default class MyDelegations extends Vue {
     this.loading = true    
 
 
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
+    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkAllDelegationsAsync()
 
     const candidates = await this.dposUser.listCandidatesAsync()
 

@@ -58,7 +58,7 @@ const DappChainStore = createNamespacedHelpers('DappChain')
       'setErrorMsg'
     ]),
     ...DappChainStore.mapActions([
-      'getDpos2'
+      'getDpos3'
     ])
   }
 })
@@ -82,7 +82,7 @@ export default class CandidateDetail extends Vue {
   }
 
   async refresh() {
-    await this.getDpos2()
+    await this.getDpos3()
     this.candidateList = await getCandidatesAsync(this.currentRPCUrl)
   }
 

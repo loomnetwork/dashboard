@@ -1,4 +1,4 @@
-import { DelegationState, LockTimeTier } from "loom-js/dist/contracts/dpos2";
+import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb";
 import Vue from 'vue'
 import BN from 'bn.js';
 import { formatToCrypto } from './utils.js';
@@ -42,11 +42,11 @@ export function formateDelegationState(value:DelegationState) {
     return delegationStateText[value] || "Unknown"
 }
 
-export function formateLockTimeTier(value:LockTimeTier) {
+export function formateLockTimeTier(value:LocktimeTier) {
     return lockTimeTierText[value] || "Unknown"
 }
 
-export function formatLockTimeBonus(value:LockTimeTier) {
+export function formatLockTimeBonus(value:LocktimeTier) {
     return lockTimeTierBonus[value] || "Unknown"
 }
 

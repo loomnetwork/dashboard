@@ -121,7 +121,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
       'claimRewardAsync',
-      'getDpos2'
+      'getDpos3'
     ])
   }
 })

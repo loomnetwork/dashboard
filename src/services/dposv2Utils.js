@@ -16,7 +16,7 @@ import axios from 'axios'
 
 const BN = require('bn.js')
 
-const DPOS2 = Contracts.DPOS2
+const DPOS3 = Contracts.DPOS3
 const Coin = Contracts.Coin
 
 const extdevChainId = '4'
@@ -85,7 +85,7 @@ async function getConsensusState(chain) {
 
 export async function getCandidatesAsync(chain) {
   const { account, client } = loadUserAccount(chain, null)
-  const DPoS = await DPOS2.createAsync(client, account)
+  const DPoS = await DPOS3.createAsync(client, account)
   const candidates = await DPoS.getCandidatesAsync()
   return candidates
 }
@@ -117,7 +117,7 @@ export async function delegateAsync(chain, base64Key, to, amount) {
   const bnAmount = new BN('1000000000000000000').muln(amount)
 
   const coin = await Coin.createAsync(client, account)
-  const DPoS = await DPOS2.createAsync(client, account)
+  const DPoS = await DPOS3.createAsync(client, account)
   await coin.approveAsync(DPoS.address, bnAmount)
   await DPoS.delegateAsync(validatorAddress, bnAmount)
 }
@@ -128,7 +128,7 @@ export async function unbondAsync(chain, base64Key, to, amount) {
   const validatorAddress = new Address(extdevChainId, LocalAddress.fromHexString(to))
   const bnAmount = new BN('1000000000000000000').muln(amount)
 
-  const DPoS = await DPOS2.createAsync(client, account)
+  const DPoS = await DPOS3.createAsync(client, account)
   await DPoS.unbondAsync(validatorAddress, bnAmount)
 }
 
@@ -141,7 +141,7 @@ export function addressFromPubKey(pubKey) {
 
 export async function getDelegationListAsync(chain, base64Key) {
   const { account, client } = loadUserAccount(chain, base64Key)
-  const DPoS = await DPOS2.createAsync(client, account)
+  const DPoS = await DPOS3.createAsync(client, account)
 
   const candidates = await getCandidatesAsync(chain)
   const delegationList = []
@@ -166,7 +166,7 @@ export async function getDelegationListAsync(chain, base64Key) {
 
 export async function checkDelegationAsync(chain, base64Key, validator) {
   const { account, client } = loadUserAccount(chain, base64Key)
-  const DPoS = await DPOS2.createAsync(client, account)
+  const DPoS = await DPOS3.createAsync(client, account)
 
   if (typeof validator === 'string') {
     const hexAddress = validator.startsWith('0x') ? validator : `0x${validator}`

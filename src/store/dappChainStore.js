@@ -1,7 +1,7 @@
 /* eslint-disable */
 import {
   CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
-  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUser,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUserV3,
 } from 'loom-js'
 
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
@@ -18,7 +18,7 @@ const debug = Debug("dashboard.dapp")
 
 import BN from 'bn.js'
 
-const DPOS2 = Contracts.DPOS2
+const DPOS3 = Contracts.DPOS3
 
 const GW_ADDRESS = ""
 /*
@@ -175,7 +175,7 @@ const defaultState = () => {
     dAppChainClient: undefined,
     GatewayInstance: undefined,
     dposUser: undefined,
-    dpos2: undefined,
+    dpos3: undefined,
     mappingStatus: undefined,
     mappingError: undefined,
     metamaskStatus: undefined,
@@ -260,7 +260,7 @@ export default {
         sessionStorage.setItem('withdrewSignature', payload)
       }
     },
-    setDPOSUser(state, payload) {
+    setDPOSUserV3(state, payload) {
       state.dposUser = payload
     },
     setShowSigningAlert(state, payload) {
@@ -350,25 +350,22 @@ export default {
       const network = state.chainUrls[state.chainIndex].network
       let user 
       try { 
-        user = await DPOSUser.createEthSignMetamaskUserAsync(		
-          rootState.DPOS.web3,
-          getters.dappchainEndpoint,
-          network,
-          GW_ADDRESS || GatewayJSON.networks[network].address,
-          LOOM_ADDRESS || LoomTokenJSON.networks[network].address
-        )
+        user = await DPOSUserV3.createEthSignMetamaskUserAsync({
+          web3: rootState.DPOS.web3,
+          dappchainEndpoint: getters.dappchainEndpoint,
+          chainId: network,
+          gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
+          version: 2
+        })
 
         reconfigureClient(user._client, commit)
-        commit("setDPOSUser", user)
+        commit("setDPOSUserV3", user)
         
       } catch(err) {
 
         console.log(err)
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true}) 
       }
-
-
-
     },
     // TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
     async switchDposUser({ state, rootState, getters, dispatch, commit }, payload) {
@@ -378,28 +375,29 @@ export default {
         throw new Error('No Private Key, Login again')
       }
       const network = state.chainUrls[state.chainIndex].network
+
       let user
-
-      let dposConstructor
-
-      if (['dev', 'local'].includes(getDomainType())) {
-        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
-      } else {
-        dposConstructor = DPOSUser.createMetamaskUserAsync
-      }
-
       try {
-        user = await dposConstructor(
-        payload.web3,
-        getters.dappchainEndpoint,
-        privateKeyString,
-        network,
-        GW_ADDRESS || GatewayJSON.networks[network].address,
-        LOOM_ADDRESS || LoomTokenJSON.networks[network].address
-        );
+        if (['dev', 'local'].includes(getDomainType())) {
+          user = await DPOSUserV3.createEthSignMetamaskUserAsync({
+            web3: payload.web3,
+            dappchainEndpoint: getters.dappchainEndpoint,
+            chainId: network,
+            gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
+            version: 2
+          });
+        } else {
+          user = await DPOSUserV3.createMetamaskUserAsync({
+            web3: payload.web3,
+            dappchainEndpoint: getters.dappchainEndpoint,
+            dappchainPrivateKey: privateKeyString,
+            chainId: network,
+            gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
+            version: 2
+          });
+        }
       } catch(err) {
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true})
-        
       }
       state.dposUser = user
     },
@@ -491,7 +489,7 @@ export default {
       }
     }, 
     async getValidatorsAsync({ dispatch, commit, rootState }) {
-      const dpos2 = await dispatch('getDpos2')
+      const dpos3 = await dispatch('getDpos3')
       const template = {
           address:  "",
           pubKey: "",
@@ -507,26 +505,27 @@ export default {
           description: "",
           fee: "N/A",
           newFee: "N/A",
-          feeDelaycounter: "N/A"
       }
       // Get all validators, candidates and delegations
       const [validators,candidates,delegations] = await Promise.all([
-        dpos2.getValidatorsAsync(),
-        dpos2.getCandidatesAsync(),
-        dpos2.getAllDelegations()
+        dpos3.getValidatorsAsync(),
+        dpos3.getCandidatesAsync(),
+        dpos3.getAllDelegations()
       ])
       const nodes = candidates.map((c) => 
         Object.assign({}, template, {
           address:  c.address.local.toString(),
           pubKey: CryptoUtils.Uint8ArrayToB64(c.pubKey),
+          personalStake: c.whitelistAmount.toString(),
+          votingPower: c.delegationTotal.toString(),
+          delegationsTotal: c.delegationTotal.sub(c.whitelistAmount).toString(),
           active : false,
           isBootstrap: rootState.DPOS.prohibitedNodes.includes(c.name),
           name: c.name,
           website: c.website,
           description: c.description,
           fee: (c.fee / 100).toString(),
-          newFee: (c.newFee / 100).toString(),
-          feeDelaycounter: c.feeDelayCounter.toString(),
+          newFee: (c.newFee / 100).toString()
         })
       )
       // helper
@@ -581,21 +580,21 @@ export default {
         throw new Error('No Private Key, Login again')
       }
 
-      const dpos2 = await dispatch('getDpos2', {
+      const dpos3 = await dispatch('getDpos3', {
         privateKey: privateKeyString
       })
       const privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
       const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
       const chainId = state.chainUrls[state.chainIndex].network
-      const result = dpos2.checkDelegationAsync(
+      const result = dpos3.checkDelegationAsync(
         new Address(chainId, LocalAddress.fromPublicKey(CryptoUtils.B64ToUint8Array(payload.validator))),
         new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
       return result
     },
-    async getDpos2({ state, commit }, payload) {
-      if (!payload && state.dpos2) {
+    async getDpos3({ state, commit }, payload) {
+      if (!payload && state.dpos3) {
         commit('setDappChainConnected', true)
-        return state.dpos2
+        return state.dpos3
       }
 
       const networkConfig = state.chainUrls[state.chainIndex]
@@ -631,10 +630,10 @@ export default {
         console.error('PlasmaChain connection error', msg)
       })
 
-      const dpos2 = await DPOS2.createAsync(client, new Address(networkId, LocalAddress.fromPublicKey(publicKey)))
-      state.dpos2 = dpos2
+      const dpos3 = await DPOS3.createAsync(client, new Address(networkId, LocalAddress.fromPublicKey(publicKey)))
+      state.dpos3 = dpos3
       commit('setDappChainConnected', true)
-      return dpos2
+      return dpos3
     },
     async ensureIdentityMappingExists({ rootState, state, dispatch, commit, rootGetters }, payload) {
 

@@ -13,7 +13,7 @@ export function dposStorePlugin(store: Store<any>) {
     // As soon as we have a dposUser getTimeUntilElectionsAsync
     store.watch(
         (state) => state.DappChain.dposUser,
-        // we never set dpos2 to null. I assume...
+        // we never set dpos3 to null. I assume...
         () => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
     )
 
@@ -28,8 +28,8 @@ export function dposStorePlugin(store: Store<any>) {
             setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), seconds * 1000)
             debug("getting validators")
             store.dispatch("DappChain/getValidatorsAsync")
-            debug("getting listDelegatorDelegations")
-            store.dispatch("DPOS/listDelegatorDelegations")
+            debug("getting checkAllDelegations")
+            store.dispatch("DPOS/checkAllDelegations")
         },
     )
 
@@ -43,9 +43,9 @@ export function dposStorePlugin(store: Store<any>) {
     store.subscribeAction({
         after(action) {
             if (delegationActions.find(a =>a === action.type)) {
-                store.dispatch("DPOS/listDelegatorDelegations")
+                store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DappChain/getDappchainLoomBalance")
-                // this might not be needed since listDelegatorDelegations
+                // this might not be needed since checkAllDelegations
                 // returns total
                 store.dispatch("DappChain/getAccumulatedStakingAmount")
             }
@@ -100,7 +100,3 @@ function buildWithdrawLimitTrigger(store) {
             store.dispatch("DPOS/updateDailyWithdrawLimit", history)
         })
 }
-
-
-
-

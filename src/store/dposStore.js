@@ -396,10 +396,10 @@ export default {
         dispatch("setError", {msg:"Fetching validators failed",report:true,cause:err}, {root: true})        
       }
     },
-    async listDelegatorDelegations({ state, rootState, commit }) {
+    async checkAllDelegations({ state, rootState, commit }) {
       const dposUser = rootState.DappChain.dposUser
       console.assert(!!dposUser, "expected dposUser to be initialised")
-      const { amount, weightedAmount, delegationsArray } = await dposUser.listDelegatorDelegations()
+      const { amount, weightedAmount, delegationsArray } = await dposUser.checkAllDelegationsAsync()
       let filteredDelegations = delegationsArray
         .filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
         // add string address to make it easy to compare

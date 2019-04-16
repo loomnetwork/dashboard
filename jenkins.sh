@@ -3,12 +3,15 @@
 
 export SENTRY_ORG=loom-network
 export SENTRY_PROJECT=loomgames-frontend
-export SENTRY_AUTH_TOKEN=cdee406313f047fd89156b6c0cf0b30e45112161ec424b81925782f53625e70b
+#export SENTRY_AUTH_TOKEN= #this is on the CI SERVER
 
-PRESET_DEV="dashboard.dappchains.com"
-PRESET_STAGE="dashboard.dappchains.com" #future production
-PRESET_PROD="faucet.dappchains.com"
-FAUCET_PATH='faucet.dappchains.com'
+
+
+PRESET_MOBILE="m-dashboard.dappchains.com"
+PRESET_DEV="dev-dashboard.dappchains.com"
+PRESET_STAGE="stage-dashboard.dappchains.com" #future production
+PRESET_PROD="dashboard.dappchains.com"
+FAUCET_PATH='dashboard.dappchains.com'
 
 # You probably don't need to modify this stuff.
 if [ "$GIT_BRANCH" == '' ]; then
@@ -27,8 +30,11 @@ case "$BRANCH_CHOICE" in
     FAUCET_PATH="${PRESET_STAGE}"
     AWS_DISTRIBUTION_ID=E3MGPR8CO07CC2
   ;;
-  origin/develop|develop|origin/add-cardpack|add-cardpack|dpos_ui|origin/dpos_ui)
+  origin/develop|develop)
     FAUCET_PATH="${PRESET_DEV}"
+  ;;
+  origin/mobile-ui|mobile-ui)
+    FAUCET_PATH="${PRESET_MOBILE}"
   ;;
   *)
     echo "Sanity check failed. You are trying to deploy from branch $GIT_BRANCH. Is that intended? If so add it to jenkins.sh so that it does the right thing."
@@ -47,13 +53,21 @@ echo "Using bucket $BUCKET_PATH."
 # bundle exec middleman s3_sync --build --bucket=$BUCKET_PATH
 rm -rf dist
 
+export NODE_OPTIONS="--max-old-space-size=8048"
+
 yarn run build
+
+REV=`git rev-parse --short HEAD`
+
+export RELEASE=$REV
+
+./node_modules/@sentry/cli/sentry-cli releases new $REV
 
 #temp hack to have all the cards ! 
 mkdir -p dist/faucet
 cd dist
-aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.map" --exclude "*.html" --exclude "*" --include "*.html"
-aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.map" --exclude "*.html" --cache-control 'max-age=86400'
+aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
+aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
 
 # TODO get the one for the faucet
 #if [ ! -z "${AWS_DISTRIBUTION_ID}" ]; then

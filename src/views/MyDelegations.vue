@@ -5,10 +5,10 @@
         <main>
           <div class="container mb-5 column py-3 p-3 d-flex">
             <div v-if="loading === false && delegations.length > 0">
-              <faucet-table :items="delegations"/>
+              <faucet-table :items="delegations" @row-clicked="showValidatorDetail"/>
             </div>
             <div v-if="loading === false && delegations.length == 0">
-              <h2>No Delegations</h2>
+              <h2>{{ $t('views.my_delegations.no_delegations') }}</h2>
             </div>
           </div>
           <div v-if="loading === true">
@@ -50,7 +50,10 @@ import { initWeb3 } from '../services/initWeb3'
     ...DPOSStore.mapMutations([
       'setConnectedToMetamask',
       'setWeb3',
-      'setCurrentMetmaskAddress'
+      'setCurrentMetamaskAddress'
+    ]),
+    ...DappChainStore.mapActions([
+      'getDpos2'
     ])
   },
   computed: {
@@ -68,61 +71,46 @@ import { initWeb3 } from '../services/initWeb3'
 })
 export default class MyDelegations extends Vue {
   delegations = []
-  states = ["Bonding", "Bonded", "Unbounding"]
-  loading = false
+  states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
+  loading = true
 
   async mounted() {
-    await this.getDelegationList()
+    this.$root.$on('initialized', async () => {
+      await this.getDelegationList()
+    }) 
+
+    await this.getDelegationList()    
   }
 
   async refresh() {
+    await this.getDpos2()
     await this.getDelegationList()
   }
 
   async getDelegationList() {
     this.loading = true    
 
-    let candidates = []
-    try {
-      candidates = await this.dposUser.listCandidatesAsync()
-    } catch(err) {
-      console.log("Error fetching delegation list:", err)
-    }
 
-    if(candidates.length <= 0) return
-    
-    for (let i in candidates) {
-      const c = candidates[i]
-      const address = c.address.toString().split(':')[1]
-      try { 
-        const delegation = await this.dposUser.checkDelegationsAsync(address)
-        if (delegation === null) {
-          console.log(` No delegation`)
-        } else {
-          const candidateName = candidates[i].name == "" ? "Validator #" + (parseInt(i) + 1) : candidates[i].name
-          if(formatToCrypto(delegation.amount) > 0) {
+    const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
 
-            this.delegations.push(
-              { 
-                "Name": candidateName,
+    const candidates = await this.dposUser.listCandidatesAsync()
+
+    this.delegations = delegationsArray
+      .filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
+      .map(delegation => {
+        let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
+        return { 
+                "Name": candidate.name,
                 "Amount": `${formatToCrypto(delegation.amount)}`,
                 "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
                 "Height": `${delegation.height}`,
-                "Locktime": `${new Date(delegation.lockTime*1000)}`,
+                "Locktime": `${new Date(delegation.lockTime * 1000)}`,
                 "State": `${this.states[delegation.state]}`,
                 _cellVariants: { Status: 'active'}
-              }
-            )          
-          }
-        }
-      } catch(err) {
-        this.$log("Error fetching delegations: ", err)        
-      }
-
-    }
+              }     
+      })
 
     this.loading = false
-
   }
 
   formatLocktime() {    
@@ -135,6 +123,9 @@ export default class MyDelegations extends Vue {
     return formattedTime
   }
 
+  showValidatorDetail(record, index) {
+    this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)
+  }
 
 }</script>
 

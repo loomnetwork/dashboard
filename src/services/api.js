@@ -41,9 +41,9 @@ export default class ApiClient {
   }
 
   getHeaders() {
-    let accessToken = localStorage.getItem('accessToken')
+    let accessToken = sessionStorage.getItem('accessToken')
     if (accessToken) {
-      return { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
+      return { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
     }
     return {}
   }

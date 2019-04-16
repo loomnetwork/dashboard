@@ -1,0 +1,255 @@
+{
+  "views": {
+    "candidate_detail": {
+      "www_candidate_com": "www.candidate.com",
+      "lorem_ipsum_dolor_sit_amet": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros. Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.",
+      "delegate": "委托",
+      "un_delegate": "取消委托"
+    },
+    "candidate_list": {
+      "candidates": "候选者",
+      "no_candidates": "无候选者"
+    },
+    "first_page": {
+      "please_log_in": "请登录",
+      "sign_out_account": "退出账户",
+      "login": "登录",
+      "sign_in_with_existing_account": "使用现有帐户登录",
+      "setup_new_account_from_scratch": "新建账户",
+      "use_seed_phrase_to_retrieve": "使用助记词检索现有帐户",
+      "new_user": "新用户",
+      "returning_user": "老用户",
+      "sign_out": "退出",
+      "create_account": "创建账户",
+      "restore_account": "恢复帐户"
+    },
+    "help": {
+      "what_is_plasma_chain": "PlasmaChain 是什么？",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain 是受 Plasma Cash 支持的中心枢纽，实现侧链和以太坊主网之间的交互。它支持高度可扩展、面向用户的DApp，并确保链之间资产转移的安全性。",
+      "what_is_staking": "锁仓是什么？",
+      "when_a_user_stakes_tokens": "当用户“锁定”代币时，这意味着他们对代币进行计时锁定，以获得网络上的权限、执行服务和访问奖励。作为 LOOM 持有者，你可以通过将你的代币委托给验证者来",
+      "help_secure_plasma_chain": "协助保护 PlasmaChain",
+      "by_staking_your_tokens_with": "。",
+      "why_is_staking_important_for": "为什么锁仓对 PlasmaChain 很重要？",
+      "as_plasma_chain_runs_a_delegated": "由于 PlasmaChain 使用委托股权证明（DPoS）共识机制，所以锁仓对网络安全至关重要。通过“委托”，用户通过将他们的代币代理到这些验证者的股权池来支持验证者。拥有最大池的候选验证者成为网络的正式验证者。通过锁定你的 LOOM 代币，你可以帮助选出最好的验证者，以确保 PlasmaChain 有最强的安全性和最佳性能（这样做还能获得奖励 —— 见下文）。委派和积极贡献的人越多，PlasmaChain 就越安全可靠。",
+      "how_can_i_stake_my": "如何在 PlasmaChain 上锁定我的 LOOM 代币？",
+      "you_can_stake_your_tokens": "可以在 PlasmaChain 管理面板上锁定你的代币：",
+      "create_an_account": "创建账户",
+      "generate_a_private_key": "生成一个私钥",
+      "log_in_to_your_meta_mask": "登录你的 MetaMask 钱包",
+      "deposit_loom_tokens_onto_plasma_chain": "将 LOOM 代币存入 PlasmaChain",
+      "choose_validators_to_stake_with": "选择你要一起锁仓的验证者",
+      "how_many_tokens_are_required": "需要多少代币才能做委托者？",
+      "there_is_no_minimum_required": "对于成为委托者, 没有最低代币数量要求。任何 LOOM 代币持有者都可以委托给网络上的候选验证者。",
+      "which_validator_s_should_i_delegate": "我该委托给哪个/些验证者呢？",
+      "you_can_use_the": "你可以在 ",
+      "for_a_full_list_of": " 查看候选验证者列表。请记住，验证者执行着维护系统完整性的关键服务 —— 提出新块、验证事务和参与治理。在研究最适合你的验证者时，可以利用其表现（正常运行时间、罚没记录）、声誉、奖励佣金百分比、社区等标准来进行评估。",
+      "do_i_lose_control_of": "当我将代币委托给验证者时，我会失去代币的控制权吗？",
+      "no_upon_delegation_your_tokens": "不会。在委托时，你的代币将被发送到一个智能合约，在你的锁定期（由你选择）内它们基本上冻结在网络上。当锁定期结束时，你的代币将自动释放给你，同时你还将收到你的验证者分享给你的相关奖励。",
+      "note_a_validator_never_has": "注意：验证者永远无法直接控制你委托给他的代币。他们在任何情况下都不能动你的代币。总而言之，在将代币暂时指派给网络期间，你仍然是所有者。",
+      "can_i_delegate_to_multiple": "我可以委托给多个候选验证者吗？",
+      "yes_users_can_choose_to": "可以。用户可以选择将其代币同时委托给多个验证者。",
+      "will_i_earn_rewards_on": "对于委托给验证者的代币，我会获得奖励吗？",
+      "validators_earn_rewards_on_any": "验证者会从委托到其股权池的代币中获得奖励。他们可以选择将这些奖励的一部分分享给他们的委托者 —— 但这完全取决于验证者。每个验证者分享奖励的百分比将公布在 ",
+      "to_ensure_full_transparency_so": " 以确保完全透明，便于用户在锁仓前做出明智的决定。有关奖励的其他信息，请查看有关",
+      "this_post_on_validator_and": "验证者和锁仓经济的这篇文章。",
+      "what_currency_will_rewards_be": "奖励将以何种货币支付？",
+      "how_do_i_claim_my": "如何领取奖励？",
+      "the_delegation_rewards_will_be": "委托奖励将由网络自动分发，你可以在此页面“奖励”选项卡下找到 —— ",
+      "plasma_chain_dashboard": "PlasmaChain 管理面板",
+      "": "。",
+      "when_will_i_receive_rewards": "我何时能收到委托的奖励？",
+      "currently_validator_rewards_are_calculated": "目前，验证者奖励是在每两周的选举周期结束时计算并支付的。",
+      "note_this_is_an_area": "注意：这一点还在继续研究中，随着网络不断趋于成熟，我们会计划更频繁的支付周期。",
+      "how_long_will_my_stake": "我的代币会锁定多长时间？",
+      "you_can_choose_from_any": "你可以选择任何一个预定义的锁定期 —— 2周，3个月，6个月，或1年。",
+      "for_the_validators_that_choose": "从选择分享奖励的验证者那里，委托者将获得一定量的奖励，数额与其锁定期挂钩。锁定期越长，奖励比例越高，具体如下：",
+      "note_these_bonus_levels_are": "注意：以上奖励是指在扣除任何验证者佣金之前。",
+      "how_can_i_un_delegate_my": "我如何取消委托？",
+      "simply_navigate_to_my_delegations": "直接去“我的委托”页面，选择某个验证者，然后点击“取消委托”按钮：",
+      "once_i_un_delegate_how_long": "取消委托之后，需要多长时间才能重新获得对代币的完全访问权？",
+      "at_launch_delegators_funds_will": "发布时，委托者代币将在两周后全部释放。这是一种安全措施，可以有效减少以下情况的发生：先委托给一个糟糕的候选者，以增加他们获得验证权的几率，然后立即取消委托。这点还在不断研究中，我们计划在未来几个月进行迭代。",
+      "are_there_any_ways_to": "有没有可能丢失一些委托的代币?",
+      "yes_if_the_protocol_rules": "有这种可能。如果不遵循协议规定，验证者可能被“扣罚”。这意味着他们将被没收一部分锁定的代币，包括已委托给其股权池的代币。扣罚有助于阻止恶意行为，并维护一个每个人都遵守同样规则的系统。它的目的是让不诚实和错误的行为付出超出其价值的代价。例如，提交一个无效的区块、尝试双倍花费、和/或遇到停机都将导致扣罚。最终确定后，我们将发布具体的扣罚细则。",
+      "where_do_the_tokens_go": "扣罚的代币会去哪里？",
+      "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。"
+    },
+    "history": {
+      "your_history": "我的历史记录",
+      "sort_by": "排序方式：",
+      "item_1": "第 1 项",
+      "item_2": "第 2 项",
+      "home": "首页"
+    },
+    "my_account": {
+      "my_address": "我的地址",
+      "balance": "余额",
+      "mainnet": "主网",
+      "plasmachain": "PlasmaChain",
+      "account_details": "账户信息",
+      "deposit_withdraw": "存取",
+      "connect_to_deposit_funds": "连接以存币",
+      "no_mapping_detected": "未检测到映射",
+      "map_accounts": "映射账户",
+      "history": "历史记录",
+      "deposit": "存入",
+      "withdraw": "取出",
+      "use_maximum": "输入全部余额",
+      "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
+      "withdraw_to_metamask": "取回到你的钱包",
+      "wait_tx": "你的交易正在等候操作。请稍等几分钟，你的余额将在交易确认后更新。",
+      "tokens_pending_deposit": "你有一笔{pendingDepositAmount} 个代币的待处理存款。必须完成此笔存款后才可以进行下一笔。",
+      "tokens_pending_withdraw": "你有一笔{pendingWithdrawAmount} 个代币的待处理取款。必须完成此笔取款后才可以进行下一笔。",
+      "reclaim_deposit": "取回存款代币",
+      "complete_withdraw": "完成取款"
+    },
+    "my_delegations": {
+      "no_delegations": "暂无委托"
+    },
+    "redelegate": {
+      "redelegate": "重新委托",
+      "from": "从",
+      "to": "到"
+    },
+    "rewards": {
+      "unclaimed_rewards": "未领取的奖励：",
+      "you_have_yet_to_receive": "你还未得到任何奖励",
+      "claim_reward": "领取奖励"
+    },
+    "validator_detail": {
+      "state": "状态：",
+      "amount_delegated": "委托的数量：",
+      "amount_delegated_loom": "{amountDelegated} 个LOOM",
+      "updated_amount": "更新后的数量：",
+      "updated_amount_loom": "{updatedAmount} 个LOOM",
+      "timelock_tier": "可选的计时锁定：",
+      "timelock": "计时锁定：",
+      "unlocked": "已解除锁定"
+    },
+    "validator_list": {
+      "no_validators_available_please_try": "连接到管理面板节点时出错。请稍后再查看。",
+      "validators": "验证者"
+    }
+  },
+  "components": {
+    "faucet_footer": {
+      "loom_network": "Loom Network",
+      "eth_fiddle": "EthFiddle",
+      "eth_deploy": "EthDeploy",
+      "crypto_zombies": "CryptoZombies",
+      "solidity_x": "SolidityX",
+      "what_is_blockchain": "区块链是什么",
+      "loom_sdk": "Loom SDK",
+      "delegatecall": "Delegatecall",
+      "github": "Github",
+      "medium": "Medium",
+      "angel_co": "Angel.co",
+      "twitter": "Twitter",
+      "telegram": "Telegram",
+      "email": "Email",
+      "loom_network_is_a_platform": "Loom Network 是一个基于以太坊的平台即服务，允许开发者运行大规模的去中心化应用程序。这使得开发者可以利用世界上最安全的公共区块链的信任和安全性，以及运行商业规模服务所需的计算资源来构建 DApp。 Loom 旨在成为新去中心化网络的代币化应用程序协议。"
+    },
+    "faucet_header": {
+      "eth_connected": "以太坊已连接",
+      "eth_disconnected": "以太坊已断开连接",
+      "dapp_connected": "PlasmaChain 已连接",
+      "dapp_disconnected": "PlasmaChain 已断开连接",
+      "explorer": "浏览器",
+      "f_a_q": "常见问题",
+      "next_election_cycle": "下一轮选举周期：",
+      "plasma_chain": "PlasmaChain：",
+      "staked": "已锁定：",
+      "deposit": "存入",
+      "plasmachain_dashboard": "Plasmachain 管理面板",
+      "dashboard": "管理面板",
+      "wallet": "钱包",
+      "my_staking": "我的锁定",
+      "my_stakes": "我锁定的代币",
+      "status": "状态",
+      "block_explorer": "区块浏览器"
+    },
+    "faucet_sidebar": {
+      "my_account": "我的账户",
+      "my_delegations": "我的委托",
+      "rewards": "奖励",
+      "history": "历史记录"
+    },
+    "layout": {
+      "metamask_changed": "你刚刚切换了MetaMask帐户。 为避免任何意外行为，应用程序将重新加载",
+      "metamask_error": "Metamask 错误！？",
+      "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
+      "mapping_error": "映射错误！？",
+      "your_account_appears_to_be": "你的DappChain帐户显示与以下以太坊地址映射：",
+      "but_your_current_account_address": "但你当前的以太坊账户地址是：",
+      "please_change_your_metamask_account": "请更改你的以太坊帐户",
+      "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
+      "sign_wallet": "在你的{walletType} 上，签名以确认你的以太坊身份。（不需要gas）",
+      "already_mapped": " 你选择的账户已映射。请选择新帐户。"
+    },
+    "loading_spinner": {
+      "please_be_patient_loomy_is": "请耐心等待哟，Loomy 正在努力加载！",
+      "this_could_take_several_minutes": "这可能需要几分钟。请不要关闭或刷新浏览器。"
+    },
+    "modals": {
+      "confirm_seed_modal": {
+        "please_type_in_words_confirm_indexes_0": "请输入单词 {confirmIndexes01}，{confirmIndexes11}，和 {confirmIndexes21} 来确认",
+        "word_confirm_1": "单词{confirm1}："
+      },
+      "faucet_delegate_modal": {
+        "amount": "数量：",
+        "locktime_bonuses": "锁定期 / 奖励：",
+        "warning_please_note_that_any": "提醒一下，请注意任何额外的委托都将覆盖已存在的委托！",
+        "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。"
+      },
+      "restore_account_modal": {
+        "please_type_in_your_seed": "请在下方输入你的助记词。",
+        "note_the_phrase_is_case": "注意：短语要区分大小写，单词间需一个空格隔开。"
+      },
+      "seed_phrase_modal": {
+        "note_these_12_words_allow": "注意：这12个单词可以帮助你在丢失或损坏的情况下恢复你的钱包。",
+        "you_must_create_a_backup_nbsp": "你必须创建一个备份！&nbsp;",
+        "write_or_print_it_out": "写下来或打印出来，并保存在安全的地方。",
+        "without_it_you_will_not": "没有它的话，一旦出现问题，你将无法恢复你的代币。",
+        "copy_to_clipboard": "复制到剪贴板"
+      },
+      "success_modal": {
+        "success": "成功"
+      },
+      "hardware_wallet_modal": {
+        "unlock_hardware_wallet": "解锁硬件钱包",
+        "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。"
+      }
+    },
+    "blockExplorer": {
+      "block_info": {
+        "on": "开启",
+        "verified": "已核实",
+        "transactions": "事务"
+      },
+      "block_list": {
+        "blocks": "区块",
+        "block_height": "区块高度：",
+        "row_value": "#{rowValue}"
+      },
+      "decoded_tx": {
+        "transaction_data": "事务数据："
+      },
+      "transaction": {
+        "push": "推送",
+        "type": "类型：",
+        "walker": "步行者",
+        "listing_price_1_99": "上市价格：1.99美元",
+        "rarity": "稀缺性：",
+        "rare": "稀有",
+        "entry": "入场：",
+        "return_a_zombie_to_hand": "返回一个僵尸到手牌",
+        "sold": "已出售"
+      },
+      "transaction_list": {
+        "filter_by": "筛选方式：",
+        "most_old": "最早的记录",
+        "pending": "待处理"
+      }
+    }
+  }
+}

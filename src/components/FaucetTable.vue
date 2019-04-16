@@ -1,5 +1,15 @@
 <template>
-  <b-table id="faucet-table" table-active="table-active" tr-class="spacer" :items="items" :fields="fields" :sort-by="sortBy" :sort-desc="sortDesc" @row-clicked="rowClickHandler"></b-table>
+  <b-table
+    responsive
+    id="faucet-table"
+    table-active="table-active"
+    tr-class="spacer"
+    :items="items"
+    :fields="fields"
+    :sort-by="sortBy"
+    :sort-desc="sortDesc"
+    @row-clicked="rowClickHandler">
+  </b-table>
 </template>
 
 <script>

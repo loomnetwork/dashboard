@@ -1,36 +1,50 @@
 <!-- PlasmaChain Delegators -->
 <template>
-  <div class="faucet">
-    <div class="faucet-content">
+  <div class="">
+    <div class="pt-3">
       <main>
         <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
         <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
         <seed-phrase-modal ref="seedPhraseRef" @ok="onGenerateSeeds"/>
         <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
         <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
-
-        <div class="container mb-5 column">
-          <div class="row my-3 p-3 d-flex justify-content-center mb-auto mt-auto">
-            <div class="col col-lg-6 d-flex flex-column justify-content-center ">
-              <img src="../assets/loomy-player-one.png" class="loomy-graphic">
-              <div class="d-flex flex-column justify-content-center align-items-center flex-wrap">
-                <!-- <b-button class="top-border bottom-border button" v-if="userIsLoggedIn" @click="signOutHandler"><p class="mb-0 color-grey"><b>Sign out</b></p><p class="mb-0 color-grey">Sign out account</p></b-button>
-                <b-button class="top-border bottom-border button" v-else @click="openLoginModal"><p class="mb-0 color-grey"><b>Login</b></p><p class="mb-0 color-grey">Sign in with existing account</p></b-button>
-                <b-button class="no-top-border bottom-border button" @click="openCreateAccountModal"><p class="mb-0 color-grey"><b>Create Account</b></p><p class="mb-0 color-grey">Setup new account from scratch</p></b-button>
-                <b-button class="no-top-border bottom-border button" @click="openRestoreAccountModal"><p class="mb-0 color-grey"><b>Restore Account</b></p><p class="mb-0 color-grey">Use seed phrase to retrieve existing account</p></b-button> -->
-                <b-button class="mb-3" style="width: 250px" variant="primary" @click="newUser">New User</b-button>
-                <b-button class="mb-3" variant="primary" style="width: 250px" @click="returningUser">Returning User</b-button>
-
-                <ChainSelector style="width: 250px" class="connection-status"
-                  :allowedUrls="chainUrls"
-                  :serverUrl="currentChain"
-                  @urlClicked="onUserInputUrl"
-                  @urlInput="onUserInputUrl"/>
-
-
+        <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
+        <div class="container-fluid mb-5 rmv-padding">
+     
+          <b-card title="Select wallet">
+            <div class="row wallet-provider-container">
+              <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center mb-3" @click="selectWallet('ledger')">
+                  <h5>Ledger</h5>
+                  <img src="../assets/ledger_logo.svg">
+                  <small>
+                    Connect & sign via your <br>
+                    hardware wallet                      
+                  </small>
+                </b-card>
               </div>
-            </div>
-          </div>
+              <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                  <h5>Metamask</h5>
+                  <img src="../assets/metamask_logo.png">
+                  <small>
+                    Connect & sign via your browser <br>
+                    or extension                      
+                  </small>
+                </b-card>                  
+              </div>                
+            </div>  
+          </b-card>
+
+
+          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
+                      v-if="!isProduction"
+                      :allowedUrls="chainUrls"
+                      :serverUrl="currentChain"
+                      @urlClicked="onUserInputUrl"
+                      @urlInput="onUserInputUrl"/>
+
+
         </div>
       </main>
     </div>
@@ -47,7 +61,9 @@ import ChainSelector from '../components/ChainSelector'
 import SeedPhraseModal from '../components/modals/SeedPhraseModal'
 import ConfirmSeedModal from '../components/modals/ConfirmSeedModal'
 import RestoreAccountModal from '../components/modals/RestoreAccountModal'
+import HardwareWalletModal from '../components/modals/HardwareWalletModal'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import { setInterval } from 'timers';
 const bip39 = require('bip39')
 
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -60,38 +76,62 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ChainSelector,
     SeedPhraseModal,
     ConfirmSeedModal,
+    HardwareWalletModal,
     RestoreAccountModal
   },
   computed: {
     ...mapState([
-      'userIsLoggedin'
+      'userIsLoggedIn'
     ]),
     ...DappChainStore.mapState([
-      'chainUrls',
+      'chainUrls'
     ]),    
     ...DPOSStore.mapState([
-      'isLoggedIn'
+      'isLoggedIn',
+      'walletType',
+      'mappingSuccess'
     ]),
     ...mapGetters([
       'getPrivateKey'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
-    ])    
+    ])
   },
   methods: {    
     ...mapActions(['signOut', 'setPrivateKey']),
-    ...DPOSStore.mapActions(['storePrivateKeyFromSeed']),
+    ...DPOSStore.mapActions(['storePrivateKeyFromSeed','initializeDependencies']),
+    ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
     ...DappChainStore.mapActions([
-      'addChainUrl',
+      'addChainUrl'
     ]),    
-    ...mapMutations(['setUserIsLoggedIn'])
+    ...mapMutations(['setUserIsLoggedIn']),
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ]) 
   }
 })
 export default class FirstPage extends Vue {
   seedPhrases = []
-
+  activeTab = 0
   currentStatus = this.STATUS.NONE
+  showTabSpinner = false
+  isProduction = window.location.hostname === "dashboard.dappchains.com"
+
+  async selectWallet(wallet) {
+    if(wallet === "ledger") {
+      this.setWalletType("ledger")
+      this.setUserIsLoggedIn(true)
+     this.$refs.hardwareWalletConfigRef.show() 
+    } else if(wallet === "metamask") {
+      this.setWalletType("metamask")
+      this.setUserIsLoggedIn(true)
+      this.$root.$emit("login") 
+    } else {
+      return
+    }
+  }
 
   async openLoginModal() {
     this.$root.$emit('bv::show::modal', 'login-account-modal')
@@ -100,6 +140,8 @@ export default class FirstPage extends Vue {
   signOutHandler() {
     this.signOut()
     this.$router.push('/')
+    this.setMappingError(null)
+    this.setMappingStatus(null)
   }
 
   async onLoginAccount() {
@@ -108,17 +150,6 @@ export default class FirstPage extends Vue {
     } else if (this.currentStatus === this.STATUS.RESTORE_ACCOUNT) {
       this.openRestoreAccountModal()
     }
-  }
-
-  async gotoAccount() {
-    this.$root.$emit('login')
-    if(this.isLoggedIn) {
-      this.$router.push({
-        name: 'account'
-      })
-      return true
-    }
-    return false
   }
 
   openCreateAccountModal() {
@@ -154,7 +185,7 @@ export default class FirstPage extends Vue {
       seed
     })
     this.setUserIsLoggedIn(true)
-    await this.gotoAccount()
+    this.switchTab()
   }
 
   newUser() {
@@ -181,7 +212,30 @@ export default class FirstPage extends Vue {
       seed
     })
     this.setUserIsLoggedIn(true)
-    await this.gotoAccount()
+    this.switchTab() 
+  }
+
+  mounted() {
+    if(!this.isMobile) return
+    if ((window.web3 && window.web3.currentProvider.isTrust) || 
+        !!window.imToken ||
+        (window.web3 && window.web3.currentProvider.isMetaMask) ||
+        (window.web3 && window.web3.isCobo)
+      ) {
+      this.setWalletType("metamask")
+      this.setUserIsLoggedIn(true)
+      this.$root.$emit("login") 
+    }
+
+  }
+  
+  switchTab() {
+    this.showTabSpinner = true
+
+    setTimeout(() => {
+      this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
+      this.showTabSpinner = false
+    }, 1000)
   }
 
   get STATUS() {
@@ -192,28 +246,71 @@ export default class FirstPage extends Vue {
     }
   }
 
-}</script>
+  get isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
+  }
+
+  async onWalletConfig() {
+    this.setWalletType("ledger")
+  }
+
+}
+</script>
+<style lang="scss" scoped>
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 2px solid #f2f1f3;
+  }
+  .banner-container .col {
+    padding: 0 36px;
+  }
+
+  .button-inner-container {
+    width: 250px;
+  }
+
+  .rmv-padding {
+    padding: 0 !important;
+  }
+
+  #login-tab {
+    .actions {
+      display: flex;
+      justify-content: center;
+      button {
+        width: 250px;
+        margin:16px;
+      }
+    }
+  }
+
+  @media (max-width: 767px) { 
+    #login-tab {
+      .actions {
+      display: flex;
+      flex-direction: column;
+        button {
+          width:100%;
+          margin:8px 0;
+        }
+      }
+    }
+
+  }
+
+
+</style>
+
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
 
-$theme-colors: (
-  //primary: #007bff,
-  primary: #02819b,
-  secondary: #4bc0c8,
-  success: #5cb85c,
-  info: #5bc0de,
-  warning: #f0ad4e,
-  danger: #d9534f,
-  light: #f0f5fd,
-  dark: #122a38
-);
+
 
 .header {
-  background: #5756e6;
   .navbar {
     padding: 0;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
     width: 100%;
     .navbar-brand {
       display: block;
@@ -223,6 +320,27 @@ $theme-colors: (
       }
     }
   }
+}
+
+.nav-pills .nav-link.active span {
+  display: inline-block;
+  color: #ffffff;
+  margin-right: 6px;
+}
+
+.wallet-selection-card:hover {
+  border: 1px solid #53e63c;
+}
+
+.tab-title {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.loomy-graphic {
+  display: block;
+  max-height: 200px;
+  margin: 0 auto;
 }
 
 .faucet {
@@ -256,13 +374,32 @@ $theme-colors: (
     background-color: transparent;
     padding: 20px;
   }
-  .loomy-graphic {
-    display: inline-block;
-    margin: 0 auto;
-    margin-bottom: 32px;
-    width: 100%;
-    max-width: 360px;
-    height: auto;
+}
+
+.wallet-provider-container {
+  .wallet-selection-card {
+    position: relative;
+    img {
+      width: 72px;
+      height: auto;
+      margin-bottom: 12px;
+    }
+    small {
+      display: block;
+    }
+    span.qa {        
+      display: inline-block;
+      line-height: 20px;        
+      right: 12px;
+      bottom: 12px;
+      position: absolute;
+      font-weight: bold;
+      width: 20px;
+      height: 20px;
+      color: white;
+      background-color: grey;
+      border-radius: 50%;
+    }
   }
 }
 

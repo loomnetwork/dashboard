@@ -115,7 +115,7 @@ export default class FaucetClient {
         try {
           delegation = await this.checkDelegationAsync(validator)
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
         delegationList.push(delegation)
       }

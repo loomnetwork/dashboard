@@ -1,33 +1,36 @@
 <template>
   <footer id="faucet-footer" class="faucet-footer">
     <div class="block footer-block bg-blue-gradient py-5">
-      <div class="container">
+      <div class="container-fluid">
         <div class="inner-container">
           <div class="footer-title">
             <img src="../assets/logo-grey.svg">
           </div>
-          <div class="d-flex flex-row justify-content-around flex-wrap">
-            <div class="">
+          <div class="d-flex flex-row row flex-wrap">
+            <div class="col">
               <ul class="list-unstyled list-spaced">
-                <li><a href="https://loomx.io" target="_blank" class="hover-warning">LoomX.io</a></li>
-                <li><a href="https://EthFiddle.com" target="_blank" class="hover-warning">EthFiddle.com</a></li>
-                <li><a href="https://EthDeploy.com" target="_blank" class="hover-warning">EthDeploy.com</a></li>
-                <li><a href="https://cryptozombies.io" target="_blank" class="hover-warning">Cryptozombies.io</a></li>
-                <li><a href="https://solidityx.org" target="_blank" class="hover-warning">SolidityX.org</a></li>
+                <li><a href="https://loomx.io" target="_blank" class="hover-warning">{{ $t('components.faucet_footer.loom_network') }}</a></li>
+                <li><a href="https://EthFiddle.com" target="_blank" class="hover-warning">{{ $t('components.faucet_footer.eth_fiddle') }}</a></li>
+                <li><a href="https://EthDeploy.com" target="_blank" class="hover-warning">{{ $t('components.faucet_footer.eth_deploy') }}</a></li>
+                <li><a href="https://CryptoZombies.io" target="_blank" class="hover-warning">{{ $t('components.faucet_footer.crypto_zombies') }}</a></li>
+                <li><a href="https://solidityx.org" target="_blank" class="hover-warning">{{ $t('components.faucet_footer.solidity_x') }}</a></li>
+                <li><a href="https://delegatecall.com/what-is-blockchain" target="_blank" class="hover-warning hover-warning">{{ $t('components.faucet_footer.what_is_blockchain') }}</a></li>
+                <li><a href="https://loomx.io/developers/" target="_blank" class="hover-warning hover-warning">{{ $t('components.faucet_footer.loom_sdk') }}</a></li>
+                <li><a href="https://delegatecall.com" target="_blank" class="hover-warning">{{ $t('components.faucet_footer.delegatecall') }}</a></li>
               </ul>
             </div>
-            <div class="">
+            <div class="col">
               <ul class="list-unstyled list-spaced">
-                <li><a href="https://github.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'github']" fixed-width /> Github</a></li>
-                <li><a href="https://medium.com/loom-network" target="_blank" class="hover-warning"><fa :icon="['fab', 'medium']" fixed-width /> Medium</a></li>
-                <li><a href="https://angel.co/loom-network-1" target="_blank" class="hover-warning"><fa :icon="['fab', 'angellist']" fixed-width /> Angel.co</a></li>
-                <li><a href="https://twitter.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'twitter']" fixed-width /> Twitter</a></li>
-                <li><a href="https://t.me/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'telegram']" fixed-width /> Telegram</a></li>
-                <li><a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning"><fa :icon="['fas', 'envelope']" fixed-width /> Email</a></li>
+                <li><a href="https://github.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'github']" fixed-width /> {{ $t('components.faucet_footer.github') }}</a></li>
+                <li><a href="https://medium.com/loom-network" target="_blank" class="hover-warning"><fa :icon="['fab', 'medium']" fixed-width /> {{ $t('components.faucet_footer.medium') }}</a></li>
+                <li><a href="https://angel.co/loom-network-1" target="_blank" class="hover-warning"><fa :icon="['fab', 'angellist']" fixed-width /> {{ $t('components.faucet_footer.angel_co') }}</a></li>
+                <li><a href="https://twitter.com/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'twitter']" fixed-width /> {{ $t('components.faucet_footer.twitter') }}</a></li>
+                <li><a href="https://t.me/loomnetwork" target="_blank" class="hover-warning"><fa :icon="['fab', 'telegram']" fixed-width /> {{ $t('components.faucet_footer.telegram') }}</a></li>
+                <li><a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning"><fa :icon="['fas', 'envelope']" fixed-width /> {{ $t('components.faucet_footer.email') }}</a></li>
               </ul>
             </div>
-            <div class="col-lg-4 col-md-6 text-left">
-              <p>Loom Network is a Platform as a Service built on top of Ethereum that allows developers to run large-scale decentralized applications. This lets developers build DApps with the trust and security of the world’s most secure public blockchain, along with the computing resources necessary to run commercial-scale services. Like how Filecoin tokenized disk space, Loom aims to be the tokenized application protocol of the new decentralized web.</p>
+            <div class="col text-left">
+              <p>{{ $t('components.faucet_footer.loom_network_is_a_platform') }}</p>
             </div>
           </div>
         </div>
@@ -53,11 +56,16 @@ export default class FaucetFooter extends Vue {
   bottom: 0;
   .footer-title {
     img {
+      position: relative;
+      left: -16px;
       width: 120px;
     }
     span {
       color: #495057; 
     }    
+  }
+  a {
+    color: #495057;
   }
   @media (max-width: 529px) {
     & {
@@ -85,7 +93,6 @@ p {
     color: #495057;
     font-style: italic;
     font-weight: 600;
-    padding: 0 2em;
     img {
       margin-right: .625rem;
     }
@@ -126,9 +133,7 @@ p {
   color: white;
 }
 
-a {
-  color: #495057;
-}
+
 
 a.hover-warning:hover {
   text-decoration: none;

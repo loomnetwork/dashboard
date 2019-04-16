@@ -58,7 +58,6 @@ if [[ "$UPDATE_CONTRACTS" == true ]]; then
         echo "updating ${d}"
         cat ${d} | jq $EXTRACTION_PATTERN > $MARKETPLACE_REPO/src/contracts/${d##*/}
     done
-    cat $ETHEREUM_CONTRACTS_REPO/build/contracts/ZBGCard.json | jq $EXTRACTION_PATTERN > $MARKETPLACE_REPO/src/contracts/EthZBGCard.json
     cat $TRANSFER_GATEWAY_REPO/mainnet/build/contracts/Gateway.json | jq $EXTRACTION_PATTERN > src/contracts/Gateway.json
 fi
 

@@ -1,22 +1,31 @@
 <template>
-  <div class="faucet">
-    <div class="faucet-content">
-      <div>
-        <main>
-          <div class="container mb-5 column py-3 p-3 d-flex" v-if="validatorList !== null && validatorList.length > 0">
-            <h1>Validators</h1>
-            <faucet-table :items="validatorList" :fields="fields" sortBy="Stake" sortDesc @row-clicked="showValidatorDetail"></faucet-table>
-          </div>
-          <div v-else-if="validatorList !== null && validatorList.length == 0">
-            No validators available, please try again later
-          </div>
-          <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
-            <loading-spinner :showBackdrop="true"></loading-spinner>
-          </div>
-        </main>
-      </div>
+  <main class="validators">
+    <header>
+      <h1>{{ $t('views.validator_list.validators') }}</h1>
+    </header>
+    <div class="content" v-if="validators && validators.length > 0">
+      <template v-if="isSmallDevice">
+        <b-list-group>
+          <b-list-group-item 
+            v-for="validator in validators" :key="validator.Name"
+            :disabled="!!validator.isBootstrap"
+            @click="showValidatorDetail(validator)"
+            >
+              <h6>{{validator.Name}}</h6>
+              <div class="fee"><label>Fee</label>{{validator.Fees}}</div>
+              <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
+              <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
+          </b-list-group-item>  
+        </b-list-group>
+      </template>
+      <template v-else>
+        <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
+      </template>
     </div>
-  </div>
+    <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
+      <loading-spinner :showBackdrop="true"></loading-spinner>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -24,8 +33,6 @@ import Vue from 'vue'
 import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 const DappChainStore = createNamespacedHelpers('DappChain')
@@ -33,105 +40,112 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 
 import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
 
+
 @Component({
   components: {
     FaucetTable,
-    FaucetHeader,
-    FaucetFooter,
     LoadingSpinner,
+  },
+  computed: {
+    ...DPOSStore.mapState([
+      'validatorFields'
+    ])
   },
   methods: {
     ...mapMutations([
       'setErrorMsg'
     ]),
-    ...DPOSStore.mapMutations([
-      'setValidators'
-    ]),
-    ...DPOSStore.mapActions([
-      'getValidatorList'
-    ]),
-    ...DappChainStore.mapActions([
-      'getValidatorsAsync'
+    ...DPOSStore.mapGetters([
+      'getFormattedValidators'
     ])
   }
 })
 export default class ValidatorList extends Vue {
-  fields = [
-    { key: 'Name', sortable: true },
-    { key: 'Status', sortable: true },
-    { key: 'Stake', sortable: true },
-    { key: 'Weight', sortable: true },
-    { key: 'Fees', sortable: true },
-    { key: 'Uptime', sortable: true },
-    { key: 'Slashes', sortable: true },
-  ]
-  validatorList = null
+  isSmallDevice = window.innerWidth < 600
 
-  async mounted() {
-    await this.refresh()
+  get validators() {
+    return this.getFormattedValidators().sort((a, b) => {
+      let aValue = a.isBootstrap ? 0 : a.totalStaked 
+      let bValue = b.isBootstrap ? 0 : b.totalStaked
+      return parseInt(aValue) - parseInt(bValue)
+    }).reverse()
   }
-
-  async refresh() {
-    this.validatorList = await this.getValidatorList()
-  }
-
-  // async getValidatorList() {
-  //   try {
-  //     const validators = await this.getValidatorsAsync()
-  //     if (validators.length === 0) {
-  //       return null
-  //     }
-  //     const validatorList = []
-  //     for (let i in validators) {
-  //       const validator = validators[i]
-  //       validatorList.push({
-  //         Name: "Validator #" + (parseInt(i) + 1),
-  //         Address: validator.address,
-  //         Status: validator.active ? "Active" : "Inactive",
-  //         Stake: (validator.stake || '0'),
-  //         Weight: (validator.weight || '0') + '%',
-  //         Fees: (validator.fee || '0') + '%',
-  //         Uptime: (validator.uptime || '0') + '%',
-  //         Slashes: (validator.slashes || '0') + '%',
-  //         Description: (validator.description) || null,
-  //         Website: (validator.website) || null,
-  //         _cellVariants: validator.active ? { Status: 'active'} : undefined,
-  //         pubKey: (validator.pubKey)
-  //       })
-  //     }
-  //     this.setValidators(validatorList)
-  //     return validatorList
-  //   } catch(err) {
-  //     this.setErrorMsg('Fetch Validator List Failed')
-  //     console.log(err)
-  //     return null
-  //   }
-  // }
+  /**
+   * adds class bootstrap node if is bootstrap
+   */
+  validatorCssClass( item, type) {
+    return item.isBoostrap ? ['boostrap-validator'] : []
+  } 
 
   showValidatorDetail(record, index) {
-    this.$router.push({
-      name: 'validatorDetail',
-      params: {
-        info: record
-      }
-    })
+    this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)
   }
-}</script>
+}
+</script>
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
 
-$theme-colors: (
-  //primary: #007bff,
-  primary: #02819b,
-  secondary: #4bc0c8,
-  success: #5cb85c,
-  info: #5bc0de,
-  warning: #f0ad4e,
-  danger: #d9534f,
-  light: #f0f5fd,
-  dark: #122a38
-);
+main.validators {
+  // ther should be global class for page titles
+  header > h1 {
+    color: #5246d5;
+    font-size: 1.35em;
+    text-align: center;
+    margin: 16px -14px;
+    font-weight: normal;
+    border-bottom: 1px solid #ededed;
+    padding-bottom: 16px;
+  }
+
+  .list-group-item {
+    padding: 0.2em 1em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    > h6 {
+      flex: 1
+    }
+    &.disabled {
+      opacity: 0.5;
+    }
+    .stakes {
+      text-align: right;
+      width: 110px;
+    }
+    .fee {
+      flex: 0;
+      font-size: 10px;
+      widows: 10px;
+    }
+    .stakes > label {
+      display: block;
+      display: none;
+      margin: 0;
+      font-size: 12px;
+      line-height: 12px;
+      text-align: left;
+    }
+    .fee > label {
+      display: inline-block;
+      margin: 0;
+      font-size: 10px;
+      line-height: 24px;
+      text-align: right;
+      vertical-align: bottom;
+      margin-right: 7px;
+      font-weight: bold;
+      color: rgba(128, 128, 128, 0.58);
+    }
+    .status {
+      flex: 50%;
+      font-size: 0.8em;
+      &.active {
+        color: green
+      }
+    }
+  }
+
+}
 
 .faucet {
   main {
@@ -145,14 +159,23 @@ $theme-colors: (
     .column {
       flex-direction: column;
     }
-    h4, h1 {
+    h4, h2, h1 {
       color: gray;
+    }
+    th[aria-colindex="3"], td[aria-colindex="3"] {
+      text-align: right !important;
+    }
+    th[aria-colindex="4"], td[aria-colindex="4"] {
+      text-align: right !important;
+    }
+    #faucet-table.table tbody tr td.table-danger {
+      opacity: 0.5;
+    }
+    #faucet-table.table tbody tr td.table-danger ~ td {
+      opacity: 0.5
     }
   }
 }
-
-</style>
-<style>
 body {
   overflow-y: scroll;
 }

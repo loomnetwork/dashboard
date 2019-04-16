@@ -11,6 +11,7 @@ export default class ChainSelector extends Vue {
   onUrlClicked(url: string) {
     this.chainUrl = url
     this.$forceUpdate()
+    window.location.reload()
     // this comment is just for avoiding empty warn
   }
 

@@ -3,7 +3,8 @@
     
     <div class="gif-container">
       <img src="../assets/loomy-running.gif" class="looping-loomy mb-2" alt="loomy">
-      <h6 class="loading-text">Please be patient, Loomy is on it!</h6>
+      <h6 class="loading-text">{{ $t('components.loading_spinner.please_be_patient_loomy_is') }}</h6>
+      <small>{{ $t('components.loading_spinner.this_could_take_several_minutes') }}</small>
     </div>
 
     <!-- Uncomment for minimal spinner  -->
@@ -32,7 +33,7 @@ export default class LoadingSpinner extends Vue {
 <style scoped lang="scss">
 
 .loading-backdrop {
-  position: absolute;
+  position: fixed;
   display: flex;
   align-content: center;
   justify-content: center;
@@ -40,7 +41,9 @@ export default class LoadingSpinner extends Vue {
   left: 0px;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(255,255,255,0.8);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
   z-index: 999;
 }
 
@@ -94,10 +97,11 @@ export default class LoadingSpinner extends Vue {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 24px;
 }
 
 .looping-loomy {
-  width: 144px;
+  width: 96px;
   height: auto;
 }
 

@@ -1,34 +1,44 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">
+  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
+    
+    <b-alert variant="light" :show="showSigningAlert" dismissible class="custom-notification text-center">
+      <strong>
+        <fa :icon="['fa', 'bell']" />
+        {{ $t('Please sign the transaction on your wallet') }}
+      </strong>
+    </b-alert>
 
-    <!-- <faucet-header v-on:update:chain="refresh()" @onLogin="onLoginAccount"></faucet-header> -->
     <faucet-header v-on:update:chain="refresh()"></faucet-header>
-    <div class="content container">
-      <div v-if="metamaskDisabled" class="disabled-overlay">
-        <div>           
-          <div class="network-error-container mb-3">
-            <img src="../assets/metamask-error-graphic.png"/>
-          </div>
-          <h4>
-            Metmask error!?
-          </h4>
-          <div>
-            <span>
-              Please enable Metamask or switch to a supported browser
-            </span>
-          </div>              
-        </div>
-      </div>      
-      <div class="row">
-        <div v-show="showSidebar" class="col-lg-3">
-          <faucet-sidebar></faucet-sidebar>      
-        </div>
-        <div :class="contentClass">
+    <div class="content">      
+		  <warning-overlay type="metamask"></warning-overlay>
+      <warning-overlay type="mapping"></warning-overlay>
+      <div class="d-none d-lg-block">
+        <faucet-sidebar></faucet-sidebar> 
+      </div>
+      <div class="main-container">
+        <div class="inner-container container">
+          <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
+              {{ $t('components.layout.sign_wallet') }}
+          </b-modal>
+          <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
+              {{ $t('components.layout.already_mapped') }}
+          </b-modal>
+          <transition name="page" mode="out-in">
           <router-view></router-view>
-        </div>        
-      </div>          
+          </transition>
+        </div>
+      </div> 
     </div>    
-    <faucet-footer></faucet-footer>
+     <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
+        <div class="d-block text-center">
+          <p>{{ $t('components.layout.metamask_changed')}}</p>
+        </div>
+        <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
+     </b-modal>
+    <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+      <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+    </transition>
+
   </div>  
 </template>
 
@@ -40,72 +50,61 @@ import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vue
 import FaucetHeader from '@/components/FaucetHeader'
 import FaucetSidebar from '../components/FaucetSidebar'
 import FaucetFooter from '@/components/FaucetFooter'
-
+import LoadingSpinner from '../components/LoadingSpinner'
+import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
-
-import { initWeb3 } from '../services/initWeb3'
 
 @Component({
   components: {
     FaucetHeader,
     FaucetSidebar,
-    FaucetFooter
+    FaucetFooter,
+    LoadingSpinner,
+    WarningOverlay
   },
   props: {
     data: Object,
   },
   methods: {
-    ...mapActions([
-      // 'registerWeb3',
-      // 'updateContractState',
-      // 'checkNetwork',
-      'checkLottery',
-      'checkCryptoBacker'      
-    ]),
     ...mapMutations([
-      'setUserIsLoggedIn',
       'setErrorMsg'
     ]),
-    ...DappChainStore.mapActions([
-      'init',
-      'initDposUser',
-      'setMetmaskStatus',
-      'setMetamaskError'
+    ...DPOSStore.mapActions([
+      'initializeDependencies',
     ]),
-    ...DPOSStore.mapMutations([
-      'setConnectedToMetamask',
-      'setWeb3',
-      'setCurrentMetmaskAddress'
-    ])
+    ...DappChainStore.mapMutations([
+      'setMappingError',
+      'setMappingStatus'
+    ])    
   },  
   computed: {
     ...mapState([
-      'alternateBackground',
-      'hasPendingApprove',
-      'pendingApprove',
-      'showAnnouncement',
-      'showLottery',
-      'showCryptoBacker',
       'userIsLoggedIn'
     ]),
     ...DappChainStore.mapState([
       'account',
-      'metamaskStatus',
-      'metamaskError'      
+      'showSigningAlert',
+      'metamaskError',
+      'mappingError'
     ]),
     ...DPOSStore.mapState([
       'showSidebar',
-      'web3',
-      'metamaskDisabled'
+      "currentMetamaskAddress",
+      'showLoadingSpinner',
+      'showAlreadyMappedModal',
+      'showSignWalletModal',
+      'mappingSuccess',
+      'walletType',
+      'status'
     ])    
   },
 })
 
-export default class Layout extends Vue {  
-  pendingModalTitle = 'Continue with your approved Loom'
-  isOpen = true
-  preload = false
+export default class Layout extends Vue { 
+
+  metamaskChangeAlert = false
+
   loginEmail = ''
   routeArray = [
     {
@@ -124,50 +123,99 @@ export default class Layout extends Vue {
     }
   ]
 
-  // Hide crypto backer modal
-  // @Watch('showCryptoBacker')
-  // onShowCryptoBackerChanged(newValue, oldValue) {
-  //   if(newValue) {
-  //     this.$root.$emit('bv::show::modal', 'crypto-backer')
-  //   }
-  // }
-
   created() {
-    this.$router.beforeEach((to, from, next) => {
-      this.$Progress.start()
-      next()
-    })
-    this.$router.afterEach((to, from) => {
-      this.$Progress.finish()
-    })
+    this.$router.afterEach((to, from) => this.$root.$emit("refreshBalances"))
   }
 
   beforeMount() {
-    if(localStorage.getItem("privatekey")) {
-      this.setUserIsLoggedIn(true)
+    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
+  }
+
+  @Watch('mappingSuccess')
+    onMappingSuccessChange(newValue, oldValue) {
+    if(newValue && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('status')
+    onMappedChange(newValue, oldValue) {
+    if(newValue === 'mapped' && this.walletType === 'metamask') {
+      this.$router.push({
+        name: 'account'
+      })
+    }
+  }
+
+  @Watch('showAlreadyMappedModal')
+    onAlreadyMappedModalChange(newValue, oldValue) {
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "already-mapped")
+    } else {
+        this.$root.$emit("bv::hide::modal", "already-mapped")
+
+    }
+  }
+
+  @Watch('showSignWalletModal')
+  onSignLedgerModalChange(newValue, oldValue) {      
+    if(newValue) {
+        this.$root.$emit("bv::show::modal", "sign-wallet-modal")
+    } else {
+        this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
     }
   }
 
   async mounted() {
-    // this.registerWeb3()
-    // this.updateContractState()
-    // this.checkNetwork()
-    if(!this.account) {
-      await this.init()
-    }    
+
+    // Clear any remaining local storage
+    localStorage.clear()
+      
+    if(this.$route.meta.requireDeps) {
+      this.attemptToInitialize()     
+    } else {
+      this.$root.$on('login', async () => {
+        this.attemptToInitialize()
+      })
+    }      
+    
+    if(window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        
+        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove. 
+        if (window.resolvingMismatchedReceipt) {
+          return;
+        }
+
+        if (this.currentMetamaskAddress && 
+          this.currentMetamaskAddress !== accounts[0] ) {
+                localStorage.clear()
+                this.metamaskChangeAlert = true
+                window.ethereum.removeAllListeners()
+        }
+
+      })
+    }
+
   }
 
-  onLoginHandler() {
-    console.log('Logged in')
-    this.$auth.initAuthInstance()
+  async restart() {
+      window.location.reload(true)
   }
 
-  get showErrorMsg() {
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: 'error' } : false
-  }
 
-  get showSuccessMsg() {
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: 'success' } : false
+  async attemptToInitialize() {
+    try {
+      await this.initializeDependencies()
+      this.$root.$emit("initialized")
+      this.$root.$emit("refreshBalances")
+    } catch(err) {
+      this.$root.$emit("logout")
+      this.setMappingError(null)
+      this.setMappingStatus(null)
+    }           
   }
 
   get getClassNameForStyling() {
@@ -181,12 +229,8 @@ export default class Layout extends Vue {
     })
     return className;
   }
-
-  get contentClass() {
-    return this.showSidebar ? 'col-lg-9' : 'col-lg-12'
-  }
-
-}</script>
+}
+</script>
 
 <style lang="scss" scoped>
   #layout {
@@ -196,6 +240,7 @@ export default class Layout extends Vue {
   }
   .content {
     display: flex;
+    position: relative;
     flex: 1;
     justify-content: center;
     .row {
@@ -207,45 +252,33 @@ export default class Layout extends Vue {
     align-items: stretch;
   }
 
-  .disabled-overlay {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
-    background-color: rgba(255,255,255,0.8);    
-    z-index: 9999;
-    text-align: center;
-    h4 {
-      color: #eb2230 !important;
-      margin-bottom: 6px;
-    }
-    .address {
-      color: #5756e6;
-      background-color: #ffd1de;
-      border-radius: 3px;
-      padding: 3px 6px;
-      font-weight: bold;
-    }
-    .network-error-container {
-      width: 180px;
-      height: 180px;
-      margin: 0 auto;
-      overflow: hidden;
-      border: 4px solid #5756e6;
-      border-radius: 50%;
-      background: rgb(238,174,202);
-      background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);   
-      img {      
-        height: 180px;
-      }
-    }
-  }  
+.page-enter-active, .page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+  transition-delay: 0.5s;
+}
+
+.page-enter, .page-leave-to {
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
+.main-container {
+	width: 100%;
+  .inner-container {
+    position: relative;
+    height: 100%;
+  }
+}
+
+.custom-notification {
+  position: absolute;
+  z-index: 10100;
+  width: 90%;
+  margin-top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
 
 </style>
 

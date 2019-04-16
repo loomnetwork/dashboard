@@ -1,0 +1,255 @@
+{
+  "views": {
+    "candidate_detail": {
+      "www_candidate_com": "www.candidate.com",
+      "lorem_ipsum_dolor_sit_amet": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean turpis nisl, suscipit eu orci id, fringilla ultricies eros. Donec et dui facilisis, suscipit tellus non, tempor sem. Phasellus lacinia sit amet velit at congue. Aliquam pretium tempus sem at faucibus. in eu Inctus velit, nec vehicula urna. In ac dui efficitur, volutpat nulla nec, rutrum nisi.",
+      "delegate": "委任する",
+      "un_delegate": "委任をやめる"
+    },
+    "candidate_list": {
+      "candidates": "候補者",
+      "no_candidates": "候補者なし"
+    },
+    "first_page": {
+      "please_log_in": "ログインしてください",
+      "sign_out_account": "サインアウト",
+      "login": "ログイン",
+      "sign_in_with_existing_account": "既存アカウントでサインイン",
+      "setup_new_account_from_scratch": "新規アカウント作成",
+      "use_seed_phrase_to_retrieve": "シードフレーズで既存のアカウントを回復",
+      "new_user": "新規ユーザー",
+      "returning_user": "既存のユーザー",
+      "sign_out": "サインアウト",
+      "create_account": "アカウントの作成",
+      "restore_account": "アカウントの回復"
+    },
+    "help": {
+      "what_is_plasma_chain": "PlasmaChainとは？",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChainは、サイドチェーンとEthereumメインネット間のトランザクションハブであり、Plasma Cashに裏打ちされたものです。これによって、ハイスケーラブルでユーザーフェーシングなDAppsと、チェーン間の安全な資産移転が可能になります。",
+      "what_is_staking": "ステーキングとは？",
+      "when_a_user_stakes_tokens": "ユーザーがトークンを「ステーク」する際、これはネットワーク上で権利を得たりサービスを行なったり、また報酬にアクセスするために、彼らが自身のトークンを一定期間ロックするということを意味します。LOOMトークンホルダーとして、あなたは",
+      "help_secure_plasma_chain": "トークンをバリデーターにステーキングすることで",
+      "by_staking_your_tokens_with": "PlasmaChainの安全維持に参加できます。",
+      "why_is_staking_important_for": "なぜPlasmaChainにとってステーキングが重要なの？",
+      "as_plasma_chain_runs_a_delegated": "PlasmaChainはDelegated Proof of Stake(DPoS)の合意モデルを採用しているため、ステーキングはネットワークの安全を守るために非常に重要です。「デリゲーション(委任)」では、ユーザーはバリデーターのステーキングプールにトークンを委託することで、彼らをサポートすることが可能です。最大級のプールを持ったバリデーター候補者たちは、ネットワーク公式バリデーターとなります。あなたのLOOMトークンをステーキングすることで、PlasmaChainの最強の安全性とパフォーマンスを保証してくれる最高のバリデーターを選択することに参加できます(さらにこれにより報酬を得ることが可能ですー以下参照)。多くの人々が委任や活発な貢献を行えばそれだけ、チェーンはより安全なものになります。",
+      "how_can_i_stake_my": "LOOMトークンをPlasmaChain上にステークする方法は？",
+      "you_can_stake_your_tokens": "PlasmaChainダッシュボードよりトークンのステークが可能です:",
+      "create_an_account": "アカウントの作成",
+      "generate_a_private_key": "秘密鍵の生成",
+      "log_in_to_your_meta_mask": "MetaMaskウォレットにログイン",
+      "deposit_loom_tokens_onto_plasma_chain": "PlasmaChainにLOOMトークンをデポジット",
+      "choose_validators_to_stake_with": "ステークしたいバリデーターを選択",
+      "how_many_tokens_are_required": "デリゲーター(委任者)になるにはどのくらいトークンが必要？",
+      "there_is_no_minimum_required": "デリゲーターになるための最低トークン数というのはありません。LOOMトークンホルダーであればどなたでも、ネットワーク上の任意のバリデーターに委任をすることが可能です。",
+      "which_validator_s_should_i_delegate": "どのバリデーターに委任すべき？",
+      "you_can_use_the": "こちらの",
+      "for_a_full_list_of": "ではバリデーター候補者の完全版リストをご利用いただけます。新規ブロックの提案、トランザクションの検証、ガバナンスへの参加といった重要な任務をバリデーターが果たすことに留意してください。あなたに合ったベストなバリデーターを見つける際には、パフォーマンス(アップタイム。罰則歴)や評判、報酬の手数料パーセンテージやコミュニティといった基準で評価すると良いでしょう。",
+      "do_i_lose_control_of": "バリデーターに委任すると、自分のトークンのコントロール権はなくなる？",
+      "no_upon_delegation_your_tokens": "いいえ。委任の際にはあなたのトークンはスマートコントラクトへと送られ、(あなたの選択した)ロックアップ期間中は基本的にネットワーク上で凍結されています。ロックアップ期間が終わると、トークンは自動的にあなたの元へと戻され、さらにバリデーターがステーキングプールで共有した報酬も追加されている可能性があります。",
+      "note_a_validator_never_has": "注: バリデーターはあなたの委託ステークに対して直接的コントロール権を持つことは決してなく、あなたのトークンを動かすことはどんな状況下でもできません。事実としてステークが一時的にネットワークに割り当てられている間も、あなたは所有者であり続けます。",
+      "can_i_delegate_to_multiple": "複数のバリデーター候補者に委任できる？",
+      "yes_users_can_choose_to": "はい。ユーザーは複数名のバリデーターに同時にトークンをステークすることが可能です。",
+      "will_i_earn_rewards_on": "バリデーターにトークンを委任すると自分は報酬を得られる？",
+      "validators_earn_rewards_on_any": "バリデーターはステーキングプールへと委任されたいかなるトークンに対しても報酬を得ることができます。彼らはその報酬を委託者と共有し還元することができますが、これは完全にバリデーター次第となります。各バリデーターが共有する報酬のパーセンテージは、透明性を保証するため",
+      "to_ensure_full_transparency_so": "にて公開され、ユーザーはステーキング前に詳細な情報を得た上での決断をすることができます。報酬についてのさらなる情報は",
+      "this_post_on_validator_and": "バリデーターとステーキングエコノミクスに関するこちらの記事をご覧ください。",
+      "what_currency_will_rewards_be": "どの通貨で報酬は支払われる？",
+      "how_do_i_claim_my": "報酬の請求方法は？",
+      "the_delegation_rewards_will_be": "委任の報酬はネットワークにより自動的に分配され、こちらの「報酬」タブよりご利用いただけます:",
+      "plasma_chain_dashboard": "PlasmaChainダッシュボード",
+      "": "。",
+      "when_will_i_receive_rewards": "いつ委任した分の報酬を受け取れる？",
+      "currently_validator_rewards_are_calculated": "現在バリデーターの報酬は、２週間毎の選挙周期の最後に計算され支払われています。",
+      "note_this_is_an_area": "注: この領域については活発な研究を行なっており、ネットワークの成熟に伴ってより頻繁な支払いスケジュールへと移行することを計画しています。",
+      "how_long_will_my_stake": "私のステークはどのくらいの期間ロックされる？",
+      "you_can_choose_from_any": "次の規定されたロックアップ期間よりご選択いただけます ー ２週間、３週間、６ヶ月、１年。",
+      "for_the_validators_that_choose": "ステーキングプールの報酬を共有することを選択しているバリデーターの場合、デリゲーターはどのロックアップ期間でもボーナスインセンティブを受け取ることになります。以下のように、ロックアップ期間が長いほどそのパーセンテージは高くなります:",
+      "note_these_bonus_levels_are": "注: このボーナス水準は、バリデーター料の差し引き前のものです。",
+      "how_can_i_un_delegate_my": "どうやってトークンの委任を取り消せる？",
+      "simply_navigate_to_my_delegations": "\"委任について\" にアクセスし、特定のバリデーターを選んで \"委任をやめる\" ボタンをクリックします:",
+      "once_i_un_delegate_how_long": "委任を取り消すと、自分のトークンへの完全なアクセスを取り戻すのにどれくらいかかる？",
+      "at_launch_delegators_funds_will": "ローンチ段階では、デリゲーターの資金が完全にリリースされるのに２週間かかります。これは悪意のある候補者にステーキングして、彼らがバリデート権を得る確率を上げてからすぐに委任を取り消すという状況に対するセキュリティ的緩和策です。この領域については活発な研究を行なっており、今後数カ月に渡って繰り返し取り組んでいく予定です。",
+      "are_there_any_ways_to": "委任したトークンのうちいくらか失ってしまうことはある？",
+      "yes_if_the_protocol_rules": "はい。プロトコルルールが遵守されない場合、バリデーターは処罰される可能性があります。これはつまり、プールに委託されたものも含め、ステークされたトークンの一部を没収されるということです。処罰は悪意ある行動を阻み、皆が同じルールに従って行動するネットワークの維持に役立ちます。この仕組みは、不誠実で罪深い行動を取ることがそのもたらす価値よりもより高コストになるように設計されています。例えば、無効なブロックの送信、二重支払いの試みおよび(または)ダウンタイムの発生は、すべて処罰の原因となります。処罰の条件が確定次第、詳しい概要を公開予定です。",
+      "where_do_the_tokens_go": "没収されてしまったトークンはどこへ行くの？",
+      "slashed_tokens_will_be_contributed": "没収されたトークンは、今後のブロック報酬のための準備金へと還元され、ネットワークの検証およびステーキングを行う人々へと支払われることになります。"
+    },
+    "history": {
+      "your_history": "あなたの履歴",
+      "sort_by": "並び替え:",
+      "item_1": "アイテム 1",
+      "item_2": "アイテム 2",
+      "home": "ホーム"
+    },
+    "my_account": {
+      "my_address": "マイアドレス",
+      "balance": "残高",
+      "mainnet": "メインネット",
+      "plasmachain": "PlasmaChain",
+      "account_details": "アカウント詳細",
+      "deposit_withdraw": "入出金",
+      "connect_to_deposit_funds": "接続して資金をデポジット",
+      "no_mapping_detected": "マッピングが検出できません",
+      "map_accounts": "アカウントをマップ",
+      "history": "履歴",
+      "deposit": "デポジット",
+      "withdraw": "出金する",
+      "use_maximum": "全額使用する",
+      "transfer_to_plasmachain_for_staking": "PlasmaChainへ移転してステーキング",
+      "withdraw_to_metamask": "ウォレットへ出金",
+      "wait_tx": "あなたのトランザクションは現在処理待機中です。トランザクションが確認後に残高が更新されますので、数分お待ちください。",
+      "tokens_pending_deposit": "{pendingDepositAmount} トークンのデポジットが未処理です。まずこのデポジットを完了してから、他の処理を行なって下さい。",
+      "tokens_pending_withdraw": "{pendingWithdrawAmount} トークンの出金が未処理です。まずこの出金を完了してから、他の処理を行なって下さい。",
+      "reclaim_deposit": "デポジットしたトークンを払い戻す",
+      "complete_withdraw": "出金完了"
+    },
+    "my_delegations": {
+      "no_delegations": "委任はありません"
+    },
+    "redelegate": {
+      "redelegate": "再委任する",
+      "from": "委任元",
+      "to": "委任先"
+    },
+    "rewards": {
+      "unclaimed_rewards": "未請求の報酬:",
+      "you_have_yet_to_receive": "まだ報酬の受け取りをしていません",
+      "claim_reward": "報酬を請求する"
+    },
+    "validator_detail": {
+      "state": "状態:",
+      "amount_delegated": "委任の数量:",
+      "amount_delegated_loom": "{amountDelegated} LOOM",
+      "updated_amount": "数量を更新:",
+      "updated_amount_loom": "{updatedAmount} LOOM",
+      "timelock_tier": "タイムロックを選択:",
+      "timelock": "タイムロック:",
+      "unlocked": "アンロック済み"
+    },
+    "validator_list": {
+      "no_validators_available_please_try": "ダッシュ ボードのノードへの接続中にエラーが発生しました。後ほど再度確認してください。",
+      "validators": "バリデーター"
+    }
+  },
+  "components": {
+    "faucet_footer": {
+      "loom_network": "Loom Network",
+      "eth_fiddle": "EthFiddle",
+      "eth_deploy": "EthDeploy",
+      "crypto_zombies": "CryptoZombies",
+      "solidity_x": "SolidityX",
+      "what_is_blockchain": "What is Blockchain",
+      "loom_sdk": "Loom SDK",
+      "delegatecall": "Delegatecall",
+      "github": "Github",
+      "medium": "Medium",
+      "angel_co": "Angel.co",
+      "twitter": "Twitter",
+      "telegram": "Telegram",
+      "email": "E-mail",
+      "loom_network_is_a_platform": "Loom Networkは、開発者が大規模な分散型アプリケーションを実行可能な、Ethereum上に作られたサービスとしてのプラットフォームです。これにより商業規模のサービス実行に必要な計算リソースに加え、世界で最も安全なパブリックブロックチェーンの信頼とセキュリティを利用し、開発者はDAppsを構築できるようになります。Loomは新しい分散型Webのためのトークン化されたアプリケーションプロトコルを目指しています。"
+    },
+    "faucet_header": {
+      "eth_connected": "Ethereumと接続済み",
+      "eth_disconnected": "Ethereumと接続なし",
+      "dapp_connected": "PlasmaChainと接続済み",
+      "dapp_disconnected": "PlasmaChainと接続なし",
+      "explorer": "エクスプロラー",
+      "f_a_q": "よくある質問",
+      "next_election_cycle": "次の選挙周期:",
+      "plasma_chain": "PlasmaChain:",
+      "staked": "ステーク済み:",
+      "deposit": "デポジット",
+      "plasmachain_dashboard": "PlasmaChainダッシュボード",
+      "dashboard": "ダッシュボード",
+      "wallet": "ウォレット",
+      "my_staking": "マイステーキング",
+      "my_stakes": "マイステーク",
+      "status": "ステータス",
+      "block_explorer": "Block Explorer"
+    },
+    "faucet_sidebar": {
+      "my_account": "マイアカウント",
+      "my_delegations": "委任について",
+      "rewards": "報酬",
+      "history": "履歴"
+    },
+    "layout": {
+      "metamask_changed": "MetaMaskアカウントが切り替わりました。予期せぬ動作を避けるため、このアプリはリロードを行います。",
+      "metamask_error": "MetaMaskのエラー!?",
+      "please_enable_metamask_or_switch": "MetaMaskの使用を可能にするか、サポート済みのブラウザに切り替えてください。",
+      "mapping_error": "マッピングのエラー!?",
+      "your_account_appears_to_be": "あなたのDappChainアカウントは次のEthereumアドレスとマッピングされています:",
+      "but_your_current_account_address": "しかし現在あなたのEthereumアカウントアドレスは:",
+      "please_change_your_metamask_account": "Ethereumのアカウントを変更してください",
+      "please_check_your_metamask_account": "Ethereumのアカウントやネットワークをチェックしてください",
+      "sign_wallet": "{walletType} 上で本人確認のために署名を行なって下さい。(ガスはかかりません)",
+      "already_mapped": "選択したアカウントはすでにマッピング済みです。新しいアカウントを選択して下さい。"
+    },
+    "loading_spinner": {
+      "please_be_patient_loomy_is": "Loomyが頑張ってロード中！少々お待ちください。",
+      "this_could_take_several_minutes": "数分かかりますが、ブラウザを閉じたり再読み込みしたりしないでください。"
+    },
+    "modals": {
+      "confirm_seed_modal": {
+        "please_type_in_words_confirm_indexes_0": "確認のため、{confirmIndexes01}、{confirmIndexes11}、{confirmIndexes21} の単語を入力してください。",
+        "word_confirm_1": "単語{confirm1}:"
+      },
+      "faucet_delegate_modal": {
+        "amount": "数量:",
+        "locktime_bonuses": "ロックタイム / ボーナス:",
+        "warning_please_note_that_any": "注意: 追加委任すると既存の委任は上書きされてしまいます！",
+        "warning_please_note_that_un_delegating": "注意: 委任を解除すると、ステーク期間中に獲得した報酬を受け取ることができなくなります。"
+      },
+      "restore_account_modal": {
+        "please_type_in_your_seed": "以下にシードフレーズを入力してください。",
+        "note_the_phrase_is_case": "注: フレーズの大文字と小文字は区別されており、各単語はスペース１つで分けられています。"
+      },
+      "seed_phrase_modal": {
+        "note_these_12_words_allow": "注: 紛失や破損の際に、この12単語でウォレットを回復することができます。",
+        "you_must_create_a_backup_nbsp": "バックアップの作成が必須です!&nbsp;",
+        "write_or_print_it_out": "メモか印刷をして、安全な場所で保管してください。",
+        "without_it_you_will_not": "これを失くすと、万一の場合にトークンを回復することができません。",
+        "copy_to_clipboard": "クリップボードにコピー"
+      },
+      "success_modal": {
+        "success": "成功!!"
+      },
+      "hardware_wallet_modal": {
+        "unlock_hardware_wallet": "ハードウェアウォレットをアンロック",
+        "enter_pin_code": "あなたのledgerでPINコードを入力し、Ethereumアプリにログインして下さい。"
+      }
+    },
+    "blockExplorer": {
+      "block_info": {
+        "on": "日時:",
+        "verified": "検証済み",
+        "transactions": "トランザクション"
+      },
+      "block_list": {
+        "blocks": "ブロック",
+        "block_height": "ブロックの高さ:",
+        "row_value": "#{rowValue}"
+      },
+      "decoded_tx": {
+        "transaction_data": "トランザクション日:"
+      },
+      "transaction": {
+        "push": "プッシュする",
+        "type": "タイプ:",
+        "walker": "ウォーカー",
+        "listing_price_1_99": "リスティング価格: $1.99",
+        "rarity": "レア度:",
+        "rare": "レア",
+        "entry": "エントリー時:",
+        "return_a_zombie_to_hand": "ゾンビ１体を手札へ戻す",
+        "sold": "販売済み"
+      },
+      "transaction_list": {
+        "filter_by": "フィルタリング",
+        "most_old": "最も古い",
+        "pending": "未処理"
+      }
+    }
+  }
+}

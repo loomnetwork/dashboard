@@ -6,9 +6,7 @@ import { setTimeout } from "timers";
 import { DPOSUser } from "loom-js";
 import { Contract } from "ethers";
 
-Debug.enable("dashboard.dpos.rx")
-
-const debug = Debug("dashboard.dpos.rx")
+const debug = Debug("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<any>) {
 
@@ -131,25 +129,15 @@ function listenToDepositApproval(account, gw: Contract, loom: Contract, store: S
         console.log('approval ' + weiAmount.toString() + ' tokens from ' + from);
         store.commit("DPOS/setShowDepositApproved", true)
         // empty pendingTx
-        // todo: theoratically not necessary but test hash, we never no...
+        // todo: theoratically not necessary but test hash, we never know...
         store.commit("DPOS/setPendingTx", null)
     });
 }
 function listenToDeposit(account, gw: Contract, loom: Contract, store: Store<any>) {
     const filter = loom.filters.Transfer(account, gw.address)
-    loom.on(filter, (from, to, amount) => {
-        console.log('transfer ' + amount.toString() + ' tokens from ' + from + ' to ' + to);
-        //store.state.DPOS.
+    loom.on(filter, (from, to, weiAmount) => {
+        console.log('transfer ' + weiAmount.toString() + ' tokens from ' + from + ' to ' + to);
         store.commit("DPOS/setShowDepositConfirmed", true)
         store.commit("DPOS/setPendingTx", null)
     });
-    // const filter = gw.filters.ERC20Received(account, amount, gwaddr)
-    // gw.on(filter, (from, weiAmount) => {
-    //     console.log('gw received ' + weiAmount.toString() + ' tokens from ' + from);
-    //     //store.state.DPOS.
-    //     store.commit("DPOS/setShowDepositConfirmed", true)
-    //     store.commit("DPOS/setPendingTx", null)
-    //     // tell user deposit to gateway seuccesfull and plasma balance will update after 10 confirmation
-    //     //store.dispatch("")
-    // });
 }

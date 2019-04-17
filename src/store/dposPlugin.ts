@@ -137,6 +137,7 @@ function listenToDeposit(account, gw: Contract, loom: Contract, store: Store<any
     const filter = loom.filters.Transfer(account, gw.address)
     loom.on(filter, (from, to, weiAmount) => {
         console.log('transfer ' + weiAmount.toString() + ' tokens from ' + from + ' to ' + to);
+        store.commit("DPOS/setShowDepositApproved", false)
         store.commit("DPOS/setShowDepositConfirmed", true)
         store.commit("DPOS/setPendingTx", null)
     });

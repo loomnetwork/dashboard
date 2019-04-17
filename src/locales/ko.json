@@ -176,6 +176,17 @@
       "history": "거래 내역",
       "faq": "F.A.Q"
     },
+    "gateway": {
+      "complete_deposit": "Complete deposit",
+      "approval": {
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue."
+      },
+      "deposit": {
+        "pending": "Deposit transaction successfully sent. you will be notified once it is confirmed",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations",
+        "failure": "Deposit failed..."
+      }
+    },
     "layout": {
       "metamask_changed": "MetaMask 계정을 전환했습니다. 예기치 않은 오류를 방지하기 위해 앱을 재시작합니다.",
       "metamask_error": "MetaMask 오류!?",

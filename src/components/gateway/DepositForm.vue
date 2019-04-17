@@ -37,7 +37,7 @@
         </b-container>
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
         <footer style="display:flex">
-          <b-btn @click="setShowDepositApprovalForm(false)">Cancel</b-btn>
+          <b-btn @click="close()">Cancel</b-btn>
           <span style="flex:1"></span>
           <b-btn @click="sendApproval" variant="primary" :disabled="amountErrors.length > 0">Confirm</b-btn>
         </footer>

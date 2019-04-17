@@ -5,7 +5,7 @@
     <b-container fluid>
       <div class="lead">
         <p>{{ $t('components.gateway.deposit.success') }}</p>
-        <a href="history">view confirmations</a>
+        <router-link to="history">view confirmations</router-link>
       </div>
     </b-container>
   </b-modal>
@@ -37,11 +37,14 @@ export default class DepositConfirmed extends Vue {
   setShowDepositConfirmed:Function
 
   get visible() {
+    console.log("showDepositConfirmed",this.showDepositConfirmed)
     return  this.showDepositConfirmed
   }
 
   set visible(value) {
-    this.setShowDepositConfirmed(false)
+    if (value === false) {
+     this.setShowDepositConfirmed(false)
+    }
   }
 
   close() {

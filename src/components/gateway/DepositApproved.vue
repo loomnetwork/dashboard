@@ -1,16 +1,27 @@
 <template>
   <b-modal v-model="visible"
-    hide-footer=""
+    hide-footer
     no-close-on-backdrop 
-    no-close-on-esc 
-    id="deposit-approval-success"  title="Approval success" 
+    no-close-on-esc
+    hide-header-close
+    id="deposit-approval-success"  title="Complete deposit" 
     >
-    <b-container fluid>
+    <b-container fluid v-if="state === 'notify'">
       <div class="lead">
         <p>{{ $t('components.gateway.approval.success') }}</p>
-        <a href="history">view confirmations</a>
       </div>
       <b-btn @click="completeDeposit">Complete deposit</b-btn>
+    </b-container>  
+    <b-container fluid v-else-if="state === 'sending'">
+      <div class="lead">
+        <p>{{ $t('components.gateway.deposit.sending') }}</p>
+      </div>
+    </b-container> 
+    <b-container fluid v-else-if="state === 'sent'">
+      <div class="lead">
+        <p>{{ $t('components.gateway.deposit.sent') }}</p>
+      </div>
+      <b-btn @click="close">Close</b-btn>
     </b-container>    
   </b-modal>
 </template>
@@ -33,6 +44,8 @@ const dposModule = namespace('DPOS')
 
 @Component
 export default class DepositApproved extends Vue {
+
+  state:string = 'notify'
 
   @dposModule.State("pendingTx")
   transaction:any
@@ -57,9 +70,16 @@ export default class DepositApproved extends Vue {
     }
   }
 
+  close() {
+    this.visible = false
+  }
+
   async completeDeposit(e) {
+    this.state = 'sending'
     e.preventDefault()
     await this.executeDeposit()
+    // refresh balances
+    this.state = 'sent'
   }
 
 }

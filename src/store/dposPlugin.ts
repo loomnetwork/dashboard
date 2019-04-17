@@ -14,7 +14,18 @@ export function dposStorePlugin(store: Store<any>) {
     store.watch(
         (state) => state.DappChain.dposUser,
         // we never set dpos3 to null. I assume...
-        () => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
+        async () => {
+            store.dispatch("DPOS/getTimeUntilElectionsAsync")
+
+            // get balances
+            let loomBalance = await store.dispatch("DappChain/getDappchainLoomBalance")
+            let mainnetBalance = await store.dispatch("DappChain/getMetamaskLoomBalance")
+            const ub = Object.assign(store.state.DPOS.userBalance, {
+                loomBalance,
+                mainnetBalance,
+            })
+            store.commit("DPOS/setUserBalance", ub)
+        },
     )
 
     // Whenever timeUntilElectionCycle is refreshed, 

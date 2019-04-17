@@ -228,11 +228,11 @@ export default class MobileAccount extends Vue {
       this.showRefreshSpinner = false
     }, 2000)
   }
-
+  // todo: remove call and only use what is in the state
   async getDelegations() {
-
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkAllDelegationsAsync()
-    const candidates = await this.dposUser.listCandidatesAsync()
+    const dposUser = await this.dposUser
+    const { amount, weightedAmount, delegationsArray } = await dposUser.checkAllDelegationsAsync()
+    const candidates = await dposUser.listCandidatesAsync()
 
     return delegationsArray.filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
            .map(delegation => {
@@ -255,13 +255,14 @@ export default class MobileAccount extends Vue {
   }
 
   async completeDeposit() {
+    const dposUser = await this.dposUser
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
     const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
-      await this.dposUser._ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), this.dposUser.ethereumLoom.address
+      await (await this.dposUser)._ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), dposUser.ethereumLoom.address
       )
       this.currentAllowance = 0
     } catch (error) {
@@ -330,7 +331,7 @@ export default class MobileAccount extends Vue {
   }
   
   async checkAllowance() {    
-    const user = this.dposUser
+    const user = await this.dposUser
     const gateway = user.ethereumGateway
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
@@ -381,6 +382,7 @@ export default class MobileAccount extends Vue {
   }
 
   async hasReceiptHandler(receipt) {
+    const dposUser = await this.dposUser
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
@@ -390,7 +392,7 @@ export default class MobileAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
-    let ethAddr = this.dposUser._wallet._address
+    let ethAddr = dposUser._wallet._address
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
     if (receipt.tokenOwner != ethAddr) {
       this.mismatchedReceiptHandler(receipt, ethAddr)
@@ -412,9 +414,7 @@ export default class MobileAccount extends Vue {
   }
 
   async reclaimWithdrawHandler() {
-    // var localAddr = CryptoUtils.bytesToHexAddr(this.dposUser._address.local.bytes)
-    // let mappedAddr = await this.dposUser._wallet._address
-    // let ethAddr = CryptoUtils.bytesToHexAddr(mappedAddr.to.local.bytes)
+    const dposUser = await this.dposUser
     let ethAddr = this.dposUser._wallet._address
     console.log('current eth addr: ', ethAddr)
     try {
@@ -467,7 +467,7 @@ export default class MobileAccount extends Vue {
   async checkAllowance() {    
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")   
-    const user = this.dposUser
+    const user = await this.dposUser
     const gateway = user.ethereumGateway
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
@@ -480,7 +480,7 @@ export default class MobileAccount extends Vue {
 
   async approveAmount(amount) {
     if(!this.dposUser) return
-    const user = this.dposUser
+    const user = await this.dposUser
     const gateway = user.ethereumGateway
     try {
       let tx = await user.ethereumLoom.approve(gateway.address, amount)
@@ -496,7 +496,8 @@ export default class MobileAccount extends Vue {
    async approveDeposit(amount) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
-    const { web3, dposUser} = this
+    const { web3 } = this
+    const dposUser = await this.dposUser
     const ethereumLoom  = dposUser.ethereumLoom
     const ethereumGateway  = dposUser._ethereumGateway
     const tokens = new BN( "" + parseInt(amount,10)) 
@@ -533,11 +534,12 @@ export default class MobileAccount extends Vue {
   async executeDeposit(amount,approvalTx) {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
+    const dposUser = await this.dposUser
     this.setGatewayBusy(true)
     const tokens = new BN( "" + parseInt(amount,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    let result = await this.dposUser._ethereumGateway.functions.depositERC20(
-      weiAmount.toString(), this.dposUser.ethereumLoom.address
+    let result = await dposUser._ethereumGateway.functions.depositERC20(
+      weiAmount.toString(), dposUser.ethereumLoom.address
     )
     await result.wait()
     this.setGatewayBusy(false)
@@ -546,13 +548,14 @@ export default class MobileAccount extends Vue {
   }
 
   async completeDeposit() {
+    const dposUser = await this.dposUser
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
     const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
-      await this.dposUser._ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), this.dposUser.ethereumLoom.address
+      await dposUser._ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), dposUser.ethereumLoom.address
       )
       this.currentAllowance = 0
     } catch (error) {

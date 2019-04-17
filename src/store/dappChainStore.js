@@ -6,9 +6,7 @@ import {
 
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 
-import ApiClient from '../services/api'
 import { getDomainType, formatToCrypto } from '../utils'
-import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
 import Debug from "debug"
 
@@ -261,6 +259,7 @@ export default {
       }
     },
     setDPOSUserV3(state, payload) {
+      console.log("setting dpos user")
       state.dposUser = payload
     },
     setShowSigningAlert(state, payload) {
@@ -314,58 +313,50 @@ export default {
         console.error(err)
       }
     },
-    async getMetamaskLoomBalance({ state , commit}, payload) {
+    async getMetamaskLoomBalance({ state , commit}) {
       if (!state.web3) return 0
 
       if (!state.dposUser) {
-        try {
-          await dispatch('initDposUser')
-        } catch (err) {
-          console.error("Error getting Loom balance", err)
-          return 0
-        }
+        throw new Error("Expected dposUser to be initialized")
       }
+      const dposUser = await state.dposUser
       const web3js = state.web3
-      const accounts = await web3js.eth.getAccounts()
-      if (accounts.length === 0) return 0
-      const address = accounts[0]
       try {
-        let loomWei = await state.dposUser.ethereumLoom.methods
-
-        let balance = web3js.utils.fromWei(await state.dposUser.ethereumLoom.methods
-          .balanceOf(address)
-          .call({ from: address }))
-      let limitDecimals = parseFloat(balance).toFixed(2)
-      return limitDecimals
+        let loomWei = await dposUser.ethereumLoom.functions.balanceOf(dposUser.ethAddress)
+        console.log("balance",loomWei)
+        let balance = web3js.utils.fromWei(loomWei.toString())
+        return parseFloat(balance).toFixed(2)
       } catch (err) {
         commit('setErrorMsg', {msg: "Error getting metamask balance", forever: false, report:true, cause:err}, {root: true})
         return 0
       }
     },
     async initDposUser({ state, rootState, getters, dispatch, commit }) {
+      console.log("initdpos user")
       if (!rootState.DPOS.web3) {    
         await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
- 
       const network = state.chainUrls[state.chainIndex].network
-      let user 
-      try { 
-        user = await DPOSUserV3.createEthSignMetamaskUserAsync({
-          web3: rootState.DPOS.web3,
-          dappchainEndpoint: getters.dappchainEndpoint,
-          chainId: network,
-          gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-          version: 2
-        })
-
+      // set state dposUser to be a Promise<dposUser> so that components caalling it don't complain or go and try to init another dpos user...
+      const user = DPOSUserV3.createEthSignMetamaskUserAsync({
+        web3: rootState.DPOS.web3,
+        dappchainEndpoint: getters.dappchainEndpoint,
+        chainId: network,
+        gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
+        version: 2
+      })
+      .then(user => {
         reconfigureClient(user._client, commit)
-        commit("setDPOSUserV3", user)
-        
-      } catch(err) {
-
+        console.log('dposUser ready')
+        return user
+      })
+      .catch((err) => {
         console.log(err)
         commit('setErrorMsg', {msg: "Error initDposUser", forever: false, report:true, cause:err}, {root: true}) 
-      }
+        return null
+      })
+      // set the promise
+      commit("setDPOSUserV3", user)
     },
     // TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
     async switchDposUser({ state, rootState, getters, dispatch, commit }, payload) {
@@ -410,7 +401,7 @@ export default {
     async depositAsync({ state }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       commit('DPOS/setGatewayBusy', true, { root: true })
-      const user = state.dposUser
+      const user = await state.dposUser
       const tokens = new BN( "" + parseInt(amount,10)) 
       const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
       const res = user.depositAsync(new BN(weiAmount, 10))
@@ -425,7 +416,7 @@ export default {
      */
     async withdrawAsync({ state, commit }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
-      const user = state.dposUser
+      const user = await state.dposUser
       const tokens = new BN( "" + parseInt(amount,10)) 
       const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
       commit('DPOS/setGatewayBusy', true, { root: true })
@@ -435,12 +426,13 @@ export default {
     },
     async approveAsync({ state, dispatch }, payload) {
       commit('DPOS/setGatewayBusy', true, { root: true })
+
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }
 
       const { amount } = payload
-      const user = state.dposUser
+      const user = await state.dposUser
       
       const token = user.ethereumLoom
       const gateway = user.ethereumGateway
@@ -449,27 +441,24 @@ export default {
     },
     async getDappchainLoomBalance({ rootState, state, dispatch }) {
       if (!state.dposUser) {
-        try {
-          await dispatch('initDposUser')
-        } catch (err) {
-          console.error("Error getting Loom balance", err)
-          return 0
-        }
+        throw new Error("Expected dposUser to be initialized")
       }
-      let loomWei = await state.dposUser.getDAppChainBalanceAsync()      
+      const user = await state.dposUser
+      let loomWei = await user.getDAppChainBalanceAsync()
+      console.log("loom onplasma",loomWei.toString())
       const balance = state.web3.utils.fromWei(loomWei.toString(), 'ether')
       let limitDecimals = parseFloat(balance).toFixed(2)
       return limitDecimals
     },
     async delegateAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
-
-        await dispatch('initDposUser')
-      }      
+        throw new Error("expected dposUser to be initialized")
+      }  
+      const user = await state.dposUser    
       try {       
         let weiAmount = state.web3.utils.toWei(payload.amount, 'ether') 
         let tier = parseInt(payload.tier)
-        const result = await state.dposUser.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
+        await user.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
@@ -477,12 +466,13 @@ export default {
     },
     async undelegateAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }
+      const user = await state.dposUser    
       let weiAmount = state.web3.utils.toWei(payload.amount, 'ether')    
       let loomAmount = weiAmount / 10 ** 18
       try {
-        const result = await state.dposUser.undelegateAsync(payload.candidate, new BN(weiAmount,10))
+        const result = await user.undelegateAsync(payload.candidate, new BN(weiAmount,10))
         commit('setSuccessMsg', {msg: `Success un-delegating ${loomAmount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
@@ -566,7 +556,7 @@ export default {
     },
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }      
       const totalDelegation = await state.dposUser.getTotalDelegationAsync()
       const amount = formatToCrypto(totalDelegation.amount)
@@ -703,10 +693,10 @@ export default {
     },
     async getUnclaimedLoomTokens({ state, dispatch, commit } ) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }
       
-      const user = state.dposUser
+      const user = await state.dposUser
 
       const web3js = state.web3
       const accounts = await web3js.eth.getAccounts()
@@ -725,10 +715,10 @@ export default {
     },
     async reclaimDeposit({ state, dispatch, commit } ) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }
       commit('DPOS/setGatewayBusy', true, { root: true })
-      const user = state.dposUser
+      const user = await state.dposUser
       const dappchainGateway = user.dappchainGateway
       try {
         await dappchainGateway.reclaimDepositorTokensAsync()
@@ -741,9 +731,9 @@ export default {
 
     async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }
-      const user = state.dposUser
+      const user = await state.dposUser
       try {
         const receipt = await user.getPendingWithdrawalReceiptAsync()
         if(!receipt) return null
@@ -759,10 +749,10 @@ export default {
 
     async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        throw new Error("expected dposUser to be initialized")
       }
 
-      var user = state.dposUser
+      var user = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
       try {
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)

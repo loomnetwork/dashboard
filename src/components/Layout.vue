@@ -177,7 +177,7 @@ export default class Layout extends Vue {
       this.attemptToInitialize()     
     } else {
       this.$root.$on('login', async () => {
-        this.attemptToInitialize()
+        // this.attemptToInitialize()
       })
     }      
     

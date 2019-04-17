@@ -176,6 +176,17 @@
       "history": "历史记录",
       "faq": "F.A.Q"
     },
+    "gateway": {
+      "complete_deposit": "Complete deposit",
+      "approval": {
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue."
+      },
+      "deposit": {
+        "pending": "Deposit transaction successfully sent. you will be notified once it is confirmed",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations",
+        "failure": "Deposit failed..."
+      }
+    },
     "layout": {
       "metamask_changed": "你刚刚切换了MetaMask帐户。 为避免任何意外行为，应用程序将重新加载",
       "metamask_error": "Metamask 错误！？",

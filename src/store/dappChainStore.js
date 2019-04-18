@@ -602,8 +602,21 @@ export default {
         new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
       return result
     },
+    /**
+     * If an initialized/initializing dposUser is in the state
+     * return dposUser.dappchainDPOS
+     * else creates one (and the client that goes with it...)
+     * @param {DappChainState} param0 
+     * @param {*} payload ?
+     * @returns {Promise<DPOS2>}
+     */
     async getDpos2({ state, commit }, payload) {
-      if (!payload && state.dpos2) {
+      if (state.dposUser) {
+        // todo check state.dpos2 and remove it/disconnect its client
+        // since we have dposUser now
+        return (await state.dposUser).dappchainDPOS
+      }
+      else if (state.dpos2) {
         commit('setDappChainConnected', true)
         return state.dpos2
       }

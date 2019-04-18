@@ -465,15 +465,9 @@ export default {
     // actually instead of depending on dposUser we should depend on dpos contract
     // (if we want to display timer in "anonymous" session)
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
-      
-      if(!rootState.DappChain.dposUser) {
-        await dispatch("DappChain/initDposUser", null, { root: true })
-      }
-
-      const user = rootState.DappChain.dposUser
-
+      const dpos = await dispatch("DappChain/getDpos2", null, { root: true })
       try {
-        const result = await user.getTimeUntilElectionsAsync()
+        const result = await dpos.getTimeUntilElectionAsync()
         debug("next election in %s seconds", result.toString())
         commit("setTimeUntilElectionCycle", result.toString())
         commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))

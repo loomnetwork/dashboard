@@ -184,5 +184,5 @@ function watchLoomPlasmaBalance(
     )
 
     // for deposits we have no way to be notified it seems. Covering with an interval
-    setInterval(updateBalance,10)
+    setInterval(updateBalance,10000)
 }

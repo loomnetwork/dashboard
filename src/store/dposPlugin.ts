@@ -126,8 +126,10 @@ function listenToGatewayEvents(store) {
 function listenToDepositApproval(account, gw: Contract, loom: Contract, store: Store<any>) {
     const filter = loom.filters.Approval(account, gw.address)
     loom.on(filter, (from, to, weiAmount) => {
-        console.log('approval ' + weiAmount.toString() + ' tokens from ' + from);
+        debug('approval ' + weiAmount.toString() + ' tokens from ' + from);
+        store.commit("DPOS/setShowDepositForm", false)
         store.commit("DPOS/setShowDepositApproved", true)
+        store.commit("DPOS/setShowDepositConfirmed", false)
         // empty pendingTx
         // todo: theoratically not necessary but test hash, we never know...
         store.commit("DPOS/setPendingTx", null)
@@ -136,7 +138,8 @@ function listenToDepositApproval(account, gw: Contract, loom: Contract, store: S
 function listenToDeposit(account, gw: Contract, loom: Contract, store: Store<any>) {
     const filter = loom.filters.Transfer(account, gw.address)
     loom.on(filter, (from, to, weiAmount) => {
-        console.log('transfer ' + weiAmount.toString() + ' tokens from ' + from + ' to ' + to);
+        debug('transfer ' + weiAmount.toString() + ' tokens from ' + from + ' to ' + to);
+        store.commit("DPOS/setShowDepositForm", false)
         store.commit("DPOS/setShowDepositApproved", false)
         store.commit("DPOS/setShowDepositConfirmed", true)
         store.commit("DPOS/setPendingTx", null)

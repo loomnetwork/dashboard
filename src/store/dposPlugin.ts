@@ -156,10 +156,10 @@ function watchLoomPlasmaBalance(
     store: Store<any>
 ) {
     const updateBalance = async() => {
-        const loomBalance = await dposUser.getDAppChainBalanceAsync(dposUser.ethAddress)
+        const loomBalance = await store.dispatch("DappChain/getDappchainLoomBalance")
         const ub = Object.assign(
             store.state.DPOS.userBalance, 
-            { loomBalance}
+            { loomBalance }
         )
         store.commit("DPOS/setUserBalance", ub)
     }
@@ -184,5 +184,5 @@ function watchLoomPlasmaBalance(
     )
 
     // for deposits we have no way to be notified it seems. Covering with an interval
-    setInterval(updateBalance,30)
+    setInterval(updateBalance,10)
 }

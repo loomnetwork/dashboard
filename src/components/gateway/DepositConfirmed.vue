@@ -5,7 +5,7 @@
     <b-container fluid>
       <div class="lead">
         <p>{{ $t('components.gateway.deposit.success') }}</p>
-        <router-link to="history">view confirmations</router-link>
+        <router-link to="history" @click.native="close">view confirmations</router-link>
       </div>
     </b-container>
   </b-modal>

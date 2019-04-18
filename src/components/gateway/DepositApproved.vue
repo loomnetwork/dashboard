@@ -67,6 +67,7 @@ export default class DepositApproved extends Vue {
   set visible(value) {
     if (value === false) {
      this.setShowDepositApproved(false)
+     this.state = 'notify'
     }
   }
 

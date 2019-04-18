@@ -182,7 +182,8 @@
         "success": "The deposit approval has been confirmed. Click complete deposit to continue."
       },
       "deposit": {
-        "pending": "Deposit transaction successfully sent. you will be notified once it is confirmed",
+        "sending": "Sending deposit request...",
+        "sent": "Deposit transaction successfully sent. you will be notified once it is confirmed",
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations",
         "failure": "Deposit failed..."
       }

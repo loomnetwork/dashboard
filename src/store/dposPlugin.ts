@@ -10,13 +10,8 @@ const debug = Debug("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<any>) {
 
-    // As soon as we have a dposUser getTimeUntilElectionsAsync
-    observeState(store,(state) => state.DappChain.dposUser)
-    .pipe(take(1))
-    .subscribe(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"))
-
     // Whenever timeUntilElectionCycle is refreshed, 
-    // refresh validators and user delegations
+    // refresh validators and user delegations (if user connected)
     // could also check unclaimedTokens, allowance...etc
     store.watch(
         (state) => state.DPOS.timeUntilElectionCycle,
@@ -27,12 +22,16 @@ export function dposStorePlugin(store: Store<any>) {
             debug("getting validators")
             store.dispatch("DappChain/getValidatorsAsync")
             debug("getting listDelegatorDelegations")
-            store.dispatch("DPOS/listDelegatorDelegations")
+            // delegator specific calls
+            if (store.state.DappChain.dposUser) {
+                store.dispatch("DPOS/listDelegatorDelegations")
+                //store.dispatch("DPOS/....rewards....")
+            }
         },
     )
 
     // On user delegation actions
-    // refresh user delegations balance and stakes
+    // refresh plasma balance and stakes
     const delegationActions = [
         "DPOS/redelegateAsync",
         "DappChain/delegateAsync",
@@ -53,6 +52,9 @@ export function dposStorePlugin(store: Store<any>) {
     buildLoadHistoryTrigger(store)
     buildWithdrawLimitTrigger(store)
     listenToGatewayEvents(store)
+
+    store.dispatch("DPOS/getTimeUntilElectionsAsync")
+
 }
 
 
@@ -102,10 +104,8 @@ function buildWithdrawLimitTrigger(store) {
 
 
 /**
- * Once DappChain.dposUser, DappChain.GatewayInstance amd DPOS.currentMetamaskAddress
- * are set in the state, 
- * listens to Approval events on the loom contract ethereum side,
- * when an approval is confirmed triggers notifies the state
+ * Once DappChain.dposUser is set in the state, 
+ * listens to Approval and deposit confirmations on the loom contract ethereum side.
  * @param store 
  */
 function listenToGatewayEvents(store) {

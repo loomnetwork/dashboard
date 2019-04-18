@@ -209,14 +209,31 @@ export default class MobileAccount extends Vue {
 
   showRefreshSpinner = false
   
-  async mounted() {
-    await this.updateTimeUntilElectionCycle()
+  mounted() {
+    // Page might be mounted while dposUser is still initializing
+    if (this.dposUser) {
+      this.dposUserReady()
+    } 
+    else {
+      // Assuming page is mounted only if initDposUser has been triggered...
+      let unwatch = this.$store.watch(
+        (s) => s.DappChain.dposUser,
+        () => {
+          unwatch()
+          this.dposUserReady()
+        }
+      )
+    }
+  }
+
+  async dposUserReady() {
+    await this.checkPendingWithdrawalReceipt()
+    await this.checkUnclaimedLoomTokens()
+    this.currentAllowance = await this.checkAllowance()
+    this.queryRewards()
+    this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
-    await this.checkUnclaimedLoomTokens()
-    await this.checkPendingWithdrawalReceipt()
-    this.currentAllowance = await this.checkAllowance()
-    await this.queryRewards()
   }
 
   refresh() {
@@ -228,7 +245,6 @@ export default class MobileAccount extends Vue {
   }
 
   async getDelegations() {
-
     const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
     const candidates = await this.dposUser.listCandidatesAsync()
 

@@ -614,7 +614,7 @@ export default {
       if (state.dposUser) {
         // todo check state.dpos2 and remove it/disconnect its client
         // since we have dposUser now
-        return (await state.dposUser).dappchainDPOS
+        return state.dposUser.dappchainDPOS
       }
       else if (state.dpos2) {
         commit('setDappChainConnected', true)

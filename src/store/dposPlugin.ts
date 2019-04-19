@@ -134,7 +134,7 @@ function watchLoomEthBalance(
     const receive = contract.filters.Transfer(null, addr, null)
 
     const updateEthLoomBalance = async() => {
-        const mainnetBalance = await store.dispatch("DappChain/getDappchainLoomBalance")
+        const mainnetBalance = await store.dispatch("DappChain/getMetamaskLoomBalance")
         const ub = Object.assign(
             store.state.DPOS.userBalance, 
             { mainnetBalance,}

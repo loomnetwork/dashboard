@@ -393,7 +393,7 @@ export default class MobileAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
-    let ethAddr = dposUser._wallet._address
+    let ethAddr = dposUser.ethAddress
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
     if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
       this.mismatchedReceiptHandler(receipt, ethAddr)

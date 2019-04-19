@@ -178,7 +178,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
       'withdrawAsync',
-      'withdrawCoinGatewayAsync'
+      'withdrawCoinGatewayAsync',
+      'switchDposUser',
     ]),
     ...mapMutations([
       'setErrorMsg'

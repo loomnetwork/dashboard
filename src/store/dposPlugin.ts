@@ -3,10 +3,16 @@ import { fromEventPattern, Observable, combineLatest } from "rxjs";
 import { filter, switchMap, tap } from "rxjs/operators";
 import { Store } from "vuex";
 import { setTimeout } from "timers";
+import { DPOSUserV3 } from "loom-js";
 
-Debug.enable("dashboard.dpos.rx")
+Debug.enable("dashboard.dpos")
 
-const debug = Debug("dashboard.dpos.rx")
+const debug = Debug("dashboard.dpos")
+const delegationActions = [
+    "DPOS/redelegateAsync",
+    "DappChain/delegateAsync",
+    "DappChain/undelegateAsync",
+]
 
 export function dposStorePlugin(store: Store<any>) {
 
@@ -14,7 +20,23 @@ export function dposStorePlugin(store: Store<any>) {
     store.watch(
         (state) => state.DappChain.dposUser,
         // we never set dpos3 to null. I assume...
-        () => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
+        async (dposUser) => {
+            store.dispatch("DPOS/getTimeUntilElectionsAsync")
+
+            // get initiale balances
+            let loomBalance = await store.dispatch("DappChain/getDappchainLoomBalance")
+            let mainnetBalance = await store.dispatch("DappChain/getMetamaskLoomBalance")
+            console.log(loomBalance.toString())
+            const ub = Object.assign(store.state.DPOS.userBalance, {
+                loomBalance,
+                mainnetBalance,
+            })
+            store.commit("DPOS/setUserBalance", ub)
+            // listen on loom contract and update loom on ethereum balance
+            watchLoomEthBalance(await dposUser, store)
+            watchLoomPlasmaBalance(await dposUser, store)
+
+        },
     )
 
     // Whenever timeUntilElectionCycle is refreshed, 
@@ -34,17 +56,12 @@ export function dposStorePlugin(store: Store<any>) {
     )
 
     // On user delegation actions
-    // refresh user delegations balance and stakes
-    const delegationActions = [
-        "DPOS/redelegateAsync",
-        "DappChain/delegateAsync",
-        "DappChain/undelegateAsync",
-    ]
+    // refresh user delegations and stakes
+    // todo refresh rewards also
     store.subscribeAction({
         after(action) {
             if (delegationActions.find(a =>a === action.type)) {
                 store.dispatch("DPOS/checkAllDelegations")
-                store.dispatch("DappChain/getDappchainLoomBalance")
                 // this might not be needed since checkAllDelegations
                 // returns total
                 store.dispatch("DappChain/getAccumulatedStakingAmount")
@@ -99,4 +116,73 @@ function buildWithdrawLimitTrigger(store) {
             debug("history loaded", history);
             store.dispatch("DPOS/updateDailyWithdrawLimit", history)
         })
+}
+
+/**
+ * 
+ * @param dposUser 
+ * @param store 
+ */
+function watchLoomEthBalance(
+    dposUser: DPOSUserV3,
+    store: Store<any>
+    ) {
+    const contract = dposUser.ethereumLoom
+    const addr = dposUser.ethAddress
+    // out out filters
+    const send = contract.filters.Transfer(addr, null, null)
+    const receive = contract.filters.Transfer(null, addr, null)
+
+    const updateEthLoomBalance = async() => {
+        const mainnetBalance = await store.dispatch("DappChain/getMetamaskLoomBalance")
+        const ub = Object.assign(
+            store.state.DPOS.userBalance, 
+            { mainnetBalance,}
+        )
+        store.commit("DPOS/setUserBalance", ub)
+    }
+    contract.on(send, updateEthLoomBalance)
+    contract.on(receive, updateEthLoomBalance)
+}
+
+/**
+ * updates balances after delegation actions
+ * plus Arbitrary interval of 30 secs (to cover deposits)
+ * @param dposUser 
+ * @param store 
+ */
+function watchLoomPlasmaBalance(
+    dposUser: DPOSUserV3,
+    store: Store<any>
+) {
+    const updateBalance = async() => {
+        const loomBalance = await store.dispatch("DappChain/getDappchainLoomBalance")
+        const ub = Object.assign(
+            store.state.DPOS.userBalance, 
+            { loomBalance }
+        )
+        store.commit("DPOS/setUserBalance", ub)
+    }
+    // We have hooks for delegation operations. We can use those to get the change right away
+    store.subscribeAction({
+        after(action) {
+            if (delegationActions.find(a =>a === action.type)) {
+                updateBalance()
+            }
+        }
+    })
+
+    // Covering withdraw: hacky, but state.gatewayBusy is a hint some transfer has taken place
+    // so refresh balance when  busy set to false (post operation)...
+    store.watch(
+        (state) => state.DPOS.gatewayBusy,
+        (busy) => {
+            if (busy === false) {
+                updateBalance()
+            }
+        }
+    )
+
+    // for deposits we have no way to be notified it seems. Covering with an interval
+    setInterval(updateBalance,10000)
 }

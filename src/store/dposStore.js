@@ -44,7 +44,7 @@ const defaultState = () => {
     mappingSuccess: false,
     gatewayBusy: false,
     userBalance: {
-      isLoading: true,
+      isLoading: false,
       loomBalance: 0,
       mainnetBalance: 0,
       stakedAmount: 0
@@ -397,7 +397,7 @@ export default {
       }
     },
     async checkAllDelegations({ state, rootState, commit }) {
-      const dposUser = rootState.DappChain.dposUser
+      const dposUser = await rootState.DappChain.dposUser
       console.assert(!!dposUser, "expected dposUser to be initialised")
       const { amount, weightedAmount, delegationsArray } = await dposUser.checkAllDelegationsAsync()
       let filteredDelegations = delegationsArray
@@ -409,12 +409,11 @@ export default {
       commit("setDelegations", filteredDelegations)
     },
     async queryRewards({ rootState, dispatch, commit }) {
-      
-      if(!rootState.DappChain.dposUser) {
-        await dispatch("DappChain/initDposUser", null, { root: true })
+      if (!rootState.DappChain.dposUser) {
+        throw new Error("Expected dposUser to be initialized")
       }
 
-      const user = rootState.DappChain.dposUser
+      const user = await rootState.DappChain.dposUser
       
       try {
         const result = await user.checkRewardsAsync()
@@ -431,11 +430,11 @@ export default {
     },
 
     async claimRewardsAsync({ rootState, dispatch }, payload) {
-      if(!rootState.DappChain.dposUser) {
-        await dispatch("DappChain/initDposUser", null, { root: true })
+      if (!rootState.DappChain.dposUser) {
+        throw new Error("Expected dposUser to be initialized")
       }
 
-      const user = rootState.DappChain.dposUser
+      const user = await rootState.DappChain.dposUser
 
       try {
         await user.claimDelegationsAsync()
@@ -447,14 +446,13 @@ export default {
     // this can be moved out as is automatically called once dposUser is set
     // actually instead of depending on dposUser we should depend on dpos contract
     // (if we want to display timer in "anonymous" session)
-    async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
-      
-      if(!rootState.DappChain.dposUser) {
-        await dispatch("DappChain/initDposUser", null, { root: true })
+    async getTimeUntilElectionsAsync({ rootState, commit }) {     
+      if (!rootState.DappChain.dposUser) {
+        throw new Error("Expected dposUser to be initialized")
       }
 
-      const user = rootState.DappChain.dposUser
-
+      const user = await rootState.DappChain.dposUser
+      console.log('getTimeUntilElectionsAsync',user)
       try {
         const result = await user.getTimeUntilElectionsAsync()
         debug("next election in %s seconds", result.toString())
@@ -467,12 +465,12 @@ export default {
     },
 
     async redelegateAsync({ rootState, dispatch, commit }, payload) {
-      if(!rootState.DappChain.dposUser) {
-        await dispatch("DappChain/initDposUser", null, { root: true })
+      if (!rootState.DappChain.dposUser) {
+        throw new Error("Expected dposUser to be initialized")
       }
 
       const { origin, target, amount} = payload
-      const user = rootState.DappChain.dposUser
+      const user = await rootState.DappChain.dposUser
 
       try {
         await user.redelegateAsync(origin, target, amount)

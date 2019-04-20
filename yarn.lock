@@ -6694,7 +6694,7 @@ lolex@^3.1.0:
 
 "loom-js@https://github.com/loomnetwork/loom-js#dist-dpos-v3":
   version "1.49.4"
-  resolved "https://github.com/loomnetwork/loom-js#840465d7b65a95886cc6e6b1d7c062e8b2fb435d"
+  resolved "https://github.com/loomnetwork/loom-js#2bd0d03345a85bcb0d45c131b18d4b9890d8d0ee"
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

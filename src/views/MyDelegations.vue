@@ -22,7 +22,6 @@
 
 <script>
 import Vue from 'vue'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
 import FaucetHeader from '../components/FaucetHeader'

@@ -79,7 +79,6 @@
 import Vue from 'vue'
 
 import { Component, Watch } from 'vue-property-decorator'
-import { getBalance, getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import FaucetTable from '../components/FaucetTable'
 

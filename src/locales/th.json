@@ -17,10 +17,10 @@
       "sign_in_with_existing_account": "Sign in with existing account",
       "setup_new_account_from_scratch": "Setup new account from scratch",
       "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
-      "new_user": "New User",
+      "new_user": "ผู้ใช้ใหม่",
       "returning_user": "Returning User",
-      "sign_out": "Sign out",
-      "create_account": "Create Account",
+      "sign_out": "ออกจากระบบ",
+      "create_account": "สร้างบัญชี",
       "restore_account": "Restore Account"
     },
     "help": {

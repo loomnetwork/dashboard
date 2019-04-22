@@ -11,9 +11,9 @@
       "no_candidates": "No Candidates"
     },
     "first_page": {
-      "please_log_in": "Please Log In",
+      "please_log_in": "กรุณาล็อกอิน",
       "sign_out_account": "Sign out account",
-      "login": "Login",
+      "login": "ล็อคอิน",
       "sign_in_with_existing_account": "Sign in with existing account",
       "setup_new_account_from_scratch": "Setup new account from scratch",
       "use_seed_phrase_to_retrieve": "Use seed phrase to retrieve existing account",
@@ -36,7 +36,7 @@
       "you_can_stake_your_tokens": "You can stake your tokens from the PlasmaChain Dashboard:",
       "create_an_account": "Create an account",
       "generate_a_private_key": "Generate a private key",
-      "log_in_to_your_meta_mask": "Log in to your MetaMask wallet",
+      "log_in_to_your_meta_mask": "ล็อกอินเข้าสู่ MetaMask wallet ของคุณ",
       "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto PlasmaChain",
       "choose_validators_to_stake_with": "Choose validators to stake with",
       "how_many_tokens_are_required": "How many tokens are required to become a delegator?",
@@ -47,7 +47,7 @@
       "do_i_lose_control_of": "Do I lose control of my tokens when I delegate them to a validator?",
       "no_upon_delegation_your_tokens": "No. Upon delegation, your tokens will be sent to a smart contract and essentially frozen on the network for the duration of your lock-up period (which is up to you to select). When the lock-up ends, your tokens are automatically released back to you along with any additional rewards that your validator may have shared with their staking pool.",
       "note_a_validator_never_has": "Note: a validator never has direct control of your delegated stake. They cannot move your tokens under any circumstances. For all intents and purposes, you remain the owner while your stake is temporarily assigned to the network.",
-      "can_i_delegate_to_multiple": "Can I delegate to multiple validator candidates?",
+      "can_i_delegate_to_multiple": "ฉันสามารถทำการ delegate ให้ validator candidates หลายๆ คนหรือไม่?",
       "yes_users_can_choose_to": "Yes. Users can choose to stake their tokens across several validators simultaneously.",
       "will_i_earn_rewards_on": "Will I earn rewards on the tokens I delegate to a validator?",
       "validators_earn_rewards_on_any": "Validators earn rewards on any tokens that are delegated to their staking pool. They can choose to share a portion of those rewards back to their delegators — but this is entirely up to the validator. The percentage each validator shares will be published on the",
@@ -214,7 +214,7 @@
       },
       "faucet_delegate_modal": {
         "amount": "จำนวน:",
-        "locktime_bonuses": "Locktime / Bonuses:",
+        "locktime_bonuses": "Locktime / โบนัส:",
         "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
       },
@@ -260,7 +260,7 @@
         "rare": "Rare",
         "entry": "Entry:",
         "return_a_zombie_to_hand": "Return a zombie to hand",
-        "sold": "Sold"
+        "sold": "ขาย"
       },
       "transaction_list": {
         "filter_by": "Filter by",

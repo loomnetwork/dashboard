@@ -6,7 +6,6 @@ import {
 
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 
-import ApiClient from '../services/api'
 import { getDomainType, formatToCrypto } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'

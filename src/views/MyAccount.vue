@@ -182,7 +182,6 @@
 import Vue from 'vue'
 import VueQrcode from '@xkeshi/vue-qrcode';
 import VueClipboard from 'vue-clipboard2'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
 import FaucetSidebar from '../components/FaucetSidebar'

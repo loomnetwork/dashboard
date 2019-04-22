@@ -7,6 +7,7 @@
     <section class="validator-details">
       <header>
       <h1>{{validator.name }}<span> {{validator.isBootstrap ? "(bootstrap)" : ''}}</span></h1>
+      <small>loom{{validator.address.substring(2)}}</small>
       <p v-if="validator.description" style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0">
         {{validator.description}}
       </p>
@@ -25,9 +26,6 @@
     </section>
     <section v-if="userIsLoggedIn" class="user-stakes">
       <h6 v-if="!isBootstrap">{{ $t('My stakes') }} </h6>
-      <p class="no-stakes" v-if="delegations.length === 0">
-        {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
-      </p>
       <b-list-group v-if="validatorDelegations.length">
           <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
             <dl>

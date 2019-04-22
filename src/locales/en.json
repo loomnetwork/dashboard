@@ -176,6 +176,18 @@
       "history": "History",
       "faq": "F.A.Q"
     },
+    "gateway": {
+      "complete_deposit": "Complete deposit",
+      "approval": {
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue."
+      },
+      "deposit": {
+        "sending": "Sending deposit request...",
+        "sent": "Deposit transaction successfully sent. you will be notified once it is confirmed",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations",
+        "failure": "Deposit failed..."
+      }
+    },
     "layout": {
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "Metamask error!?",

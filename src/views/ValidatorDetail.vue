@@ -7,6 +7,7 @@
     <section class="validator-details">
       <header>
       <h1>{{validator.name }}<span> {{validator.isBootstrap ? "(bootstrap)" : ''}}</span></h1>
+      <small>loom{{validator.address.substring(2)}}</small>
       <p v-if="validator.description" style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0">
         {{validator.description}}
       </p>

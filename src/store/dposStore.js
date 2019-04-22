@@ -1,11 +1,12 @@
 import axios from 'axios'
-const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
+const { CryptoUtils, LocalAddress } = require('loom-js')
 import { formatToCrypto } from '../utils'
 import { initWeb3 } from '../services/initWeb3'
-import BigNumber from 'bignumber.js'
-const bip39 = require('bip39')
+
+import {ethers} from "ethers"
 
 import Debug from "debug"
+import { Store } from 'vuex';
 
 Debug.enable("dashboard.dpos")
 const debug = Debug("dashboard.dpos")
@@ -74,7 +75,11 @@ const defaultState = () => {
     dashboardPrivateKey: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
     dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
     client: null,
-    mapper: null
+    mapper: null,
+    showDepositForm: false,
+    showDepositApproved: false,
+    showDepositConfirmed: false,
+    pendingTx: null,
   }
 }
 
@@ -217,6 +222,18 @@ export default {
     },
     setDelegations(state, payload) {
       state.delegations = payload
+    },
+    setShowDepositForm(state, playload) {
+      state.showDepositForm = playload
+    },
+    setShowDepositApproved(state, playload) {
+      state.showDepositApproved = playload
+    },
+    setShowDepositConfirmed(state, playload) {
+      state.showDepositConfirmed = playload
+    },
+    setPendingTx(state, info) {
+      state.pendingTx = info
     }
   },
   actions: {
@@ -448,15 +465,9 @@ export default {
     // actually instead of depending on dposUser we should depend on dpos contract
     // (if we want to display timer in "anonymous" session)
     async getTimeUntilElectionsAsync({ rootState, dispatch, commit }) {
-      
-      if(!rootState.DappChain.dposUser) {
-        await dispatch("DappChain/initDposUser", null, { root: true })
-      }
-
-      const user = rootState.DappChain.dposUser
-
+      const dpos = await dispatch("DappChain/getDpos2", null, { root: true })
       try {
-        const result = await user.getTimeUntilElectionsAsync()
+        const result = await dpos.getTimeUntilElectionAsync()
         debug("next election in %s seconds", result.toString())
         commit("setTimeUntilElectionCycle", result.toString())
         commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))
@@ -596,8 +607,95 @@ export default {
       state.withdrawLimit =  Math.max(0, limit)
       debug('state.withdrawLimit', state.withdrawLimit)
       return state.withdrawLimit
-    }
+    },
+    /**
+     * sends an approval request and does not wait for a confirmation
+     * as we listen to confirmations on the contract
+     * @param {*} param0 
+     * @param {*} tokenAmount 
+     * @see dposPlugin
+     */
+    async approveDeposit({rootState, commit}, tokenAmount) {
+      const dposUser = rootState.DappChain.dposUser
+      console.assert(dposUser, "Expected dposUser to be initialized")
+      const loom  = dposUser.ethereumLoom
+      const gw  = dposUser._ethereumGateway
+      const wei = ethers.utils.parseEther(""+tokenAmount)
+      debug('approve', gw.address, wei.toString(), wei)
+      await executeTx(
+        commit,
+        "deposit approval",
+        () => loom.functions.approve( gw.address, wei.toString())
+      )
+    },
+    /**
+     * deposits amount: min(allowance, floor(ballance))
+     * if amount > 0
+     * todo handle error
+     * 
+     * @param {Store} param0 
+     * @param {ethers.utils.BigNumber} weiAmount 
+     */
+    async executeDeposit({rootState, commit}) {
+      const dposUser = rootState.DappChain.dposUser
+      console.assert(dposUser, "Expected dposUser to be initialized")
+      const loom  = dposUser.ethereumLoom
+      const gw = dposUser.ethereumGateway
+      const account = dposUser.ethAddress
+      const rawAmount = await Promise.all([
+          loom.balanceOf(account),
+          loom.allowance(account, gw.address)
+        ])
+        .then(([balance, allowance]) => { 
+          debug("balance %s allowance %s", balance.toString(), allowance.toString())
+          return allowance.lt(balance) ? allowance : balance
+        })
 
+      // rounding... 
+      const amount = rawAmount.sub(rawAmount.mod(ethers.constants.WeiPerEther))
+      if (amount.isZero()) {
+        throw new Error('No allowance or insufisient funds')
+      }
+      debug("depositERC20 %s ", amount.toString(), loom.address)
+
+      await executeTx(
+        commit,
+        "deposit",
+        () => gw.functions.depositERC20(amount.toString(), loom.address)
+      )
+    },
   },
 
+
+
+}
+
+/**
+ * 
+ * @param {*} commit 
+ * @param {*} type 
+ * @param {*} fn 
+ * @see approveDeposit
+ * @see executeDeposit
+ */
+async function executeTx(commit,type,fn) {
+  let pendingTx = {type, hash:""}; 
+  commit("setGatewayBusy",true)
+  try {
+    const tx = await fn()
+    debug('pending tx', tx.hash)
+    pendingTx.hash = tx.hash
+
+  } catch(err) {
+    // imToken funky output
+    if(err.transactionHash) {
+      pendingTx.hash = err.transactionHash
+    } else {
+      commit("setGatewayBusy",false)
+      throw err
+    }
+  }
+
+  commit("setPendingTx", pendingTx)
+  commit("setGatewayBusy",false)
 }

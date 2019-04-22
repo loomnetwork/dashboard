@@ -44,16 +44,14 @@
       </form>
     </div>
     <div v-else-if="status === 'sending'">
-      <p>sending approval request...</p>
+      <p class="lead">{{ $t("components.gateway.approval.sending") }}</p>
     </div>
     <div v-else-if="status === 'failed'">
-      <p>Failed sending deposit approval request</p>
+      <p class="lead">{{ $t("components.gateway.approval.failure") }}</p>
       <b-btn @click="close" variant="primary">Close</b-btn>
-
     </div>
     <div v-else-if="status === 'sent'">
-      <p class="lead"
-      >Approval request sent succesfully. You will be asked to complete the deposit once it is confirmed.</p>
+      <p class="lead">{{ $t("components.gateway.approval.sent") }}</p>
       <b-btn @click="close" variant="primary">Close</b-btn>
     </div>
   </b-modal>

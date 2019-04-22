@@ -179,7 +179,10 @@
     "gateway": {
       "complete_deposit": "Complete deposit",
       "approval": {
-        "success": "The deposit approval has been confirmed. Click complete deposit to continue."
+        "sending": "Sending approval request...",
+        "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
+        "failure": "Failed sending deposit approval request..."
       },
       "deposit": {
         "sending": "Sending deposit request...",

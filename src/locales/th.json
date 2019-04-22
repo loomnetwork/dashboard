@@ -205,12 +205,12 @@
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
-      "this_could_take_several_minutes": "This could take several minutes. Please don't close or refresh your browser"
+      "this_could_take_several_minutes": "นี้อาจใช้เวลาหลายนาที กรุณาอย่าปิด หรือรีเฟรชเบราว์เซอร์ของคุณ"
     },
     "modals": {
       "confirm_seed_modal": {
         "please_type_in_words_confirm_indexes_0": "Please type in words {confirmIndexes01}, {confirmIndexes11}, and {confirmIndexes21} to confirm",
-        "word_confirm_1": "Word{confirm1}:"
+        "word_confirm_1": "คำ{confirm1}:"
       },
       "faucet_delegate_modal": {
         "amount": "จำนวน:",
@@ -230,7 +230,7 @@
         "copy_to_clipboard": "คัดลอกไปยังคลิปบอร์ด"
       },
       "success_modal": {
-        "success": "Success"
+        "success": "ประสบความสำเร็จ"
       },
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "Unlock Hardware wallet",
@@ -253,7 +253,7 @@
       },
       "transaction": {
         "push": "Push",
-        "type": "Type:",
+        "type": "ประเภท:",
         "walker": "Walker",
         "listing_price_1_99": "Listing Price: $1.99",
         "rarity": "Rarity:",

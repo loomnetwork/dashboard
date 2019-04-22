@@ -555,6 +555,7 @@ export default {
         Object.assign(node, {
             active:  true,
             personalStake: v.whitelistAmount.toString(),
+            totalStaked: v.whitelistAmount.toString(), //default value for nodes without delegations
             votingPower: v.delegationTotal.toString(),
             delegationsTotal: v.delegationTotal.sub(v.whitelistAmount).toString()
         })

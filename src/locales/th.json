@@ -213,7 +213,7 @@
         "word_confirm_1": "Word{confirm1}:"
       },
       "faucet_delegate_modal": {
-        "amount": "Amount:",
+        "amount": "จำนวน:",
         "locktime_bonuses": "Locktime / Bonuses:",
         "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
@@ -227,7 +227,7 @@
         "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
         "write_or_print_it_out": "Write or print it out and keep in a safe place.",
         "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
-        "copy_to_clipboard": "Copy to Clipboard"
+        "copy_to_clipboard": "คัดลอกไปยังคลิปบอร์ด"
       },
       "success_modal": {
         "success": "Success"

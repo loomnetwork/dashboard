@@ -76,7 +76,6 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import SuccessModal from '../components/modals/SuccessModal'
 import RedelegateModal from '../components/modals/RedelegateModal'
 import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
-import { getAddress } from '../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import { formatToCrypto } from '@/utils.js';
 
@@ -202,19 +201,6 @@ export default class ValidatorDetail extends Vue {
     else {
         this.setSuccess("Somehow copy  didn't work...sorry")
     }
-  }
-
-  async claimRewardHandler() {
-    this.finished = false
-    let address = getAddress(this.getPrivateKey)
-    try {
-      await this.claimRewardAsync(address)
-      this.setSuccess("Successfully claimed rewards!")
-    } catch(err) {
-      console.error("Claiming reward failed", err)
-      this.setErrorMsg({msg: "Claiming reward failed", forever: false})
-    }
-    this.finished = true
   }
 
   async redelegateHandler() {

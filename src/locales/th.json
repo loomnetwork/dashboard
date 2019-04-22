@@ -54,9 +54,9 @@
       "to_ensure_full_transparency_so": "to ensure full transparency, so that users can make informed decisions prior to staking. For additional info on rewards, see",
       "this_post_on_validator_and": "this post on validator and staking economics",
       "what_currency_will_rewards_be": "What currency will rewards be paid in?",
-      "how_do_i_claim_my": "How do I claim my rewards?",
+      "how_do_i_claim_my": "ฉันจะรับรางวัลของฉันอย่างไร?",
       "the_delegation_rewards_will_be": "The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the",
-      "plasma_chain_dashboard": "PlasmaChain Dashboard",
+      "plasma_chain_dashboard": "PlasmaChain Dashboard ",
       "": ".",
       "when_will_i_receive_rewards": "When will I receive rewards on my delegations?",
       "currently_validator_rewards_are_calculated": "Currently, validator rewards are calculated and paid out at the end of election cycles, which run every 2 weeks.",
@@ -86,7 +86,7 @@
       "balance": "Balance",
       "mainnet": "Mainnet",
       "plasmachain": "PlasmaChain",
-      "account_details": "Account details",
+      "account_details": "รายละเอียดบัญชี",
       "deposit_withdraw": "Deposit withdraw",
       "connect_to_deposit_funds": "Connect to deposit funds",
       "no_mapping_detected": "No mapping detected",
@@ -113,14 +113,14 @@
     },
     "rewards": {
       "unclaimed_rewards": "Unclaimed rewards:",
-      "you_have_yet_to_receive": "You have yet to receive any rewards",
-      "claim_reward": "Claim Reward"
+      "you_have_yet_to_receive": "คุณยังไม่ได้รับรางวัลใด ๆ",
+      "claim_reward": "รับรางวัล"
     },
     "validator_detail": {
       "state": "State:",
       "amount_delegated": "Amount Delegated:",
       "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "Updated Amount:",
+      "updated_amount": "จำนวนเงินที่ปรับปรุง:",
       "updated_amount_loom": "{updatedAmount} LOOM",
       "timelock_tier": "Timelock Tier:",
       "timelock": "Timelock:",

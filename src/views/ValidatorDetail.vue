@@ -26,9 +26,6 @@
     </section>
     <section v-if="userIsLoggedIn" class="user-stakes">
       <h6 v-if="!isBootstrap">{{ $t('My stakes') }} </h6>
-      <p class="no-stakes" v-if="delegations.length === 0">
-        {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
-      </p>
       <b-list-group v-if="validatorDelegations.length">
           <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
             <dl>

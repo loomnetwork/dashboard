@@ -40,7 +40,7 @@
           <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
                       v-if="!isProduction"
                       :allowedUrls="chainUrls"
-                      :serverUrl="currentChain"
+                      :serverUrl="networkId"
                       @urlClicked="onUserInputUrl"
                       @urlInput="onUserInputUrl"/>
 
@@ -84,7 +84,8 @@ const DappChainStore = createNamespacedHelpers('DappChain')
       'userIsLoggedIn'
     ]),
     ...DappChainStore.mapState([
-      'chainUrls'
+      'chainUrls',
+      'networkId'
     ]),    
     ...DPOSStore.mapState([
       'isLoggedIn',
@@ -93,9 +94,6 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ]),
     ...mapGetters([
       'getPrivateKey'
-    ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
     ])
   },
   methods: {    
@@ -171,10 +169,11 @@ export default class FirstPage extends Vue {
     // this.blockchain.setServerUrl(newUrl)
   }
 
-  async onUserInputUrl(url){
-    if (await this.addChainUrl({ url })) {
-      this.onConnectionUrlChanged(url)
-    }
+  async onUserInputUrl(id){
+    this.addChainUrl({id})
+    // this.onConnectionUrlChanged(id)
+    this.$forceUpdate()
+    window.location.reload()
   }  
 
   async onConfirmSeeds() {

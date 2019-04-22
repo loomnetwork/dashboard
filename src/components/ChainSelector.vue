@@ -26,10 +26,13 @@
       </b-form-input>
       <b-input-group-append>
         <b-dropdown variant="dark" size="sm">
-          <b-dropdown-item-button v-for="(chain, index) in allowedUrls"
+          <b-dropdown-item-button v-for="(chain, index) in Object.keys(allowedUrls)"
             :key="index"
-            @click="onUrlClicked(chain.websockt || chain.rpc || '')">
-            {{chain.websockt || chain.rpc || ''}}
+            @click="onUrlClicked(chain)">            
+            <span>
+              <strong>{{ index + 1 }}</strong>
+              {{ chain }} : {{allowedUrls[chain]["dappchainEndpoint"] }}
+            </span>
           </b-dropdown-item-button>
         </b-dropdown>
       </b-input-group-append>

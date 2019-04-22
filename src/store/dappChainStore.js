@@ -1,12 +1,13 @@
 /* eslint-disable */
 import {
   CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
-  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUser,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUser
 } from 'loom-js'
 
-import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
+import { createDefaultClient } from 'loom-js/dist/helpers'
 
-import ApiClient from '../services/api'
+import networks from '../../chain-config'
+import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 import { getDomainType, formatToCrypto } from '../utils'
 import LoomTokenJSON from '../contracts/LoomToken.json'
 import GatewayJSON from '../contracts/Gateway.json'
@@ -14,7 +15,6 @@ import Debug from "debug"
 
 Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
-
 
 import BN from 'bn.js'
 
@@ -27,8 +27,8 @@ if (hostname === "dashboard.dappchains.com") {
   LOOM_ADDRESS = ""
   GW_ADDRESS = ""
 } else if ( hostname === "dev-dashboard.dappchains.com") {
-  LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
-  GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
+  LOOM_ADDRESS = ""
+  GW_ADDRESS = ""
 } else {
   LOOM_ADDRESS = ""
   GW_ADDRESS = ""
@@ -72,24 +72,6 @@ const clientNetwork = {
   },
 }
 
-function defaultNetworkId() {
-  const domain = getDomainType()
-  let loomNetwork
-  if (domain === 'local' || domain == 'rinkeby') {
-    loomNetwork = 'asia1'
-  } else if (domain == 'stage') {
-    loomNetwork = 'stage'
-  } else {
-    // TODO: Switch to prod chain ('plasma') 
-    // when vault is fixed to not update data
-    loomNetwork = 'asia1'
-  }
-  return loomNetwork
-}
-
-function defaultChainId() {
-  return 'asia1'
-}
 
 const getChainUrls = () => {
   let chainUrlsJSON = sessionStorage.getItem('chainUrls')
@@ -107,10 +89,9 @@ const getChainUrls = () => {
   return chainUrls
 }
 
-const getChainIndex = (chainUrls) => {
-  let chainIndex = sessionStorage.getItem('chainIndex')
-  if (!chainIndex || chainIndex >= chainUrls.length) chainIndex = 0
-  return chainIndex
+const getNetworkId = (chainUrls) => {
+  let networkId = sessionStorage.getItem('networkId')
+  return networkId || Object.keys(networks)[0]
 }
 
 const getServerUrl = (chain) => {
@@ -174,17 +155,15 @@ function reconfigureClient(client, commit) {
 
 
 const defaultState = () => {
-  const chainUrls = getChainUrls()
-  const chainIndex = getChainIndex(chainUrls)
+
   return {
     web3: undefined,
     account: undefined,
     accountStakesTotal: null,
     localAddress: undefined,
     count: 0,
-    networkId: defaultNetworkId(),
-    chainUrls: chainUrls,
-    chainIndex: chainIndex,
+    networkId: getNetworkId(networks),
+    chainUrls: networks,
     dAppChainClient: undefined,
     LoomTokenNetwork: undefined,
     LoomTokenInstance: undefined,
@@ -211,16 +190,17 @@ export default {
     networks() {
       return clientNetwork
     },
-    currentChain(state) {
-      const network = state.chainUrls[state.chainIndex]
-      return network.websockt || network.rpc || ''
+    getNetworkIds() {
+      return Object.keys(networks)
     },
-    currentChainId(state) {
-      const network = state.chainUrls[state.chainIndex]
-      return network.network
+    currentChain(state) {
+      return state.chainUrls[state.networkId]
+      const endpoint = network["dappchainEndpoint"]
+      const wsUri = `${endpoint.replace(/http|https/g, "wss")}/websocket`
+      return wsUri
     },
     currentRPCUrl(state) {
-      const network = state.chainUrls[state.chainIndex]
+      const network = state.chainUrls[state.networkId]
       const url = new URL(network.websockt || network.rpc)
       url.protocol =  url.protocol.replace(/:/g, "") === "wss" ? "https" : "http"
       url.pathname = "rpc"
@@ -234,9 +214,8 @@ export default {
       // }
       // return ''
     },
-    defaultNetworkId,
     dappchainEndpoint(state) {
-      const network = state.chainUrls[state.chainIndex]
+      const network = state.chainUrls[state.networkId]
       const url = new URL(network.websockt || network.rpc) 
       url.protocol =  url.protocol.replace(/:/g, "") === "wss" ? "https" : "http"
       url.pathname = ""
@@ -285,18 +264,19 @@ export default {
     },
     setValidators(state, payload) {
       state.validators = payload
+    },
+    setNetworkId(state, payload) {
+      state.networkId = payload
+      sessionStorage.setItem('networkId', payload)
     }
   },
   actions: {
-    addChainUrl({ state, dispatch }, payload) {
-      const chains = state.chainUrls
-      const existingIndex = chains.findIndex(chain => {
-        return chain.websockt === payload.url || chain.rpc === payload.url
-      })
-      if (existingIndex >= 0) {
-        if (state.chainIndex === existingIndex) return false
-        state.chainIndex = existingIndex
-        sessionStorage.setItem('chainIndex', state.chainIndex)
+    addChainUrl({ state, dispatch, commit }, payload) {
+      if(state.networkId === payload.id) return
+      const chains = Object.keys(state.chainUrls)
+      const existingId = chains.indexOf(payload.id)    
+      if (existingId > -1) {
+        commit("setNetworkId", payload.id)
       } else {
         let websockt, rpc
         if (payload.url.startsWith('ws')) {
@@ -319,7 +299,6 @@ export default {
       sessionStorage.setItem('chainIndex', state.chainIndex)
       sessionStorage.setItem('chainUrls', JSON.stringify(state.chainUrls))
       
-      return true
     },
     registerWeb3({ commit, state, getters }, payload) {
       try {
@@ -610,7 +589,7 @@ export default {
      * @param {*} payload ?
      * @returns {Promise<DPOS2>}
      */
-    async getDpos2({ state, commit }, payload) {
+    async getDpos2({ state, commit, getters }, payload) {
       if (state.dposUser) {
         // todo check state.dpos2 and remove it/disconnect its client
         // since we have dposUser now
@@ -621,8 +600,8 @@ export default {
         return state.dpos2
       }
 
-      const networkConfig = state.chainUrls[state.chainIndex]
-
+      const networkConfig = state.chainUrls[state.networkId]
+    
       let privateKey
       if (payload && payload.privateKey) {
         privateKey = CryptoUtils.B64ToUint8Array(payload.privateKey)
@@ -630,31 +609,15 @@ export default {
         privateKey = CryptoUtils.generatePrivateKey()
       }
 
-      let networkId = networkConfig.network === "us1" ? "default" : networkConfig.network 
-      let client
-      if (networkConfig.websockt) {
-        client = new Client(networkId, networkConfig.websockt, networkConfig.queryws)
-      } else {
-        client = new Client(networkId,
-          createJSONRPCClient({
-            protocols: [{ url: networkConfig.rpc }]
-          }),
-          networkConfig.queryws
-        )
-      }
+      let privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
 
-      const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-
-      client.txMiddleware = [
-        new NonceTxMiddleware(publicKey, client),
-        new SignedTxMiddleware(privateKey)
-      ]
+      const { client, publicKey, address } = createDefaultClient(privateKeyString, networkConfig["dappchainEndpoint"], networkConfig["chainId"])
       client.on('error', msg => {
         commit('setDappChainConnected', false)
         console.error('PlasmaChain connection error', msg)
       })
 
-      const dpos2 = await DPOS2.createAsync(client, new Address(networkId, LocalAddress.fromPublicKey(publicKey)))
+      const dpos2 = await DPOS2.createAsync(client, address)
       state.dpos2 = dpos2
       commit('setDappChainConnected', true)
       return dpos2

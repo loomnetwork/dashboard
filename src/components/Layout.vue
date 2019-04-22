@@ -169,9 +169,6 @@ export default class Layout extends Vue {
   }
 
   async mounted() {
-
-    // Clear any remaining local storage
-    localStorage.clear()
       
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
@@ -191,7 +188,6 @@ export default class Layout extends Vue {
 
         if (this.currentMetamaskAddress && 
           this.currentMetamaskAddress !== accounts[0] ) {
-                localStorage.clear()
                 this.metamaskChangeAlert = true
                 window.ethereum.removeAllListeners()
         }

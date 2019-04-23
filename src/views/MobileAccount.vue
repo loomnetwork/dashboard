@@ -23,12 +23,12 @@
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
           <h5 class="highlight">
             {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
-            <loom-icon :color="'#f0ad4e'"/>
+            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
           </h5>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
           <h5 class="highlight">
             {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
-            <loom-icon :color="'#f0ad4e'"/>
+            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
           </h5>
           <!-- unclaimed -->
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
@@ -83,7 +83,7 @@
     <b-card title="Rewards" class="mb-4">
       <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
-        <loom-icon :color="'#f0ad4e'"/>
+        <loom-icon v-if="rewardsValue" :color="'#f0ad4e'" width="20px" height="20px"/>
       </router-link>
     </b-card>
 

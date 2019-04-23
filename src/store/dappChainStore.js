@@ -272,7 +272,7 @@ export default {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
       }
-      const network = state.chainUrls[state.chainIndex].network
+      const network = state.networkId
       let user
 
       let dposConstructor
@@ -482,7 +482,7 @@ export default {
       })
       const privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
       const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-      const chainId = state.chainUrls[state.chainIndex].network
+      const chainId = state.networkId
       const result = dpos2.checkDelegationAsync(
         new Address(chainId, LocalAddress.fromPublicKey(CryptoUtils.B64ToUint8Array(payload.validator))),
         new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
@@ -681,7 +681,7 @@ export default {
       privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
       let account
 
-      const networkConfig = state.chainUrls[state.chainIndex]
+      const networkConfig = state.chainUrls[state.networkId]
 
       let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
       let client

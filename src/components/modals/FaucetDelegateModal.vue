@@ -27,7 +27,6 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import LoadingSpinner from '../../components/LoadingSpinner'
-import { getAddress, addressFromPubKey } from '../../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 const DappChainStore = createNamespacedHelpers('DappChain')

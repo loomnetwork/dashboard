@@ -23,7 +23,6 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { getAddress } from '../services/dposv2Utils.js'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
 const DappChainStore = createNamespacedHelpers('DappChain')

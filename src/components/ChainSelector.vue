@@ -22,14 +22,17 @@
 
 
     <b-input-group size="sm">
-      <b-form-input type="url" aria-label="Connection URL" :value="chainUrl" @change="setUrl">
+      <b-form-input type="text" aria-label="Connection URL" :value="chainUrl" @change="setUrl">
       </b-form-input>
       <b-input-group-append>
         <b-dropdown variant="dark" size="sm">
-          <b-dropdown-item-button v-for="(chain, index) in allowedUrls"
-            :key="index"
-            @click="onUrlClicked(chain.websockt || chain.rpc || '')">
-            {{chain.websockt || chain.rpc || ''}}
+          <b-dropdown-item-button v-for="(chain, index) in Object.keys(allowedUrls)"
+                                  :key="`chain-${index}`"
+                                  @click="onUrlClicked(chain)">            
+            <span>
+              <strong>{{ index + 1 }}</strong>
+              {{ chain }} : {{allowedUrls[chain]["dappchainEndpoint"] }}
+            </span>
           </b-dropdown-item-button>
         </b-dropdown>
       </b-input-group-append>

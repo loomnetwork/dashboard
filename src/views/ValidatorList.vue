@@ -25,14 +25,6 @@
           </template>
         </div>
       </div>
-      <div class="col">
-        <header>
-          <h1>Analytics</h1>
-        </header>
-        <div class="content">
-          <analytics></analytics>
-        </div>
-      </div>
     </div>
 
     <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
@@ -45,7 +37,6 @@
 <script>
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import Analytics from '../components/Analytics'
 import FaucetTable from '../components/FaucetTable'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
@@ -67,7 +58,6 @@ function random() {
 
 @Component({
   components: {
-    Analytics,
     FaucetTable,
     LoadingSpinner,
   },

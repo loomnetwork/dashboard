@@ -1,7 +1,10 @@
 <template>
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
     <b-nav-item>
-      <router-link to="/validators" class="router" exact-active-class="router-active">{{ $t('views.validator_list.validators') }}</router-link>
+      <router-link to="/analytics" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.analytics') }}</router-link>
+    </b-nav-item>      
+    <b-nav-item>
+      <router-link to="/validators" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validators') }}</router-link>
     </b-nav-item>  
     <div id="restricted-access-links" @click="clickHandler">
       <b-nav-item>

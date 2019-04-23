@@ -204,31 +204,12 @@ export default {
       if(state.networkId === payload.id) return
       const chains = Object.keys(state.chainUrls)
       const existingId = chains.indexOf(payload.id)    
-      if (existingId > -1) {
+      if(existingId > -1) {
         commit("setNetworkId", payload.id)
         commit("setCurrentChain", state.chainUrls[payload.id])
       } else {
-        let websockt, rpc
-        if (payload.url.startsWith('ws')) {
-          websockt = payload.url
-        } else {
-          rpc = payload.url
-        }
-        const chain = {
-          network: defaultChainId(),
-          websockt,
-          rpc
-        }
-        chains.push({
-          ...chain,
-          queryws: 'wss://' + getServerUrl(chain) + '/queryws'
-        })
-        state.chainUrls = chains
-        state.chainIndex = state.chainUrls.length - 1
-      }      
-      sessionStorage.setItem('chainIndex', state.chainIndex)
-      sessionStorage.setItem('chainUrls', JSON.stringify(state.chainUrls))
-      
+        return
+      }
     },
     registerWeb3({ commit, state, getters }, payload) {
       try {

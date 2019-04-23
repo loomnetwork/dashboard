@@ -1,7 +1,12 @@
 <template>
   <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
     
-    <b-alert variant="warning" :show="showSigningAlert" dismissible class="custom-alert text-center">{{ $t('Please sign the transaction on your wallet') }}</b-alert>
+    <b-alert variant="light" :show="showSigningAlert" dismissible class="custom-notification text-center">
+      <strong>
+        <fa :icon="['fa', 'bell']" />
+        {{ $t('Please sign the transaction on your wallet') }}
+      </strong>
+    </b-alert>
 
     <faucet-header v-on:update:chain="refresh()"></faucet-header>
     <div class="content">      
@@ -34,6 +39,9 @@
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
+    <!-- gateway -->
+    <DepositApproved />
+    <DepositConfirmed />
   </div>  
 </template>
 
@@ -48,6 +56,10 @@ import FaucetFooter from '@/components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
+
+import DepositApproved from '@/components/gateway/DepositApproved'
+import DepositConfirmed from '@/components/gateway/DepositConfirmed'
+
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
@@ -56,7 +68,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     FaucetSidebar,
     FaucetFooter,
     LoadingSpinner,
-    WarningOverlay
+    WarningOverlay,
+    DepositApproved,
+    DepositConfirmed,
   },
   props: {
     data: Object,
@@ -164,9 +178,6 @@ export default class Layout extends Vue {
   }
 
   async mounted() {
-
-    // Clear any remaining local storage
-    localStorage.clear()
       
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
@@ -186,7 +197,6 @@ export default class Layout extends Vue {
 
         if (this.currentMetamaskAddress && 
           this.currentMetamaskAddress !== accounts[0] ) {
-                localStorage.clear()
                 this.metamaskChangeAlert = true
                 window.ethereum.removeAllListeners()
         }
@@ -263,6 +273,16 @@ export default class Layout extends Vue {
     position: relative;
     height: 100%;
   }
+}
+
+.custom-notification {
+  position: absolute;
+  z-index: 10100;
+  width: 90%;
+  margin-top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
 }
 
 </style>

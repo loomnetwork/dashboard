@@ -44,7 +44,6 @@
 
 <script>
 import Vue from 'vue'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import Analytics from '../components/Analytics'
 import FaucetTable from '../components/FaucetTable'
@@ -55,6 +54,16 @@ const DPOSStore = createNamespacedHelpers('DPOS')
 
 import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+var seed = parseInt(localStorage.getItem('validatorListSeed')) || getRandomInt(100);
+localStorage.setItem('validatorListSeed', seed)
+function random() {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
 
 @Component({
   components: {
@@ -81,8 +90,8 @@ export default class ValidatorList extends Vue {
 
   get validators() {
     return this.getFormattedValidators().sort((a, b) => {
-      let aValue = a.isBootstrap ? 0 : a.totalStaked 
-      let bValue = b.isBootstrap ? 0 : b.totalStaked
+      let aValue = a.isBootstrap ? 0 : random()*10000
+      let bValue = b.isBootstrap ? 0 : random()*10000
       return parseInt(aValue) - parseInt(bValue)
     }).reverse()
   }

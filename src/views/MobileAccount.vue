@@ -48,19 +48,14 @@
         </div>
       </b-card-body>
       <b-card-footer class="custom-card-footer">
+        <DepositForm />
+        <a v-if="pendingTx" style="display: flex;align-items: center;" :href="`https://etherscan.io/tx/${pendingTx.hash}`" target="_blank">
+          <b-spinner variant="primary" style="margin-right:16px;"></b-spinner> <span>pending: {{pendingTx.type}}</span>
+        </a>
         <!-- deposit withdraw -->
-        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero()" class="d-flex justify-content-between">
+        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero() && !pendingTx" class="d-flex justify-content-between">
           <b-button-group class="gateway" style="display: flex;">
-          <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
-            :balance="userBalance.mainnetBalance" 
-            :transferAction="approveDeposit"
-            :resolveTxSuccess="executeDeposit"
-            buttonLabel="Deposit" 
-            >
-            <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
-            <template #failueMessage><p>Approval failed.</p></template>
-            <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
-          </TransferStepper>
+             <b-btn variant="outline-primary" @click="setShowDepositForm(true)">{{ $t("components.faucet_header.deposit")}}</b-btn>
           <TransferStepper  v-if="userBalance.loomBalance > 0 && oracleEnabled"
             @withdrawalDone="afterWithdrawalDone"
             @withdrawalFailed="afterWithdrawalFailed"
@@ -129,7 +124,6 @@ import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import LoomIcon from '@/components/LoomIcon'
 import FaucetTable from '@/components/FaucetTable'
-import { getBalance, getAddress } from '@/services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 import Web3 from 'web3'
@@ -138,6 +132,7 @@ import debug from 'debug'
 import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
+import DepositForm from '@/components/gateway/DepositForm'
 
 const log = debug('mobileaccount')
 
@@ -151,7 +146,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     LoomIcon,
     FaucetTable,
     TransferStepper,
-
+    DepositForm,
   },
   computed: {
     ...DappChainStore.mapState([
@@ -165,7 +160,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'timeUntilElectionCycle',
       'nextElectionTime',
       'states',
-      'currentMetamaskAddress'
+      'currentMetamaskAddress',
+      "pendingTx"
     ]) 
   },
   methods: {
@@ -177,14 +173,16 @@ const ELECTION_CYCLE_MILLIS = 600000
       'getPendingWithdrawalReceipt',
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
-      'withdrawAsync'
+      'withdrawAsync',
+      'withdrawCoinGatewayAsync'
     ]),
     ...mapMutations([
       'setErrorMsg'
     ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
-      'setShowLoadingSpinner'      
+      'setShowLoadingSpinner',
+      'setShowDepositForm',
     ])
   }
 })
@@ -210,14 +208,31 @@ export default class MobileAccount extends Vue {
 
   showRefreshSpinner = false
   
-  async mounted() {
-    await this.updateTimeUntilElectionCycle()
+  mounted() {
+    // Page might be mounted while dposUser is still initializing
+    if (this.dposUser) {
+      this.dposUserReady()
+    } 
+    else {
+      // Assuming page is mounted only if initDposUser has been triggered...
+      let unwatch = this.$store.watch(
+        (s) => s.DappChain.dposUser,
+        () => {
+          unwatch()
+          this.dposUserReady()
+        }
+      )
+    }
+  }
+
+  async dposUserReady() {
+    await this.checkPendingWithdrawalReceipt()
+    await this.checkUnclaimedLoomTokens()
+    this.currentAllowance = await this.checkAllowance()
+    this.queryRewards()
+    this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
-    await this.checkUnclaimedLoomTokens()
-    await this.checkPendingWithdrawalReceipt()
-    this.currentAllowance = await this.checkAllowance()
-    await this.queryRewards()
   }
 
   refresh() {
@@ -229,7 +244,6 @@ export default class MobileAccount extends Vue {
   }
 
   async getDelegations() {
-
     const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
     const candidates = await this.dposUser.listCandidatesAsync()
 
@@ -510,7 +524,7 @@ export default class MobileAccount extends Vue {
         weiAmount.toString()
       )
 
-      await approval.wait()
+     // await approval.wait()
       //const receipt = await approval.wait()
       log('approvalTX', approval)
       // we still need to execute deposit so keep gatewayBusy = true
@@ -530,6 +544,7 @@ export default class MobileAccount extends Vue {
   }
 
   async executeDeposit(amount,approvalTx) {
+    return approvalTx
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")
     this.setGatewayBusy(true)

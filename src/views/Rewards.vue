@@ -3,18 +3,15 @@
     <div id="rewards" class="faucet-content">
       <div class="col-lg-8 offset-lg-2">
         <b-card class="text-center mt-5 p-md-2 p-lg-5">
-          <div v-if="displayResults">
+          <div>
             <h4 class="mb-4">
               {{ $t('views.rewards.unclaimed_rewards') }} 
               <strong>
-                {{this.rewardsResults.toString() + " LOOM"}}
+                {{rewardsResults.toString() + " LOOM"}}
               </strong>
             </h4>
             <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler">{{ $t('views.rewards.claim_reward') }}</b-button>
             <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
-          </div>
-          <div v-else>
-            <h4>{{ $t('views.rewards.you_have_yet_to_receive') }}</h4>
           </div>
         </b-card>
       </div>
@@ -26,7 +23,6 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { getAddress } from '../services/dposv2Utils.js'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
 const DappChainStore = createNamespacedHelpers('DappChain')
@@ -56,11 +52,34 @@ const DappChainStore = createNamespacedHelpers('DappChain')
 export default class ValidatorDetail extends Vue {
 
   hideTooltip = false
+  pollInterval = null
+
+  @Watch('$route')
+  onRouteChange(newValue, oldValue) {      
+    if(newValue) {
+      this.queryRewards()
+    }
+  }
 
   async mounted() {
+    await this.refresh()
+    this.startPolling()
+  }
+
+  async refresh() {
     this.setShowLoadingSpinner(true)
     await this.queryRewards()
     this.setShowLoadingSpinner(false)
+  }
+
+  startPolling() {
+    this.pollInterval = setInterval(async () => {
+      this.refresh()
+    }, 15 * 1000)
+  }
+
+  destroyed() {
+    if(this.pollInterval) clearInterval(this.pollInterval)          
   }
 
   async claimRewardHandler() {
@@ -76,16 +95,6 @@ export default class ValidatorDetail extends Vue {
     this.setShowLoadingSpinner(false)
     this.hideTooltip = false
   }
-
-  get displayResults() {
-    if(!this.rewardsResults) return ""
-    if(parseInt(this.rewardsResults) > 0) {
-      return this.rewardsResults.toString()
-    } else {
-      return ""  
-    } 
-  }
-
 }
 
 </script>

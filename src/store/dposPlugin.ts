@@ -1,24 +1,17 @@
 import Debug from "debug"
-import { fromEventPattern, Observable, combineLatest } from "rxjs";
-import { filter, switchMap, tap } from "rxjs/operators";
+import { fromEventPattern, Observable, combineLatest, pipe } from "rxjs";
+import { filter, switchMap, tap, map, take } from "rxjs/operators";
 import { Store } from "vuex";
 import { setTimeout } from "timers";
+import { DPOSUser } from "loom-js";
+import { Contract } from "ethers";
 
-Debug.enable("dashboard.dpos.rx")
-
-const debug = Debug("dashboard.dpos.rx")
+const debug = Debug("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<any>) {
 
-    // As soon as we have a dposUser getTimeUntilElectionsAsync
-    store.watch(
-        (state) => state.DappChain.dposUser,
-        // we never set dpos2 to null. I assume...
-        () => store.dispatch("DPOS/getTimeUntilElectionsAsync"),
-    )
-
     // Whenever timeUntilElectionCycle is refreshed, 
-    // refresh validators and user delegations
+    // refresh validators and user delegations (if user connected)
     // could also check unclaimedTokens, allowance...etc
     store.watch(
         (state) => state.DPOS.timeUntilElectionCycle,
@@ -29,12 +22,16 @@ export function dposStorePlugin(store: Store<any>) {
             debug("getting validators")
             store.dispatch("DappChain/getValidatorsAsync")
             debug("getting listDelegatorDelegations")
-            store.dispatch("DPOS/listDelegatorDelegations")
+            // delegator specific calls
+            if (store.state.DappChain.dposUser) {
+                store.dispatch("DPOS/listDelegatorDelegations")
+                //store.dispatch("DPOS/....rewards....")
+            }
         },
     )
 
     // On user delegation actions
-    // refresh user delegations balance and stakes
+    // refresh plasma balance and stakes
     const delegationActions = [
         "DPOS/redelegateAsync",
         "DappChain/delegateAsync",
@@ -42,7 +39,7 @@ export function dposStorePlugin(store: Store<any>) {
     ]
     store.subscribeAction({
         after(action) {
-            if (delegationActions.find(a =>a === action.type)) {
+            if (delegationActions.find(a => a === action.type)) {
                 store.dispatch("DPOS/listDelegatorDelegations")
                 store.dispatch("DappChain/getDappchainLoomBalance")
                 // this might not be needed since listDelegatorDelegations
@@ -54,10 +51,18 @@ export function dposStorePlugin(store: Store<any>) {
 
     buildLoadHistoryTrigger(store)
     buildWithdrawLimitTrigger(store)
+    listenToGatewayEvents(store)
+
+    store.dispatch("DPOS/getTimeUntilElectionsAsync")
+
 }
 
 
-
+/**
+ * helper to make vuex watchers observable
+ * @param store 
+ * @param stateGetter 
+ */
 function observeState(store: Store<any>, stateGetter): Observable<any> {
     // init with noop
     // unwatchFn is the fn returned by vuex .watch()
@@ -71,13 +76,11 @@ function observeState(store: Store<any>, stateGetter): Observable<any> {
 
 
 function buildLoadHistoryTrigger(store) {
-    debug("buildLoadHistoryTrigger")
-
     combineLatest(
         observeState(store, (state) => state.DPOS.web3),
         observeState(store, (state) => state.DappChain.GatewayInstance),
         observeState(store, (state) => state.DPOS.currentMetamaskAddress),
-    )
+    ).pipe(take(1))
         .subscribe(([web3, gatewayInstance, address]) => {
             debug("all 3 available", address)
             store.dispatch("DPOS/loadEthereumHistory", { web3, gatewayInstance, address })
@@ -86,9 +89,7 @@ function buildLoadHistoryTrigger(store) {
 }
 
 function buildWithdrawLimitTrigger(store) {
-    debug("buildWithdrawLimitTrigger")
-
-    const d = observeState(store, (state) => state.DPOS.history)
+    observeState(store, (state) => state.DPOS.history)
         .pipe(
             filter(val => val instanceof Promise),
             // TODO should handle promise failure or the pipe explodes
@@ -102,5 +103,45 @@ function buildWithdrawLimitTrigger(store) {
 }
 
 
+/**
+ * Once DappChain.dposUser is set in the state, 
+ * listens to Approval and deposit confirmations on the loom contract ethereum side.
+ * @param store 
+ */
+function listenToGatewayEvents(store) {
 
+    observeState(store, (state) => state.DappChain.dposUser)
+    // assuming only one DPOS session per page load
+    .pipe(take(1))
+    .subscribe((dposUser:DPOSUser) => {
+        const loom =  dposUser.ethereumLoom
+        const gw = dposUser.ethereumGateway
+        const account = dposUser.ethAddress
+        listenToDepositApproval(account, gw, loom, store)
+        listenToDeposit(account, gw, loom, store)
+    })
 
+}
+
+function listenToDepositApproval(account, gw: Contract, loom: Contract, store: Store<any>) {
+    const filter = loom.filters.Approval(account, gw.address)
+    loom.on(filter, (from, to, weiAmount) => {
+        debug('approval ' + weiAmount.toString() + ' tokens from ' + from);
+        store.commit("DPOS/setShowDepositForm", false)
+        store.commit("DPOS/setShowDepositApproved", true)
+        store.commit("DPOS/setShowDepositConfirmed", false)
+        // empty pendingTx
+        // todo: theoratically not necessary but test hash, we never know...
+        store.commit("DPOS/setPendingTx", null)
+    });
+}
+function listenToDeposit(account, gw: Contract, loom: Contract, store: Store<any>) {
+    const filter = loom.filters.Transfer(account, gw.address)
+    loom.on(filter, (from, to, weiAmount) => {
+        debug('transfer ' + weiAmount.toString() + ' tokens from ' + from + ' to ' + to);
+        store.commit("DPOS/setShowDepositForm", false)
+        store.commit("DPOS/setShowDepositApproved", false)
+        store.commit("DPOS/setShowDepositConfirmed", true)
+        store.commit("DPOS/setPendingTx", null)
+    });
+}

@@ -273,6 +273,7 @@ export default class MobileAccount extends Vue {
     const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
+      console.log( weiAmount.toString(), this.dposUser.ethereumLoom.address)
       await this.dposUser._ethereumGateway.functions.depositERC20(
         weiAmount.toString(), this.dposUser.ethereumLoom.address
       )
@@ -455,27 +456,6 @@ export default class MobileAccount extends Vue {
       this.isWithdrawalInprogress = false
     }
   }
-  async depositHandler() {
-
-    if(this.transferAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.setShowLoadingSpinner(true)
-    
-    try {
-      await this.depositAsync({amount: this.transferAmount})
-      this.setSuccess("Deposit successfull")
-    } catch(err) {
-      console.error("Deposit failed, error: ", err)
-      this.setError({msg: "Deposit failed, please try again", err})
-    }
-    this.transferAmount = ""
-
-    this.setShowLoadingSpinner(false)
-    
-  }
 
   async checkAllowance() {    
     console.assert(this.dposUser, "Expected dposUser to be initialized")
@@ -489,93 +469,6 @@ export default class MobileAccount extends Vue {
       console.error("Error checking allowance", err)
       return ''
     }
-  }
-
-  async approveAmount(amount) {
-    if(!this.dposUser) return
-    const user = this.dposUser
-    const gateway = user.ethereumGateway
-    try {
-      let tx = await user.ethereumLoom.approve(gateway.address, amount)
-      await tx.wait()
-      this.currentAllowance = await this.checkAllowance()
-      this.setSuccess("Amount approved")
-    } catch(err) {
-      console.error("Error approving amount", err)
-      return
-    }    
-  }
-
-   async approveDeposit(amount) {
-    console.assert(this.dposUser, "Expected dposUser to be initialized")
-    console.assert(this.web3, "Expected web3 to be initialized")
-    const { web3, dposUser} = this
-    const ethereumLoom  = dposUser.ethereumLoom
-    const ethereumGateway  = dposUser._ethereumGateway
-    const tokens = new BN( "" + parseInt(amount,10)) 
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
-    this.setGatewayBusy(true)
-    log('approve', ethereumGateway.address, weiAmount.toString())
-    try {
-
-      const approval = await ethereumLoom.functions.approve(
-        ethereumGateway.address,
-        weiAmount.toString()
-      )
-
-     // await approval.wait()
-      //const receipt = await approval.wait()
-      log('approvalTX', approval)
-      // we still need to execute deposit so keep gatewayBusy = true
-      return approval
-
-    } catch(err) {
-
-      // To bypass old web3 version used by imToken
-      if(err.transactionHash) {
-        err.hash = err.transactionHash
-        return err 
-      } else {
-        throw err
-      }
-    }
-  
-  }
-
-  async executeDeposit(amount,approvalTx) {
-    return approvalTx
-    console.assert(this.dposUser, "Expected dposUser to be initialized")
-    console.assert(this.web3, "Expected web3 to be initialized")
-    this.setGatewayBusy(true)
-    const tokens = new BN( "" + parseInt(amount,10)) 
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    let result = await this.dposUser._ethereumGateway.functions.depositERC20(
-      weiAmount.toString(), this.dposUser.ethereumLoom.address
-    )
-    await result.wait()
-    this.setGatewayBusy(false)
-    this.$emit('refreshBalances')
-    return result
-  }
-
-  async completeDeposit() {
-    this.setGatewayBusy(true)
-    this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    try {
-      await this.dposUser._ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), this.dposUser.ethereumLoom.address
-      )
-      this.currentAllowance = 0
-    } catch (error) {
-      console.error(error)
-    }
-    this.$emit('refreshBalances')
-    this.setGatewayBusy(false)
-    this.setShowLoadingSpinner(false)
-
   }
 
   async executeWithdrawal(amount) {
@@ -593,13 +486,23 @@ export default class MobileAccount extends Vue {
         return tx
       }
     } catch (e) {
+      // imtoken hack
+      if (e.transactionHash) {
+        return {
+          hash: e.transactionHash
+        }
+      }
       console.error(e)
     }
   }
 
   async resolveWithdraw(amount, tx) {
-    let result = await tx.wait()
-    return result
+    // imtoken hack
+    if (tx.wait) {
+      let result = await tx.wait()
+      return result
+    }
+    return tx
   }
 
   destroyed() {

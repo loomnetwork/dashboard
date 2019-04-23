@@ -1,4 +1,3 @@
-import Contract from '../services/contract'
 import { getDomainType, } from '../utils'
 import * as Sentry from '@sentry/browser'
 const { CryptoUtils, } = require('loom-js')
@@ -8,7 +7,6 @@ import axios from 'axios'
 export const state = {
   web3: null,
   route: null,
-  contract: new Contract(),
   user: null,
   privateKey: null,
   backer: {},

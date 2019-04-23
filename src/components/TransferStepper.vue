@@ -26,11 +26,9 @@
         <b-row>
           <b-col>
             <b-form-input
-              type="number"
+              type="text"
               :placeholder="'max. ' + balance"
               v-model="transferAmount"
-              :max="balance"
-              :min="1"
               pattern="[1-9]\d*"
               step="1"
               @keyup="validateAmount"
@@ -117,17 +115,21 @@ export default class TransferStepper extends Vue {
   amountErrors = []
 
   validateAmount() {
+
     const errors = []
-    const num = new Number(this.transferAmount)
+    const num = parseInt(""+this.transferAmount,10)
     const int = Math.floor(num)
+    if (!/^[1-9]\d*$/.test(this.transferAmount)) {
+      errors.push('Please enter a valid amount.')
+    }
     if (int != num) {
-      errors.push('Only round amounts allowed')
+      errors.push('Only round amounts allowed.')
     }
     if (int < 1) {
       errors.push('At least 1 loom')
     }
     if (int > this.balance) {
-      errors.push('Mot enough funds in your account')
+      errors.push('Not enough funds in your account')
     }
     this.amountErrors = errors
   }

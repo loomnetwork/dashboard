@@ -18,7 +18,7 @@
             <b-col>
               <b-form-input
                 type="number"
-                :placeholder="'max. ' + userBalance.mainnetBalance"
+                :placeholder="'Max. ' + userBalance.mainnetBalance"
                 :max="userBalance.mainnetBalance"
                 :min="1"
                 v-model="transferAmount"
@@ -31,7 +31,7 @@
               <b-btn
                 variant="outline-primary"
                 @click="depositAll"
-              >all ( {{userBalance.mainnetBalance}} )</b-btn>
+              >{{ $t("transfer_all", {amount: userBalance.mainnetBalance}) }}</b-btn>
             </b-col>
           </b-row>
         </b-container>

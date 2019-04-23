@@ -26,7 +26,14 @@
     </b-nav-item>
     <b-nav-item>
       <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
-    </b-nav-item>      
+    </b-nav-item>
+    <b-nav-item v-if="userIsLoggedIn">
+      <a class="nav-link">
+        <a @click="logout">
+          Sign out
+        </a>        
+      </a>
+    </b-nav-item>
   </b-nav>
 </template>
 
@@ -46,6 +53,10 @@ export default class FaucetSidebar extends Vue {
   clickHandler() {
     if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
     return
+  }
+
+  logout() {
+    this.$root.$emit('logout')
   }
 
 }

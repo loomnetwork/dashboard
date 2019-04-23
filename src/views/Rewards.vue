@@ -10,7 +10,7 @@
                 {{rewardsResults.toString() + " LOOM"}}
               </strong>
             </h4>
-            <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler">{{ $t('views.rewards.claim_reward') }}</b-button>
+            <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasNoRewards">{{ $t('views.rewards.claim_reward') }}</b-button>
             <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
           </div>
         </b-card>
@@ -76,6 +76,10 @@ export default class ValidatorDetail extends Vue {
     this.pollInterval = setInterval(async () => {
       this.refresh()
     }, 15 * 1000)
+  }
+
+  get hasNoRewards() {
+    return this.rewardsResults == "0.00"
   }
 
   destroyed() {

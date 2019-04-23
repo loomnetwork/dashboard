@@ -552,7 +552,7 @@ export default {
 
     async fetchAnalyticsData({ state, commit, dispatch }, payload) {
 
-      let dataPromise = await axios.get("http://dev-api.loom.games/delegation/total?from_date&to_date")
+      let dataPromise = await axios.get("//dev-api.loom.games/delegation/total?from_date&to_date")
       commit("setAnalyticsData", dataPromise)
 
     },

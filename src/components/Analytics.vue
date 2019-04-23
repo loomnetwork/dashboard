@@ -13,7 +13,6 @@
   import FaucetTable from '../components/FaucetTable'
   import { mapGetters, mapState, mapActions, mapMutatioins, createNamespacedHelpers } from 'vuex'
 
-  import ApiClient from '../services/api'
   import { formatToCrypto } from '@/utils'
   import { isIP } from 'net'
 

@@ -1,10 +1,14 @@
 <template>
-  <div class="row p-5">
+  <div class="row px-3 py-4">
     <div class="col-md-6">
-      <canvas id="barChart" width="300" height="300"></canvas>
+      <b-card title="Total amount staked">
+        <canvas id="barChart" width="300" height="300"></canvas>
+      </b-card>      
     </div>
     <div class="col-md-6">
-      <canvas id="pieChart" width="300" height="300"></canvas>
+      <b-card title="Tier distribution">
+        <canvas id="pieChart" width="300" height="300"></canvas>
+      </b-card>      
     </div>
   </div>
 </template>

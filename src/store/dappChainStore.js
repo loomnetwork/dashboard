@@ -34,61 +34,6 @@ if (hostname === "dashboard.dappchains.com") {
   GW_ADDRESS = ""
 }
 
-/*
-network config
-1: mainnet
-4: rinkeby
- */
-const clientNetwork = {
-  '1': {
-    network: 'default',
-    websockt: 'wss://test-z-asia1.dappchains.com/websocket',
-    queryws: 'wss://test-z-asia1.dappchains.com/queryws'
-  },
-  '4': {
-    network: 'asia1',
-    websockt: 'wss://test-z-asia1.dappchains.com/websocket',
-    queryws: 'wss://test-z-asia1.dappchains.com/queryws'
-  },
-  'asia1': {
-    network: 'asia1',
-    websockt: 'wss://test-z-asia1.dappchains.com/websocket',
-    queryws: 'wss://test-z-asia1.dappchains.com/queryws'
-  },
-  'plasma': {
-    network: 'default',
-    websockt: 'wss://plasma.dappchains.com/websocket',
-    queryws: 'wss://plasma.dappchains.com/queryws'
-  },
-  'stage': {
-    network: 'default',
-    websockt: 'wss://test-z-us1.dappchains.com/websocket',
-    queryws: 'wss://test-z-us1.dappchains.com/queryws'
-  },
-  'local': {
-    network: 'default',
-    websockt: 'ws://localhost:46658/websocket',
-    queryws: 'ws://localhost:46658/queryws'
-  },
-}
-
-
-const getChainUrls = () => {
-  let chainUrlsJSON = sessionStorage.getItem('chainUrls')
-  let chainUrls
-  if (!chainUrlsJSON) {
-    chainUrls = [
-      clientNetwork['plasma'],
-      clientNetwork['4'],      
-      clientNetwork['stage'],
-      clientNetwork['local'],
-    ]
-  } else {
-    chainUrls = JSON.parse(chainUrlsJSON)
-  }
-  return chainUrls
-}
-
 const getNetworkId = (chainUrls) => {
   let networkId = sessionStorage.getItem('networkId')
   let defaultId = Object.keys(networks)[0]
@@ -181,12 +126,6 @@ export default {
   getters: {
     getAccount(state) {
       return state.account
-    },
-    networks() {
-      return clientNetwork
-    },
-    getNetworkIds() {
-      return Object.keys(networks)
     },
     currentChain(state) {
       return state.chainUrls[state.networkId]

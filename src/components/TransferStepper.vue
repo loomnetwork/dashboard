@@ -35,7 +35,7 @@
             />
           </b-col>
           <b-col>
-            <b-btn variant="outline-primary" @click="transferAmount = Math.floor(balance)">all ({{balance}})</b-btn>
+            <b-btn variant="outline-primary" @click="transferAll">all ({{balance}})</b-btn>
           </b-col>
         </b-row>
       </b-container>
@@ -147,6 +147,11 @@ export default class TransferStepper extends Vue {
 
   hide() {
     this.$root.$emit("bv::hide::modal", "gateway-transfer")
+  }
+
+  transferAll() {
+    this.transferAmount = Math.floor(this.balance)
+    this.amountErrors = []
   }
 
   transferExecuted(tx) {

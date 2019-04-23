@@ -27,7 +27,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'swiper/dist/css/swiper.css'
 import 'animate.css/animate.css'
 
-import ApiClient from './services/faucet-api'
 import { i18n } from './i18n'
 import App from './App.vue'
 import router from './router'
@@ -46,14 +45,12 @@ const progressBarOptions = {
   autoFinish: false
 }
 
-const api = new ApiClient()
 
 const debugMode = process.env.NODE_ENV !== 'production'
 const log = (message = '', object) => {
   if (debugMode) console.log(message, object)
 }
 
-Object.defineProperty(Vue.prototype, '$api', { value: api })
 Object.defineProperty(Vue.prototype, '$log', { value: log })
 
 Vue.use(VueProgressBar, progressBarOptions)

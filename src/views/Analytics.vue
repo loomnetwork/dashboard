@@ -85,6 +85,18 @@
         data: {
           datasets: [{
             data: timeIntervalChunks,
+            backgroundColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(255, 99, 132, 1)",
+            ],
             label: "Amount of LOOM staked"
           }],
           labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]

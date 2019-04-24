@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop
+  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer no-close-on-backdrop
   no-close-on-esc>
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
@@ -87,7 +87,6 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
-
     this.setShowLoadingSpinner(true)
     await this.redelegateAsync({
       origin: this.origin.address, 
@@ -153,7 +152,7 @@ export default class RedelegateModal extends Vue {
     width: 100%;
     max-height: 240px;
     overflow-y: auto;
-    z-index: 999;
+    z-index: 9;
     background-color: #ffffff;
     border: 2px solid #f2f1f3;
     .v-autocomplete-list-item {

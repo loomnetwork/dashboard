@@ -276,7 +276,7 @@ export default class Layout extends Vue {
 }
 
 .custom-notification {
-  position: absolute;
+  position: fixed;
   z-index: 10100;
   width: 90%;
   margin-top: 12px;

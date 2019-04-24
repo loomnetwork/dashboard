@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="faucet-delegate-modal" ref="modalRef" ok-only hide-header centered>
+  <b-modal id="faucet-delegate-modal" ref="modalRef" ok-only hide-header>
     <b-container fluid>
       <div v-if="loading" class="loading-spinner-container">
         <loading-spinner :showBackdrop="true"></loading-spinner>

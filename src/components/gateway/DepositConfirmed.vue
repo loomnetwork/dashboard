@@ -44,11 +44,13 @@ export default class DepositConfirmed extends Vue {
   set visible(value) {
     if (value === false) {
      this.setShowDepositConfirmed(false)
+     this.$root.$emit("refreshBalances")
     }
   }
 
   close() {
     // just empty the state
+    this.$root.$emit("refreshBalances")
     this.visible = false
   }
 

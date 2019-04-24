@@ -237,7 +237,7 @@ export default class MobileAccount extends Vue {
 
   refresh() {
     this.showRefreshSpinner = true
-    this.$emit('refreshBalances')
+    this.$root.$emit("refreshBalances")
     setTimeout(() => {
       this.showRefreshSpinner = false
     }, 2000)

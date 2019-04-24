@@ -54,7 +54,7 @@
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-if="validatorDelegations.length && !isBootstrap" class="no-stakes">
+      <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
       <b-button class="btn-lg" 

@@ -300,6 +300,7 @@ export default class FaucetHeader extends Vue {
       })
       let stakedAmount = await this.getAccumulatedStakingAmount()
       let isLoading = false
+      console.log(mainnetBalance)
       this.setUserBalance({
         isLoading,
         loomBalance,
@@ -309,6 +310,7 @@ export default class FaucetHeader extends Vue {
       this.showRefreshSpinner = false
       this.errorRefreshing = false
     } catch(err) {
+      console.log('error refreshing', err)
       this.errorRefreshing = true
     }
   }

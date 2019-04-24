@@ -28,7 +28,7 @@
       <p class="no-stakes" v-if="delegations.length === 0">
         {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
       </p>
-      <b-list-group v-if="validatorDelegations.length">
+      <b-list-group>
           <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
             <dl>
               <dt>{{ $t('views.validator_detail.state') }}</dt>
@@ -57,12 +57,13 @@
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-else-if="!isBootstrap" class="no-stakes">
+      <p v-if="validatorDelegations.length && !isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
-        <b-button class="btn-lg" 
-          @click="openRequestDelegateModal()"
-        >{{ $t("Stake my tokens") }}</b-button>
       </p>
+      <b-button class="btn-lg" 
+        @click="openRequestDelegateModal()">
+        {{ $t("Stake my tokens") }}
+      </b-button>
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>

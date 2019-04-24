@@ -44,9 +44,6 @@
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="!isBootstrap && delegation.state !== 1"
-                  @click="openRequestDelegationUpdateModal(delegation)"
-                >{{ $t('Update') }}</b-button>
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
@@ -179,6 +176,7 @@ export default class ValidatorDetail extends Vue {
     const validator = this.validator
     if (!this.validator) return []
     return this.delegations
+      .filter((d, idx) => idx !== 0)
       .filter(d => d.validatorStr === validator.address)
       .map(d => { 
         d.locked = parseInt(d.lockTime,10)*1000 > Date.now()

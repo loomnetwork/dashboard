@@ -635,7 +635,7 @@ export default {
 
     async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        return null
       }
       const user = state.dposUser
       try {

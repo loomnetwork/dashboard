@@ -30,8 +30,8 @@ if (hostname === "dashboard.dappchains.com") {
   LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
   GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
 } else {
-  LOOM_ADDRESS = ""
-  GW_ADDRESS = ""
+  LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
+  GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
 }
 
 const getNetworkId = (chainUrls) => {
@@ -133,6 +133,10 @@ export default {
       const wsUri = `${endpoint.replace(/http|https/g, "wss")}/websocket`
       return wsUri
     },
+    getWithdrewOn(state) {
+      const s = localStorage.getItem('lastWithdrawTime') || '0'
+      return parseInt(s,10) 
+    },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
       const url = new URL(network.websockt || network.rpc)
@@ -181,6 +185,9 @@ export default {
       } else {
         sessionStorage.setItem('withdrewSignature', payload)
       }
+    },
+    setWithdrewOn(state, timestamp) {
+      localStorage.setItem('lastWithdrawTime',timestamp)
     },
     setDPOSUser(state, payload) {
       state.dposUser = payload

@@ -249,7 +249,7 @@ export default {
           rootState.DPOS.web3,
           state.currentChain.dappchainEndpoint,
           network,
-          GW_ADDRESS || GatewayJSON.networks[network].address,
+          GW_ADDRESS || GW_ADDRESS || state.currentChain["gatewayAddress"],
           LOOM_ADDRESS || LoomTokenJSON.networks[network].address
         )
 

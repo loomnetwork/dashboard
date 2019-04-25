@@ -44,7 +44,7 @@ export default class LoadingSpinner extends Vue {
   width: 100vw;
   height: 100vh;
   background-color: rgb(255, 255, 255);
-  z-index: 999;
+  z-index: 9999;
 }
 
 @keyframes lds-dual-ring {

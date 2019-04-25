@@ -385,9 +385,6 @@ export default class MobileAccount extends Vue {
     await this.refresh(true)
   }
 
-  async checkPendingWithdrawalReceipt() {
-    this.receipt = await this.getPendingWithdrawalReceipt()
-  }
 
   async hasReceiptHandler(receipt) {
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {

@@ -652,19 +652,22 @@ export default {
     },
 
     async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
+      console.assert(!!state.dposUser, "Expected dposUser to be initialised")
 
       var user = state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
+      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
       try {
+        const receipt = await user.getPendingWithdrawalReceiptAsync()
+        debug("receipt", receipt);
+        //const result = await user.resumeWithdrawalAsync()
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
-        console.log("result", result);
+        debug("withdrawCoinFromRinkebyGatewayAsync", result);
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {
-        console.log("Error withdrawal coin from gateway", err);
+        commit('DPOS/setGatewayBusy', false, { root: true })
+        console.error("Error withdrawal coin from gateway", err);
         throw Error(err.message)       
       }
     },

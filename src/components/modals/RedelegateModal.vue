@@ -102,10 +102,15 @@ export default class RedelegateModal extends Vue {
     }
 
     this.setShowLoadingSpinner(true)
-    await this.redelegateAsync({
+    let payload = {
       origin: this.origin.address, 
       target: this.target.address, 
-      amount: this.delegation.amount})
+      amount: this.delegation.amount,
+    }
+
+    if(this.selectedTargetDelegation) payload.index = this.selectedTargetDelegation.index
+
+    await this.redelegateAsync(payload)
 
     this.setShowLoadingSpinner(false)
     // this.$emit("ok")
@@ -140,7 +145,6 @@ export default class RedelegateModal extends Vue {
   selectTargetItem(validator) {
     this.target = validator
     this.targetDelegations = this.validatorDelegations()
-    debugger
   }
 
   validatorDelegations() {

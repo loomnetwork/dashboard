@@ -235,6 +235,10 @@ export default class MobileAccount extends Vue {
     this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
+
+    if (this.receipt) {
+      this.hasReceiptHandler(this.receipt)
+    }
   }
 
   refresh() {
@@ -337,6 +341,7 @@ export default class MobileAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
+    // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
     if(!this.unclaimedTokens.isZero()) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
   }

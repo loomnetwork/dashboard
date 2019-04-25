@@ -497,7 +497,7 @@ export default {
 
     async fetchDappChainEvents({ state, commit, dispatch }, payload) {
 
-      let historyPromise = axios.get(`${state.dappChainEventUrl}/eth:${state.currentMetamaskAddress}`)
+      let historyPromise = axios.get(`${state.dappChainEventUrl}/eth:${state.currentMetamaskAddress}?sort=-block_height`)
       // Store the unresolved promise
       commit("setHistoryPromise", historyPromise)
       

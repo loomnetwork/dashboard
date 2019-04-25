@@ -24,6 +24,7 @@ export function initFilters() {
     Vue.filter("lockTimeBonus",formatLockTimeBonus)
     //Vue.filter('duration', formatDuration)
     Vue.filter('date', formatDate)
+    Vue.filter('readableDate', readableDateTime)
     Vue.filter('tokenAmount', formatTokenAmount)
     Vue.filter('domain', formatDomain)
     Vue.filter('url', formatUrl)
@@ -71,6 +72,11 @@ export function formatLockTimeBonus(value:LocktimeTier) {
 export function formatDate(timestamp) {
     console.log("date",timestamp)
     return new Date(parseInt(""+timestamp,10)*1000).toString()
+}
+
+export function readableDateTime(timestamp) {
+    console.log("date", timestamp)
+    return new Date(timestamp*1000).toLocaleDateString()
 }
 
 export function formatTokenAmount(wei:BN) {

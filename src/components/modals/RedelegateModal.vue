@@ -11,6 +11,11 @@
                       @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
+      <v-autocomplete :items="targetDelegations"
+                      v-model="selectedTargetDelegation"
+                      :get-label="getDelegationLabel"
+                      :component-item="dropdownDelegationTemplate">
+      </v-autocomplete>      
     </div>      
     <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>    
     <div class="row">
@@ -27,6 +32,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import RedelegateDropdownTemplate from './RedelegateDropdownTemplate'
+import RedelegateDelegationDropdownTemplate from './RedelegateDelegationDropdownTemplate'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -36,11 +42,15 @@ const applicationStore = createNamespacedHelpers('applicationStore')
 @Component({
   components: {
     LoadingSpinner,
-    RedelegateDropdownTemplate
+    RedelegateDropdownTemplate,
+    RedelegateDelegationDropdownTemplate
   },
   computed: {
     ...DappChainStore.mapState([
       "validators",
+    ]),
+    ...DPOSStore.mapState([
+      "delegations"
     ])
   },
   methods: {
@@ -61,8 +71,11 @@ const applicationStore = createNamespacedHelpers('applicationStore')
 export default class RedelegateModal extends Vue {
 
   dropdownTemplate = RedelegateDropdownTemplate
+  dropdownDelegationTemplate = RedelegateDelegationDropdownTemplate
   filteredTargetItems = []
   delegation = null
+  targetDelegations = []
+  selectedTargetDelegation = null
   origin = {}
   target = {}
 
@@ -104,6 +117,10 @@ export default class RedelegateModal extends Vue {
     return item ? item.name : ""
   }
 
+  getDelegationLabel(item) {
+    return item ? item.index : ""
+  }
+
   updateTargetItems(query) {
     const validators = this.validators.filter(v => !v.isBootstrap)
     const origin = this.origin
@@ -122,7 +139,22 @@ export default class RedelegateModal extends Vue {
 
   selectTargetItem(validator) {
     this.target = validator
+    this.targetDelegations = this.validatorDelegations()
+    debugger
   }
+
+  validatorDelegations() {
+    if (!this.target || this.delegations.length <= 0) return
+    const validator = this.target
+    return this.delegations
+      .filter(d => d.validatorStr === validator.address)
+      .map((d, idx) => { 
+        d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
+        d.index = (idx + 1)
+        return d
+      })
+  }
+
 }
 </script>
 <style lang="scss">

@@ -340,7 +340,7 @@ main.validator {
   bottom: 0px;
   right: 0px;
   background-color: rgba(255,255,255,0.8);
-  z-index: 999;
+  z-index: 9999;
 }
 
 </style>

@@ -357,13 +357,6 @@ export default class MobileAccount extends Vue {
     }
   }
 
-  async reclaimDepositHandler() {
-    let result = await this.reclaimDeposit()
-    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
-    this.$root.$emit("bv::show::modal", "wait-tx")
-    await this.refresh(true)
-  }
-
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')

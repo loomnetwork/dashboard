@@ -1,4 +1,5 @@
 {
+  "transfer_all":"All ({amount} LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -175,6 +176,22 @@
       "rewards": "Rewards",
       "history": "History",
       "faq": "F.A.Q"
+    },
+    "gateway": {
+      "complete_deposit": "Complete deposit",
+      "approval": {
+        "sending": "Sending approval request...",
+        "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
+        "failure": "Failed sending deposit approval request..."
+      },
+      "deposit": {
+        "sending": "Sending deposit request...",
+        "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
+        "view_confirmation": "View confirmations",
+        "failure": "Deposit failed..."
+      }
     },
     "layout": {
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",

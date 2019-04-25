@@ -22,14 +22,12 @@
 
 <script>
 import Vue from 'vue'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
 import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'
 import FaucetSidebar from '../components/FaucetSidebar'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { getDelegationListAsync } from '../services/dposv2Utils.js'
 import { formatToCrypto, sleep } from '../utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import { log } from 'util';

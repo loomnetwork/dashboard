@@ -23,12 +23,12 @@
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
           <h5 class="highlight">
             {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
-            <loom-icon :color="'#f0ad4e'"/>
+            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
           </h5>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
           <h5 class="highlight">
             {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
-            <loom-icon :color="'#f0ad4e'"/>
+            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
           </h5>
           <!-- unclaimed -->
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
@@ -48,19 +48,14 @@
         </div>
       </b-card-body>
       <b-card-footer class="custom-card-footer">
+        <DepositForm />
+        <a v-if="pendingTx" style="display: flex;align-items: center;" :href="`https://etherscan.io/tx/${pendingTx.hash}`" target="_blank">
+          <b-spinner variant="primary" style="margin-right:16px;"></b-spinner> <span>pending: {{pendingTx.type}}</span>
+        </a>
         <!-- deposit withdraw -->
-        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero()" class="d-flex justify-content-between">
+        <footer v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero() && !pendingTx" class="d-flex justify-content-between">
           <b-button-group class="gateway" style="display: flex;">
-          <TransferStepper v-if="userBalance.mainnetBalance > 0 && oracleEnabled"
-            :balance="userBalance.mainnetBalance" 
-            :transferAction="approveDeposit"
-            :resolveTxSuccess="executeDeposit"
-            buttonLabel="Deposit" 
-            >
-            <template #pendingMessage><p>Please approve deposit on your wallet...</p></template>
-            <template #failueMessage><p>Approval failed.</p></template>
-            <template #confirmingMessage>Please confirm deposit on your wallet. Depositing as soon as approval is confirmed: </template>
-          </TransferStepper>
+             <b-btn variant="outline-primary" @click="setShowDepositForm(true)">{{ $t("components.faucet_header.deposit")}}</b-btn>
           <TransferStepper  v-if="userBalance.loomBalance > 0 && oracleEnabled"
             @withdrawalDone="afterWithdrawalDone"
             @withdrawalFailed="afterWithdrawalFailed"
@@ -88,7 +83,7 @@
     <b-card title="Rewards" class="mb-4">
       <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
-        <loom-icon :color="'#f0ad4e'"/>
+        <loom-icon v-if="rewardsValue" :color="'#f0ad4e'" width="20px" height="20px"/>
       </router-link>
     </b-card>
 
@@ -128,7 +123,6 @@ import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import LoomIcon from '@/components/LoomIcon'
 import FaucetTable from '@/components/FaucetTable'
-import { getBalance, getAddress } from '@/services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 import Web3 from 'web3'
@@ -137,6 +131,7 @@ import debug from 'debug'
 import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
+import DepositForm from '@/components/gateway/DepositForm'
 
 const log = debug('mobileaccount')
 
@@ -150,7 +145,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     LoomIcon,
     FaucetTable,
     TransferStepper,
-
+    DepositForm,
   },
   computed: {
     ...DappChainStore.mapState([
@@ -164,7 +159,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'timeUntilElectionCycle',
       'nextElectionTime',
       'states',
-      'currentMetamaskAddress'
+      'currentMetamaskAddress',
+      "pendingTx"
     ]) 
   },
   methods: {
@@ -185,7 +181,8 @@ const ELECTION_CYCLE_MILLIS = 600000
     ]),
     ...DPOSStore.mapMutations([
       'setGatewayBusy',
-      'setShowLoadingSpinner'      
+      'setShowLoadingSpinner',
+      'setShowDepositForm',
     ])
   }
 })
@@ -211,19 +208,36 @@ export default class MobileAccount extends Vue {
 
   showRefreshSpinner = false
   
-  async mounted() {
-    await this.updateTimeUntilElectionCycle()
+  mounted() {
+    // Page might be mounted while dposUser is still initializing
+    if (this.dposUser) {
+      this.dposUserReady()
+    } 
+    else {
+      // Assuming page is mounted only if initDposUser has been triggered...
+      let unwatch = this.$store.watch(
+        (s) => s.DappChain.dposUser,
+        () => {
+          unwatch()
+          this.dposUserReady()
+        }
+      )
+    }
+  }
+
+  async dposUserReady() {
+    await this.checkPendingWithdrawalReceipt()
+    await this.checkUnclaimedLoomTokens()
+    this.currentAllowance = await this.checkAllowance()
+    this.queryRewards()
+    this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
-    await this.checkUnclaimedLoomTokens()
-    await this.checkPendingWithdrawalReceipt()
-    this.currentAllowance = await this.checkAllowance()
-    await this.queryRewards()
   }
 
   refresh() {
     this.showRefreshSpinner = true
-    this.$emit('refreshBalances')
+    this.$root.$emit("refreshBalances")
     setTimeout(() => {
       this.showRefreshSpinner = false
     }, 2000)
@@ -442,27 +456,6 @@ export default class MobileAccount extends Vue {
       this.isWithdrawalInprogress = false
     }
   }
-  async depositHandler() {
-
-    if(this.transferAmount <= 0) {
-      this.setError("Invalid amount")
-      return
-    }
-
-    this.setShowLoadingSpinner(true)
-    
-    try {
-      await this.depositAsync({amount: this.transferAmount})
-      this.setSuccess("Deposit successfull")
-    } catch(err) {
-      console.error("Deposit failed, error: ", err)
-      this.setError({msg: "Deposit failed, please try again", err})
-    }
-    this.transferAmount = ""
-
-    this.setShowLoadingSpinner(false)
-    
-  }
 
   async checkAllowance() {    
     console.assert(this.dposUser, "Expected dposUser to be initialized")
@@ -476,95 +469,6 @@ export default class MobileAccount extends Vue {
       console.error("Error checking allowance", err)
       return ''
     }
-  }
-
-  async approveAmount(amount) {
-    if(!this.dposUser) return
-    const user = await this.dposUser
-    const gateway = user.ethereumGateway
-    try {
-      let tx = await user.ethereumLoom.approve(gateway.address, amount)
-      await tx.wait()
-      this.currentAllowance = await this.checkAllowance()
-      this.setSuccess("Amount approved")
-    } catch(err) {
-      console.error("Error approving amount", err)
-      return
-    }    
-  }
-
-   async approveDeposit(amount) {
-    console.assert(this.dposUser, "Expected dposUser to be initialized")
-    console.assert(this.web3, "Expected web3 to be initialized")
-    const { web3 } = this
-    const dposUser = await this.dposUser
-    const ethereumLoom  = dposUser.ethereumLoom
-    const ethereumGateway  = dposUser._ethereumGateway
-    const tokens = new BN( "" + parseInt(amount,10)) 
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    log('approve', ethereumGateway.address, weiAmount.toString(), weiAmount)
-    this.setGatewayBusy(true)
-    log('approve', ethereumGateway.address, weiAmount.toString())
-    try {
-
-      const approval = await ethereumLoom.functions.approve(
-        ethereumGateway.address,
-        weiAmount.toString()
-      )
-
-      await approval.wait()
-      //const receipt = await approval.wait()
-      log('approvalTX', approval)
-      // we still need to execute deposit so keep gatewayBusy = true
-      return approval
-
-    } catch(err) {
-
-      // To bypass old web3 version used by imToken
-      if(err.transactionHash) {
-        err.hash = err.transactionHash
-        return err 
-      } else {
-        throw err
-      }
-    }
-  
-  }
-
-  async executeDeposit(amount,approvalTx) {
-    console.assert(this.dposUser, "Expected dposUser to be initialized")
-    console.assert(this.web3, "Expected web3 to be initialized")
-    const dposUser = await this.dposUser
-    this.setGatewayBusy(true)
-    const tokens = new BN( "" + parseInt(amount,10)) 
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    let result = await dposUser._ethereumGateway.functions.depositERC20(
-      weiAmount.toString(), dposUser.ethereumLoom.address
-    )
-    await result.wait()
-    this.setGatewayBusy(false)
-    this.$emit('refreshBalances')
-    return result
-  }
-
-  async completeDeposit() {
-    const dposUser = await this.dposUser
-    this.setGatewayBusy(true)
-    this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
-    try {
-      await dposUser._ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), dposUser.ethereumLoom.address
-      )
-      this.currentAllowance = 0
-    } catch (error) {
-      console.error(error)
-    }
-    this.$emit('refreshBalances')
-    this.setGatewayBusy(false)
-    this.setShowLoadingSpinner(false)
-
   }
 
   async executeWithdrawal(amount) {
@@ -582,13 +486,23 @@ export default class MobileAccount extends Vue {
         return tx
       }
     } catch (e) {
+      // imtoken hack
+      if (e.transactionHash) {
+        return {
+          hash: e.transactionHash
+        }
+      }
       console.error(e)
     }
   }
 
   async resolveWithdraw(amount, tx) {
-    let result = await tx.wait()
-    return result
+    // imtoken hack
+    if (tx.wait) {
+      let result = await tx.wait()
+      return result
+    }
+    return tx
   }
 
   destroyed() {

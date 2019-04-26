@@ -30,7 +30,7 @@ if (hostname === "dashboard.dappchains.com") {
   GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
 } else {
   LOOM_ADDRESS = ""
-  GW_ADDRESS = "0x6804f48233F6Ff2b468f7636560d525ca951931e"
+  GW_ADDRESS = ""
 }
 
 const getNetworkId = (chainUrls) => {

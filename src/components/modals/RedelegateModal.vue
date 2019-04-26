@@ -11,7 +11,7 @@
                       @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
-      <v-autocomplete v-if="targetDelegations.length > 0"
+      <v-autocomplete v-if="targetDelegationsLength"
                       v-model="selectedTargetDelegation"
                       :items="targetDelegations"
                       :get-label="getDelegationLabel"
@@ -157,6 +157,10 @@ export default class RedelegateModal extends Vue {
         d.index = (idx + 1)
         return d
       })
+  }
+
+  get targetDelegationsLength() {
+    this.targetDelegations ? this.targetDelegations.length > 0 : false
   }
 
 }

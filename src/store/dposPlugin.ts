@@ -136,11 +136,11 @@ function watchLoomEthBalance(
  */
 function listenToGatewayEvents(store) {
 
-    observeState(store, (state) => state.DappChain.dposUser)
+    observeState(store, (state) => state.DappChain.dposUser )
     // assuming only one DPOS session per page load
-    .pipe(take(1))
+    .pipe(take(1), switchMap((x) => x as Promise<DPOSUserV3>))
     .subscribe((dposUser:DPOSUserV3) => {
-        const loom =  dposUser.ethereumLoom
+        const loom = dposUser.ethereumLoom
         const gw = dposUser.ethereumGateway
         const account = dposUser.ethAddress
         listenToDepositApproval(account, gw, loom, store)

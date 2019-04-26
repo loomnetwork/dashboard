@@ -100,7 +100,6 @@ export default {
     getFormattedValidators(state, getters, rootState) {
 
       return rootState.DappChain.validators.map((validator) => {
-
         let Weight = 0
         if ( validator.name.startsWith("plasma-") )  {
           Weight = 1

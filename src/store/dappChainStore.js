@@ -30,7 +30,7 @@ if (hostname === "dashboard.dappchains.com") {
   GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
 } else {
   LOOM_ADDRESS = ""
-  GW_ADDRESS = ""
+  GW_ADDRESS = "0x6804f48233F6Ff2b468f7636560d525ca951931e"
 }
 
 const getNetworkId = (chainUrls) => {
@@ -225,7 +225,7 @@ export default {
       const dposUser = await state.dposUser
       const web3js = state.web3
       try {
-        let result = await state.dposUser.ethereumLoom.balanceOf(address)
+        let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
         let balance = web3js.utils.fromWei(result.toString())
         let limitDecimals = parseFloat(balance).toFixed(2)
         return limitDecimals
@@ -243,7 +243,7 @@ export default {
       // set state dposUser to be a Promise<dposUser> so that components caalling it don't complain or go and try to init another dpos user...
       const user = DPOSUserV3.createEthSignMetamaskUserAsync({
         web3: rootState.DPOS.web3,
-        dappchainEndpoint: getters.dappchainEndpoint,
+        dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
         chainId: network,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
         version: 2
@@ -275,7 +275,7 @@ export default {
         if (['dev', 'local'].includes(getDomainType())) {
           user = await DPOSUserV3.createEthSignMetamaskUserAsync({
             web3: payload.web3,
-            dappchainEndpoint: getters.dappchainEndpoint,
+            dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: network,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
             version: 2
@@ -283,7 +283,7 @@ export default {
         } else {
           user = await DPOSUserV3.createMetamaskUserAsync({
             web3: payload.web3,
-            dappchainEndpoint: getters.dappchainEndpoint,
+            dappchainEndpoint: state.chainUrls[state.networkId],
             dappchainPrivateKey: privateKeyString,
             chainId: network,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
@@ -462,8 +462,10 @@ export default {
     async getAccumulatedStakingAmount({ state, dispatch }, payload) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
-      }      
-      const totalDelegation = await state.dposUser.getTotalDelegationAsync()
+      }
+      const user = await state.dposUser 
+      // TODO: Add custom total delegation function
+      const totalDelegation = 0
       const amount = formatToCrypto(totalDelegation.amount)
       state.accountStakesTotal = totalDelegation.amount
       return amount
@@ -490,7 +492,8 @@ export default {
       if (state.dposUser) {
         // todo check state.dpos2 and remove it/disconnect its client
         // since we have dposUser now
-        return state.dposUser.dappchainDPOS
+        const user = await state.dposUser
+        return user.dappchainDPOS
       }
       else if (state.dpos3) {
         commit('setDappChainConnected', true)

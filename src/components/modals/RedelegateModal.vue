@@ -4,15 +4,16 @@
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
-      <v-autocomplete :items="filteredTargetItems"
-                      v-model="target"
+      <v-autocomplete v-model="target"
+                      :items="filteredTargetItems"
                       :get-label="getLabel"
                       :component-item="dropdownTemplate"
                       @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
-      <v-autocomplete :items="targetDelegations"
+      <v-autocomplete v-if="targetDelegations.length > 0"
                       v-model="selectedTargetDelegation"
+                      :items="targetDelegations"
                       :get-label="getDelegationLabel"
                       :component-item="dropdownDelegationTemplate">
       </v-autocomplete>      
@@ -118,11 +119,11 @@ export default class RedelegateModal extends Vue {
   }  
 
   getLabel(item) {
-    return item ? item.name : ""
+    return item ? item.name : "Please select a validator"
   }
 
   getDelegationLabel(item) {
-    return item ? item.index : ""
+    return item ? item.index : "Please select a delegation"
   }
 
   updateTargetItems(query) {

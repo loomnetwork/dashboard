@@ -3,7 +3,7 @@ import { fromEventPattern, Observable, combineLatest, pipe } from "rxjs";
 import { filter, switchMap, tap, map, take } from "rxjs/operators";
 import { Store } from "vuex";
 import { setTimeout } from "timers";
-import { DPOSUser } from "loom-js";
+import { DPOSUserV3 } from "loom-js";
 import { Contract } from "ethers";
 
 const debug = Debug("dashboard.dpos")
@@ -139,7 +139,7 @@ function listenToGatewayEvents(store) {
     observeState(store, (state) => state.DappChain.dposUser)
     // assuming only one DPOS session per page load
     .pipe(take(1))
-    .subscribe((dposUser:DPOSUser) => {
+    .subscribe((dposUser:DPOSUserV3) => {
         const loom =  dposUser.ethereumLoom
         const gw = dposUser.ethereumGateway
         const account = dposUser.ethAddress

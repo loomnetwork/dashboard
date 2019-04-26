@@ -26,8 +26,8 @@ if (hostname === "dashboard.dappchains.com") {
   LOOM_ADDRESS = ""
   GW_ADDRESS = ""
 } else if ( hostname === "dev-dashboard.dappchains.com") {
-  LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
-  GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
+  LOOM_ADDRESS = ""
+  GW_ADDRESS = ""
 } else {
   LOOM_ADDRESS = ""
   GW_ADDRESS = ""
@@ -268,18 +268,10 @@ export default {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
       }
+
       const network = state.networkId
       let user
 
-      let dposConstructor
-
-      if (['dev', 'local'].includes(getDomainType())) {
-        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
-      } else {
-        dposConstructor = DPOSUser.createMetamaskUserAsync
-      }
-
-      let user
       try {
         if (['dev', 'local'].includes(getDomainType())) {
           user = await DPOSUserV3.createEthSignMetamaskUserAsync({

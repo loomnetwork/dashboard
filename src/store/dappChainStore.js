@@ -239,7 +239,7 @@ export default {
       if (!rootState.DPOS.web3) {    
         await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
-      const network = state.chainUrls[state.chainIndex].network
+      const network = state.networkId
       // set state dposUser to be a Promise<dposUser> so that components caalling it don't complain or go and try to init another dpos user...
       const user = DPOSUserV3.createEthSignMetamaskUserAsync({
         web3: rootState.DPOS.web3,
@@ -269,15 +269,6 @@ export default {
         throw new Error('No Private Key, Login again')
       }
       const network = state.networkId
-      let user
-
-      let dposConstructor
-
-      if (['dev', 'local'].includes(getDomainType())) {
-        dposConstructor = DPOSUser.createEthSignMetamaskUserAsync
-      } else {
-        dposConstructor = DPOSUser.createMetamaskUserAsync
-      }
 
       let user
       try {
@@ -495,8 +486,13 @@ export default {
         new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
       return result
     },
-    async getDpos3({ state, commit }, payload) {
-      if (!payload && state.dpos3) {
+    async getDpos3({ state, commit, getters }, payload) {
+      if (state.dposUser) {
+        // todo check state.dpos2 and remove it/disconnect its client
+        // since we have dposUser now
+        return state.dposUser.dappchainDPOS
+      }
+      else if (state.dpos3) {
         commit('setDappChainConnected', true)
         return state.dpos3
       }
@@ -518,11 +514,11 @@ export default {
         console.error('PlasmaChain connection error', msg)
       })
 
-      const dpos3 = await DPOS3.createAsync(client, new Address(networkId, LocalAddress.fromPublicKey(publicKey)))
+      const dpos3 = await DPOS2.createAsync(client, address)
       state.dpos3 = dpos3
       commit('setDappChainConnected', true)
       return dpos3
-    },
+    },    
     async ensureIdentityMappingExists({ rootState, state, dispatch, commit, rootGetters }, payload) {
 
       let metamaskAddress = ""

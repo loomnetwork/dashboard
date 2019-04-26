@@ -463,13 +463,8 @@ export default {
     // this can be moved out as is automatically called once dposUser is set
     // actually instead of depending on dposUser we should depend on dpos contract
     // (if we want to display timer in "anonymous" session)
-    async getTimeUntilElectionsAsync({ rootState, commit }) {     
-      if (!rootState.DappChain.dposUser) {
-        throw new Error("Expected dposUser to be initialized")
-      }
-
-      const user = await rootState.DappChain.dposUser
-      console.log('getTimeUntilElectionsAsync',user)
+    async getTimeUntilElectionsAsync({ rootState, commit, dispatch }) {     
+      const dpos = await dispatch("DappChain/getDpos3", null, { root: true })
       try {
         const result = await dpos.getTimeUntilElectionAsync()
         debug("next election in %s seconds", result.toString())

@@ -249,6 +249,7 @@ export default class MobileAccount extends Vue {
     const candidates = await dposUser.listCandidatesAsync()
 
     return delegationsArray.filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
+           .filter((d, idx) => idx > 0)
            .map(delegation => {
             let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
             return { 

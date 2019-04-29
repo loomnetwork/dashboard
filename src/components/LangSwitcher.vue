@@ -28,16 +28,7 @@
       }
     },
     mounted: function() {
-
       this.configureLocale()
-
-      // const configureLocale = () => {
-      //   let candidateLang = navigator.language || "en"
-      //   let res = supportedLocales.filter((lang) => {
-      //     candidateLang.includes(lang.key)
-      //   })
-      // }
-
     },    
     methods: {
       ...mapMutations([

@@ -231,7 +231,7 @@ export default class MobileAccount extends Vue {
     await this.checkUnclaimedLoomTokens()
     this.currentAllowance = await this.checkAllowance()
     this.queryRewards()
-    //this.updateTimeUntilElectionCycle()
+    this.updateTimeUntilElectionCycle()
     this.startTimer()
   }
 
@@ -245,8 +245,10 @@ export default class MobileAccount extends Vue {
 
   get formatedDelegations() {
     const candidates = this.validators
-    return this.delegations.map((delegation) => {
-      let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
+    return this.delegations
+    .filter(d => d.validatorStr !== "0x0000000000000000000000000000000000000000")
+    .map((delegation) => {
+      let candidate = candidates.find(c => c.address === delegation.validator.local.toString())
       return { 
               "Name": candidate.name,
               "Amount": `${formatToCrypto(delegation.amount)}`,
@@ -308,7 +310,7 @@ export default class MobileAccount extends Vue {
         this.electionCycleTimer = timeLeft.toString()
         this.showTimeUntilElectionCycle()
       } else {
-        // await this.updateTimeUntilElectionCycle()
+        await this.updateTimeUntilElectionCycle()
         this.electionCycleTimer
       }
     }

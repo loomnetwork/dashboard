@@ -18,9 +18,9 @@ export default {
     "gatewayAddress" : "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
   },
   "local": {
-    "dappchainEndpoint" : "http://localhost:46658",
-    "mainnetEndpoint" : "https://rinkeby.infura.io",
+    "dappchainEndpoint" : "ws://localhost:46658",//34361 //46658
+    "mainnetEndpoint" : "http://localhost:8545",
     "chainId" : "default",
-    "gatewayAddress" : "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
+    "gatewayAddress" : "0x6804f48233F6Ff2b468f7636560d525ca951931e"
   }
 }

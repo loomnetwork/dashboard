@@ -16,6 +16,7 @@ export function dposStorePlugin(store: Store<any>) {
     store.watch(
         (state) => state.DPOS.timeUntilElectionCycle,
         (time: string) => {
+            console.log(time)
             // assuming string...
             const seconds = parseInt(time, 10)
             setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), seconds * 1000)
@@ -24,7 +25,7 @@ export function dposStorePlugin(store: Store<any>) {
             debug("getting listDelegatorDelegations")
             // delegator specific calls
             if (store.state.DappChain.dposUser) {
-                store.dispatch("DPOS/listDelegatorDelegations")
+                store.dispatch("DPOS/checkAllDelegations")
                 //store.dispatch("DPOS/....rewards....")
             }
         },
@@ -40,11 +41,10 @@ export function dposStorePlugin(store: Store<any>) {
     store.subscribeAction({
         after(action) {
             if (delegationActions.find(a => a === action.type)) {
-                store.dispatch("DPOS/listDelegatorDelegations")
+                store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DappChain/getDappchainLoomBalance")
-                // this might not be needed since listDelegatorDelegations
-                // returns total
-                store.dispatch("DappChain/getAccumulatedStakingAmount")
+                store.dispatch("DappChain/getMetamaskLoomBalance")
+
             }
         }
     })

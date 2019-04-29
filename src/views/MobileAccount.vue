@@ -89,7 +89,7 @@
 
     <b-card title="Delegations" id="delegations-container">
 
-      <b-card v-for="(delegation, idx) in delegations" :key="'delegations' + idx" no-body class="mb-1">
+      <b-card v-for="(delegation, idx) in formatedDelegations" :key="'delegations' + idx" no-body class="mb-1">
         <b-card-header @click="toggleAccordion(idx)"
                        header-tag="header"
                        class="d-flex justify-content-between p-2"
@@ -150,7 +150,8 @@ const ELECTION_CYCLE_MILLIS = 600000
   computed: {
     ...DappChainStore.mapState([
       'web3',
-      'dposUser'
+      'dposUser',
+      'validators'
     ]),    
     ...DPOSStore.mapState([
       'userBalance',
@@ -158,6 +159,7 @@ const ELECTION_CYCLE_MILLIS = 600000
       'rewardsResults',
       'timeUntilElectionCycle',
       'nextElectionTime',
+      'delegations',
       'states',
       'currentMetamaskAddress',
       "pendingTx"
@@ -189,7 +191,6 @@ const ELECTION_CYCLE_MILLIS = 600000
 
 export default class MobileAccount extends Vue {
 
-  delegations = []
   currentAllowance = 0
 
   timerRefreshInterval = null
@@ -230,9 +231,8 @@ export default class MobileAccount extends Vue {
     await this.checkUnclaimedLoomTokens()
     this.currentAllowance = await this.checkAllowance()
     this.queryRewards()
-    this.updateTimeUntilElectionCycle()
+    //this.updateTimeUntilElectionCycle()
     this.startTimer()
-    this.delegations = await this.getDelegations()
   }
 
   refresh() {
@@ -242,27 +242,20 @@ export default class MobileAccount extends Vue {
       this.showRefreshSpinner = false
     }, 2000)
   }
-  // todo: remove call and only use what is in the state
-  async getDelegations() {
-    const dposUser = await this.dposUser
-    const { amount, weightedAmount, delegationsArray } = await dposUser.checkAllDelegationsAsync()
-    const candidates = await dposUser.listCandidatesAsync()
 
-    return delegationsArray.filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
-           .filter((d, idx) => idx > 0)
-           .map(delegation => {
-            let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
-            return { 
-                    "Name": candidate.name,
-                    "Amount": `${formatToCrypto(delegation.amount)}`,
-                    "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-                    "Height": `${delegation.height}`,
-                    "Locktime": `${new Date(delegation.lockTime * 1000)}`,
-                    "State": `${this.states[delegation.state]}`,
-                    _cellVariants: { Status: 'active'}
-            }
+  get formatedDelegations() {
+    const candidates = this.validators
+    return this.delegations.map((delegation) => {
+      let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
+      return { 
+              "Name": candidate.name,
+              "Amount": `${formatToCrypto(delegation.amount)}`,
+              "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
+              "Locktime": `${new Date(delegation.lockTime * 1000)}`,
+              "State": `${this.states[delegation.state]}`,
+              _cellVariants: { Status: 'active'}
+      }
     })
-
   }
 
   toggleAccordion(idx) {
@@ -315,7 +308,8 @@ export default class MobileAccount extends Vue {
         this.electionCycleTimer = timeLeft.toString()
         this.showTimeUntilElectionCycle()
       } else {
-        await this.updateTimeUntilElectionCycle()
+        // await this.updateTimeUntilElectionCycle()
+        this.electionCycleTimer
       }
     }
     

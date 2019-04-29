@@ -1,7 +1,7 @@
 /* eslint-disable */
 import {
   CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
-  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUserV3,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUserV3, DPOSUser,
 } from 'loom-js'
 
 import { createDefaultClient } from 'loom-js/dist/helpers'
@@ -9,6 +9,7 @@ import { createDefaultClient } from 'loom-js/dist/helpers'
 import networks from '../../chain-config'
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 import { getDomainType, formatToCrypto } from '../utils'
+// @ts-ignore
 import GatewayJSON from '../contracts/Gateway.json'
 import Debug from "debug"
 
@@ -16,8 +17,9 @@ Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
 
 import BN from 'bn.js'
+import { DPOS3 } from 'loom-js/dist/contracts';
 
-const DPOS2 = Contracts.DPOS2
+const DPOS = Contracts.DPOS3
 let LOOM_ADDRESS = ""
 let GW_ADDRESS = ""
 
@@ -26,8 +28,8 @@ if (hostname === "dashboard.dappchains.com") {
   LOOM_ADDRESS = ""
   GW_ADDRESS = ""
 } else if ( hostname === "dev-dashboard.dappchains.com") {
-  LOOM_ADDRESS = "0x165245382ff23A5D3782b48286B6A81b6fd0508e"
-  GW_ADDRESS = "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73"
+  LOOM_ADDRESS = ""
+  GW_ADDRESS = ""
 } else {
   LOOM_ADDRESS = ""
   GW_ADDRESS = ""
@@ -42,25 +44,15 @@ const getNetworkId = (chainUrls) => {
 const getCurrentChain = (chainUrls) => {
   let networkId = sessionStorage.getItem('networkId')
   let defaultId = Object.keys(networks)[0]
-  return chainUrls[networkId] || chainUrls[defaultId]
-}
-
-const getServerUrl = (chain) => {
-  const url = chain.websockt || chain.rpc
-  const splited = url.split('://')
-  if (splited[1]) {
-    return splited[1].split('/')[0]
-  }
-  return ''
+  return chainUrls[networkId || defaultId]
 }
 
 const createClient = (state, privateKeyString) => {
 
   const networkConfig = state.chainUrls[state.networkId]
     
-  const { client, publicKey, address } = createDefaultClient(privateKeyString, networkConfig["dappchainEndpoint"], networkConfig["chainId"])
+  const { client } = createDefaultClient(privateKeyString, networkConfig["dappchainEndpoint"], networkConfig["chainId"])
   client.on('error', msg => {
-    commit('setDappChainConnected', false)
     console.error('PlasmaChain connection error', msg)
   })
 
@@ -97,7 +89,6 @@ const defaultState = () => {
   return {
     web3: undefined,
     account: undefined,
-    accountStakesTotal: null,
     localAddress: undefined,
     count: 0,
     chainUrls: networks,
@@ -126,9 +117,6 @@ export default {
     },
     currentChain(state) {
       return state.chainUrls[state.networkId]
-      const endpoint = network["dappchainEndpoint"]
-      const wsUri = `${endpoint.replace(/http|https/g, "wss")}/websocket`
-      return wsUri
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
@@ -196,7 +184,7 @@ export default {
     }
   },
   actions: {
-    addChainUrl({ state, dispatch, commit }, payload) {
+    addChainUrl({ state, commit }, payload) {
       if(state.networkId === payload.id) return
       const chains = Object.keys(state.chainUrls)
       const existingId = chains.indexOf(payload.id)    
@@ -207,7 +195,7 @@ export default {
         return
       }
     },
-    registerWeb3({ commit, state, getters }, payload) {
+    registerWeb3({ commit, state }, payload) {
       try {
         commit('setWeb3', payload.web3)
         // these are filled on yarn serve/build
@@ -216,7 +204,7 @@ export default {
         console.error(err)
       }
     },
-    async getMetamaskLoomBalance({ state , commit}) {
+    async getMetamaskLoomBalance({ rootState, state , commit}) {
       if (!state.web3) return 0
 
       if (!state.dposUser) {
@@ -227,8 +215,10 @@ export default {
       try {
         let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
         let balance = web3js.utils.fromWei(result.toString())
-        let limitDecimals = parseFloat(balance).toFixed(2)
-        return limitDecimals
+        const mainnetBalance = parseFloat(balance).toFixed(2)
+        const userBalance = rootState.DPOS.userBalance
+        commit("DPOS/setUserBalance",Object.assign(userBalance,{mainnetBalance}),{root:true})
+        return mainnetBalance
       } catch (err) {
         commit('setErrorMsg', {msg: "Error getting metamask balance", forever: false, report:true, cause:err}, {root: true})
         return 0
@@ -249,7 +239,7 @@ export default {
         version: 2
       })
       .then(user => {
-        reconfigureClient(user._client, commit)
+        reconfigureClient(user.client, commit)
         console.log('dposUser ready')
         return user
       })
@@ -269,10 +259,10 @@ export default {
         throw new Error('No Private Key, Login again')
       }
       const network = state.networkId
-
+      const domainType = getDomainType()
       let user
       try {
-        if (['dev', 'local'].includes(getDomainType())) {
+        if (domainType === 'dev' || domainType === 'local') {
           user = await DPOSUserV3.createEthSignMetamaskUserAsync({
             web3: payload.web3,
             dappchainEndpoint: state.chainUrls[state.networkId],
@@ -301,7 +291,7 @@ export default {
      * @param {{amount}} payload 
      * @returns {Promise<TransactionReceipt>}
      */
-    async depositAsync({ state }, {amount}) {
+    async depositAsync({ state, commit }, {amount}) {
       console.assert(state.dposUser, "Expected dposUser to be initialized")
       commit('DPOS/setGatewayBusy', true, { root: true })
       const user = await state.dposUser
@@ -328,7 +318,7 @@ export default {
       commit('DPOS/setGatewayBusy', false, { root: true })
       return res
     },
-    async approveAsync({ state, dispatch }, payload) {
+    async approveAsync({ state, commit }, payload) {
       commit('DPOS/setGatewayBusy', true, { root: true })
 
       if (!state.dposUser) {
@@ -343,7 +333,7 @@ export default {
       await token.approve(gateway.address, amount)
       
     },
-    async getDappchainLoomBalance({ rootState, state, dispatch }) {
+    async getDappchainLoomBalance({ rootState, state, commit }) {
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
@@ -351,10 +341,12 @@ export default {
       let loomWei = await user.getDAppChainBalanceAsync()
       console.log("loom onplasma",loomWei.toString())
       const balance = state.web3.utils.fromWei(loomWei.toString(), 'ether')
-      let limitDecimals = parseFloat(balance).toFixed(2)
-      return limitDecimals
+      const userBalance = rootState.DPOS.userBalance
+      let loomBalance = parseFloat(balance).toFixed(2)
+      commit("DPOS/setUserBalance", Object.assign(userBalance,{loomBalance}), {root:true})
+      return loomBalance
     },
-    async delegateAsync({ state, dispatch, commit }, payload) {
+    async delegateAsync({ state, commit }, payload) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }  
@@ -368,7 +360,7 @@ export default {
         commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
       }      
     },
-    async undelegateAsync({ state, dispatch, commit }, payload) {
+    async undelegateAsync({ state, commit }, payload) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
@@ -459,17 +451,6 @@ export default {
       nodes.filter((n) => n.name === "").forEach(n => n.name = n.address)
       commit("setValidators", nodes)
     },
-    async getAccumulatedStakingAmount({ state, dispatch }, payload) {
-      if (!state.dposUser) {
-        throw new Error("expected dposUser to be initialized")
-      }
-      const user = await state.dposUser 
-      // TODO: Add custom total delegation function
-      const totalDelegation = 0
-      const amount = formatToCrypto(totalDelegation.amount)
-      state.accountStakesTotal = totalDelegation.amount
-      return amount
-    },
     async checkDelegationAsync({ state, dispatch}, payload) {
       const privateKeyString = sessionStorage.getItem('privatekey')
       if (!privateKeyString) {
@@ -477,20 +458,20 @@ export default {
         throw new Error('No Private Key, Login again')
       }
 
-      const dpos3 = await dispatch('getDpos3', {
+      const dpos3:DPOS3 = await dispatch('getDpos3', {
         privateKey: privateKeyString
       })
       const privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
       const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
       const chainId = state.networkId
-      const result = dpos2.checkDelegationAsync(
+      const result = dpos3.checkDelegationAsync(
         new Address(chainId, LocalAddress.fromPublicKey(CryptoUtils.B64ToUint8Array(payload.validator))),
         new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
       return result
     },
-    async getDpos3({ state, commit, getters }, payload) {
+    async getDpos3({ state, commit }, payload:{privateKey?:string}) {
       if (state.dposUser) {
-        // todo check state.dpos2 and remove it/disconnect its client
+        // todo check state.dpos3 and remove it/disconnect its client
         // since we have dposUser now
         const user = await state.dposUser
         return user.dappchainDPOS
@@ -501,6 +482,8 @@ export default {
       }
 
       const networkConfig = state.chainUrls[state.networkId]
+
+      debug("networkConfig",networkConfig)
     
       let privateKey
       if (payload && payload.privateKey) {
@@ -511,18 +494,25 @@ export default {
 
       let privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
 
-      const { client, publicKey, address } = createDefaultClient(privateKeyString, networkConfig["dappchainEndpoint"], networkConfig["chainId"])
+      const { client, address } = createDefaultClient(privateKeyString, networkConfig["dappchainEndpoint"], networkConfig["chainId"])
       client.on('error', msg => {
         commit('setDappChainConnected', false)
         console.error('PlasmaChain connection error', msg)
       })
+      try {
+        const dpos3 = await DPOS.createAsync(client, address)
+        debug("DPOS clreated",dpos3)
+        state.dpos3 = dpos3
+        commit('setDappChainConnected', true)
+        return dpos3
+      }
+      catch(error) {
+        console.error("Error creating DPOS contract", error)
+      }
 
-      const dpos3 = await DPOS2.createAsync(client, address)
-      state.dpos3 = dpos3
-      commit('setDappChainConnected', true)
-      return dpos3
+
     },    
-    async ensureIdentityMappingExists({ rootState, state, dispatch, commit, rootGetters }, payload) {
+    async ensureIdentityMappingExists({ rootState, state, commit }, payload) {
 
       let metamaskAddress = ""
       if(payload) {
@@ -534,10 +524,6 @@ export default {
       const client = createClient(state, rootState.DPOS.dashboardPrivateKey)
       commit("DPOS/setClient", client, { root: true })
 
-      const contractAddr = await client.getContractAddressAsync('addressmapper')
-
-      const dappchainAddress = rootGetters["DPOS/getDashboardAddressAsLocalAddress"]
-
       try {
         commit("DPOS/setStatus", "check_mapping", {root: true})
         commit('setMappingError', null)
@@ -548,7 +534,6 @@ export default {
         commit("DPOS/setMapper", addressMapper, { root: true })
         let address = new Address("eth", LocalAddress.fromHexString(metamaskAddress))
         const mapping = await addressMapper.getMappingAsync(address)
-        const mappedEthAddress = mapping.to.local.toString()
 
       } catch (err) {
         commit("DPOS/setStatus", "no_mapping", {root: true})
@@ -558,7 +543,7 @@ export default {
       }
       commit("DPOS/setStatus", "mapped", {root: true})
     },
-    async createNewPlasmaUser({ state, rootState, dispatch }) {
+    async createNewPlasmaUser({ state, rootState }) {
       const privateKey = CryptoUtils.generatePrivateKey()
       const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
       const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
@@ -580,29 +565,24 @@ export default {
     async addMappingAsync({ state, dispatch, commit }, payload) {
       if (!state.dposUser) {
         await dispatch('initDposUser')
-      } try {
-        await state.dposUser.mapAccountsAsync()
+      } 
+      try {
+        const user:DPOSUserV3 = await state.dposUser
+        await user.mapAccountsAsync()
         commit("DPOS/setStatus", "mapped", {root: true})
       } catch (err) {
         commit('setMappingError', err.message)
         throw Error(err.message.toString())
       }
     },
-    async getUnclaimedLoomTokens({ state, dispatch, commit } ) {
+    async getUnclaimedLoomTokens({ state, commit } ) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
       
-      const user = await state.dposUser
-
-      const web3js = state.web3
-      const accounts = await web3js.eth.getAccounts()
-      if (accounts.length === 0) return 0
-      const address = accounts[0]
-      const formattedAddress = `eth:${address}`
-      console.log('formatted address:', formattedAddress)
+      const user:DPOSUserV3 = await state.dposUser
       try {
-        let unclaimAmount = await user.getUnclaimedLoomTokensAsync(address)
+        let unclaimAmount = await user.getUnclaimedLoomTokensAsync()
         console.log('unclaimed amount', unclaimAmount)
         return unclaimAmount
       } catch (err) {
@@ -610,7 +590,7 @@ export default {
         commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true, cause:err})
       }
     },
-    async reclaimDeposit({ state, dispatch, commit } ) {
+    async reclaimDeposit({ state, commit } ) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
@@ -626,11 +606,11 @@ export default {
       commit('DPOS/setGatewayBusy', false, { root: true })
     },
 
-    async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
+    async getPendingWithdrawalReceipt({ state, commit } ) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
-      const user = await state.dposUser
+      const user:DPOSUserV3 = await state.dposUser
       try {
         const receipt = await user.getPendingWithdrawalReceiptAsync()
         if(!receipt) return null
@@ -649,10 +629,11 @@ export default {
         throw new Error("expected dposUser to be initialized")
       }
 
-      var user = await state.dposUser
+      var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
       try {
-        const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
+        // @ts-ignore
+        const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
         console.log("result", result);
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
@@ -661,7 +642,7 @@ export default {
         throw Error(err.message)       
       }
     },
-    async init({ state, commit, rootState }, payload) {
+    async init({ state, commit }) {
 
       let privateKey
       let privateKeyString = sessionStorage.getItem('privatekey')

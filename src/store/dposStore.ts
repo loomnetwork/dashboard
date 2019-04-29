@@ -430,7 +430,7 @@ export default {
       let filteredDelegations = delegationsArray
         // delegation with index 0 represents rewards
         .filter((d) => d.index > 0)
-        //.filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
+        .filter( d => !(d.amount.isZero() && d.updateAmount.isZero()))
         // add string address to make it easy to compare
         .map( d => Object.assign(d, {
           validatorStr:d.validator.local.toString(),

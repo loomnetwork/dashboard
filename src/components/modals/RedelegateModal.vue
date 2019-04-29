@@ -1,18 +1,19 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer centered no-close-on-backdrop
+  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer no-close-on-backdrop
   no-close-on-esc>
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
-      <v-autocomplete :items="filteredTargetItems"
-                      v-model="target"
+      <v-autocomplete v-model="target"
+                      :items="filteredTargetItems"
                       :get-label="getLabel"
                       :component-item="dropdownTemplate"
                       @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
-      <v-autocomplete :items="targetDelegations"
+      <v-autocomplete v-if="targetDelegationsLength"
                       v-model="selectedTargetDelegation"
+                      :items="targetDelegations"
                       :get-label="getDelegationLabel"
                       :component-item="dropdownDelegationTemplate">
       </v-autocomplete>      
@@ -100,7 +101,6 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
-
     this.setShowLoadingSpinner(true)
     let payload = {
       origin: this.origin.address, 
@@ -119,11 +119,11 @@ export default class RedelegateModal extends Vue {
   }  
 
   getLabel(item) {
-    return item ? item.name : ""
+    return item ? item.name : "Please select a validator"
   }
 
   getDelegationLabel(item) {
-    return item ? item.index : ""
+    return item ? item.index : "Please select a delegation"
   }
 
   updateTargetItems(query) {
@@ -159,6 +159,10 @@ export default class RedelegateModal extends Vue {
       })
   }
 
+  get targetDelegationsLength() {
+    this.targetDelegations ? this.targetDelegations.length > 0 : false
+  }
+
 }
 </script>
 <style lang="scss">
@@ -189,7 +193,7 @@ export default class RedelegateModal extends Vue {
     width: 100%;
     max-height: 240px;
     overflow-y: auto;
-    z-index: 999;
+    z-index: 9;
     background-color: #ffffff;
     border: 2px solid #f2f1f3;
     .v-autocomplete-list-item {

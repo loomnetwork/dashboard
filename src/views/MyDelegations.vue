@@ -22,14 +22,12 @@
 
 <script>
 import Vue from 'vue'
-import ApiClient from '../services/faucet-api'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
 import FaucetHeader from '../components/FaucetHeader'
 import FaucetFooter from '../components/FaucetFooter'
 import FaucetSidebar from '../components/FaucetSidebar'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { getDelegationListAsync } from '../services/dposv2Utils.js'
 import { formatToCrypto, sleep } from '../utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import { log } from 'util';
@@ -89,10 +87,10 @@ export default class MyDelegations extends Vue {
 
   async getDelegationList() {
     this.loading = true    
-    const dposUser = await this.dposUser
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.checkAllDelegationsAsync()
+    const user = await this.dposUser
+    const { amount, weightedAmount, delegationsArray } = await user.checkAllDelegationsAsync()
 
-    const candidates = await this.dposUser.listCandidatesAsync()
+    const candidates = await user.listCandidatesAsync()
 
     this.delegations = delegationsArray
       .filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))

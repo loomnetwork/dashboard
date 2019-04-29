@@ -66,7 +66,6 @@
   import HistoryEvent from '../components/HistoryEvent'
   import { mapGetters, mapState, mapActions, mapMutatioins, createNamespacedHelpers } from 'vuex'
 
-  import ApiClient from '../services/api'
   import { formatToCrypto } from '@/utils'
   import { isIP } from 'net'
 

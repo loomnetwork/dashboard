@@ -39,6 +39,9 @@
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
+    <!-- gateway -->
+    <DepositApproved />
+    <DepositConfirmed />
   </div>  
 </template>
 
@@ -53,6 +56,10 @@ import FaucetFooter from '@/components/FaucetFooter'
 import LoadingSpinner from '../components/LoadingSpinner'
 import WarningOverlay from '../components/WarningOverlay'
 const DappChainStore = createNamespacedHelpers('DappChain')
+
+import DepositApproved from '@/components/gateway/DepositApproved'
+import DepositConfirmed from '@/components/gateway/DepositConfirmed'
+
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
@@ -61,7 +68,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     FaucetSidebar,
     FaucetFooter,
     LoadingSpinner,
-    WarningOverlay
+    WarningOverlay,
+    DepositApproved,
+    DepositConfirmed,
   },
   props: {
     data: Object,
@@ -169,17 +178,10 @@ export default class Layout extends Vue {
   }
 
   async mounted() {
-
-    // Clear any remaining local storage
-    localStorage.clear()
       
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
-    } else {
-      this.$root.$on('login', async () => {
-        // this.attemptToInitialize()
-      })
-    }      
+    } 
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
@@ -191,7 +193,6 @@ export default class Layout extends Vue {
 
         if (this.currentMetamaskAddress && 
           this.currentMetamaskAddress !== accounts[0] ) {
-                localStorage.clear()
                 this.metamaskChangeAlert = true
                 window.ethereum.removeAllListeners()
         }
@@ -271,7 +272,7 @@ export default class Layout extends Vue {
 }
 
 .custom-notification {
-  position: absolute;
+  position: fixed;
   z-index: 10100;
   width: 90%;
   margin-top: 12px;

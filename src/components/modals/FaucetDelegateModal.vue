@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="faucet-delegate-modal" ref="modalRef" ok-only hide-header centered>
+  <b-modal id="faucet-delegate-modal" ref="modalRef" ok-only hide-header>
     <b-container fluid>
       <div v-if="loading" class="loading-spinner-container">
         <loading-spinner :showBackdrop="true"></loading-spinner>
@@ -27,7 +27,6 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import LoadingSpinner from '../../components/LoadingSpinner'
-import { getAddress, addressFromPubKey } from '../../services/dposv2Utils.js'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 const DappChainStore = createNamespacedHelpers('DappChain')

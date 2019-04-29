@@ -4,14 +4,11 @@ import VueRouter from 'vue-router'
 import store from './store'
 
 import FirstPage from './views/FirstPage.vue'
-import MyAccount from './views/MyAccount.vue'
 import MyDelegations from './views/MyDelegations.vue'
 import History from './views/MobileHistory.vue'
 import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
-import CandidateList from './views/CandidateList.vue'
-import CandidateDetail from './views/CandidateDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
 import MobileAccount from './views/MobileAccount.vue'
 import Rewards from './views/Rewards.vue'
@@ -151,16 +148,6 @@ const router = new VueRouter({
         meta: {
           requireDeps: true
         }
-      },
-      {
-        path: 'candidates',
-        name: 'candidates',
-        component: CandidateList
-      },
-      {
-        path: 'candidate',
-        name: 'candidateDetail',
-        component: CandidateDetail
       },
       {
         path: 'blockexplorer',

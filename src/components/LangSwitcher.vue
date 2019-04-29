@@ -1,29 +1,21 @@
 <template>
   <div class="locale-changer">
-    <b-form-select v-model="$i18n.locale" @change="showLang">
+    <b-form-select v-model="$i18n.locale" @change="switchLang">
       <option v-for="lang in langs" :key="lang.key" :value="lang.key">{{ lang.localizedName }}</option>
     </b-form-select>
   </div>
 </template>
 
 <script>
-  import { supportedLocales } from '../i18n'
+  import { loadLocale, supportedLocales } from '../i18n'
+  import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
 
   export default {
     name: 'LangSwitcher',
     data() {
-      return {}
-    },
-    methods: {
-      showLang(locale) {
-        window.location.pathname = window.location.pathname.replace(/^\/\w{2}/i, locale)
-      }
-    },
-    computed: {
-      langs() {
-        // return supportedLocales
-        // only 3 languages now, so won't import directly from i18n
-        return [
+      return {
+        selectedLang: '',
+        langs: [
           {
             key: 'en',
             localizedName: 'English'
@@ -32,9 +24,42 @@
             key: 'zh',
             localizedName: '中文'
           }
-        ]
+        ]        
       }
-    }
+    },
+    mounted: function() {
+
+      this.configureLocale()
+
+      // const configureLocale = () => {
+      //   let candidateLang = navigator.language || "en"
+      //   let res = supportedLocales.filter((lang) => {
+      //     candidateLang.includes(lang.key)
+      //   })
+      // }
+
+    },    
+    methods: {
+      ...mapMutations([
+        'setLocale',
+      ]),
+      async switchLang(locale) {
+        this.setLocale(locale)
+        await loadLocale(locale)
+        // window.location.pathname = window.location.pathname.replace(/^\/\w{2}/i, locale)
+      },
+      async configureLocale() {
+        let candidateLang = navigator.language || "en"
+        let res = this.langs.find(function(lang) {
+          return candidateLang.includes(lang.key)
+        })
+        await loadLocale(res.key)
+      }
+    },
+    computed: mapState([
+      'locale'
+    ])
+
   }
 </script>
 

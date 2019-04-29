@@ -3,12 +3,14 @@ import * as Sentry from '@sentry/browser'
 const { CryptoUtils, } = require('loom-js')
 
 import axios from 'axios'
+import { loadLocale, supportedLocales } from '../i18n'
 
 export const state = {
   web3: null,
   route: null,
   user: null,
   privateKey: null,
+  locale: navigator.language || "en",
   backer: {},
   retrievedBackerInfo: false,
   userIsLoggedIn: isUserLoggedIn(),
@@ -32,7 +34,7 @@ export const state = {
   showAnnouncement: false,
   showLottery: false,
   showCryptoBacker: false,
-  cryptoBacker: null
+  cryptoBacker: null,
 }
 
 function isUserLoggedIn() {
@@ -115,6 +117,9 @@ export const mutations = {
   setAccessToken(state, payload) {
     state.accessToken = payload
   },
+  setLocale(state, locale) {
+    state.locale = locale
+  },  
 }
 
 export const actions = {

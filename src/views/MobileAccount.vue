@@ -166,10 +166,6 @@ const ELECTION_CYCLE_MILLIS = 600000
     ]) 
   },
   methods: {
-    ...DPOSStore.mapActions([
-      'queryRewards',
-      'getTimeUntilElectionsAsync'
-    ]),
     ...DappChainStore.mapActions([
       'getPendingWithdrawalReceipt',
       'getUnclaimedLoomTokens',
@@ -177,6 +173,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'withdrawAsync',
       'withdrawCoinGatewayAsync',
       'switchDposUser',
+      'getMetamaskLoomBalance',
+      'getDappchainLoomBalance',
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -230,23 +228,24 @@ export default class MobileAccount extends Vue {
     await this.checkPendingWithdrawalReceipt()
     await this.checkUnclaimedLoomTokens()
     this.currentAllowance = await this.checkAllowance()
-    this.queryRewards()
     this.updateTimeUntilElectionCycle()
     this.startTimer()
   }
 
   refresh() {
     this.showRefreshSpinner = true
-    this.$root.$emit("refreshBalances")
-    setTimeout(() => {
-      this.showRefreshSpinner = false
-    }, 2000)
+    Promise.all([
+        this.getMetamaskLoomBalance(),
+        this.getDappchainLoomBalance()
+    ])
+    .finally(() => this.showRefreshSpinner = false)
   }
 
   get formatedDelegations() {
     const candidates = this.validators
+    console.log(this.delegations)
     return this.delegations
-    .filter(d => d.validatorStr !== "0x0000000000000000000000000000000000000000")
+    .filter(d => d.index > 0)
     .map((delegation) => {
       let candidate = candidates.find(c => c.address === delegation.validator.local.toString())
       return { 
@@ -297,7 +296,6 @@ export default class MobileAccount extends Vue {
 
 
   async updateTimeUntilElectionCycle() {
-    await this.getTimeUntilElectionsAsync()
     this.electionCycleTimer = this.timeUntilElectionCycle
   }
 

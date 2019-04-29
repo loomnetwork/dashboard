@@ -58,10 +58,17 @@
       <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
-      <b-button class="btn-lg" 
-        @click="openRequestDelegateModal()">
-        {{ $t("Stake my tokens") }}
-      </b-button>
+      <footer class="staking-actions">
+        <b-button class="btn-lg stake" 
+          @click="openRequestDelegateModal()">
+          {{ $t("Stake tokens") }}
+        </b-button>
+        <b-button class="btn-lg consolidate" v-if="multipleUnlockedStakes"
+          @click="consolidateDelegations(validator)">
+          {{ $t("views.validator_detail.consolidate") }}
+        </b-button>
+      </footer>
+
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
@@ -114,7 +121,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setErrorMsg'
     ]),
     ...DPOSStore.mapActions([
-      'redelegateAsync'
+      'redelegateAsync',
+      'consolidateDelegations',
     ]),
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
@@ -176,8 +184,7 @@ export default class ValidatorDetail extends Vue {
     const validator = this.validator
     if (!this.validator) return []
     return this.delegations
-      .filter((d, idx) => idx !== 0)
-      .filter(d => d.validatorStr === validator.address)
+      .filter((d) => d.validatorStr === validator.address && d.index > 0)
       .map(d => { 
         d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
         return d
@@ -203,6 +210,11 @@ export default class ValidatorDetail extends Vue {
     else {
         this.setSuccess("Somehow copy  didn't work...sorry")
     }
+  }
+  
+  get multipleUnlockedStakes() {
+    // dev only. remove "true" on production
+    return true || this.delegations.filter((d) => d.unlocked).length > 1
   }
 
   async redelegateHandler() {

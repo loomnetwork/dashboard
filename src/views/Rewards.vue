@@ -54,36 +54,8 @@ export default class ValidatorDetail extends Vue {
   hideTooltip = false
   pollInterval = null
 
-  @Watch('$route')
-  onRouteChange(newValue, oldValue) {      
-    if(newValue) {
-      this.queryRewards()
-    }
-  }
-
-  async mounted() {
-    await this.refresh()
-    this.startPolling()
-  }
-
-  async refresh() {
-    this.setShowLoadingSpinner(true)
-    await this.queryRewards()
-    this.setShowLoadingSpinner(false)
-  }
-
-  startPolling() {
-    this.pollInterval = setInterval(async () => {
-      this.refresh()
-    }, 15 * 1000)
-  }
-
   get hasNoRewards() {
     return this.rewardsResults == "0.00"
-  }
-
-  destroyed() {
-    if(this.pollInterval) clearInterval(this.pollInterval)          
   }
 
   async claimRewardHandler() {
@@ -92,7 +64,6 @@ export default class ValidatorDetail extends Vue {
     try {
       await this.claimRewardsAsync()
       this.setSuccessMsg({msg: "Successfully claimed rewards!" + this.rewardsResults.toString(), forever: false})
-      await this.queryRewards()
     } catch(err) {
       this.setErrorMsg({msg: "Claiming reward failed", forever: false, report:true, cause:err})
     }
@@ -104,9 +75,6 @@ export default class ValidatorDetail extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/_mixin.scss';
-@import '~@/assets/scss/_variables.scss';
-
 #rewards {
   padding: 24px;
   h4 {

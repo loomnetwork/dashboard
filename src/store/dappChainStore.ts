@@ -18,6 +18,8 @@ const debug = Debug("dashboard.dapp")
 
 import BN from 'bn.js'
 import { DPOS3 } from 'loom-js/dist/contracts';
+import { ActionTree } from 'vuex';
+import { DashboardState } from '@/types';
 
 const DPOS = Contracts.DPOS3
 let LOOM_ADDRESS = ""
@@ -206,14 +208,15 @@ export default {
     },
     async getMetamaskLoomBalance({ rootState, state , commit}) {
       if (!state.web3) return 0
-
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
       const dposUser = await state.dposUser
       const web3js = state.web3
       try {
+        debug("ethereumLoom.balanceOf")
         let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
+        debug("ethereumLoom.balanceOf",result.toString())
         let balance = web3js.utils.fromWei(result.toString())
         const mainnetBalance = parseFloat(balance).toFixed(2)
         const userBalance = rootState.DPOS.userBalance
@@ -339,7 +342,7 @@ export default {
       }
       const user = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
-      console.log("loom onplasma",loomWei.toString())
+      debug("plasma loom balance",loomWei.toString())
       const balance = state.web3.utils.fromWei(loomWei.toString(), 'ether')
       const userBalance = rootState.DPOS.userBalance
       let loomBalance = parseFloat(balance).toFixed(2)
@@ -392,6 +395,7 @@ export default {
           fee: "N/A",
           newFee: "N/A",
       }
+      debug("getValidatorsAsync")
       // Get all validators, candidates and delegations
       const [validators,candidates,delegations] = await Promise.all([
         dpos3.getValidatorsAsync(),
@@ -450,24 +454,6 @@ export default {
       // use the address for those without names 
       nodes.filter((n) => n.name === "").forEach(n => n.name = n.address)
       commit("setValidators", nodes)
-    },
-    async checkDelegationAsync({ state, dispatch}, payload) {
-      const privateKeyString = sessionStorage.getItem('privatekey')
-      if (!privateKeyString) {
-        // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        throw new Error('No Private Key, Login again')
-      }
-
-      const dpos3:DPOS3 = await dispatch('getDpos3', {
-        privateKey: privateKeyString
-      })
-      const privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
-      const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-      const chainId = state.networkId
-      const result = dpos3.checkDelegationAsync(
-        new Address(chainId, LocalAddress.fromPublicKey(CryptoUtils.B64ToUint8Array(payload.validator))),
-        new Address(chainId, LocalAddress.fromPublicKey(publicKey)))
-      return result
     },
     async getDpos3({ state, commit }, payload:{privateKey?:string}) {
       if (state.dposUser) {
@@ -587,7 +573,7 @@ export default {
         return unclaimAmount
       } catch (err) {
         console.log("Error check unclaim loom tokens", err);
-        commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true, cause:err})
+        commit('setErrorMsg', 'Error check unclaim loom tokens', { root: true})
       }
     },
     async reclaimDeposit({ state, commit } ) {
@@ -601,7 +587,7 @@ export default {
         await dappchainGateway.reclaimDepositorTokensAsync()
       } catch (err) {
         console.log("Error reclaiming tokens", err);
-        commit('setErrorMsg', 'Error reclaiming tokens', { root: true, cause:err})
+        commit('setErrorMsg', 'Error reclaiming tokens', { root: true})
       }
       commit('DPOS/setGatewayBusy', false, { root: true })
     },
@@ -620,7 +606,7 @@ export default {
         return  { signature: signature, amount: amount, tokenOwner: owner }
       } catch (err) {
         console.log("Error get pending withdrawal receipt", err);
-        commit('setErrorMsg', 'Error get pending withdrawal receipt', { root: true, cause:err})       
+        commit('setErrorMsg', 'Error get pending withdrawal receipt', { root: true})       
       }
     },
 
@@ -687,5 +673,5 @@ export default {
       const msgType = payload.type === "error" ? "setErrorMsg" : "setSuccessMsg";
       commit(msgType, payload.msg, { root: true })
     }
-  }
+  } as ActionTree<any,DashboardState>
 }

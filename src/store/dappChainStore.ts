@@ -236,7 +236,7 @@ export default {
         dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
         chainId: network,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-        version: 2
+        version: 1
       })
       .then(user => {
         reconfigureClient(user.client, commit)
@@ -350,7 +350,7 @@ export default {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }  
-      const user = await state.dposUser    
+      const user:DPOSUserV3 = await state.dposUser    
       try {       
         let weiAmount = state.web3.utils.toWei(payload.amount, 'ether') 
         let tier = parseInt(payload.tier)

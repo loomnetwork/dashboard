@@ -95,7 +95,7 @@ export default {
       return state.latestBlockNumber || JSON.parse(sessionStorage.getItem("latestBlockNumber")|| "")
     },
     getCachedEvents(state) {
-      return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents") || "[}")
+      return state.cachedEvents || JSON.parse(sessionStorage.getItem("cachedEvents") || "[]")
     },
     getDashboardAddressAsLocalAddress(state) {
       return LocalAddress.fromHexString(state.dashboardAddress)
@@ -476,19 +476,13 @@ export default {
     // this can be moved out as is automatically called once dposUser is set
     // actually instead of depending on dposUser we should depend on dpos contract
     // (if we want to display timer in "anonymous" session)
-    async getTimeUntilElectionsAsync({ rootState, commit, dispatch }) {  
+    async getTimeUntilElectionsAsync({ commit, dispatch }) {  
       const dpos:DPOS3 = await dispatch("DappChain/getDpos3", null, { root: true })
       try {
-        // getTimeUntilElectionsAsync returns some weird values
-        // looks like a negative value of the last election
-        // keeping this just for testing 
         const result:BN = await dpos.getTimeUntilElectionAsync()
-        const date = new Date(result.toNumber()*-1000)
-        const tmp = Math.abs(date.getTime() - Date.now())
-        debug("next election in %s seconds", tmp)
-        debug("next election in %s date", date)
-        commit("setTimeUntilElectionCycle", 30000)
-        commit("setNextElectionTime", Date.now() + 30000)//Date.now() + (result.toNumber()*1000))
+        debug("next election in %s seconds", result.toNumber()*1000)
+        commit("setTimeUntilElectionCycle", result.toNumber()*1000)
+        commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))//Date.now() + (result.toNumber()*1000))
       } catch(err) {
         console.error(err)
       }

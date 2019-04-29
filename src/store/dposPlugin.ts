@@ -17,16 +17,17 @@ export function dposStorePlugin(store: Store<DashboardState>) {
     // could also check unclaimedTokens, allowance...etc
     store.watch(
         (state) => state.DPOS.timeUntilElectionCycle,
-        (time: string) => {
-            // assuming string...
+        (timeStr:string) => {
+            const seconds = parseInt(timeStr,10)
+            console.log("timeUntilElectionCycle", seconds)
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
             if (store.state.DappChain.dposUser) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            const seconds = parseInt(time, 10)
-            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), seconds * 1000)
+            console.log("setTimeout seconds",Math.max(seconds,1) * 1000)
+            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
 
         },
     )

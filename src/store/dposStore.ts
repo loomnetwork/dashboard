@@ -469,7 +469,7 @@ export default {
       
     },
 
-    async claimRewardsAsync({ rootState, dispatch }, payload) {
+    async claimRewardsAsync({ rootState }) {
       if (!rootState.DappChain.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
@@ -486,11 +486,12 @@ export default {
     // actually instead of depending on dposUser we should depend on dpos contract
     // (if we want to display timer in "anonymous" session)
     async getTimeUntilElectionsAsync({ commit, dispatch }) {  
+      debug("getTimeUntilElectionsAsync")
       const dpos:DPOS3 = await dispatch("DappChain/getDpos3", null, { root: true })
       try {
         const result:BN = await dpos.getTimeUntilElectionAsync()
         debug("next election in %s seconds", result.toNumber())
-        commit("setTimeUntilElectionCycle", result.toNumber())
+        commit("setTimeUntilElectionCycle", ""+result.toNumber())
         commit("setNextElectionTime", Date.now() + (result.toNumber()*1000))//Date.now() + (result.toNumber()*1000))
       } catch(err) {
         console.error(err)

@@ -296,7 +296,8 @@ export default class MobileAccount extends Vue {
 
 
   async updateTimeUntilElectionCycle() {
-    this.electionCycleTimer = this.timeUntilElectionCycle
+    const millis = this.nextElectionTime - Date.now()
+    this.electionCycleTimer =  Math.ceil(millis/1000)
   }
 
   async decreaseTimer() {

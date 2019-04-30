@@ -271,7 +271,7 @@ export default {
             dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: network,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-            version: 2
+            version: 1
           });
         } else {
           user = await DPOSUserV3.createMetamaskUserAsync({

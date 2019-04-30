@@ -504,11 +504,11 @@ export default {
         throw new Error("Expected dposUser to be initialized")
       }
 
-      const { origin, target, amount} = payload
+      const { origin, target, amount, index} = payload
       const user = await rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, target, amount)
+        await user.redelegateAsync(origin, target, amount, index)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)

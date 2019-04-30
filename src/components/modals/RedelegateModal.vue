@@ -133,9 +133,7 @@ export default class RedelegateModal extends Vue {
       amount: this.delegation.amount,
       index: this.selectedTargetDelegation
     }
-
-    if(this.selectedTargetDelegation) payload.index = this.selectedTargetDelegation.index
-
+    
     await this.redelegateAsync(payload)
 
     this.setShowLoadingSpinner(false)

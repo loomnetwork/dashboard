@@ -126,7 +126,9 @@
       "timelock_tier": "선택 가능한 락업 기간:",
       "timelock": "락업 기간:",
       "unlocked": "잠금 해제됨",
-      "no_stakes": "You have not yet staked with {name}"
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",

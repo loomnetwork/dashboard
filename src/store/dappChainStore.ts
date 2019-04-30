@@ -21,6 +21,8 @@ import { DPOS3 } from 'loom-js/dist/contracts';
 import { ActionTree } from 'vuex';
 import { DashboardState } from '@/types';
 
+const WEI_TOKEN = new BN(""+10**18)
+
 const DPOS = Contracts.DPOS3
 let LOOM_ADDRESS = ""
 let GW_ADDRESS = ""
@@ -207,17 +209,15 @@ export default {
       }
     },
     async getMetamaskLoomBalance({ rootState, state , commit}) {
-      if (!state.web3) return 0
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
-      const dposUser = await state.dposUser
-      const web3js = state.web3
+      const dposUser:DPOSUserV3 = await state.dposUser
       try {
         debug("ethereumLoom.balanceOf")
         let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
         debug("ethereumLoom.balanceOf",result.toString())
-        let balance = web3js.utils.fromWei(result.toString())
+        let balance = formatToCrypto(result.toString())
         const mainnetBalance = parseFloat(balance).toFixed(2)
         const userBalance = rootState.DPOS.userBalance
         commit("DPOS/setUserBalance",Object.assign(userBalance,{mainnetBalance}),{root:true})
@@ -343,7 +343,7 @@ export default {
       const user = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
-      const balance = state.web3.utils.fromWei(loomWei.toString(), 'ether')
+      const balance = formatToCrypto(loomWei.toString())
       const userBalance = rootState.DPOS.userBalance
       let loomBalance = parseFloat(balance).toFixed(2)
       commit("DPOS/setUserBalance", Object.assign(userBalance,{loomBalance}), {root:true})
@@ -355,9 +355,9 @@ export default {
       }  
       const user:DPOSUserV3 = await state.dposUser    
       try {       
-        let weiAmount = state.web3.utils.toWei(payload.amount, 'ether') 
+        let weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN) 
         let tier = parseInt(payload.tier)
-        await user.delegateAsync(payload.candidate, new BN(weiAmount, 10), tier)
+        await user.delegateAsync(payload.candidate, weiAmount, tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
@@ -368,11 +368,10 @@ export default {
         throw new Error("expected dposUser to be initialized")
       }
       const user = await state.dposUser    
-      let weiAmount = state.web3.utils.toWei(payload.amount, 'ether')    
-      let loomAmount = weiAmount / 10 ** 18
+      const weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN)    
       try {
-        const result = await user.undelegateAsync(payload.candidate, new BN(weiAmount,10))
-        commit('setSuccessMsg', {msg: `Success un-delegating ${loomAmount} tokens`, forever: false}, {root: true})
+        const result = await user.undelegateAsync(payload.candidate, weiAmount)
+        commit('setSuccessMsg', {msg: `Success un-delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
@@ -450,7 +449,6 @@ export default {
           totalStaked: new BN(node.personalStake).add(delegatedStake).toString(),
         })
       })
-      console.log(nodes)
       // use the address for those without names 
       nodes.filter((n) => n.name === "").forEach(n => n.name = n.address)
       commit("setValidators", nodes)

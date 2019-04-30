@@ -280,7 +280,7 @@ export default {
             dappchainPrivateKey: privateKeyString,
             chainId: network,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-            version: 2
+            version: 1
           });
         }
       } catch(err) {

@@ -173,6 +173,7 @@
       "block_explorer": "블록 탐색기"
     },
     "faucet_sidebar": {
+      "validators": "Validators",
       "my_account": "내 계정",
       "my_delegations": "내 위임",
       "rewards": "보상",

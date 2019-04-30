@@ -173,6 +173,7 @@
       "block_explorer": "区块浏览器"
     },
     "faucet_sidebar": {
+      "validators": "Validators",
       "my_account": "我的账户",
       "my_delegations": "我的委托",
       "rewards": "奖励",

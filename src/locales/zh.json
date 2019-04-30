@@ -126,7 +126,9 @@
       "timelock_tier": "可选的计时锁定：",
       "timelock": "计时锁定：",
       "unlocked": "已解除锁定",
-      "no_stakes": "You have not yet staked with {name}"
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "连接到管理面板节点时出错。请稍后再查看。",

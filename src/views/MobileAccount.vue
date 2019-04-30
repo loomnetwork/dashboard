@@ -21,15 +21,25 @@
 
         <div class="p3">
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
-          <h5 class="highlight">
-            {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
-            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
-          </h5>
+          <div v-if="userBalance.mainnetBalance">
+            <h5 class="highlight">
+              {{userBalance.mainnetBalance + " LOOM"}}
+              <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
+            </h5>
+          </div>
+          <div v-else>
+            <b-spinner variant="primary" label="Spinning" /> 
+          </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
-          <h5 class="highlight">
-            {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
-            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
-          </h5>
+          <div v-if="userBalance.loomBalance">
+            <h5 class="highlight">
+              {{userBalance.loomBalance + " LOOM"}}
+              <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
+            </h5>
+          </div>
+          <div v-else>
+            <b-spinner variant="primary" label="Spinning" />
+          </div>
           <!-- unclaimed -->
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
             <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
@@ -80,12 +90,13 @@
         <b-spinner v-else variant="primary" label="Spinning"/>
     </b-card>
 
-    <b-card title="Rewards" class="mb-4">
+    <!-- <b-card title="Rewards" class="mb-4">
       <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
         <loom-icon v-if="rewardsValue" :color="'#f0ad4e'" width="20px" height="20px"/>
       </router-link>
-    </b-card>
+    </b-card> -->
+    <rewards></rewards>
 
     <b-card title="Delegations" id="delegations-container">
 
@@ -132,6 +143,7 @@ import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
 import DepositForm from '@/components/gateway/DepositForm'
+import Rewards from '@/components/Rewards'
 
 const log = debug('mobileaccount')
 
@@ -146,6 +158,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     FaucetTable,
     TransferStepper,
     DepositForm,
+    Rewards
   },
   computed: {
     ...DappChainStore.mapState([

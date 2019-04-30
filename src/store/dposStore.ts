@@ -51,9 +51,9 @@ const defaultState = () => {
     gatewayBusy: false,
     userBalance: {
       isLoading: false,
-      loomBalance: 0,
-      mainnetBalance: 0,
-      stakedAmount: 0
+      loomBalance: null,
+      mainnetBalance: null,
+      stakedAmount: null
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,

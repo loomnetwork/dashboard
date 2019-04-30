@@ -173,6 +173,7 @@
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
+      "validators": "Validators",
       "my_account": "マイアカウント",
       "my_delegations": "委任について",
       "rewards": "報酬",

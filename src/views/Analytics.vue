@@ -87,7 +87,7 @@
       }
 
       let config2 = {
-        type: 'bar',
+        type: 'line',
         data: {
           datasets: [{
             data: timeIntervalChunks,

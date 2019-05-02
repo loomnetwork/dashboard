@@ -181,11 +181,7 @@ export default class Layout extends Vue {
       
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
-    } else {
-      this.$root.$on('login', async () => {
-        this.attemptToInitialize()
-      })
-    }      
+    } 
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
@@ -276,7 +272,7 @@ export default class Layout extends Vue {
 }
 
 .custom-notification {
-  position: absolute;
+  position: fixed;
   z-index: 10100;
   width: 90%;
   margin-top: 12px;

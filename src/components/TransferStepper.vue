@@ -26,18 +26,16 @@
         <b-row>
           <b-col>
             <b-form-input
-              type="number"
+              type="text"
               :placeholder="'max. ' + balance"
               v-model="transferAmount"
-              :max="balance"
-              :min="1"
               pattern="[1-9]\d*"
               step="1"
               @keyup="validateAmount"
             />
           </b-col>
           <b-col>
-            <b-btn variant="outline-primary" @click="transferAmount = Math.floor(balance)">all ({{balance}})</b-btn>
+            <b-btn variant="outline-primary" @click="transferAll">all ({{balance}})</b-btn>
           </b-col>
         </b-row>
       </b-container>
@@ -117,17 +115,21 @@ export default class TransferStepper extends Vue {
   amountErrors = []
 
   validateAmount() {
+
     const errors = []
-    const num = new Number(this.transferAmount)
+    const num = parseInt(""+this.transferAmount,10)
     const int = Math.floor(num)
+    if (!/^[1-9]\d*$/.test(this.transferAmount)) {
+      errors.push('Please enter a valid amount.')
+    }
     if (int != num) {
-      errors.push('Only round amounts allowed')
+      errors.push('Only round amounts allowed.')
     }
     if (int < 1) {
       errors.push('At least 1 loom')
     }
     if (int > this.balance) {
-      errors.push('Mot enough funds in your account')
+      errors.push('Not enough funds in your account')
     }
     this.amountErrors = errors
   }
@@ -145,6 +147,11 @@ export default class TransferStepper extends Vue {
 
   hide() {
     this.$root.$emit("bv::hide::modal", "gateway-transfer")
+  }
+
+  transferAll() {
+    this.transferAmount = Math.floor(this.balance)
+    this.amountErrors = []
   }
 
   transferExecuted(tx) {

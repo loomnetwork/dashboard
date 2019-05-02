@@ -13,7 +13,6 @@ import ValidatorDetail from './views/ValidatorDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
 import Analytics from './views/Analytics.vue'
 import MobileAccount from './views/MobileAccount.vue'
-import Rewards from './views/Rewards.vue'
 import Help from './views/Help.vue'
 
 import { loadLocale, isLocaleSupported } from './i18n'
@@ -95,15 +94,6 @@ const router = new VueRouter({
         }
       },
       {
-        path: 'delegations',
-        name: 'delegations',
-        component: MyDelegations,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true
-        }      
-      },
-      {
         path: 'history',
         name: 'history',
         component: History,
@@ -121,15 +111,6 @@ const router = new VueRouter({
           requireDeps: true
         }      
       },
-      {
-        path: 'rewards',
-        name: 'rewards',
-        component: Rewards,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true
-        }   
-      },    
       {
         path: 'faq',
         name: 'FAQ',

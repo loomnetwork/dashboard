@@ -11,14 +11,8 @@
         <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_account') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/delegations" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_delegations') }}</router-link>
-      </b-nav-item>
-      <b-nav-item>
         <router-link to="/history" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.history') }}</router-link>
       </b-nav-item>      
-      <b-nav-item>
-        <router-link to="/rewards" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.rewards') }}</router-link>
-      </b-nav-item>  
     </div>
     <hr>
     <b-nav-item>

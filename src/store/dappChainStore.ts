@@ -120,6 +120,10 @@ export default {
     currentChain(state) {
       return state.chainUrls[state.networkId]
     },
+    getWithdrewOn(state) {
+      const s = localStorage.getItem('lastWithdrawTime') || '0'
+      return parseInt(s,10) 
+    },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
       const url = new URL(network.websockt || network.rpc)
@@ -166,6 +170,9 @@ export default {
       } else {
         sessionStorage.setItem('withdrewSignature', payload)
       }
+    },
+    setWithdrewOn(state, timestamp) {
+      localStorage.setItem('lastWithdrawTime',timestamp)
     },
     setDPOSUserV3(state, payload) {
       console.log("setting dpos user")
@@ -611,12 +618,11 @@ export default {
     },
 
     async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
-      if (!state.dposUser) {
-        throw new Error("expected dposUser to be initialized")
-      }
+      console.assert(!!state.dposUser, "Expected dposUser to be initialised")
 
       var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
+      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
       try {
         // @ts-ignore
         const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
@@ -624,7 +630,8 @@ export default {
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {
-        console.log("Error withdrawal coin from gateway", err);
+        commit('DPOS/setGatewayBusy', false, { root: true })
+        console.error("Error withdrawal coin from gateway", err);
         throw Error(err.message)       
       }
     },

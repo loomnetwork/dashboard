@@ -126,19 +126,16 @@ export default {
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
-      const url = new URL(network.websockt || network.rpc)
+      const url = new URL(network.dappchainEndpoint)
       url.protocol =  url.protocol.replace(/:/g, "") === "wss" ? "https" : "http"
       url.pathname = "rpc"
       return url.toString()
-      // if (network.rpc) return network.rpc
-      // if (network.websockt) {
-      //   const splited = network.websockt.split('://')
-      //   if (splited[1]) {
-      //     return 'https://' + splited[1].split('/')[0] + '/rpc'
-      //   }
-      // }
-      // return ''
+    },
+    dappchainEndpoint(state) {
+      const network = state.chainUrls[state.networkId]
+      return network.dappchainEndpoint
     }
+
   },
   mutations: {
     updateState(state, payload) {

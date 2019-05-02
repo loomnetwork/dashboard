@@ -4,19 +4,42 @@
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
-      <v-autocomplete v-model="target"
+      <v-autocomplete class="mb-4"
+                      v-model="target"
                       :items="filteredTargetItems"
                       :get-label="getLabel"
                       :component-item="dropdownTemplate"
                       @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
-      <v-autocomplete v-if="targetDelegationsLength"
+      <!-- <v-autocomplete v-if="targetDelegations.length > 0"
                       v-model="selectedTargetDelegation"
                       :items="targetDelegations"
                       :get-label="getDelegationLabel"
                       :component-item="dropdownDelegationTemplate">
-      </v-autocomplete>      
+      </v-autocomplete>       -->
+
+
+      <b-list-group v-if="targetDelegations.length > 0">
+        <b-list-group-item class="delegations-list-item"
+                           :class="selectedTargetDelegation === delegation.index ? 'active-delegations-list-item' : ''"
+                           v-for="(delegation, idx) in targetDelegations" 
+                           :key="delegation + ' ' + idx"
+                           @click="selectDelegation(delegation)">
+          <div class="row">
+            <div class="col-sm-2 text-left">
+              <strong>{{delegation.index}}</strong>
+            </div>
+            <div class="col-sm-4 text-left">
+              <strong>Amount: </strong><span>{{delegation.amount | tokenAmount}}</span>
+            </div>
+            <div class="col-sm-6 text-left">
+              <strong>Locktime: </strong><span>{{delegation.lockTime | readableDate}}</span>
+            </div>      
+          </div>
+        </b-list-group-item>
+      </b-list-group>
+
     </div>      
     <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>    
     <div class="row">
@@ -101,15 +124,16 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
+
     this.setShowLoadingSpinner(true)
+    
     let payload = {
       origin: this.origin.address, 
       target: this.target.address, 
       amount: this.delegation.amount,
+      index: this.selectedTargetDelegation
     }
-
-    if(this.selectedTargetDelegation) payload.index = this.selectedTargetDelegation.index
-
+    
     await this.redelegateAsync(payload)
 
     this.setShowLoadingSpinner(false)
@@ -147,6 +171,10 @@ export default class RedelegateModal extends Vue {
     this.targetDelegations = this.validatorDelegations()
   }
 
+  selectDelegation(delegation) {
+    this.selectedTargetDelegation = delegation.index
+  }
+
   validatorDelegations() {
     if (!this.target || this.delegations.length <= 0) return
     const validator = this.target
@@ -157,10 +185,6 @@ export default class RedelegateModal extends Vue {
         d.index = (idx + 1)
         return d
       })
-  }
-
-  get targetDelegationsLength() {
-    this.targetDelegations ? this.targetDelegations.length > 0 : false
   }
 
 }
@@ -210,4 +234,15 @@ export default class RedelegateModal extends Vue {
     }
   }
 }
+
+.delegations-list-item:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.active-delegations-list-item {
+  background-color: #007bff;
+  color: #ffffff;  
+}
+
 </style>

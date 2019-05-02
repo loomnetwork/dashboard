@@ -123,7 +123,7 @@
 
     async refresh() {
       
-      await this.fetchDappChainEvents()
+      //await this.fetchDappChainEvents()
 
       // Check if there are any cached events
       if(this.latestBlockNumber && this.cachedEvents.length > 0) {

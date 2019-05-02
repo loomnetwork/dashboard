@@ -181,11 +181,7 @@ export default class Layout extends Vue {
       
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
-    } else {
-      this.$root.$on('login', async () => {
-        this.attemptToInitialize()
-      })
-    }      
+    } 
     
     if(window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {

@@ -26,6 +26,9 @@
     </section>
     <section v-if="userIsLoggedIn" class="user-stakes">
       <h6 v-if="!isBootstrap">{{ $t('My stakes') }} </h6>
+      <p class="no-stakes" v-if="delegations.length === 0">
+        {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
+      </p>
       <b-list-group v-if="validatorDelegations.length">
           <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
             <dl>
@@ -42,9 +45,6 @@
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="!isBootstrap && delegation.state !== 1"
-                  @click="openRequestDelegationUpdateModal(delegation)"
-                >{{ $t('Update') }}</b-button>
                 <b-button variant="outline-primary" :disabled="delegation.state !== 1"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
@@ -55,12 +55,21 @@
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-else-if="!isBootstrap" class="no-stakes">
+      <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
-        <b-button class="btn-lg" 
-          @click="openRequestDelegateModal()"
-        >{{ $t("Stake my tokens") }}</b-button>
       </p>
+
+      <div class="button-container">
+        <b-button class="stake mr-3" 
+          @click="openRequestDelegateModal()">
+          {{ $t("Stake tokens") }}
+        </b-button>
+        <b-button class="consolidate" v-if="multipleUnlockedStakes"
+          @click="consolidateDelegations(validator)">
+          {{ $t("views.validator_detail.consolidate") }}
+        </b-button>
+      </div>
+
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
@@ -113,12 +122,13 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'setErrorMsg'
     ]),
     ...DPOSStore.mapActions([
-      'redelegateAsync'
+      'redelegateAsync',
+      'consolidateDelegations',
     ]),
     ...DappChainStore.mapActions([
       'getValidatorsAsync',
       'claimRewardAsync',
-      'getDpos2'
+      'getDpos3'
     ])
   }
 })
@@ -175,7 +185,7 @@ export default class ValidatorDetail extends Vue {
     const validator = this.validator
     if (!this.validator) return []
     return this.delegations
-      .filter(d => d.validatorStr === validator.address)
+      .filter((d) => d.validatorStr === validator.address && d.index > 0)
       .map(d => { 
         d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
         return d
@@ -201,6 +211,11 @@ export default class ValidatorDetail extends Vue {
     else {
         this.setSuccess("Somehow copy  didn't work...sorry")
     }
+  }
+  
+  get multipleUnlockedStakes() {
+    // dev only. remove "true" on production
+    return true || this.delegations.filter((d) => d.unlocked).length > 1
   }
 
   async redelegateHandler() {

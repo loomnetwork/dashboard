@@ -126,7 +126,9 @@
       "timelock_tier": "Timelock Tier:",
       "timelock": "Timelock:",
       "unlocked": "Unlocked",
-      "no_stakes": "You have not yet staked with {name}"
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
@@ -171,6 +173,7 @@
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
+      "validators": "Validators",
       "my_account": "My Account",
       "my_delegations": "My Delegations",
       "rewards": "Rewards",

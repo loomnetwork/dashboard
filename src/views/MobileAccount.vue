@@ -186,15 +186,15 @@ const ELECTION_CYCLE_MILLIS = 600000
       'withdrawAsync',
       'withdrawCoinGatewayAsync',
       'switchDposUser',
-      'setWithdrewSignature',
+      'getMetamaskLoomBalance',
+      'getDappchainLoomBalance',
     ]),
     ...DappChainStore.mapMutations([
-      'setWithdrewOn'
+      'setWithdrewOn',
+      'setWithdrewSignature',
     ]),
     ...DappChainStore.mapGetters([
       'getWithdrewOn',
-      'getMetamaskLoomBalance',
-      'getDappchainLoomBalance',
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -246,11 +246,10 @@ export default class MobileAccount extends Vue {
 
   async dposUserReady() {
     await this.checkPendingWithdrawalReceipt()
-    await this.checkUnclaimedLoomTokens()
+    //await this.checkUnclaimedLoomTokens()
     this.currentAllowance = await this.checkAllowance()
     this.updateTimeUntilElectionCycle()
     this.startTimer()
-    this.delegations = await this.getDelegations()
 
     // Only alert te user if the receipt is fresh
     if (this.receipt && !this.hasJustWithdrawn() ) {
@@ -455,7 +454,7 @@ export default class MobileAccount extends Vue {
 
   async reclaimWithdrawHandler() {
     const dposUser = await this.dposUser
-    let ethAddr = this.dposUser._wallet._address
+    let ethAddr = this.dposUser.ethAddr
     console.log('current eth addr: ', ethAddr)
     try {
       this.isWithdrawalInprogress = true

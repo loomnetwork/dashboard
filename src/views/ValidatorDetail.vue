@@ -58,16 +58,17 @@
       <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
-      <footer class="staking-actions">
-        <b-button class="btn-lg stake" 
+
+      <div class="button-container">
+        <b-button class="stake mr-3" 
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="btn-lg consolidate" v-if="multipleUnlockedStakes"
+        <b-button class="consolidate" v-if="multipleUnlockedStakes"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>
-      </footer>
+      </div>
 
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>

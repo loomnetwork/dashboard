@@ -542,6 +542,9 @@ h3 {
 }
 
 .button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -550,7 +553,6 @@ h3 {
   left: 0px;
   box-shadow: rgba(219, 219, 219, 0.56) 0px -3px 8px 0px;
   button {
-    margin: 0 auto;
     display: block;
     background-color: #4e4fd2;    
   }

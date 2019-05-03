@@ -20,7 +20,7 @@
                       :component-item="dropdownDelegationTemplate">
       </v-autocomplete>       -->
 
-      <b-list-group v-if="targetDelegations.length > 0">
+      <!-- <b-list-group v-if="targetDelegations.length > 0">
         <b-list-group-item class="delegations-list-item"
                            :class="selectedTargetDelegation === delegation.index ? 'active-delegations-list-item' : '' ||
                            delegation.state !== 1 ? 'disabled-delegations-list-item' : ''"
@@ -39,7 +39,7 @@
             </div>      
           </div>
         </b-list-group-item>
-      </b-list-group>
+      </b-list-group> -->
 
     </div>      
     <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>    
@@ -140,7 +140,7 @@ export default class RedelegateModal extends Vue {
       origin: this.origin.address, 
       target: this.target.address, 
       amount: this.delegation.amount,
-      index: this.selectedTargetDelegation || this.targetDelegations.length + 1
+      index: this.delegation.index
     }
 
     await this.redelegateAsync(payload)
@@ -182,7 +182,6 @@ export default class RedelegateModal extends Vue {
 
   selectTargetItem(validator) {
     this.target = validator
-    this.targetDelegations = this.validatorDelegations()
   }
 
   selectDelegation(delegation) {

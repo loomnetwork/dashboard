@@ -248,8 +248,8 @@ export default class ValidatorDetail extends Vue {
       delegation.lockTimeTier)
   }
 
-  openRequestUnbondModal() {
-    this.$refs.delegateModalRef.show(this.validator.address, 'unbond')
+  openRequestUnbondModal(delegation) {
+    this.$refs.delegateModalRef.show(this.validator.address, 'unbond',0,0, delegation)
   }
   
   openRedelegateModal(delegation) {

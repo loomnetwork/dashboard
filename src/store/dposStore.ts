@@ -573,8 +573,8 @@ export default {
     },
 
     async fetchAnalyticsData({ state, commit, dispatch }, payload) {
-
-      let dataPromise = await axios.get("//dev-api.loom.games/delegation/total?from_date&to_date")
+      let url = process.env.VUE_APP_ANALYTICS_URL
+      let dataPromise = await axios.get(url + "/delegation/total?from_date&to_date")
       commit("setAnalyticsData", dataPromise)
 
     },

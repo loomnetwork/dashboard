@@ -8,12 +8,12 @@
       </strong>
     </b-alert>
 
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>
+    <!-- <faucet-header v-on:update:chain="refresh()"></faucet-header> -->
     <div class="content">      
 		  <warning-overlay type="metamask"></warning-overlay>
       <warning-overlay type="mapping"></warning-overlay>
       <div class="d-none d-lg-block">
-        <faucet-sidebar></faucet-sidebar> 
+        <!-- <faucet-sidebar></faucet-sidebar>  -->
       </div>
       <div class="main-container">
         <div class="inner-container container">
@@ -24,7 +24,8 @@
               {{ $t('components.layout.already_mapped') }}
           </b-modal>
           <transition name="page" mode="out-in">
-          <router-view></router-view>
+          <!-- <router-view></router-view> -->
+          <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p>
           </transition>
         </div>
       </div> 

@@ -78,9 +78,15 @@ function reconfigureClient(client, commit) {
   const handle = middleware.Handle.bind(middleware)
   middleware.Handle = async function (txData) {
     commit('setShowSigningAlert', true)
-    const res = await handle(txData)
-    commit('setShowSigningAlert', false)
-    return res
+    try {
+      const res = await handle(txData)
+      commit('setShowSigningAlert', false)
+      return res
+    }
+    catch (e) {
+      commit('setShowSigningAlert', false)
+      throw e
+    }
   }
   return client
 }
@@ -370,15 +376,15 @@ export default {
         commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
       }      
     },
-    async undelegateAsync({ state, commit }, payload) {
+    async undelegateAsync({ state, commit }, payload:{candidate:string,index:number,amount:string|number}) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
-      const user = await state.dposUser    
+      const user:DPOSUserV3 = await state.dposUser    
       let weiAmount = state.web3.utils.toWei(payload.amount, 'ether')    
       let loomAmount = weiAmount / 10 ** 18
       try {
-        const result = await user.undelegateAsync(payload.candidate, new BN(weiAmount,10))
+        const result = await user.undelegateAsync(payload.candidate, new BN(weiAmount,10), payload.index)
         commit('setSuccessMsg', {msg: `Success un-delegating ${loomAmount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})

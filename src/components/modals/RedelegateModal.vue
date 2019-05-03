@@ -182,7 +182,6 @@ export default class RedelegateModal extends Vue {
 
   selectTargetItem(validator) {
     this.target = validator
-    this.targetDelegations = this.validatorDelegations()
   }
 
   selectDelegation(delegation) {

@@ -45,7 +45,7 @@
     "ethers": "^4.0.26",
     "google-protobuf": "^3.6.0",
     "ledger-wallet-provider": "loomnetwork/ledger-wallet-provider.git",
-    "loom-js": "1.51.0",
+    "loom-js": "1.51.1",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
     "node-sass": "^4.9.0",

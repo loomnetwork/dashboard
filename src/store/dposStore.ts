@@ -115,7 +115,6 @@ export default {
         const isBootstrap = validator.isBootstrap
         return {
           Address: validator.address,
-          pubKey: (validator.pubKey),
           // Active / Inactive validator
           Status: validator.active ? "Active" : "Inactive",
           totalStaked: formatToCrypto(validator.totalStaked),
@@ -383,7 +382,6 @@ export default {
           const isBootstrap = validator.isBootstrap
           validatorList.push({
             Address: validator.address,
-            pubKey: (validator.pubKey),
             // Active / Inactive validator
             Status: validator.active ? "Active" : "Inactive",
 

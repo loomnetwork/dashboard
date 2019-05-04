@@ -391,7 +391,6 @@ export default {
       const dpos3 = await dispatch('getDpos3')
       const template = {
           address:  "",
-          pubKey: "",
           active : false,
           isBootstrap : false,
           totalStaked: "0",
@@ -415,7 +414,6 @@ export default {
       const nodes = candidates.map((c) => 
         Object.assign({}, template, {
           address:  c.address.local.toString(),
-          pubKey: CryptoUtils.Uint8ArrayToB64(c.pubKey),
           personalStake: c.whitelistAmount.toString(),
           votingPower: c.delegationTotal.toString(),
           delegationsTotal: c.delegationTotal.sub(c.whitelistAmount).toString(),

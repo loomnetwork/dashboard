@@ -6718,10 +6718,10 @@ lolex@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-3.1.0.tgz#1a7feb2fefd75b3e3a7f79f0e110d9476e294434"
 
-loom-js@1.50.0:
-  version "1.50.0"
-  resolved "https://registry.npmjs.org/loom-js/-/loom-js-1.50.0.tgz#8d88e665aa48eeab3eb335eebe11939e45710c1f"
-  integrity sha512-Z+xaY0rmFwDwx5Vkum3FoFxdwuI7J+CvpUoA7mBDrS+LYNNKLh64UbkhwN5FA9bpo4jQwPkZBmbIjEQM0K6/5Q==
+loom-js@1.51.1:
+  version "1.51.1"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.51.1.tgz#ae3a80c7b5374897ed0fe42d5ab0ce0e7addb29c"
+  integrity sha512-wD1NN1ni91uV1d8h4Gl0uszIRuob0DuqR9lO9M2ys9BdT+fNfH65ikmMufYmQZpshV3JvITqq2u5VoEpP13esg==
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

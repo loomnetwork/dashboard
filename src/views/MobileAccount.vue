@@ -174,7 +174,15 @@ const ELECTION_CYCLE_MILLIS = 600000
       'getUnclaimedLoomTokens',
       'reclaimDeposit',
       'withdrawAsync',
-      'withdrawCoinGatewayAsync'
+      'withdrawCoinGatewayAsync',
+      'switchDposUser',
+      'setWithdrewSignature',
+    ]),
+    ...DappChainStore.mapMutations([
+      'setWithdrewOn'
+    ]),
+    ...DappChainStore.mapGetters([
+      'getWithdrewOn'
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -233,6 +241,19 @@ export default class MobileAccount extends Vue {
     this.updateTimeUntilElectionCycle()
     this.startTimer()
     this.delegations = await this.getDelegations()
+
+    // Only alert te user if the receipt is fresh
+    if (this.receipt && !this.hasJustWithdrawn() ) {
+      this.hasReceiptHandler(this.receipt)
+    }
+  }
+
+  /**
+   * receipt is fresh if last withdrawal was less than 5 minutes ago
+   *@param receipt
+   */
+  hasJustWithdrawn() {
+    return this.getWithdrewOn() > ( Date.now()- 5*60*1000)
   }
 
   refresh() {
@@ -335,8 +356,12 @@ export default class MobileAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
+    // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
-    if(!this.unclaimedTokens.isZero()) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+    if( !this.unclaimedTokens.isZero() &&
+        !this.hasJustWithdrawn() ) {
+      this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+    }
   }
 
   async checkPendingWithdrawalReceipt() {
@@ -355,16 +380,11 @@ export default class MobileAccount extends Vue {
     }
   }
 
-  async reclaimDepositHandler() {
-    let result = await this.reclaimDeposit()
-    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
-    this.$root.$emit("bv::show::modal", "wait-tx")
-    await this.refresh(true)
-  }
-
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
+        this.setWithdrewOn(Date.now())
+
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -390,9 +410,6 @@ export default class MobileAccount extends Vue {
     await this.refresh(true)
   }
 
-  async checkPendingWithdrawalReceipt() {
-    this.receipt = await this.getPendingWithdrawalReceipt()
-  }
 
   async hasReceiptHandler(receipt) {
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
@@ -406,7 +423,7 @@ export default class MobileAccount extends Vue {
     }
     let ethAddr = this.dposUser._wallet._address
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
-    if (receipt.tokenOwner != ethAddr) {
+    if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
       this.mismatchedReceiptHandler(receipt, ethAddr)
     }
   }
@@ -450,6 +467,8 @@ export default class MobileAccount extends Vue {
         alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
         window.location.reload(true)
       }
+      
+      this.setWithdrewOn(Date.now())
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)
@@ -482,6 +501,7 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
+        this.setWithdrewOn(Date.now())
         //await tx.wait()
         return tx
       }

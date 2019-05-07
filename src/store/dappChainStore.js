@@ -133,6 +133,10 @@ export default {
       const wsUri = `${endpoint.replace(/http|https/g, "wss")}/websocket`
       return wsUri
     },
+    getWithdrewOn(state) {
+      const s = localStorage.getItem('lastWithdrawTime') || '0'
+      return parseInt(s,10) 
+    },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
       const url = new URL(network.websockt || network.rpc)
@@ -181,6 +185,9 @@ export default {
       } else {
         sessionStorage.setItem('withdrewSignature', payload)
       }
+    },
+    setWithdrewOn(state, timestamp) {
+      localStorage.setItem('lastWithdrawTime',timestamp)
     },
     setDPOSUser(state, payload) {
       state.dposUser = payload
@@ -635,7 +642,7 @@ export default {
 
     async getPendingWithdrawalReceipt({ state, dispatch, commit } ) {
       if (!state.dposUser) {
-        await dispatch('initDposUser')
+        return null
       }
       const user = state.dposUser
       try {
@@ -652,19 +659,22 @@ export default {
     },
 
     async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
-      if (!state.dposUser) {
-        await dispatch('initDposUser')
-      }
+      console.assert(!!state.dposUser, "Expected dposUser to be initialised")
 
       var user = state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
+      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
       try {
+        const receipt = await user.getPendingWithdrawalReceiptAsync()
+        debug("receipt", receipt);
+        //const result = await user.resumeWithdrawalAsync()
         const result = await user.withdrawCoinFromRinkebyGatewayAsync(payload.amount, payload.signature)
-        console.log("result", result);
+        debug("withdrawCoinFromRinkebyGatewayAsync", result);
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {
-        console.log("Error withdrawal coin from gateway", err);
+        commit('DPOS/setGatewayBusy', false, { root: true })
+        console.error("Error withdrawal coin from gateway", err);
         throw Error(err.message)       
       }
     },

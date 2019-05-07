@@ -1,6 +1,6 @@
 <template>
   <b-nav id="faucet-sidebar" vertical class="navbar-side">
-    <b-nav-item>
+    <b-nav-item v-if="false"> <!-- hide until v3 -->
       <router-link to="/analytics" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.analytics') }}</router-link>
     </b-nav-item>      
     <b-nav-item>

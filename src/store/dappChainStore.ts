@@ -373,7 +373,7 @@ export default {
         commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
       }      
     },
-    async undelegateAsync({ state, commit }, payload:{candidate:string,index:number,amount:string|number}) {
+    async undelegateAsync({ state, commit }, payload:{candidate:string,amount:string,index:number}) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }

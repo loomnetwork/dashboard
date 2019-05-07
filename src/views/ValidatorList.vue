@@ -1,30 +1,36 @@
 <template>
   <main class="validators">
-    <header>
-      <h1>{{ $t('views.validator_list.validators') }}</h1>
-    </header>
-    <div class="content" v-if="validators && validators.length > 0">
-      <template v-if="isSmallDevice">
-        <b-list-group>
-          <b-list-group-item 
-            v-for="validator in validators" :key="validator.Name"
-            :disabled="!!validator.isBootstrap"
-            @click="showValidatorDetail(validator)"
-            >
-              <h6>{{validator.Name}}</h6>
-              <div class="fee"><label>Fee</label>{{validator.Fees}}</div>
-              <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
-              <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
-          </b-list-group-item>  
-        </b-list-group>
-      </template>
-      <template v-else>
-        <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
-      </template>
+    <div class="row" v-if="validators && validators.length > 0">
+      <div class="col">
+        <header>
+          <h1>{{ $t('views.validator_list.validators') }}</h1>
+        </header>
+        <div class="content">
+          <template v-if="isSmallDevice">
+            <b-list-group>
+              <b-list-group-item 
+                v-for="validator in validators" :key="validator.Name"
+                :disabled="!!validator.isBootstrap"
+                @click="showValidatorDetail(validator)"
+                >
+                  <h6>{{validator.Name}}</h6>
+                  <div class="fee"><label>Fee</label>{{validator.Fees}}</div>
+                  <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
+                  <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
+              </b-list-group-item>  
+            </b-list-group>
+          </template>
+          <template v-else>
+            <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
+          </template>
+        </div>
+      </div>
     </div>
+
     <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
       <loading-spinner :showBackdrop="true"></loading-spinner>
     </div>
+
   </main>
 </template>
 

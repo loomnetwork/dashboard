@@ -137,7 +137,7 @@ export default class Layout extends Vue {
   }
 
   beforeMount() {
-    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
+    if(!this.userIsLoggedIn) this.$router.push({ path: '/analytics' })
   }
 
   @Watch('mappingSuccess')

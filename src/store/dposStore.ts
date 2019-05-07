@@ -79,8 +79,10 @@ const defaultState = () => {
     delegations: [],
     dashboardPrivateKey: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
     dashboardAddress: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
+    analyticsEndpoint: "//dev-api.loom.games",
     client: null,
     mapper: null,
+    analyticsData: null,
     showDepositForm: false,
     showDepositApproved: false,
     showDepositConfirmed: false,
@@ -222,6 +224,9 @@ export default {
     },
     setMapper(state, payload) {
       state.mapper = payload
+    },
+    setAnalyticsData(state, payload) {
+      state.analyticsData = payload
     },
     setDelegations(state, payload) {
       state.delegations = payload
@@ -566,6 +571,15 @@ export default {
 
     },
 
+    async fetchAnalyticsData({ state, commit, dispatch }, payload) {
+      // TODO: Uncomment to use .env
+      // let url = process.env.VUE_APP_ANALYTICS_URL
+      // let dataPromise = await axios.get(url + "/delegation/total?from_date&to_date")
+      let url = state.analyticsEndpoint
+      let dataPromise = await axios.get(url + "/delegation/total?from_date&to_date")
+      commit("setAnalyticsData", dataPromise)
+
+    },
     async loadEthereumHistory({commit, rootState, getters, state}) {
       debug("loadEthereumHistory")
       if (!rootState.DappChain.dposUser) {

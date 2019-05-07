@@ -173,6 +173,7 @@
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
+      "analytics": "Analytics",
       "validators": "Validators",
       "my_account": "My Account",
       "my_delegations": "My Delegations",

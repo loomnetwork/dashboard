@@ -3,6 +3,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from './store'
 
+
 import FirstPage from './views/FirstPage.vue'
 import MyDelegations from './views/MyDelegations.vue'
 import History from './views/MobileHistory.vue'
@@ -10,6 +11,7 @@ import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
+import Analytics from './views/Analytics.vue'
 import MobileAccount from './views/MobileAccount.vue'
 import Help from './views/Help.vue'
 
@@ -136,8 +138,13 @@ const router = new VueRouter({
         component: BlockExplorer
       },
       {
+        path: 'analytics',
+        name: 'analytics',
+        component: Analytics
+      },
+      {
         path: '/',
-        redirect: '/account'
+        redirect: '/analytics'
       }
     ],
   }

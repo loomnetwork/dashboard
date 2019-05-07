@@ -78,9 +78,15 @@ function reconfigureClient(client, commit) {
   const handle = middleware.Handle.bind(middleware)
   middleware.Handle = async function (txData) {
     commit('setShowSigningAlert', true)
-    const res = await handle(txData)
-    commit('setShowSigningAlert', false)
-    return res
+    try {
+      const res = await handle(txData)
+      commit('setShowSigningAlert', false)
+      return res
+    }
+    catch (e) {
+      commit('setShowSigningAlert', false)
+      throw e
+    }
   }
   return client
 }
@@ -126,19 +132,16 @@ export default {
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
-      const url = new URL(network.websockt || network.rpc)
+      const url = new URL(network.dappchainEndpoint)
       url.protocol =  url.protocol.replace(/:/g, "") === "wss" ? "https" : "http"
       url.pathname = "rpc"
       return url.toString()
-      // if (network.rpc) return network.rpc
-      // if (network.websockt) {
-      //   const splited = network.websockt.split('://')
-      //   if (splited[1]) {
-      //     return 'https://' + splited[1].split('/')[0] + '/rpc'
-      //   }
-      // }
-      // return ''
+    },
+    dappchainEndpoint(state) {
+      const network = state.chainUrls[state.networkId]
+      return network.dappchainEndpoint
     }
+
   },
   mutations: {
     updateState(state, payload) {
@@ -388,7 +391,6 @@ export default {
       const dpos3 = await dispatch('getDpos3')
       const template = {
           address:  "",
-          pubKey: "",
           active : false,
           isBootstrap : false,
           totalStaked: "0",
@@ -412,7 +414,6 @@ export default {
       const nodes = candidates.map((c) => 
         Object.assign({}, template, {
           address:  c.address.local.toString(),
-          pubKey: CryptoUtils.Uint8ArrayToB64(c.pubKey),
           personalStake: c.whitelistAmount.toString(),
           votingPower: c.delegationTotal.toString(),
           delegationsTotal: c.delegationTotal.sub(c.whitelistAmount).toString(),

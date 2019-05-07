@@ -64,7 +64,7 @@
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="consolidate" v-if="multipleUnlockedStakes"
+        <b-button class="consolidate" v-if="multipleUnlockedStakes && false"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>

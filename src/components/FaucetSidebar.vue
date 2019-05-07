@@ -8,10 +8,10 @@
     </b-nav-item>  
     <div id="restricted-access-links" @click="clickHandler">
       <b-nav-item>
-        <router-link to="/account" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_account') }}</router-link>
+        <router-link to="/account" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.my_account') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/history" :class="[ !userIsLoggedIn ? 'router disabled' : 'router' ]" exact-active-class="router-active">{{ $t('components.faucet_sidebar.history') }}</router-link>
+        <router-link to="/history" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.history') }}</router-link>
       </b-nav-item>      
     </div>
     <hr>

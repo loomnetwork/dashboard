@@ -58,16 +58,17 @@
       <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
-      <footer class="staking-actions">
-        <b-button class="btn-lg stake" 
+
+      <div class="button-container">
+        <b-button class="stake mr-3" 
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="btn-lg consolidate" v-if="multipleUnlockedStakes"
+        <b-button class="consolidate" v-if="multipleUnlockedStakes && false"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>
-      </footer>
+      </div>
 
       <!-- dialogs -->
       <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
@@ -247,8 +248,8 @@ export default class ValidatorDetail extends Vue {
       delegation.lockTimeTier)
   }
 
-  openRequestUnbondModal() {
-    this.$refs.delegateModalRef.show(this.validator.address, 'unbond')
+  openRequestUnbondModal(delegation) {
+    this.$refs.delegateModalRef.show(this.validator.address, 'unbond',0,0, delegation)
   }
   
   openRedelegateModal(delegation) {

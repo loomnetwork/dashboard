@@ -51,9 +51,9 @@ const defaultState = () => {
     gatewayBusy: false,
     userBalance: {
       isLoading: false,
-      loomBalance: 0,
-      mainnetBalance: 0,
-      stakedAmount: 0
+      loomBalance: null,
+      mainnetBalance: null,
+      stakedAmount: null
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
@@ -115,7 +115,6 @@ export default {
         const isBootstrap = validator.isBootstrap
         return {
           Address: validator.address,
-          pubKey: (validator.pubKey),
           // Active / Inactive validator
           Status: validator.active ? "Active" : "Inactive",
           totalStaked: formatToCrypto(validator.totalStaked),
@@ -383,7 +382,6 @@ export default {
           const isBootstrap = validator.isBootstrap
           validatorList.push({
             Address: validator.address,
-            pubKey: (validator.pubKey),
             // Active / Inactive validator
             Status: validator.active ? "Active" : "Inactive",
 
@@ -504,11 +502,11 @@ export default {
         throw new Error("Expected dposUser to be initialized")
       }
 
-      const { origin, target, amount} = payload
+      const { origin, target, amount, index} = payload
       const user = await rootState.DappChain.dposUser
 
       try {
-        await user.redelegateAsync(origin, target, amount)
+        await user.redelegateAsync(origin, target, amount, index)
         commit("setSuccessMsg", {msg: "Success redelegating stake", forever: false}, {root: true})
       } catch(err) {
         console.error(err)

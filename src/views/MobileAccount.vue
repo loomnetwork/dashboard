@@ -21,15 +21,25 @@
 
         <div class="p3">
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
-          <h5 class="highlight">
-            {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
-            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
-          </h5>
+          <div v-if="userBalance.mainnetBalance">
+            <h5 class="highlight">
+              {{userBalance.mainnetBalance + " LOOM"}}
+              <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
+            </h5>
+          </div>
+          <div v-else>
+            <b-spinner variant="primary" label="Spinning" /> 
+          </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
-          <h5 class="highlight">
-            {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
-            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
-          </h5>
+          <div v-if="userBalance.loomBalance">
+            <h5 class="highlight">
+              {{userBalance.loomBalance + " LOOM"}}
+              <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
+            </h5>
+          </div>
+          <div v-else>
+            <b-spinner variant="primary" label="Spinning" />
+          </div>
           <!-- unclaimed -->
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
             <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
@@ -80,12 +90,13 @@
         <b-spinner v-else variant="primary" label="Spinning"/>
     </b-card>
 
-    <b-card title="Rewards" class="mb-4">
+    <!-- <b-card title="Rewards" class="mb-4">
       <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
         <loom-icon v-if="rewardsValue" :color="'#f0ad4e'" width="20px" height="20px"/>
       </router-link>
-    </b-card>
+    </b-card> -->
+    <rewards></rewards>
 
     <b-card title="Delegations" id="delegations-container">
 
@@ -132,6 +143,7 @@ import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
 import DepositForm from '@/components/gateway/DepositForm'
+import Rewards from '@/components/Rewards'
 
 const log = debug('mobileaccount')
 
@@ -146,6 +158,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     FaucetTable,
     TransferStepper,
     DepositForm,
+    Rewards
   },
   computed: {
     ...DappChainStore.mapState([
@@ -175,6 +188,13 @@ const ELECTION_CYCLE_MILLIS = 600000
       'switchDposUser',
       'getMetamaskLoomBalance',
       'getDappchainLoomBalance',
+    ]),
+    ...DappChainStore.mapMutations([
+      'setWithdrewOn',
+      'setWithdrewSignature',
+    ]),
+    ...DappChainStore.mapGetters([
+      'getWithdrewOn',
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -226,10 +246,23 @@ export default class MobileAccount extends Vue {
 
   async dposUserReady() {
     await this.checkPendingWithdrawalReceipt()
-    await this.checkUnclaimedLoomTokens()
+    //await this.checkUnclaimedLoomTokens()
     this.currentAllowance = await this.checkAllowance()
     this.updateTimeUntilElectionCycle()
     this.startTimer()
+
+    // Only alert te user if the receipt is fresh
+    if (this.receipt && !this.hasJustWithdrawn() ) {
+      this.hasReceiptHandler(this.receipt)
+    }
+  }
+
+  /**
+   * receipt is fresh if last withdrawal was less than 5 minutes ago
+   *@param receipt
+   */
+  hasJustWithdrawn() {
+    return this.getWithdrewOn() > ( Date.now()- 5*60*1000)
   }
 
   refresh() {
@@ -332,8 +365,12 @@ export default class MobileAccount extends Vue {
 
   async checkUnclaimedLoomTokens() {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
+    // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
-    if(!this.unclaimedTokens.isZero()) this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+    if( !this.unclaimedTokens.isZero() &&
+        !this.hasJustWithdrawn() ) {
+      this.$root.$emit("bv::show::modal", "unclaimed-tokens")
+    }
   }
 
   async checkPendingWithdrawalReceipt() {
@@ -352,16 +389,11 @@ export default class MobileAccount extends Vue {
     }
   }
 
-  async reclaimDepositHandler() {
-    let result = await this.reclaimDeposit()
-    this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
-    this.$root.$emit("bv::show::modal", "wait-tx")
-    await this.refresh(true)
-  }
-
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
+        this.setWithdrewOn(Date.now())
+
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -387,9 +419,6 @@ export default class MobileAccount extends Vue {
     await this.refresh(true)
   }
 
-  async checkPendingWithdrawalReceipt() {
-    this.receipt = await this.getPendingWithdrawalReceipt()
-  }
 
   async hasReceiptHandler(receipt) {
     const dposUser = await this.dposUser
@@ -425,7 +454,7 @@ export default class MobileAccount extends Vue {
 
   async reclaimWithdrawHandler() {
     const dposUser = await this.dposUser
-    let ethAddr = this.dposUser._wallet._address
+    let ethAddr = this.dposUser.ethAddr
     console.log('current eth addr: ', ethAddr)
     try {
       this.isWithdrawalInprogress = true
@@ -446,6 +475,8 @@ export default class MobileAccount extends Vue {
         alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
         window.location.reload(true)
       }
+      
+      this.setWithdrewOn(Date.now())
     } catch (err) {
       this.setErrorMsg(err.message)
       console.error(err)
@@ -478,6 +509,7 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
+        this.setWithdrewOn(Date.now())
         //await tx.wait()
         return tx
       }
@@ -529,6 +561,9 @@ h3 {
 }
 
 .button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -537,7 +572,6 @@ h3 {
   left: 0px;
   box-shadow: rgba(219, 219, 219, 0.56) 0px -3px 8px 0px;
   button {
-    margin: 0 auto;
     display: block;
     background-color: #4e4fd2;    
   }

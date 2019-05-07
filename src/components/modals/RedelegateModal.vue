@@ -1,22 +1,46 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" hide-footer no-close-on-backdrop
+  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" @hidden="clear" hide-footer no-close-on-backdrop
   no-close-on-esc>
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
-      <v-autocomplete v-model="target"
+      <v-autocomplete class="mb-4"
+                      v-model="target"
+                      placeholder="Please select a validator"
                       :items="filteredTargetItems"
                       :get-label="getLabel"
                       :component-item="dropdownTemplate"
                       @item-selected="selectTargetItem"
                       @update-items="updateTargetItems">
       </v-autocomplete>
-      <v-autocomplete v-if="targetDelegationsLength"
+      <!-- <v-autocomplete v-if="targetDelegations.length > 0"
                       v-model="selectedTargetDelegation"
                       :items="targetDelegations"
                       :get-label="getDelegationLabel"
                       :component-item="dropdownDelegationTemplate">
-      </v-autocomplete>      
+      </v-autocomplete>       -->
+
+      <!-- <b-list-group v-if="targetDelegations.length > 0">
+        <b-list-group-item class="delegations-list-item"
+                           :class="selectedTargetDelegation === delegation.index ? 'active-delegations-list-item' : '' ||
+                           delegation.state !== 1 ? 'disabled-delegations-list-item' : ''"
+                           v-for="(delegation, idx) in targetDelegations" 
+                           :key="delegation + ' ' + idx"
+                           @click="selectDelegation(delegation)">
+          <div class="row">
+            <div class="col-sm-2 text-left">
+              <strong>{{delegation.index}}</strong>
+            </div>
+            <div class="col-sm-4 text-left">
+              <strong>Amount: </strong><span>{{delegation.amount | tokenAmount}}</span>
+            </div>
+            <div class="col-sm-6 text-left">
+              <strong>Locktime: </strong><span>{{delegation.lockTime | readableDate}}</span>
+            </div>      
+          </div>
+        </b-list-group-item>
+      </b-list-group> -->
+
     </div>      
     <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>    
     <div class="row">
@@ -91,8 +115,16 @@ export default class RedelegateModal extends Vue {
     this.$refs.modalRef.show()
   }
 
-  async okHandler() {
+  clear() {
+    this.delegation = null
+    this.targetDelegations = []
+    this.selectedTargetDelegation = null
+    this.origin = {}
+    this.target = {}
+  }
 
+  async okHandler() {
+    this.errorMsg = ""
     if(!this.target.address) {
       this.errorMsg = "Please select both a target and an origin validator"
       return
@@ -101,22 +133,28 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
+
     this.setShowLoadingSpinner(true)
+    
     let payload = {
       origin: this.origin.address, 
       target: this.target.address, 
       amount: this.delegation.amount,
+      index: this.delegation.index
     }
-
-    if(this.selectedTargetDelegation) payload.index = this.selectedTargetDelegation.index
 
     await this.redelegateAsync(payload)
 
     this.setShowLoadingSpinner(false)
     // this.$emit("ok")
-    this.$refs.modalRef.hide()
+    this.closeModal()
 
   }  
+
+  closeModal() {
+    this.clear()
+    this.$refs.modalRef.hide()
+  }
 
   getLabel(item) {
     return item ? item.name : "Please select a validator"
@@ -144,7 +182,18 @@ export default class RedelegateModal extends Vue {
 
   selectTargetItem(validator) {
     this.target = validator
-    this.targetDelegations = this.validatorDelegations()
+  }
+
+  selectDelegation(delegation) {
+    if(this.selectedTargetDelegation === delegation.index) {
+      this.selectedTargetDelegation = null
+      return
+    }
+    if(delegation.state !== 1) {
+     this.errorMsg = "The selected delegation is in a bonding state, please try again later." 
+    } else {
+      this.selectedTargetDelegation = delegation.index
+    }
   }
 
   validatorDelegations() {
@@ -157,10 +206,6 @@ export default class RedelegateModal extends Vue {
         d.index = (idx + 1)
         return d
       })
-  }
-
-  get targetDelegationsLength() {
-    this.targetDelegations ? this.targetDelegations.length > 0 : false
   }
 
 }
@@ -210,4 +255,25 @@ export default class RedelegateModal extends Vue {
     }
   }
 }
+
+.delegations-list-item {
+  cursor: pointer;
+}
+
+.delegations-list-item:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.active-delegations-list-item {
+  background-color: #007bff;
+  color: #ffffff;  
+}
+
+.disabled-delegations-list-item {
+  opacity: 0.5;
+  pointer-events: none !important;
+  cursor: not-allowed;
+}
+
 </style>

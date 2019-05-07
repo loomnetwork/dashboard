@@ -1,22 +1,28 @@
 <template>
-  <div class="faucet-with-navbar">
-    <div id="rewards" class="faucet-content">
-      <div class="col-lg-8 offset-lg-2">
-        <b-card class="text-center mt-5 p-md-2 p-lg-5">
-          <div>
-            <h4 class="mb-4">
-              {{ $t('views.rewards.unclaimed_rewards') }} 
-              <strong>
-                {{rewardsResults.toString() + " LOOM"}}
-              </strong>
-            </h4>
-            <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasNoRewards">{{ $t('views.rewards.claim_reward') }}</b-button>
-            <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
-          </div>
-        </b-card>
+  <b-card title="Rewards" class="mb-4">
+    <div>
+      <div class="mb-4">
+        <div v-if="rewardsResults && rewardsResults <= 0">
+          <h6>
+            You do not have any rewards at the moment. Please visit the <router-link to="/validators" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validators') }}</router-link> page.
+          </h6>
+        </div>
+        <div v-else-if="rewardsResults > 0">
+          <h6>
+            {{ $t('views.rewards.unclaimed_rewards') }} 
+          </h6>
+          <h5 class="highlight">
+            {{rewardsResults.toString() + " LOOM"}}
+          </h5>
+        </div>
+        <div v-else-if="!rewardsResults">
+          <b-spinner variant="primary" label="Spinning" />
+        </div>
       </div>
+      <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasNoRewards">{{ $t('views.rewards.claim_reward') }}</b-button>
+      <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
     </div>
-  </div>
+  </b-card>
 </template>
 
 <script>
@@ -49,13 +55,17 @@ const DappChainStore = createNamespacedHelpers('DappChain')
     ...DPOSStore.mapMutations(['setShowLoadingSpinner'])
   }
 })
-export default class ValidatorDetail extends Vue {
+export default class Rewards extends Vue {
 
   hideTooltip = false
   pollInterval = null
 
   get hasNoRewards() {
     return this.rewardsResults == "0.00"
+  }
+
+  get formattedRewardResults() {
+    return this.rewardsResults.toString() + " LOOM"    
   }
 
   async claimRewardHandler() {

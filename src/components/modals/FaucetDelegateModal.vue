@@ -110,7 +110,8 @@ export default class FaucetDelegateModal extends Vue {
         await this.undelegateAsync({
           candidate: this.delegationDetail.from,
           amount: this.delegationDetail.amount,
-          tier: this.locktimeTierVal
+          tier: this.locktimeTierVal,
+          index: this.delegation.index
         })
       } else {
         await this.delegateAsync({
@@ -132,10 +133,12 @@ export default class FaucetDelegateModal extends Vue {
     return this.delegationDetail && new Number(this.delegationDetail.amount) > 0
   }
 
-  show(address, type ='', minAmount = 0, minLockTimeTier = 0) {
+  // xxx
+  show(address, type ='', minAmount = 0, minLockTimeTier = 0, delegation = null) {
     this.minAmount = minAmount
     this.minLockTimeTier = minLockTimeTier
     this.locktimeTierVal = minLockTimeTier
+    this.delegation = delegation
     if(!address) {
       if(this.validators && this.validators.length > 0) {
         this.formattedValidators = this.validators.map((v) => {

@@ -80,9 +80,15 @@ function reconfigureClient(client, commit) {
   const handle = middleware.Handle.bind(middleware)
   middleware.Handle = async function (txData) {
     commit('setShowSigningAlert', true)
-    const res = await handle(txData)
-    commit('setShowSigningAlert', false)
-    return res
+    try {
+      const res = await handle(txData)
+      commit('setShowSigningAlert', false)
+      return res
+    }
+    catch (e) {
+      commit('setShowSigningAlert', false)
+      throw e
+    }
   }
   return client
 }
@@ -122,21 +128,22 @@ export default {
     currentChain(state) {
       return state.chainUrls[state.networkId]
     },
+    getWithdrewOn(state) {
+      const s = localStorage.getItem('lastWithdrawTime') || '0'
+      return parseInt(s,10) 
+    },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
-      const url = new URL(network.websockt || network.rpc)
+      const url = new URL(network.dappchainEndpoint)
       url.protocol =  url.protocol.replace(/:/g, "") === "wss" ? "https" : "http"
       url.pathname = "rpc"
       return url.toString()
-      // if (network.rpc) return network.rpc
-      // if (network.websockt) {
-      //   const splited = network.websockt.split('://')
-      //   if (splited[1]) {
-      //     return 'https://' + splited[1].split('/')[0] + '/rpc'
-      //   }
-      // }
-      // return ''
+    },
+    dappchainEndpoint(state) {
+      const network = state.chainUrls[state.networkId]
+      return network.dappchainEndpoint
     }
+
   },
   mutations: {
     updateState(state, payload) {
@@ -168,6 +175,9 @@ export default {
       } else {
         sessionStorage.setItem('withdrewSignature', payload)
       }
+    },
+    setWithdrewOn(state, timestamp) {
+      localStorage.setItem('lastWithdrawTime',timestamp)
     },
     setDPOSUserV3(state, payload) {
       console.log("setting dpos user")
@@ -271,7 +281,7 @@ export default {
             dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: network,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-            version: 2
+            version: 1
           });
         } else {
           user = await DPOSUserV3.createMetamaskUserAsync({
@@ -280,7 +290,7 @@ export default {
             dappchainPrivateKey: privateKeyString,
             chainId: network,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-            version: 2
+            version: 1
           });
         }
       } catch(err) {
@@ -363,15 +373,15 @@ export default {
         commit('setErrorMsg', {msg: "Error delegating", forever: false, report:true, cause:err}, {root: true})
       }      
     },
-    async undelegateAsync({ state, commit }, payload) {
+    async undelegateAsync({ state, commit }, payload:{candidate:string,amount:string,index:number}) {
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
-      const user = await state.dposUser    
-      const weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN)    
+      const user:DPOSUserV3 = await state.dposUser   
+      const weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN)     
       try {
-        const result = await user.undelegateAsync(payload.candidate, weiAmount)
-        commit('setSuccessMsg', {msg: `Success un-delegating ${payload.amount} tokens`, forever: false}, {root: true})
+        const result = await user.undelegateAsync(payload.candidate, weiAmount, payload.index)
+        commit('setSuccessMsg', {msg: `Success un-delegating ${weiAmount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }
@@ -380,7 +390,6 @@ export default {
       const dpos3 = await dispatch('getDpos3')
       const template = {
           address:  "",
-          pubKey: "",
           active : false,
           isBootstrap : false,
           totalStaked: "0",
@@ -404,7 +413,6 @@ export default {
       const nodes = candidates.map((c) => 
         Object.assign({}, template, {
           address:  c.address.local.toString(),
-          pubKey: CryptoUtils.Uint8ArrayToB64(c.pubKey),
           personalStake: c.whitelistAmount.toString(),
           votingPower: c.delegationTotal.toString(),
           delegationsTotal: c.delegationTotal.sub(c.whitelistAmount).toString(),
@@ -609,12 +617,11 @@ export default {
     },
 
     async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
-      if (!state.dposUser) {
-        throw new Error("expected dposUser to be initialized")
-      }
+      console.assert(!!state.dposUser, "Expected dposUser to be initialised")
 
       var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
+      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
       try {
         // @ts-ignore
         const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
@@ -622,7 +629,8 @@ export default {
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {
-        console.log("Error withdrawal coin from gateway", err);
+        commit('DPOS/setGatewayBusy', false, { root: true })
+        console.error("Error withdrawal coin from gateway", err);
         throw Error(err.message)       
       }
     },

@@ -33,7 +33,7 @@ export interface ISearchQuery {
   },
   computed: {
     ...mapGetters([
-      "dappchainEndpoint"
+      "currentRPCUrl"
     ])
   }
 })

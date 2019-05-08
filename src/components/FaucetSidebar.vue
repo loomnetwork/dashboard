@@ -23,19 +23,19 @@
     </b-nav-item>
     <div class="developer-menu">
       <b-nav-item>
-        <router-link to="/" class="router" exact-active-class="router-active">Account Explorer</router-link>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.account_explorer') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/" class="router" exact-active-class="router-active">Block Explorer</router-link>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.block_explorer') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/" class="router" exact-active-class="router-active">Deploy to Plasmachain</router-link>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.deploy_to_plasmachain') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/" class="router" exact-active-class="router-active">Transfer Gateway</router-link>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.transfer_gateway') }}</router-link>
       </b-nav-item>
       <b-nav-item>
-        <router-link to="/" class="router" exact-active-class="router-active">Validator Management</router-link>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validator_management') }}</router-link>
       </b-nav-item>
     </div>
     <b-nav-item v-if="userIsLoggedIn">

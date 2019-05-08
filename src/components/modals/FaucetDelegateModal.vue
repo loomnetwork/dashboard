@@ -203,7 +203,7 @@ export default class FaucetDelegateModal extends Vue {
     let inputAmount = parseInt(this.delegationDetail.amount)
     return this.delegationDetail &&
            inputAmount &&
-           inputAmount > this.minAmount &&
+           inputAmount >= this.minAmount &&
            inputAmount <= this.maxAmount
   }
 

@@ -13,11 +13,11 @@
         <div class="buttons">
           <div class="button" @click="setShowDepositForm(true)">Deposit</div>
           <div class="button">Withdraw</div>
-          <div class="button">Swap</div>
+          <div class="disable">Swap</div>
         </div>
-        <DepositForm />
       </div>
     </div>
+    <DepositForm />
   </div>
 </template>
 
@@ -98,10 +98,17 @@ export default class DepositWithdraw extends Vue {
         width: 33.33%;
         text-align: center;
         background-color: white;
-        border: 1px solid gray;
+        color: #5756e6;
+        border: 1px solid #5756e6;
         border-radius: 4px;
         padding: 16px 0px;
         margin: 24px 16px;
+      }
+      .button:hover{
+        box-shadow: #cececed6 0 2px 2px 0px;
+        background-color: #5756e6;
+        color: white;
+        cursor: pointer;
       }
   
     }
@@ -120,6 +127,17 @@ img {
   height: 100%;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.disable{
+  border: 1px solid gray;
+  color: gray;
+  width: 33.33%;
+  text-align: center;
+  background-color: white;
+  border-radius: 4px;
+  padding: 16px 0px;
+  margin: 24px 16px;
 }
 
 

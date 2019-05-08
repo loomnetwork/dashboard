@@ -21,6 +21,23 @@
     <b-nav-item>
       <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
     </b-nav-item>
+    <div class="developer-menu">
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">Account Explorer</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">Block Explorer</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">Deploy to Plasmachain</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">Transfer Gateway</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">Validator Management</router-link>
+      </b-nav-item>
+    </div>
     <b-nav-item v-if="userIsLoggedIn">
       <a class="nav-link">
         <a @click="logout">
@@ -72,8 +89,17 @@ export default class FaucetSidebar extends Vue {
   font-weight: bold
 }
 .router {
+  font-size: 16px;
+  font-weight: normal;
   color: gray;
   padding: 5px 15px;
+}
+.developer-menu {
+  margin: 16px 0;
+  background-color: gray;
+  a {
+    color: white;
+  }
 }
 .column {
   flex-direction: column;

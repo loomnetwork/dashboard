@@ -271,6 +271,7 @@ export default {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
       }
+      const network = state.networkId
       const chainId = state.currentChain.chainId
       const domainType = getDomainType()
       let user

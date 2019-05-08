@@ -7,7 +7,7 @@
         {{ $t('Please sign the transaction on your wallet') }}
       </strong>
     </b-alert>
-
+    <div v-if="networkId === 'us1'" style="background: #FFC107;padding: 0 16px;">Testnet</div>
     <faucet-header v-on:update:chain="refresh()"></faucet-header>
     <div class="content">      
 		  <warning-overlay type="metamask"></warning-overlay>
@@ -95,7 +95,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'account',
       'showSigningAlert',
       'metamaskError',
-      'mappingError'
+      'mappingError',
+      'networkId',
     ]),
     ...DPOSStore.mapState([
       'showSidebar',

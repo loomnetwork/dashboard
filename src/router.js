@@ -14,6 +14,7 @@ import BlockExplorer from './views/BlockExplorer.vue'
 import Analytics from './views/Analytics.vue'
 import MobileAccount from './views/MobileAccount.vue'
 import Help from './views/Help.vue'
+import DepositWithdraw from './views/DepositWithdraw.vue'
 
 import { loadLocale, isLocaleSupported } from './i18n'
 
@@ -141,6 +142,11 @@ const router = new VueRouter({
         path: 'analytics',
         name: 'analytics',
         component: Analytics
+      },
+      {
+        path: 'deposit-withdraw',
+        name: 'depositeWithdraw',
+        component: DepositWithdraw
       },
       {
         path: '/',

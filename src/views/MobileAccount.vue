@@ -303,7 +303,7 @@ export default class MobileAccount extends Vue {
     const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
-      await (await this.dposUser)._ethereumGateway.functions.depositERC20(
+      await dposUser.ethereumGateway.functions.depositERC20(
         weiAmount.toString(), dposUser.ethereumLoom.address
       )
       this.currentAllowance = 0

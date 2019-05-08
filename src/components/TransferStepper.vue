@@ -181,7 +181,7 @@ export default class TransferStepper extends Vue {
   }
 
   transferFailed(error) {
-    if (error.message.includes("User denied transaction signature")) {
+    if (error.message.includes("User denied")) {
       this.errorMessage = "You rejected the transaction"
       this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page 
       if (this.resolveTxSuccess) {
@@ -203,10 +203,9 @@ export default class TransferStepper extends Vue {
       this.hasTransferFailed = true;
       // report to sentry
     }
-    
+    this.hide()
+    this.reset()
     this.approvalPromise = null;
-   
-    
   }
 
   retryTransfer() {

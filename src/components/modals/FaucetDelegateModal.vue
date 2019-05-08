@@ -114,6 +114,11 @@ export default class FaucetDelegateModal extends Vue {
           index: this.delegation.index
         })
       } else {
+        console.log({
+          candidate: this.delegationDetail.to,
+          amount: this.delegationDetail.amount,
+          tier: this.locktimeTierVal
+        })
         await this.delegateAsync({
           candidate: this.delegationDetail.to,
           amount: this.delegationDetail.amount,

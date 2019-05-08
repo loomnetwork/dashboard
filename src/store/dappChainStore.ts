@@ -350,7 +350,7 @@ export default {
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
-      const user = await state.dposUser
+      const user:DPOSUserV3 = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
       const balance = formatToCrypto(loomWei.toString())
@@ -367,6 +367,7 @@ export default {
       try {       
         let weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN) 
         let tier = parseInt(payload.tier)
+        console.log(payload.candidate, weiAmount.toString(), tier)
         await user.delegateAsync(payload.candidate, weiAmount, tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
@@ -410,6 +411,7 @@ export default {
         dpos3.getCandidatesAsync(),
         dpos3.getAllDelegations()
       ])
+      console.log("candidates", candidates)
       const nodes = candidates.map((c) => 
         Object.assign({}, template, {
           address:  c.address.local.toString(),
@@ -616,12 +618,12 @@ export default {
       }
     },
 
-    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
+    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload:{amount:BN,signature:string}) {
       console.assert(!!state.dposUser, "Expected dposUser to be initialised")
 
       var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
-      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
+      debug("withdrawCoinFromRinkebyGatewayAsync", payload.amount.toString());
       try {
         // @ts-ignore
         const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)

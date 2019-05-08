@@ -242,12 +242,12 @@ export default {
       if (!rootState.DPOS.web3) {    
         await dispatch("DPOS/initWeb3Local", null, { root: true })
       }
-      const network = state.networkId
+      const chainId = state.currentChain.chainId
       // set state dposUser to be a Promise<dposUser> so that components caalling it don't complain or go and try to init another dpos user...
       const user = DPOSUserV3.createEthSignMetamaskUserAsync({
         web3: rootState.DPOS.web3,
         dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
-        chainId: network,
+        chainId: chainId,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
         version: 1
       })
@@ -271,7 +271,7 @@ export default {
         // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
         throw new Error('No Private Key, Login again')
       }
-      const network = state.networkId
+      const chainId = state.currentChain.chainId
       const domainType = getDomainType()
       let user
       try {
@@ -279,16 +279,16 @@ export default {
           user = await DPOSUserV3.createEthSignMetamaskUserAsync({
             web3: payload.web3,
             dappchainEndpoint: state.chainUrls[state.networkId],
-            chainId: network,
+            chainId: chainId,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
             version: 1
           });
-        } else {
+        } else {          
           user = await DPOSUserV3.createMetamaskUserAsync({
             web3: payload.web3,
             dappchainEndpoint: state.chainUrls[state.networkId],
             dappchainPrivateKey: privateKeyString,
-            chainId: network,
+            chainId: chainId,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
             version: 1
           });

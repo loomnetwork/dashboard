@@ -141,7 +141,7 @@ export default class FaucetDelegateModal extends Vue {
     if(type === "unbond") {
       this.maxAmount = delegation.amount
     } else {
-      this.maxAmount = parseInt(this.userBalance.loomBalance)
+      this.maxAmount = parseFloat(this.userBalance.loomBalance)
     }
     
     this.minLockTimeTier = minLockTimeTier
@@ -204,12 +204,13 @@ export default class FaucetDelegateModal extends Vue {
     if(this.delegationDetail.amount === "") {
       return null
     } else {
-      inputAmount = parseInt(this.delegationDetail.amount)
+      inputAmount = parseFloat(this.delegationDetail.amount)
     }
-    
+
     return !!this.delegationDetail &&
-           !!inputAmount &&
+           !!inputAmount                 &&
            inputAmount >= this.minAmount &&
+           inputAmount % 1 === 0         &&
            inputAmount <= this.maxAmount
   }
 

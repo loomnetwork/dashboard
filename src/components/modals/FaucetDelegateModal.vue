@@ -7,7 +7,7 @@
       <div v-else>
         <b-row class="my-1 mb-3">
           <b-col sm="3"><label>{{ $t('components.modals.faucet_delegate_modal.amount') }}</label></b-col>
-          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" :state="delegationDetail && delegationDetail.amount && delegationDetail.amount > minAmount && delegationDetail.amount <= userBalance.loomBalance" type="number" :min="minAmount" :max="userBalance.loomBalance"></b-form-input></b-col>
+          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" :state="isAmountValid" type="number"></b-form-input></b-col>
         </b-row>
         <b-row class="my-1" v-if="!unbond" key="range">
           <b-col sm="6"><label id="lockTimeReward" for="locktime">{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label></b-col>
@@ -94,6 +94,7 @@ export default class FaucetDelegateModal extends Vue {
   ]
 
   minAmount = 0
+  maxAmount = 0
   minLockTimeTier = 0
 
   async requestDelegate() {
@@ -139,8 +140,15 @@ export default class FaucetDelegateModal extends Vue {
   }
 
   // xxx
-  show(address, type ='', minAmount = 0, minLockTimeTier = 0, delegation = null) {
-    this.minAmount = minAmount
+  show(address, type ='', minAmount = 1, minLockTimeTier = 0, delegation = null) {
+
+    this.minAmount = 1
+    if(type === "unbond") {
+      this.maxAmount = delegation.amount
+    } else {
+      this.maxAmount = parseFloat(this.userBalance.loomBalance)
+    }
+    
     this.minLockTimeTier = minLockTimeTier
     this.locktimeTierVal = minLockTimeTier
     this.delegation = delegation
@@ -191,6 +199,24 @@ export default class FaucetDelegateModal extends Vue {
       default:
         break
     }
+  }
+
+
+  get isAmountValid() {
+
+    let inputAmount
+
+    if(this.delegationDetail.amount === "") {
+      return null
+    } else {
+      inputAmount = parseFloat(this.delegationDetail.amount)
+    }
+
+    return !!this.delegationDetail &&
+           !!inputAmount                 &&
+           inputAmount >= this.minAmount &&
+           inputAmount % 1 === 0         &&
+           inputAmount <= this.maxAmount
   }
 
 }

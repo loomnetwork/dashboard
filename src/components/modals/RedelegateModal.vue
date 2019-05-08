@@ -126,7 +126,7 @@ export default class RedelegateModal extends Vue {
   async okHandler() {
     this.errorMsg = ""
     if(!this.target.address) {
-      this.errorMsg = "Please select both a target and an origin validator"
+      this.errorMsg = "Please select a target validator"
       return
     }
     if(this.origin.address === this.target.address) {
@@ -181,6 +181,7 @@ export default class RedelegateModal extends Vue {
   }
 
   selectTargetItem(validator) {
+    this.errorMsg = ""
     this.target = validator
   }
 

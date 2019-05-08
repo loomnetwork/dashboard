@@ -199,10 +199,16 @@ export default class FaucetDelegateModal extends Vue {
 
   get isAmountValid() {
 
-    if(this.delegationDetail.amount === "") return false
-    let inputAmount = parseInt(this.delegationDetail.amount)
-    return this.delegationDetail &&
-           inputAmount &&
+    let inputAmount
+
+    if(this.delegationDetail.amount === "") {
+      return null
+    } else {
+      inputAmount = parseInt(this.delegationDetail.amount)
+    }
+    
+    return !!this.delegationDetail &&
+           !!inputAmount &&
            inputAmount >= this.minAmount &&
            inputAmount <= this.maxAmount
   }

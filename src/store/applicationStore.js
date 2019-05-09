@@ -2,9 +2,6 @@ import { getDomainType, } from '../utils'
 import * as Sentry from '@sentry/browser'
 const { CryptoUtils, } = require('loom-js')
 
-import axios from 'axios'
-import { loadLocale, supportedLocales } from '../i18n'
-
 export const state = {
   web3: null,
   route: null,
@@ -142,78 +139,6 @@ export const actions = {
       commit('setSuccessMsg', 'You have successfully signed out')
     } catch (err) {
       commit('setErrorMsg', err)
-    }
-  },
-  async getPrivateKey({ commit, state, dispatch }, payload) {
-    const domain = getDomainType()
-    let base
-    if (domain == 'local' || domain == 'rinkeby') {
-      base = 'https://vault2-dc2.devdc.io/'
-    } else if (domain == 'stage') {
-      base = 'https://stage-vault.delegatecall.com/'
-    } else {
-      // TODO: Switch to prod vault ('https://vault.delegatecall.com/')
-      // when vault is fixed to not update data
-      base = 'https://vault2-dc2.devdc.io/'
-    }
-
-    let instance = axios.create({
-      headers: { 'X-Vault-Token': payload.data.auth.client_token }
-    })
-    await instance.get(`${base}v1/entcubbyhole/loomauth`)
-      .then(responseKey => {
-        state.privateKey = responseKey.data.data.privatekey
-        sessionStorage.setItem('privatekey', responseKey.data.data.privatekey)
-        sessionStorage.setItem('userIsLoggedIn', true)
-        commit('setUserIsLoggedIn', true)
-      })
-      .catch(err => {
-        if (err.response) {
-          if (err.response.status == 404) {
-            // let vaultConfig = {
-            //   base: base,
-            //   instance: instance
-            // }
-            // dispatch('setPrivateKey', vaultConfig)
-          } else {
-            err.message = 'Error occur when try to get privateKey: ' + err.message
-            throw err
-          }
-        }
-      })
-  },
-  async setPrivateKey({ commit }, payload) {
-    // const privateKey = CryptoUtils.generatePrivateKey()
-    const privateKey = CryptoUtils.generatePrivateKeyFromSeed(payload.seed.slice(0, 32))
-    const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)    
-    const domain = getDomainType()
-    let base
-    if (domain == 'local' || domain == 'rinkeby') {
-      base = 'https://vault2-dc2.devdc.io/'
-
-    } else if (domain == 'stage') {
-      base = 'https://stage-vault.delegatecall.com/'
-    } else {
-      base = 'https://vault.delegatecall.com/'
-    }
-
-    const vaultToken = sessionStorage.getItem('vaultToken')
-    let instance = axios.create({
-      headers: { 'X-Vault-Token': vaultToken }
-    })
-
-    try {
-      const storeMappingResponse = await instance.post(`${base}v1/entcubbyhole/loomauth`,
-        {
-          'privatekey': privateKeyString
-        }
-      )
-      state.privateKey = privateKeyString
-      sessionStorage.setItem('privatekey', privateKeyString)
-      sessionStorage.setItem('userIsLoggedIn', true)
-      commit('setUserIsLoggedIn', true)
-    } catch (err) {
-      console.error(err)
     }
   },
 

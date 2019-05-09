@@ -375,7 +375,6 @@ export default {
       try {       
         let weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN) 
         let tier = parseInt(payload.tier)
-        console.log(payload.candidate, weiAmount.toString(), tier)
         await user.delegateAsync(payload.candidate, weiAmount, tier)
         commit('setSuccessMsg', {msg: `Success delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
@@ -419,7 +418,6 @@ export default {
         dpos3.getCandidatesAsync(),
         dpos3.getAllDelegations()
       ])
-      console.log("candidates", candidates)
       const nodes = candidates.map((c) => 
         Object.assign({}, template, {
           address:  c.address.local.toString(),

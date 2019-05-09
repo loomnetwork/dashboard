@@ -61,7 +61,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'userBalance'
     ]),
     ...DappChainStore.mapState([
-      'dposUser'
+      'dposUser',
+      'web3'
     ])
   }
 })
@@ -71,17 +72,17 @@ export default class DepositWithdraw extends Vue {
   wallets = [
     {
       name: 'Loom',
-      address: 'xxxxxxxxxxxxxxxxxxx',
+      address: '',
       balance: null,
       currency: 'LOOM',
-      img: 'https://s2.coinmarketcap.com/static/img/coins/200x200/2588.png'
+      img: require('../assets/logo.png')
     },
     {
       name: 'Ethereum',
-      address: 'xxxxxxxxxxxxxxxxxxx',
-      balance: '00.00',
+      address: '',
+      balance: null,
       currency: 'ETH',
-      img: ''
+      img: require('../assets/ethereum-icon.svg')
     }
   ]
   
@@ -100,8 +101,9 @@ export default class DepositWithdraw extends Vue {
     this.wallets[0].address = dposUser.loomAddress.local.toString() // set loomAddress to wallet
     this.wallets[1].address = dposUser.ethAddress // set ethAddress to wallet
 
-    Promise.all([this.getMetamaskLoomBalance()]).then(result => {
+    Promise.all([this.getMetamaskLoomBalance(), this.web3.eth.getBalance(dposUser.ethAddress)]).then(result => {
       this.wallets[0].balance = result[0] // Loom mainet
+      this.wallets[1].balance = parseFloat(result[1]).toFixed(2)
     })
   }
 }

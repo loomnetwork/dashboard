@@ -306,14 +306,19 @@ export default {
      * @returns {Promise<TransactionReceipt>}
      */
     async depositAsync({ state, commit }, {amount}) {
-      console.assert(state.dposUser, "Expected dposUser to be initialized")
-      commit('DPOS/setGatewayBusy', true, { root: true })
-      const user = await state.dposUser
-      const tokens = new BN( "" + parseInt(amount,10)) 
-      const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
-      const res = user.depositAsync(new BN(weiAmount, 10))
-      commit('DPOS/setGatewayBusy', false, { root: true })
-      return res
+      try {
+        console.assert(state.dposUser, "Expected dposUser to be initialized")
+        commit('DPOS/setGatewayBusy', true, { root: true })
+        const user = await state.dposUser
+        const tokens = new BN( "" + parseInt(amount,10)) 
+        const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
+        const res = user.depositAsync(new BN(weiAmount, 10))
+        commit('DPOS/setGatewayBusy', false, { root: true })
+        return res
+      } catch (error) {
+        console.log(error)
+        commit('DPOS/setGatewayBusy', false, { root: true })
+      }
     },
     /**
      * 
@@ -333,25 +338,27 @@ export default {
       return res
     },
     async approveAsync({ state, commit }, payload) {
-      commit('DPOS/setGatewayBusy', true, { root: true })
 
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
-
       const { amount } = payload
-      const user = await state.dposUser
-      
+      const user:DPOSUserV3 = await state.dposUser
       const token = user.ethereumLoom
       const gateway = user.ethereumGateway
-      await token.approve(gateway.address, amount)
-      
+      commit('DPOS/setGatewayBusy', true, { root: true })
+      try {
+        await token.approve(gateway.address, amount)
+      } catch (error) {
+        console.log(error)
+      }
+      commit('DPOS/setGatewayBusy', false, { root: true })
     },
     async getDappchainLoomBalance({ rootState, state, commit }) {
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
-      const user = await state.dposUser
+      const user:DPOSUserV3 = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
       const balance = formatToCrypto(loomWei.toString())
@@ -617,16 +624,15 @@ export default {
       }
     },
 
-    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
+    async withdrawCoinGatewayAsync({ state, commit }, payload:{amount:BN,signature:string}) {
       console.assert(!!state.dposUser, "Expected dposUser to be initialised")
-
       var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
-      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
+      debug("withdrawCoinGatewayAsync", payload.amount.toString(), payload.signature);
       try {
         // @ts-ignore
-        const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
-        console.log("result", result);
+        //const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
+        const result = await user.resumeWithdrawalAsync()
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {

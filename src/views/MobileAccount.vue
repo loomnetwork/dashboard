@@ -303,7 +303,7 @@ export default class MobileAccount extends Vue {
     const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
-      await (await this.dposUser)._ethereumGateway.functions.depositERC20(
+      await dposUser.ethereumGateway.functions.depositERC20(
         weiAmount.toString(), dposUser.ethereumLoom.address
       )
       this.currentAllowance = 0
@@ -475,10 +475,9 @@ export default class MobileAccount extends Vue {
         alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
         window.location.reload(true)
       }
-      
       this.setWithdrewOn(Date.now())
     } catch (err) {
-      this.setErrorMsg(err.message)
+      this.setErrorMsg({msg: "Failed resuming withdraw", forever: false,report:true,cause:err})
       console.error(err)
       this.isWithdrawalInprogress = false
     }

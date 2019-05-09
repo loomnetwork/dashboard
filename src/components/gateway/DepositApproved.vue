@@ -22,7 +22,13 @@
         <p>{{ $t('components.gateway.deposit.sent') }}</p>
       </div>
       <b-btn @click="close">Close</b-btn>
-    </b-container>    
+    </b-container>  
+    <b-container fluid v-else-if="state === 'failed'">
+      <div class="lead">
+        <p>{{ $t('components.gateway.deposit.failure') }}</p>
+      </div>
+      <b-btn @click="close">Close</b-btn>
+    </b-container>  
   </b-modal>
 </template>
 
@@ -78,9 +84,13 @@ export default class DepositApproved extends Vue {
   async completeDeposit(e) {
     this.state = 'sending'
     e.preventDefault()
-    await this.executeDeposit()
-    // refresh balances
-    this.state = 'sent'
+    try {
+      await this.executeDeposit()
+      this.state = 'sent'
+    } catch (error) {
+      console.log(error)
+      this.state = 'failed'
+    }
   }
 
 }

@@ -11,7 +11,7 @@
       </div>
       <div class="wallet-detail">
         <h2> {{ activeWallet.name }} </h2>
-        <p>{{ activeWallet.key }}</p>
+        <p>{{ activeWallet.address }}</p>
         <div class="buttons">
           <div class="button" @click="setShowDepositForm(true)">Deposit</div>
           <div class="button" @click="setShowDepositForm(true)">Withdraw</div>
@@ -71,14 +71,14 @@ export default class DepositWithdraw extends Vue {
   wallets = [
     {
       name: 'Loom',
-      key: 'xxxxxxxxxxxxxxxxxxx',
+      address: 'xxxxxxxxxxxxxxxxxxx',
       balance: null,
       currency: 'LOOM',
       img: 'https://s2.coinmarketcap.com/static/img/coins/200x200/2588.png'
     },
     {
       name: 'Ethereum',
-      key: 'xxxxxxxxxxxxxxxxxxx',
+      address: 'xxxxxxxxxxxxxxxxxxx',
       balance: '00.00',
       currency: 'ETH',
       img: ''
@@ -95,14 +95,14 @@ export default class DepositWithdraw extends Vue {
   created () {
     this.activeWallet = this.wallets[0]
   }
-  mounted () {
-  }
-  beforeMount () {
+  async mounted () {
+    const dposUser = await this.dposUser
+    this.wallets[0].address = dposUser.loomAddress.local.toString() // set loomAddress to wallet
+    this.wallets[1].address = dposUser.ethAddress // set ethAddress to wallet
+
     Promise.all([this.getMetamaskLoomBalance()]).then(result => {
       this.wallets[0].balance = result[0] // Loom mainet
     })
-  }
-  updated () {
   }
 }
 </script>

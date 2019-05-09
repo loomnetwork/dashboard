@@ -65,8 +65,10 @@
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">
-        <p><slot name="successTxt">Transaction sent:</slot><br/>
-        <a target="_blank" v-if="txHash" :href="etherscanDepositUrl" class="hash">View on EtherScan</a></p>
+        <div v-if="txHash">
+          <p><slot name="successTxt">Transaction sent:</slot><br/>
+          <a target="_blank" :href="etherscanDepositUrl" class="hash">View on EtherScan</a></p>
+        </div>        
         <p>Mining transaction, please access the <router-link to="/history">history page</router-link> to see the progress.</p>
         <b-btn v-if="txSuccessPromise === null" @click="hide" variant="outline-primary">close</b-btn>
       </div>

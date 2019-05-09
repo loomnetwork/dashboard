@@ -165,7 +165,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapState([
       'chainUrls',
       'isConnectedToDappChain',
-      'mappingStatus'
+      'mappingStatus',
+      'networkId'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',

@@ -12,25 +12,23 @@ const debug = Debug("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<DashboardState>) {
 
-    // Whenever timeUntilElectionCycle is refreshed, 
-    // refresh validators and user delegations (if user connected)
-    // could also check unclaimedTokens, allowance...etc
-    store.watch(
-        (state) => state.DPOS.timeUntilElectionCycle,
-        (timeStr:string) => {
-            const seconds = parseInt(timeStr,10)
-            console.log("timeUntilElectionCycle", seconds)
+    store.subscribeAction({
+        after(action){
+            if(action.type !== "DPOS/getTimeUntilElectionsAsync") {
+                return
+            }
+            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle,10)
+            debug("timeUntilElectionCycle", seconds)
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
             if (store.state.DappChain.dposUser) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            console.log("setTimeout seconds",Math.max(seconds,1) * 1000)
+            debug("setTimeout seconds",Math.max(seconds,1) * 1000)
             setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
-
-        },
-    )
+        }
+    })
 
     // When a user session starts
     // load account state

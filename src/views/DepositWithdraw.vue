@@ -120,12 +120,13 @@ export default class DepositWithdraw extends Vue {
     .wallet-item {
       box-shadow: inset #d8d8d878 0 2px 12px 0px;
       display: flex;
-      padding: 36px;
+      padding: 28px;
       opacity: 0.5;
       align-items: center;
       h2 {
         margin: 0;
         font-size: 1.8rem;
+        white-space: nowrap;
       }
       .mask {
         width: 100%;

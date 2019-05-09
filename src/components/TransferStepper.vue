@@ -158,12 +158,12 @@ export default class TransferStepper extends Vue {
     if (tx) {
       this.tx = tx
       this.txHash = tx.hash
-      this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
+      this.etherscanApprovalUrl = `https://etherscan.io/tx/${this.txHash}`
       if (this.resolveTxSuccess) {
         // resolved of deposit
         this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )        
         this.txSuccessPromise.then((tx) => {
-          this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
+          this.etherscanDepositUrl = `https://etherscan.io/tx/${this.txHash}`
           this.transferSuccessful(), console.error
         })
 

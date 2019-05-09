@@ -66,7 +66,7 @@
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">
         <p><slot name="successTxt">Transaction sent:</slot><br/>
-        <a target="_blank" :href="etherscanDepositUrl" class="hash">View on EtherScan</a></p>
+        <a target="_blank" v-if="txHash" :href="etherscanDepositUrl" class="hash">View on EtherScan</a></p>
         <p>Mining transaction, please access the <router-link to="/history">history page</router-link> to see the progress.</p>
         <b-btn v-if="txSuccessPromise === null" @click="hide" variant="outline-primary">close</b-btn>
       </div>
@@ -159,7 +159,6 @@ export default class TransferStepper extends Vue {
       this.tx = tx
       this.txHash = tx.hash
       this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
-      
       if (this.resolveTxSuccess) {
         // resolved of deposit
         this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )        

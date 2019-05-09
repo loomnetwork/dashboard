@@ -15,9 +15,11 @@
       </b-nav-item>      
     </div>
     <hr>
-    <b-nav-item>
-      <router-link to="/deposit-withdraw" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.deposit_withdraw') }}</router-link>
-    </b-nav-item>
+    <div id="restricted-access-links"  @click="clickHandler">
+      <b-nav-item>
+        <router-link to="/deposit-withdraw" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.deposit_withdraw') }}</router-link>
+      </b-nav-item>
+    </div>
     <b-nav-item>
       <router-link to="/blockexplorer" class="router" exact-active-class="router-active">{{ $t('components.faucet_header.block_explorer') }}</router-link>
     </b-nav-item>

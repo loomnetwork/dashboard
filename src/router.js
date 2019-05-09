@@ -113,6 +113,14 @@ const router = new VueRouter({
         }      
       },
       {
+        path: 'deposit-withdraw',
+        name: 'depositeWithdraw',
+        component: DepositWithdraw,
+        meta: {
+          requireLogIn: true
+        }
+      },
+      {
         path: 'faq',
         name: 'FAQ',
         component: Help,  
@@ -142,11 +150,6 @@ const router = new VueRouter({
         path: 'analytics',
         name: 'analytics',
         component: Analytics
-      },
-      {
-        path: 'deposit-withdraw',
-        name: 'depositeWithdraw',
-        component: DepositWithdraw
       },
       {
         path: '/',

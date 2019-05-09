@@ -2,9 +2,11 @@
   <div>
     <div class="container">
       <div class="wallet-list">
-        <div class="wallet-item" v-for="(wallet, index) in wallets" :key="index" @click="onSelectWallet(index)">
+        <div class="wallet-item" v-for="(wallet, index) in wallets" :key="index" 
+        @click="onSelectWallet(index)" :class="{ 'wallet-active': activeIndex === index}">
           <img :src="wallet.img" />
           <h2>{{ `${wallet.balance} ${wallet.currency}` }}</h2>
+          <div class="mask"></div>
         </div>
       </div>
       <div class="wallet-detail">
@@ -12,58 +14,95 @@
         <p>{{ activeWallet.key }}</p>
         <div class="buttons">
           <div class="button" @click="setShowDepositForm(true)">Deposit</div>
-          <div class="button">Withdraw</div>
+          <div class="button" @click="setShowDepositForm(true)">Withdraw</div>
           <div class="disable">Swap</div>
         </div>
       </div>
     </div>
-    <DepositForm />
+    <DepositForm />                         
+    <div v-if="userBalance.loomBalance">
+      <h5 class="highlight">
+        {{userBalance.loomBalance + " LOOM"}}
+        <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
+      </h5>
+    </div>
+    <div v-else>
+    
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import LoomIcon from '@/components/LoomIcon'
 import DepositForm from '@/components/gateway/DepositForm'
 import { Component } from 'vue-property-decorator'
 import { createNamespacedHelpers } from 'vuex'
 
+const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
-    DepositForm
+    DepositForm,
+    LoomIcon
   },
   methods: {
     ...DPOSStore.mapMutations([
       'setShowDepositForm'
+    ]),
+    ...DappChainStore.mapActions([
+      'getMetamaskLoomBalance',
+      'getPendingWithdrawalReceipt'
+    ])
+  },
+  computed: {
+    ...DPOSStore.mapState([
+      'userBalance'
+    ]),
+    ...DappChainStore.mapState([
+      'dposUser'
     ])
   }
 })
 
 export default class DepositWithdraw extends Vue {
+  currentAllowance = 0
   wallets = [
+    {
+      name: 'Loom',
+      key: 'xxxxxxxxxxxxxxxxxxx',
+      balance: null,
+      currency: 'LOOM',
+      img: 'https://s2.coinmarketcap.com/static/img/coins/200x200/2588.png'
+    },
     {
       name: 'Ethereum',
       key: 'xxxxxxxxxxxxxxxxxxx',
       balance: '00.00',
       currency: 'ETH',
       img: ''
-    },
-    {
-      name: 'Loom',
-      key: 'xxxxxxxxxxxxxxxxxxx',
-      balance: '00.00',
-      currency: 'LOOM',
-      img: 'https://s2.coinmarketcap.com/static/img/coins/200x200/2588.png'
     }
   ]
+  
   activeWallet = null
+  activeIndex = 0
 
   onSelectWallet (index) {
     this.activeWallet = this.wallets[index]
+    this.activeIndex = index
   }
   created () {
     this.activeWallet = this.wallets[0]
+  }
+  mounted () {
+  }
+  beforeMount () {
+    Promise.all([this.getMetamaskLoomBalance()]).then(result => {
+      this.wallets[0].balance = result[0] // Loom mainet
+    })
+  }
+  updated () {
   }
 }
 </script>
@@ -72,24 +111,35 @@ export default class DepositWithdraw extends Vue {
 .container {
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 12px;
-  padding: 16px 24px;
   margin: 16px;
   box-shadow: #cecece54 0 2px 5px 0px;
   display: flex;
+  padding: 0;
   .wallet-list {
     width: 30%;
     .wallet-item {
+      box-shadow: inset #d8d8d878 0 2px 12px 0px;
       display: flex;
-      padding: 1em;
+      padding: 36px;
+      opacity: 0.5;
       align-items: center;
       h2 {
         margin: 0;
         font-size: 1.8rem;
       }
+      .mask {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+    .wallet-item:hover, .wallet-active {
+      opacity: 1;
+      box-shadow: none;
     }
   }
   .wallet-detail {
-    border-left: 1px solid rgba(0, 0, 0, 0.05); 
     width: 70%;
     padding: 24px;
     .buttons {
@@ -121,12 +171,6 @@ img {
   background-color: white;
   border-radius: 48px;
   margin-right: 1em;
-}
-.mask {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .disable{

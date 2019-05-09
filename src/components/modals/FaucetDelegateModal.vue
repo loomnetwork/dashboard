@@ -28,6 +28,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import BN from 'bn.js'
 
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -139,7 +140,7 @@ export default class FaucetDelegateModal extends Vue {
 
     this.minAmount = 1
     if(type === "unbond") {
-      this.maxAmount = delegation.amount
+      this.maxAmount = delegation.amount.div(new BN(""+10**18)).toNumber()
     } else {
       this.maxAmount = parseFloat(this.userBalance.loomBalance)
     }

@@ -632,7 +632,8 @@ export default {
       console.assert(!!state.dposUser, "Expected dposUser to be initialised")
       var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
-      debug("withdrawCoinGatewayAsync", payload.amount.toString(), payload.signature);
+      let amount = payload.amount ? payload.amount.toString() : ""
+      debug("withdrawCoinGatewayAsync", amount, payload.signature);
       try {
         // @ts-ignore
         //const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)

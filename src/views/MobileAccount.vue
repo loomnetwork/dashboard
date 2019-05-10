@@ -457,6 +457,7 @@ export default class MobileAccount extends Vue {
     const dposUser = await this.dposUser
     let ethAddr = this.dposUser.ethAddr
     console.log('current eth addr: ', ethAddr)
+    this.setShowLoadingSpinner(true)
     try {
       this.isWithdrawalInprogress = true
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
@@ -477,10 +478,12 @@ export default class MobileAccount extends Vue {
         window.location.reload(true)
       }
       this.setWithdrewOn(Date.now())
+      this.setShowLoadingSpinner(false)
     } catch (err) {
       this.setErrorMsg({msg: "Failed resuming withdraw", forever: false,report:true,cause:err})
       console.error(err)
       this.isWithdrawalInprogress = false
+      this.setShowLoadingSpinner(false)
     }
   }
 

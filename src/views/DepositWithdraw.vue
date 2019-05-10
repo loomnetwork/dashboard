@@ -19,16 +19,7 @@
         </div>
       </div>
     </div>
-    <DepositForm />                         
-    <div v-if="userBalance.loomBalance">
-      <h5 class="highlight">
-        {{userBalance.loomBalance + " LOOM"}}
-        <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
-      </h5>
-    </div>
-    <div v-else>
-    
-    </div>
+    <DepositForm />
   </div>
 </template>
 
@@ -101,9 +92,9 @@ export default class DepositWithdraw extends Vue {
     this.wallets[0].address = dposUser.loomAddress.local.toString() // set loomAddress to wallet
     this.wallets[1].address = dposUser.ethAddress // set ethAddress to wallet
 
-    Promise.all([this.getMetamaskLoomBalance(), this.web3.eth.getBalance(dposUser.ethAddress)]).then(result => {
-      this.wallets[0].balance = result[0] // Loom mainet
-      this.wallets[1].balance = parseFloat(result[1]).toFixed(2)
+    Promise.all([this.web3.eth.getBalance(dposUser.ethAddress)]).then(result => {
+      this.wallets[0].balance = this.userBalance.loomBalance // Loom mainet
+      this.wallets[1].balance = parseFloat(result[0]).toFixed(2)
     })
   }
 }

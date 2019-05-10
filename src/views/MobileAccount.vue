@@ -43,9 +43,10 @@
           <!-- unclaimed -->
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
             <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-            <div class="center-children">                                  
-              <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
-              <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+            <div class="center-children" id="complete-withdrawal-container">                                  
+              <b-btn variant="outline-primary" class="mr-2" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress || hasJustWithdrawn()"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+              <b-spinner v-if="isWithdrawalInprogress || hasJustWithdrawn()" variant="primary" label="Spinning" small/>
+              <b-tooltip v-if="isWithdrawalInprogress || hasJustWithdrawn()" target="complete-withdrawal-container" placement="bottom" title="Your transaction is processing, check back in a few mintues."></b-tooltip>
             </div>                                
           </div>
           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 

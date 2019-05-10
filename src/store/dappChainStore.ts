@@ -333,9 +333,13 @@ export default {
       const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
       commit('DPOS/setGatewayBusy', true, { root: true })
       console.log("withdrawAsync",weiAmount)
-      let res = await user.withdrawAsync(new BN(weiAmount, 10))
-      commit('DPOS/setGatewayBusy', false, { root: true })
-      return res
+      try {
+        let res = await user.withdrawAsync(new BN(weiAmount, 10))
+        return res
+        commit('DPOS/setGatewayBusy', false, { root: true })
+      } catch(err) {
+        commit('DPOS/setGatewayBusy', false, { root: true })
+      }
     },
     async approveAsync({ state, commit }, payload) {
 

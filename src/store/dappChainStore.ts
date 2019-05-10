@@ -129,8 +129,10 @@ export default {
       return state.chainUrls[state.networkId]
     },
     getWithdrewOn(state) {
-      const s = localStorage.getItem('lastWithdrawTime') || '0'
-      return parseInt(s,10) 
+      let p = ""
+      const ls = localStorage.getItem('lastWithdrawTime')
+      if(ls) p = JSON.parse(ls)
+      return p || 0
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
@@ -177,7 +179,7 @@ export default {
       }
     },
     setWithdrewOn(state, timestamp) {
-      localStorage.setItem('lastWithdrawTime',timestamp)
+      localStorage.setItem('lastWithdrawTime', JSON.stringify(timestamp))
     },
     setDPOSUserV3(state, payload) {
       console.log("setting dpos user")

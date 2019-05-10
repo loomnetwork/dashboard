@@ -46,7 +46,7 @@
             <div class="center-children" id="complete-withdrawal-container">                                  
               <b-btn variant="outline-primary" class="mr-2" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress || hasJustWithdrawn()"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
               <b-spinner v-if="isWithdrawalInprogress || hasJustWithdrawn()" variant="primary" label="Spinning" small/>
-              <b-tooltip target="complete-withdrawal-container" placement="bottom" title="Your transaction is processing, check back in a few mintues."></b-tooltip>
+              <b-tooltip v-if="isWithdrawalInprogress || hasJustWithdrawn()" target="complete-withdrawal-container" placement="bottom" title="Your transaction is processing, check back in a few mintues."></b-tooltip>
             </div>                                
           </div>
           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 

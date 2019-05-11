@@ -61,7 +61,7 @@ export function getValueOfUnit(unit) {
   return new BigNumber(unitValue, 10)
 }
 
-
+  // @ts-ignore
 const web3js = new Web3(Web3.currentProvider)
 
 export const getDomainType = function() {
@@ -73,8 +73,10 @@ export const getDomainType = function() {
 }
 
 export const getNetworkType = async function() {
+  // @ts-ignore
   if (typeof window.web3 !== 'undefined') {
     return new Promise(resolve => {
+        // @ts-ignore
       web3.version.getNetwork((err, netId) => {
         resolve(netId)
       })
@@ -118,3 +120,18 @@ const capitalize = s => {
 
  export const buildMutationsFromState = state =>
   Object.assign({}, ...Object.keys(state).map(name => simpleMutations(name)))
+
+
+
+export function dynamicSort(property) {
+    let sortOrder = 1
+    if(property[0] === "-") {
+        sortOrder = -1
+        property = property.substr(1)
+    }
+    return (a,b) => {
+      let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0
+      return result * sortOrder
+    }
+  }
+  

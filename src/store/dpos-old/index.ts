@@ -1,47 +1,76 @@
-import axios from 'axios'
-const { CryptoUtils, LocalAddress } = require('loom-js')
-import { formatToCrypto } from '../../utils'
-import { initWeb3 as web3init } from '../../services/initWeb3'
-import Web3 from 'web3'
+import axios from "axios"
+import { CryptoUtils,
+  LocalAddress,
+  EthersSigner,
+  getMetamaskSigner, SignedEthTxMiddleware,
+  Client, createJSONRPCClient, NonceTxMiddleware,
+  SignedTxMiddleware } from "loom-js"
+import { formatToCrypto, getDomainType } from "../../utils"
+import { initWeb3 as web3init } from "../../services/initWeb3"
+import Web3 from "web3"
+import debug from "debug"
+import GatewayJSON from "@/contracts/Gateway.json"
+import networks from "@/../chain-config"
 
 import {ethers} from "ethers"
 
-import Debug from "debug"
-import { DPOS3 } from 'loom-js/dist/contracts';
-import { DPOSUserV3, Address, Client } from 'loom-js';
+import { DPOS3, AddressMapper } from "loom-js/dist/contracts"
+import { DPOSUserV3, Address } from "loom-js"
 import BN from "bn.js"
-import { DashboardState, DposState } from '@/types';
-import { Log } from 'ethers/providers';
-import { getStoreBuilder } from 'vuex-typex';
-
+import { DashboardState, DposState } from "@/types"
+import { Log } from "ethers/providers"
+import { getStoreBuilder } from "vuex-typex"
 
 import * as getters from "./getters"
 import * as mutations from "./mutations"
-import { dynamicSort } from '@/utils';
 
-Debug.enable("dashboard.dpos")
-const debug = Debug("dashboard.dpos")
+debug.enable("dashboard.DPOS")
+const log = debug("dashboard.DPOS")
+const WEI_TOKEN = new BN("" + 10 ** 18)
 
 const DAILY_WITHDRAW_LIMIT = 500000
+let GW_ADDRESS = ""
 
-
+const hostname = window.location.hostname
+if (hostname === "dashboard.dappchains.com") {
+  GW_ADDRESS = ""
+} else if (hostname === "dev-dashboard.dappchains.com") {
+  GW_ADDRESS = ""
+} else {
+  GW_ADDRESS = ""
+}
 
 const defaultState = () => {
   return {
+    web3: undefined,
+    account: undefined,
+    localAddress: undefined,
+    count: 0,
+    chainUrls: networks,
+    networkId: getNetworkId(),
+    currentChain: getCurrentChain(),
+    dAppChainClient: null,
+    metamaskStatus: undefined,
+    metamaskError: undefined,
+    validators: [],
+    GatewayInstance: null,
+    mappingStatus: "",
+    dposUser: null,
+    dpos3: undefined,
+    isConnectedToDappChain: false,
     isLoggedIn: false,
     showSidebar: true,
     connectedToMetamask: false,
-    web3: undefined,
     currentMetamaskAddress: undefined,
     history: null,
     withdrawLimit: DAILY_WITHDRAW_LIMIT,
-    validators: [],
     status: "check_mapping",
     walletType: undefined,
     selectedAccount: undefined,
     metamaskDisabled: false,
     showLoadingSpinner: false,
     showSignWalletModal: false,
+    showSigningAlert: false,
     showAlreadyMappedModal: false,
     mappingSuccess: false,
     gatewayBusy: false,
@@ -49,19 +78,19 @@ const defaultState = () => {
       isLoading: false,
       loomBalance: null,
       mainnetBalance: null,
-      stakedAmount: null
+      stakedAmount: null,
     },
     rewardsResults: null,
     timeUntilElectionCycle: null,
     // timestamp millis
     nextElectionTime: 0,
     validatorFields: [
-      { key: 'Name', sortable: true },
-      { key: 'Status', sortable: true },
-      { key: 'totalStaked', sortable: true, label: "Total Staked" },
+      { key: "Name", sortable: true },
+      { key: "Status", sortable: true },
+      { key: "totalStaked", sortable: true, label: "Total Staked" },
       // { key: 'votingPower', sortable: true, label: "Reward Power" },
       // { key: 'Weight', sortable: true },
-      { key: 'Fees', sortable: true },
+      { key: "Fees", sortable: true },
       // { key: 'Uptime', sortable: true },
       // { key: 'Slashes', sortable: true },
     ],
@@ -86,7 +115,6 @@ const defaultState = () => {
   } as DposState
 }
 
-
 const builder = getStoreBuilder<DashboardState>().module("DPOS", defaultState())
 const stateGetter = builder.state()
 
@@ -98,534 +126,499 @@ export const DPOSTypedStore = {
   getCachedEvents: builder.read(getters.getCachedEvents),
   getDashboardAddressAsLocalAddress: builder.read(getters.getDashboardAddressAsLocalAddress),
   getFormattedValidators: builder.read(getters.getFormattedValidators),
+  getWithdrewOn: builder.read(getters.getWithdrewOn),
 
   // mutations
-  setIsLoggedIn:          builder.commit(mutations.setIsLoggedIn),
-  setShowSidebar:         builder.commit(mutations.setShowSidebar),
-  setConnectedToMetamask: builder.commit(mutations.setConnectedToMetamask),
-  setWeb3:                builder.commit(mutations.setWeb3),
   setUserBalance:         builder.commit(mutations.setUserBalance),
-  setValidators:          builder.commit(mutations.setValidators),
   setCurrentMetamaskAddress: builder.commit(mutations.setCurrentMetamaskAddress),
-  setStatus: builder.commit(mutations.setStatus),
-  setMetamaskDisabled: builder.commit(mutations.setMetamaskDisabled),
-  setShowLoadingSpinner: builder.commit(mutations.setShowLoadingSpinner),
-  setSignWalletModal: builder.commit(mutations.setSignWalletModal),
-  setAlreadyMappedModal: builder.commit(mutations.setAlreadyMappedModal),
-  setMappingSuccess: builder.commit(mutations.setMappingSuccess),
-  setRewardsResults: builder.commit(mutations.setRewardsResults),
-  setTimeUntilElectionCycle: builder.commit(mutations.setTimeUntilElectionCycle),
-  setNextElectionTime: builder.commit(mutations.setNextElectionTime),
+  setStatus:              builder.commit(mutations.setStatus),
+  setShowLoadingSpinner:  builder.commit(mutations.setShowLoadingSpinner),
+  setShowSidebar:         builder.commit(mutations.setShowSidebar),
+  setShowSigningAlert: builder.commit(mutations.setShowSigningAlert),
+  setSignWalletModal:     builder.commit(mutations.setSignWalletModal),
+  setIsLoggedIn:          builder.commit(mutations.setIsLoggedIn),
+  // ethereum
+  setMetamaskDisabled:    builder.commit(mutations.setMetamaskDisabled),
+  setWeb3:                builder.commit(mutations.setWeb3),
+  setConnectedToMetamask: builder.commit(mutations.setConnectedToMetamask),
   setWalletType: builder.commit(mutations.setWalletType),
   setSelectedAccount: builder.commit(mutations.setSelectedAccount),
+  setSelectedLedgerPath: builder.commit(mutations.setSelectedLedgerPath),
   setLatesBlockNumber: builder.commit(mutations.setLatesBlockNumber),
   setCachedEvents: builder.commit(mutations.setCachedEvents),
-  setSelectedLedgerPath: builder.commit(mutations.setSelectedLedgerPath),
   setGatewayBusy: builder.commit(mutations.setGatewayBusy),
   setHistoryPromise: builder.commit(mutations.setHistoryPromise),
-  setDappChainEvents: builder.commit(mutations.setDappChainEvents),
+
+  // plasma
   setClient: builder.commit(mutations.setClient),
+  setDappChainConnected: builder.commit(mutations.setDappChainConnected),
+  setDappChainEvents: builder.commit(mutations.setDappChainEvents),
+
+  // mapper
+  switchDposUser: builder.dispatch(switchDposUser),
   setMapper: builder.commit(mutations.setMapper),
+  setAlreadyMappedModal:  builder.commit(mutations.setAlreadyMappedModal),
+  setMappingSuccess:      builder.commit(mutations.setMappingSuccess),
+  setMappingStatus: builder.commit(mutations.setMappingStatus),
+  setMappingError: builder.commit(mutations.setMappingError),
+
+  // DPOS
+  setDPOSUserV3:          builder.commit(mutations.setDPOSUserV3),
+  setValidators:          builder.commit(mutations.setValidators),
+  setTimeUntilElectionCycle: builder.commit(mutations.setTimeUntilElectionCycle),
+  setNextElectionTime: builder.commit(mutations.setNextElectionTime),
   setAnalyticsData: builder.commit(mutations.setAnalyticsData),
   setDelegations: builder.commit(mutations.setDelegations),
+  setRewardsResults:      builder.commit(mutations.setRewardsResults),
+
+  // gateway
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
   setPendingTx: builder.commit(mutations.setPendingTx),
 
+  updateState: builder.commit(mutations.updateState),
+
+  setMetamaskStatus: builder.commit(mutations.setMetamaskStatus),
+  setMetamaskError: builder.commit(mutations.setMetamaskError),
+  setWithdrewSignature: builder.commit(mutations.setWithdrewSignature),
+  setWithdrewOn: builder.commit(mutations.setWithdrewOn),
+  setNetworkId: builder.commit(mutations.setNetworkId),
+  setCurrentChain: builder.commit(mutations.setCurrentChain),
+
   // actions
+  registerWeb3: builder.dispatch(registerWeb3),
+  initWeb3Local: builder.dispatch(initWeb3Local),
+  initWeb3: builder.dispatch(initWeb3),
   initializeDependencies: builder.dispatch(initializeDependencies),
+
+  ensureIdentityMappingExists: builder.dispatch(ensureIdentityMappingExists),
+  createNewPlasmaUser: builder.dispatch(createNewPlasmaUser),
   checkMappingAccountStatus: builder.dispatch(checkMappingAccountStatus),
   storePrivateKeyFromSeed: builder.dispatch(storePrivateKeyFromSeed),
   clearPrivateKey: builder.dispatch(clearPrivateKey),
   checkIfConnected: builder.dispatch(checkIfConnected),
-  initWeb3Local: builder.dispatch(initWeb3Local),
-  initWeb3: builder.dispatch(initWeb3),
-  getValidatorList: builder.dispatch(getValidatorList),
-  checkAllDelegations: builder.dispatch(checkAllDelegations),
-  consolidateDelegations: builder.dispatch(consolidateDelegations),
-  queryRewards: builder.dispatch(queryRewards),
-  claimRewardsAsync: builder.dispatch(claimRewardsAsync),
-  getTimeUntilElectionsAsync: builder.dispatch(getTimeUntilElectionsAsync),
-  redelegateAsync: builder.dispatch(redelegateAsync),
+
   fetchDappChainEvents: builder.dispatch(fetchDappChainEvents),
   fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
   loadEthereumHistory: builder.dispatch(loadEthereumHistory),
   updateDailyWithdrawLimit: builder.dispatch(updateDailyWithdrawLimit),
+  addMappingAsync: builder.dispatch(addMappingAsync),
   approveDeposit: builder.dispatch(approveDeposit),
   executeDeposit: builder.dispatch(executeDeposit),
+  depositAsync: builder.dispatch(depositAsync),
+  withdrawAsync: builder.dispatch(withdrawAsync),
+  approveAsync: builder.dispatch(approveAsync),
+
+  getDpos3: builder.dispatch(getDpos3),
+  initDposUser: builder.dispatch(initDposUser),
+  delegateAsync: builder.dispatch(delegateAsync),
+  redelegateAsync: builder.dispatch(redelegateAsync),
+  undelegateAsync: builder.dispatch(undelegateAsync),
+  queryRewards: builder.dispatch(queryRewards),
+  claimRewardsAsync: builder.dispatch(claimRewardsAsync),
+  getValidatorsAsync: builder.dispatch(getValidatorsAsync),
+  checkAllDelegations: builder.dispatch(checkAllDelegations),
+  consolidateDelegations: builder.dispatch(consolidateDelegations),
+  getTimeUntilElectionsAsync: builder.dispatch(getTimeUntilElectionsAsync),
+
+  // the rest fron dappchain store
+  addChainUrl: builder.dispatch(addChainUrl),
+  getMetamaskLoomBalance: builder.dispatch(getMetamaskLoomBalance),
+
+  getDappchainLoomBalance: builder.dispatch(getDappchainLoomBalance),
+  getUnclaimedLoomTokens: builder.dispatch(getUnclaimedLoomTokens),
+  reclaimDeposit: builder.dispatch(reclaimDeposit),
+  getPendingWithdrawalReceipt: builder.dispatch(getPendingWithdrawalReceipt),
+  withdrawCoinGatewayAsync: builder.dispatch(withdrawCoinGatewayAsync),
+  init: builder.dispatch(init),
+  showMsg: builder.dispatch(showMsg),
+
 }
 
-
+// const DPOSStore = builder.vuexModule()
 
 // actions
 
+import { BareActionContext } from "vuex-typex"
+// import { DappChainTypedModule } from '../dappchain';
+import { CommonTypedStore } from "../common"
+import { createDefaultClient } from "loom-js/dist/helpers"
 
-
-
-import { BareActionContext } from "vuex-typex";
-import { DappChainTypedModule } from '../dappchain';
+// shorthand for action context
 declare type Context = BareActionContext<DposState, DashboardState>
 
-async function initializeDependencies(ctx:Context, payload) {
-  DPOSTypedStore.setShowLoadingSpinner(true);
+async function initializeDependencies(ctx: Context, payload) {
+  DPOSTypedStore.setShowLoadingSpinner(true)
   try {
-    await DPOSTypedStore.initWeb3Local();
-    await DappChainTypedModule.ensureIdentityMappingExists(null);
-    await DPOSTypedStore.checkMappingAccountStatus;
-    await DappChainTypedModule.initDposUser(  null );
+    await DPOSTypedStore.initWeb3Local()
+    await DPOSTypedStore.ensureIdentityMappingExists({})
+    await DPOSTypedStore.checkMappingAccountStatus()
+    await DPOSTypedStore.initDposUser()
   } catch (err) {
     if (err.message === "no Metamask installation detected") {
-      DPOSTypedStore.setMetamaskDisabled(true);;
+      DPOSTypedStore.setMetamaskDisabled(true)
     }
-    commit(
-      "setErrorMsg",
+    CommonTypedStore.setErrorMsg(
       {
         msg: "An error occurred, please refresh the page",
         forever: false,
         report: true,
-        cause: err
+        cause: err,
       },
-      { root: true }
-    );
-    DPOSTypedStore.setShowLoadingSpinner(false);
-    throw err;
+    )
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    throw err
   }
-  DPOSTypedStore.setShowLoadingSpinner(false);
+  DPOSTypedStore.setShowLoadingSpinner(false)
 }
-async function checkMappingAccountStatus(ctx:Context) {
-  DPOSTypedStore.setSignWalletModal(false);;
-  DPOSTypedStore.setAlreadyMappedModal(false);;
+
+async function checkMappingAccountStatus(ctx: Context) {
+  DPOSTypedStore.setSignWalletModal(false)
+  DPOSTypedStore.setAlreadyMappedModal(false)
   if (ctx.state.status == "no_mapping" && ctx.state.mappingError == undefined) {
     try {
-      DPOSTypedStore.setSignWalletModal(true);;
-      DPOSTypedStore.setShowLoadingSpinner(true);
-      await DappChainTypedModule.createNewPlasmaUser(  null );
+      DPOSTypedStore.setSignWalletModal(true)
+      DPOSTypedStore.setShowLoadingSpinner(true)
+      await DPOSTypedStore.createNewPlasmaUser()
       // await DappChainTypedModule.addMappingAsync(  null )
-      DPOSTypedStore.setShowLoadingSpinner(false);
-      DPOSTypedStore.setMappingSuccess(true);;
-      DPOSTypedStore.setSignWalletModal(false);;
+      DPOSTypedStore.setShowLoadingSpinner(false)
+      DPOSTypedStore.setMappingSuccess(true)
+      DPOSTypedStore.setSignWalletModal(false)
     } catch (err) {
-      console.log("add mapping async error", err);
-      DPOSTypedStore.setSignWalletModal(false);;
+      console.log("add mapping async error", err)
+      DPOSTypedStore.setSignWalletModal(false)
       if (err.message.includes("identity mapping already exists")) {
-        DPOSTypedStore.setAlreadyMappedModal(true);;
+        DPOSTypedStore.setAlreadyMappedModal(true)
       } else {
-        commit(
-          "setErrorMsg",
+        CommonTypedStore.setErrorMsg(
           { msg: err.message, forever: false, report: true, cause: err },
-          { root: true }
-        );
+        )
       }
     }
   } else if (ctx.state.status == "no_mapping" && ctx.state.mappingError !== undefined) {
-    DPOSTypedStore.setSignWalletModal(false);;
+    DPOSTypedStore.setSignWalletModal(false)
     // if (err.message.includes("identity mapping already exists")) {
     //   DPOSTypedStore.setAlreadyMappedModal(true);
     // } else {
     //   commit("setErrorMsg", {msg: err.message, forever: false, report: true, cause: err}, { root: true })
     // }
   } else if (ctx.state.status == "mapped") {
-    DPOSTypedStore.setMappingSuccess(true);
+    DPOSTypedStore.setMappingSuccess(true)
   }
-  DPOSTypedStore.setShowLoadingSpinner(false);
+  DPOSTypedStore.setShowLoadingSpinner(false)
 }
 async function storePrivateKeyFromSeed(ctx, payload) {
   const privateKey = CryptoUtils.generatePrivateKeyFromSeed(
-    payload.seed.slice(0, 32)
-  );
-  const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey);
-  sessionStorage.setItem("privatekey", privateKeyString);
-  DPOSTypedStore.setIsLoggedIn(true);;
+    payload.seed.slice(0, 32),
+  )
+  const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
+  sessionStorage.setItem("privatekey", privateKeyString)
+  DPOSTypedStore.setIsLoggedIn(true)
 }
 async function clearPrivateKey(ctx, payload) {
-  sessionStorage.removeItem("privatekey");
-  DPOSTypedStore.setIsLoggedIn(false);;
+  sessionStorage.removeItem("privatekey")
+  DPOSTypedStore.setIsLoggedIn(false)
 }
-async function checkIfConnected(ctx:Context) {
-  if (!ctx.state.web3) await DPOSTypedStore.initWeb3();
+async function checkIfConnected(ctx: Context) {
+  if (!ctx.state.web3) await DPOSTypedStore.initWeb3()
 }
 // broken
-async function initWeb3Local(ctx:Context) {
+async function initWeb3Local(ctx: Context) {
   if (ctx.state.walletType === "metamask") {
-    let web3js:Web3 = await web3init();
-    let accounts = await web3js.eth.getAccounts();
-    let metamaskAccount = accounts[0];
-    DPOSTypedStore.setWeb3(web3js);
-    DPOSTypedStore.setCurrentMetamaskAddress(metamaskAccount);
+    // @ts-ignore
+    const web3js: Web3 = await web3init()
+    const accounts = await web3js.eth.getAccounts()
+    const metamaskAccount = accounts[0]
+    DPOSTypedStore.setWeb3(web3js)
+    DPOSTypedStore.setCurrentMetamaskAddress(metamaskAccount)
   } else if (ctx.state.walletType === "ledger") {
     if (ctx.state.selectedLedgerPath) {
       // let web3js = await initWeb3SelectedWallet(ctx.state.selectedLedgerPath)
       // DPOSTypedStore.setWeb3(web3js);
     } else {
-      console.error("no HD path selected");
-      throw new Error("No HD path selected");
+      console.error("no HD path selected")
+      throw new Error("No HD path selected")
     }
   }
-  DPOSTypedStore.setConnectedToMetamask(true);;
-  await DappChainTypedModule.init( null );
-  await dispatch(
-    "DappChain/registerWeb3",
+  DPOSTypedStore.setConnectedToMetamask(true)
+  await DPOSTypedStore.init()
+  await DPOSTypedStore.registerWeb3(
     { web3: ctx.state.web3 },
-    { root: true }
-  );
+  )
 }
 
-async function initWeb3(ctx:Context) {
-  let web3js;
+async function initWeb3(ctx: Context) {
+  let web3js
   // @ts-ignore
   if (window.ethereum) {
     // @ts-ignore
-    window.web3 = new Web3(ethereum);
+    window.web3 = new Web3(ethereum)
     // @ts-ignore
-    web3js = new Web3(ethereum);
+    web3js = new Web3(ethereum)
     try {
       // @ts-ignore
-      await ethereum.enable();
+      await ethereum.enable()
     } catch (err) {
-      dispatch("setError", "User denied access to Metamask", { root: true });
-      return;
+      CommonTypedStore.setError({err: "User denied access to Metamask", msg: "User denied access to Metamask"})
+      return
     }
     // @ts-ignore
   } else if (window.web3) {
     // @ts-ignore
-    window.web3 = new Web3(window.web3.currentProvider);
+    window.web3 = new Web3(window.web3.currentProvider)
     // @ts-ignore
-    web3js = new Web3(window.web3.currentProvider);
+    web3js = new Web3(window.web3.currentProvider)
   } else {
-    dispatch("setError", "Metamask is not Enabled", { root: true });
+    CommonTypedStore.setError({err: "Metamask is not Enabled", msg: "User denied access to Metamask"})
   }
-  DPOSTypedStore.setWeb3(web3js);;
+  DPOSTypedStore.setWeb3(web3js)
 }
-/**
- * @deprecated use get state.DappChain.validators which is automatically refreshed
- * when needed
- * @param {*} param0
- */
-async function getValidatorList(ctx:Context) {
-  try {
-    const validators = await dispatch("DappChain/getValidatorsAsync", null, {
-      root: true
-    });
-    if (validators.length === 0) {
-      return null;
-    }
-    const validatorList: any[] = [];
-    for (let i in validators) {
-      const validator = validators[i];
 
-      let weight = 0;
-      if (validator.isBootstrap) {
-        weight = 1;
-      } else if (validator.name === "") {
-        weight = 2;
-      }
-
-      // Check if bootstrap val
-      const validatorName =
-        validator.name !== "" ? validator.name : validator.address;
-      const isBootstrap = validator.isBootstrap;
-      validatorList.push({
-        Address: validator.address,
-        // Active / Inactive validator
-        Status: validator.active ? "Active" : "Inactive",
-        totalStaked: formatToCrypto(validator.totalStaked),
-        delegationsTotal: formatToCrypto(validator.delegationsTotal),
-        personalStake: formatToCrypto(validator.personalStake),
-        delegatedStake: formatToCrypto(validator.delegatedStake),
-        // Whitelist + Tokens Staked * Bonuses
-        votingPower: formatToCrypto(validator.votingPower || 0),
-        // Validator MEtadata
-        Name: validatorName,
-        Description: validator.description || null,
-        Website: validator.website || null,
-        Fees: isBootstrap ? "N/A" : (validator.fee || "0") + "%",
-        isBootstrap,
-        Weight: weight || 0,
-        _cellVariants: {
-          Status: validator.active ? "active" : "inactive",
-          Name: isBootstrap ? "danger" : undefined
-        }
-      });
-    }
-    validatorList.sort(dynamicSort("Weight"));
-    DPOSTypedStore.setValidators(validatorList);;
-  } catch (err) {
-    console.error(err);
-    DPOSTypedStore.setValidators([]);
-    dispatch(
-      "setError",
-      { msg: "Fetching validators failed", report: true, cause: err },
-      { root: true }
-    );
-  }
-}
-async function checkAllDelegations(ctx:Context) {
-  console.assert(
-    !!ctx.rootState.DappChain.dposUser,
-    "expected dposUser to be initialised"
-  );
-  const dposUser: DPOSUserV3 = await ctx.rootState.DappChain.dposUser!;
-
-  debug("checkAllDelegationsAsync");
+async function checkAllDelegations(ctx: Context) {
+  const user = await requireDposUser(ctx)
+  log("checkAllDelegationsAsync")
   const {
     amount,
     weightedAmount,
-    delegationsArray
-  } = await dposUser.checkAllDelegationsAsync();
-  debug("delegations", delegationsArray);
-  let filteredDelegations = delegationsArray
+    delegationsArray,
+  } = await user.checkAllDelegationsAsync()
+  log("delegations", delegationsArray)
+  const filteredDelegations = delegationsArray
     // delegation with index 0 represents rewards
-    .filter(d => d.index > 0)
-    .filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
+    .filter((d) => d.index > 0)
+    .filter((d) => !(d.amount.isZero() && d.updateAmount.isZero()))
     // add string address to make it easy to compare
-    .map(d =>
+    .map((d) =>
       Object.assign(d, {
-        validatorStr: d.validator.local.toString()
-      })
-    );
-  const userBalance = ctx.state.userBalance;
-  const stakedAmount = formatToCrypto(weightedAmount.toString());
-  DPOSTypedStore.setDelegations(filteredDelegations);
-  DPOSTypedStore.setUserBalance(Object.assign(userBalance, { stakedAmount }));
+        validatorStr: d.validator.local.toString(),
+      }),
+    )
+  const userBalance = ctx.state.userBalance
+  const stakedAmount = formatToCrypto(weightedAmount.toString())
+  DPOSTypedStore.setDelegations(filteredDelegations)
+  DPOSTypedStore.setUserBalance(Object.assign(userBalance, { stakedAmount }))
 }
-async function consolidateDelegations(ctx:Context, validator) {
-  console.assert(
-    !!ctx.rootState.DappChain.dposUser,
-    "expected dposUser to be initialised"
-  );
-  const dposUser: DPOSUserV3 = await ctx.rootState.DappChain.dposUser!;
-  const address = Address.fromString(
-    `${dposUser.client.chainId}:${validator.address}`
-  );
-  debug("consolidateDelegations");
-  await dposUser.dappchainDPOS.consolidateDelegations(address);
-}
-async function queryRewards(ctx:Context) {
-  if (!ctx.rootState.DappChain.dposUser) {
-    throw new Error("Expected dposUser to be initialized");
-  }
+async function consolidateDelegations(ctx: Context, validator) {
+  const user = await requireDposUser(ctx)
 
-  const user: DPOSUserV3 = await ctx.rootState.DappChain.dposUser!;
+  const address = Address.fromString(
+    `${user.client.chainId}:${validator.address}`,
+  )
+  log("consolidateDelegations")
+  await user.dappchainDPOS.consolidateDelegations(address)
+}
+async function queryRewards(ctx: Context) {
+  const user = await requireDposUser(ctx)
   try {
-    debug("queryRewards");
-    const result = await user.checkRewardsAsync();
-    const formattedResult = formatToCrypto(result);
-    DPOSTypedStore.setRewardsResults(formattedResult);
+    log("queryRewards")
+    const result = await user.checkRewardsAsync()
+    const formattedResult = formatToCrypto(result)
+    DPOSTypedStore.setRewardsResults(formattedResult)
   } catch (err) {
     if (err.message.includes("Distribution record not found")) {
-      DPOSTypedStore.setRewardsResults(0);
+      DPOSTypedStore.setRewardsResults("0")
     } else {
-      commit(
-        "setErrorMsg",
+      CommonTypedStore.setErrorMsg(
         {
           msg: "Failed querying rewards",
           forever: false,
           report: true,
-          cause: err
+          cause: err,
         },
-        { root: true }
-      );
+      )
     }
   }
 }
 
-async function claimRewardsAsync({ rootState }) {
-  if (!rootState.DappChain.dposUser) {
-    throw new Error("Expected dposUser to be initialized");
-  }
-  const user: DPOSUserV3 = await rootState.DappChain.dposUser;
+async function claimRewardsAsync(ctx: Context) {
+  const user = await requireDposUser(ctx)
   try {
-    debug("claimRewardsAsync");
-    await user.claimRewardsAsync();
+    log("claimRewardsAsync")
+    await user.claimRewardsAsync()
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 }
 // this can be moved out as is automatically called once dposUser is set
 // actually instead of depending on dposUser we should depend on dpos contract
 // (if we want to display timer in "anonymous" session)
-async function getTimeUntilElectionsAsync(ctx:Context) {
-  debug("getTimeUntilElectionsAsync");
-  const dpos: DPOS3 = await dispatch("DappChain/getDpos3", null, {
-    root: true
-  });
+async function getTimeUntilElectionsAsync(ctx: Context) {
+  log("getTimeUntilElectionsAsync")
+  const dpos = await DPOSTypedStore.getDpos3({})
   try {
-    const result: BN = await dpos.getTimeUntilElectionAsync();
-    debug("next election in %s seconds", result.toNumber());
-    DPOSTypedStore.setTimeUntilElectionCycle("" + result.toNumber());
-    DPOSTypedStore.setNextElectionTime(Date.now() + result.toNumber() * 1000); //Date.now() + (result.toNumber()*1000))
+    const result: BN = await dpos.getTimeUntilElectionAsync()
+    log("next election in %s seconds", result.toNumber())
+    DPOSTypedStore.setTimeUntilElectionCycle("" + result.toNumber())
+    DPOSTypedStore.setNextElectionTime(Date.now() + result.toNumber() * 1000) // Date.now() + (result.toNumber()*1000))
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 }
 
-async function redelegateAsync(ctx:Context, payload) {
-  if (!ctx.rootState.DappChain.dposUser) {
-    throw new Error("Expected dposUser to be initialized");
+async function addMappingAsync(ctx: Context) {
+  if (!ctx.state.dposUser) {
+    await DPOSTypedStore.initDposUser()
   }
+  try {
+    const user = await ctx.state.dposUser!
+    await user.mapAccountsAsync()
+    DPOSTypedStore.setStatus("mapped")
+  } catch (err) {
+    DPOSTypedStore.setMappingError(err.message)
+    throw Error(err.message.toString())
+  }
+}
 
-  const { origin, target, amount, index } = payload;
-  const user = await ctx.rootState.DappChain.dposUser;
+async function redelegateAsync(ctx: Context, payload: {origin: string, target: string, amount: string, index: number}) {
+  const user = await requireDposUser(ctx)
+  const { origin, target, amount, index } = payload
 
   try {
-    await user.redelegateAsync(origin, target, amount, index);
-    commit(
-      "setSuccessMsg",
+    await user.redelegateAsync(origin, target, amount, index)
+    CommonTypedStore.setSuccessMsg(
       { msg: "Success redelegating stake", forever: false },
-      { root: true }
-    );
+    )
   } catch (err) {
-    console.error(err);
-    commit(
-      "setErrorMsg",
+    console.error(err)
+    CommonTypedStore.setErrorMsg(
       {
         msg: "Failed to redelegate stake",
         forever: false,
         report: true,
-        cause: err
+        cause: err,
       },
-      { root: true }
-    );
+    )
   }
 }
 
-async function fetchDappChainEvents(ctx:Context) {
-  let historyPromise = axios.get(
-    `${ctx.state.dappChainEventUrl}/eth:${
-      ctx.state.currentMetamaskAddress
-    }?sort=-block_height`
-  );
+async function fetchDappChainEvents(ctx: Context) {
+  const {currentMetamaskAddress, dappChainEventUrl} = ctx.state
+  const historyPromise = axios.get(
+    `${dappChainEventUrl}/eth:${currentMetamaskAddress}?sort=-block_height`,
+  )
   // Store the unresolved promise
-  DPOSTypedStore.setHistoryPromise(historyPromise);
+  DPOSTypedStore.setHistoryPromise(historyPromise)
 
   historyPromise
-    .then(response => {
+    .then((response) => {
       return response.data.txs
-        .filter(tx => {
-          // Filter based on these events
-          if (
+        .filter((tx) =>
             tx.topic === "event:WithdrawLoomCoin" ||
             tx.topic === "event:MainnetDepositEvent" ||
-            tx.topic === "event:MainnetWithdrawalEvent"
-          ) {
-            return tx;
-          }
-        })
-        .map(tx => {
-          let type = "";
+            tx.topic === "event:MainnetWithdrawalEvent",
+        )
+        .map((tx) => {
+          let type = ""
           switch (tx.topic) {
             case "event:MainnetDepositEvent":
-              type = "Deposit";
-              break;
+              type = "Deposit"
+              break
             case "event:MainnetWithdrawalEvent":
-              type = "Withdraw";
-              break;
+              type = "Withdraw"
+              break
             case "event:WithdrawLoomCoin":
-              type = "Withdraw Begun";
-              break;
+              type = "Withdraw Begun"
+              break
             default:
-              break;
+              type = "Other"
+              break
           }
 
-          let amount = tx.token_amount;
+          const amount = tx.token_amount
 
           // Return events in this format
           return {
             "Block #": tx.block_height,
-            Event: type,
-            Amount: formatToCrypto(amount),
-            "Tx Hash": tx.tx_hash
-          };
-        });
+            "Event": type,
+            "Amount": formatToCrypto(amount),
+            "Tx Hash": tx.tx_hash,
+          }
+        })
     })
-    .catch(err => {
-      console.error(err);
+    .catch((err) => {
+      console.error(err)
     })
-    .then(results => {
-      DPOSTypedStore.setDappChainEvents(results);;
-    });
+    .then((results) => {
+      DPOSTypedStore.setDappChainEvents(results)
+    })
 }
 
-async function fetchAnalyticsData(ctx:Context) {
+async function fetchAnalyticsData(ctx: Context) {
   // TODO: Uncomment to use .env
   // let url = process.env.VUE_APP_ANALYTICS_URL
   // let dataPromise = await axios.get(url + "/delegation/total?from_date&to_date")
-  let url = ctx.state.analyticsEndpoint;
-  let data = await axios.get(
-    url + "/delegation/total?from_date&to_date"
-  );
-  DPOSTypedStore.setAnalyticsData(data);
+  const url = ctx.state.analyticsEndpoint
+  const data = await axios.get(
+    url + "/delegation/total?from_date&to_date",
+  )
+  DPOSTypedStore.setAnalyticsData(data)
 }
-async function loadEthereumHistory(ctx:Context) {
-  debug("loadEthereumHistory");
-  if (!ctx.rootState.DappChain.dposUser) {
-    console.warn("no dposUser for which to call history");
-    return;
-  }
-  const user: DPOSUserV3 = await ctx.rootState.DappChain.dposUser!;
-  const loom = user.ethereumLoom;
-  const gateway = user.ethereumGateway;
-  const provider = user.ethereumGateway.provider;
-  const cachedEvents = DPOSTypedStore.getCachedEvents();
+async function loadEthereumHistory(ctx: Context) {
+  log("loadEthereumHistory")
+  const user = await requireDposUser(ctx)
+  const loom = user.ethereumLoom
+  const gateway = user.ethereumGateway
+  const provider = user.ethereumGateway.provider
+  const cachedEvents = DPOSTypedStore.getCachedEvents()
   // Get latest mined block from Ethereum
   const depositFilter = loom.filters.Transfer(
     user.ethAddress,
     gateway.address,
-    null
-  );
+    null,
+  )
   const withdrawFilter = loom.filters.Transfer(
     gateway.address,
     user.ethAddress,
-    null
-  );
-  let deposits: Log[];
-  let withdraws: Log[];
-  let toBlock;
+    null,
+  )
+  let deposits: Log[]
+  let withdraws: Log[]
+  let toBlock
   try {
-    deposits = await loom.provider.getLogs(depositFilter);
-    withdraws = await loom.provider.getLogs(withdrawFilter);
-    toBlock = await provider.getBlockNumber();
+    deposits = await loom.provider.getLogs(depositFilter)
+    withdraws = await loom.provider.getLogs(withdrawFilter)
+    toBlock = await provider.getBlockNumber()
   } catch (e) {
-    console.error(e);
-    return [];
+    console.error(e)
+    return []
   }
 
   const history = deposits
-    .map(entry => ({
+    .map((entry) => ({
       "Block #": entry.blockNumber!,
-      Event: "Deposit",
-      Amount: formatToCrypto(entry.topics[2]),
-      "Tx Hash": entry.transactionHash
+      "Event": "Deposit",
+      "Amount": formatToCrypto(entry.topics[2]),
+      "Tx Hash": entry.transactionHash,
     }))
     .concat(
-      withdraws.map(entry => ({
+      withdraws.map((entry) => ({
         "Block #": entry.blockNumber!,
-        Event: "Withdraw",
-        Amount: formatToCrypto(entry.topics[2]),
-        "Tx Hash": entry.transactionHash
-      }))
+        "Event": "Withdraw",
+        "Amount": formatToCrypto(entry.topics[2]),
+        "Tx Hash": entry.transactionHash,
+      })),
     )
-    .sort((a, b) => a["Block #"] - b["Block #"]);
+    .sort((a, b) => a["Block #"] - b["Block #"])
 
-  const mergedEvents:any[] = cachedEvents.concat(history);
-  DPOSTypedStore.setLatesBlockNumber(toBlock);
-  DPOSTypedStore.setCachedEvents(mergedEvents);
-  debug("ethereum history", mergedEvents);
-  return mergedEvents;
+  const mergedEvents: any[] = cachedEvents.concat(history)
+  DPOSTypedStore.setLatesBlockNumber(toBlock)
+  DPOSTypedStore.setCachedEvents(mergedEvents)
+  log("ethereum history", mergedEvents)
+  return mergedEvents
 }
 
-async function updateDailyWithdrawLimit(ctx:Context, history) {
+async function updateDailyWithdrawLimit(ctx: Context, history) {
   // TODO externalise this
   const limit = history
-    .filter(item => item.Event === "Withdraw") // and date is today
+    .filter((item) => item.Event === "Withdraw") // and date is today
     .reduce(
       (left, item) => left - parseInt(item.Amount, 10),
-      DAILY_WITHDRAW_LIMIT
-    );
-  ctx.state.withdrawLimit = Math.max(0, limit);
-  debug("ctx.state.withdrawLimit", ctx.state.withdrawLimit);
-  return ctx.state.withdrawLimit;
+      DAILY_WITHDRAW_LIMIT,
+    )
+  ctx.state.withdrawLimit = Math.max(0, limit)
+  log("ctx.state.withdrawLimit", ctx.state.withdrawLimit)
+  return ctx.state.withdrawLimit
 }
 /**
  * sends an approval request and does not wait for a confirmation
@@ -634,20 +627,16 @@ async function updateDailyWithdrawLimit(ctx:Context, history) {
  * @param {*} tokenAmount
  * @see dposPlugin
  */
-async function approveDeposit(ctx:Context, tokenAmount) {
-  console.assert(
-    ctx.rootState.DappChain.dposUser,
-    "Expected dposUser to be initialized"
-  );
-  const dposUser = await ctx.rootState.DappChain.dposUser!;
-  const loom = dposUser.ethereumLoom;
-  const gw = dposUser.ethereumGateway;
-  const wei = ethers.utils.parseEther("" + tokenAmount);
-  debug("approve", gw.address, wei.toString(), wei);
+async function approveDeposit(ctx: Context, tokenAmount) {
+  const user = await requireDposUser(ctx)
+  const loom = user.ethereumLoom
+  const gw = user.ethereumGateway
+  const wei = ethers.utils.parseEther("" + tokenAmount)
+  log("approve", gw.address, wei.toString(), wei)
   return executeTx(
-    "deposit approval", 
-    () => loom.functions.approve(gw.address, wei.toString())
-  );
+    "deposit approval",
+    () => loom.functions.approve(gw.address, wei.toString()),
+  )
 }
 /**
  * deposits amount: min(allowance, floor(ballance))
@@ -657,52 +646,634 @@ async function approveDeposit(ctx:Context, tokenAmount) {
  * @param {Store} param0
  * @param {ethers.utils.BigNumber} weiAmount
  */
-async function executeDeposit(ctx:Context) {
-  console.assert(
-    ctx.rootState.DappChain.dposUser,
-    "Expected dposUser to be initialized"
-  );
-  const dposUser = await ctx.rootState.DappChain.dposUser!;
-  const loom = dposUser.ethereumLoom;
-  const gw = dposUser.ethereumGateway;
-  const account = dposUser.ethAddress;
+async function executeDeposit(ctx: Context) {
+  const user = await requireDposUser(ctx)
+  const loom = user.ethereumLoom
+  const gw = user.ethereumGateway
+  const account = user.ethAddress
   const rawAmount = await Promise.all([
     loom.balanceOf(account),
-    loom.allowance(account, gw.address)
+    loom.allowance(account, gw.address),
   ]).then(([balance, allowance]) => {
-    debug("balance %s allowance %s", balance.toString(), allowance.toString());
-    return allowance.lt(balance) ? allowance : balance;
-  });
+    log("balance %s allowance %s", balance.toString(), allowance.toString())
+    return allowance.lt(balance) ? allowance : balance
+  })
 
   // rounding...
-  const amount = rawAmount.sub(rawAmount.mod(ethers.constants.WeiPerEther));
+  const amount = rawAmount.sub(rawAmount.mod(ethers.constants.WeiPerEther))
   if (amount.isZero()) {
-    throw new Error("No allowance or insufisient funds");
+    throw new Error("No allowance or insufisient funds")
   }
-  debug("depositERC20 %s ", amount.toString(), loom.address);
+  log("depositERC20 %s ", amount.toString(), loom.address)
 
   await executeTx("deposit", () =>
-    gw.functions.depositERC20(amount.toString(), loom.address)
-  );
+    gw.functions.depositERC20(amount.toString(), loom.address),
+  )
 }
 
-async function executeTx(type:string, fn) {
-  const pendingTx = { type, hash: "" };
-  DPOSTypedStore.setGatewayBusy(true);;
+async function executeTx(type: string, fn) {
+  const pendingTx = { type, hash: "" }
+  DPOSTypedStore.setGatewayBusy(true)
   try {
-    const tx = await fn();
-    debug("pending tx", tx.hash);
-    pendingTx.hash = tx.hash;
+    const tx = await fn()
+    log("pending tx", tx.hash)
+    pendingTx.hash = tx.hash
   } catch (err) {
     // imToken funky output
     if (err.transactionHash) {
-      pendingTx.hash = err.transactionHash;
+      pendingTx.hash = err.transactionHash
     } else {
-      DPOSTypedStore.setGatewayBusy(false);
-      throw err;
+      DPOSTypedStore.setGatewayBusy(false)
+      throw err
     }
   }
 
-  DPOSTypedStore.setPendingTx(pendingTx);
-  DPOSTypedStore.setGatewayBusy(false);
+  DPOSTypedStore.setPendingTx(pendingTx)
+  DPOSTypedStore.setGatewayBusy(false)
+}
+
+async function ensureIdentityMappingExists(ctx: Context, payload: {currentAddress?: string}) {
+  let metamaskAddress = ""
+  if (payload.currentAddress) {
+    metamaskAddress = payload.currentAddress.toLowerCase()
+  } else {
+    metamaskAddress = ctx.rootState.DPOS.currentMetamaskAddress.toLowerCase()
+  }
+
+  const client = createClient(
+    ctx.state,
+    ctx.rootState.DPOS.dashboardPrivateKey,
+  )
+  DPOSTypedStore.setClient(client)
+
+  try {
+    DPOSTypedStore.setStatus("check_mapping")
+    DPOSTypedStore.setMappingError(null)
+    DPOSTypedStore.setMappingStatus("")
+
+    const dashboardAddress = new Address(
+      "default",
+      LocalAddress.fromHexString(ctx.rootState.DPOS.dashboardAddress),
+    )
+    const addressMapper = await AddressMapper.createAsync(
+      client,
+      dashboardAddress,
+    )
+    DPOSTypedStore.setMapper(addressMapper)
+    const address = new Address(
+      "eth",
+      LocalAddress.fromHexString(metamaskAddress),
+    )
+    const mapping = await addressMapper.getMappingAsync(address)
+    DPOSTypedStore.setStatus("mapped")
+    // DPOSTypedStore.setMapping(mapping)
+  } catch (err) {
+    DPOSTypedStore.setStatus("no_mapping")
+    console.error("Error ensuring mapping exists: ", err)
+    // commit('setErrorMsg', {msg: `Error mapping identities, please try again`, forever: true}, {root: true})
+    return
+  }
+}
+async function createNewPlasmaUser(ctx: Context) {
+  const privateKey = CryptoUtils.generatePrivateKey()
+  const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
+  const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+  const address = LocalAddress.fromPublicKey(publicKey)
+  const ethAddr = ctx.state.currentMetamaskAddress.toLowerCase()
+  const wallet = getMetamaskSigner(ctx.state.web3.currentProvider)
+  const signer = new EthersSigner(wallet)
+
+  const one = new Address("default", address)
+  const two = new Address("eth", LocalAddress.fromHexString(ethAddr))
+  const client = createClient(ctx.state, privateKeyString)
+  const addressMapper = await AddressMapper.createAsync(client, one)
+  await addressMapper.addIdentityMappingAsync(one, two, signer)
+}
+async function delegateAsync(ctx: Context, payload) {
+  if (!ctx.state.dposUser) {
+    throw new Error("expected dposUser to be initialized")
+  }
+  const user: DPOSUserV3 = await ctx.state.dposUser
+  try {
+    const weiAmount = new BN("" + payload.amount, 10).mul(WEI_TOKEN)
+    const tier = parseInt(payload.tier)
+    await user.delegateAsync(payload.candidate, weiAmount, tier)
+    CommonTypedStore.setSuccessMsg(
+      { msg: `Success delegating ${payload.amount} tokens`, forever: false },
+    )
+  } catch (err) {
+    CommonTypedStore.setErrorMsg(
+      { msg: "Error delegating", forever: false, report: true, cause: err },
+    )
+  }
+}
+async function undelegateAsync(
+  ctx: Context,
+  payload: { candidate: string; amount: string; index: number },
+) {
+  if (!ctx.state.dposUser) {
+    throw new Error("expected dposUser to be initialized")
+  }
+  const user: DPOSUserV3 = await ctx.state.dposUser
+  const weiAmount = new BN("" + payload.amount, 10).mul(WEI_TOKEN)
+  try {
+    await user.undelegateAsync(
+      payload.candidate,
+      weiAmount,
+      payload.index,
+    )
+    CommonTypedStore.setSuccessMsg(
+      { msg: `Success un-delegating ${weiAmount} tokens`, forever: false },
+    )
+  } catch (err) {
+    CommonTypedStore.setErrorMsg(
+      { msg: "Failed to undelegate", forever: false, report: true, cause: err },
+    )
+  }
+}
+async function getValidatorsAsync(ctx: Context) {
+  const dpos3 = await DPOSTypedStore.getDpos3({})
+  const template = {
+    address: "",
+    active: false,
+    isBootstrap: false,
+    totalStaked: "0",
+    personalStake: "0",
+    votingPower: "0",
+    delegationTotal: "0",
+    delegatedStake: "0",
+    name: "",
+    website: "",
+    description: "",
+    fee: "N/A",
+    newFee: "N/A",
+  }
+  log("getValidatorsAsync")
+  // Get all validators, candidates and delegations
+  const [validators, candidates, delegations] = await Promise.all([
+    dpos3.getValidatorsAsync(),
+    dpos3.getCandidatesAsync(),
+    dpos3.getAllDelegations(),
+  ])
+  const nodes = candidates.map((c) =>
+    Object.assign({}, template, {
+      address: c.address.local.toString(),
+      personalStake: c.whitelistAmount.toString(),
+      votingPower: c.delegationTotal.toString(),
+      delegationsTotal: c.delegationTotal.sub(c.whitelistAmount).toString(),
+      active: false,
+      isBootstrap: ctx.rootState.DPOS.prohibitedNodes.includes(c.name),
+      name: c.name,
+      website: c.website,
+      description: c.description,
+      fee: (c.fee / 100).toString(),
+      newFee: (c.newFee / 100).toString(),
+    }),
+  )
+  // helper
+  const getOrCreate = (addr) => {
+    let existing: any = nodes.find((node) => node.address === addr)
+    if (!existing) {
+      existing = Object.assign({}, template, { address: addr })
+      nodes.push(existing)
+    }
+    return existing
+  }
+
+  validators.forEach((v) => {
+    const addr = v.address.local.toString()
+    const node = getOrCreate(addr)
+    Object.assign(node, {
+      active: true,
+      personalStake: v.whitelistAmount.toString(),
+      totalStaked: v.whitelistAmount.toString(), // default value for nodes without delegations
+      votingPower: v.delegationTotal.toString(),
+      delegationsTotal: v.delegationTotal.sub(v.whitelistAmount).toString(),
+    })
+  })
+
+  delegations
+    .filter((d) => d.delegationsArray.length > 0)
+    .forEach((d) => {
+      const addr = d.delegationsArray[0].validator.local.toString()
+      const delegatedStake = d.delegationTotal
+      const node = getOrCreate(addr)
+      Object.assign(node, {
+        delegatedStake: delegatedStake.toString(),
+        totalStaked: new BN(node.personalStake).add(delegatedStake).toString(),
+      })
+    })
+  // use the address for those without names
+  nodes.filter((n) => n.name === "").forEach((n) => (n.name = n.address))
+  DPOSTypedStore.setValidators(nodes)
+
+  // return nodes
+}
+async function getDpos3(ctx: Context, payload: { privateKey?: string }) {
+  console.log("getDpos3")
+  if (ctx.state.dposUser) {
+    // todo check ctx.state.dpos3 and remove it/disconnect its client
+    // since we have dposUser now
+    const user = await ctx.state.dposUser
+    return user.dappchainDPOS
+  } else if (ctx.state.dpos3) {
+    DPOSTypedStore.setDappChainConnected(true)
+    return ctx.state.dpos3
+  }
+
+  const networkConfig = ctx.state.chainUrls[ctx.state.networkId]
+
+  log("networkConfig", networkConfig)
+
+  let privateKey
+  if (payload && payload.privateKey) {
+    privateKey = CryptoUtils.B64ToUint8Array(payload.privateKey)
+  } else {
+    privateKey = CryptoUtils.generatePrivateKey()
+  }
+
+  const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
+
+  const { client, address } = createDefaultClient(
+    privateKeyString,
+    networkConfig.dappchainEndpoint,
+    networkConfig.chainId,
+  )
+  client.on("error", (msg) => {
+    DPOSTypedStore.setDappChainConnected(false)
+    console.error("PlasmaChain connection error", msg)
+  })
+  try {
+    const dpos3 = await DPOS3.createAsync(client, address)
+    log("DPOS clreated", dpos3)
+    ctx.state.dpos3 = dpos3
+    DPOSTypedStore.setDappChainConnected(true)
+    return dpos3
+  } catch (error) {
+    console.error("Error creating DPOS contract", error)
+    throw error
+  }
+}
+
+async function initDposUser(ctx: Context) {
+  console.log("initdpos user")
+  if (!ctx.rootState.DPOS.web3) {
+    await DPOSTypedStore.initWeb3Local()
+  }
+  const chainId = ctx.state.currentChain.chainId
+  // set ctx.state.dposUser to be a Promise<dposUser>
+  // so that components caalling it don't complain or go and try to init another dpos user...
+  const user = DPOSUserV3.createEthSignMetamaskUserAsync({
+    web3: ctx.rootState.DPOS.web3,
+    dappchainEndpoint:
+      ctx.state.chainUrls[ctx.state.networkId].dappchainEndpoint,
+    chainId,
+    gatewayAddress: GW_ADDRESS || ctx.state.currentChain.gatewayAddress,
+    version: 1,
+  }).then(user => {
+    reconfigureClient(user.client)
+    log("dposUser ready")
+    return user
+  })
+  user.catch((err) => {
+    console.error(err)
+    CommonTypedStore.setErrorMsg(
+      { msg: "Error initDposUser", forever: false, report: true, cause: err },
+    )
+  })
+  // set the promise
+  DPOSTypedStore.setDPOSUserV3(user)
+}
+
+// TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
+async function switchDposUser(ctx: Context, payload: {web3?: any}) {
+  const privateKeyString = sessionStorage.getItem("privatekey")
+  if (!privateKeyString) {
+    // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
+    throw new Error("No Private Key, Login again")
+  }
+  const network = ctx.state.networkId
+  const chainId = ctx.state.currentChain.chainId
+  const domainType = getDomainType()
+  let user
+  const opts = {
+    web3: payload.web3!,
+    dappchainEndpoint: ctx.state.chainUrls[ctx.state.networkId],
+    chainId,
+    gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
+    version: 1,
+  }
+  try {
+    if (domainType === "dev" || domainType === "local") {
+      user = await DPOSUserV3.createEthSignMetamaskUserAsync(opts)
+    } else {
+      user = await DPOSUserV3.createMetamaskUserAsync({
+        ...opts,
+        dappchainPrivateKey: privateKeyString,
+      })
+    }
+  } catch (err) {
+    CommonTypedStore.setErrorMsg(
+      { msg: "Error initDposUser", forever: false, report: true, cause: err },
+    )
+  }
+  ctx.state.dposUser = user
+}
+
+/**
+ *
+ * @param {store} param0
+ * @param {{amount}} payload
+ * @returns {Promise<TransactionReceipt>}
+ */
+async function withdrawAsync(ctx: Context, { amount }) {
+  console.assert(ctx.state.dposUser, "Expected dposUser to be initialized")
+  const user = await ctx.state.dposUser!
+  const tokens = new BN("" + parseInt(amount, 10))
+  const weiAmount = new BN(ctx.state.web3.utils.toWei(tokens, "ether"), 10)
+  DPOSTypedStore.setGatewayBusy(true)
+  try {
+    const res = await user.withdrawAsync(new BN(weiAmount, 10))
+    DPOSTypedStore.setGatewayBusy(false)
+    return res
+  } catch (err) {
+      DPOSTypedStore.setGatewayBusy(false)
+  }
+}
+/**
+ *
+ * @param {store} param0
+ * @param {{amount}} payload
+ * @returns {Promise<TransactionReceipt>}
+ */
+async function depositAsync(ctx: Context, { amount }) {
+  const user = await requireDposUser(ctx)
+  const tokens = new BN("" + parseInt(amount, 10))
+  const weiAmount = new BN(ctx.state.web3.utils.toWei(tokens, "ether"), 10)
+  DPOSTypedStore.setGatewayBusy(true)
+  try {
+    const res = user.depositAsync(new BN(weiAmount, 10))
+    DPOSTypedStore.setGatewayBusy(false)
+    return res
+  } catch (error) {
+    console.log(error)
+    DPOSTypedStore.setGatewayBusy(false)
+  }
+}
+
+async function approveAsync(ctx: Context, payload) {
+  const user = await requireDposUser(ctx)
+
+  const { amount } = payload
+  const token = user.ethereumLoom
+  const gateway = user.ethereumGateway
+  DPOSTypedStore.setGatewayBusy(true)
+
+  try {
+    await token.approve(gateway.address, amount)
+  } catch (error) {
+    console.log(error)
+  }
+  DPOSTypedStore.setGatewayBusy(false)
+}
+
+export function registerWeb3(ctx: Context, payload: {web3: Web3}) {
+  try {
+    DPOSTypedStore.setWeb3(payload.web3)
+    // these are filled on yarn serve/build
+    ctx.state.GatewayInstance = new payload.web3.eth.Contract(
+      GatewayJSON.abi,
+      GW_ADDRESS || ctx.state.currentChain.gatewayAddress,
+    )
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+function createClient(state, privateKeyString) {
+  const networkConfig = state.chainUrls[state.networkId]
+
+  const { client } = createDefaultClient(
+    privateKeyString,
+    networkConfig.dappchainEndpoint,
+    networkConfig.chainId,
+  )
+  client.on("error", (msg) => {
+    console.error("PlasmaChain connection error", msg)
+  })
+
+  return client
+}
+
+async function requireDposUser(ctx: Context) {
+  if (!ctx.state.dposUser) {
+    throw new Error("Expected dposUser to be initialized")
+  }
+  return await ctx.state.dposUser
+}
+
+/**
+ * overrides client.middleware SignedEthTxMiddleware.Handle
+ * to notify vuex when the user has to sign
+ * @param client
+ */
+function reconfigureClient(client) {
+  const middleware = client.txMiddleware.find(
+    (m) => m instanceof SignedEthTxMiddleware,
+  )
+  if (!middleware) {
+    console.warn(
+      "could not find SignedEthTxMiddleware in client.middleware for reconfiguration",
+    )
+    return client
+  }
+  const handle = middleware.Handle.bind(middleware)
+  middleware.Handle = async function(txData) {
+    DPOSTypedStore.setShowSigningAlert(true)
+    try {
+      const res = await handle(txData)
+      DPOSTypedStore.setShowSigningAlert(false)
+      return res
+    } catch (e) {
+      DPOSTypedStore.setShowSigningAlert(false)
+      throw e
+    }
+  }
+  return client
+}
+
+export function addChainUrl(ctx: Context, payload: {id: string}) {
+  if (ctx.state.networkId === payload.id) return
+  const chains = Object.keys(ctx.state.chainUrls)
+  const existingId = chains.indexOf(payload.id)
+  if (existingId > -1) {
+    DPOSTypedStore.setNetworkId(payload.id)
+    DPOSTypedStore.setCurrentChain(ctx.state.chainUrls[payload.id])
+  } else {
+    return
+  }
+}
+
+async function getMetamaskLoomBalance(ctx: Context) {
+  const dposUser = await requireDposUser(ctx)
+  try {
+    log("ethereumLoom.balanceOf")
+    const result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
+    log("ethereumLoom.balanceOf", result.toString())
+    const balance = formatToCrypto(result.toString())
+    const mainnetBalance = parseFloat(balance).toFixed(2)
+    const userBalance = ctx.rootState.DPOS.userBalance
+    DPOSTypedStore.setUserBalance(
+      Object.assign(userBalance, { mainnetBalance }),
+    )
+    return mainnetBalance
+  } catch (err) {
+    CommonTypedStore.setErrorMsg(
+      {
+        msg: "Error getting metamask balance",
+        forever: false,
+        report: true,
+        cause: err,
+      },
+    )
+    return 0
+  }
+}
+
+async function getDappchainLoomBalance(ctx: Context) {
+  const user = await requireDposUser(ctx)
+  const loomWei = await user.getDAppChainBalanceAsync()
+  log("plasma loom balance", loomWei.toString())
+  const balance = formatToCrypto(loomWei.toString())
+  const userBalance = ctx.rootState.DPOS.userBalance
+  const loomBalance = parseFloat(balance).toFixed(2)
+  DPOSTypedStore.setUserBalance(Object.assign(userBalance, { loomBalance }))
+  return loomBalance
+}
+
+async function getUnclaimedLoomTokens(ctx: Context) {
+  const user = await requireDposUser(ctx)
+  try {
+    const unclaimAmount = await user.getUnclaimedLoomTokensAsync()
+    log("unclaimed amount", unclaimAmount)
+    return unclaimAmount
+  } catch (err) {
+    console.log("Error check unclaim loom tokens", err)
+    CommonTypedStore.setErrorMsg("Error check unclaim loom tokens")
+  }
+}
+async function reclaimDeposit(ctx: Context) {
+  const user = await requireDposUser(ctx)
+  const dappchainGateway = user.dappchainGateway
+  DPOSTypedStore.setGatewayBusy(true)
+  try {
+    await dappchainGateway.reclaimDepositorTokensAsync()
+  } catch (err) {
+    console.log("Error reclaiming tokens", err)
+    CommonTypedStore.setErrorMsg("Error reclaiming tokens")
+  }
+  DPOSTypedStore.setGatewayBusy(false)
+}
+
+async function getPendingWithdrawalReceipt(ctx: Context) {
+  const user = await requireDposUser(ctx)
+  try {
+    const receipt = await user.getPendingWithdrawalReceiptAsync()
+    if (!receipt) return null
+    const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+    const owner = CryptoUtils.bytesToHexAddr(receipt.tokenOwner.local.bytes)
+    const amount = receipt.tokenAmount
+    return { signature, amount, tokenOwner: owner }
+  } catch (err) {
+    console.log("Error get pending withdrawal receipt", err)
+    CommonTypedStore.setErrorMsg("Error get pending withdrawal receipt")
+  }
+}
+
+async function withdrawCoinGatewayAsync(
+  ctx: Context,
+  payload: { amount: BN; signature: string },
+) {
+  const user = await requireDposUser(ctx)
+
+  DPOSTypedStore.setGatewayBusy(true)
+  log("withdrawCoinGatewayAsync", payload.amount.toString(), payload.signature)
+  try {
+    const result = await user.resumeWithdrawalAsync()
+    DPOSTypedStore.setGatewayBusy(false)
+    return result
+  } catch (err) {
+      DPOSTypedStore.setGatewayBusy(false)
+      console.error("Error withdrawal coin from gateway", err)
+      throw Error(err.message)
+  }
+}
+async function init(ctx: Context) {
+  let privateKey
+  const privateKeyString = sessionStorage.getItem("privatekey")
+
+  if (!privateKeyString) {
+    // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
+    return
+  }
+
+  privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
+  let account
+
+  const networkConfig = ctx.state.chainUrls[ctx.state.networkId]
+
+  const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+  let client
+  if (networkConfig.websockt) {
+    client = new Client(
+      networkConfig.network,
+      networkConfig.websockt,
+      networkConfig.queryws,
+    )
+  } else {
+    client = new Client(
+      networkConfig.network,
+      createJSONRPCClient({
+        protocols: [{ url: networkConfig.rpc }],
+      }),
+      networkConfig.queryws,
+    )
+  }
+  client.txMiddleware = [
+    new NonceTxMiddleware(publicKey, client),
+    new SignedTxMiddleware(privateKey),
+  ]
+
+  account = LocalAddress.fromPublicKey(publicKey).toString()
+  const localAddress = new Address(
+    client.chainId,
+    LocalAddress.fromPublicKey(publicKey),
+  )
+
+  DPOSTypedStore.updateState({
+    account,
+    localAddress,
+    dAppChainClient: client,
+  })
+}
+function showMsg(ctx: Context, payload: {type: string, msg: string}) {
+  if (payload.type === "error") {
+    CommonTypedStore.setErrorMsg(payload.msg)
+  } else {
+    CommonTypedStore.setSuccessMsg(payload.msg)
+  }
+}
+
+//
+// helpers
+//
+
+function getNetworkId() {
+  const networkId = sessionStorage.getItem("networkId")
+  const defaultId = Object.keys(networks)[0]
+  return networkId || defaultId
+}
+// redundant ?
+function getCurrentChain() {
+  return networks[getNetworkId()]
 }

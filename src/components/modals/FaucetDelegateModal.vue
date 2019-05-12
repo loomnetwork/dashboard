@@ -6,32 +6,64 @@
       </div>
       <div v-else>
         <b-row class="my-1 mb-3">
-          <b-col sm="3"><label>{{ $t('components.modals.faucet_delegate_modal.amount') }}</label></b-col>
-          <b-col sm="9"><b-form-input v-model="delegationDetail.amount" :state="isAmountValid" type="number"></b-form-input></b-col>
+          <b-col sm="3">
+            <label>{{ $t('components.modals.faucet_delegate_modal.amount') }}</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input v-model="delegationDetail.amount" :state="isAmountValid" type="number"></b-form-input>
+          </b-col>
         </b-row>
         <b-row class="my-1" v-if="!unbond" key="range">
-          <b-col sm="6"><label id="lockTimeReward" for="locktime">{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label></b-col>
-          <b-col sm="6"><span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span></b-col>
-          <b-col><b-form-input v-model="locktimeTierVal" :min="minLockTimeTier" max="3" :formatter="formatRangeInput" id="locktime" type="range" data-toggle="tooltip"></b-form-input></b-col>
-          <b-tooltip target="lockTimeReward" placement="bottom" title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"></b-tooltip>
+          <b-col sm="6">
+            <label
+              id="lockTimeReward"
+              for="locktime"
+            >{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label>
+          </b-col>
+          <b-col sm="6">
+            <span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span>
+          </b-col>
+          <b-col>
+            <b-form-input
+              v-model="locktimeTierVal"
+              :min="minLockTimeTier"
+              max="3"
+              :formatter="formatRangeInput"
+              id="locktime"
+              type="range"
+              data-toggle="tooltip"
+            ></b-form-input>
+          </b-col>
+          <b-tooltip
+            target="lockTimeReward"
+            placement="bottom"
+            title="In order to qualify for the associated the reward multiplier, keep your tokens staked until the locktime has expired"
+          ></b-tooltip>
         </b-row>
       </div>
     </b-container>
     <div slot="modal-footer" class="w-100">
-      <b-button v-if="!loading" style="width: 160px; float: right;" variant="primary" :disabled="!isAmountValid" @click="requestDelegate">{{okTitle}}</b-button>
+      <b-button
+        v-if="!loading"
+        style="width: 160px; float: right;"
+        variant="primary"
+        :disabled="!isAmountValid"
+        @click="requestDelegate"
+      >{{okTitle}}</b-button>
     </div>
   </b-modal>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import LoadingSpinner from '../../components/LoadingSpinner'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import BN from 'bn.js'
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
+import LoadingSpinner from "../../components/LoadingSpinner.vue"
+import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from "vuex"
+import BN from "bn.js"
+import { IDelegation } from 'loom-js/dist/contracts/dpos2';
 
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
+const DappChainStore = createNamespacedHelpers("DappChain")
+const DPOSStore = createNamespacedHelpers("DPOS")
 
 @Component({
   props: {
@@ -41,36 +73,29 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     LoadingSpinner
   },
   computed: {
-    ...mapGetters([
-      'getPrivateKey'
-    ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-      'currentRPCUrl',
-    ]),
     ...DappChainStore.mapState([
-      'validators',
+      "validators",
     ]),
     ...DPOSStore.mapState([
-      'userBalance'
+      "userBalance"
     ])
   },
   methods: {
     ...mapActions([
-      'setError'
+      "setError"
     ]),
     ...DappChainStore.mapActions([
-      'delegateAsync',
-      'undelegateAsync'
+      "delegateAsync",
+      "undelegateAsync"
     ])
   }
 })
 
 export default class FaucetDelegateModal extends Vue {
   delegationDetail = {
-    amount: '',
-    from: '',
-    to: ''
+    amount: "",
+    from: "",
+    to: ""
   }
   locktimeTierVal = 0
   validator = null
@@ -97,10 +122,11 @@ export default class FaucetDelegateModal extends Vue {
   minAmount = 0
   maxAmount = 0
   minLockTimeTier = 0
+  delegation: IDelegation|null = null
 
   async requestDelegate() {
 
-    if(this.delegationDetail.amount <= 0) {
+    if (this.delegationDetail.amount <= 0) {
       this.setError("Invalid amount")
       return
     }
@@ -122,34 +148,30 @@ export default class FaucetDelegateModal extends Vue {
           tier: this.locktimeTierVal
         })
       }
-    this.loading = false
-    this.$emit('onDelegate')
-    this.$root.$emit('bv::hide::modal', 'faucet-delegate-modal')
-    } catch(err) {
-      this.setError({msg: "Delegation failed", err})
+      this.loading = false
+      this.$emit("onDelegate")
+      this.$root.$emit("bv::hide::modal", "faucet-delegate-modal")
+    } catch (err) {
+      this.setError({ msg: "Delegation failed", err })
       this.loading = false
     }
   }
 
-  get isAmountValid() {
-    return this.delegationDetail && new Number(this.delegationDetail.amount) > 0
-  }
-
   // xxx
-  show(address, type ='', minAmount = 1, minLockTimeTier = 0, delegation = null) {
+  show(address, type = "", minAmount = 1, minLockTimeTier = 0, delegation: IDelegation|null = null) {
 
     this.minAmount = 1
-    if(type === "unbond") {
-      this.maxAmount = delegation.amount.div(new BN(""+10**18)).toNumber()
+    if (delegation != null && type === "unbond") {
+      this.maxAmount = delegation!.amount.div(new BN("" + 10 ** 18)).toNumber()
     } else {
       this.maxAmount = parseFloat(this.userBalance.loomBalance)
     }
-    
+
     this.minLockTimeTier = minLockTimeTier
     this.locktimeTierVal = minLockTimeTier
     this.delegation = delegation
-    if(!address) {
-      if(this.validators && this.validators.length > 0) {
+    if (!address) {
+      if (this.validators && this.validators.length > 0) {
         this.formattedValidators = this.validators.map((v) => {
           return {
             text: v.name || v.name,
@@ -163,17 +185,20 @@ export default class FaucetDelegateModal extends Vue {
       this.unbond = true
       this.okTitle = "Un-delegate"
       this.delegationDetail = {
-        amount: '',
-        from: address
+        amount: "",
+        from: address,
+        to:""
       }
     } else {
       this.unbond = false
       this.okTitle = "Delegate"
       this.delegationDetail = {
-        amount: '',
+        amount: "",
+        from: "",
         to: address
       }
     }
+    // @ts-ignore
     this.$refs.modalRef.show()
   }
 
@@ -183,7 +208,7 @@ export default class FaucetDelegateModal extends Vue {
 
   onLocktimeChange(val) {
 
-    switch(this.locktimeTier) {
+    switch (this.locktimeTier) {
       case 0:
         return "2 weeks"
       case 1:
@@ -202,17 +227,17 @@ export default class FaucetDelegateModal extends Vue {
 
     let inputAmount
 
-    if(this.delegationDetail.amount === "") {
+    if (this.delegationDetail.amount === "") {
       return null
     } else {
       inputAmount = parseFloat(this.delegationDetail.amount)
     }
 
     return !!this.delegationDetail &&
-           !!inputAmount                 &&
-           inputAmount >= this.minAmount &&
-           inputAmount % 1 === 0         &&
-           inputAmount <= this.maxAmount
+      !!inputAmount &&
+      inputAmount >= this.minAmount &&
+      inputAmount % 1 === 0 &&
+      inputAmount <= this.maxAmount
   }
 
 }

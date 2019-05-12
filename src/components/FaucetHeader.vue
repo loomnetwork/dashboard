@@ -9,7 +9,7 @@
       {{this.$store.state.errorMsg}}
       </b-alert>
       <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
-      <span class="text-dark" v-html="this.$store.state.successMsg"></span>
+      <span class="text-dark" v-html="state.common.successMsg"></span>
     </b-alert>
 
     <div class="d-none d-md-block">
@@ -85,22 +85,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import ChainSelector from './ChainSelector'
-import LoomIcon from '@/components/LoomIcon'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import LangSwitcher from './LangSwitcher'
+import LoomIcon from '@/components/LoomIcon.vue'
+import LangSwitcher from './LangSwitcher.vue'
+import { DashboardState } from '../types';
+import { DPOSTypedStore } from '../store/dpos-old';
+import { CommonTypedStore } from '../store/common';
 
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
 
 @Component({
   components: {
     ChainSelector,
     LangSwitcher,
-    LoomIcon
+    LoomIcon,
   },
   props: {
     hideDashboard: {
@@ -128,50 +128,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       default: false,
     },
   },
-  methods: {
-    ...mapMutations([
-      'setUserIsLoggedIn'
-    ]),
-    ...DPOSStore.mapMutations([
-      'setUserBalance',
-      'setShowLoadingSpinner'
-    ]),
-    ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
-    ...DappChainStore.mapActions([
-      'addChainUrl',
-      'getDappchainLoomBalance',
-      'getMetamaskLoomBalance',
-    ]),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ]) 
-    
-  },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn',
-      'errorMsg',
-      'successMsg'
-    ]),
-    ...DPOSStore.mapState([
-      'web3',
-      'connectedToMetamask',
-      'currentMetamaskAddress',
-      'userBalance',
-      'status',
-      'timeUntilElectionCycle'
-    ]),
-    ...DappChainStore.mapState([
-      'chainUrls',
-      'isConnectedToDappChain',
-      'mappingStatus',
-      'networkId'
-    ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-    ])
-  },
 })
 
 export default class FaucetHeader extends Vue {
@@ -186,27 +142,37 @@ export default class FaucetHeader extends Vue {
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
+  setMappingError = DPOSTypedStore.setMappingError
+  setMappingStatus = DPOSTypedStore.setMappingStatus
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  clearPrivateKey = DPOSTypedStore.clearPrivateKey
+
+
   logOut() {
     this.clearPrivateKey()
     sessionStorage.removeItem("userIsLoggedIn")
     this.setUserIsLoggedIn(false)
     this.setMappingError(null)
-    this.setMappingStatus(null)
+    this.setMappingStatus("")
     this.setShowLoadingSpinner(false)
     window.location.reload(true)
   }
 
   login() {
-    if (this.userIsLoggedIn) {
+    if (this.state.common.userIsLoggedIn) {
       this.logOut()
       return
     }
-    this.$router.push({ path: '/login' })
-    // this.$root.$emit('bv::show::modal', 'login-account-modal')
+    this.$router.push({ path: "/login" })
   }
 
-  @Watch('isConnectedToDappChain')
-    onConnectingToDappChainChange(newValue, oldValue) {
+  @Watch("state.DPOS.isConnectedToDappChain")
+  onConnectingToDappChainChange(newValue, oldValue) {
     if(newValue) {
       this.connectedToDappChain = true
     } else {
@@ -214,57 +180,12 @@ export default class FaucetHeader extends Vue {
     }
   }
 
-  testHide() {
-    this.$emit("bv::toggle::collapse", "nav_collapse", false);
-  }
-
   async mounted() { 
 
-    // Start election cycle timer
-    // this.$root.$on('initialized', async () => {
-    //   await this.updateTimeUntilElectionCycle()
-    //   this.startTimer()
-    // })
-
-    // Listen to refreshBalances event
-    this.$root.$on('refreshBalances', async () => {
-      await this.refresh()
-    })
-
-    this.$root.$on('logout', () => {
+    this.$root.$on("logout", () => {
       this.logOut()
     })
 
-  }
-
-  startTimer() {
-    this.timerRefreshInterval = setInterval(async () => this.decreaseTimer(), 1000)
-  }
-
-  async updateTimeUntilElectionCycle() {
-    //await this.getTimeUntilElectionsAsync()
-    this.electionCycleTimer = this.timeUntilElectionCycle    
-  }
-
-  async decreaseTimer() {
-    if(this.electionCycleTimer) {
-      let timeLeft = parseInt(this.electionCycleTimer)      
-      if(timeLeft > 0) {
-        timeLeft--
-        this.timeLeft = timeLeft
-        this.electionCycleTimer = timeLeft.toString()
-        this.showTimeUntilElectionCycle()
-      } else {
-        await this.updateTimeUntilElectionCycle()
-      }
-    }
-    
-  }
-
-  startPolling() {
-    if(this.userIsLoggedIn) {
-      this.refreshInterval = setInterval(async () => this.refresh(), 5000)
-    }
   }
 
   get showBackButton() {
@@ -273,110 +194,33 @@ export default class FaucetHeader extends Vue {
 
   get isMobile() {
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
-  }  
-  
-  destroyed() {
-    this.deleteIntervals()
   }
 
-  deleteIntervals() {
-    if(this.refreshInterval) clearInterval(this.refreshInterval)
-    if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)    
-  }
-
-
-  get loginText() {
-    return this.userIsLoggedIn ? 'Log Out' : 'Log In'
-  }
-
-  async refresh() {
-    if(this.status !== 'mapped') return
-    try {
-      this.showRefreshSpinner = true
-      let loomBalance = await this.getDappchainLoomBalance()
-      let mainnetBalance = await this.getMetamaskLoomBalance({
-        web3: this.web3,
-        address: this.currentMetamaskAddress
-      })
-      return
-      // let stakedAmount = await this.getAccumulatedStakingAmount()
-      let isLoading = false
-      console.log(mainnetBalance)
-      this.setUserBalance({
-        isLoading,
-        loomBalance,
-        mainnetBalance,
-        //stakedAmount
-      })
-      this.showRefreshSpinner = false
-      this.errorRefreshing = false
-    } catch(err) {
-      console.log('error refreshing', err)
-      this.errorRefreshing = true
-    }
-  }
-
-  onLoginAccount() {
-    this.$emit('onLogin')
-  }
-
-  onConnectionUrlChanged(newUrl) {
-    this.$emit('update:chain')
-    // this.blockchain.setServerUrl(newUrl)
-  }
-
-  async onUserInputUrl(url){
-    if (await this.addChainUrl({ url })) {
-      this.onConnectionUrlChanged(url)
-    }
-  }
 
   get isLoggedIn() {
-    return this.userIsLoggedIn ? true : false
+    return this.state.common.userIsLoggedIn ? true : false
   }
 
   get showErrorMsg() {
-    /*
-    message opt can be like
-    {
-      stay: true, // if you don't want it be auto hidden, set it to true
-      waitTime: 5 // define how long do you want it to stay
-    }
-     */
     if(this.$store.state.errorMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
-        ref: this.$refs.errorMsg
+        ref: this.$refs.errorMsg,
       })
     }
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: 'error' } : false
+    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: "error" } : false
   }
 
   get showSuccessMsg() {
-    if(this.$store.state.successMsg) {
+    if(this.state.common.successMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
         ref: this.$refs.successMsg
       })
     }
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: 'success' } : false
+    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: "success" } : false
   }
 
-  get formatLoomBalance() {
-      return this.userBalance.loomBalance.toString()
-  }
-
-  showTimeUntilElectionCycle() {    
-    if(this.electionCycleTimer) {
-      let timeLeft = this.electionCycleTimer
-      let date = new Date(null)
-      date.setSeconds(timeLeft)
-      let result = date.toISOString().substr(11, 8)
-      this.formattedTimeUntilElectionCycle = result
-    } else {
-      this.formattedTimeUntilElectionCycle = ""      
-    }
-  }
 
   hideAlert(alertOpt){
     let stay = alertOpt.opt ? alertOpt.opt.stay : false

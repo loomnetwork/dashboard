@@ -1,33 +1,24 @@
 <template>
   <div v-if="showBackdrop" class="loading-backdrop">
-    
     <div class="gif-container">
       <img src="../assets/loomy-running.gif" class="looping-loomy mb-2" alt="loomy">
       <h6 class="loading-text">{{ $t('components.loading_spinner.please_be_patient_loomy_is') }}</h6>
       <small>{{ $t('components.loading_spinner.this_could_take_several_minutes') }}</small>
     </div>
-
-    <!-- Uncomment for minimal spinner  -->
-    <!-- <div class="lds-css">
-      <div style="width:100%;height:100%" class="lds-dual-ring">
-        <div></div>
-      </div>
-    </div> -->
-
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
 
 @Component({
   props: {
-    showBackdrop: Boolean
-  }  
+    showBackdrop: Boolean,
+  }
 })
 export default class LoadingSpinner extends Vue {
-  loading = true
+  loading: boolean = true
 }
 </script>
 <style scoped lang="scss">

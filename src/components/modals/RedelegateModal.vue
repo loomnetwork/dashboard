@@ -1,117 +1,86 @@
 <template>
-  <b-modal id="redelegate-modal" ref="modalRef" title="Redelegate" @hidden="clear" hide-footer no-close-on-backdrop
-  no-close-on-esc>
+  <b-modal
+    id="redelegate-modal"
+    ref="modalRef"
+    title="Redelegate"
+    @hidden="clear"
+    hide-footer
+    no-close-on-backdrop
+    no-close-on-esc
+  >
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
     <div class="dropdown-container mb-4">
-      <v-autocomplete class="mb-4"
-                      v-model="target"
-                      placeholder="Please select a validator"
-                      :items="filteredTargetItems"
-                      :get-label="getLabel"
-                      :component-item="dropdownTemplate"
-                      @item-selected="selectTargetItem"
-                      @update-items="updateTargetItems">
-      </v-autocomplete>
-      <!-- <v-autocomplete v-if="targetDelegations.length > 0"
-                      v-model="selectedTargetDelegation"
-                      :items="targetDelegations"
-                      :get-label="getDelegationLabel"
-                      :component-item="dropdownDelegationTemplate">
-      </v-autocomplete>       -->
-
-      <!-- <b-list-group v-if="targetDelegations.length > 0">
-        <b-list-group-item class="delegations-list-item"
-                           :class="selectedTargetDelegation === delegation.index ? 'active-delegations-list-item' : '' ||
-                           delegation.state !== 1 ? 'disabled-delegations-list-item' : ''"
-                           v-for="(delegation, idx) in targetDelegations" 
-                           :key="delegation + ' ' + idx"
-                           @click="selectDelegation(delegation)">
-          <div class="row">
-            <div class="col-sm-2 text-left">
-              <strong>{{delegation.index}}</strong>
-            </div>
-            <div class="col-sm-4 text-left">
-              <strong>Amount: </strong><span>{{delegation.amount | tokenAmount}}</span>
-            </div>
-            <div class="col-sm-6 text-left">
-              <strong>Locktime: </strong><span>{{delegation.lockTime | readableDate}}</span>
-            </div>      
-          </div>
-        </b-list-group-item>
-      </b-list-group> -->
-
-    </div>      
-    <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>    
+      <v-autocomplete
+        class="mb-4"
+        v-model="target"
+        placeholder="Please select a validator"
+        :items="filteredTargetItems"
+        :get-label="getLabel"
+        :component-item="dropdownTemplate"
+        @item-selected="selectTargetItem"
+        @update-items="updateTargetItems"
+      ></v-autocomplete>
+    </div>
+    <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>
     <div class="row">
       <div class="col btn-container">
         <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="okHandler">Redelegate</b-button>
       </div>
     </div>
-
   </b-modal>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import LoadingSpinner from '../../components/LoadingSpinner'
-import RedelegateDropdownTemplate from './RedelegateDropdownTemplate'
-import RedelegateDelegationDropdownTemplate from './RedelegateDelegationDropdownTemplate'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-
-const DPOSStore = createNamespacedHelpers('DPOS')
-const DappChainStore = createNamespacedHelpers('DappChain')
-const applicationStore = createNamespacedHelpers('applicationStore')
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
+import LoadingSpinner from "../../components/LoadingSpinner.vue"
+import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
+import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
+import { DPOSTypedStore } from "@/store/dpos-old"
+import { DashboardState } from "@/types"
 
 @Component({
   components: {
     LoadingSpinner,
     RedelegateDropdownTemplate,
-    RedelegateDelegationDropdownTemplate
+    RedelegateDelegationDropdownTemplate,
   },
-  computed: {
-    ...DappChainStore.mapState([
-      "validators",
-    ]),
-    ...DPOSStore.mapState([
-      "delegations"
-    ])
-  },
-  methods: {
-    ...DPOSStore.mapActions([
-      "redelegateAsync"
-    ]),
-    ...DappChainStore.mapActions([
-    ]),
-    ...applicationStore.mapActions([
-      "addBlockingTask",
-      "removeBlockingTask",
-    ]),
-    ...DPOSStore.mapMutations([
-      "setShowLoadingSpinner"
-    ])
-  }
 })
 export default class RedelegateModal extends Vue {
 
   dropdownTemplate = RedelegateDropdownTemplate
   dropdownDelegationTemplate = RedelegateDelegationDropdownTemplate
-  filteredTargetItems = []
-  delegation = null
-  targetDelegations = []
-  selectedTargetDelegation = null
-  origin = {}
-  target = {}
+  filteredTargetItems: any[] = []
+  delegation: any = null
+  targetDelegations: any[] = []
+  selectedTargetDelegation: any = null
+  origin: any = {}
+  target: any = {}
 
   errorMsg = ""
   originErrorMsg = ""
 
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  redelegateAsync = DPOSTypedStore.redelegateAsync
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get validators() {
+    return this.state.DPOS.validators
+  }
+  get delegations() {
+    return this.state.DPOS.delegations
+  }
+
   show(delegation) {
     const originAddr = delegation.validatorStr
     this.delegation = delegation
-    this.origin = this.validators.find(v => v.address === originAddr)
+    this.origin = this.validators.find((v) => v.address === originAddr)
     this.updateTargetItems()
+    // @ts-ignore
     this.$refs.modalRef.show()
   }
 
@@ -125,22 +94,22 @@ export default class RedelegateModal extends Vue {
 
   async okHandler() {
     this.errorMsg = ""
-    if(!this.target.address) {
+    if (!this.target.address) {
       this.errorMsg = "Please select a target validator"
       return
     }
-    if(this.origin.address === this.target.address) {
+    if (this.origin.address === this.target.address) {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
 
     this.setShowLoadingSpinner(true)
-    
-    let payload = {
-      origin: this.origin.address, 
-      target: this.target.address, 
-      amount: this.delegation.amount,
-      index: this.delegation.index
+
+    const payload = {
+      origin: this.origin.address,
+      target: this.target.address,
+      amount: this.delegation!.amount,
+      index: this.delegation!.index,
     }
 
     await this.redelegateAsync(payload)
@@ -149,10 +118,11 @@ export default class RedelegateModal extends Vue {
     // this.$emit("ok")
     this.closeModal()
 
-  }  
+  }
 
   closeModal() {
     this.clear()
+    // @ts-ignore
     this.$refs.modalRef.hide()
   }
 
@@ -164,18 +134,18 @@ export default class RedelegateModal extends Vue {
     return item ? item.index : "Please select a delegation"
   }
 
-  updateTargetItems(query) {
-    const validators = this.validators.filter(v => !v.isBootstrap)
+  updateTargetItems(query = "") {
+    const validators = this.validators.filter((v) => !v.isBootstrap)
     const origin = this.origin
-    const str = (query||"").toLowerCase()
-    if(str.length > 0) {
-      this.filteredTargetItems = validators.filter((item) => 
-        origin != item &&
-        item.name.toLowerCase().includes(str)
+    const str = query.toLowerCase()
+    if (str.length > 0) {
+      this.filteredTargetItems = validators.filter((item) =>
+        origin !== item &&
+        item.name.toLowerCase().includes(str),
       )
     } else {
       this.filteredTargetItems = validators.filter((item) =>
-        origin != item
+        origin !== item,
       )
     }
   }
@@ -186,12 +156,12 @@ export default class RedelegateModal extends Vue {
   }
 
   selectDelegation(delegation) {
-    if(this.selectedTargetDelegation === delegation.index) {
+    if (this.selectedTargetDelegation === delegation.index) {
       this.selectedTargetDelegation = null
       return
     }
-    if(delegation.state !== 1) {
-     this.errorMsg = "The selected delegation is in a bonding state, please try again later." 
+    if (delegation.state !== 1) {
+      this.errorMsg = "The selected delegation is in a bonding state, please try again later."
     } else {
       this.selectedTargetDelegation = delegation.index
     }
@@ -201,9 +171,9 @@ export default class RedelegateModal extends Vue {
     if (!this.target || this.delegations.length <= 0) return
     const validator = this.target
     return this.delegations
-      .filter(d => d.validatorStr === validator.address)
-      .map((d, idx) => { 
-        d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
+      .filter((d) => d.validatorStr === validator.address)
+      .map((d, idx) => {
+        d.locked = parseInt(d.lockTime, 10) * 1000 > Date.now()
         d.index = (idx + 1)
         return d
       })
@@ -212,7 +182,6 @@ export default class RedelegateModal extends Vue {
 }
 </script>
 <style lang="scss">
-
 .btn-container {
   display: flex;
   .submit-btn {
@@ -268,7 +237,7 @@ export default class RedelegateModal extends Vue {
 
 .active-delegations-list-item {
   background-color: #007bff;
-  color: #ffffff;  
+  color: #ffffff;
 }
 
 .disabled-delegations-list-item {
@@ -276,5 +245,4 @@ export default class RedelegateModal extends Vue {
   pointer-events: none !important;
   cursor: not-allowed;
 }
-
 </style>

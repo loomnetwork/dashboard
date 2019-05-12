@@ -51,7 +51,7 @@ const log = (message = '', object) => {
   if (debugMode) console.log(message, object)
 }
 
-Object.defineProperty(Vue.prototype, '$log', { value: log })
+//Object.defineProperty(Vue.prototype, '$log', { value: log })
 
 Vue.use(VueProgressBar, progressBarOptions)
 Vue.use(BootstrapVue)
@@ -66,6 +66,7 @@ sync(store, router)
 
 Vue.filter('interval', function (value) {
   if (!value) return ''
+  // @ts-ignore
   return  moment.duration(value, "seconds").format();
 })
 

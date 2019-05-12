@@ -25,7 +25,7 @@ module.exports = {
   pages: {
       index: {
         title: 'Index Page',
-       entry: 'src/index.js',
+       entry: 'src/index.ts',
         template: 'public/index.html',
         filename: 'index.html'
       }
@@ -34,43 +34,6 @@ module.exports = {
   devServer: {
     https: true,
     disableHostCheck: true,
-    proxy: {
-      '^/auth/*': {
-        target: proxyUrl,
-        ws: true,
-        changeOrigin: true
-      },
-      '^/user/*': {
-        target: proxyUrl,
-        ws: true,
-        changeOrigin: true
-      },
-      '^/backer/*': {
-        target: proxyUrl,
-        ws: true,
-        changeOrigin: true
-      },
-      '^/erc721/*': {
-        target: proxyUrl,
-        ws: true,
-        changeOrigin: true
-      },
-      '^/lottery/*': {
-        target: proxyUrl,
-        ws: true,
-        changeOrigin: true
-      },
-      '^/karma/*': {
-        target: proxyFaucetUrl,
-        ws: true,
-        changeOrigin: true
-      },
-      '^/fiat/*': {
-        target: proxyUrl,
-        ws: true,
-        changeOrigin: true
-      }
-    }
   },
   configureWebpack: config => {
     console.log('nodeenv:', process.env.NODE_ENV)

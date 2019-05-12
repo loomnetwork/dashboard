@@ -34,26 +34,26 @@
   </main>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import FaucetTable from '../components/FaucetTable'
-import LoadingSpinner from '../components/LoadingSpinner'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
+import FaucetTable from "../components/FaucetTable.vue"
+import LoadingSpinner from "../components/LoadingSpinner.vue"
 
-import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js";
+import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js"
+import { DPOSTypedStore } from "../store/dpos-old"
+import { CommonTypedStore } from "../store/common"
 
 function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
+  return Math.floor(Math.random() * Math.floor(max))
 }
 
-var seed = parseInt(localStorage.getItem('validatorListSeed')) || getRandomInt(100);
-localStorage.setItem('validatorListSeed', seed)
+let seed = parseInt(localStorage.getItem("validatorListSeed") || "0", 10) || getRandomInt(100)
+localStorage.setItem("validatorListSeed", "" + seed)
+
 function random() {
-    var x = Math.sin(seed++) * 10000;
-    return x - Math.floor(x);
+    const x = Math.sin(seed++) * 10000
+    return x - Math.floor(x)
 }
 
 @Component({
@@ -61,36 +61,32 @@ function random() {
     FaucetTable,
     LoadingSpinner,
   },
-  computed: {
-    ...DPOSStore.mapState([
-      'validatorFields'
-    ])
-  },
-  methods: {
-    ...mapMutations([
-      'setErrorMsg'
-    ]),
-    ...DPOSStore.mapGetters([
-      'getFormattedValidators'
-    ])
-  }
 })
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
+  validatorFields = DPOSTypedStore.state.validatorFields
+
+  get getFormattedValidators() {
+    return DPOSTypedStore.getFormattedValidators()
+  }
+
   get validators() {
-    return this.getFormattedValidators().sort((a, b) => {
-      let aValue = a.isBootstrap ? 0 : random()*10000
-      let bValue = b.isBootstrap ? 0 : random()*10000
-      return parseInt(aValue) - parseInt(bValue)
+    return this.getFormattedValidators.sort((a, b) => {
+      const aValue = a.isBootstrap ? 0 : random() * 10000
+      const bValue = b.isBootstrap ? 0 : random() * 10000
+      return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
   }
+
+  setErrorMsg = CommonTypedStore.setErrorMsg
+
   /**
    * adds class bootstrap node if is bootstrap
    */
   validatorCssClass( item, type) {
-    return item.isBoostrap ? ['boostrap-validator'] : []
-  } 
+    return item.isBoostrap ? ["boostrap-validator"] : []
+  }
 
   showValidatorDetail(record, index) {
     this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)

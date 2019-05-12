@@ -24,11 +24,8 @@
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
 import FaucetTable from '../components/FaucetTable'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
-import FaucetSidebar from '../components/FaucetSidebar'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { formatToCrypto, sleep } from '../utils.js'
+import { formatToCrypto, sleep } from '../utils.ts'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import { log } from 'util';
 const DappChainStore = createNamespacedHelpers('DappChain')
@@ -39,29 +36,14 @@ import { initWeb3 } from '../services/initWeb3'
 @Component({
   components: {
     FaucetTable,
-    FaucetHeader,
-    FaucetFooter,
-    FaucetSidebar,
     LoadingSpinner
   },
   methods: {
-    ...DPOSStore.mapMutations([
-      'setConnectedToMetamask',
-      'setWeb3',
-      'setCurrentMetamaskAddress'
-    ]),
     ...DappChainStore.mapActions([
       'getDpos3'
     ])
   },
   computed: {
-    ...mapGetters([
-      'getPrivateKey'
-    ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-      'currentRPCUrl',
-    ]),
     ...DappChainStore.mapState([
       'dposUser',
     ])  

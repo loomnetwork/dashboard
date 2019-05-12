@@ -130,21 +130,21 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import LoomIcon from '@/components/LoomIcon'
-import FaucetTable from '@/components/FaucetTable'
+import LoomIcon from '@/components/LoomIcon.vue'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 
 import Web3 from 'web3'
 import BN from 'bn.js'
 import debug from 'debug'
-import { setTimeout } from 'timers'
-import { formatToCrypto, sleep } from '../utils.js'
-import TransferStepper from '../components/TransferStepper'
-import DepositForm from '@/components/gateway/DepositForm'
-import Rewards from '@/components/Rewards'
+import { formatToCrypto, sleep } from '@/utils.ts'
+import TransferStepper from '../components/TransferStepper.vue'
+import DepositForm from '@/components/gateway/DepositForm.vue'
+import Rewards from '@/components/Rewards.vue'
+import { DPOSTypedStore } from '../store/dpos-old';
+import { CommonTypedStore } from '../store/common';
 
 const log = debug('mobileaccount')
 
@@ -156,77 +156,65 @@ const ELECTION_CYCLE_MILLIS = 600000
 @Component({
   components: {
     LoomIcon,
-    FaucetTable,
     TransferStepper,
     DepositForm,
-    Rewards
+    Rewards,
   },
-  computed: {
-    ...DappChainStore.mapState([
-      'web3',
-      'dposUser',
-      'validators'
-    ]),    
-    ...DPOSStore.mapState([
-      'userBalance',
-      'gatewayBusy',
-      'rewardsResults',
-      'timeUntilElectionCycle',
-      'nextElectionTime',
-      'delegations',
-      'states',
-      'currentMetamaskAddress',
-      "pendingTx"
-    ]) 
-  },
-  methods: {
-    ...DappChainStore.mapActions([
-      'getPendingWithdrawalReceipt',
-      'getUnclaimedLoomTokens',
-      'reclaimDeposit',
-      'withdrawAsync',
-      'withdrawCoinGatewayAsync',
-      'switchDposUser',
-      'getMetamaskLoomBalance',
-      'getDappchainLoomBalance',
-    ]),
-    ...DappChainStore.mapMutations([
-      'setWithdrewOn',
-      'setWithdrewSignature',
-    ]),
-    ...DappChainStore.mapGetters([
-      'getWithdrewOn',
-    ]),
-    ...mapMutations([
-      'setErrorMsg'
-    ]),
-    ...DPOSStore.mapMutations([
-      'setGatewayBusy',
-      'setShowLoadingSpinner',
-      'setShowDepositForm',
-    ])
-  }
 })
-
 export default class MobileAccount extends Vue {
 
   currentAllowance = 0
 
-  timerRefreshInterval = null
-  formattedTimeUntilElectionCycle = null
+  timerRefreshInterval:number|null = null
+  formattedTimeUntilElectionCycle = ""
   timeLeft = 0
 
   // gateway related
   // unclaimed tokens
   unclaimedTokens = new BN(0)
+  unclaimWithdrawTokens = 0
   unclaimWithdrawTokensETH = 0
   unclaimSignature = ""
   oracleEnabled = true
-  receipt = null
+  receipt:any = null
   isWithdrawalInprogress = false
   withdrawLimit = 0
+  electionCycleTimer = 0
 
   showRefreshSpinner = false
+
+  // methods
+  setGatewayBusy        = DPOSTypedStore.setGatewayBusy
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowDepositForm    = DPOSTypedStore.setShowDepositForm
+  setErrorMsg           = CommonTypedStore.setErrorMsg
+  setWithdrewOn         = DPOSTypedStore.setWithdrewOn
+  setWithdrewSignature  = DPOSTypedStore.setWithdrewSignature
+  getWithdrewOn = DPOSTypedStore.getWithdrewOn
+
+  getPendingWithdrawalReceipt  = DPOSTypedStore.getPendingWithdrawalReceipt
+  setWithdregetUnclaimedLoomTokenswSignature  = DPOSTypedStore.getUnclaimedLoomTokens
+  getUnclaimedLoomTokens  = DPOSTypedStore.getUnclaimedLoomTokens
+  reclaimDeposit  = DPOSTypedStore.reclaimDeposit
+  withdrawAsync  = DPOSTypedStore.withdrawAsync
+  withdrawCoinGatewayAsync  = DPOSTypedStore.withdrawCoinGatewayAsync
+  switchDposUser  = DPOSTypedStore.switchDposUser
+  getMetamaskLoomBalance  = DPOSTypedStore.getMetamaskLoomBalance
+  getDappchainLoomBalance  = DPOSTypedStore.getDappchainLoomBalance
+
+  get web3() { return DPOSTypedStore.state.web3}
+  get dposUser() { return DPOSTypedStore.state.dposUser}
+  get validators() { return DPOSTypedStore.state.validators}
+  get userBalance() { return DPOSTypedStore.state.userBalance}
+  get gatewayBusy() { return DPOSTypedStore.state.gatewayBusy}
+  get rewardsResults() { return DPOSTypedStore.state.rewardsResults}
+  get timeUntilElectionCycle() { return DPOSTypedStore.state.timeUntilElectionCycle}
+  get nextElectionTime() { return DPOSTypedStore.state.nextElectionTime}
+  get delegations() { return DPOSTypedStore.state.delegations}
+  get states() { return DPOSTypedStore.state.states}
+  get currentMetamaskAddress() { return DPOSTypedStore.state.currentMetamaskAddress}
+  get pendingTx() { return DPOSTypedStore.state.pendingTx}
+
   
   mounted() {
     // Page might be mounted while dposUser is still initializing
@@ -266,15 +254,6 @@ export default class MobileAccount extends Vue {
     return this.getWithdrewOn() > ( Date.now()- 5*60*1000)
   }
 
-  refresh() {
-    this.showRefreshSpinner = true
-    Promise.all([
-        this.getMetamaskLoomBalance(),
-        this.getDappchainLoomBalance()
-    ])
-    .finally(() => this.showRefreshSpinner = false)
-  }
-
   get formatedDelegations() {
     const candidates = this.validators
     console.log(this.delegations)
@@ -298,14 +277,15 @@ export default class MobileAccount extends Vue {
   }
 
   async completeDeposit() {
-    const dposUser = await this.dposUser
+    const dposUser = await this.dposUser!
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
-    const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
+    const tokens = new BN(this.currentAllowance) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
       await dposUser.ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), dposUser.ethereumLoom.address
+        weiAmount.toString(),
+        dposUser.ethereumLoom.address,
       )
       this.currentAllowance = 0
     } catch (error) {
@@ -317,7 +297,7 @@ export default class MobileAccount extends Vue {
   }
 
   startTimer() {
-    this.timerRefreshInterval = setInterval(() => this.decreaseTimer(), 1000)
+    this.timerRefreshInterval = window.setInterval(() => this.decreaseTimer(), 1000)
   }
 
   get timerValue() {
@@ -331,23 +311,22 @@ export default class MobileAccount extends Vue {
 
   async updateTimeUntilElectionCycle() {
     const millis = this.nextElectionTime - Date.now()
-    this.electionCycleTimer =  Math.ceil(millis/1000)
+    this.electionCycleTimer =  Math.ceil(millis / 1000)
   }
 
   async decreaseTimer() {
     if(this.electionCycleTimer) {
-      let timeLeft = parseInt(this.electionCycleTimer)      
+      let timeLeft = this.electionCycleTimer
       if(timeLeft > 0) {
         timeLeft--
         this.timeLeft = timeLeft
-        this.electionCycleTimer = timeLeft.toString()
+        this.electionCycleTimer = timeLeft
         this.showTimeUntilElectionCycle()
       } else {
         await this.updateTimeUntilElectionCycle()
-        this.electionCycleTimer
+        //this.electionCycleTimer
       }
     }
-    
   }
 
   showTimeUntilElectionCycle() {    
@@ -378,17 +357,6 @@ export default class MobileAccount extends Vue {
     this.receipt = await this.getPendingWithdrawalReceipt()
   }
   
-  async checkAllowance() {    
-    const user = await this.dposUser
-    const gateway = user.ethereumGateway
-    try {          
-      const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return parseInt(this.web3.utils.fromWei(allowance.toString()))
-    } catch(err) {
-      console.error("Error checking allowance", err)
-      return 0
-    }
-  }
 
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
@@ -401,7 +369,6 @@ export default class MobileAccount extends Vue {
       this.unclaimSignature = this.receipt.signature
       this.unclaimWithdrawTokensETH = 0
     }
-    await this.refresh(true)
   }
 
   async afterWithdrawalFailed () {
@@ -410,19 +377,17 @@ export default class MobileAccount extends Vue {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
       this.unclaimSignature = this.receipt.signature
     }
-    await this.refresh(true)
   }
 
   async reclaimDepositHandler() {
     let result = await this.reclaimDeposit()
     this.$root.$emit("bv::hide::modal", "unclaimed-tokens")
     this.$root.$emit("bv::show::modal", "wait-tx")
-    await this.refresh(true)
   }
 
 
   async hasReceiptHandler(receipt) {
-    const dposUser = await this.dposUser
+    const dposUser = await this.dposUser!
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
@@ -432,7 +397,7 @@ export default class MobileAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
-    let ethAddr = dposUser.ethAddress
+    const ethAddr = dposUser.ethAddress
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
     if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
       this.mismatchedReceiptHandler(receipt, ethAddr)
@@ -441,6 +406,7 @@ export default class MobileAccount extends Vue {
 
   async mismatchedReceiptHandler(receipt, ethAddr) {
     // this is necessary to prevent reloading when metamask changes accounts
+    // @ts-ignore
     window.resolvingMismatchedReceipt = true
 
     console.log('receipt: ', receipt.tokenOwner)
@@ -448,19 +414,23 @@ export default class MobileAccount extends Vue {
 
     let r = confirm(`A pending withdraw requires you to switch ETH accounts to: ${receipt.tokenOwner}. Please change your account and then click OK`)
     if (r) {
+      // @ts-ignore
       let tempUser = await this.switchDposUser({web3: window.web3})
       this.reclaimWithdrawHandler()
     }
   }
 
   async reclaimWithdrawHandler() {
-    const dposUser = await this.dposUser
-    let ethAddr = this.dposUser.ethAddr
+    const dposUser = await this.dposUser!
+    const ethAddr = dposUser.ethAddress
     console.log('current eth addr: ', ethAddr)
     try {
       this.isWithdrawalInprogress = true
-      let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
-      await tx.wait()
+      const tx = await this.withdrawCoinGatewayAsync({
+        amount: this.unclaimWithdrawTokens, 
+        signature: this.unclaimSignature}
+      )
+      await tx!.wait()
       this.$root.$emit("bv::show::modal", "wait-tx")
       this.isWithdrawalInprogress = false
       await this.checkPendingWithdrawalReceipt()
@@ -469,9 +439,8 @@ export default class MobileAccount extends Vue {
         this.unclaimSignature = this.receipt.signature
       }
       this.unclaimWithdrawTokensETH = 0
-      await this.refresh(true) 
-
       // TODO: this is added for fixing mismatched receipts, remove once users are fixed. 
+      // @ts-ignore
       if (window.resolvingMismatchedReceipt) {
         alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
         window.location.reload(true)
@@ -484,23 +453,33 @@ export default class MobileAccount extends Vue {
     }
   }
 
-  async checkAllowance() {    
+  // async checkAllowance() {    
+  //   const user = await this.dposUser
+  //   const gateway = user.ethereumGateway
+  //   try {          
+  //     const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
+  //     return parseInt(this.web3.utils.fromWei(allowance.toString()))
+  //   } catch(err) {
+  //     console.error("Error checking allowance", err)
+  //     return 0
+  //   }
+  // }
+
+  async checkAllowance() {
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")   
-    const user = await this.dposUser
+    const user = await this.dposUser!
     const gateway = user.ethereumGateway
-    try {          
+    try {
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
-      return parseInt(this.web3.utils.fromWei(allowance.toString()))
+      return parseInt(this.web3.utils.fromWei(allowance.toString()),10)
     } catch(err) {
       console.error("Error checking allowance", err)
-      return ''
+      return 0
     }
   }
 
   async executeWithdrawal(amount) {
-    // return new Promise((resolve,reject) => setTimeout(() => resolve({hash:'0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'}),5000))
-    // note:  withdrawAsync returns Promise<TransactionReceipt> 
     try {
       await this.checkPendingWithdrawalReceipt()
       if (this.receipt) {

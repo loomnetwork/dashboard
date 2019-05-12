@@ -25,47 +25,46 @@
   </b-card>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
+import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from "vuex"
+import { DPOSTypedStore } from "../store/dpos-old"
+import { CommonTypedStore } from "../store/common"
+import { DashboardState } from "../types"
 
-const DPOSStore = createNamespacedHelpers('DPOS')
-const DappChainStore = createNamespacedHelpers('DappChain')
+const DPOSStore = createNamespacedHelpers("DPOS")
+const DappChainStore = createNamespacedHelpers("DappChain")
 
-@Component({
-  computed: {
-    ...mapGetters([
-      'getPrivateKey'
-    ]),    
-    ...DPOSStore.mapState([
-      'rewardsResults',
-      'showLoadingSpinner'
-    ])
-  },  
-  methods: {
-    ...DPOSStore.mapActions([
-      'queryRewards',
-      'claimRewardsAsync'
-    ]),
-    ...mapMutations([
-      'setSuccessMsg',
-      'setErrorMsg'
-    ]),
-    ...DPOSStore.mapMutations(['setShowLoadingSpinner'])
-  }
-})
+@Component
 export default class Rewards extends Vue {
 
   hideTooltip = false
   pollInterval = null
 
+  setSuccessMsg = CommonTypedStore.setSuccessMsg
+  setErrorMsg = CommonTypedStore.setErrorMsg
+  queryRewards = DPOSTypedStore.queryRewards
+  claimRewardsAsync = DPOSTypedStore.claimRewardsAsync
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get showLoadingSpinner() {
+    return this.state.DPOS.showLoadingSpinner
+  }
+  get rewardsResults() {
+    return this.state.DPOS.rewardsResults
+  }
+
   get hasNoRewards() {
-    return this.rewardsResults == "0.00"
+    return this.rewardsResults === "0.00"
   }
 
   get formattedRewardResults() {
-    return this.rewardsResults.toString() + " LOOM"    
+    return this.rewardsResults.toString() + " LOOM"
   }
 
   async claimRewardHandler() {
@@ -73,15 +72,15 @@ export default class Rewards extends Vue {
     this.setShowLoadingSpinner(true)
     try {
       await this.claimRewardsAsync()
-      this.setSuccessMsg({msg: "Successfully claimed rewards!" + this.rewardsResults.toString(), forever: false})
-    } catch(err) {
-      this.setErrorMsg({msg: "Claiming reward failed", forever: false, report:true, cause:err})
+      this.setSuccessMsg({msg: "Successfully claimed rewards!" +
+        this.rewardsResults.toString(), forever: false})
+    } catch (err) {
+      this.setErrorMsg({msg: "Claiming reward failed", forever: false, report: true, cause: err})
     }
     this.setShowLoadingSpinner(false)
     this.hideTooltip = false
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

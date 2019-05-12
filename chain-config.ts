@@ -1,4 +1,5 @@
-export default {
+import { DahboardEnvs } from "@/types";
+const configs = {
   "plasma": {
     "dappchainEndpoint" : "https://plasma.dappchains.com",
     "mainnetEndpoint" : "https://mainnet.infura.io",
@@ -23,4 +24,7 @@ export default {
     "chainId" : "default",
     "gatewayAddress" : "0x6804f48233F6Ff2b468f7636560d525ca951931e"
   }
-}
+} as DahboardEnvs
+
+
+export default configs

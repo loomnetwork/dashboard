@@ -3,11 +3,6 @@
   <div class="">
     <div class="pt-3">
       <main>
-        <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
-        <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
-        <seed-phrase-modal ref="seedPhraseRef" @ok="onGenerateSeeds"/>
-        <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
-        <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
         <div class="container-fluid mb-5 rmv-padding">
      
@@ -51,86 +46,66 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
+<script lang="ts">
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import ChainSelector from '../components/ChainSelector'
-import SeedPhraseModal from '../components/modals/SeedPhraseModal'
-import ConfirmSeedModal from '../components/modals/ConfirmSeedModal'
-import RestoreAccountModal from '../components/modals/RestoreAccountModal'
-import HardwareWalletModal from '../components/modals/HardwareWalletModal'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+import RestoreAccountModal from '../components/modals/RestoreAccountModal.vue'
+import HardwareWalletModal from '../components/modals/HardwareWalletModal.vue'
 import { setInterval } from 'timers';
-const bip39 = require('bip39')
+import { Modal } from "bootstrap-vue";
 
-const DPOSStore = createNamespacedHelpers('DPOS')
-const DappChainStore = createNamespacedHelpers('DappChain')
+import { DPOSTypedStore } from "@/store/dpos-old";
+import { CommonTypedStore } from '../store/common';
+import { DappChainTypedModule } from '../store/dappchain';
+import { DashboardState } from '../types';
 
 @Component({
   components: {
-    FaucetHeader,
-    FaucetFooter,
     ChainSelector,
-    SeedPhraseModal,
-    ConfirmSeedModal,
     HardwareWalletModal,
-    RestoreAccountModal
-  },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DappChainStore.mapState([
-      'chainUrls',
-      'networkId'
-    ]),    
-    ...DPOSStore.mapState([
-      'isLoggedIn',
-      'walletType',
-      'mappingSuccess'
-    ]),
-    ...mapGetters([
-      'getPrivateKey'
-    ])
-  },
-  methods: {    
-    ...mapActions(['signOut', 'setPrivateKey']),
-    ...DPOSStore.mapActions(['storePrivateKeyFromSeed','initializeDependencies']),
-    ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
-    ...DappChainStore.mapActions([
-      'addChainUrl'
-    ]),    
-    ...mapMutations(['setUserIsLoggedIn']),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ]) 
   }
 })
 export default class FirstPage extends Vue {
-  seedPhrases = []
   activeTab = 0
   currentStatus = this.STATUS.NONE
   showTabSpinner = false
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
+  get userIsLoggedIn() { return CommonTypedStore.getUserIsLoggedIn }
+  get chainUrls() { return this.$state.DappChain.chainUrls }
+  get networkId() { return this.$state.DappChain.networkId }
+  get walletType() { return this.$state.DPOS.walletType }
+  get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
+  get $state() { return (this.$store.state as DashboardState)}
+
+  // vuex
+  setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
+  initializeDependencies = DPOSTypedStore.initializeDependencies
+  setWalletType = DPOSTypedStore.setWalletType
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  signOut = CommonTypedStore.signOut
+
+  addChainUrl = DappChainTypedModule.addChainUrl
+  setMappingError = DPOSTypedStore.setMappingError
+  setMappingStatus = DPOSTypedStore.setMappingStatus
+
   async selectWallet(wallet) {
     if(wallet === "ledger") {
       this.setWalletType("ledger")
       this.setUserIsLoggedIn(true)
-     this.$refs.hardwareWalletConfigRef.show() 
+
+      this.modal("hardwareWalletConfigRef").show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-      console.log("done initializeDependencies")
-      //this.$root.$emit("login")
-      
+      await this.initializeDependencies()      
     } else {
       return
     }
+  }
+
+  modal(ref:string) {
+   return this.$refs[ref] as Modal
   }
 
   async openLoginModal() {
@@ -139,36 +114,14 @@ export default class FirstPage extends Vue {
 
   signOutHandler() {
     this.signOut()
+    // @ts-ignore
     this.$router.push('/')
     this.setMappingError(null)
     this.setMappingStatus(null)
   }
 
-  async onLoginAccount() {
-    if (this.currentStatus === this.STATUS.CREATE_ACCOUNT) {
-      this.openCreateAccountModal()
-    } else if (this.currentStatus === this.STATUS.RESTORE_ACCOUNT) {
-      this.openRestoreAccountModal()
-    }
-  }
-
-  openCreateAccountModal() {
-    this.currentStatus = this.STATUS.CREATE_ACCOUNT
-    if (this.userIsLoggedIn) {
-      this.$refs.seedPhraseRef.show()
-    } else {
-      this.openLoginModal()
-    }
-  }
-
-  onGenerateSeeds(seeds) {
-    this.seedPhrases = seeds
-    this.$refs.confirmSeedRef.show(seeds)
-  }
-
   onConnectionUrlChanged(newUrl) {
     this.$emit('update:chain')
-    // this.blockchain.setServerUrl(newUrl)
   }
 
   async onUserInputUrl(id){
@@ -178,55 +131,18 @@ export default class FirstPage extends Vue {
     window.location.reload()
   }  
 
-  async onConfirmSeeds() {
-    this.currentStatus = this.STATUS.NONE
-    const mnemonic = this.seedPhrases.join(' ')
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    await this.storePrivateKeyFromSeed({
-      seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab()
-  }
-
-  newUser() {
-    this.$refs.seedPhraseRef.show()
-  }
-
-  returningUser() {
-    this.$refs.restoreAccountModal.show()
-  }
-
-  openRestoreAccountModal() {
-    this.currentStatus = this.STATUS.RESTORE_ACCOUNT
-    if (this.userIsLoggedIn) {
-      this.$refs.restoreAccountModal.show()
-    } else {
-      this.openLoginModal()
-    }
-  }
-
-  async onRestoreAccount(mnemonic) {
-    this.currentStatus = this.STATUS.NONE
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    await this.storePrivateKeyFromSeed({
-      seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab() 
-  }
 
   async mounted() {
     if(!this.isMobile) return
-    if ((window.web3 && window.web3.currentProvider.isTrust) || 
-        !!window.imToken ||
-        (window.web3 && window.web3.currentProvider.isMetaMask) ||
-        (window.web3 && window.web3.isCobo)
+
+    if ((window["web3"] && window["web3"].currentProvider.isTrust) || 
+        !!window["imToken"] ||
+        (window["web3"] && window["web3"].currentProvider.isMetaMask) ||
+        (window["web3"] && window["web3"].isCobo)
       ) {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
       await this.initializeDependencies()
-    // this.$root.$emit("login") 
     }
 
   }

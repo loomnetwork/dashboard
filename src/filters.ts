@@ -1,7 +1,7 @@
 import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb";
 import Vue from 'vue'
 import BN from 'bn.js';
-import { formatToCrypto } from './utils.js';
+import { formatToCrypto } from './utils';
 
 import VueI18n from 'vue-i18n'
 

@@ -1,5 +1,5 @@
 const { LoomProvider, CryptoUtils, Client, LocalAddress } = require('loom-js')
-import { formatToCrypto } from '../utils.js'
+import { formatToCrypto } from '../utils.ts'
 import * as Utils from 'web3-utils'
 
 const defaultState = () => {

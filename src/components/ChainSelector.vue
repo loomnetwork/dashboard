@@ -1,26 +1,6 @@
+<script lang="ts" src="./ChainSelector.ts"></script>
 <template>
   <div id="chain-selector">
-
-<!-- 
-  <b-dropdown size="sm" :text="chainUrl" @change="setUrl">
-    <b-dropdown-item-button v-for="(chain, index) in allowedUrls"
-      :key="index"
-      @click="onUrlClicked(chain.websockt || chain.rpc || '')">
-      {{chain.websockt || chain.rpc || ''}}
-    </b-dropdown-item-button>
-  </b-dropdown> -->
-<!-- 
-
-  <b-form-group>
-    <b-form-select id="chainSelector"
-                  :options="allowedUrls"
-                  required
-                  :value="chainUrl"
-                  @change="setUrl">
-    </b-form-select>
-  </b-form-group> -->
-
-
     <b-input-group size="sm">
       <b-form-input type="text" aria-label="Connection URL" :value="chainUrl" @change="setUrl">
       </b-form-input>
@@ -37,8 +17,6 @@
         </b-dropdown>
       </b-input-group-append>
     </b-input-group>
-
-
   </div>
 </template>
 <style lang="scss">
@@ -49,4 +27,3 @@
   }
 
 </style>
-<script lang="ts" src="./chain-selector.ts"></script>

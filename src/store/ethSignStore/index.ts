@@ -4,7 +4,6 @@ import {
   LoomProvider,
   NonceTxMiddleware,
   SignedTxMiddleware,
-  Nonce2TxMiddleware,
   SignedEthTxMiddleware,
   Address,
   LocalAddress,
@@ -12,8 +11,9 @@ import {
   CachedNonceTxMiddleware
 } from 'loom-js'
 import { buildMutationsFromState } from '../../utils'
-import { ethers } from 'ethers'
 import { B64ToUint8Array } from 'loom-js/dist/crypto-utils'
+
+
 
 const defaultState = () => ({
   client: null,
@@ -27,37 +27,39 @@ const defaultState = () => ({
 })
 
 const actions = {
-  async createClient({ rootState, commit, rootGetters }) {
-    const chainURLs = rootState.DappChain.chainUrls[rootState.DappChain.chainIndex]
-    const client = new Client(chainURLs.network, chainURLs.websockt, chainURLs.queryws)
-    const ethersProvider = new ethers.providers.Web3Provider(web3.currentProvider)
-    const signer = ethersProvider.getSigner()
+  // async createClient({ rootState, commit, rootGetters }) {
+  //   const chainURLs = rootState.DappChain.chainUrls[rootState.DappChain.chainIndex]
+  //   const client = new Client(chainURLs.network, chainURLs.websockt, chainURLs.queryws)
+  //   // @ts-ignore
+  //   const ethersProvider = new ethers.providers.Web3Provider(web3.currentProvider)
+  //   const signer = ethersProvider.getSigner()
 
-    client.txMiddleware = [
-      new Nonce2TxMiddleware(client, true),
-      new SignedEthTxMiddleware(signer, true)
-    ]
+  //   client.txMiddleware = [
+  //     new NonceTxMiddleware(,client),
+  //         // @ts-ignore
+  //     new SignedEthTxMiddleware(signer)
+  //   ]
 
-    const publicKey = CryptoUtils.publicKeyFromPrivateKey(
-      B64ToUint8Array(rootGetters.getPrivateKey)
-    )
+  //   const publicKey = CryptoUtils.publicKeyFromPrivateKey(
+  //     B64ToUint8Array(rootGetters.getPrivateKey)
+  //   )
 
-    const dappChainAddress = LocalAddress.fromPublicKey(publicKey).toString()
-    const ethereumAddress = await signer.getAddress()
+  //   const dappChainAddress = LocalAddress.fromPublicKey(publicKey).toString()
+  //   const ethereumAddress = await signer.getAddress()
 
-    commit('setClient', client)
-    commit('setSigner', signer)
-    commit('setPublicKey', publicKey)
-    commit('setEthereumAddress', ethereumAddress)
-    commit('setDappChainAddress', dappChainAddress)
-  },
+  //   commit('setClient', client)
+  //   commit('setSigner', signer)
+  //   commit('setPublicKey', publicKey)
+  //   commit('setEthereumAddress', ethereumAddress)
+  //   commit('setDappChainAddress', dappChainAddress)
+  // },
 
   async createLoomProvider({ state, commit, rootGetters }) {
     const loomProvider = new LoomProvider(state.client, B64ToUint8Array(rootGetters.getPrivateKey))
 
     loomProvider.setMiddlewaresForAddress(state.ethereumAddress, [
       new CachedNonceTxMiddleware(state.publicKey, state.client),
-      new SignedEthTxMiddleware(state.signer, true)
+      new SignedEthTxMiddleware(state.signer)
     ])
 
     commit('setLoomProvider', loomProvider)

@@ -74,70 +74,37 @@
     </section>
   </main>
 </template>
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import { Component, Watch } from 'vue-property-decorator'
-import FaucetTable from '../components/FaucetTable'
-import LoadingSpinner from '../components/LoadingSpinner'
-import SuccessModal from '../components/modals/SuccessModal'
-import RedelegateModal from '../components/modals/RedelegateModal'
-import FaucetDelegateModal from '../components/modals/FaucetDelegateModal'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
+import SuccessModal from '../components/modals/SuccessModal.vue'
+import RedelegateModal from '../components/modals/RedelegateModal.vue'
+import FaucetDelegateModal from '../components/modals/FaucetDelegateModal.vue'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { formatToCrypto } from '@/utils.js';
-
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
+import { formatToCrypto } from '@/utils';
+import { DPOSTypedStore } from '../store/dpos-old';
+import { CommonTypedStore } from '../store/common';
+import { Modal } from 'bootstrap-vue';
 
 @Component({
   components: {
-    FaucetTable,
     SuccessModal,
     RedelegateModal,
     FaucetDelegateModal,
     LoadingSpinner
   },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DPOSStore.mapState([
-      'prohibitedNodes',
-      'delegations'
-    ]),
-    ...DappChainStore.mapState([
-      'validators',
-    ]),
-    ...mapGetters([
-      'getPrivateKey'
-    ]),
-  },
-  methods: {
-    ...mapActions([
-      'setSuccess'
-    ]),
-    ...mapMutations([
-      'setErrorMsg'
-    ]),
-    ...DPOSStore.mapActions([
-      'redelegateAsync',
-      'consolidateDelegations',
-    ]),
-    ...DappChainStore.mapActions([
-      'getValidatorsAsync',
-      'claimRewardAsync',
-      'getDpos3'
-    ])
-  }
 })
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
+  prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
   fields = [
     { key: 'Status' },
-    { key: 'personalStake', label: 'Validator Personal Stake'},
-    { key: 'delegatedStake', label: 'Delegators Stake'},
-    { key: 'totalStaked', label: 'Total Staked'},
+    { key: "personalStake", label: "Validator Personal Stake"},
+    { key: "delegatedStake", label: "Delegators Stake"},
+    { key: "totalStaked", label: "Total Staked"},
     // { key: 'votingPower', label: 'Reward Power'},
-    { key: 'Fees', sortable: false },
+    { key: "Fees", sortable: false },
   ]
   validatorName = ""
 
@@ -162,13 +129,20 @@ export default class ValidatorDetail extends Vue {
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
+  setErrorMsg = CommonTypedStore.setErrorMsg
+
+  setSuccess = CommonTypedStore.setSuccess
+
+  consolidateDelegations = DPOSTypedStore.consolidateDelegations
+
   async beforeMount() {
     this.validatorName = this.$route.params.index
   }
 
-  /**
-   * @returns {IValidator && ICandidate}
-   */
+  get userIsLoggedIn() { return CommonTypedStore.state.userIsLoggedIn}
+
+  get validators() {return DPOSTypedStore.state.validators}
+
   get validator() {
     const v = this.validators.find(v => v.name === this.validatorName)
     // todo add state.loadingValidators:boolean
@@ -189,6 +163,10 @@ export default class ValidatorDetail extends Vue {
       })
   }
 
+  get delegations() {
+    return DPOSTypedStore.state.delegations
+  }
+
   async mounted() {
     this.finished = true
   }
@@ -199,9 +177,11 @@ export default class ValidatorDetail extends Vue {
     this.$root.$emit("bv::hide::modal", "success-modal")
   }
 
+
   copyAddress() {
-    this.$refs.address.select();    
-    const successful = document.execCommand('copy');
+    // @ts-ignore
+    this.$refs.address.select();
+    const successful = document.execCommand("copy");
     if (successful) {
         this.setSuccess("Address copied to clipboard")
     }
@@ -221,45 +201,42 @@ export default class ValidatorDetail extends Vue {
     this.$root.$emit("refreshBalances")
   }
 
-  get isReallyLoggedIn() {
-    return this.userIsLoggedIn && this.getPrivateKey
-  }
-
-  get canClaimReward() {
-    return this.hasDelegation && this.this.unlockTime.second <= 0
-  }
-
   get isBootstrap() {
     return this.prohibitedNodes.includes(this.validator.name)
   }
 
   openRequestDelegateModal() {
-    this.$refs.delegateModalRef.show(this.validator.address, '')
+    // @ts-ignore
+    this.$refs.delegateModalRef.show(this.validator.address, "")
   }
   
   openRequestDelegationUpdateModal(delegation) {
+    // @ts-ignore
     this.$refs.delegateModalRef.show(
       this.validator.address, 
-      '',
+      "",
       0,//formatToCrypto(delegation.amount), 
       delegation.lockTimeTier)
   }
 
   openRequestUnbondModal(delegation) {
-    this.$refs.delegateModalRef.show(this.validator.address, 'unbond',0,0, delegation)
+    // @ts-ignore
+    this.modal("delegateModalRef").show(this.validator.address, "unbond",0,0, delegation)
   }
   
   openRedelegateModal(delegation) {
-    this.$refs.redelegateModalRef.show(delegation)
+    // @ts-ignore
+    this.modal("redelegateModalRef").show(delegation)
+  }
+
+  modal(ref:string):Modal {
+    return this.$refs[ref] as Modal
   }
 
 }
 </script>
 
 <style lang="scss">
-@import url('https://use.typekit.net/nbq4wog.css');
-
-
 main.validator {
   // for the "stake my tokens button"
   padding-bottom: 82px;

@@ -5,7 +5,6 @@ import { BareActionContext } from "vuex-typex";
 import { PlasmaState, HasPlasmaState } from "./types";
 import { TokenSymbol } from "../ethereum/types";
 
-
 declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>
 
 // holds the contracts. We don't need to exposed these on the state

@@ -10,5 +10,6 @@ export interface PlasmaState {
     client: Client|null,
     balances: {
         [erc20Symbol:string]:BN
-    }
+    },
+    cardInstance: any
 }

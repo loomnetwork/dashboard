@@ -226,7 +226,10 @@ export default class MobileAccount extends Vue {
   withdrawLimit = 0
 
   showRefreshSpinner = false
-  
+
+  cooldownInterval = null 
+  whenCooldown = null
+
   mounted() {
     // Page might be mounted while dposUser is still initializing
     if (this.dposUser) {
@@ -242,8 +245,34 @@ export default class MobileAccount extends Vue {
         }
       )
     }
+
+    this.whenCooldown = this.getTimeWhenCooldownExpires()
+
+    if(!this.enoughTimeHasPassed) {
+      this.beginPolling()
+    }
+
+    this.$root.$on('withdrawalDone', () => {
+      this.beginPolling()
+    })
+
+    this.$root.$on('witdrawalRejected', () => {
+      this.whenCooldown = null 
+    })
+
   }
 
+  destroyed() {
+    if(this.cooldownInterval) clearInterval(this.cooldownInterval)
+  }
+
+  beginPolling() {
+    this.cooldownInterval = setInterval(async () => {
+      this.whenCooldown = this.getTimeWhenCooldownExpires()
+      if(this.enoughTimeHasPassed) clearInterval(this.cooldownInterval)
+    }, 30 * 1000) // 30 seconds    
+  }
+  
   async dposUserReady() {
     await this.checkPendingWithdrawalReceipt()
     //await this.checkUnclaimedLoomTokens()
@@ -262,11 +291,13 @@ export default class MobileAccount extends Vue {
    *@param receipt
    */
   get enoughTimeHasPassed() {
-    // Time of last withdrawal
-    let pastWithdrawalTime = this.withdrewOn
-    // Five minutes ago
-    let whenCooledDown = (Date.now()- 5*60*1000)
-    return whenCooledDown > pastWithdrawalTime
+    // Five minutes ago > Withdrawal timestamp
+    return this.whenCooldown > this.withdrewOn
+  }
+
+
+  getTimeWhenCooldownExpires() {
+    return (Date.now()- 5*60*1000)
   }
 
   refresh() {
@@ -516,7 +547,7 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        this.setWithdrewOn(Date.now())
+        this.setWithdrewOn(Date.now()) 
         //await tx.wait()
         return tx
       }

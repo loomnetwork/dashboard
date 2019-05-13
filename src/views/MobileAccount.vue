@@ -277,7 +277,7 @@ export default class MobileAccount extends Vue {
     this.startTimer()
 
     // Only alert te user if the receipt is fresh
-    if (this.receipt && !this.enoughTimeHasPassed) {
+    if (this.receipt) {
       this.hasReceiptHandler(this.receipt)
     }
   }
@@ -437,9 +437,6 @@ export default class MobileAccount extends Vue {
     if(this.receipt) {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
       this.unclaimSignature = this.receipt.signature
-    } else {
-      this.setWithdrewOn("")
-      localStorage.removeItem("lastWithdrawTime")
     }
 
     await this.refresh(true)
@@ -547,7 +544,8 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        this.setWithdrewOn(Date.now()) 
+        // TODO: Delete?
+        // this.setWithdrewOn(Date.now()) 
         //await tx.wait()
         return tx
       }

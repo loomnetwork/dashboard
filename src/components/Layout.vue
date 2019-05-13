@@ -194,6 +194,7 @@ export default class Layout extends Vue {
 
         if (this.currentMetamaskAddress && 
           this.currentMetamaskAddress !== accounts[0] ) {
+                localStorage.removeItem('lastWithdrawTime')
                 this.metamaskChangeAlert = true
                 window.ethereum.removeAllListeners()
         }

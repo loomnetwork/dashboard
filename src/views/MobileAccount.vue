@@ -73,7 +73,7 @@
             :balance="userBalance.loomBalance" 
             :transferAction="executeWithdrawal"
             :resolveTxSuccess="resolveWithdraw"
-            :enableCooldown="enoughTimeHasPassed"
+            :enableCooldown="!enoughTimeHasPassed"
             buttonLabel="Withdraw"
             executionTitle="Execute transfer">
               <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
@@ -166,7 +166,8 @@ const ELECTION_CYCLE_MILLIS = 600000
     ...DappChainStore.mapState([
       'web3',
       'dposUser',
-      'validators'
+      'validators',
+      'withdrewOn'
     ]),    
     ...DPOSStore.mapState([
       'userBalance',
@@ -177,7 +178,7 @@ const ELECTION_CYCLE_MILLIS = 600000
       'delegations',
       'states',
       'currentMetamaskAddress',
-      "pendingTx"
+      'pendingTx'
     ]) 
   },
   methods: {
@@ -194,9 +195,6 @@ const ELECTION_CYCLE_MILLIS = 600000
     ...DappChainStore.mapMutations([
       'setWithdrewOn',
       'setWithdrewSignature',
-    ]),
-    ...DappChainStore.mapGetters([
-      'getWithdrewOn',
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -264,9 +262,11 @@ export default class MobileAccount extends Vue {
    *@param receipt
    */
   get enoughTimeHasPassed() {
-    let pastWithdrawalTime = this.getWithdrewOn
+    // Time of last withdrawal
+    let pastWithdrawalTime = this.withdrewOn
+    // Five minutes ago
     let whenCooledDown = (Date.now()- 5*60*1000)
-    return pastWithdrawalTime > whenCooledDown
+    return whenCooledDown > pastWithdrawalTime
   }
 
   refresh() {
@@ -371,7 +371,7 @@ export default class MobileAccount extends Vue {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
     // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
-    if(!this.unclaimedTokens.isZero() && this.enoughTimeHasPassed() ) {
+    if(!this.unclaimedTokens.isZero() && this.enoughTimeHasPassed) {
       this.$root.$emit("bv::show::modal", "unclaimed-tokens")
     }
   }

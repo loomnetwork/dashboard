@@ -102,7 +102,8 @@
       "tokens_pending_deposit": "{pendingDepositAmount} トークンのデポジットが未処理です。まずこのデポジットを完了してから、他の処理を行なって下さい。",
       "tokens_pending_withdraw": "{pendingWithdrawAmount} トークンの出金が未処理です。まずこの出金を完了してから、他の処理を行なって下さい。",
       "reclaim_deposit": "デポジットしたトークンを払い戻す",
-      "complete_withdraw": "出金完了"
+      "complete_withdraw": "出金完了",
+      "pending_withdrawal": "Withdrawal pending"
     },
     "my_delegations": {
       "no_delegations": "委任はありません"

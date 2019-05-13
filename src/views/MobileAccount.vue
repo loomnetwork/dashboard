@@ -371,8 +371,7 @@ export default class MobileAccount extends Vue {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
     // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
-    if( !this.unclaimedTokens.isZero() &&
-        !this.enoughTimeHasPassed() ) {
+    if(!this.unclaimedTokens.isZero() && this.enoughTimeHasPassed() ) {
       this.$root.$emit("bv::show::modal", "unclaimed-tokens")
     }
   }
@@ -396,6 +395,7 @@ export default class MobileAccount extends Vue {
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
+    this.setWithdrewOn(Date.now())
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -513,6 +513,7 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
+        this.setWithdrewOn(Date.now())
         //await tx.wait()
         return tx
       }

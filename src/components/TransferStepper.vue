@@ -1,6 +1,12 @@
 <template>
 <div>
-  <b-button v-b-modal.modalPrevent variant="outline-primary" :disabled="enableCooldown" @click="show = !show">{{buttonLabel}}</b-button>
+  <div v-if="enableCooldown">
+    <b-button v-b-modal.modalPrevent variant="outline-primary" :disabled="enableCooldown" @click="show = !show">
+      {{ $t('views.my_account.complete_withdraw') }}
+      <b-spinner variant="primary" label="Spinning" small/>
+    </b-button>
+  </div>
+  <b-button v-else v-b-modal.modalPrevent variant="outline-primary" @click="show = !show">{{buttonLabel}}</b-button>
   <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
     no-close-on-esc
     no-close-on-backdrop

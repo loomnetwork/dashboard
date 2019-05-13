@@ -425,6 +425,9 @@ export default class MobileAccount extends Vue {
   async hasReceiptHandler(receipt) {
     const dposUser = await this.dposUser
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
+
+      if(!this.enoughTimeHasPassed) return
+
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())

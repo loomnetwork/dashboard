@@ -102,7 +102,8 @@
       "tokens_pending_deposit": "입금 처리 중인 {pendingDepositAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 입금을 완료해주세요.",
       "tokens_pending_withdraw": "출금 처리 중인 {pendingWithdrawAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 출금을 완료해주세요.",
       "reclaim_deposit": "예치된 토큰 회수하기",
-      "complete_withdraw": "출금 완료"
+      "complete_withdraw": "출금 완료",
+      "pending_withdrawal": "Withdrawal pending"
     },
     "my_delegations": {
       "no_delegations": "위임 내역 없음"

@@ -270,9 +270,6 @@ export default class MobileAccount extends Vue {
     this.cooldownInterval = setInterval(async () => {
       this.whenCooldown = this.getTimeWhenCooldownExpires()
       if(this.enoughTimeHasPassed) clearInterval(this.cooldownInterval)
-      console.log("=============")
-      console.log("Polling")
-      console.log("=============")
     }, 30 * 1000) // 30 seconds    
   }
   

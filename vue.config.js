@@ -5,23 +5,11 @@ const Renderer = PrerenderSpaPlugin.PuppeteerRenderer
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-var baseUrl = '/'
-/*
-if (process.env.ASSET_ENV === 'production') {
-  baseUrl = 'https://d1yfcrdiemhp2q.cloudfront.net'
-} else if (process.env.ASSET_ENV === 'staging') {
-  baseUrl = 'https://d1enfopzuihz6a.cloudfront.net'
-} else if (process.env.ASSET_ENV === 'dev') {
-  baseUrl = 'https://faucet.dappchains.com'
-}
-*/
-
-const proxyUrl = 'https://rinkeby.loom.games'
-const proxyFaucetUrl = 'https://api-faucet.dappchains.com'
-
+const baseUrl = '/'
 
 module.exports = {
-  baseUrl: baseUrl,
+  //publicPath: baseUrl,
+  //baseUrl: baseUrl,
   pages: {
       index: {
         title: 'Index Page',
@@ -38,24 +26,6 @@ module.exports = {
   configureWebpack: config => {
     console.log('nodeenv:', process.env.NODE_ENV)
     let plugins = []
-    // if(process.env.NODE_ENV !== 'development') plugins.push(
-    //   new PrerenderSpaPlugin({
-    //     staticDir: path.resolve(__dirname, 'dist'),
-    //     routes: ['/', '/browse', '/trading', '/cards', '/earlybacker'],
-    //     server: {
-    //       // Normally a free port is autodetected, but feel free to set this if needed.
-    //       port: 8001
-    //     },
-    //     renderer: new Renderer({
-    //       // renderAfterElementExists: '#app'
-    //       // Wait to render until a specified event is fired on the document.
-    //       // renderAfterDocumentEvent: 'render-event',
-    //       renderAfterTime: 5000,
-    //           // headless: false,
-    //         maxConcurrentRoutes: 1
-    //     })
-    //   })
-    // )
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -86,13 +56,5 @@ module.exports = {
     config.module.rules.delete('eslint');
     config.resolve.set('symlinks', false); // makes yarn link loom-js work
     config.module.rules.delete('uglify');
-
-    // config
-    //     .plugin('uglify')
-    //     .tap(args => {
-    //       console.log("uglify args", args)
-    //       args.mangle = false
-    //       return args
-    // })
   }
 }

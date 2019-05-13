@@ -6,12 +6,11 @@
     </div>
   </div>
 </template>
-
-<script>
+<script lang="ts">
 export default {
   props: {
     item: { required: true },
-    searchText: { required: true }
-  }
+    searchText: { required: true },
+  },
 }
 </script>

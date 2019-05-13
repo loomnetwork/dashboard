@@ -1,13 +1,14 @@
 import debug from "debug"
-import { fromEventPattern, Observable, combineLatest } from "rxjs";
-import { filter, switchMap, tap, take } from "rxjs/operators";
-import { Store } from "vuex";
-import { setTimeout } from "timers";
-import { DPOSUserV3 } from "loom-js";
-import { ERC20Gateway_v2 } from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2";
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20";
-import { DashboardState } from "@/types";
-import { DPOSTypedStore } from "./dpos-old";
+import { fromEventPattern, Observable } from "rxjs"
+import { filter, switchMap, tap, take } from "rxjs/operators"
+import { Store } from "vuex"
+import { setTimeout } from "timers"
+import { DPOSUserV3 } from "loom-js"
+import { ERC20Gateway_v2 } from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2"
+import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { DashboardState } from "@/types"
+import { DPOSTypedStore } from "./dpos-old"
+import { noop } from "vue-class-component/lib/util"
 
 const log = debug("dashboard.dpos")
 
@@ -16,11 +17,11 @@ debug.enable("dashboard.dpos")
 export function dposStorePlugin(store: Store<DashboardState>) {
 
     store.subscribeAction({
-        after(action){
-            if(action.type !== "DPOS/getTimeUntilElectionsAsync") {
+        after(action) {
+            if (action.type !== "DPOS/getTimeUntilElectionsAsync") {
                 return
             }
-            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle,10)
+            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle, 10)
             log("timeUntilElectionCycle", seconds)
             store.dispatch("DPOS/getValidatorsAsync")
             // delegator specific calls
@@ -28,28 +29,28 @@ export function dposStorePlugin(store: Store<DashboardState>) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            log("setTimeout seconds",Math.max(seconds,1) * 1000)
-            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
-        }
+            log("setTimeout seconds", Math.max(seconds, 1) * 1000)
+            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds, 1) * 1000)
+        },
     })
 
     // When a user session starts
     // load account state
-    observeState(store, (state) => state.DappChain.dposUser )
+    observeState(store, (state) => state.DPOS.dposUser )
     .pipe(
-        filter((user) => user != null), 
+        filter((user) => user != null),
         switchMap((x) => x as Promise<DPOSUserV3>),
-        take(1) // happens only once per session, so take one to remove watcher...
+        take(1), // happens only once per session, so take one to remove watcher...
     )
-    .subscribe((user:DPOSUserV3) => {
+    .subscribe((user: DPOSUserV3) => {
         // load user state
         store.dispatch("DPOS/checkAllDelegations")
-        store.dispatch("DappChain/getDappchainLoomBalance")
-        store.dispatch("DappChain/getMetamaskLoomBalance")
+        store.dispatch("DPOS/getDappchainLoomBalance")
+        store.dispatch("DPOS/getMetamaskLoomBalance")
         store.dispatch("DPOS/queryRewards")
         store.dispatch("DPOS/fetchDappChainEvents")
         store.dispatch("DPOS/loadEthereumHistory")
-        watchLoomEthBalance(user,store)
+        watchLoomEthBalance(user, store)
     })
 
     //
@@ -63,63 +64,59 @@ export function dposStorePlugin(store: Store<DashboardState>) {
     ]
     store.subscribeAction({
         after(action) {
-            if (dposActions.find(a => a === action.type)) {
+            if (dposActions.find((a) => a === action.type)) {
                 store.dispatch("DPOS/checkAllDelegations")
-                store.dispatch("DappChain/getDappchainLoomBalance")
+                store.dispatch("DPOS/getDappchainLoomBalance")
                 store.dispatch("DPOS/queryRewards")
                 store.dispatch("DPOS/fetchDappChainEvents")
                 store.dispatch("DPOS/loadEthereumHistory")
             }
-        }
+        },
     })
 
     buildWithdrawLimitTrigger(store)
     listenToGatewayEvents(store)
 
-    DPOSTypedStore.getTimeUntilElectionsAsync()
+    setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), 1000)
 }
-
 
 /**
  * helper to make vuex watchers observable
- * @param store 
- * @param stateGetter 
+ * @param store
+ * @param stateGetter
  */
-function observeState<T>(store: Store<any>, stateGetter:(s:any)=>T): Observable<any> {
+function observeState<S, T>(store: Store<S>, stateGetter: (s: S) => T): Observable<any> {
     // init with noop
     // unwatchFn is the fn returned by vuex .watch()
-    let off = () => { }
+    let off = noop
     const on = (handler) => {
         off = store.watch(stateGetter, (val) => handler(val))
     }
     return fromEventPattern(on, off)
 }
 
-
-
-
-function buildWithdrawLimitTrigger(store) {
+function buildWithdrawLimitTrigger(store: Store<DashboardState>) {
     observeState(store, (state) => state.DPOS.history)
         .pipe(
-            filter(val => val instanceof Promise),
+            filter((val) => val instanceof Promise),
             // TODO should handle promise failure or the pipe explodes
-            switchMap(promise => promise),
+            switchMap((promise) => promise),
             tap(() => log("history loaded")),
         )
         .subscribe((history) => {
-            log("history loaded", history);
+            log("history loaded", history)
             store.dispatch("DPOS/updateDailyWithdrawLimit", history)
         })
 }
 
 /**
- * 
- * @param dposUser 
- * @param store 
+ *
+ * @param dposUser
+ * @param store
  */
 function watchLoomEthBalance(
     dposUser: DPOSUserV3,
-    store: Store<any>
+    store: Store<any>,
     ) {
     const contract = dposUser.ethereumLoom
     const addr = dposUser.ethAddress
@@ -134,16 +131,16 @@ function watchLoomEthBalance(
 }
 
 /**
- * Once DappChain.dposUser is set in the state, 
+ * Once DappChain.dposUser is set in the state,
  * listens to Approval and deposit confirmations on the loom contract ethereum side.
- * @param store 
+ * @param store
  */
-function listenToGatewayEvents(store) {
+function listenToGatewayEvents(store: Store<DashboardState>) {
 
-    observeState(store, (state) => state.DappChain.dposUser )
+    observeState(store, (state) => state.DPOS.dposUser )
     // assuming only one DPOS session per page load
     .pipe(take(1), switchMap((x) => x as Promise<DPOSUserV3>))
-    .subscribe((dposUser:DPOSUserV3) => {
+    .subscribe((dposUser: DPOSUserV3) => {
         const loom = dposUser.ethereumLoom
         const gw = dposUser.ethereumGateway
         const account = dposUser.ethAddress
@@ -154,24 +151,24 @@ function listenToGatewayEvents(store) {
 }
 
 function listenToDepositApproval(account, gw: ERC20Gateway_v2, loom: ERC20, store: Store<DashboardState>) {
-    const filter = loom.filters.Approval(account, gw.address, null)
-    loom.on(filter, (from, to, weiAmount) => {
-        log('approval ' + weiAmount.toString() + ' tokens from ' + from);
-        store.commit("DPOS/setShowDepositForm", false)
-        store.commit("DPOS/setShowDepositApproved", true)
-        store.commit("DPOS/setShowDepositConfirmed", false)
+    const approval = loom.filters.Approval(account, gw.address, null)
+    loom.on(approval, (from, _, weiAmount) => {
+        log("approval " + weiAmount.toString() + " tokens from " + from)
+        DPOSTypedStore.setShowDepositForm(false)
+        DPOSTypedStore.setShowDepositApproved(true)
+        DPOSTypedStore.setShowDepositConfirmed(false)
         // empty pendingTx
         // todo: theoratically not necessary but test hash, we never know...
-        store.commit("DPOS/setPendingTx", null)
-    });
+        DPOSTypedStore.setPendingTx(null)
+    })
 }
 function listenToDeposit(account, gw: ERC20Gateway_v2, loom: ERC20, store: Store<any>) {
-    const filter = loom.filters.Transfer(account, gw.address, null)
-    loom.on(filter, (from, to, weiAmount) => {
-        log('transfer ' + weiAmount.toString() + ' tokens from ' + from + ' to ' + to);
-        store.commit("DPOS/setShowDepositForm", false)
-        store.commit("DPOS/setShowDepositApproved", false)
-        store.commit("DPOS/setShowDepositConfirmed", true)
-        store.commit("DPOS/setPendingTx", null)
-    });
+    const transfer = loom.filters.Transfer(account, gw.address, null)
+    loom.on(transfer, (from, to, weiAmount) => {
+        log("transfer " + weiAmount.toString() + " tokens from " + from + " to " + to)
+        DPOSTypedStore.setShowDepositForm(false)
+        DPOSTypedStore.setShowDepositApproved(false)
+        DPOSTypedStore.setShowDepositConfirmed(false)
+        DPOSTypedStore.setPendingTx(null)
+    })
 }

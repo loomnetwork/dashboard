@@ -1,22 +1,25 @@
 
+import { getStoreBuilder } from "vuex-typex"
+import { DashboardState } from "@/types"
+
+export interface LocaleState {
+  locale: string
+}
+
+const builder = getStoreBuilder<DashboardState>().module(
+  "locale",
+  {
+    locale: sessionStorage.getItem("locale") || "en",
+  } as LocaleState,
+)
+const stateGetter = builder.state()
+
+function setLocale(state: LocaleState, locale: string) {
+  state.locale = locale
+  sessionStorage.setItem("locale", locale)
+}
+
 export const LocaleStore = {
-    state: {
-      locale: sessionStorage.getItem('locale') || 'en'
-    },
-    getters: {
-      locale(state) {
-        return state.locale
-      }
-    },
-    mutations: {
-      setLocale(state, locale) {
-        state.locale = locale
-        sessionStorage.setItem('locale', locale)
-      }
-    },
-    actions: {
-      setLocale({ commit }, locale) {
-        commit('setLocale', locale)
-      }
-    }
-  }
+  get state() { return stateGetter()},
+  setLocale: builder.commit(setLocale),
+}

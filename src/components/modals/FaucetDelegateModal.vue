@@ -56,51 +56,31 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Component } from "vue-property-decorator"
+import { Component, Prop } from "vue-property-decorator"
 import LoadingSpinner from "../../components/LoadingSpinner.vue"
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from "vuex"
 import BN from "bn.js"
-import { IDelegation } from 'loom-js/dist/contracts/dpos2';
-
-const DappChainStore = createNamespacedHelpers("DappChain")
-const DPOSStore = createNamespacedHelpers("DPOS")
+import { IDelegation } from "loom-js/dist/contracts/dpos3"
+import { CommonTypedStore } from "../../store/common"
+import { DashboardState } from "../../types"
+import { DPOSTypedStore } from "../../store/dpos-old"
 
 @Component({
-  props: {
-    locktimeTier: Number,
-  },
   components: {
-    LoadingSpinner
+    LoadingSpinner,
   },
-  computed: {
-    ...DappChainStore.mapState([
-      "validators",
-    ]),
-    ...DPOSStore.mapState([
-      "userBalance"
-    ])
-  },
-  methods: {
-    ...mapActions([
-      "setError"
-    ]),
-    ...DappChainStore.mapActions([
-      "delegateAsync",
-      "undelegateAsync"
-    ])
-  }
 })
-
 export default class FaucetDelegateModal extends Vue {
   delegationDetail = {
     amount: "",
     from: "",
-    to: ""
+    to: "",
   }
+  @Prop({})
+  locktimeTier = 0
   locktimeTierVal = 0
   validator = null
   showValidators = false
-  formattedValidators = []
+  formattedValidators: any[] = []
   unbond = false
   loading = false
   okTitle = "Delegate"
@@ -109,25 +89,40 @@ export default class FaucetDelegateModal extends Vue {
     "2 weeks",
     "3 months",
     "6 months",
-    "1 year"
+    "1 year",
   ]
 
   bonusTiers = [
     "x1",
     "x1.5",
     "x2",
-    "x4"
+    "x4",
   ]
 
   minAmount = 0
   maxAmount = 0
   minLockTimeTier = 0
-  delegation: IDelegation|null = null
+  delegation: IDelegation | null = null
+
+  setError = CommonTypedStore.setError
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get validators() {
+    return this.state.DPOS.validators
+  }
+
+  get userBalance() { return this.state.DPOS.userBalance }
+
+  delegateAsync = DPOSTypedStore.delegateAsync
+  undelegateAsync = DPOSTypedStore.undelegateAsync
 
   async requestDelegate() {
 
-    if (this.delegationDetail.amount <= 0) {
-      this.setError("Invalid amount")
+    if (parseInt(this.delegationDetail.amount, 10) <= 0) {
+      this.setError({ msg: "Invalid amount", err: {} })
       return
     }
 
@@ -138,14 +133,13 @@ export default class FaucetDelegateModal extends Vue {
         await this.undelegateAsync({
           candidate: this.delegationDetail.from,
           amount: this.delegationDetail.amount,
-          tier: this.locktimeTierVal,
-          index: this.delegation.index
+          index: this.delegation!.index,
         })
       } else {
         await this.delegateAsync({
           candidate: this.delegationDetail.to,
           amount: this.delegationDetail.amount,
-          tier: this.locktimeTierVal
+          tier: this.locktimeTierVal,
         })
       }
       this.loading = false
@@ -158,7 +152,7 @@ export default class FaucetDelegateModal extends Vue {
   }
 
   // xxx
-  show(address, type = "", minAmount = 1, minLockTimeTier = 0, delegation: IDelegation|null = null) {
+  show(address, type = "", minAmount = 1, minLockTimeTier = 0, delegation: IDelegation | null = null) {
 
     this.minAmount = 1
     if (delegation != null && type === "unbond") {
@@ -175,7 +169,7 @@ export default class FaucetDelegateModal extends Vue {
         this.formattedValidators = this.validators.map((v) => {
           return {
             text: v.name || v.name,
-            value: v.address
+            value: v.address,
           }
         })
       }
@@ -187,7 +181,7 @@ export default class FaucetDelegateModal extends Vue {
       this.delegationDetail = {
         amount: "",
         from: address,
-        to:""
+        to: "",
       }
     } else {
       this.unbond = false
@@ -195,7 +189,7 @@ export default class FaucetDelegateModal extends Vue {
       this.delegationDetail = {
         amount: "",
         from: "",
-        to: address
+        to: address,
       }
     }
     // @ts-ignore
@@ -221,7 +215,6 @@ export default class FaucetDelegateModal extends Vue {
         break
     }
   }
-
 
   get isAmountValid() {
 

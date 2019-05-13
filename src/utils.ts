@@ -1,81 +1,79 @@
 /* eslint-disable no-undef, func-names */
-import Web3 from 'web3'
-import BigNumber from 'bignumber.js'
+import Web3 from "web3"
+import BigNumber from "bignumber.js"
 
 const unitMap = {
-  'noether':      '0',
-  'wei':          '1',
-  'kwei':         '1000',
-  'Kwei':         '1000',
-  'babbage':      '1000',
-  'femtoether':   '1000',
-  'mwei':         '1000000',
-  'Mwei':         '1000000',
-  'lovelace':     '1000000',
-  'picoether':    '1000000',
-  'gwei':         '1000000000',
-  'Gwei':         '1000000000',
-  'shannon':      '1000000000',
-  'nanoether':    '1000000000',
-  'nano':         '1000000000',
-  'szabo':        '1000000000000',
-  'microether':   '1000000000000',
-  'micro':        '1000000000000',
-  'finney':       '1000000000000000',
-  'milliether':   '1000000000000000',
-  'milli':        '1000000000000000',
-  'ether':        '1000000000000000000',
-  'kether':       '1000000000000000000000',
-  'grand':        '1000000000000000000000',
-  'mether':       '1000000000000000000000000',
-  'gether':       '1000000000000000000000000000',
-  'tether':       '1000000000000000000000000000000'
+  noether:      "0",
+  wei:          "1",
+  kwei:         "1000",
+  Kwei:         "1000",
+  babbage:      "1000",
+  femtoether:   "1000",
+  mwei:         "1000000",
+  Mwei:         "1000000",
+  lovelace:     "1000000",
+  picoether:    "1000000",
+  gwei:         "1000000000",
+  Gwei:         "1000000000",
+  shannon:      "1000000000",
+  nanoether:    "1000000000",
+  nano:         "1000000000",
+  szabo:        "1000000000000",
+  microether:   "1000000000000",
+  micro:        "1000000000000",
+  finney:       "1000000000000000",
+  milliether:   "1000000000000000",
+  milli:        "1000000000000000",
+  ether:        "1000000000000000000",
+  kether:       "1000000000000000000000",
+  grand:        "1000000000000000000000",
+  mether:       "1000000000000000000000000",
+  gether:       "1000000000000000000000000000",
+  tether:       "1000000000000000000000000000000",
 }
 
-export function toBigNumber(number) {
-  number = number || 0
-  if (isBigNumber(number))
-    return number
-
-  if (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
-    return new BigNumber(number.replace('0x',''), 16)
+export function toBigNumber(num) {
+  num = num || 0
+  if (isBigNumber(num)) {
+    return num
   }
-  return new BigNumber(number.toString(10), 10)
+
+  if (isString(num) && (num.indexOf("0x") === 0 || num.indexOf("-0x") === 0)) {
+    return new BigNumber(num.replace("0x", ""), 16)
+  }
+  return new BigNumber(num.toString(10), 10)
 }
 
 export function isBigNumber(object) {
-  return (object && (object instanceof BigNumber || (object.constructor && object.constructor.name === 'BigNumber')))      
+  return (object && (object instanceof BigNumber || (object.constructor && object.constructor.name === "BigNumber")))
 }
 
-const isString = function (object) {
-  return typeof object === 'string' ||
-      (object && object.constructor && object.constructor.name === 'String')
+function isString(object) {
+  return typeof object === "string" ||
+      (object && object.constructor && object.constructor.name === "String")
 }
 
 export function getValueOfUnit(unit) {
-  unit = unit ? unit.toLowerCase() : 'ether'
-  var unitValue = unitMap[unit]
+  unit = unit ? unit.toLowerCase() : "ether"
+  const unitValue = unitMap[unit]
   if (unitValue === undefined) {
-      throw new Error('This unit doesn\'t exists, please use the one of the following units' + JSON.stringify(unitMap, null, 2))
+      throw new Error(`Unknown unit '${unit}'`)
   }
   return new BigNumber(unitValue, 10)
 }
 
-  // @ts-ignore
-const web3js = new Web3(Web3.currentProvider)
-
-export const getDomainType = function() {
+export function getDomainType() {
   const host = window.location.host
-  if (host && !host.includes('local')) {
-    return host.split('.')[0]
+  if (host && !host.includes("local")) {
+    return host.split(".")[0]
   }
-  return 'local'
+  return "local"
 }
 
-export const getNetworkType = async function() {
+export async function getNetworkType() {
   // @ts-ignore
-  if (typeof window.web3 !== 'undefined') {
-    return new Promise(resolve => {
+  if (typeof window.web3 !== "undefined") {
+    return new Promise((resolve) => {
         // @ts-ignore
       web3.version.getNetwork((err, netId) => {
         resolve(netId)
@@ -85,7 +83,7 @@ export const getNetworkType = async function() {
   return null
 }
 
-export const formatToCrypto = (amount) => {
+export function formatToCrypto(amount) {
   const conversion = new BigNumber(amount / 10 ** 18, 10)
   // show gwei if less than one
   return conversion.lt(1) && conversion.gt(0) ?
@@ -94,8 +92,8 @@ export const formatToCrypto = (amount) => {
 }
 
 export const DOMAIN_NETWORK_ID = {
-  '1': ['loom'],
-  '4': ['rinkeby', 'stage', 'local']
+  1: ["loom"],
+  4: ["rinkeby", "stage", "local"],
 }
 
 export function getRandomInt(min, max) {
@@ -103,35 +101,29 @@ export function getRandomInt(min, max) {
 }
 
 export const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-
-export const EMAIL_REGEX = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
-
-const capitalize = s => {
+const capitalize = (s) => {
   if (typeof s !== "string") return ""
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
- export const simpleMutations = stateName => ({
-  [`set${capitalize(stateName)}`]: (state, payload) => (state[stateName] = payload)
+export const simpleMutations = (stateName) => ({
+  [`set${capitalize(stateName)}`]: (state, payload) => (state[stateName] = payload),
 })
 
- export const buildMutationsFromState = state =>
-  Object.assign({}, ...Object.keys(state).map(name => simpleMutations(name)))
-
-
+export const buildMutationsFromState = (state) =>
+  Object.assign({}, ...Object.keys(state).map((name) => simpleMutations(name)))
 
 export function dynamicSort(property) {
     let sortOrder = 1
-    if(property[0] === "-") {
+    if (property[0] === "-") {
         sortOrder = -1
         property = property.substr(1)
     }
-    return (a,b) => {
-      let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0
+    return (a, b) => {
+      const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0
       return result * sortOrder
     }
   }
-  

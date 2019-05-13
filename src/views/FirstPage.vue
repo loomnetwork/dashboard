@@ -47,23 +47,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
-import ChainSelector from '../components/ChainSelector'
-import RestoreAccountModal from '../components/modals/RestoreAccountModal.vue'
-import HardwareWalletModal from '../components/modals/HardwareWalletModal.vue'
-import { setInterval } from 'timers';
-import { Modal } from "bootstrap-vue";
+import { Vue, Component, Watch } from "vue-property-decorator"
+import ChainSelector from "../components/ChainSelector"
+import RestoreAccountModal from "../components/modals/RestoreAccountModal.vue"
+import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
+import { setInterval } from "timers"
+import { Modal } from "bootstrap-vue"
 
-import { DPOSTypedStore } from "@/store/dpos-old";
-import { CommonTypedStore } from '../store/common';
-import { DappChainTypedModule } from '../store/dappchain';
-import { DashboardState } from '../types';
+import { DPOSTypedStore } from "@/store/dpos-old"
+import { CommonTypedStore } from "../store/common"
+import { DashboardState } from "../types"
 
 @Component({
   components: {
     ChainSelector,
     HardwareWalletModal,
-  }
+  },
 })
 export default class FirstPage extends Vue {
   activeTab = 0
@@ -72,8 +71,8 @@ export default class FirstPage extends Vue {
   isProduction = window.location.hostname === "dashboard.dappchains.com"
 
   get userIsLoggedIn() { return CommonTypedStore.getUserIsLoggedIn }
-  get chainUrls() { return this.$state.DappChain.chainUrls }
-  get networkId() { return this.$state.DappChain.networkId }
+  get chainUrls() { return this.$state.DPOS.chainUrls }
+  get networkId() { return this.$state.DPOS.networkId }
   get walletType() { return this.$state.DPOS.walletType }
   get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
   get $state() { return (this.$store.state as DashboardState)}
@@ -85,60 +84,60 @@ export default class FirstPage extends Vue {
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
   signOut = CommonTypedStore.signOut
 
-  addChainUrl = DappChainTypedModule.addChainUrl
+  addChainUrl = DPOSTypedStore.addChainUrl
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus
 
   async selectWallet(wallet) {
-    if(wallet === "ledger") {
+    if (wallet === "ledger") {
       this.setWalletType("ledger")
       this.setUserIsLoggedIn(true)
 
-      this.modal("hardwareWalletConfigRef").show() 
-    } else if(wallet === "metamask") {
+      this.modal("hardwareWalletConfigRef").show()
+    } else if (wallet === "metamask") {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()      
+      await this.initializeDependencies()
     } else {
       return
     }
   }
 
-  modal(ref:string) {
+  modal(ref: string) {
    return this.$refs[ref] as Modal
   }
 
   async openLoginModal() {
-    this.$root.$emit('bv::show::modal', 'login-account-modal')
+    this.$root.$emit("bv::show::modal", "login-account-modal")
   }
 
   signOutHandler() {
     this.signOut()
     // @ts-ignore
-    this.$router.push('/')
+    this.$router.push("/")
     this.setMappingError(null)
-    this.setMappingStatus(null)
+    this.setMappingStatus("")
   }
 
   onConnectionUrlChanged(newUrl) {
-    this.$emit('update:chain')
+    this.$emit("update:chain")
   }
 
-  async onUserInputUrl(id){
+  async onUserInputUrl(id) {
     this.addChainUrl({id})
     // this.onConnectionUrlChanged(id)
     this.$forceUpdate()
     window.location.reload()
-  }  
-
+  }
 
   async mounted() {
-    if(!this.isMobile) return
-
-    if ((window["web3"] && window["web3"].currentProvider.isTrust) || 
-        !!window["imToken"] ||
-        (window["web3"] && window["web3"].currentProvider.isMetaMask) ||
-        (window["web3"] && window["web3"].isCobo)
+    if (!this.isMobile) return
+    // @ts-ignore
+    const web3 = window.web3
+    if ((web3 && web3.currentProvider.isTrust) ||
+        "imToken" in window ||
+        (web3 && web3.currentProvider.isMetaMask) ||
+        (web3 && web3.isCobo)
       ) {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
@@ -146,7 +145,7 @@ export default class FirstPage extends Vue {
     }
 
   }
-  
+
   switchTab() {
     this.showTabSpinner = true
 
@@ -158,9 +157,9 @@ export default class FirstPage extends Vue {
 
   get STATUS() {
     return {
-      NONE: 'NONE',
-      CREATE_ACCOUNT: 'CREATE_ACCOUNT',
-      RESTORE_ACCOUNT: 'RESTORE_ACCOUNT'
+      NONE: "NONE",
+      CREATE_ACCOUNT: "CREATE_ACCOUNT",
+      RESTORE_ACCOUNT: "RESTORE_ACCOUNT",
     }
   }
 

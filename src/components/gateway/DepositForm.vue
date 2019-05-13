@@ -56,21 +56,13 @@
     </div>
   </b-modal>
 </template>
-
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component } from "vue-property-decorator"
 import { ethers } from "ethers"
 
-import { DPOSTypedStore } from "@/store/dpos-old";
-
-import {
-  State,
-  Getter,
-  Action,
-  Mutation,
-  namespace
-} from 'vuex-class'
-import { formatToCrypto } from '@/utils';
+import { DPOSTypedStore } from "@/store/dpos-old"
+import { formatToCrypto } from "@/utils"
+import { DashboardState } from "../../types"
 
 @Component
 export default class DepositForm extends Vue {
@@ -79,18 +71,17 @@ export default class DepositForm extends Vue {
     return DPOSTypedStore.state.userBalance
   }
 
-  get showDepositForm() {
-    return this.$store.
+  get state(): DashboardState {
+    return this.$store.state
   }
 
-  @dposModule.State("showDepositForm")
-  showDepositForm: boolean
+  get showDepositForm() {
+    return this.state.DPOS.showDepositForm
+  }
 
-  @dposModule.Mutation("setShowDepositForm")
-  setShowDepositForm
+  setShowDepositForm = DPOSTypedStore.setShowDepositForm
 
-  @dposModule.Action("approveDeposit")
-  approveDeposit: Function
+  approveDeposit = DPOSTypedStore.approveDeposit
 
   // vue returns either number or empty string for input number
   transferAmount: number | "" = ""
@@ -108,7 +99,7 @@ export default class DepositForm extends Vue {
       this.setShowDepositForm(false)
       this.status = ""
       this.transferAmount = ""
-      this.amountErrors.length === 0
+      this.amountErrors.length = 0
     }
   }
 

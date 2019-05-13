@@ -6,24 +6,24 @@
     hide-header-close
     id="deposit-approval-success"  title="Complete deposit" 
     >
-    <b-container fluid v-if="state === 'notify'">
+    <b-container fluid v-if="status === 'notify'">
       <div class="lead">
         <p>{{ $t('components.gateway.approval.success') }}</p>
       </div>
       <b-btn @click="completeDeposit">Complete deposit</b-btn>
     </b-container>  
-    <b-container fluid v-else-if="state === 'sending'">
+    <b-container fluid v-else-if="status === 'sending'">
       <div class="lead">
         <p>{{ $t('components.gateway.deposit.sending') }}</p>
       </div>
     </b-container> 
-    <b-container fluid v-else-if="state === 'sent'">
+    <b-container fluid v-else-if="status === 'sent'">
       <div class="lead">
         <p>{{ $t('components.gateway.deposit.sent') }}</p>
       </div>
       <b-btn @click="close">Close</b-btn>
     </b-container>  
-    <b-container fluid v-else-if="state === 'failed'">
+    <b-container fluid v-else-if="status === 'failed'">
       <div class="lead">
         <p>{{ $t('components.gateway.deposit.failure') }}</p>
       </div>
@@ -33,47 +33,42 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
 import {ethers} from "ethers"
 
-import {
-  State,
-  Getter,
-  Action,
-  Mutation,
-  namespace
-} from 'vuex-class'
-import { formatToCrypto } from '@/utils';
-
-const dposModule = namespace('DPOS')
+import { formatToCrypto } from "@/utils"
+import { DashboardState } from "../../types"
+import { DPOSTypedStore } from "../../store/dpos-old"
 
 @Component
 export default class DepositApproved extends Vue {
 
-  state:string = 'notify'
+  status: string = "notify"
 
-  @dposModule.State("pendingTx")
-  transaction:any
+  get state(): DashboardState {
+    return this.$store.state
+  }
 
-  @dposModule.State("showDepositApproved")
-  showDepositApproved: boolean
+  get transaction() {
+    return this.state.DPOS.pendingTx
+  }
+  get showDepositApproved() {
+    return this.state.DPOS.showDepositApproved
+  }
 
-  @dposModule.Mutation("setShowDepositApproved")
-  setShowDepositApproved:Function
-
-  @dposModule.Action("executeDeposit")
-  executeDeposit:Function
+  setShowDepositApproved = DPOSTypedStore.setShowDepositApproved
+  executeDeposit = DPOSTypedStore.executeDeposit
 
   get visible() {
-    console.log("showDepositApproved",this.showDepositApproved)
+    console.log("showDepositApproved", this.showDepositApproved)
     return this.showDepositApproved
   }
 
   set visible(value) {
     if (value === false) {
      this.setShowDepositApproved(false)
-     this.state = 'notify'
+     this.status = "notify"
     }
   }
 
@@ -82,14 +77,14 @@ export default class DepositApproved extends Vue {
   }
 
   async completeDeposit(e) {
-    this.state = 'sending'
+    this.status = "sending"
     e.preventDefault()
     try {
       await this.executeDeposit()
-      this.state = 'sent'
+      this.status = "sent"
     } catch (error) {
       console.log(error)
-      this.state = 'failed'
+      this.status = "failed"
     }
   }
 

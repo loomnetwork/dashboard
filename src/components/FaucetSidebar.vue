@@ -21,7 +21,7 @@
     <b-nav-item>
       <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
     </b-nav-item>
-    <b-nav-item v-if="userIsLoggedIn">
+    <b-nav-item v-if="state.common.userIsLoggedIn">
       <a class="nav-link">
         <a @click="logout">
           Sign out
@@ -31,26 +31,25 @@
   </b-nav>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
+import { DashboardState } from "../types"
 
-@Component({
-  computed: {
-    ...mapState(['userIsLoggedIn'])
-  }
-})
-
+@Component
 export default class FaucetSidebar extends Vue {
 
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
   clickHandler() {
-    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
+    if (!this.state.common.userIsLoggedIn) this.$router.push({ path: "/login" })
     return
   }
 
   logout() {
-    this.$root.$emit('logout')
+    this.$root.$emit("logout")
   }
 
 }

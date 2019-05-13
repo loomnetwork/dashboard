@@ -1,8 +1,8 @@
 
 import BN from "bn.js"
-import { Provider } from "ethers/providers";
-import { HasPlasmaState } from "../plasma/types";
-import { IDelegation, IValidator, ICandidate, DPOS3 } from "loom-js/dist/contracts/dpos3";
+import { Provider } from "ethers/providers"
+import { HasPlasmaState } from "../plasma/types"
+import { IDelegation, IValidator, ICandidate, DPOS3 } from "loom-js/dist/contracts/dpos3"
 
 // Interface for root stores that support EthereumState
 export interface HasDPOSState extends HasPlasmaState {
@@ -23,8 +23,6 @@ export interface DPOSState {
     rewards: BN
 }
 
-
-
 export interface Validator extends IValidator, ICandidate {
-    totalDelegated:BN
-} 
+    totalDelegated: BN
+}

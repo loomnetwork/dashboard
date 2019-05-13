@@ -75,31 +75,30 @@
   </main>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
-import SuccessModal from '../components/modals/SuccessModal.vue'
-import RedelegateModal from '../components/modals/RedelegateModal.vue'
-import FaucetDelegateModal from '../components/modals/FaucetDelegateModal.vue'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { formatToCrypto } from '@/utils';
-import { DPOSTypedStore } from '../store/dpos-old';
-import { CommonTypedStore } from '../store/common';
-import { Modal } from 'bootstrap-vue';
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
+import LoadingSpinner from "../components/LoadingSpinner.vue"
+import SuccessModal from "../components/modals/SuccessModal.vue"
+import RedelegateModal from "../components/modals/RedelegateModal.vue"
+import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
+import { formatToCrypto } from "@/utils"
+import { DPOSTypedStore } from "../store/dpos-old"
+import { CommonTypedStore } from "../store/common"
+import { Modal } from "bootstrap-vue"
 
 @Component({
   components: {
     SuccessModal,
     RedelegateModal,
     FaucetDelegateModal,
-    LoadingSpinner
+    LoadingSpinner,
   },
 })
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
   prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
   fields = [
-    { key: 'Status' },
+    { key: "Status" },
     { key: "personalStake", label: "Validator Personal Stake"},
     { key: "delegatedStake", label: "Delegators Stake"},
     { key: "totalStaked", label: "Total Staked"},
@@ -122,10 +121,10 @@ export default class ValidatorDetail extends Vue {
     "2 weeks",
     "3 months",
     "6 months",
-    "1 year"
+    "1 year",
   ]
 
-  lockDays = [14,90,180,365]
+  lockDays = [14, 90, 180, 365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
@@ -144,12 +143,12 @@ export default class ValidatorDetail extends Vue {
   get validators() {return DPOSTypedStore.state.validators}
 
   get validator() {
-    const v = this.validators.find(v => v.name === this.validatorName)
+    const validator = this.validators.find((v) => v.name === this.validatorName)
     // todo add state.loadingValidators:boolean
-    if(v === undefined) {
+    if (validator === undefined) {
       this.$router.push("../validators")
     }
-    return v
+    return validator
   }
 
   get validatorDelegations() {
@@ -157,8 +156,8 @@ export default class ValidatorDetail extends Vue {
     if (!this.validator) return []
     return this.delegations
       .filter((d) => d.validatorStr === validator.address && d.index > 0)
-      .map(d => { 
-        d.locked = parseInt(d.lockTime,10)*1000 > Date.now()
+      .map((d) => {
+        d.locked = parseInt(d.lockTime, 10) * 1000 > Date.now()
         return d
       })
   }
@@ -177,19 +176,17 @@ export default class ValidatorDetail extends Vue {
     this.$root.$emit("bv::hide::modal", "success-modal")
   }
 
-
   copyAddress() {
     // @ts-ignore
-    this.$refs.address.select();
-    const successful = document.execCommand("copy");
+    this.$refs.address.select()
+    const successful = document.execCommand("copy")
     if (successful) {
         this.setSuccess("Address copied to clipboard")
-    }
-    else {
+    } else {
         this.setSuccess("Somehow copy  didn't work...sorry")
     }
   }
-  
+
   get multipleUnlockedStakes() {
     // dev only. remove "true" on production
     return true || this.delegations.filter((d) => d.unlocked).length > 1
@@ -209,27 +206,27 @@ export default class ValidatorDetail extends Vue {
     // @ts-ignore
     this.$refs.delegateModalRef.show(this.validator.address, "")
   }
-  
+
   openRequestDelegationUpdateModal(delegation) {
     // @ts-ignore
     this.$refs.delegateModalRef.show(
-      this.validator.address, 
+      this.validator.address,
       "",
-      0,//formatToCrypto(delegation.amount), 
+      0, // formatToCrypto(delegation.amount),
       delegation.lockTimeTier)
   }
 
   openRequestUnbondModal(delegation) {
     // @ts-ignore
-    this.modal("delegateModalRef").show(this.validator.address, "unbond",0,0, delegation)
+    this.modal("delegateModalRef").show(this.validator.address, "unbond", 0, 0, delegation)
   }
-  
+
   openRedelegateModal(delegation) {
     // @ts-ignore
     this.modal("redelegateModalRef").show(delegation)
   }
 
-  modal(ref:string):Modal {
+  modal(ref: string): Modal {
     return this.$refs[ref] as Modal
   }
 

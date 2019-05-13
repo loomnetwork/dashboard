@@ -1,5 +1,5 @@
 <template>
-  <div id="faucet-header" @login="startPolling" ref="header" class="header">
+  <div id="faucet-header" ref="header" class="header">
 
     <b-alert variant="danger"
                dismissible
@@ -47,12 +47,12 @@
               <!-- Right aligned nav items -->
               <b-navbar-nav class="mobile-nav ml-auto">
                 
-                <b-nav-item v-if="userIsLoggedIn">
+                <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <router-link to="/account" class="router text-light hover-warning">Account</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-if="userIsLoggedIn">
+                <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <router-link to="/history" class="router text-light hover-warning">History</router-link>
                   </h5>
@@ -70,7 +70,7 @@
                   </b-nav-item>              
                 </div>
                 <LangSwitcher/>
-                <b-nav-item v-if="userIsLoggedIn">
+                <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <a @click="logOut" class="router text-light hover-warning">Sign out</a>
                   </h5>
@@ -86,15 +86,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import ChainSelector from './ChainSelector'
-import LoomIcon from '@/components/LoomIcon.vue'
-import LangSwitcher from './LangSwitcher.vue'
-import { DashboardState } from '../types';
-import { DPOSTypedStore } from '../store/dpos-old';
-import { CommonTypedStore } from '../store/common';
-
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
+import ChainSelector from "./ChainSelector"
+import LoomIcon from "@/components/LoomIcon.vue"
+import LangSwitcher from "./LangSwitcher.vue"
+import { DashboardState } from "../types"
+import { DPOSTypedStore } from "../store/dpos-old"
+import { CommonTypedStore } from "../store/common"
 
 @Component({
   components: {
@@ -129,7 +128,6 @@ import { CommonTypedStore } from '../store/common';
     },
   },
 })
-
 export default class FaucetHeader extends Vue {
 
   refreshInterval = null
@@ -137,7 +135,7 @@ export default class FaucetHeader extends Vue {
   formattedTimeUntilElectionCycle = null
   timeLeft = 600
   errorRefreshing = false
-  connectedToDappChain = false 
+  connectedToDappChain = false
 
   electionCycleTimer = undefined
   showRefreshSpinner = false
@@ -146,12 +144,12 @@ export default class FaucetHeader extends Vue {
     return this.$store.state
   }
 
+
   setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
   clearPrivateKey = DPOSTypedStore.clearPrivateKey
-
 
   logOut() {
     this.clearPrivateKey()
@@ -173,14 +171,14 @@ export default class FaucetHeader extends Vue {
 
   @Watch("state.DPOS.isConnectedToDappChain")
   onConnectingToDappChainChange(newValue, oldValue) {
-    if(newValue) {
+    if (newValue) {
       this.connectedToDappChain = true
     } else {
       this.connectedToDappChain = false
     }
   }
 
-  async mounted() { 
+  async mounted() {
 
     this.$root.$on("logout", () => {
       this.logOut()
@@ -196,13 +194,12 @@ export default class FaucetHeader extends Vue {
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
   }
 
-
   get isLoggedIn() {
     return this.state.common.userIsLoggedIn ? true : false
   }
 
   get showErrorMsg() {
-    if(this.$store.state.errorMsg) {
+    if (this.$store.state.errorMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
         ref: this.$refs.errorMsg,
@@ -212,25 +209,26 @@ export default class FaucetHeader extends Vue {
   }
 
   get showSuccessMsg() {
-    if(this.state.common.successMsg) {
+    if (this.state.common.successMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
-        ref: this.$refs.successMsg
+        ref: this.$refs.successMsg,
       })
     }
     return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: "success" } : false
   }
 
-
-  hideAlert(alertOpt){
-    let stay = alertOpt.opt ? alertOpt.opt.stay : false
-    let waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
-    if(!stay){
-      setTimeout(()=>{
+  hideAlert(alertOpt) {
+    const stay = alertOpt.opt ? alertOpt.opt.stay : false
+    const waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
+    if (!stay) {
+      setTimeout(() => {
         if (alertOpt.ref) {
           try {
             alertOpt.ref.dismiss()
-          } catch (e) {}
+          } catch (e) {
+            console.error(e)
+          }
         }
       }, waitTime * 1000)
     }

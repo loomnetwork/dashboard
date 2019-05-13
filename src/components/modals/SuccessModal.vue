@@ -8,16 +8,12 @@
   </b-modal>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
 
-@Component({
-})
-
-export default class SuccessModal extends Vue {
-  
-}
+@Component
+export default class SuccessModal extends Vue {}
 </script>
 <style lang="scss">
 

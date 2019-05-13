@@ -3,16 +3,16 @@
  */
 
 import { getStoreBuilder } from "vuex-typex"
-import { timer } from "rxjs";
-import { BareActionContext } from "vuex-typex";
+import { timer } from "rxjs"
+import { BareActionContext } from "vuex-typex"
 
-import { DPOSState, HasDPOSState } from "./types";
+import { DPOSState, HasDPOSState } from "./types"
 
 import * as mutations from "./mutations"
-import BN from "bn.js";
-import { IDelegation } from "loom-js/dist/contracts/dpos3";
+import BN from "bn.js"
+import { IDelegation } from "loom-js/dist/contracts/dpos3"
 
-const initialState:DPOSState = {
+const initialState: DPOSState = {
     contract: null,
     loading: {
         electionTime: false,
@@ -23,12 +23,11 @@ const initialState:DPOSState = {
     electionTime: new Date(),
     validators: [],
     delegations: [],
-    rewards: new BN(0)
+    rewards: new BN(0),
 }
 
 const builder = getStoreBuilder<HasDPOSState>().module("dpos", initialState)
 const stateGetter = builder.state()
-
 
 const dposTypedModule = {
 
@@ -55,56 +54,47 @@ export const dposModule = builder.vuexModule()
 // strongly typed module api
 export { dposTypedModule }
 
-
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
-
-
-
-async function refreshElectionTime(context:ActionContext) {
+async function refreshElectionTime(context: ActionContext) {
     await timer(2000).toPromise()
-    dposTypedModule.setElectionTime(new Date(Date.now() + 60+1000))
+    dposTypedModule.setElectionTime(new Date(Date.now() + 60 + 1000))
 }
 
-
-function delegate(context:ActionContext, delegation:IDelegation) {
+function delegate(context: ActionContext, delegation: IDelegation) {
     return timer(2000).toPromise()
 }
 
-
-
-function redelegate(context:ActionContext, payload:IDelegation) {
+function redelegate(context: ActionContext, payload: IDelegation) {
     // playload .updateAmount .updateValidator .index
     return timer(2000).toPromise()
 }
 
-
-function consolidate(context:ActionContext, payload:{symbol:string, tokenAmount:BN, to:string}) {
+function consolidate(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
     return timer(2000).toPromise()
 }
 
 /**
  * withdraw from gateway to ethereum account
- * @param symbol 
+ * @param symbol
  */
-function undelegate(context:ActionContext, payload:IDelegation) {
+function undelegate(context: ActionContext, payload: IDelegation) {
     return timer(2000).toPromise()
 }
 
 /**
  * withdraw from gateway to ethereum account
- * @param symbol 
+ * @param symbol
  */
-async function refreshRewards(context:ActionContext, payload:{symbol:string, tokenAmount:BN, to:string}) {
+async function refreshRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
     await timer(2000).toPromise()
     dposTypedModule.setRewards("0")
 }
 
 /**
  * withdraw from gateway to ethereum account
- * @param symbol 
+ * @param symbol
  */
-function claimRewards(context:ActionContext, payload:{symbol:string, tokenAmount:BN, to:string}) {
+function claimRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
     return timer(2000).toPromise()
 }
-

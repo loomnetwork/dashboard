@@ -1,17 +1,23 @@
-import WalletInterface from './WalletInterface';
+import WalletInterface from "./WalletInterface"
+
 class HDWalletInterface extends WalletInterface {
-  constructor(path, pubkey, isHardware, identifier, txSigner, msgSigner) {
-    super(pubkey, true, identifier);
-    this.path = path;
-    this.txSigner = txSigner;
-    this.msgSigner = msgSigner;
-    this.isHardware = isHardware;
+  constructor(
+    readonly path,
+    pubkey,
+    readonly isHardware: boolean,
+    identifier: string,
+    readonly txSigner,
+    readonly msgSigner,
+  ) {
+    super(pubkey, true, identifier)
   }
+
   signTransaction(txParams) {
-    return super.signTransaction(txParams, this.txSigner);
+    return super.signTransaction(txParams, this.txSigner)
   }
+
   signMessage(msg) {
-    return super.signMessage(msg, this.msgSigner);
+    return super.signMessage(msg, this.msgSigner)
   }
 }
-export default HDWalletInterface;
+export default HDWalletInterface

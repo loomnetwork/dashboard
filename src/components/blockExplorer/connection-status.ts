@@ -1,5 +1,5 @@
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
-import { Blockchain } from './blockchain'
+import { Component, Prop, Vue, Emit } from "vue-property-decorator"
+import { Blockchain } from "./blockchain"
 
 @Component
 export default class ConnectionStatus extends Vue {
@@ -17,13 +17,13 @@ export default class ConnectionStatus extends Vue {
     return this.blockchain && this.blockchain.isConnected
   }
 
-  @Emit('urlClicked')
+  @Emit("urlClicked")
   onUrlClicked(url: string) {
     // this comment is just for avoiding empty warn
   }
 
   @Emit("urlInput")
-  setUrl(url:string){
+  setUrl(url: string) {
     // this comment is just for avoiding empty warn
   }
 }

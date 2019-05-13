@@ -21,8 +21,8 @@ import Vue from "vue"
 import Chart from "chart.js"
 import { Component } from "vue-property-decorator"
 
-import { DPOSTypedStore } from "../store/dpos-old";
-import { DashboardState } from "../types";
+import { DPOSTypedStore } from "../store/dpos-old"
+import { DashboardState } from "../types"
 
 @Component
 export default class Analytics extends Vue {
@@ -41,7 +41,7 @@ export default class Analytics extends Vue {
 
     const totalTiers = data[0].tiers
     const tierAmount: any[] = []
-    const tiers = { "zero": "2 weeks", "one": "3 months", "two": "6 months", "three": "1 year" }
+    const tiers = { zero: "2 weeks", one: "3 months", two: "6 months", three: "1 year" }
     const tierKeys: any[] = []
 
     // tslint
@@ -94,7 +94,7 @@ export default class Analytics extends Vue {
             "rgba(255, 99, 132, 1)",
             "rgba(255, 99, 132, 1)",
           ],
-          label: "Amount of LOOM staked"
+          label: "Amount of LOOM staked",
         }],
         labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },

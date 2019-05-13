@@ -27,19 +27,14 @@
 
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
-
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
 @Component({
   props: {
     event: Object,
-    latestBlock: Number
+    latestBlock: Number,
   },
-  computed: {}
 })
 export default class HistoryEvent extends Vue {
 

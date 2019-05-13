@@ -1,4 +1,4 @@
-import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
+import { Component, Prop, Vue, Emit } from "vue-property-decorator"
 
 @Component
 export default class ChainSelector extends Vue {
@@ -7,14 +7,13 @@ export default class ChainSelector extends Vue {
 
   chainUrl = this.serverUrl
 
-  @Emit('urlClicked')
+  @Emit("urlClicked")
   onUrlClicked(url: string) {
     this.chainUrl = url
-    // this comment is just for avoiding empty warn
   }
 
   @Emit("urlInput")
-  setUrl(url:string){
+  setUrl(url: string) {
     // this comment is just for avoiding empty warn
   }
 }

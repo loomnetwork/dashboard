@@ -438,7 +438,6 @@ export default class MobileAccount extends Vue {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
       this.unclaimSignature = this.receipt.signature
     } else {
-      debugger
       this.setWithdrewOn("")
       localStorage.removeItem("lastWithdrawTime")
     }

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-button v-b-modal.modalPrevent variant="outline-primary" @click="show = !show">{{buttonLabel}}</b-button>
+  <b-button v-b-modal.modalPrevent variant="outline-primary" :disabled="enableCooldown" @click="show = !show">{{buttonLabel}}</b-button>
   <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
     no-close-on-esc
     no-close-on-backdrop
@@ -87,7 +87,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     "transferAction",   // function (amount) => Promise<TransactionReceipt>
     "resolveTxSuccess", // function (TransactionReceipt) => Promise<void>
     "executionTitle",
-    "buttonLabel"
+    "buttonLabel",
+    "enableCooldown"
   ],
   computed: {
     ...DPOSStore.mapState([

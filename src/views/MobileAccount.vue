@@ -44,9 +44,9 @@
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
             <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
             <div class="center-children" id="complete-withdrawal-container">                                  
-              <b-btn variant="outline-primary" class="mr-2" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress || hasJustWithdrawn()"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
-              <b-spinner v-if="isWithdrawalInprogress || hasJustWithdrawn()" variant="primary" label="Spinning" small/>
-              <b-tooltip v-if="isWithdrawalInprogress || hasJustWithdrawn()" target="complete-withdrawal-container" placement="bottom" title="Your transaction is processing, check back in a few mintues."></b-tooltip>
+              <b-btn variant="outline-primary" class="mr-2" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+              <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+              <b-tooltip v-if="isWithdrawalInprogress" target="complete-withdrawal-container" placement="left" title="Your transaction is processing, check back in a few mintues."></b-tooltip>
             </div>                                
           </div>
           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
@@ -73,7 +73,8 @@
             :balance="userBalance.loomBalance" 
             :transferAction="executeWithdrawal"
             :resolveTxSuccess="resolveWithdraw"
-            buttonLabel="Withdraw" 
+            :enableCooldown="!enoughTimeHasPassed"
+            buttonLabel="Withdraw"
             executionTitle="Execute transfer">
               <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
               <template #failueMessage>Withdrawal failed... retry?</template>
@@ -165,7 +166,8 @@ const ELECTION_CYCLE_MILLIS = 600000
     ...DappChainStore.mapState([
       'web3',
       'dposUser',
-      'validators'
+      'validators',
+      'withdrewOn'
     ]),    
     ...DPOSStore.mapState([
       'userBalance',
@@ -176,7 +178,7 @@ const ELECTION_CYCLE_MILLIS = 600000
       'delegations',
       'states',
       'currentMetamaskAddress',
-      "pendingTx"
+      'pendingTx'
     ]) 
   },
   methods: {
@@ -193,9 +195,6 @@ const ELECTION_CYCLE_MILLIS = 600000
     ...DappChainStore.mapMutations([
       'setWithdrewOn',
       'setWithdrewSignature',
-    ]),
-    ...DappChainStore.mapGetters([
-      'getWithdrewOn',
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -253,7 +252,7 @@ export default class MobileAccount extends Vue {
     this.startTimer()
 
     // Only alert te user if the receipt is fresh
-    if (this.receipt && !this.hasJustWithdrawn() ) {
+    if (this.receipt && !this.enoughTimeHasPassed) {
       this.hasReceiptHandler(this.receipt)
     }
   }
@@ -262,8 +261,12 @@ export default class MobileAccount extends Vue {
    * receipt is fresh if last withdrawal was less than 5 minutes ago
    *@param receipt
    */
-  hasJustWithdrawn() {
-    return this.getWithdrewOn() > ( Date.now()- 5*60*1000)
+  get enoughTimeHasPassed() {
+    // Time of last withdrawal
+    let pastWithdrawalTime = this.withdrewOn
+    // Five minutes ago
+    let whenCooledDown = (Date.now()- 5*60*1000)
+    return whenCooledDown > pastWithdrawalTime
   }
 
   refresh() {
@@ -368,8 +371,7 @@ export default class MobileAccount extends Vue {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
     // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
-    if( !this.unclaimedTokens.isZero() &&
-        !this.hasJustWithdrawn() ) {
+    if(!this.unclaimedTokens.isZero() && this.enoughTimeHasPassed) {
       this.$root.$emit("bv::show::modal", "unclaimed-tokens")
     }
   }
@@ -393,8 +395,7 @@ export default class MobileAccount extends Vue {
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
-        this.setWithdrewOn(Date.now())
-
+    this.setWithdrewOn(Date.now())
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)

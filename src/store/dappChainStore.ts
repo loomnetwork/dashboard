@@ -64,6 +64,13 @@ const createClient = (state, privateKeyString) => {
 
 }
 
+const checkLatestWithdrawal = () => {
+  let p = ""
+  const ls = localStorage.getItem('lastWithdrawTime')
+  if(ls) p = JSON.parse(ls)
+  return p || 0  
+}
+
 /**
  * overrides client.middleware SignedEthTxMiddleware.Handle
  * to notify vuex when the user has to sign
@@ -93,7 +100,6 @@ function reconfigureClient(client, commit) {
   return client
 }
 
-
 const defaultState = () => {
 
   return {
@@ -115,6 +121,7 @@ const defaultState = () => {
     isConnectedToDappChain: false,
     showSigningAlert: false,
     validators: [],
+    withdrewOn: checkLatestWithdrawal()
   }
 }
 
@@ -127,10 +134,6 @@ export default {
     },
     currentChain(state) {
       return state.chainUrls[state.networkId]
-    },
-    getWithdrewOn(state) {
-      const s = localStorage.getItem('lastWithdrawTime') || '0'
-      return parseInt(s,10) 
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
@@ -177,7 +180,8 @@ export default {
       }
     },
     setWithdrewOn(state, timestamp) {
-      localStorage.setItem('lastWithdrawTime',timestamp)
+      state.withdrewOn = timestamp
+      localStorage.setItem('lastWithdrawTime', JSON.stringify(timestamp))      
     },
     setDPOSUserV3(state, payload) {
       console.log("setting dpos user")

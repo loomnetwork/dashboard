@@ -256,10 +256,6 @@ export default class MobileAccount extends Vue {
       this.beginPolling()
     })
 
-    this.$root.$on('witdrawalRejected', () => {
-      this.whenCooldown = null 
-    })
-
   }
 
   destroyed() {
@@ -441,7 +437,12 @@ export default class MobileAccount extends Vue {
     if(this.receipt) {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
       this.unclaimSignature = this.receipt.signature
+    } else {
+      debugger
+      this.setWithdrewOn("")
+      localStorage.removeItem("lastWithdrawTime")
     }
+
     await this.refresh(true)
   }
 

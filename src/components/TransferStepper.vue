@@ -187,9 +187,9 @@ export default class TransferStepper extends Vue {
   }
 
   transferFailed(error) {
+
     if (error.message.includes("User denied")) {
       this.errorMessage = "You rejected the transaction"
-      this.$emit('witdrawalRejected');
       this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page 
       if (this.resolveTxSuccess) {
         // set to true only deposit case, this will shoe retry button

@@ -102,7 +102,8 @@
       "tokens_pending_deposit": "You have a pending deposit of {pendingDepositAmount} tokens. You must complete the deposit before making another.",
       "tokens_pending_withdraw": "You have a pending withdrawal of {pendingWithdrawAmount} tokens. You must complete the withdrawal before making another.",
       "reclaim_deposit": "Reclaim Deposit Tokens",
-      "complete_withdraw": "Complete Withdrawal"
+      "complete_withdraw": "Complete Withdrawal",
+      "pending_withdrawal": "Withdrawal pending"
     },
     "my_delegations": {
       "no_delegations": "No Delegations"
@@ -126,7 +127,9 @@
       "timelock_tier": "Timelock Tier:",
       "timelock": "Timelock:",
       "unlocked": "Unlocked",
-      "no_stakes": "You have not yet staked with {name}"
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
@@ -171,6 +174,8 @@
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
+      "analytics": "Analytics",
+      "validators": "Validators",
       "my_account": "My Account",
       "my_delegations": "My Delegations",
       "rewards": "Rewards",

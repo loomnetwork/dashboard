@@ -281,7 +281,7 @@ export default class MobileAccount extends Vue {
     this.startTimer()
 
     // Only alert te user if the receipt is fresh
-    if (this.receipt) {
+    if (this.receipt && !this.enoughTimeHasPassed) {
       this.hasReceiptHandler(this.receipt)
     }
   }
@@ -426,7 +426,6 @@ export default class MobileAccount extends Vue {
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
-    debugger
     this.setWithdrewOn(Date.now())
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
@@ -549,8 +548,6 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        // TODO: Delete?
-        // this.setWithdrewOn(Date.now()) 
         //await tx.wait()
         return tx
       }

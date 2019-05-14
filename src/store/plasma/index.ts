@@ -49,12 +49,6 @@ export const ethereumModule = {
 // cardInstance = new state.web3.eth.Contract(CardJSON.abi, cardNetwork.address)
 // commit('updateState', { cardNetwork, cardInstance })
 
-function initCardInstance() {
-    if (!getCardInstance) {
-        
-    } 
-}
-
 function createClient() {
     noop()
 }

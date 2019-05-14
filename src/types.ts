@@ -77,6 +77,7 @@ export interface DposState {
   dAppChainClient: Client | null
   metamaskStatus?: any
   metamaskError?: any
+  withdrewSignature: string
 }
 
 // export interface DappchainState {

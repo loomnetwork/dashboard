@@ -86,15 +86,15 @@ import LoadingSpinner from "../LoadingSpinner.vue"
 import DropdownTemplate from "./DropdownTemplate.vue"
 import LedgerWallet from "@/services/ledger/ledgerWallet"
 import { pathsArr as hdPaths } from "@/services/ledger/paths"
-const HookedWalletProvider = require("web3-provider-engine/subproviders/hooked-wallet")
 
+// @ts-ignore
+// const HookedWalletProvider = require("web3-provider-engine/subproviders/hooked-wallet")
+import HookedWalletProvider from "web3-provider-engine/subproviders/hooked-wallet"
 import { formatToCrypto } from "@/utils"
-import { initWeb3Hardware, initWeb3SelectedWallet, initWeb3SelectedWalletBeta } from "../../services/initWeb3"
-import { setTimeout } from "timers"
-import { throws } from "assert"
-import { CommonTypedStore } from "../../store/common"
-import { DPOSTypedStore } from "../../store/dpos-old"
-import { DashboardState } from "../../types"
+import { initWeb3Hardware, initWeb3SelectedWallet, initWeb3SelectedWalletBeta } from "@/services/initWeb3"
+import { CommonTypedStore } from "@/store/common"
+import { DPOSTypedStore } from "@/store/dpos-old"
+import { DashboardState } from "@/types"
 import Web3 from "web3"
 
 @Component({
@@ -172,11 +172,11 @@ export default class HardwareWalletModal extends Vue {
   async updateAddresses() {
     this.showLoadingSpinner = true
     this.derivationPath = this.selectedPath!.replace("m/", "")
-    let offset = (this.currentPage - 1) * this.perPage
+    const offset = (this.currentPage - 1) * this.perPage
 
     const results = await initWeb3SelectedWalletBeta(this.calculatePath(offset))
     this.accounts = results.map((account, index) => {
-      let offsetIndex = offset + index
+      const offsetIndex = offset + index
       return {
         account,
         balance: "loading",
@@ -226,7 +226,7 @@ export default class HardwareWalletModal extends Vue {
     if (this.mappingSuccess) {
       this.$emit("ok")
       this.$router.push({
-        name: "account"
+        name: "account",
       })
     }
   }
@@ -289,7 +289,7 @@ export default class HardwareWalletModal extends Vue {
       await this.hdWallet.init(path)
     } catch (err) {
       this.setErrorMsg({
-        msg: "Can't connect to your wallet. Please try again.", forever: false, report: true, cause: err
+        msg: "Can't connect to your wallet. Please try again.", forever: false, report: true, cause: err,
       })
       console.log("Error when trying to init hd wallet:", err)
       this.showLoadingSpinner = false
@@ -317,7 +317,7 @@ export default class HardwareWalletModal extends Vue {
 
     }).catch((err) => {
       this.setErrorMsg({
-        msg: "Error loading your wallet accounts. Please try again.", forever: false, report: true, cause: err
+        msg: "Error loading your wallet accounts. Please try again.", forever: false, report: true, cause: err,
       })
       console.log("Error when trying to get accounts:", err)
       this.showLoadingSpinner = false
@@ -336,10 +336,9 @@ export default class HardwareWalletModal extends Vue {
     console.log("Loading addresses at path: ", path)
   }
 
-
   async setWeb3Instance() {
     if (typeof this.web3js === "undefined") {
-      const web3js = await initWeb3Hardware() //initLedgerProvider()
+      const web3js = await initWeb3Hardware()
       // @ts-ignore
       window.ledgerweb3 = web3js
       this.web3js = web3js
@@ -348,10 +347,10 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async getBalances() {
-    this.accounts.forEach(item => {
+    this.accounts.forEach((item) => {
       this.web3js!.eth
         .getBalance(item.account)
-        .then(balance => {
+        .then((balance) => {
           item.balance = balance
         })
     })
@@ -362,7 +361,7 @@ export default class HardwareWalletModal extends Vue {
   }
 
   formatAddress(address) {
-    let cap = 10
+    const cap = 10
     return address.slice(0, cap) + "..." + address.slice(-cap, address.length)
   }
 

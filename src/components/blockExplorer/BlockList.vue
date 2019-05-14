@@ -211,4 +211,5 @@
 }
 </style>
 
-<script lang="ts" src="./block-list.ts"></script>
+<script lang="ts" src="./block-list.ts">
+</script>

@@ -6,18 +6,18 @@
   </div>
 </template>
 
-<script>
-  import { supportedLocales } from '../i18n'
+<script lang="ts">
+  import { supportedLocales } from "../i18n"
 
   export default {
-    name: 'LangSwitcher',
+    name: "LangSwitcher",
     data() {
       return {}
     },
     methods: {
       showLang(locale) {
         window.location.pathname = window.location.pathname.replace(/^\/\w{2}/i, locale)
-      }
+      },
     },
     computed: {
       langs() {
@@ -25,16 +25,16 @@
         // only 3 languages now, so won't import directly from i18n
         return [
           {
-            key: 'en',
-            localizedName: 'English'
+            key: "en",
+            localizedName: "English",
           },
           {
-            key: 'zh',
-            localizedName: '中文'
-          }
+            key: "zh",
+            localizedName: "中文",
+          },
         ]
-      }
-    }
+      },
+    },
   }
 </script>
 

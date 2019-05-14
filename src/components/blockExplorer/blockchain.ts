@@ -1,23 +1,23 @@
-import Axios from 'axios'
+import Axios from "axios"
 
-import { extractTxDataFromStr, IDecodedTx } from './transaction-reader'
+import { extractTxDataFromStr, IDecodedTx } from "./transaction-reader"
 
 interface IBlockchainStatusResponse {
   result: {
     sync_info: {
-      latest_block_height: number
-    }
+      latest_block_height: number,
+    },
   }
 }
 
 interface IBlockchainBlockMeta {
   block_id: {
-    hash: string
+    hash: string,
   }
   header: {
     height: number
     time: string
-    num_txs: number
+    num_txs: number,
   }
 }
 
@@ -45,14 +45,14 @@ export interface IBlockchainTransaction {
 interface IBlockchainResponse {
   result: {
     last_height: number
-    block_metas: IBlockchainBlockMeta[]
+    block_metas: IBlockchainBlockMeta[],
   }
 }
 
 interface IBlockResponse {
   result: {
     last_height: number
-    block_meta: IBlockchainBlockMeta
+    block_meta: IBlockchainBlockMeta,
   }
 }
 
@@ -122,7 +122,7 @@ export class Blockchain {
     minHeight?: number
     maxHeight?: number
     limit?: number
-    autoFetch: boolean
+    autoFetch: boolean,
   }): Promise<IBlockchainBlock[]> {
     this.clearRefreshTimer()
     try {
@@ -133,7 +133,7 @@ export class Blockchain {
         this.totalNumBlocks = latestBlockHeight
       }
 
-      let maxBlocksToFetch = (opts && opts.limit) || 20
+      const maxBlocksToFetch = (opts && opts.limit) || 20
       let firstBlockNum = Math.max(this.totalNumBlocks - (maxBlocksToFetch - 1), 1)
       let lastBlockNum = this.totalNumBlocks
       // NOTE: the blockchain API endpoint currently only returns max of 20 blocks per request
@@ -147,8 +147,8 @@ export class Blockchain {
       const chainResp = await Axios.get<IBlockchainResponse>(`${this.serverUrl}/blockchain`, {
         params: {
           minHeight: firstBlockNum,
-          maxHeight: lastBlockNum
-        }
+          maxHeight: lastBlockNum,
+        },
       })
       this.totalNumBlocks = chainResp.data.result.last_height
       this.isConnected = true
@@ -156,14 +156,14 @@ export class Blockchain {
       if (opts && opts.autoFetch) {
         this.setRefreshTimer()
       }
-      return chainResp.data.result.block_metas.map<IBlockchainBlock>(meta => ({
+      return chainResp.data.result.block_metas.map<IBlockchainBlock>((meta) => ({
         hash: meta.block_id.hash,
         height: meta.header.height,
         time: meta.header.time,
         numTxs: meta.header.num_txs,
         isFetchingTxs: false,
         didFetchTxs: false,
-        txs: []
+        txs: [],
       }))
     } catch (e) {
       this.isConnected = false
@@ -173,7 +173,7 @@ export class Blockchain {
 
   async fetchBlock(blockHeight: number): Promise<IBlockchainBlock> {
     const chainResp = await Axios.get<IBlockResponse>(`${this.serverUrl}/block`, {
-      params: { height: blockHeight }
+      params: { height: blockHeight },
     })
     const meta = chainResp.data.result.block_meta
     const block = {
@@ -183,7 +183,7 @@ export class Blockchain {
       numTxs: meta.header.num_txs,
       isFetchingTxs: false,
       didFetchTxs: false,
-      txs: []
+      txs: [],
     }
     return block
   }
@@ -195,20 +195,20 @@ export class Blockchain {
     try {
       block.isFetchingTxs = true
       const blockResp = await Axios.get<any>(`${this.serverUrl}/block`, {
-        params: { height: block.height }
+        params: { height: block.height },
       })
       const rawTxs: any[] = blockResp.data.result.block.data.txs
       block.txs = []
-      for (let i = 0; i < rawTxs.length; i++) {
+      for (const item of rawTxs) {
         try {
-          const data = extractTxDataFromStr(rawTxs[i])
+          const data = extractTxDataFromStr(item)
           block.txs.push({
-            hash: new Buffer(data.signed.sig).toString('hex'),
+            hash: new Buffer(data.signed.sig).toString("hex"),
             blockHeight: block.height,
             txType: getTxType(data.tx),
             time: block.time,
             sender: getTxSender(data.tx),
-            data: data.tx
+            data: data.tx,
           })
         } catch (e) {
           console.error(e)
@@ -224,7 +224,7 @@ export class Blockchain {
 }
 
 export function getShortTxHash(longHash: string): string {
-  return '0x' + longHash.slice(0, 8)
+  return "0x" + longHash.slice(0, 8)
 }
 
 function getTxType(tx: IDecodedTx): string {
@@ -233,5 +233,5 @@ function getTxType(tx: IDecodedTx): string {
 
 function getTxSender(tx: IDecodedTx): string {
   // you could use the app user as the sender, please check delegatecall for example
-  return 'default'
+  return "default"
 }

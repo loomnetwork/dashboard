@@ -28,13 +28,9 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from "vuex"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
-
-const DPOSStore = createNamespacedHelpers("DPOS")
-const DappChainStore = createNamespacedHelpers("DappChain")
 
 @Component
 export default class Rewards extends Vue {

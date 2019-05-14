@@ -1,21 +1,18 @@
 // PlasmaChain Delegators
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import store from './store'
+import Vue from "vue"
+import VueRouter from "vue-router"
+import store from "./store"
 
+import FirstPage from "./views/FirstPage.vue"
+import History from "./views/MobileHistory.vue"
+import ValidatorList from "./views/ValidatorList.vue"
+import ValidatorDetail from "./views/ValidatorDetail.vue"
+import BlockExplorer from "./views/BlockExplorer.vue"
+import Analytics from "./views/Analytics.vue"
+import MobileAccount from "./views/MobileAccount.vue"
+import Help from "./views/Help.vue"
 
-import FirstPage from './views/FirstPage.vue'
-import MyDelegations from './views/MyDelegations.vue'
-import History from './views/MobileHistory.vue'
-import Redelegate from './views/Redelegate.vue'
-import ValidatorList from './views/ValidatorList.vue'
-import ValidatorDetail from './views/ValidatorDetail.vue'
-import BlockExplorer from './views/BlockExplorer.vue'
-import Analytics from './views/Analytics.vue'
-import MobileAccount from './views/MobileAccount.vue'
-import Help from './views/Help.vue'
-
-import { loadLocale, isLocaleSupported } from './i18n'
+import { loadLocale, isLocaleSupported } from "./i18n"
 
 Vue.use(VueRouter)
 
@@ -24,18 +21,20 @@ async function setRouteLocale(to, from) {
   if (to.params.locale && isLocaleSupported(to.params.locale)) {
     const { locale } = to.params
     await loadLocale(locale)
-    await store.dispatch('setLocale', locale)
+    console.log(locale)
+    await store.commit("setLocale", locale)
   } else if (from.params.locale && isLocaleSupported(from.params.locale)) {
-    return { path: '/' + from.params.locale + to.path, query, hash }
+    return { path: "/" + from.params.locale + to.path, query, hash }
   } else if (store.getters.locale) {
-    return { path: '/' + store.getters.locale + to.path, query, hash }
+    return { path: "/" + store.getters.locale + to.path, query, hash }
   }
   return undefined
 }
 
 const LocaleComponent = Vue.extend({
-  template: '<router-view />',
+  template: "<router-view />",
   async beforeRouteEnter(to, from, next) {
+    console.log("beforeRouteEnter")
     let nextRoute
     try {
       nextRoute = await setRouteLocale(to, from)
@@ -44,7 +43,7 @@ const LocaleComponent = Vue.extend({
       return
     }
     if (nextRoute === undefined) {
-      next(vm => {
+      next((vm) => {
         if (to.meta.title) {
           document.title = to.meta.title(to, vm)
         }
@@ -69,92 +68,85 @@ const LocaleComponent = Vue.extend({
     } else {
       next(nextRoute)
     }
-  }
+  },
 })
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   routes: [
     {
-    path: '/:locale?',
+    path: "/:locale?",
     component: LocaleComponent,
     children: [
       {
-        path: 'login',
-        name: 'firstPage',
-        component: FirstPage
+        path: "login",
+        name: "firstPage",
+        component: FirstPage,
       },
       {
-        path: 'account',
-        name: 'account',
+        path: "account",
+        name: "account",
         component: MobileAccount,
         meta: {
           requireLogIn: true,
-          requireDeps: true
-        }
-      },
-      {
-        path: 'history',
-        name: 'history',
-        component: History,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true
-        }      
-      },      
-      {
-        path: 'redelegate',
-        name: 'redelegate',
-        component: Redelegate,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true
-        }      
-      },
-      {
-        path: 'faq',
-        name: 'FAQ',
-        component: Help,  
-      }, 
-      {
-        path: 'validators',
-        name: 'validators',
-        component: ValidatorList,
-        meta: {
-          requireDeps: true
+          requireDeps: true,
         },
       },
       {
-        path: 'validator/:index',
-        name: 'validatorDetail',
+        path: "history",
+        name: "history",
+        component: History,
+        meta: {
+          requireLogIn: true,
+          requireDeps: true,
+        },
+      },
+      {
+        path: "faq",
+        name: "FAQ",
+        component: Help,
+      },
+      {
+        path: "validators",
+        name: "validators",
+        component: ValidatorList,
+        meta: {
+          requireDeps: true,
+        },
+      },
+      {
+        path: "validator/:index",
+        name: "validatorDetail",
         component: ValidatorDetail,
         meta: {
-          requireDeps: true
-        }
+          requireDeps: true,
+        },
       },
       {
-        path: 'blockexplorer',
-        name: 'blockexplorer',
-        component: BlockExplorer
+        path: "blockexplorer",
+        name: "blockexplorer",
+        component: BlockExplorer,
       },
       {
-        path: 'analytics',
-        name: 'analytics',
-        component: Analytics
+        path: "analytics",
+        name: "analytics",
+        component: Analytics,
       },
       {
-        path: '/',
-        redirect: '/analytics'
-      }
+        path: "/",
+        redirect: "/login",
+      },
     ],
-  }
+  },
   ],
   scrollBehavior() {
     return {
       x: 0,
-      y: 0
+      y: 0,
     }
-  }
+  },
 })
+
+
 
 export default router

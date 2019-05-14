@@ -1,30 +1,32 @@
 import Vue from "vue"
-import Vuex from "vuex"
+import Vuex, { Store } from "vuex"
 // import { state, getters, mutations, actions } from './applicationStore'
-import {CommonStore} from "./common"
-import { EthSignStore } from "./ethSignStore"
 
-import { dposStorePlugin } from "./dposPlugin"
-import { LocaleStore } from "./locale"
 import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
 
+import "./locale"
 import "./dpos-old"
-import "./dappchain"
 import "./common"
+import "./ethSignStore"
+import { LocaleStore } from "./locale"
+import { DPOSTypedStore } from "./dpos-old"
+import { CommonStore } from "./common"
+import { EthSign } from "./ethSignStore"
+import { dposStorePlugin } from "./dposPlugin"
 
 Vue.use(Vuex)
 
-const store = getStoreBuilder<DashboardState>().vuexStore({
-  // modules: {
-  //   //common: CommonStore,
-  //   //DappChain: DappChainStore,
-  //   //DPOS: DPOSStore,
-  //   //Locale: LocaleStore,
-  //   //EthSign: EthSignStore
-  // },
+const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore({
   plugins: [dposStorePlugin],
 })
 console.log(store)
 export default store
 
+  // modules: {
+  //   //common: CommonStore, ok
+  //   //DappChain: DappChainStore, ok
+  //   //DPOS: DPOSStore, pok
+  //   //Locale: LocaleStore,
+  //   //EthSign: EthSignStore ok
+  // },

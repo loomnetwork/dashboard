@@ -69,21 +69,19 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
-import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
+import { Vue, Component, Watch } from "vue-property-decorator"
 
-import FaucetHeader from '@/components/FaucetHeader.vue'
-import FaucetSidebar from '../components/FaucetSidebar.vue'
-import FaucetFooter from '@/components/FaucetFooter.vue'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
-import WarningOverlay from '../components/WarningOverlay.vue'
+import FaucetHeader from "@/components/FaucetHeader.vue"
+import FaucetSidebar from "../components/FaucetSidebar.vue"
+import FaucetFooter from "@/components/FaucetFooter.vue"
+import LoadingSpinner from "../components/LoadingSpinner.vue"
+import WarningOverlay from "../components/WarningOverlay.vue"
 
-import DepositApproved from '@/components/gateway/DepositApproved.vue'
-import DepositConfirmed from '@/components/gateway/DepositConfirmed.vue'
-import { DashboardState } from '../types';
-import { CommonTypedStore } from '../store/common';
-import { DPOSTypedStore } from '../store/dpos-old';
-import { DappChainTypedModule } from '../store/dappchain';
+import DepositApproved from "@/components/gateway/DepositApproved.vue"
+import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
+import { DashboardState } from "../types"
+import { CommonTypedStore } from "../store/common"
+import { DPOSTypedStore } from "../store/dpos-old"
 
 @Component({
   components: {
@@ -99,28 +97,27 @@ import { DappChainTypedModule } from '../store/dappchain';
     data: Object,
   },
 })
-
 export default class Layout extends Vue {
 
-  get $state() { return (this.$store.state as DashboardState) }
+  //get $state() { return (this.$store.state as DashboardState) }
+  get s() { return (this.$store.state as DashboardState) }
 
-  get userIsLoggedIn() { return this.$state.common.userIsLoggedIn }
+  get userIsLoggedIn() { return this.s.common.userIsLoggedIn }
 
-  get walletType() { return this.$state.DPOS.walletType }
-  get showSidebar() { return this.$state.DPOS.showSidebar }
-  get currentMetamaskAddress() { return this.$state.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.$state.DPOS.showLoadingSpinner }
-  get showAlreadyMappedModal() { return this.$state.DPOS.showAlreadyMappedModal }
-  get showSignWalletModal() { return this.$state.DPOS.showSignWalletModal }
-  get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
-  get status() { return this.$state.DPOS.status }
+  get walletType() { return this.s.DPOS.walletType }
+  get showSidebar() { return this.s.DPOS.showSidebar }
+  get currentMetamaskAddress() { return this.s.DPOS.currentMetamaskAddress }
+  get showLoadingSpinner() { return this.s.DPOS.showLoadingSpinner }
+  get showAlreadyMappedModal() { return this.s.DPOS.showAlreadyMappedModal }
+  get showSignWalletModal() { return this.s.DPOS.showSignWalletModal }
+  get mappingSuccess() { return this.s.DPOS.mappingSuccess }
+  get status() { return this.s.DPOS.status }
 
-  get account() { return this.$state.DappChain.account }
-  get showSigningAlert() { return this.$state.DPOS.showSigningAlert }
-  get metamaskError() { return this.$state.DappChain.metamaskError }
-  get mappingError() { return this.$state.DappChain.mappingError }
-  get networkId() { return this.$state.DappChain.networkId }
-
+  get account() { return this.s.DPOS.account }
+  get showSigningAlert() { return this.s.DPOS.showSigningAlert }
+  get metamaskError() { return this.s.DPOS.metamaskError }
+  get mappingError() { return this.s.DPOS.mappingError }
+  get networkId() { return this.s.DPOS.networkId }
 
   setErrorMsg = CommonTypedStore.setErrorMsg
   initializeDependencies = DPOSTypedStore.initializeDependencies
@@ -129,47 +126,42 @@ export default class Layout extends Vue {
 
   metamaskChangeAlert = false
 
-  loginEmail = ''
+  loginEmail = ""
   routeArray = [
     {
-      'className': 'gradient-bg',
-      'routeNames': ['browse', 'Browse Type', 'card detail', 'trade history', 'Account',
-        'Confirmed Package Purchase', 'Card Pack',]
+      className: "gradient-bg",
+      routeNames: ["browse", "Browse Type", "card detail", "trade history", "Account",
+        "Confirmed Package Purchase", "Card Pack"],
     },
   ]
 
-  created() {
-    // @ts-ignore
-    this.$router.afterEach((to, from) => this.$root.$emit("refreshBalances"))
-  }
-
   beforeMount() {
-    if (!this.userIsLoggedIn)
-      // @ts-ignore
-      this.$router.push({ path: '/login' })
+    if (!this.userIsLoggedIn) {
+      this.$router.push({ path: "/login" })
+    }
   }
 
-  @Watch('mappingSuccess')
+  @Watch("mappingSuccess")
   onMappingSuccessChange(newValue, oldValue) {
-    if (newValue && this.walletType === 'metamask') {
+    debugger
+    if (newValue && this.walletType === "metamask") {
       // @ts-ignore
       this.$router.push({
-        name: 'account'
+        name: "account",
       })
     }
   }
 
-  @Watch('status')
+  @Watch("status")
   onMappedChange(newValue, oldValue) {
-    if (newValue === 'mapped' && this.walletType === 'metamask') {
-      // @ts-ignore
+    if (newValue === "mapped" && this.walletType === "metamask") {
       this.$router.push({
-        name: 'account'
+        name: "account",
       })
     }
   }
 
-  @Watch('showAlreadyMappedModal')
+  @Watch("showAlreadyMappedModal")
   onAlreadyMappedModalChange(newValue, oldValue) {
     if (newValue) {
       this.$root.$emit("bv::show::modal", "already-mapped")
@@ -179,7 +171,7 @@ export default class Layout extends Vue {
     }
   }
 
-  @Watch('showSignWalletModal')
+  @Watch("showSignWalletModal")
   onSignLedgerModalChange(newValue, oldValue) {
     if (newValue) {
       this.$root.$emit("bv::show::modal", "sign-wallet-modal")
@@ -196,11 +188,11 @@ export default class Layout extends Vue {
 
     if ("ethereum" in window) {
       // @ts-ignore
-      window.ethereum.on('accountsChanged', (accounts) => {
-        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove. 
+      window.ethereum.on("accountsChanged", (accounts) => {
+        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove.
         // @ts-ignore
         if (window.resolvingMismatchedReceipt) {
-          return;
+          return
         }
         if (this.currentMetamaskAddress &&
           this.currentMetamaskAddress !== accounts[0]) {
@@ -218,7 +210,6 @@ export default class Layout extends Vue {
     window.location.reload(true)
   }
 
-
   async attemptToInitialize() {
     try {
       await this.initializeDependencies()
@@ -227,21 +218,21 @@ export default class Layout extends Vue {
     } catch (err) {
       this.$root.$emit("logout")
       this.setMappingError(null)
-      this.setMappingStatus(null)
+      this.setMappingStatus("")
     }
   }
 
   get getClassNameForStyling() {
-    let className = "";
-    const self = this;
-    this.routeArray.forEach(item => {
+    let className = ""
+    const self = this
+    this.routeArray.forEach((item) => {
       // @ts-ignore
       if (item.routeNames.includes(self.$route.name)) {
-        className = item.className;
-        return;
+        className = item.className
+        return
       }
     })
-    return className;
+    return className
   }
 }
 </script>

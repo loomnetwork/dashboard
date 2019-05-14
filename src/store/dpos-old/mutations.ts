@@ -78,7 +78,7 @@ export function setClient(state: DposState, payload: Client) {
 export function setMapper(state: DposState, payload: AddressMapper) {
   state.mapper = payload
 }
-export function setAnalyticsData(state: DposState, payload: Object) {
+export function setAnalyticsData(state: DposState, payload: object) {
   state.analyticsData = payload
 }
 export function setDelegations(state: DposState, payload: any[]) {
@@ -93,7 +93,7 @@ export function setShowDepositApproved(state: DposState, playload: boolean) {
 export function setShowDepositConfirmed(state: DposState, playload: boolean) {
   state.showDepositConfirmed = playload
 }
-export function setPendingTx(state: DposState, info: {type: string, hash: string}) {
+export function setPendingTx(state: DposState, info: {type: string, hash: string}|null) {
   state.pendingTx = info
 }
 
@@ -142,12 +142,13 @@ export function setMetamaskError(state: DposState, payload: Error|any) {
   state.metamaskError = payload
 }
 
-export function setWithdrewSignature(state: DposState, payload: Uint8Array|string|null) {
+export function setWithdrewSignature(state: DposState, payload: string) {
   if (!payload) {
     sessionStorage.removeItem("withdrewSignature")
   } else {
     sessionStorage.setItem("withdrewSignature", JSON.stringify(payload))
   }
+  state.withdrewSignature = payload
 }
 export function setWithdrewOn(state: DposState, timestamp: number) {
   localStorage.setItem("lastWithdrawTime", JSON.stringify(timestamp))

@@ -1,4 +1,5 @@
-<script lang="ts" src="./ChainSelector.ts"></script>
+<script lang="ts" src="./ChainSelector.ts">
+</script>
 <template>
   <div id="chain-selector">
     <b-input-group size="sm">

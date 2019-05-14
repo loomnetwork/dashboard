@@ -6,7 +6,8 @@
   "linterOptions": {
     "exclude": [
       "node_modules/**",
-      "src/**/*.json"
+      "src/**/*.json",
+      "src/components/blockExplorer/pbs/*.js"
     ]
   },
   "rules": {

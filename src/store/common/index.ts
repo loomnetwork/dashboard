@@ -60,14 +60,12 @@ const CommonTypedStore = {
 
 }
 
-function getPrivateKey(state) {
+function getPrivateKey(_: CommonState) {
   if (state.privateKey) return state.privateKey
   return sessionStorage.getItem("privatekey")
 }
-function getUserIsLoggedIn(state) {
-  return JSON.parse(sessionStorage.getItem("userIsLoggedIn") || "")
-    ? true
-    : false
+function getUserIsLoggedIn(_: CommonState) {
+  return !!JSON.parse(sessionStorage.getItem("userIsLoggedIn") || "")
 }
 
 const CommonStore = builder.vuexModule()

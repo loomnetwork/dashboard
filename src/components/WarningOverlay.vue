@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div v-if="type === 'metamask'">
       <div v-if="metamaskDisabled && userIsLoggedIn" class="disabled-overlay">
         <div>           
@@ -49,34 +48,30 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
+import { DashboardState } from "../types";
 
 @Component({
   props: {
-    type: String
+    type: String,
   },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DappChainStore.mapState([
-      'account',
-      'metamaskStatus',
-      'metamaskError',
-      'mappingStatus',
-      'mappingError'
-    ]),  
-    ...DPOSStore.mapState([
-      'metamaskDisabled'
-    ])    
-  }
 })
 export default class WarningOverlay extends Vue {
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get userIsLoggedIn() { return this.state.common.userIsLoggedIn}
+  get account() { return this.state.DPOS.account}
+  get metamaskStatus() { return this.state.DPOS.metamaskStatus}
+  get metamaskError() { return this.state.DPOS.metamaskError}
+  get mappingStatus() { return this.state.DPOS.mappingStatus}
+  get mappingError() { return this.state.DPOS.mappingError}
+  get metamaskDisabled() { return this.state.DPOS.metamaskDisabled}
+
 }
 </script>
 <style scoped lang="scss">
@@ -120,8 +115,5 @@ export default class WarningOverlay extends Vue {
       }
     }
   }  
-
-</style>
-
 
 </style>

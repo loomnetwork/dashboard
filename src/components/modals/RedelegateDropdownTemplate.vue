@@ -26,10 +26,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
-    item: { required: true }
-  }
+    item: { required: true },
+  },
 }
 </script>

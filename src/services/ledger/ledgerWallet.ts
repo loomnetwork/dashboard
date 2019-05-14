@@ -13,6 +13,7 @@ import {
 
 const NEED_PASSWORD = false
 
+// tslint:disable-next-line: class-name
 class ledgerWallet {
   identifier = "ledger"
   isHardware = true
@@ -25,7 +26,7 @@ class ledgerWallet {
   appConfig: any
   hdKey: HDKey
 
-  constructor() {}
+  // constructor() {}
 
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths.ledgerEthereum.path

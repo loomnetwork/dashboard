@@ -15,7 +15,7 @@ import { Component, Watch } from "vue-property-decorator"
 @Component({
   props: {
     showBackdrop: Boolean,
-  }
+  },
 })
 export default class LoadingSpinner extends Vue {
   loading: boolean = true

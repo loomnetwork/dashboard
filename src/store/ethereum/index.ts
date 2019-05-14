@@ -4,14 +4,14 @@
 
 import { getStoreBuilder } from "vuex-typex"
 
-import { DashboardState } from "@/types";
+import { DashboardState } from "@/types"
 
-import { EthereumState } from "./types";
+import { EthereumState } from "./types"
 
 import * as actions from "./actions"
 import * as mutations from "./mutations"
 
-const initialState:EthereumState = {
+const initialState: EthereumState = {
     provider: null,
     erc20Addresses: {
         loom: "",
@@ -20,15 +20,12 @@ const initialState:EthereumState = {
     },
     balances: {
         eth: null,
-        loom: null
-    }
+        loom: null,
+    },
 }
 
 const builder = getStoreBuilder<DashboardState>().module("ethereum", initialState)
 const stateGetter = builder.state()
-
-
-
 
 export const ethereumModule = {
 
@@ -38,6 +35,6 @@ export const ethereumModule = {
     approve: builder.dispatch(actions.approve),
     transfer: builder.dispatch(actions.transfer),
 
-    setBalance: builder.commit(mutations.setBalance)
+    setBalance: builder.commit(mutations.setBalance),
 
 }

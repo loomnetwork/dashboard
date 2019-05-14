@@ -5,14 +5,15 @@
 import { getStoreBuilder } from "vuex-typex"
 
 import * as actions from "./actions"
-import { PlasmaState, HasPlasmaState } from "./types";
-import { Client } from "loom-js";
+import { PlasmaState, HasPlasmaState } from "./types"
+import { Client } from "loom-js"
 import BN from "bn.js"
 import { createDefaultClient } from "loom-js/dist/helpers";
 import { TokenSymbol } from "../ethereum/types";
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import * as getters from "./getters"
 import { getCachedEvents } from '../dpos-old/getters';
+import { noop } from "vue-class-component/lib/util"
 
 const initialState: PlasmaState = {
     // not state but...
@@ -27,9 +28,6 @@ const initialState: PlasmaState = {
 
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
-
-
-
 
 export const ethereumModule = {
     get state() { return stateGetter() },
@@ -58,5 +56,5 @@ function initCardInstance() {
 }
 
 function createClient() {
-
+    noop()
 }

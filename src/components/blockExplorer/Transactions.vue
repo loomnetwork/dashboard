@@ -8,4 +8,5 @@
 
 </style>
 
-<script lang="ts" src="./transactions.ts"></script>
+<script lang="ts" src="./transactions.ts">
+</script>

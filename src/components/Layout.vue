@@ -143,7 +143,6 @@ export default class Layout extends Vue {
 
   @Watch("mappingSuccess")
   onMappingSuccessChange(newValue, oldValue) {
-    debugger
     if (newValue && this.walletType === "metamask") {
       // @ts-ignore
       this.$router.push({

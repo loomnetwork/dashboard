@@ -12,6 +12,7 @@ import { createDefaultClient } from "loom-js/dist/helpers";
 import { TokenSymbol } from "../ethereum/types";
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import * as getters from "./getters"
+import * as mutations from "./mutations"
 import { getCachedEvents } from '../dpos-old/getters';
 import { noop } from "vue-class-component/lib/util"
 
@@ -23,13 +24,13 @@ const initialState: PlasmaState = {
         [TokenSymbol.ETH]: new BN("0"),
         [TokenSymbol.BNB]: new BN("0"),
     },
-    cardInstance: null,
+    cardContract: {},
 }
 
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
 
-export const ethereumModule = {
+export const plasmaModule = {
     get state() { return stateGetter() },
 
     // Getters
@@ -39,6 +40,8 @@ export const ethereumModule = {
     updateBalance: builder.dispatch(actions.updateBalance),
     approve: builder.dispatch(actions.approve),
     transfer: builder.dispatch(actions.transferTokens),
+
+    setCardContract: builder.commit(mutations.setCardContract),
 
 }
 

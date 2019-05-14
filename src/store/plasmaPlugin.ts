@@ -6,8 +6,9 @@ import {
     LoomProvider, Client, CryptoUtils,
   } from "loom-js"
 import { noop } from 'vue-class-component/lib/util';
+import { plasmaModule } from './plasma';
 
-function temp1(client: Client, privateKey: Uint8Array) {
+function ISetupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return []
 }
 
@@ -17,15 +18,15 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
         async (newUser) => {
             const user = await newUser!
             const client = user.client
-            const pk = 
-            "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ=="
-            const uint8privatekey = CryptoUtils.B64ToUint8Array(pk)
-            const loomProvider = new LoomProvider(client, uint8privatekey, temp1)
+            const dashboardPrivateKey = store.state.DPOS.dashboardPrivateKey
+            const uint8PrivateKey = CryptoUtils.B64ToUint8Array(dashboardPrivateKey)
+            const loomProvider = new LoomProvider(client, uint8PrivateKey, ISetupMiddlewaresFunction)
             const web3 = new Web3(loomProvider)
             const networkId = client.chainId
             const cardInstance = new web3.eth.Contract(MigratedZBGCardJSON.abi, MigratedZBGCardJSON.networks[networkId].address)
-            let tokens = await cardInstance.methods.tokensOwned(user.ethAddress).call({from: user.ethAddress})
-            console.log("tokens",tokens);
+            plasmaModule.setCardContract({name: "card", contract: cardInstance})
+            // let tokens = await cardInstance.methods.tokensOwned(user.ethAddress).call({from: user.ethAddress})
+            // console.log("tokens",tokens);
             
             //         let tokens = await state.cardInstance.methods
             //     .tokensOwned(payload.account)

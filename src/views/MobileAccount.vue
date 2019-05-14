@@ -256,8 +256,8 @@ export default class MobileAccount extends Vue {
       this.beginPolling()
     })
 
-    this.$root.$on('witdrawalRejected', () => {
-      this.whenCooldown = null 
+    this.$root.$on('withdrawalExecuted', () => {
+      this.setWithdrewOn(Date.now())
     })
 
   }
@@ -281,7 +281,7 @@ export default class MobileAccount extends Vue {
     this.startTimer()
 
     // Only alert te user if the receipt is fresh
-    if (this.receipt && !this.enoughTimeHasPassed) {
+    if (this.receipt) {
       this.hasReceiptHandler(this.receipt)
     }
   }
@@ -426,6 +426,7 @@ export default class MobileAccount extends Vue {
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
+    debugger
     this.setWithdrewOn(Date.now())
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
@@ -442,6 +443,7 @@ export default class MobileAccount extends Vue {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
       this.unclaimSignature = this.receipt.signature
     }
+
     await this.refresh(true)
   }
 
@@ -547,7 +549,8 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        this.setWithdrewOn(Date.now()) 
+        // TODO: Delete?
+        // this.setWithdrewOn(Date.now()) 
         //await tx.wait()
         return tx
       }

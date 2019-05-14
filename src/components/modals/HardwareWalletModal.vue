@@ -87,7 +87,7 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ...mapMutations(['setErrorMsg',
                     'setSuccessMsg'
                     ]),
-    ...dposStore.mapActions(['checkMappingAccountStatus']),
+    ...dposStore.mapActions(['checkMappingAccountStatus','initializeDependencies']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
       'init',
@@ -204,6 +204,7 @@ export default class HardwareWalletModal extends Vue {
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)
     this.disableProgressBtn = false
+    await this.initializeDependencies()
     if (this.mappingSuccess) {
       this.$emit('ok');
       this.$router.push({

@@ -3,6 +3,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from './store'
 
+
 import FirstPage from './views/FirstPage.vue'
 import MyDelegations from './views/MyDelegations.vue'
 import History from './views/MobileHistory.vue'
@@ -10,8 +11,8 @@ import Redelegate from './views/Redelegate.vue'
 import ValidatorList from './views/ValidatorList.vue'
 import ValidatorDetail from './views/ValidatorDetail.vue'
 import BlockExplorer from './views/BlockExplorer.vue'
+import Analytics from './views/Analytics.vue'
 import MobileAccount from './views/MobileAccount.vue'
-import Rewards from './views/Rewards.vue'
 import Help from './views/Help.vue'
 
 import { loadLocale, isLocaleSupported } from './i18n'
@@ -93,15 +94,6 @@ const router = new VueRouter({
         }
       },
       {
-        path: 'delegations',
-        name: 'delegations',
-        component: MyDelegations,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true
-        }      
-      },
-      {
         path: 'history',
         name: 'history',
         component: History,
@@ -119,15 +111,6 @@ const router = new VueRouter({
           requireDeps: true
         }      
       },
-      {
-        path: 'rewards',
-        name: 'rewards',
-        component: Rewards,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true
-        }   
-      },    
       {
         path: 'faq',
         name: 'FAQ',
@@ -155,8 +138,13 @@ const router = new VueRouter({
         component: BlockExplorer
       },
       {
+        path: 'analytics',
+        name: 'analytics',
+        component: Analytics
+      },
+      {
         path: '/',
-        redirect: '/account'
+        redirect: '/analytics'
       }
     ],
   }

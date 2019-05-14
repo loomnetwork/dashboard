@@ -134,7 +134,10 @@ export default class FirstPage extends Vue {
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
-      this.$root.$emit("login") 
+      await this.initializeDependencies()
+      console.log("done initializeDependencies")
+      //this.$root.$emit("login")
+      
     } else {
       return
     }
@@ -223,7 +226,7 @@ export default class FirstPage extends Vue {
     this.switchTab() 
   }
 
-  mounted() {
+  async mounted() {
     if(!this.isMobile) return
     if ((window.web3 && window.web3.currentProvider.isTrust) || 
         !!window.imToken ||
@@ -232,7 +235,8 @@ export default class FirstPage extends Vue {
       ) {
       this.setWalletType("metamask")
       this.setUserIsLoggedIn(true)
-      this.$root.$emit("login") 
+      await this.initializeDependencies()
+    // this.$root.$emit("login") 
     }
 
   }

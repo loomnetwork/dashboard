@@ -1,4 +1,4 @@
-import { DelegationState, LockTimeTier } from "loom-js/dist/contracts/dpos2";
+import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb";
 import Vue from 'vue'
 import BN from 'bn.js';
 import { formatToCrypto } from './utils.js';
@@ -24,6 +24,7 @@ export function initFilters() {
     Vue.filter("lockTimeBonus",formatLockTimeBonus)
     //Vue.filter('duration', formatDuration)
     Vue.filter('date', formatDate)
+    Vue.filter('readableDate', readableDateTime)
     Vue.filter('tokenAmount', formatTokenAmount)
     Vue.filter('domain', formatDomain)
     Vue.filter('url', formatUrl)
@@ -42,11 +43,11 @@ export function formateDelegationState(value:DelegationState) {
     return delegationStateText[value] || "Unknown"
 }
 
-export function formateLockTimeTier(value:LockTimeTier) {
+export function formateLockTimeTier(value:LocktimeTier) {
     return lockTimeTierText[value] || "Unknown"
 }
 
-export function formatLockTimeBonus(value:LockTimeTier) {
+export function formatLockTimeBonus(value:LocktimeTier) {
     return lockTimeTierBonus[value] || "Unknown"
 }
 
@@ -71,6 +72,11 @@ export function formatLockTimeBonus(value:LockTimeTier) {
 export function formatDate(timestamp) {
     console.log("date",timestamp)
     return new Date(parseInt(""+timestamp,10)*1000).toString()
+}
+
+export function readableDateTime(timestamp) {
+    console.log("date", timestamp)
+    return new Date(timestamp*1000).toLocaleDateString()
 }
 
 export function formatTokenAmount(wei:BN) {

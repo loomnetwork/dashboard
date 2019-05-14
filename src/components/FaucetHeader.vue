@@ -141,7 +141,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'addChainUrl',
       'getDappchainLoomBalance',
       'getMetamaskLoomBalance',
-      'getAccumulatedStakingAmount'
     ]),
     ...DappChainStore.mapMutations([
       'setMappingError',
@@ -166,7 +165,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ...DappChainStore.mapState([
       'chainUrls',
       'isConnectedToDappChain',
-      'mappingStatus'
+      'mappingStatus',
+      'networkId'
     ]),
     ...DappChainStore.mapGetters([
       'currentChain',
@@ -242,7 +242,7 @@ export default class FaucetHeader extends Vue {
   }
 
   async updateTimeUntilElectionCycle() {
-    await this.getTimeUntilElectionsAsync()
+    //await this.getTimeUntilElectionsAsync()
     this.electionCycleTimer = this.timeUntilElectionCycle    
   }
 
@@ -298,14 +298,15 @@ export default class FaucetHeader extends Vue {
         web3: this.web3,
         address: this.currentMetamaskAddress
       })
-      let stakedAmount = await this.getAccumulatedStakingAmount()
+      return
+      // let stakedAmount = await this.getAccumulatedStakingAmount()
       let isLoading = false
       console.log(mainnetBalance)
       this.setUserBalance({
         isLoading,
         loomBalance,
         mainnetBalance,
-        stakedAmount
+        //stakedAmount
       })
       this.showRefreshSpinner = false
       this.errorRefreshing = false

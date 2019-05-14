@@ -21,21 +21,32 @@
 
         <div class="p3">
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
-          <h5 class="highlight">
-            {{userBalance.isLoading ? 'loading' : userBalance.mainnetBalance + " LOOM"}}
-            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
-          </h5>
+          <div v-if="userBalance.mainnetBalance">
+            <h5 class="highlight">
+              {{userBalance.mainnetBalance + " LOOM"}}
+              <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px" />
+            </h5>
+          </div>
+          <div v-else>
+            <b-spinner variant="primary" label="Spinning" /> 
+          </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>                            
-          <h5 class="highlight">
-            {{userBalance.isLoading ? 'loading' : userBalance.loomBalance + " LOOM"}}
-            <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
-          </h5>
+          <div v-if="userBalance.loomBalance">
+            <h5 class="highlight">
+              {{userBalance.loomBalance + " LOOM"}}
+              <loom-icon v-if="!userBalance.isLoading" :color="'#f0ad4e'" width="20px" height="20px"/>
+            </h5>
+          </div>
+          <div v-else>
+            <b-spinner variant="primary" label="Spinning" />
+          </div>
           <!-- unclaimed -->
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
             <p> {{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}} </p><br>
-            <div class="center-children">                                  
-              <b-btn variant="outline-primary" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
+            <div class="center-children" id="complete-withdrawal-container">                                  
+              <b-btn variant="outline-primary" class="mr-2" @click="reclaimWithdrawHandler" :disabled="isWithdrawalInprogress"> {{$t('views.my_account.complete_withdraw')}} </b-btn>
               <b-spinner v-if="isWithdrawalInprogress" variant="primary" label="Spinning" small/>
+              <b-tooltip v-if="isWithdrawalInprogress" target="complete-withdrawal-container" placement="left" title="Your transaction is processing, check back in a few mintues."></b-tooltip>
             </div>                                
           </div>
           <b-modal id="wait-tx" title="Done" hide-footer centered no-close-on-backdrop> 
@@ -62,7 +73,8 @@
             :balance="userBalance.loomBalance" 
             :transferAction="executeWithdrawal"
             :resolveTxSuccess="resolveWithdraw"
-            buttonLabel="Withdraw" 
+            :enableCooldown="!enoughTimeHasPassed"
+            buttonLabel="Withdraw"
             executionTitle="Execute transfer">
               <template #pendingMessage><p>Transfering funds from plasma chain to your ethereum account...</p></template>
               <template #failueMessage>Withdrawal failed... retry?</template>
@@ -80,16 +92,17 @@
         <b-spinner v-else variant="primary" label="Spinning"/>
     </b-card>
 
-    <b-card title="Rewards" class="mb-4">
+    <!-- <b-card title="Rewards" class="mb-4">
       <router-link tag="h5" to="/rewards" class="highlight" >
         {{rewardsValue}}
         <loom-icon v-if="rewardsValue" :color="'#f0ad4e'" width="20px" height="20px"/>
       </router-link>
-    </b-card>
+    </b-card> -->
+    <rewards></rewards>
 
     <b-card title="Delegations" id="delegations-container">
 
-      <b-card v-for="(delegation, idx) in delegations" :key="'delegations' + idx" no-body class="mb-1">
+      <b-card v-for="(delegation, idx) in formatedDelegations" :key="'delegations' + idx" no-body class="mb-1">
         <b-card-header @click="toggleAccordion(idx)"
                        header-tag="header"
                        class="d-flex justify-content-between p-2"
@@ -101,7 +114,6 @@
           <b-card-body>
             <ul>
               <li v-if="delegation['Update Amount'] !== '0.00'">Update amount: {{delegation["Update Amount"]}}</li>
-              <li>Height: {{delegation["Height"]}}</li>
               <li>Unlock time: {{delegation["Locktime"]}}</li>
               <li>State: {{delegation["State"]}}</li>
             </ul>
@@ -133,6 +145,7 @@ import { setTimeout } from 'timers'
 import { formatToCrypto, sleep } from '../utils.js'
 import TransferStepper from '../components/TransferStepper'
 import DepositForm from '@/components/gateway/DepositForm'
+import Rewards from '@/components/Rewards'
 
 const log = debug('mobileaccount')
 
@@ -147,11 +160,14 @@ const ELECTION_CYCLE_MILLIS = 600000
     FaucetTable,
     TransferStepper,
     DepositForm,
+    Rewards
   },
   computed: {
     ...DappChainStore.mapState([
       'web3',
-      'dposUser'
+      'dposUser',
+      'validators',
+      'withdrewOn'
     ]),    
     ...DPOSStore.mapState([
       'userBalance',
@@ -159,16 +175,13 @@ const ELECTION_CYCLE_MILLIS = 600000
       'rewardsResults',
       'timeUntilElectionCycle',
       'nextElectionTime',
+      'delegations',
       'states',
       'currentMetamaskAddress',
-      "pendingTx"
+      'pendingTx'
     ]) 
   },
   methods: {
-    ...DPOSStore.mapActions([
-      'queryRewards',
-      'getTimeUntilElectionsAsync'
-    ]),
     ...DappChainStore.mapActions([
       'getPendingWithdrawalReceipt',
       'getUnclaimedLoomTokens',
@@ -176,13 +189,12 @@ const ELECTION_CYCLE_MILLIS = 600000
       'withdrawAsync',
       'withdrawCoinGatewayAsync',
       'switchDposUser',
-      'setWithdrewSignature',
+      'getMetamaskLoomBalance',
+      'getDappchainLoomBalance',
     ]),
     ...DappChainStore.mapMutations([
-      'setWithdrewOn'
-    ]),
-    ...DappChainStore.mapGetters([
-      'getWithdrewOn'
+      'setWithdrewOn',
+      'setWithdrewSignature',
     ]),
     ...mapMutations([
       'setErrorMsg'
@@ -197,7 +209,6 @@ const ELECTION_CYCLE_MILLIS = 600000
 
 export default class MobileAccount extends Vue {
 
-  delegations = []
   currentAllowance = 0
 
   timerRefreshInterval = null
@@ -215,7 +226,10 @@ export default class MobileAccount extends Vue {
   withdrawLimit = 0
 
   showRefreshSpinner = false
-  
+
+  cooldownInterval = null 
+  whenCooldown = null
+
   mounted() {
     // Page might be mounted while dposUser is still initializing
     if (this.dposUser) {
@@ -231,19 +245,43 @@ export default class MobileAccount extends Vue {
         }
       )
     }
+
+    this.whenCooldown = this.getTimeWhenCooldownExpires()
+
+    if(!this.enoughTimeHasPassed) {
+      this.beginPolling()
+    }
+
+    this.$root.$on('withdrawalDone', () => {
+      this.beginPolling()
+    })
+
+    this.$root.$on('witdrawalRejected', () => {
+      this.whenCooldown = null 
+    })
+
   }
 
+  destroyed() {
+    if(this.cooldownInterval) clearInterval(this.cooldownInterval)
+  }
+
+  beginPolling() {
+    this.cooldownInterval = setInterval(async () => {
+      this.whenCooldown = this.getTimeWhenCooldownExpires()
+      if(this.enoughTimeHasPassed) clearInterval(this.cooldownInterval)
+    }, 30 * 1000) // 30 seconds    
+  }
+  
   async dposUserReady() {
     await this.checkPendingWithdrawalReceipt()
-    await this.checkUnclaimedLoomTokens()
+    //await this.checkUnclaimedLoomTokens()
     this.currentAllowance = await this.checkAllowance()
-    this.queryRewards()
     this.updateTimeUntilElectionCycle()
     this.startTimer()
-    this.delegations = await this.getDelegations()
 
     // Only alert te user if the receipt is fresh
-    if (this.receipt && !this.hasJustWithdrawn() ) {
+    if (this.receipt && !this.enoughTimeHasPassed) {
       this.hasReceiptHandler(this.receipt)
     }
   }
@@ -252,36 +290,41 @@ export default class MobileAccount extends Vue {
    * receipt is fresh if last withdrawal was less than 5 minutes ago
    *@param receipt
    */
-  hasJustWithdrawn() {
-    return this.getWithdrewOn() > ( Date.now()- 5*60*1000)
+  get enoughTimeHasPassed() {
+    // Five minutes ago > Withdrawal timestamp
+    return this.whenCooldown > this.withdrewOn
+  }
+
+
+  getTimeWhenCooldownExpires() {
+    return (Date.now()- 5*60*1000)
   }
 
   refresh() {
     this.showRefreshSpinner = true
-    this.$root.$emit("refreshBalances")
-    setTimeout(() => {
-      this.showRefreshSpinner = false
-    }, 2000)
+    Promise.all([
+        this.getMetamaskLoomBalance(),
+        this.getDappchainLoomBalance()
+    ])
+    .finally(() => this.showRefreshSpinner = false)
   }
 
-  async getDelegations() {
-    const { amount, weightedAmount, delegationsArray } = await this.dposUser.listDelegatorDelegations()
-    const candidates = await this.dposUser.listCandidatesAsync()
-
-    return delegationsArray.filter(d => !(d.amount.isZero() && d.updateAmount.isZero()))
-           .map(delegation => {
-            let candidate = candidates.find(c => c.address.local.toString() === delegation.validator.local.toString())
-            return { 
-                    "Name": candidate.name,
-                    "Amount": `${formatToCrypto(delegation.amount)}`,
-                    "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-                    "Height": `${delegation.height}`,
-                    "Locktime": `${new Date(delegation.lockTime * 1000)}`,
-                    "State": `${this.states[delegation.state]}`,
-                    _cellVariants: { Status: 'active'}
-            }
+  get formatedDelegations() {
+    const candidates = this.validators
+    console.log(this.delegations)
+    return this.delegations
+    .filter(d => d.index > 0)
+    .map((delegation) => {
+      let candidate = candidates.find(c => c.address === delegation.validator.local.toString())
+      return { 
+              "Name": candidate.name,
+              "Amount": `${formatToCrypto(delegation.amount)}`,
+              "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
+              "Locktime": `${new Date(delegation.lockTime * 1000)}`,
+              "State": `${this.states[delegation.state]}`,
+              _cellVariants: { Status: 'active'}
+      }
     })
-
   }
 
   toggleAccordion(idx) {
@@ -289,14 +332,14 @@ export default class MobileAccount extends Vue {
   }
 
   async completeDeposit() {
+    const dposUser = await this.dposUser
     this.setGatewayBusy(true)
     this.setShowLoadingSpinner(true)
     const tokens = new BN( "" + parseInt(this.currentAllowance,10)) 
     const weiAmount = new BN(this.web3.utils.toWei(tokens, 'ether'), 10)
     try {
-      console.log( weiAmount.toString(), this.dposUser.ethereumLoom.address)
-      await this.dposUser._ethereumGateway.functions.depositERC20(
-        weiAmount.toString(), this.dposUser.ethereumLoom.address
+      await dposUser.ethereumGateway.functions.depositERC20(
+        weiAmount.toString(), dposUser.ethereumLoom.address
       )
       this.currentAllowance = 0
     } catch (error) {
@@ -321,8 +364,8 @@ export default class MobileAccount extends Vue {
 
 
   async updateTimeUntilElectionCycle() {
-    await this.getTimeUntilElectionsAsync()
-    this.electionCycleTimer = this.timeUntilElectionCycle
+    const millis = this.nextElectionTime - Date.now()
+    this.electionCycleTimer =  Math.ceil(millis/1000)
   }
 
   async decreaseTimer() {
@@ -335,6 +378,7 @@ export default class MobileAccount extends Vue {
         this.showTimeUntilElectionCycle()
       } else {
         await this.updateTimeUntilElectionCycle()
+        this.electionCycleTimer
       }
     }
     
@@ -358,8 +402,7 @@ export default class MobileAccount extends Vue {
     const unclaimedAmount = await this.getUnclaimedLoomTokens()
     // console.log("unclaimedAmount",unclaimedAmount)
     this.unclaimedTokens = unclaimedAmount
-    if( !this.unclaimedTokens.isZero() &&
-        !this.hasJustWithdrawn() ) {
+    if(!this.unclaimedTokens.isZero() && this.enoughTimeHasPassed) {
       this.$root.$emit("bv::show::modal", "unclaimed-tokens")
     }
   }
@@ -369,7 +412,7 @@ export default class MobileAccount extends Vue {
   }
   
   async checkAllowance() {    
-    const user = this.dposUser
+    const user = await this.dposUser
     const gateway = user.ethereumGateway
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
@@ -383,8 +426,7 @@ export default class MobileAccount extends Vue {
   async afterWithdrawalDone () {
     this.$root.$emit("bv::show::modal", "wait-tx")
     this.$emit('refreshBalances')
-        this.setWithdrewOn(Date.now())
-
+    this.setWithdrewOn(Date.now())
     await this.checkPendingWithdrawalReceipt()
     if(this.receipt){
       this.setWithdrewSignature(this.receipt.signature)
@@ -412,7 +454,11 @@ export default class MobileAccount extends Vue {
 
 
   async hasReceiptHandler(receipt) {
+    const dposUser = await this.dposUser
     if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
+
+      if(!this.enoughTimeHasPassed) return
+
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())
@@ -421,7 +467,7 @@ export default class MobileAccount extends Vue {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
-    let ethAddr = this.dposUser._wallet._address
+    let ethAddr = dposUser.ethAddress
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
     if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
       this.mismatchedReceiptHandler(receipt, ethAddr)
@@ -443,11 +489,10 @@ export default class MobileAccount extends Vue {
   }
 
   async reclaimWithdrawHandler() {
-    // var localAddr = CryptoUtils.bytesToHexAddr(this.dposUser._address.local.bytes)
-    // let mappedAddr = await this.dposUser._wallet._address
-    // let ethAddr = CryptoUtils.bytesToHexAddr(mappedAddr.to.local.bytes)
-    let ethAddr = this.dposUser._wallet._address
+    const dposUser = await this.dposUser
+    let ethAddr = this.dposUser.ethAddr
     console.log('current eth addr: ', ethAddr)
+    this.setShowLoadingSpinner(true)
     try {
       this.isWithdrawalInprogress = true
       let tx = await this.withdrawCoinGatewayAsync({amount: this.unclaimWithdrawTokens, signature: this.unclaimSignature})      
@@ -467,19 +512,20 @@ export default class MobileAccount extends Vue {
         alert('Pending withdraw is fixed. Please log in again to switch back to the correct account.')
         window.location.reload(true)
       }
-      
       this.setWithdrewOn(Date.now())
+      this.setShowLoadingSpinner(false)
     } catch (err) {
-      this.setErrorMsg(err.message)
+      this.setErrorMsg({msg: "Failed resuming withdraw", forever: false,report:true,cause:err})
       console.error(err)
       this.isWithdrawalInprogress = false
+      this.setShowLoadingSpinner(false)
     }
   }
 
   async checkAllowance() {    
     console.assert(this.dposUser, "Expected dposUser to be initialized")
     console.assert(this.web3, "Expected web3 to be initialized")   
-    const user = this.dposUser
+    const user = await this.dposUser
     const gateway = user.ethereumGateway
     try {          
       const allowance = await user.ethereumLoom.allowance(this.currentMetamaskAddress, gateway.address)
@@ -501,7 +547,7 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        this.setWithdrewOn(Date.now())
+        this.setWithdrewOn(Date.now()) 
         //await tx.wait()
         return tx
       }
@@ -553,6 +599,9 @@ h3 {
 }
 
 .button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;  
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -561,7 +610,6 @@ h3 {
   left: 0px;
   box-shadow: rgba(219, 219, 219, 0.56) 0px -3px 8px 0px;
   button {
-    margin: 0 auto;
     display: block;
     background-color: #4e4fd2;    
   }

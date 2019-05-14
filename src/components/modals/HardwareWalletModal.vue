@@ -85,9 +85,9 @@ const dappChainStore = createNamespacedHelpers('DappChain')
                               'setStatus', 
                               'setSelectedLedgerPath']),
     ...mapMutations(['setErrorMsg',
-                    'setSuccessMsg'
+                    'setSuccessMsg',
+                    'setUserIsLoggedIn'
                     ]),
-    ...mapActions(['setUserIsLoggedIn']),
     ...dposStore.mapActions(['checkMappingAccountStatus','initializeDependencies']),
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',

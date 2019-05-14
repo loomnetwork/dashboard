@@ -1,7 +1,8 @@
 
 import BN from "bn.js"
 import { Client } from "loom-js"
-import Contract from 'web3/eth/contract';
+import Contract from "web3/eth/contract"
+import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 
 export interface HasPlasmaState {
     plasma: PlasmaState
@@ -10,9 +11,16 @@ export interface HasPlasmaState {
 export interface PlasmaState {
     client: Client|null,
     balances: {
-        [erc20Symbol:string]:BN
+        [erc20Symbol: string]: BN,
     },
-    cardContract: {
-        [name: string]: Contract
-    }
+    packsContract: {
+        [name: string]: Contract,
+    },
+    cardContract: MigratedZBGCard | null,
+    cardBalance: CardBalance[],
+}
+
+export interface CardBalance {
+    id: string
+    amount: number
 }

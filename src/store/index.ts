@@ -12,11 +12,9 @@ import "./locale"
 import "./dpos-old"
 import "./common"
 import "./ethSignStore"
-import { LocaleStore } from "./locale"
 import { DPOSTypedStore } from "./dpos-old"
 import { CommonStore } from "./common"
 import { EthSign } from "./ethSignStore"
-import { dposStorePlugin } from "./dposPlugin"
 
 Vue.use(Vuex)
 
@@ -32,11 +30,3 @@ const store = getStoreBuilder<DashboardState>().vuexStore({
 })
 console.log(store)
 export default store
-
-  // modules: {
-  //   //common: CommonStore, ok
-  //   //DappChain: DappChainStore, ok
-  //   //DPOS: DPOSStore, pok
-  //   //Locale: LocaleStore,
-  //   //EthSign: EthSignStore ok
-  // },

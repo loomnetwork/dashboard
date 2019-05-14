@@ -2,15 +2,31 @@ import { Store } from "vuex"
 import { DashboardState } from "@/types"
 import Web3 from "web3"
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
+import BoosterPackJSON from "@/contracts/BoosterPack.json"
 import {
     LoomProvider, Client, CryptoUtils,
   } from "loom-js"
 import { noop } from 'vue-class-component/lib/util';
 import { plasmaModule } from './plasma';
+import packAddresses from "@/ZBGPackAddresses.json"
+import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
 
 function ISetupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return []
 }
+
+const PACKS_NAME = [
+    "booster",
+    "super",
+    "air",
+    "earth",
+    "fire",
+    "life",
+    "toxic",
+    "water",
+    "binance",
+    "tron",
+]
 
 export function plasmaStorePlugin(store: Store<DashboardState>) {
     store.watch(
@@ -23,36 +39,16 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             const loomProvider = new LoomProvider(client, uint8PrivateKey, ISetupMiddlewaresFunction)
             const web3 = new Web3(loomProvider)
             const networkId = client.chainId
-            const cardInstance = new web3.eth.Contract(MigratedZBGCardJSON.abi, MigratedZBGCardJSON.networks[networkId].address)
-            plasmaModule.setCardContract({name: "card", contract: cardInstance})
-            // let tokens = await cardInstance.methods.tokensOwned(user.ethAddress).call({from: user.ethAddress})
-            // console.log("tokens",tokens);
-            
-            //         let tokens = await state.cardInstance.methods
-            //     .tokensOwned(payload.account)
-            //     .call({ from: payload.account })
-            //   let cards: any = {}
-            //   tokens.indexes.forEach((id: string | number, i: string | number) => {
-            //     cards[id] = parseInt(tokens.balances[i])
-            //   })
-
-        }
+            const cardInstance = new web3.eth.Contract(
+                MigratedZBGCardJSON.abi,
+                MigratedZBGCardJSON.networks[networkId].address)
+            for (const pack of PACKS_NAME) {
+                let packInstance = new web3.eth.Contract(BoosterPackJSON.abi,
+                    packAddresses[store.state.DPOS.networkId][pack])
+                plasmaModule.setPacksContract({name: pack, contract: packInstance})
+            }
+            // @ts-ignore
+            plasmaModule.setCardContract(cardInstance)
+        },
     )
 }
-    
-// let result = await state.cardInstance.methods
-//       .safeTransferFrom(
-//         state.cardNetwork.address,
-//         payload.receiver,
-//         payload.cardId,
-//         payload.amount
-//       )
-        // cardInstance.methods.safeTransferFrom(MigratedZBGCardJSON.networks[networkId], )
-// card: async () => {
-//     if (state.cardInstance) return
-//     let cardNetwork
-//     let cardInstance
-//     cardNetwork = CardJSON.networks[state.loomNetwork]
-//     cardInstance = new state.web3.eth.Contract(CardJSON.abi, cardNetwork.address)
-//     commit('updateState', { cardNetwork, cardInstance })
-//   },

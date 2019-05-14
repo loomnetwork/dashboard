@@ -2,7 +2,7 @@
  * @module dpos-dashboard.gateway
  */
 
-import { getStoreBuilder } from "vuex-typex"
+import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
 import * as actions from "./actions"
 import { PlasmaState, HasPlasmaState } from "./types"
@@ -15,6 +15,8 @@ import * as getters from "./getters"
 import * as mutations from "./mutations"
 import { getCachedEvents } from '../dpos-old/getters';
 import { noop } from "vue-class-component/lib/util"
+import Contract from 'web3/eth/contract';
+import { DashboardState } from '@/types';
 
 const initialState: PlasmaState = {
     // not state but...
@@ -24,11 +26,14 @@ const initialState: PlasmaState = {
         [TokenSymbol.ETH]: new BN("0"),
         [TokenSymbol.BNB]: new BN("0"),
     },
-    cardContract: {},
+    packsContract: {},
+    cardContract: null,
+    cardBalance: []
 }
 
-const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
+const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
 const stateGetter = builder.state()
+declare type ActionContext = BareActionContext<PlasmaState, DashboardState>
 
 export const plasmaModule = {
     get state() { return stateGetter() },
@@ -37,20 +42,26 @@ export const plasmaModule = {
     getCardInstance: builder.read(getters.getCardInstance),
 
     // actions
-    updateBalance: builder.dispatch(actions.updateBalance),
-    approve: builder.dispatch(actions.approve),
-    transfer: builder.dispatch(actions.transferTokens),
+    checkCardsBalances: builder.dispatch(checkCardsBalances),
 
-    setCardContract: builder.commit(mutations.setCardContract),
+    // mutation
+    setPacksContract: builder.commit(mutations.setPacksContract),
+    setCardContract:  builder.commit(mutations.setCardContract),
+    setCardBalance: builder.commit(mutations.setCardBalance),
+  }
 
+async function checkCardsBalances(context: ActionContext){
+    const account = context.rootState.DPOS.account
+    const tokens = await context.state.cardContract!.methods
+                .tokensOwned(account)
+                .call({ from: account })
+    const cards = context.state.cardBalance
+    tokens.indexes.forEach((id: string, i: number) => {
+      cards.push({id, amount: parseInt(tokens.balances[i], 10)})
+    })
+    plasmaModule.setCardBalance(cards)
 }
 
-// if (state.cardInstance) return
-// let cardNetwork
-// let cardInstance
-// cardNetwork = CardJSON.networks[state.loomNetwork]
-// cardInstance = new state.web3.eth.Contract(CardJSON.abi, cardNetwork.address)
-// commit('updateState', { cardNetwork, cardInstance })
 
 function createClient() {
     noop()

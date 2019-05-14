@@ -11,6 +11,7 @@ import BlockExplorer from "./views/BlockExplorer.vue"
 import Analytics from "./views/Analytics.vue"
 import MobileAccount from "./views/MobileAccount.vue"
 import Help from "./views/Help.vue"
+import GameAssets from "./views/GameAssets.vue"
 
 import { loadLocale, isLocaleSupported } from "./i18n"
 
@@ -126,6 +127,15 @@ const router = new VueRouter({
         path: "blockexplorer",
         name: "blockexplorer",
         component: BlockExplorer,
+      },
+      {
+        path: "gameAssets",
+        name: "gameAssets",
+        component: GameAssets,
+        meta: {
+          requireLogIn: true,
+          requireDeps: true,
+        },
       },
       {
         path: "analytics",

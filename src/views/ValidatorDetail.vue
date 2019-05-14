@@ -56,12 +56,13 @@
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
 
-      <div class="button-container">
+      <div class="button-container" v-if="!isBootstrap">
         <b-button class="stake mr-3" 
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="consolidate" v-if="multipleUnlockedStakes && false"
+
+        <b-button class="consolidate" v-if="multipleUnlockedStakes"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>

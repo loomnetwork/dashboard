@@ -5,16 +5,11 @@
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
 import { PlasmaState, HasPlasmaState } from "./types"
-import { Client } from "loom-js"
 import BN from "bn.js"
-import { createDefaultClient } from "loom-js/dist/helpers";
 import { TokenSymbol } from "../ethereum/types";
-import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
-import { getCachedEvents } from '../dpos-old/getters';
 import { noop } from "vue-class-component/lib/util"
-import Contract from 'web3/eth/contract';
 import { DashboardState } from '@/types';
 
 const initialState: PlasmaState = {

@@ -21,19 +21,22 @@ export function dposStorePlugin(store: Store<DashboardState>) {
             }
             const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle, 10)
             debug("timeUntilElectionCycle", seconds)
+            // seconds is 0 => elections still running
+            const electionIsRunning = seconds < 1
+            store.commit("DPOS/setElectionIsRunning", electionIsRunning)
+            if (electionIsRunning) {
+                // while still runing poll with an interval of 15 seconds
+                // do not refresh vvalidators and delegations
+                return setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), 15 * 1000)
+            }
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
             if (store.state.DappChain.dposUser) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            const electionRunningTime = store.state.DappChain.networkId === "plasma" ? (1000 * 60 * 2) : (1000 * 10)
-            debug("===============>", Math.max(seconds, 1) * 1000)
-            await sleep(Math.max(seconds, 1) * 1000)
-            store.commit("DPOS/setElectionIsRunning", true)
-            await sleep(electionRunningTime)
-            store.commit("DPOS/setElectionIsRunning", false)
-            store.dispatch("DPOS/getTimeUntilElectionsAsync")
+            debug("setTimeout seconds",Math.max(seconds,1) * 1000)
+            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
         }
     })
 

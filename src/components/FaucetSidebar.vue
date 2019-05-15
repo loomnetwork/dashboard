@@ -19,10 +19,10 @@
       <router-link to="/blockexplorer" class="router" exact-active-class="router-active">{{ $t('components.faucet_header.block_explorer') }}</router-link>
     </b-nav-item>
     <b-nav-item>
-      <router-link to="/gameAssets" class="router" exact-active-class="router-active"> GameAssets </router-link>
+      <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
     </b-nav-item>
     <b-nav-item>
-      <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
+      <router-link to="/game-assets" class="router" exact-active-class="router-active"> GameAssets </router-link>
     </b-nav-item>
     <b-nav-item v-if="state.common.userIsLoggedIn">
       <a class="nav-link">

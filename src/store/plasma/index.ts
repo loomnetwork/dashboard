@@ -4,7 +4,7 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import { PlasmaState, HasPlasmaState } from "./types"
+import { PlasmaState } from "./types"
 import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types";
 import * as getters from "./getters"

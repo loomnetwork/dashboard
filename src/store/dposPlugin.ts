@@ -61,12 +61,23 @@ export function dposStorePlugin(store: Store<DashboardState>) {
     store.subscribeAction({
         after(action) {
             if (dposActions.find(a => a === action.type)) {
+
+                if(action.type === "DappChain/delegateAsync" ||
+                   action.type === "DappChain/undelegateAsync") {
+                    store.dispatch("DPOS/addEventToQue", action)
+                }
+
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DappChain/getDappchainLoomBalance")
                 store.dispatch("DPOS/queryRewards")
                 store.dispatch("DPOS/fetchDappChainEvents")
                 store.dispatch("DPOS/loadEthereumHistory")
             }
+
+
+
+
+
         }
     })
 

@@ -17,8 +17,17 @@
         <div class="container-fluid">
           <router-link to="/account" class="navbar-brand">
             <loom-icon width="18px" height="18px" :color="'#ffffff'"/> Plasmachain          
-          </router-link>          
-          <form class="form-inline">
+          </router-link>         
+          <form class="form-inline" id="right-menu-container">
+            <b-dropdown no-caret variant="primary">
+              <template slot="button-content">
+                <span class="mr-1">Events</span><fa :icon="['far', 'bell']" fixed-width />
+              </template>
+              <b-dropdown-item v-for="(event, idx) in eventQue" :key="'event' + idx">
+                <h5>{{event.type}}</h5>
+                <h5>{{event.payload.amount || 0}}</h5>
+              </b-dropdown-item>
+            </b-dropdown>            
             <LangSwitcher/>
           </form>
         </div>
@@ -69,6 +78,7 @@
                     </h5>
                   </b-nav-item>              
                 </div>
+
                 <LangSwitcher/>
                 <b-nav-item v-if="userIsLoggedIn">
                   <h5>
@@ -160,7 +170,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'currentMetamaskAddress',
       'userBalance',
       'status',
-      'timeUntilElectionCycle'
+      'timeUntilElectionCycle',
+      'eventQue'
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
@@ -543,6 +554,11 @@ a.hover-warning:hover {
   strong {
     color: #ffffff;
   }
+}
+
+#right-menu-container .dropdown-toggle {
+  background-color: transparent;
+  border: none;
 }
 
 </style>

@@ -87,6 +87,8 @@ const defaultState = () => {
     showDepositApproved: false,
     showDepositConfirmed: false,
     pendingTx: null,
+    electionIsRunning: false,
+    eventQue: [],
   }
 }
 
@@ -242,7 +244,13 @@ export default {
     },
     setPendingTx(state, info) {
       state.pendingTx = info
-    }
+    },
+    setElectionIsRunning(state, payload) {
+      state.electionIsRunning = payload
+    },
+    setEventQue(state, payload) {
+      state.eventQue = payload
+    },
   },
   actions: {
     async initializeDependencies({ state, commit, dispatch }, payload) {
@@ -699,6 +707,12 @@ export default {
         "deposit",
         () => gw.functions.depositERC20(amount.toString(), loom.address)
       )
+    },
+    addEventToQue({state, commit}, event) {
+      const {type, payload} = event
+      let freshQue = Array.from(state.eventQue)
+      freshQue.push({type, payload})
+      commit("setEventQue", freshQue)
     },
   } as ActionTree<any,any>,
 

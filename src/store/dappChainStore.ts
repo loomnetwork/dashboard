@@ -369,9 +369,8 @@ export default {
       const user:DPOSUserV3 = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
-      const balance = formatToCrypto(loomWei.toString())
+      const loomBalance = formatToCrypto(loomWei.toString())
       const userBalance = rootState.DPOS.userBalance
-      let loomBalance = parseFloat(balance).toFixed(2)
       commit("DPOS/setUserBalance", Object.assign(userBalance,{loomBalance}), {root:true})
       return loomBalance
     },

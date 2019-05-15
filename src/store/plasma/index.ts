@@ -4,7 +4,6 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import * as actions from "./actions"
 import { PlasmaState, HasPlasmaState } from "./types"
 import { Client } from "loom-js"
 import BN from "bn.js"
@@ -28,7 +27,8 @@ const initialState: PlasmaState = {
     },
     packsContract: {},
     cardContract: null,
-    cardBalance: []
+    cardBalance: [],
+    packsBalances: {},
 }
 
 const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
@@ -43,18 +43,24 @@ export const plasmaModule = {
 
     // actions
     checkCardsBalances: builder.dispatch(checkCardsBalances),
+    checkPacksBalances: builder.dispatch(checkPacksBalances),
 
     // mutation
     setPacksContract: builder.commit(mutations.setPacksContract),
     setCardContract:  builder.commit(mutations.setCardContract),
     setCardBalance: builder.commit(mutations.setCardBalance),
+    setPackBalance: builder.commit(mutations.setPackBalance),
   }
 
-async function checkCardsBalances(context: ActionContext){
-    const account = context.rootState.DPOS.account
+async function checkCardsBalances(context: ActionContext) {
+    const dposUser = await context.rootState.DPOS.dposUser
+    console.log("--------------------------");
+    console.log("dposUser", dposUser!);
+    console.log("dposUser!.loomAddress.toString()", dposUser!.loomAddress.toString()!);
+    console.log("--------------------------");
     const tokens = await context.state.cardContract!.methods
-                .tokensOwned(account)
-                .call({ from: account })
+                .tokensOwned(dposUser!.loomAddress.toString())
+                .call({ from: dposUser!.loomAddress.toString() })
     const cards = context.state.cardBalance
     tokens.indexes.forEach((id: string, i: number) => {
       cards.push({id, amount: parseInt(tokens.balances[i], 10)})
@@ -62,6 +68,13 @@ async function checkCardsBalances(context: ActionContext){
     plasmaModule.setCardBalance(cards)
 }
 
+async function checkPacksBalances(context: ActionContext, payload: string) {
+  const account = context.rootState.DPOS.account
+  const amount = await context.state.packsContract[payload].methods
+          .balanceOf(account)
+          .call({ from: account })
+  plasmaModule.setPackBalance({packType: payload, balance: amount})
+}
 
 function createClient() {
     noop()

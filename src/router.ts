@@ -111,7 +111,7 @@ const router = new VueRouter({
         meta: {
           requireLogIn: true,
           requireDeps: true,
-        },        
+        },
       },
       {
         path: "/validators",

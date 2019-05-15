@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
 import { plasmaModule } from "../store/plasma"
-import { CardBalance } from '../store/plasma/types';
+import { CardBalance } from "../store/plasma/types"
 
 export default class GameAssets extends Vue {
   cardsBalances = plasmaModule.state.cardBalance
@@ -20,3 +20,4 @@ export default class GameAssets extends Vue {
   }
 }
 </script>
+

@@ -2,9 +2,10 @@
  * @module dpos-dashboard.gateway
  */
 
-import { getStoreBuilder } from "vuex-typex"
+import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import * as actions from "./actions"
+import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { timer } from "rxjs"
 import { PlasmaState, HasPlasmaState } from "./types"
 import { Client } from "loom-js"
 import BN from "bn.js"
@@ -25,16 +26,81 @@ const initialState: PlasmaState = {
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
 
-export const ethereumModule = {
+export const plasmaModule = {
 
     get state() { return stateGetter() },
 
-    updateBalance: builder.dispatch(actions.updateBalance),
-    approve: builder.dispatch(actions.approve),
-    transfer: builder.dispatch(actions.transferTokens),
+    updateBalance: builder.dispatch(updateBalance),
+    approve: builder.dispatch(approveTransfer),
+    transfer: builder.dispatch(transferTokens),
 
 }
 
 function createClient() {
     noop()
+}
+
+declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>
+
+// holds the contracts. We don't need to exposed these on the state
+const erc20Contracts: Map<TokenSymbol, ERC20> = new Map()
+
+function getErc20Contract(symbol: TokenSymbol): ERC20 {
+    // @ts-ignore
+    return null
+}
+
+/**
+ * deposit from ethereum account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+export function updateBalance(context: ActionContext, payload: {symbol: TokenSymbol, tokenAmount?: BN}) {
+    return timer(2000).toPromise()
+}
+
+/**
+ * withdraw from plasma account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+export function approveTransfer(
+    context: ActionContext,
+    { symbol, tokenAmount, to }: { symbol: TokenSymbol, tokenAmount: BN, to: string },
+) {
+
+    const balance = context.state.balances[symbol]
+    const weiAmount = tokenAmount
+    if (weiAmount.gt(balance)) {
+        throw new Error("approval.balance.low")
+    }
+    const contract: ERC20 = getErc20Contract(symbol, weiAmount)
+
+    contract.functions.approve(to, weiAmount.toString())
+
+    return timer(2000).toPromise()
+}
+
+/**
+ * withdraw from gateway to ethereum account
+ * @param symbol
+ */
+export function transferTokens(
+    context: ActionContext,
+    payload: {
+        symbol: string,
+        tokenAmount: BN,
+        to: string,
+    },
+) {
+    return timer(2000).toPromise()
+}
+
+export function trasfertAsset(context: ActionContext,
+                              payload: {
+        symbol: string,
+        to: string,
+    },
+) {
+    return timer(2000).toPromise()
 }

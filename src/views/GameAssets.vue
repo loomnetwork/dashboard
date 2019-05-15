@@ -12,11 +12,11 @@ import { plasmaModule } from "../store/plasma"
 import { CardBalance } from "../store/plasma/types"
 
 export default class GameAssets extends Vue {
-  cardsBalances = plasmaModule.state.cardBalance
+  cardBalance = plasmaModule.state.cardBalance
   cards: CardBalance[] = []
 
   async mounted() {
-    this.cards = await this.cardsBalances
+    this.cards = await this.cardBalance
   }
 }
 </script>

@@ -28,7 +28,7 @@ const initialState: PlasmaState = {
     packsContract: {},
     cardContract: null,
     cardBalance: [],
-    packsBalances: {},
+    packBalance: {},
 }
 
 const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
@@ -42,8 +42,10 @@ export const plasmaModule = {
     getCardInstance: builder.read(getters.getCardInstance),
 
     // actions
-    checkCardsBalances: builder.dispatch(checkCardsBalances),
-    checkPacksBalances: builder.dispatch(checkPacksBalances),
+    checkCardBalance: builder.dispatch(checkCardBalance),
+    checkPackBalance: builder.dispatch(checkPackBalance),
+    transferPacks: builder.dispatch(transferPacks),
+    transferCards: builder.dispatch(transferCards),
 
     // mutation
     setPacksContract: builder.commit(mutations.setPacksContract),
@@ -52,7 +54,7 @@ export const plasmaModule = {
     setPackBalance: builder.commit(mutations.setPackBalance),
   }
 
-async function checkCardsBalances(context: ActionContext) {
+async function checkCardBalance(context: ActionContext) {
     const dposUser = await context.rootState.DPOS.dposUser
     console.log("--------------------------");
     console.log("dposUser", dposUser!);
@@ -68,12 +70,41 @@ async function checkCardsBalances(context: ActionContext) {
     plasmaModule.setCardBalance(cards)
 }
 
-async function checkPacksBalances(context: ActionContext, payload: string) {
+async function checkPackBalance(context: ActionContext, payload: string) {
   const account = context.rootState.DPOS.account
   const amount = await context.state.packsContract[payload].methods
           .balanceOf(account)
           .call({ from: account })
   plasmaModule.setPackBalance({packType: payload, balance: amount})
+}
+
+async function transferPacks(
+  context: ActionContext,
+  payload: {
+    packType: string,
+    amount: number,
+    destinationDappchainAddress: string}) {
+  const account = context.rootState.DPOS.account
+  const result = await context.state.packsContract[payload.packType].methods
+          .transfer(payload.destinationDappchainAddress, payload.amount)
+          .send({ from: account })
+  return result
+}
+
+async function transferCards(
+  context: ActionContext,
+  payload: {
+    cardIds: string[],
+    amounts: number[],
+    destinationDappchainAddress: string}) {
+  const account = context.rootState.DPOS.account
+  const result = await context.state.cardContract!.methods.batchTransferFrom(
+    account,
+    payload.destinationDappchainAddress,
+    payload.cardIds,
+    payload.amounts)
+  .send({ from: account })
+  return result
 }
 
 function createClient() {

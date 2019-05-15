@@ -49,7 +49,7 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             }
             // @ts-ignore
             plasmaModule.setCardContract(cardInstance)
-            plasmaModule.checkCardsBalances()
+            plasmaModule.checkCardBalance()
         },
     )
 }

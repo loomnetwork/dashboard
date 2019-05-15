@@ -56,13 +56,10 @@ export const plasmaModule = {
 
 async function checkCardBalance(context: ActionContext) {
     const dposUser = await context.rootState.DPOS.dposUser
-    console.log("--------------------------");
-    console.log("dposUser", dposUser!);
-    console.log("dposUser!.loomAddress.toString()", dposUser!.loomAddress.toString()!);
-    console.log("--------------------------");
+    const account = dposUser!.loomAddress.toString()
     const tokens = await context.state.cardContract!.methods
-                .tokensOwned(dposUser!.loomAddress.toString())
-                .call({ from: dposUser!.loomAddress.toString() })
+                .tokensOwned(account)
+                .call({ from: account })
     const cards = context.state.cardBalance
     tokens.indexes.forEach((id: string, i: number) => {
       cards.push({id, amount: parseInt(tokens.balances[i], 10)})
@@ -71,7 +68,8 @@ async function checkCardBalance(context: ActionContext) {
 }
 
 async function checkPackBalance(context: ActionContext, payload: string) {
-  const account = context.rootState.DPOS.account
+  const dposUser = await context.rootState.DPOS.dposUser
+  const account = dposUser!.loomAddress.toString()
   const amount = await context.state.packsContract[payload].methods
           .balanceOf(account)
           .call({ from: account })
@@ -84,7 +82,8 @@ async function transferPacks(
     packType: string,
     amount: number,
     destinationDappchainAddress: string}) {
-  const account = context.rootState.DPOS.account
+  const dposUser = await context.rootState.DPOS.dposUser
+  const account = dposUser!.loomAddress.toString()
   const result = await context.state.packsContract[payload.packType].methods
           .transfer(payload.destinationDappchainAddress, payload.amount)
           .send({ from: account })
@@ -97,7 +96,8 @@ async function transferCards(
     cardIds: string[],
     amounts: number[],
     destinationDappchainAddress: string}) {
-  const account = context.rootState.DPOS.account
+  const dposUser = await context.rootState.DPOS.dposUser
+  const account = dposUser!.loomAddress.toString()
   const result = await context.state.cardContract!.methods.batchTransferFrom(
     account,
     payload.destinationDappchainAddress,

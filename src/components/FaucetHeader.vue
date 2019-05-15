@@ -24,8 +24,8 @@
                 <span class="mr-1">Events</span><fa :icon="['far', 'bell']" fixed-width />
               </template>
               <b-dropdown-item v-for="(event, idx) in eventQue" :key="'event' + idx">
-                <h5>{{event.type}}</h5>
-                <h5>{{event.payload.amount || 0}}</h5>
+                <span>Event: </span><strong>{{event.type}}</strong>
+                <span>Amount: </span><strong>{{event.payload.amount || 0}}</strong>
               </b-dropdown-item>
             </b-dropdown>            
             <LangSwitcher/>

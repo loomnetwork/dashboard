@@ -7,17 +7,19 @@ import { DPOSUserV3 } from "loom-js";
 import { ERC20Gateway_v2 } from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2";
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20";
 import { DashboardState } from "@/types";
+import { sleep } from '../utils'
+import { ConsolidateDelegationsRequest } from "loom-js/dist/proto/dposv3_pb";
 
 const debug = Debug("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<DashboardState>) {
 
     store.subscribeAction({
-        after(action){
+        async after(action) {
             if(action.type !== "DPOS/getTimeUntilElectionsAsync") {
                 return
             }
-            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle,10)
+            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle, 10)
             debug("timeUntilElectionCycle", seconds)
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
@@ -25,8 +27,13 @@ export function dposStorePlugin(store: Store<DashboardState>) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            debug("setTimeout seconds",Math.max(seconds,1) * 1000)
-            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
+            const electionRunningTime = store.state.DappChain.networkId === "plasma" ? (1000 * 60 * 2) : (1000 * 10)
+            debug("===============>", Math.max(seconds, 1) * 1000)
+            await sleep(Math.max(seconds, 1) * 1000)
+            store.commit("DPOS/setElectionIsRunning", true)
+            await sleep(electionRunningTime)
+            store.commit("DPOS/setElectionIsRunning", false)
+            store.dispatch("DPOS/getTimeUntilElectionsAsync")
         }
     })
 

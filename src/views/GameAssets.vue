@@ -28,6 +28,25 @@
                 :items="seCards"
                 :fields="cardTableFields"
               >
+                <template slot="reciever" slot-scope="row">
+                  <b-input
+                    type="text"
+                    v-model="row.item.reciever"
+                    class="d-block"
+                    placeholder="dappchain address"
+                  />
+                </template>
+                <template slot="packAmountTransfer" slot-scope="row">
+                  <b-input
+                    type="number"
+                    v-model="row.item.packAmountTransfer"
+                    class="d-block"
+                    placeholder="amount"
+                  />
+                </template>
+                <template slot="transfer" slot-scope="row">
+                  <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+                </template>
               </b-table>
             </b-tab>
             <b-tab title="Backer-Edition">
@@ -157,7 +176,13 @@ export default class GameAssets extends Vue {
     {
       key: "amount",
       sortable: true
-    }
+    },
+    {
+      key: 'packAmountTransfer',
+      label: 'Amount to transfer'
+    },
+    { key: "reciever", label: "Reciever" },
+    { key: "transfer", label: "Transfer" },
   ]
 
   async mounted() {

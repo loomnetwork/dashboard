@@ -4,7 +4,7 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import { PlasmaState } from "./types"
+import { PlasmaState, CardDetail } from "./types"
 import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types";
 import * as getters from "./getters"
@@ -52,18 +52,18 @@ export const plasmaModule = {
 
 async function checkCardBalance(context: ActionContext) {
     const dposUser = await context.rootState.DPOS.dposUser
-    console.log("dposUser from checkCardBalance...............",dposUser);
     const account = dposUser!.loomAddress.local.toString()
     const tokens = await context.state.cardContract!.methods
                 .tokensOwned(account)
                 .call({ from: account })
-    const cards = context.state.cardBalance
+    let cards: CardDetail[] = []
     tokens.indexes.forEach((id: string, i: number) => {
-      let card = getCardByTokenId(id) 
+      let card = getCardByTokenId(id)
       card.amount = parseInt(tokens.balances[i], 10)
       cards.push(card)
     })
     plasmaModule.setCardBalance(cards)
+
 }
 
 async function checkPackBalance(context: ActionContext, payload: string) {

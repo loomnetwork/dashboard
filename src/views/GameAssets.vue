@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         GAME
-        <b-card>
+        <b-card class="mb-5">
           My Account
           <b-row>
             <b-col>Ethereum:</b-col>
@@ -15,7 +15,7 @@
           </b-row>
         </b-card>
 
-        <b-card no-body>
+        <b-card no-body class="mb-5">
           <b-card-title>My Game Assets</b-card-title>
           <b-tabs card>
             <b-tab title="Standard-Edition">
@@ -134,15 +134,16 @@ import { plasmaModule } from "../store/plasma"
 import { CardDetail } from "../store/plasma/types"
 import { dposModule } from '../store/dpos';
 import { dposStorePlugin } from '../store/dposPlugin';
+import { DashboardState } from '../types';
+import { DPOSUserV3 } from 'loom-js';
 
 @Component({
 })
 
 export default class GameAssets extends Vue {
-  cardBalance = plasmaModule.state.cardBalance
+  dposUser: DPOSUserV3 | null = null
   checkCardBalance = plasmaModule.checkCardBalance
-  ethAccount = "0x5237652768382879213973297821"
-  dappchainAccount = "0x9824832894320123911231"
+  dappchainAccount = ""
   etherScanDomain = "https://etherscan.io" // TODO: set to env variable
   blockExplorerDomain = "https://blockexplorer.loomx.io/" // TODO: set to env variable
   cards: CardDetail[] = []
@@ -185,10 +186,24 @@ export default class GameAssets extends Vue {
     { key: "transfer", label: "Transfer" },
   ]
 
+  get state():DashboardState {
+    return this.$store.state
+  }
+
+  get cardBalance() {
+    return this.state.plasma.cardBalance
+  }
+
+  get ethAccount(){
+    return this.state.DPOS.currentMetamaskAddress
+  }
+
+
   async mounted() {
+    this.dposUser = await this.state.DPOS.dposUser
+    this.dappchainAccount = this.dposUser!.loomAddress.local.toString()
     await this.checkCardBalance()
     this.cards = await this.cardBalance
-    console.log(this.cards)
   }
 
   gotoEtherScan() {

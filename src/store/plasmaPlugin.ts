@@ -15,7 +15,7 @@ function ISetupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return []
 }
 
-const PACKS_NAME = [
+export const PACKS_NAME = [
     "booster",
     "super",
     "air",

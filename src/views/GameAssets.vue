@@ -4,21 +4,17 @@
           <b-card-title>My Account</b-card-title>
           <b-row>
             <b-col cols="3">Ethereum:</b-col>
-            <b-col cols="6"><b-form-input v-model="ethAccount"></b-form-input></b-col>
+            <b-col cols="6"><h6 class="highlight">{{ethAccount}}</h6></b-col>
             <b-col cols="3"><router-link to="gotoEtherScan">Show in EtherScan </router-link></b-col>
           </b-row>
           <b-row>
             <b-col cols="3">Loom:</b-col>
-            <b-col cols="6"><b-form-input v-model="dappchainAccount"></b-form-input></b-col>
+            <b-col cols="6"><h6 class="highlight">{{dappchainAccount}}</h6></b-col>
             <b-col cols="3"><router-link to="gotoBlockExplorer">Show in Block Explorer</router-link></b-col>
           </b-row>
         </b-card>
-
-        <b-card class="mb-5">
-          <b-card-title>My Game Assets</b-card-title>
-          <Cards/>
-        </b-card>
-
+        <Packs/>
+        <Cards/>
     </div>
 </template>
 
@@ -29,10 +25,12 @@ import { dposModule } from "../store/dpos"
 import { DashboardState } from "../types"
 import { DPOSUserV3 } from "loom-js"
 import Cards from "@/components/game-asset/Cards.vue"
+import Packs from "@/components/game-asset/Packs.vue"
 
 @Component({
   components: {
     Cards,
+    Packs,
   },
 })
 
@@ -42,19 +40,17 @@ export default class GameAssets extends Vue {
   etherScanDomain = "https://etherscan.io" // TODO: set to env variable
   blockExplorerDomain = "https://blockexplorer.loomx.io/" // TODO: set to env variable
 
-  get state():DashboardState {
+  get state(): DashboardState {
     return this.$store.state
   }
 
-  get ethAccount(){
+  get ethAccount() {
     return this.state.DPOS.currentMetamaskAddress
   }
-
 
   async mounted() {
     this.dposUser = await this.state.DPOS.dposUser
     this.dappchainAccount = this.dposUser!.loomAddress.local.toString()
-  
   }
 
   gotoEtherScan() {

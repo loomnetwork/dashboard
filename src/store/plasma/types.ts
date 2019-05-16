@@ -18,9 +18,12 @@ export interface PlasmaState {
     },
     cardContract: MigratedZBGCard | null,
     cardBalance: CardDetail[],
-    packBalance: {
-        [packType: string]: number,
-    }
+    packBalance: PackDetail[],
+}
+
+export interface PackDetail {
+    type: string,
+    amount: number,
 }
 
 export interface CardDetail {

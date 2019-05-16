@@ -10,6 +10,7 @@
         "toxic" : "0x99a3378185f7b7b6aa9f6632e8ca0514ec01247d",
         "water" : "0x9ed8380b47feef8945251ded45f0ba4f1b72f522",
         "super" : "0x60ab575af210cc952999976854e938447e919871",
+        "binance" : "0x0fd6e6405b2cef67447b11630d1c9e0ae03e39dc",
         "tron" : "0x03a66793dfbec8ed27b6ef96fd3215a1b4f35093"
     }, 
     "asia1": {
@@ -23,6 +24,7 @@
         "toxic" : "0x99a3378185f7b7b6aa9f6632e8ca0514ec01247d",
         "water" : "0x9ed8380b47feef8945251ded45f0ba4f1b72f522",
         "super" : "0x60ab575af210cc952999976854e938447e919871",
+        "binance" : "0x0fd6e6405b2cef67447b11630d1c9e0ae03e39dc",
         "tron" : "0x03a66793dfbec8ed27b6ef96fd3215a1b4f35093"
     },
     "us1": {
@@ -36,6 +38,7 @@
         "toxic" : "0x750ffb9928d9fb1dd3b8b7eda47c130b410dde72",
         "water" : "0x4f5b70188f14b6d80e8bf0002eca2ab2863ece5e",
         "super" : "0xd05b46ffb3828218d5b7d9b1225575477c9e79d7",
+        "binance" : "0x837da2498b31d1654d51c1871b10fc4e3d192f02",
         "tron" : "0x3d9cb3c4af539f88f3fdd863621758be4917ef05"
     },
     "plasma": {
@@ -49,6 +52,7 @@
         "toxic" : "0x7aef265be0f7aac7c2fe0343d328afbc4c1253c2",
         "water" : "0xb8357e4deb282fb20bc6da6a18f21f2da546149b",
         "super" : "0x2b44d4f3b086d4b752d762ec2cf1ab7a0b3bfe44",
+        "binance" : "0x554e93eca9f192a07d5e1337b0d85a12abceb803",
         "tron" : "0x90df68c6745ee7664ac35eae18d98bd0cf930cfb"
     }
 }

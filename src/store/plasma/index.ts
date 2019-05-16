@@ -4,7 +4,7 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import { PlasmaState, CardDetail } from "./types"
+import { PlasmaState, CardDetail, PackDetail } from "./types"
 import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types";
 import * as getters from "./getters"
@@ -12,6 +12,7 @@ import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
 import { DashboardState } from '@/types';
 import { getCardByTokenId } from "@/utils"
+import { PACKS_NAME } from '../plasmaPlugin';
 
 const initialState: PlasmaState = {
     // not state but...
@@ -24,7 +25,7 @@ const initialState: PlasmaState = {
     packsContract: {},
     cardContract: null,
     cardBalance: [],
-    packBalance: {},
+    packBalance: [],
 }
 
 const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
@@ -66,13 +67,18 @@ async function checkCardBalance(context: ActionContext) {
 
 }
 
-async function checkPackBalance(context: ActionContext, payload: string) {
+async function checkPackBalance(context: ActionContext) {
   const dposUser = await context.rootState.DPOS.dposUser
   const account = dposUser!.loomAddress.local.toString()
-  const amount = await context.state.packsContract[payload].methods
-          .balanceOf(account)
-          .call({ from: account })
-  plasmaModule.setPackBalance({packType: payload, balance: amount})
+  let packs: PackDetail[] = []
+  PACKS_NAME.forEach(async type => {
+    const amount = await context.state.packsContract[type].methods
+            .balanceOf(account)
+            .call({ from: account })
+    let pack =  {type, amount}
+    packs.push(pack)
+  })
+  plasmaModule.setPackBalance(packs)
 }
 
 async function transferPacks(

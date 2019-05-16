@@ -1,4 +1,6 @@
 <template>
+ <b-card class="mb-5">
+  <b-card-title>My Cards</b-card-title>
   <b-tabs card>
     <b-tab title="Standard-Edition">
       <b-card-text>standard-edition amount: {{ standardEditionAmount }}</b-card-text>
@@ -99,6 +101,7 @@
       </b-table>
     </b-tab>
   </b-tabs>
+ </b-card>
 </template>
 
 <script lang="ts">

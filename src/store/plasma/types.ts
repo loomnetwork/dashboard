@@ -17,13 +17,21 @@ export interface PlasmaState {
         [name: string]: Contract,
     },
     cardContract: MigratedZBGCard | null,
-    cardBalance: CardBalance[],
+    cardBalance: CardDetail[],
     packBalance: {
         [packType: string]: number,
     }
 }
 
-export interface CardBalance {
+export interface CardDetail {
     id: string
     amount: number
+    display_name: string,
+    image: string
+    title: string
+    variant: string
+    variation: string
+    mould_type: string
+    element: string
+    originalID: string
 }

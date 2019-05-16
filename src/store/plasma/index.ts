@@ -11,6 +11,7 @@ import * as getters from "./getters"
 import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
 import { DashboardState } from '@/types';
+import { getCardByTokenId } from "@/utils"
 
 const initialState: PlasmaState = {
     // not state but...
@@ -51,20 +52,23 @@ export const plasmaModule = {
 
 async function checkCardBalance(context: ActionContext) {
     const dposUser = await context.rootState.DPOS.dposUser
-    const account = dposUser!.loomAddress.toString()
+    console.log("dposUser from checkCardBalance...............",dposUser);
+    const account = dposUser!.loomAddress.local.toString()
     const tokens = await context.state.cardContract!.methods
                 .tokensOwned(account)
                 .call({ from: account })
     const cards = context.state.cardBalance
     tokens.indexes.forEach((id: string, i: number) => {
-      cards.push({id, amount: parseInt(tokens.balances[i], 10)})
+      let card = getCardByTokenId(id) 
+      card.amount = parseInt(tokens.balances[i], 10)
+      cards.push(card)
     })
     plasmaModule.setCardBalance(cards)
 }
 
 async function checkPackBalance(context: ActionContext, payload: string) {
   const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.toString()
+  const account = dposUser!.loomAddress.local.toString()
   const amount = await context.state.packsContract[payload].methods
           .balanceOf(account)
           .call({ from: account })
@@ -78,7 +82,7 @@ async function transferPacks(
     amount: number,
     destinationDappchainAddress: string}) {
   const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.toString()
+  const account = dposUser!.loomAddress.local.toString()
   const result = await context.state.packsContract[payload.packType].methods
           .transfer(payload.destinationDappchainAddress, payload.amount)
           .send({ from: account })
@@ -92,7 +96,7 @@ async function transferCards(
     amounts: number[],
     destinationDappchainAddress: string}) {
   const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.toString()
+  const account = dposUser!.loomAddress.local.toString()
   const result = await context.state.cardContract!.methods.batchTransferFrom(
     account,
     payload.destinationDappchainAddress,

@@ -1,4 +1,4 @@
-import { PlasmaState, CardBalance } from './types';
+import { PlasmaState, CardDetail } from './types';
 import Contract from 'web3/eth/contract';
 import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
 
@@ -10,7 +10,7 @@ export function setCardContract(state: PlasmaState, payload: MigratedZBGCard) {
     state.cardContract = payload
 }
 
-export function setCardBalance(state: PlasmaState, payload: CardBalance[]) {
+export function setCardBalance(state: PlasmaState, payload: CardDetail[]) {
     state.cardBalance = payload
 }
 

@@ -8,7 +8,7 @@ import {
   } from "loom-js"
 import { noop } from 'vue-class-component/lib/util';
 import { plasmaModule } from './plasma';
-import packAddresses from "@/ZBGPackAddresses.json"
+import packAddresses from "@/data/ZBGPackAddresses.json"
 import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
 
 function ISetupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
@@ -49,7 +49,6 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             }
             // @ts-ignore
             plasmaModule.setCardContract(cardInstance)
-            plasmaModule.checkCardBalance()
         },
     )
 }

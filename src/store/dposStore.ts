@@ -36,7 +36,7 @@ const defaultState = () => {
     showSidebar: true,
     connectedToMetamask: false,
     web3: undefined,
-    currentMetamaskAddress: undefined,
+    currentMetamaskAddress: undefined, 
     history: null,
     withdrawLimit: DAILY_WITHDRAW_LIMIT,
     validators: [],

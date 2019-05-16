@@ -2,16 +2,19 @@
   <div>
     <div class="container">
       <div class="wallet-list">
-        <div class="wallet-item" v-for="(wallet, index) in wallets" :key="index" 
-        @click="onSelectWallet(index)" :class="{ 'wallet-active': activeIndex === index}">
-          <img :src="wallet.img" />
-          <h2>{{ `${wallet.balance} ${wallet.currency}` }}</h2>
+        <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
+        
+        <div class="wallet-item" v-for="(wallet, index) in filteredToken" :key="index" @click="onSelectWallet(wallet)" :class="{ 'wallet-active': activeWallet === wallet}">
+          <!-- <img :src="wallet.img" /> -->
+          <h2>{{ `${wallet.balance} ${wallet.symbol}` }}</h2>
           <div class="mask"></div>
         </div>
+
       </div>
       <div class="wallet-detail">
-        <h2> {{ activeWallet.name }} </h2>
+        <h2>{{ `${balance} ${activeWallet.symbol}` }}</h2>
         <p>{{ activeWallet.address }}</p>
+          
         <div class="buttons">
           <div class="button" @click="setShowDepositForm(true)">Deposit</div>
           <div class="button" @click="setShowDepositForm(true)">Withdraw</div>
@@ -29,6 +32,13 @@ import LoomIcon from '@/components/LoomIcon'
 import DepositForm from '@/components/gateway/DepositForm'
 import { Component } from 'vue-property-decorator'
 import { createNamespacedHelpers } from 'vuex'
+import { CLIENT_RENEG_LIMIT } from 'tls';
+import { close } from 'fs';
+import { filter } from 'rxjs/operators';
+import { get } from 'http';
+import { toBigNumber, getValueOfUnit, isBigNumber } from '../utils'
+import { fileURLToPath } from 'url';
+
 
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -44,7 +54,11 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapActions([
       'getMetamaskLoomBalance',
-      'getPendingWithdrawalReceipt'
+      'getPendingWithdrawalReceipt',
+      'getDappchainLoomBalance',
+      'getTokensDetails',
+      'checkTokenBalance',
+      'updateCurrentToken'
     ])
   },
   computed: {
@@ -53,49 +67,80 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DappChainStore.mapState([
       'dposUser',
-      'web3'
+      'web3',
+      'tokenDetails',
+      'dappchainBalance',
+      'ethCoinInstance'
     ])
+  // },
+  // watch: {
+  //   currentTokenBalance: function(oldValue, newValue) {
+  //     if (newValue && this.balanceIntervalHandler) {
+  //       clearInterval(this.balanceIntervalHandler)
+  //       this.setDepositState(2)
+  //     }
+  //   }
   }
 })
 
 export default class DepositWithdraw extends Vue {
   currentAllowance = 0
-  wallets = [
-    {
-      name: 'Loom',
-      address: '',
-      balance: null,
-      currency: 'LOOM',
-      img: require('../assets/logo.png')
-    },
-    {
-      name: 'Ethereum',
-      address: '',
-      balance: null,
-      currency: 'ETH',
-      img: require('../assets/ethereum-icon.svg')
-    }
-  ]
+  // currentUnit = 'ETH'
   
+  filteredToken = []
+    
   activeWallet = null
-  activeIndex = 0
+  tokens = []
+  inputFilter = ''
 
-  onSelectWallet (index) {
-    this.activeWallet = this.wallets[index]
-    this.activeIndex = index
-  }
-  created () {
-    this.activeWallet = this.wallets[0]
-  }
   async mounted () {
     const dposUser = await this.dposUser
-    this.wallets[0].address = dposUser.loomAddress.local.toString() // set loomAddress to wallet
-    this.wallets[1].address = dposUser.ethAddress // set ethAddress to wallet
 
-    Promise.all([this.web3.eth.getBalance(dposUser.ethAddress)]).then(result => {
-      this.wallets[0].balance = this.userBalance.loomBalance // Loom Plasmachain
-      this.wallets[1].balance = parseFloat(result[0]).toFixed(2)
-    })
+    Promise.all([this.getTokensDetails()])
+    .then(result => {
+      const [allToken] = result
+      const balance = parseFloat(this.dappchainBalance*Math.pow(10,18)).toFixed(2) //Eth plasma
+      const ethToken = {
+        filename: "Ethereum",
+        name: "ETH",
+        decimal: 18,
+        symbol: "ETH",
+        address: dposUser.ethAddress, // set ethAddress to wallet
+        balance: balance
+      }
+      this.filteredToken = [ethToken, ...allToken]
+      this.activeWallet = this.filteredToken[0]
+      console.log('filtered: ', this.ethCoinInstance.balance);
+    }) 
+
+    await this.unitChangeHandler('ETH')
+  }
+  
+  // created () {
+  //   this.activeWallet = this.filteredToken[0]
+  //   console.logthis.activeWallet;
+  // }
+  async onSelectWallet (wallet) {
+      this.activeWallet = wallet
+      // this.balanceIntervalHandler = setInterval(() => this.checkTokenBalance(), 100000)
+      await this.unitChangeHandler(wallet.symbol)
+  }
+  filterToken(){
+    if(this.inputFilter != null) {
+      let filterToken = this.tokens.filter(token => {
+        return token.symbol.includes(this.inputFilter.toUpperCase()) ? token : null
+      })
+      this.filteredToken = filterToken
+    } else { this.filteredToken.push(this.getTokensDetails()) }
+  }
+  get balance() {
+        let returnValue = toBigNumber(this.currentTokenBalance).dividedBy(getValueOfUnit('ether'))
+        return isBigNumber(this.currentTokenBalance)
+          ? returnValue.toFixed(6)
+          : returnValue.toFixed(6).toString(10)
+  }
+  async unitChangeHandler(symbol) {
+    await this.updateCurrentToken({ symbol: symbol })
   }
 }
 </script>

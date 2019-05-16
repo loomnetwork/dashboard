@@ -13,17 +13,24 @@ import { getDomainType, formatToCrypto } from '../utils'
 import GatewayJSON from '../contracts/Gateway.json'
 import Debug from "debug"
 
+import token from '../data/topTokensSymbol.json'
+import BinanceTokenJSON from '../contracts/BinanceToken.json'
+
 Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
 
 import BN from 'bn.js'
-import { DPOS3 } from 'loom-js/dist/contracts';
+import { DPOS3, EthCoin } from 'loom-js/dist/contracts';
 import { ActionTree } from 'vuex';
 import { DashboardState } from '@/types';
+import { dispatch } from 'rxjs/internal/observable/pairs';
+import { State } from 'loom-js/dist/proto/dposv3_pb';
+
 
 const WEI_TOKEN = new BN(""+10**18)
 
 const DPOS = Contracts.DPOS3
+
 let LOOM_ADDRESS = ""
 let GW_ADDRESS = ""
 
@@ -54,14 +61,12 @@ const getCurrentChain = (chainUrls) => {
 const createClient = (state, privateKeyString) => {
 
   const networkConfig = state.chainUrls[state.networkId]
-    
   const { client } = createDefaultClient(privateKeyString, networkConfig["dappchainEndpoint"], networkConfig["chainId"])
   client.on('error', msg => {
     console.error('PlasmaChain connection error', msg)
   })
 
   return client
-
 }
 
 /**
@@ -108,6 +113,13 @@ const defaultState = () => {
     GatewayInstance: undefined,
     dposUser: undefined,
     dpos3: undefined,
+
+    dappchainBalance: undefined,
+    ethCoinInstance: undefined,
+
+    tokenDetails: undefined,
+    currentTokenBalance: undefined,
+
     mappingStatus: undefined,
     mappingError: undefined,
     metamaskStatus: undefined,
@@ -153,6 +165,7 @@ export default {
     },
     setWeb3(state, payload) {
       state.web3 = payload
+      console.log('web3"s here', state.web3.eth);
     },
     setMappingStatus(state, payload) {
       state.mappingStatus = payload
@@ -195,13 +208,36 @@ export default {
     },
     setCurrentChain(state, payload) {
       state.currentChain = payload
+    },
+    setDappchainBalance(state, payload){
+      console.log("setting dappchain balance", payload)
+      state.dappchainBalance[payload.keyBalance] = payload.balance
+    },
+    setEthCoinInstance(state, payload){
+      state.ethCoinInstance = payload
+    },
+    setTokenDetails(state, payload){
+      state.tokenDetails = payload
+    },
+    setCurrentTokenInstance: (state, payload) => {
+      state.currentTokenInstance = payload
+    },
+    setCurrentTokenBalance(state, payload){
+      state.currentTokenBalance = payload
     }
+
   },
   actions: {
+    getTokensDetails({ state, commit }) {
+      const tokens = token.tokens
+      commit("setTokenDetails", tokens)
+      console.log("token: ", tokens)
+      return tokens
+    },
     addChainUrl({ state, commit }, payload) {
       if(state.networkId === payload.id) return
       const chains = Object.keys(state.chainUrls)
-      const existingId = chains.indexOf(payload.id)    
+      const existingId = chains.indexOf(payload.id)
       if(existingId > -1) {
         commit("setNetworkId", payload.id)
         commit("setCurrentChain", state.chainUrls[payload.id])
@@ -237,6 +273,7 @@ export default {
         return 0
       }
     },
+
     async initDposUser({ state, rootState, getters, dispatch, commit }) {
       console.log("initdpos user")
       if (!rootState.DPOS.web3) {    
@@ -348,10 +385,13 @@ export default {
       
     },
     async getDappchainLoomBalance({ rootState, state, commit }) {
+      
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
       const user = await state.dposUser
+      console.log(user);
+      
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
       const balance = formatToCrypto(loomWei.toString())
@@ -359,6 +399,16 @@ export default {
       let loomBalance = parseFloat(balance).toFixed(2)
       commit("DPOS/setUserBalance", Object.assign(userBalance,{loomBalance}), {root:true})
       return loomBalance
+    },
+    async checkDappchainEthBalance({ state, commit }) {
+      try {
+        let address = state.localAddress
+        let balance = await state.ethCoinInstance.getBalanceOfAsync(address)
+        console.log('baalnce; ',balance);
+        commit('setDappchainBalance', balance.toString())
+      } catch (e) {
+        commit('setDappchainBalance', '0')
+      }
     },
     async delegateAsync({ state, commit }, payload) {
       if (!state.dposUser) {
@@ -635,47 +685,102 @@ export default {
         throw Error(err.message)       
       }
     },
-    async init({ state, commit }) {
+    async updateCurrentToken({ rootState, state, commit, dispatch }, payload) {
+      const tokenSymbol = payload.symbol.toUpperCase()
 
-      let privateKey
-      let privateKeyString = sessionStorage.getItem('privatekey')
+      if (!state.web3) await dispatch('init')
+       // await dispatch('PackSaleStore/updateDefaultPayments', null, { root: true })
+      const tokens = token.tokens
 
-      if (!privateKeyString) {
-        // commit('setErrorMsg', 'Error, Please logout and login again', { root: true })
-        return
+      try {
+        if (tokenSymbol === 'ETH') {
+          await dispatch('checkDappchainEthBalance')
+          commit('setCurrentTokenInstance', state.ethCoinInstance)
+          commit('setCurrentTokenBalance', state.dappchainBalance)
+        } else {
+          let tokenData = tokens.find(token => { return token.symbol === tokenSymbol })
+          console.log('tokens: ',tokenData);
+          let tokenAddress =  tokenData.address.stage
+          let mainnetAddress = tokenData.address
+          let tokenInstance = new state.web3.eth.Contract(
+            BinanceTokenJSON.abi,
+            tokenAddress
+            )
+            console.log(tokenInstance);
+            commit('setCurrentTokenInstance', tokenInstance)
+            // commit('setCurrentTokenMainnetAddress', mainnetAddress)
+            
+          }
+          // commit('setCurrentTokenSymbol', tokenSymbol)
+
+          await dispatch('checkTokenBalance')
+      } catch (error) {
+        throw Error(`Can't use ${tokenSymbol} token, ${error}`)
       }
-
-      privateKey = CryptoUtils.B64ToUint8Array(privateKeyString)
-      let account
-
-      const networkConfig = state.chainUrls[state.networkId]
-
-      let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-      let client
-      if (networkConfig.websockt) {
-        client = new Client(networkConfig.network, networkConfig.websockt, networkConfig.queryws)
-      } else {
-        client = new Client(networkConfig.network,
-          createJSONRPCClient({
-            protocols: [{ url: networkConfig.rpc }]
-          }),
-          networkConfig.queryws
-        )
+    },
+    async checkTokenBalance({ rootState, state, commit, dispatch }) {
+      try {
+        let balance
+        if (state.currentTokenSymbol === 'ETH') {
+          console.log("here's eth");
+          await dispatch('checkDappchainEthBalance')
+          balance = state.dappchainBalance
+        } else if(state.currentTokenSymbol =='LOOM') {
+          console.log("here's loom");
+          let loomBalance = await dispatch('getDappchainLoomBalance')
+          balance = loomBalance
+        } else {
+          console.log("else")
+          const user = rootState.DappChain
+          const user2 = await rootState.DappChain.dposUser
+          debugger
+          const addr = user2!.loomAddress.local.toString()
+          debugger
+          balance = await state.currentTokenInstance.methods
+            .balanceOf(addr).call({ from: addr})
+          // balance = await state.currentTokenInstance.methods
+          //   .balanceOf('0x9d0bd7f94e9e5c72c50fde64008b9409407f43db', { from: '0x9d0bd7f94e9e5c72c50fde64008b9409407f43db' })
+          console.log('balance: ', balance);
+        }
+        commit('setCurrentTokenBalance', balance.toString())
+      } catch (error) {
+        commit('setCurrentTokenBalance', 0)
+        console.log("errorrrrr", error);
+        
+        throw error
       }
-      client.txMiddleware = [
-        new NonceTxMiddleware(publicKey, client),
-        new SignedTxMiddleware(privateKey)
-      ]
-
-      account = LocalAddress.fromPublicKey(publicKey).toString()
-      let localAddress = new Address(client.chainId, LocalAddress.fromPublicKey(publicKey))
+    },
+    
+    async init({ state, commit, dispatch }, payload) {
+      if(!state.dposUser) return
+      const user = await state.dposUser
+      const client = user.client
+      const localAddress = user.loomAddress
+      const account = localAddress.local.toString()
 
       commit('updateState', {
         account,
         localAddress,
-        dAppChainClient: client,
+        dAppChainClient: client
+      })
+
+      const initHandlers = {
+        ethCoin: async () => {
+          if (state.ethCoinInstance) return
+          try {          
+            let ethCoinInstance = await Contracts.EthCoin.createAsync(state.dAppChainClient, state.localAddress)
+            console.log(ethCoinInstance);
+            commit('setEthCoinInstance', ethCoinInstance)
+          } catch (error) {
+          }
+        }
+      }
+
+      payload.contractNames.forEach(async contractName => {
+        await initHandlers[contractName]()
       })
     },
+
     showMsg({ commit }, payload) {
       const msgType = payload.type === "error" ? "setErrorMsg" : "setSuccessMsg";
       commit(msgType, payload.msg, { root: true })

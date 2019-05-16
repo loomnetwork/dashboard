@@ -91,7 +91,8 @@ const dappChainStore = createNamespacedHelpers('DappChain')
     ...dappChainStore.mapActions([
       'ensureIdentityMappingExists',
       'init',
-      'registerWeb3'
+      'registerWeb3',
+      'ethCoin'
     ]),
     },
   computed: {

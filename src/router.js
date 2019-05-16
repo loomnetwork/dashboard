@@ -117,7 +117,8 @@ const router = new VueRouter({
         name: 'depositeWithdraw',
         component: DepositWithdraw,
         meta: {
-          requireLogIn: true
+          requireLogIn: true,
+          requireLoomChain : ['ethCoin']
         }
       },
       {
@@ -164,6 +165,17 @@ const router = new VueRouter({
       y: 0
     }
   }
+  
+
+
+})
+router.beforeEach(async (to, from, next) => {
+
+  if (to.meta.requireLoomChain && store.state.userIsLoggedIn) {
+    await store.dispatch('DappChain/init', { contractNames: to.meta.requireLoomChain })
+  }
+
+  next()
 })
 
 export default router

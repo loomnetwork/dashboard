@@ -1,21 +1,20 @@
 <template>
     <div class="container">
-        GAME
         <b-card class="mb-5">
-          My Account
+          <b-card-title>My Account</b-card-title>
           <b-row>
-            <b-col>Ethereum:</b-col>
-            <b-col><b-form-input v-model="ethAccount"></b-form-input></b-col>
-            <router-link to="gotoEtherScan">Show in EtherScan </router-link>
+            <b-col cols="3">Ethereum:</b-col>
+            <b-col cols="6"><b-form-input v-model="ethAccount"></b-form-input></b-col>
+            <b-col cols="3"><router-link to="gotoEtherScan">Show in EtherScan </router-link></b-col>
           </b-row>
           <b-row>
-            <b-col>Loom:</b-col>
-            <b-col><b-form-input v-model="dappchainAccount"></b-form-input></b-col>
-            <router-link to="gotoBlockExplorer">Show in Block Explorer</router-link>
+            <b-col cols="3">Loom:</b-col>
+            <b-col cols="6"><b-form-input v-model="dappchainAccount"></b-form-input></b-col>
+            <b-col cols="3"><router-link to="gotoBlockExplorer">Show in Block Explorer</router-link></b-col>
           </b-row>
         </b-card>
 
-        <b-card no-body class="mb-5">
+        <b-card class="mb-5">
           <b-card-title>My Game Assets</b-card-title>
           <b-tabs card>
             <b-tab title="Standard-Edition">
@@ -28,25 +27,9 @@
                 :items="seCards"
                 :fields="cardTableFields"
               >
-                <template slot="reciever" slot-scope="row">
-                  <b-input
-                    type="text"
-                    v-model="row.item.reciever"
-                    class="d-block"
-                    placeholder="dappchain address"
-                  />
-                </template>
-                <template slot="packAmountTransfer" slot-scope="row">
-                  <b-input
-                    type="number"
-                    v-model="row.item.packAmountTransfer"
-                    class="d-block"
-                    placeholder="amount"
-                  />
-                </template>
-                <template slot="transfer" slot-scope="row">
-                  <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
-                </template>
+              <template slot="transfer" slot-scope="row">
+                <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+              </template>
               </b-table>
             </b-tab>
             <b-tab title="Backer-Edition">
@@ -59,6 +42,9 @@
                 :items="beCards"
                 :fields="cardTableFields"
               >
+              <template slot="transfer" slot-scope="row">
+                <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+              </template>
               </b-table>
             </b-tab>
             <b-tab title="Limited-Edition">
@@ -71,6 +57,9 @@
                 :items="leCards"
                 :fields="cardTableFields"
               >
+              <template slot="transfer" slot-scope="row">
+                <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+              </template>
               </b-table>
             </b-tab>
             <b-tab title="Binance-Edition">
@@ -83,6 +72,9 @@
                 :items="bneCards"
                 :fields="cardTableFields"
               >
+              <template slot="transfer" slot-scope="row">
+                <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+              </template>
               </b-table>
             </b-tab>
             <b-tab title="Tron-Edition">
@@ -95,6 +87,9 @@
                 :items="teCards"
                 :fields="cardTableFields"
               >
+              <template slot="transfer" slot-scope="row">
+                <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+              </template>
               </b-table>
             </b-tab>
             <b-tab title="Summary">
@@ -116,9 +111,14 @@
                 <b-col>
                   <b-card-text> tron-edition amount: {{ tronEditionAmount }} </b-card-text>
                 </b-col>
-                <b-col> </b-col>
+                <b-col> 
+                  <b-card-text> total amount: {{ userCardsAmount }} </b-card-text>
+                </b-col>
               </b-row>
               <b-table striped bordered hover :items="cards" :fields="cardTableFields">
+                <template slot="transfer" slot-scope="row">
+                  <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+                </template>
               </b-table>
             </b-tab>
           </b-tabs>
@@ -179,11 +179,8 @@ export default class GameAssets extends Vue {
       sortable: true
     },
     {
-      key: 'packAmountTransfer',
-      label: 'Amount to transfer'
-    },
-    { key: "reciever", label: "Reciever" },
-    { key: "transfer", label: "Transfer" },
+      key: "transfer",
+      label: "Transfer" },
   ]
 
   get state():DashboardState {

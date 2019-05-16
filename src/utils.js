@@ -88,7 +88,7 @@ export const formatToCrypto = (amount) => {
   // show gwei if less than one
   return conversion.lt(1) && conversion.gt(0) ?
     conversion.toFixed(9) :
-    conversion.toFixed(3)
+    conversion.toFixed(2)
 }
 
 export const DOMAIN_NETWORK_ID = {

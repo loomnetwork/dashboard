@@ -107,14 +107,17 @@
                        header-tag="header"
                        class="d-flex justify-content-between p-2"
                        role="tab">
-          <span>{{delegation["Name"]}}</span>
+          <div>
+            <b-spinner v-if="delegation['State'] !== 'Bonded'" small variant="primary"  style="margin-right:16px;"></b-spinner>
+            <span>{{delegation["Name"]}}</span>
+          </div>
           <strong>{{delegation["Amount"]}}</strong>
         </b-card-header>
         <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
-          <b-card-body>
+          <b-card-body @click="gotoValidator(delegation.Name)">
             <ul>
               <li v-if="delegation['Update Amount'] !== '0.00'">Update amount: {{delegation["Update Amount"]}}</li>
-              <li>Unlock time: {{delegation["Locktime"]}}</li>
+              <li v-if="!delegation.unlocked">Unlock time: {{delegation["Locktime"]}}</li>
               <li>State: {{delegation["State"]}}</li>
             </ul>
           </b-card-body>
@@ -317,11 +320,12 @@ export default class MobileAccount extends Vue {
     .map((delegation) => {
       let candidate = candidates.find(c => c.address === delegation.validator.local.toString())
       return { 
-              "Name": candidate.name,
-              "Amount": `${formatToCrypto(delegation.amount)}`,
-              "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-              "Locktime": `${new Date(delegation.lockTime * 1000)}`,
-              "State": `${this.states[delegation.state]}`,
+              Name: candidate.name,
+              Amount: formatToCrypto(delegation.amount),
+              "Update Amount": formatToCrypto(delegation.updateAmount),
+              Locktime: new Date(delegation.lockTime * 1000),
+              unlocked: delegation.lockTime * 1000 < Date.now(),
+              State: this.states[delegation.state],
               _cellVariants: { Status: 'active'}
       }
     })
@@ -569,6 +573,10 @@ export default class MobileAccount extends Vue {
       return result
     }
     return tx
+  }
+
+  gotoValidator(name) {
+    this.$router.push("validator/"+name)
   }
 
   destroyed() {

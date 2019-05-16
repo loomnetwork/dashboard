@@ -84,11 +84,11 @@ export const getNetworkType = async function() {
 }
 
 export const formatToCrypto = (amount) => {
-  const conversion = new BigNumber(amount / 10 ** 18, 10)
+  const conversion = new BigNumber(amount,10).div(10 ** 18)
   // show gwei if less than one
   return conversion.lt(1) && conversion.gt(0) ?
-    conversion.toFormat(9) :
-    conversion.toFormat(2)
+    conversion.toFixed(9) :
+    conversion.toFixed(2)
 }
 
 export const DOMAIN_NETWORK_ID = {

@@ -37,8 +37,10 @@
               <dd>{{delegation.updateAmount | tokenAmount}}</dd>
               <dt>{{ $t('views.validator_detail.timelock_tier') }}</dt>
               <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
+              <template v-if="delegation.lockTime > 0">
               <dt>Unlock time</dt>
-              <dd>{{delegation.lockTime > 0 ? (delegation.lockTime | date('seconds')) : 0}}</dd>
+              <dd>{{delegation.lockTime | date('seconds')}}</dd>
+              </template>
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">

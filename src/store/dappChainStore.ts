@@ -231,8 +231,7 @@ export default {
         debug("ethereumLoom.balanceOf")
         let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
         debug("ethereumLoom.balanceOf",result.toString())
-        let balance = formatToCrypto(result.toString())
-        const mainnetBalance = parseFloat(balance).toFixed(2)
+        let mainnetBalance = formatToCrypto(result.toString())
         const userBalance = rootState.DPOS.userBalance
         commit("DPOS/setUserBalance",Object.assign(userBalance,{mainnetBalance}),{root:true})
         return mainnetBalance

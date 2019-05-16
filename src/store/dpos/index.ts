@@ -29,36 +29,42 @@ const initialState: DPOSState = {
 const builder = getStoreBuilder<HasDPOSState>().module("dpos", initialState)
 const stateGetter = builder.state()
 
-const dposTypedModule = {
+const dposModule = {
 
     get state() { return stateGetter() },
+
+    setContract: builder.commit(mutations.setContract),
+    setElectionTime: builder.commit(mutations.setElectionTime),
+    setValidators: builder.commit(mutations.setValidators),
+    setDelegations: builder.commit(mutations.setDelegations),
+    setRewards: builder.commit(mutations.setRewards),
 
     delegate: builder.dispatch(delegate),
     redelegate: builder.dispatch(redelegate),
     consolidate: builder.dispatch(consolidate),
     undelegate: builder.dispatch(undelegate),
-    refreshRewards: builder.dispatch(refreshRewards),
     claimRewards: builder.dispatch(claimRewards),
-    refreshElectionTime: builder.dispatch(refreshElectionTime),
 
-    setValidators: builder.commit(mutations.setValidators),
-    setDelegations: builder.commit(mutations.setDelegations),
-    setRewards: builder.commit(mutations.setRewards),
-    setElectionTime: builder.commit(mutations.setElectionTime),
+    refreshRewards: builder.dispatch(refreshRewards),
+
+    refreshElectionTime: builder.dispatch(refreshElectionTime),
+    refreshValidators: builder.dispatch(refreshValidators),
 
 }
 
-// standard vuex module
-export const dposModule = builder.vuexModule()
-
-// strongly typed module api
-export { dposTypedModule }
+// vuex module as a service
+export { dposModule }
 
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
 async function refreshElectionTime(context: ActionContext) {
     await timer(2000).toPromise()
-    dposTypedModule.setElectionTime(new Date(Date.now() + 60 + 1000))
+    dposModule.setElectionTime(new Date(Date.now() + 60 + 1000))
+}
+
+async function refreshValidators(context: ActionContext) {
+    await timer(2000).toPromise()
+    dposModule.setValidators([])
 }
 
 function delegate(context: ActionContext, delegation: IDelegation) {
@@ -88,7 +94,7 @@ function undelegate(context: ActionContext, payload: IDelegation) {
  */
 async function refreshRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
     await timer(2000).toPromise()
-    dposTypedModule.setRewards("0")
+    dposModule.setRewards("0")
 }
 
 /**

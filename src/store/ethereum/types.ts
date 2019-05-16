@@ -1,6 +1,7 @@
 
 import BN from "bn.js"
 import { Provider } from "ethers/providers"
+import { Signer } from "ethers"
 
 // Interface for application stores than include EthereumState
 export interface HasEthereumState {
@@ -10,6 +11,8 @@ export interface HasEthereumState {
 export interface EthereumState {
     // not really state but...
     provider: Provider|null
+    address: string
+    signer: Signer|null
 
     // config: erc20 contracts addresses
     erc20Addresses: {

@@ -6,7 +6,7 @@ import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { timer } from "rxjs"
-import { PlasmaState, HasPlasmaState } from "./types"
+import { PlasmaState, HasPlasmaState, TransferRequest } from "./types"
 import { Client } from "loom-js"
 import BN from "bn.js"
 import { createDefaultClient } from "loom-js/dist/helpers"
@@ -15,7 +15,8 @@ import { noop } from "vue-class-component/lib/util"
 
 const initialState: PlasmaState = {
     // not state but...
-    client: null,
+    client: createClient(),
+    address: "",
     balances: {
         [TokenSymbol.LOOM]: new BN("0"),
         [TokenSymbol.ETH]: new BN("0"),
@@ -37,7 +38,7 @@ export const plasmaModule = {
 }
 
 function createClient() {
-    noop()
+    return new Client("default", "", "")
 }
 
 declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>
@@ -45,7 +46,7 @@ declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>
 // holds the contracts. We don't need to exposed these on the state
 const erc20Contracts: Map<TokenSymbol, ERC20> = new Map()
 
-function getErc20Contract(symbol: TokenSymbol): ERC20 {
+function getErc20Contract(symbol: string): ERC20 {
     // @ts-ignore
     return null
 }
@@ -66,7 +67,7 @@ export function updateBalance(context: ActionContext, payload: {symbol: TokenSym
  */
 export function approveTransfer(
     context: ActionContext,
-    { symbol, tokenAmount, to }: { symbol: TokenSymbol, tokenAmount: BN, to: string },
+    { symbol, tokenAmount, to }: TransferRequest,
 ) {
 
     const balance = context.state.balances[symbol]
@@ -74,7 +75,7 @@ export function approveTransfer(
     if (weiAmount.gt(balance)) {
         throw new Error("approval.balance.low")
     }
-    const contract: ERC20 = getErc20Contract(symbol, weiAmount)
+    const contract: ERC20 = getErc20Contract(symbol)
 
     contract.functions.approve(to, weiAmount.toString())
 

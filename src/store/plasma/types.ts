@@ -8,7 +8,14 @@ export interface HasPlasmaState {
 
 export interface PlasmaState {
     client: Client|null,
+    address: string,
     balances: {
         [erc20Symbol: string]: BN,
     }
+}
+
+export interface TransferRequest {
+    symbol: string
+    tokenAmount: BN
+    to: string
 }

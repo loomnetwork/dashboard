@@ -11,38 +11,80 @@ import { Address, LocalAddress } from "loom-js"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { Transaction } from "ethers/utils"
-import { DashboardState } from "@/types"
+import { Funds } from "@/types"
 
-import * as actions from "./actions"
 import { GatewayState, HasGatewayState } from "./types"
-import { Store } from "vuex"
+
+import { timer } from "rxjs"
+import { BareActionContext } from "vuex-typex"
+
+import * as mutations from "./mutations"
+
+declare type ActionContext = BareActionContext<GatewayState, HasGatewayState>
 
 const initialState: GatewayState = {
+    mapping: null,
     pendingReceipt: null,
     pendingTransaction: null,
+    unclaimedTokens: [],
 }
 
-const builder = getStoreBuilder<DashboardState>().module("gateway", initialState)
+const builder = getStoreBuilder<HasGatewayState>().module("ethGateway", initialState)
 const stateGetter = builder.state()
 
 export const gatewayModule = {
 
     get state() { return stateGetter() },
 
-    deposit: builder.dispatch(actions.deposit),
-    withdrawToGateway: builder.dispatch(actions.withdrawToGateway),
-    withdrawFromGateway: builder.dispatch(actions.withdrawFromGateway),
-    checkPendingReceipt: builder.dispatch(actions.checkPendingReceipt),
+    setMapping: builder.commit(mutations.setMapping),
+    setPendingReceipt: builder.commit(mutations.setPendingReceipt),
+    setPendingTx: builder.commit(mutations.setPendingTx),
+    setUnclaimedTokens: builder.commit(mutations.setUnclaimedTokens),
+
+    deposit: builder.dispatch(deposit),
+    plasmaWithdraw: builder.dispatch(plasmaWithdraw),
+    ethereumWithdraw: builder.dispatch(ethereumWithdraw),
+    checkPendingReceipt: builder.dispatch(checkPendingReceipt),
+
+    checkMapping: builder.dispatch(checkMapping),
+    createMapping: builder.dispatch(createMapping),
 
 }
 
-function gatewayModulePlugin(store: Store<HasGatewayState>) {
+/**
+ * deposit from ethereum account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+export function deposit( context: ActionContext, funds: Funds) {
+  return timer(2000).toPromise()
+}
 
-    store.watch(
-        (state) => store.state.gateway.pendingReceipt,
-        (value, old) => {
-            console.log("pending receipt")
-        },
-    )
+/**
+ * withdraw from plasma account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+export function plasmaWithdraw( context: ActionContext, funds: Funds ) {
+  return timer(2000).toPromise()
+}
+
+/**
+ * withdraw from gateway to ethereum account
+ * @param symbol
+ */
+export function ethereumWithdraw(context: ActionContext, funds: Funds) {
+  return timer(2000).toPromise()
+}
+
+export function checkPendingReceipt(context: ActionContext) {
+  return timer(2000).toPromise()
+}
+
+function checkMapping(context: ActionContext, adddress: string) {
+    return timer(2000).toPromise()
+}
+
+function createMapping(context: ActionContext) {
+    return timer(2000).toPromise()
 }

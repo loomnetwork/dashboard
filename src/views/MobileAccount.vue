@@ -111,7 +111,7 @@
             <b-spinner v-if="delegation['State'] !== 'Bonded'" small variant="primary"  style="margin-right:16px;"></b-spinner>
             <span>{{delegation["Name"]}}</span>
           </div>
-          <strong>{{delegation["Amount"]}} {{delegation.unlocked}}</strong>
+          <strong>{{delegation["Amount"]}}</strong>
         </b-card-header>
         <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
           <b-card-body @click="gotoValidator(delegation.Name)">

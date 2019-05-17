@@ -13,6 +13,7 @@ import { noop } from "vue-class-component/lib/util"
 import { DashboardState } from '@/types';
 import { getCardByTokenId } from "@/utils"
 import { PACKS_NAME } from '../plasmaPlugin';
+import { CommonTypedStore } from '../common';
 
 const initialState: PlasmaState = {
     // not state but...
@@ -56,9 +57,10 @@ export const plasmaModule = {
 async function checkCardBalance(context: ActionContext) {
     const dposUser = await context.rootState.DPOS.dposUser
     const account = dposUser!.loomAddress.local.toString()
+    const ethAddr = dposUser!.ethAddress
     const tokens = await context.state.cardContract!.methods
                 .tokensOwned(account)
-                .call({ from: account })
+                .call({ from: ethAddr })
     let cards: CardDetail[] = []
     tokens.indexes.forEach((id: string, i: number) => {
       let card = getCardByTokenId(id)
@@ -72,11 +74,12 @@ async function checkCardBalance(context: ActionContext) {
 async function checkPackBalance(context: ActionContext) {
   const dposUser = await context.rootState.DPOS.dposUser
   const account = dposUser!.loomAddress.local.toString()
+  const ethAddr = dposUser!.ethAddress
   let packs: PackDetail[] = []
   PACKS_NAME.forEach(async type => {
     const amount = await context.state.packsContract[type].methods
             .balanceOf(account)
-            .call({ from: account })
+            .call({ from: ethAddr })
     let pack =  {type, amount}
     packs.push(pack)
   })
@@ -103,15 +106,25 @@ async function transferCards(
     cardIds: string[],
     amounts: number[],
     destinationDappchainAddress: string}) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.local.toString()
-  const result = await context.state.cardContract!.methods.batchTransferFrom(
-    account,
-    payload.destinationDappchainAddress,
-    payload.cardIds,
-    payload.amounts)
-  .send({ from: account })
-  return result
+  console.log("payload", payload)
+  try {
+    const dposUser = await context.rootState.DPOS.dposUser
+    const dappchainAccount = dposUser!.loomAddress.local.toString()
+    const ethAccount = dposUser!.ethAddress
+    console.log("ethAddr", ethAccount);
+    const result = await context.state.cardContract!.methods.batchTransferFrom(
+      dappchainAccount,
+      payload.destinationDappchainAddress,
+      payload.cardIds,
+      payload.amounts)
+    .send({ from: ethAccount })
+    console.log("reult", result);
+    
+    return result
+  } catch (error) {
+    CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
+    throw error
+  }
 }
 
 function createClient() {

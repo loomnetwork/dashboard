@@ -13,7 +13,7 @@ const configs = {
     gatewayAddress : "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73",
   },
   us1: {
-    dappchainEndpoint : "https://test-z-us1.dappchains.com",
+    dappchainEndpoint : "wss://test-z-us1.dappchains.com",
     mainnetEndpoint : "https://rinkeby.infura.io",
     chainId : "default",
     gatewayAddress : "0x76c41eFFc2871e73F42b2EAe5eaf8Efe50bDBF73",

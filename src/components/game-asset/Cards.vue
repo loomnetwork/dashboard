@@ -14,7 +14,7 @@
         :fields="cardTableFields"
       >
         <template slot="transfer" slot-scope="row">
-          <b-button type="button" @click="transferCards(row.item)">Transfer</b-button>
+          <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
         </template>
       </b-table>
     </b-tab>
@@ -29,7 +29,7 @@
         :fields="cardTableFields"
       >
         <template slot="transfer" slot-scope="row">
-          <b-button type="button" @click="transferCards(row.item)">Transfer</b-button>
+          <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
         </template>
       </b-table>
     </b-tab>
@@ -44,7 +44,7 @@
         :fields="cardTableFields"
       >
         <template slot="transfer" slot-scope="row">
-          <b-button type="button" @click="transferCards(row.item)">Transfer</b-button>
+          <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
         </template>
       </b-table>
     </b-tab>
@@ -59,7 +59,7 @@
         :fields="cardTableFields"
       >
         <template slot="transfer" slot-scope="row">
-          <b-button type="button" @click="transferCards(row.item)">Transfer</b-button>
+          <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
         </template>
       </b-table>
     </b-tab>
@@ -74,7 +74,7 @@
         :fields="cardTableFields"
       >
         <template slot="transfer" slot-scope="row">
-          <b-button type="button" @click="transferCards(row.item)">Transfer</b-button>
+          <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
         </template>
       </b-table>
     </b-tab>
@@ -92,12 +92,12 @@
         </b-col>
         <b-col>
           <b-card-text>Transfer all cards</b-card-text>
-          <b-button type="button" @click="batchTransferCards('All')">Transfer All</b-button>
+          <b-button type="button" @click="openBatchTransferCardsModal('All')">Transfer All</b-button>
         </b-col>
       </b-row>
       <b-table striped bordered hover :items="cards" :fields="cardTableFields">
         <template slot="transfer" slot-scope="row">
-          <b-button type="button" @click="transferCards(row.item)">Transfer</b-button>
+          <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
         </template>
       </b-table>
     </b-tab>
@@ -177,7 +177,7 @@ export default class Cards extends Vue {
    return this.$refs[ref] as Modal
   }
 
-  transferCards(item) {
+  openTransferCardsModal(item) {
     this.setCardToTransferSelected(item)
     this.$root.$emit("bv::show::modal", "transfer-cards-modal")
   }

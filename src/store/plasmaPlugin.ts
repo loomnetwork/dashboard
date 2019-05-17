@@ -4,7 +4,7 @@ import Web3 from "web3"
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import BoosterPackJSON from "@/contracts/BoosterPack.json"
 import {
-    LoomProvider, Client, CryptoUtils,
+    LoomProvider, Client, CryptoUtils, NonceTxMiddleware, SignedEthTxMiddleware, Address, LocalAddress
   } from "loom-js"
 import { noop } from 'vue-class-component/lib/util';
 import { plasmaModule } from './plasma';
@@ -12,7 +12,7 @@ import packAddresses from "@/data/ZBGPackAddresses.json"
 import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
 
 function ISetupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
-    return []
+    return client.txMiddleware
 }
 
 export const PACKS_NAME = [
@@ -37,6 +37,16 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             const dashboardPrivateKey = store.state.DPOS.dashboardPrivateKey
             const uint8PrivateKey = CryptoUtils.B64ToUint8Array(dashboardPrivateKey)
             const loomProvider = new LoomProvider(client, uint8PrivateKey, ISetupMiddlewaresFunction)
+            const callerChainId ='eth'
+            const signer = (client.txMiddleware[1] as SignedEthTxMiddleware).signer
+            loomProvider.setMiddlewaresForAddress(user.ethAddress, [
+                new NonceTxMiddleware(
+                  new Address(callerChainId, LocalAddress.fromHexString(user.ethAddress)),
+                  client
+                ),
+                new SignedEthTxMiddleware(signer)
+              ])
+            loomProvider.callerChainId = "eth"
             const web3 = new Web3(loomProvider)
             const networkId = client.chainId
             const cardInstance = new web3.eth.Contract(

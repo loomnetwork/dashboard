@@ -17,3 +17,8 @@ export function setCardBalance(state: PlasmaState, payload: CardDetail[]) {
 export function setPackBalance(state: PlasmaState, payload: PackDetail[]) {
     state.packBalance = payload
 }
+
+export function setCardToTransferSelected(state: PlasmaState, payload: CardDetail) {
+    console.log("new CardDetail", payload)
+    state.cardToTransferSelected = payload
+}

@@ -19,6 +19,7 @@ export interface PlasmaState {
     cardContract: MigratedZBGCard | null,
     cardBalance: CardDetail[],
     packBalance: PackDetail[],
+    cardToTransferSelected: CardDetail | {},
 }
 
 export interface PackDetail {

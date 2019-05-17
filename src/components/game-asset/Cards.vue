@@ -1,5 +1,6 @@
 <template>
  <b-card class="mb-5">
+  <transfer-cards-modal ref="transferModalConfig"></transfer-cards-modal>
   <b-card-title>My Cards</b-card-title>
   <b-tabs card>
     <b-tab title="Standard-Edition">
@@ -110,10 +111,17 @@ import { Component, Watch } from "vue-property-decorator"
 import { plasmaModule } from "@/store/plasma"
 import { CardDetail } from "@/store/plasma/types"
 import { DashboardState } from "@/types"
+import TransferCardsModal from "@/components/modals/TransferCardsModal.vue"
+import { Modal } from "bootstrap-vue"
 
-@Component
+@Component({
+  components: {
+    TransferCardsModal,
+  }
+})
 export default class Cards extends Vue {
   checkCardBalance = plasmaModule.checkCardBalance
+  setCardToTransferSelected = plasmaModule.setCardToTransferSelected
   cards: CardDetail[] = []
   seCards: CardDetail[] = []
   leCards: CardDetail[] = []
@@ -132,41 +140,49 @@ export default class Cards extends Vue {
   cardTableFields = [
     {
       key: "id",
-      sortable: true
+      sortable: true,
     },
     {
       key: "display_name",
-      sortable: true
+      sortable: true,
     },
     {
       key: "variation",
-      sortable: true
+      sortable: true,
     },
     {
       key: "amount",
-      sortable: true
+      sortable: true,
     },
     {
       key: "transfer",
-      label: "Transfer"
+      label: "Transfer",
     }
   ];
 
   get state(): DashboardState {
-    return this.$store.state;
+    return this.$store.state
   }
 
   get cardBalance() {
-    return this.state.plasma.cardBalance;
+    return this.state.plasma.cardBalance
   }
 
   async mounted() {
-    await this.checkCardBalance();
-    this.cards = await this.cardBalance;
+    await this.checkCardBalance()
+    this.cards = await this.cardBalance
+  }
+
+  modal(ref: string) {
+   return this.$refs[ref] as Modal
+  }
+
+  transferCards(item) {
+    this.setCardToTransferSelected(item)
+    this.$root.$emit("bv::show::modal", "transfer-cards-modal")
   }
 
   resetCardAmount() {
-    console.log("reset....");
     (this.userCardsAmount = 0),
       (this.standardEditionAmount = 0),
       (this.limitedEditionAmount = 0),
@@ -186,9 +202,9 @@ export default class Cards extends Vue {
     newUserCards: CardDetail[],
     oldUserCards: CardDetail[],
   ) {
-    this.resetCardAmount();
+    this.resetCardAmount()
     if (newUserCards.length > 0) {
-      this.cards = newUserCards;
+      this.cards = newUserCards
       this.cards.forEach(cd => {
         if (cd.id.endsWith("0")) {
           this.standardEditionAmount += cd.amount

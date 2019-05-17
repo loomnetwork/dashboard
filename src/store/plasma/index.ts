@@ -26,6 +26,7 @@ const initialState: PlasmaState = {
     cardContract: null,
     cardBalance: [],
     packBalance: [],
+    cardToTransferSelected: {},
 }
 
 const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
@@ -49,6 +50,7 @@ export const plasmaModule = {
     setCardContract:  builder.commit(mutations.setCardContract),
     setCardBalance: builder.commit(mutations.setCardBalance),
     setPackBalance: builder.commit(mutations.setPackBalance),
+    setCardToTransferSelected: builder.commit(mutations.setCardToTransferSelected),
   }
 
 async function checkCardBalance(context: ActionContext) {

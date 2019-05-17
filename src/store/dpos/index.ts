@@ -10,7 +10,8 @@ import { DPOSState, HasDPOSState } from "./types"
 
 import * as mutations from "./mutations"
 import BN from "bn.js"
-import { IDelegation } from "loom-js/dist/contracts/dpos3"
+import { IDelegation, ICandidate } from "loom-js/dist/contracts/dpos3"
+import { state } from "../common"
 
 const initialState: DPOSState = {
     contract: null,
@@ -58,34 +59,42 @@ export { dposModule }
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
 async function refreshElectionTime(context: ActionContext) {
-    await timer(2000).toPromise()
-    dposModule.setElectionTime(new Date(Date.now() + 60 + 1000))
+    const time: BN = await context.state.contract!.getTimeUntilElectionAsync()
+    const date = Date.now() + (time.toNumber() * 1000)
+    dposModule.setElectionTime(new Date(date))
 }
 
 async function refreshValidators(context: ActionContext) {
+    const time: BN = await context.state.contract!.getTimeUntilElectionAsync()
     await timer(2000).toPromise()
     dposModule.setValidators([])
 }
 
-function delegate(context: ActionContext, delegation: IDelegation) {
-    return timer(2000).toPromise()
+async function delegate(context: ActionContext, delegation: IDelegation) {
+    await context.state.contract!.delegateAsync(delegation.validator, delegation.amount, delegation.lockTimeTier)
 }
 
-function redelegate(context: ActionContext, payload: IDelegation) {
-    // playload .updateAmount .updateValidator .index
-    return timer(2000).toPromise()
+async function redelegate(context: ActionContext, delegation: IDelegation) {
+    await context.state.contract!.redelegateAsync(
+        delegation.validator,
+        delegation.updateValidator!,
+        delegation.updateAmount,
+        delegation.index,
+    )
+
 }
 
-function consolidate(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
-    return timer(2000).toPromise()
+async function consolidate(context: ActionContext, validator: ICandidate) {
+    await context.state.contract!.consolidateDelegations(validator.address)
+
 }
 
 /**
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-function undelegate(context: ActionContext, payload: IDelegation) {
-    return timer(2000).toPromise()
+async function undelegate(context: ActionContext, delegation: IDelegation) {
+    await context.state.contract!.unbondAsync(delegation.validator, delegation.updateAmount, delegation.index)
 }
 
 /**
@@ -101,6 +110,10 @@ async function refreshRewards(context: ActionContext, payload: {symbol: string, 
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-function claimRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
+function claimRewards(context: ActionContext) {
+    // filter delegations index = 0 amount > 0
+    // for each
+    // set message "claiming rewards from validator x"
+    //
     return timer(2000).toPromise()
 }

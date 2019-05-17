@@ -1,6 +1,8 @@
 import { HasGatewayState } from "./types"
 import { Store } from "vuex"
 import { gatewayModule } from "."
+import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
+import { plasmaModule } from "../plasma"
 
 export function ethGatewayPluging(store: Store<HasGatewayState>) {
     store.watch(
@@ -10,6 +12,20 @@ export function ethGatewayPluging(store: Store<HasGatewayState>) {
 
     function ethereumAddressSet(newAddress) {
         gatewayModule.checkMapping(newAddress)
+    }
+
+    store.watch(
+        (s) => s.gateway.mapping,
+        setPlasmaId,
+    )
+
+    function setPlasmaId(mapping: IAddressMapping|null) {
+        // do nothing if mapping is incomplete
+        if (mapping === null || mapping.from.isEmpty() || mapping.from.isEmpty()) {
+            return
+        }
+        // assuming from is always ethereum
+        plasmaModule
     }
 }
 

@@ -6,8 +6,8 @@ import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { timer } from "rxjs"
-import { PlasmaState, HasPlasmaState, TransferRequest } from "./types"
-import { Client } from "loom-js"
+import { PlasmaState, HasPlasmaState, TransferRequest, PlasmaSigner } from "./types"
+import { Client, Address } from "loom-js"
 import BN from "bn.js"
 import { createDefaultClient } from "loom-js/dist/helpers"
 import { TokenSymbol } from "../ethereum/types"
@@ -31,6 +31,7 @@ export const plasmaModule = {
 
     get state() { return stateGetter() },
 
+    changeIdentity: builder.dispatch(changeIdentity),
     updateBalance: builder.dispatch(updateBalance),
     approve: builder.dispatch(approveTransfer),
     transfer: builder.dispatch(transferTokens),
@@ -42,6 +43,17 @@ function createClient() {
 }
 
 declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>
+
+async function changeIdentity(ctx: ActionContext, id: {signer: PlasmaSigner|null, address: string}) {
+    ctx.state.signer = id.signer
+    // add the conresponding middleware
+    if ( id.signer === null ) {
+        ctx.state.client.txMiddleware = []
+    } else {
+        ctx.state.client.txMiddleware = id.signer.clientMiddleware()
+    }
+    ctx.state.address = id.address
+}
 
 // holds the contracts. We don't need to exposed these on the state
 const erc20Contracts: Map<TokenSymbol, ERC20> = new Map()
@@ -56,7 +68,8 @@ function getErc20Contract(symbol: string): ERC20 {
  * @param symbol
  * @param tokenAmount
  */
-export function updateBalance(context: ActionContext, payload: {symbol: TokenSymbol, tokenAmount?: BN}) {
+export function updateBalance(context: ActionContext, symbol: TokenSymbol) {
+    const contract = getErc20Contract(symbol)
     return timer(2000).toPromise()
 }
 

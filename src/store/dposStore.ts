@@ -87,6 +87,7 @@ const defaultState = () => {
     showDepositApproved: false,
     showDepositConfirmed: false,
     pendingTx: null,
+    electionIsRunning: false,
   }
 }
 
@@ -231,17 +232,20 @@ export default {
     setDelegations(state, payload) {
       state.delegations = payload
     },
-    setShowDepositForm(state, playload) {
-      state.showDepositForm = playload
+    setShowDepositForm(state, payload) {
+      state.showDepositForm = payload
     },
-    setShowDepositApproved(state, playload) {
-      state.showDepositApproved = playload
+    setShowDepositApproved(state, payload) {
+      state.showDepositApproved = payload
     },
-    setShowDepositConfirmed(state, playload) {
-      state.showDepositConfirmed = playload
+    setShowDepositConfirmed(state, payload) {
+      state.showDepositConfirmed = payload
     },
     setPendingTx(state, info) {
       state.pendingTx = info
+    },
+    setElectionIsRunning(state, payload) {
+      state.electionIsRunning = payload
     }
   },
   actions: {

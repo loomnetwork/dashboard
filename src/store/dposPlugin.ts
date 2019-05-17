@@ -7,18 +7,28 @@ import { DPOSUserV3 } from "loom-js";
 import { ERC20Gateway_v2 } from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2";
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20";
 import { DashboardState } from "@/types";
+import { sleep } from '../utils'
+import { ConsolidateDelegationsRequest } from "loom-js/dist/proto/dposv3_pb";
 
 const debug = Debug("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<DashboardState>) {
 
     store.subscribeAction({
-        after(action){
+        async after(action) {
             if(action.type !== "DPOS/getTimeUntilElectionsAsync") {
                 return
             }
-            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle,10)
+            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle, 10)
             debug("timeUntilElectionCycle", seconds)
+            // seconds is 0 => elections still running
+            const electionIsRunning = seconds < 1
+            store.commit("DPOS/setElectionIsRunning", electionIsRunning)
+            if (electionIsRunning) {
+                // while still runing poll with an interval of 15 seconds
+                // do not refresh vvalidators and delegations
+                return setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), 15 * 1000)
+            }
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
             if (store.state.DappChain.dposUser) {

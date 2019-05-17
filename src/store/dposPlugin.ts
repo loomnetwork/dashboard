@@ -39,6 +39,7 @@ export function dposStorePlugin(store: Store<DashboardState>) {
             if (store.state.DappChain.dposUser) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
+                store.dispatch("DappChain/getDappchainLoomBalance")
             }
             // in normal case, give election an optimistic AVERAGE_ELECTION_MILLIS  to finish
             const delay =  Math.max(seconds*1000, AVERAGE_ELECTION_MILLIS)

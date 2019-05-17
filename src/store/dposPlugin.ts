@@ -12,7 +12,11 @@ import { ConsolidateDelegationsRequest } from "loom-js/dist/proto/dposv3_pb";
 
 const debug = Debug("dashboard.dpos")
 
+const AVERAGE_ELECTION_MILLIS = 15 * 1000
+
 export function dposStorePlugin(store: Store<DashboardState>) {
+
+    var electionTimeout:number = -1
 
     store.subscribeAction({
         async after(action) {
@@ -25,9 +29,10 @@ export function dposStorePlugin(store: Store<DashboardState>) {
             const electionIsRunning = seconds < 1
             store.commit("DPOS/setElectionIsRunning", electionIsRunning)
             if (electionIsRunning) {
-                // while still runing poll with an interval of 15 seconds
+                // while still runing poll with an interval of AVERAGE_ELECTION_MILLIS
                 // do not refresh vvalidators and delegations
-                return setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), 15 * 1000)
+                electionTimeout = window.setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), AVERAGE_ELECTION_MILLIS)
+                return
             }
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
@@ -35,8 +40,10 @@ export function dposStorePlugin(store: Store<DashboardState>) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            debug("setTimeout seconds",Math.max(seconds,1) * 1000)
-            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
+            // in normal case, give election an optimistic AVERAGE_ELECTION_MILLIS  to finish
+            const delay =  Math.max(seconds*1000, AVERAGE_ELECTION_MILLIS)
+            debug("Calling getTimeUntilElectionsAsync in %s millis",delay)
+            electionTimeout = window.setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), delay)
         }
     })
 
@@ -84,6 +91,15 @@ export function dposStorePlugin(store: Store<DashboardState>) {
     listenToGatewayEvents(store)
 
     store.dispatch("DPOS/getTimeUntilElectionsAsync")
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+    window.addEventListener("visibilitychange", () => {
+        if (document.hidden) return
+        if (electionTimeout > 0) {
+            window.clearTimeout(electionTimeout)
+        }
+        store.dispatch("DPOS/getTimeUntilElectionsAsync")
+    })
 
 }
 

@@ -11,7 +11,7 @@ import { plasmaModule } from './plasma';
 import packAddresses from "@/data/ZBGPackAddresses.json"
 import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
 
-function ISetupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
+function setupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return client.txMiddleware
 }
 
@@ -36,16 +36,8 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             const client = user.client
             const dashboardPrivateKey = store.state.DPOS.dashboardPrivateKey
             const uint8PrivateKey = CryptoUtils.B64ToUint8Array(dashboardPrivateKey)
-            const loomProvider = new LoomProvider(client, uint8PrivateKey, ISetupMiddlewaresFunction)
-            const callerChainId ='eth'
-            const signer = (client.txMiddleware[1] as SignedEthTxMiddleware).signer
-            loomProvider.setMiddlewaresForAddress(user.ethAddress, [
-                new NonceTxMiddleware(
-                  new Address(callerChainId, LocalAddress.fromHexString(user.ethAddress)),
-                  client
-                ),
-                new SignedEthTxMiddleware(signer)
-              ])
+            const loomProvider = new LoomProvider(client, uint8PrivateKey, setupMiddlewaresFunction)
+            loomProvider.setMiddlewaresForAddress(user.ethAddress, client.txMiddleware)
             loomProvider.callerChainId = "eth"
             const web3 = new Web3(loomProvider)
             const networkId = client.chainId

@@ -88,8 +88,16 @@
 
     <b-card title="Election Cycle" class="mb-4">
         <h6>Time left</h6>
-        <h5 v-if="formattedTimeUntilElectionCycle" class="highlight">{{formattedTimeUntilElectionCycle}}</h5>
-        <b-spinner v-else variant="primary" label="Spinning"/>
+        <div v-if="electionIsRunning">
+          <strong>
+            <h5 class="highlight rmv-spacing animated flash slow infinite">Election is underway</h5>
+            <small>Please be patient</small>
+          </strong>
+        </div>
+        <div v-else>
+          <h5 v-if="formattedTimeUntilElectionCycle" class="highlight">{{formattedTimeUntilElectionCycle}}</h5>
+          <b-spinner v-else variant="primary" label="Spinning"/>
+        </div>
     </b-card>
 
     <!-- <b-card title="Rewards" class="mb-4">
@@ -181,7 +189,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'delegations',
       'states',
       'currentMetamaskAddress',
-      'pendingTx'
+      'pendingTx',
+      'electionIsRunning',
     ]) 
   },
   methods: {

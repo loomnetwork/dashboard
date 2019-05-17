@@ -7,26 +7,43 @@ import { DPOSUserV3 } from "loom-js";
 import { ERC20Gateway_v2 } from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2";
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20";
 import { DashboardState } from "@/types";
+import { sleep } from '../utils'
+import { ConsolidateDelegationsRequest } from "loom-js/dist/proto/dposv3_pb";
 
 const debug = Debug("dashboard.dpos")
 
+const AVERAGE_ELECTION_MILLIS = 15 * 1000
+
 export function dposStorePlugin(store: Store<DashboardState>) {
 
+    var electionTimeout:number = -1
+
     store.subscribeAction({
-        after(action){
+        async after(action) {
             if(action.type !== "DPOS/getTimeUntilElectionsAsync") {
                 return
             }
-            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle,10)
+            const seconds = parseInt(store.state.DPOS.timeUntilElectionCycle, 10)
             debug("timeUntilElectionCycle", seconds)
+            // seconds is 0 => elections still running
+            const electionIsRunning = seconds < 1
+            store.commit("DPOS/setElectionIsRunning", electionIsRunning)
+            if (electionIsRunning) {
+                // while still runing poll with an interval of AVERAGE_ELECTION_MILLIS
+                // do not refresh vvalidators and delegations
+                electionTimeout = window.setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), AVERAGE_ELECTION_MILLIS)
+                return
+            }
             store.dispatch("DappChain/getValidatorsAsync")
             // delegator specific calls
             if (store.state.DappChain.dposUser) {
                 store.dispatch("DPOS/checkAllDelegations")
                 store.dispatch("DPOS/queryRewards")
             }
-            debug("setTimeout seconds",Math.max(seconds,1) * 1000)
-            setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), Math.max(seconds,1) * 1000)
+            // in normal case, give election an optimistic AVERAGE_ELECTION_MILLIS  to finish
+            const delay =  Math.max(seconds*1000, AVERAGE_ELECTION_MILLIS)
+            debug("Calling getTimeUntilElectionsAsync in %s millis",delay)
+            electionTimeout = window.setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), delay)
         }
     })
 
@@ -74,6 +91,15 @@ export function dposStorePlugin(store: Store<DashboardState>) {
     listenToGatewayEvents(store)
 
     store.dispatch("DPOS/getTimeUntilElectionsAsync")
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+    window.addEventListener("visibilitychange", () => {
+        if (document.hidden) return
+        if (electionTimeout > 0) {
+            window.clearTimeout(electionTimeout)
+        }
+        store.dispatch("DPOS/getTimeUntilElectionsAsync")
+    })
 
 }
 

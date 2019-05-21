@@ -13,5 +13,6 @@ export interface GatewayState {
     mapping: IAddressMapping|null,
     pendingTransaction: any,
     pendingReceipt: IWithdrawalReceipt|null
-    unclaimedTokens: IUnclaimedToken[]
+    unclaimedTokens: IUnclaimedToken[],
+    address: string,
 }

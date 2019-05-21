@@ -19,6 +19,10 @@ const initialState: PlasmaState = {
     // not state but...
     client: createClient(configs.us1),
     signer: null,
+    genericAddress: "",
+    erc20Addresses: {
+        loom: "",
+    },
     address: "",
     appKey: {
         private: "",
@@ -30,6 +34,11 @@ const initialState: PlasmaState = {
         [TokenSymbol.ETH]: new BN("0"),
         [TokenSymbol.BNB]: new BN("0"),
     },
+    loom: {
+        contract: null,
+        balance: "",
+        address: "",
+    }
 }
 
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)

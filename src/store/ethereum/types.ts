@@ -3,6 +3,7 @@ import BN from "bn.js"
 import { Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { Observable } from "rxjs"
+import { ERC20 } from 'loom-js/dist/mainnet-contracts/ERC20';
 
 // Interface for application stores than include EthereumState
 export interface HasEthereumState {
@@ -22,6 +23,11 @@ export interface EthereumState {
     }
     balances: {
         [erc20Symbol: string]: BN,
+    },
+    loom: {
+        contract: ERC20 | null,
+        balance: BN,
+        address: string,
     }
 }
 
@@ -54,4 +60,3 @@ export interface AccountInfo {
     eth?: number
     loom?: number
 }
-

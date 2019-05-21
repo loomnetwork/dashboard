@@ -43,6 +43,11 @@ const initialState: EthereumState = {
         eth: null,
         loom: null,
     },
+    loom: {
+        contract: null,
+        balance: "",
+        address: "",
+    }
 }
 
 const builder = getStoreBuilder<HasEthereumState>().module("ethereum", initialState)
@@ -58,6 +63,7 @@ export const ethereumModule = {
     transfer: builder.dispatch(transfer),
 
     setWalletType: builder.dispatch(setWalletType),
+    allowance: builder.dispatch(allowance),
 
 }
 
@@ -112,6 +118,10 @@ export function transfer(context: ActionContext, payload: TransferRequest) {
 }
 
 export function allowance(context: ActionContext, spender: string) {
-    return timer(2000).toPromise().then(() => new BN("0"))
-}
 
+    let allowance = context.state.loom.contract!.functions.allowance(
+      context.state.address,
+      spender,
+    )
+    return allowance
+}

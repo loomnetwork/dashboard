@@ -19,6 +19,7 @@ import { timer } from "rxjs"
 import { BareActionContext } from "vuex-typex"
 
 import * as mutations from "./mutations"
+import { ethereumModule } from '../ethereum';
 
 declare type ActionContext = BareActionContext<GatewayState, HasGatewayState>
 
@@ -28,6 +29,7 @@ function initialState(): GatewayState {
     pendingReceipt: null,
     pendingTransaction: null,
     unclaimedTokens: [],
+    address: "",
 }
 }
 
@@ -54,7 +56,7 @@ export const gatewayModule = {
  * @param tokenAmount
  */
 export function deposit( context: ActionContext, funds: Funds) {
-  return timer(2000).toPromise()
+  return ethereumModule.allowance(context.state.address)
 }
 
 /**
@@ -63,6 +65,7 @@ export function deposit( context: ActionContext, funds: Funds) {
  * @param tokenAmount
  */
 export function plasmaWithdraw( context: ActionContext, funds: Funds ) {
+
   return timer(2000).toPromise()
 }
 

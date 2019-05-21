@@ -15,7 +15,7 @@ export default {
     "dappchainEndpoint" : "https://test-z-us1.dappchains.com",
     "mainnetEndpoint" : "https://rinkeby.infura.io",
     "chainId" : "default",
-    "gatewayAddress" : "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3"
+    "gatewayAddress" : "0xEA319a0Ea64f482060032b4BE8d9d3F7232c1214"
   },
   "local": {
     "dappchainEndpoint" : "ws://localhost:46658",//34361 //46658

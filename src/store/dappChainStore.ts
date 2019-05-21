@@ -252,7 +252,7 @@ export default {
         dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
         chainId: chainId,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-        version: 1
+        version: 2
       })
       .then(user => {
         reconfigureClient(user.client, commit)
@@ -285,7 +285,7 @@ export default {
             dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-            version: 1
+            version: 2
           });
         } else {          
           user = await DPOSUserV3.createMetamaskUserAsync({
@@ -294,7 +294,7 @@ export default {
             dappchainPrivateKey: privateKeyString,
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-            version: 1
+            version: 2
           });
         }
       } catch(err) {

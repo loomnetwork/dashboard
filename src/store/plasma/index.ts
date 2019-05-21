@@ -9,14 +9,22 @@ import { timer } from "rxjs"
 import { PlasmaState, HasPlasmaState, TransferRequest, PlasmaSigner } from "./types"
 import { Client, Address } from "loom-js"
 import BN from "bn.js"
-import { createDefaultClient } from "loom-js/dist/helpers"
+import { createDefaultClient, setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
 import { TokenSymbol } from "../ethereum/types"
 import { noop } from "vue-class-component/lib/util"
 
+import configs from "@/envs"
+
 const initialState: PlasmaState = {
     // not state but...
-    client: createClient(),
+    client: createClient(configs.us1),
+    signer: null,
     address: "",
+    appKey: {
+        private: "",
+        public: "",
+        address: "",
+    },
     balances: {
         [TokenSymbol.LOOM]: new BN("0"),
         [TokenSymbol.ETH]: new BN("0"),
@@ -38,8 +46,9 @@ export const plasmaModule = {
 
 }
 
-function createClient() {
-    return new Client("default", "", "")
+function createClient(env: {chainId: string, endpoint: string}) {
+    const { writer, reader } = setupProtocolsFromEndpoint(env.endpoint)
+    return new Client(env.chainId, writer, reader)
 }
 
 declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>

@@ -10,6 +10,16 @@ export interface PlasmaState {
     client: Client,
     address: string,
     signer: PlasmaSigner|null,
+    genericAddress: string,
+    appKey: {
+        private: string,
+        public: string,
+        address: string,
+    },
+    erc20Addresses: {
+        loom: string
+        [erc20Symbol: string]: string,
+    }
     balances: {
         [erc20Symbol: string]: BN,
     }

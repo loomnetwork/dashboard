@@ -38,11 +38,6 @@ export const gatewayModule = {
 
     get state() { return stateGetter() },
 
-    setMapping: builder.commit(mutations.setMapping),
-    setPendingReceipt: builder.commit(mutations.setPendingReceipt),
-    setPendingTx: builder.commit(mutations.setPendingTx),
-    setUnclaimedTokens: builder.commit(mutations.setUnclaimedTokens),
-
     deposit: builder.dispatch(deposit),
     plasmaWithdraw: builder.dispatch(plasmaWithdraw),
     ethereumWithdraw: builder.dispatch(ethereumWithdraw),
@@ -101,14 +96,15 @@ async function loadMapping(context: ActionContext, address: string) {
 
 async function createMapping(context: ActionContext) {
   // create a temporary client for new napping
-  const client = context.rootState.plasma.client!
-  const ethAddress = context.state.mapping!.from
-  const signer = context.rootState.ethereum.signer!
-  const plasmaId = generateNewId()
-  const caller = context.rootState.plasma.appAddress
-  const mapper = await AddressMapper.createAsync(client, caller)
+  const client = getRequired(context.rootState.plasma.client, "plasma client")
+  const ethAddress = getRequired(context.state.mapping, "mapping").from
+  const signer = getRequired(context.rootState.ethereum.signer, "signer")
+  const caller = context.rootState.plasma.genericAddress
   // @ts-ignore, bignumber changed between version
   const ethSigner = new EthersSigner(signer)
+  const plasmaId = generateNewId()
+  const mapper = await AddressMapper.createAsync(client, caller)
+
   try {
     await mapper.addIdentityMappingAsync(Address.fromString(`eth:${ethAddress}`), plasmaId.address, ethSigner)
     context.state.mapping = await mapper.getMappingAsync(Address.fromString(`eth:${ethAddress}`))
@@ -120,4 +116,11 @@ async function createMapping(context: ActionContext) {
 
 function generateNewId() {
   return {address: Address.fromString("")}
+}
+
+function getRequired<T>(value: T|null, name: string): T {
+  if (value === null) {
+    throw new Error("Value required but was null " + name)
+  }
+  return value
 }

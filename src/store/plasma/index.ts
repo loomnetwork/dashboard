@@ -14,6 +14,7 @@ import { DashboardState } from '@/types';
 import { getCardByTokenId } from "@/utils"
 import { PACKS_NAME } from '../plasmaPlugin';
 import { CommonTypedStore } from '../common';
+import { DPOSTypedStore } from '../dpos-old';
 
 const initialState: PlasmaState = {
     // not state but...
@@ -114,6 +115,7 @@ async function transferCards(
     destinationDappchainAddress: string}) {
   console.log("payload", payload)
   try {
+    DPOSTypedStore.setShowLoadingSpinner(true)
     const dposUser = await context.rootState.DPOS.dposUser
     const dappchainAccount = dposUser!.loomAddress.local.toString()
     const ethAccount = dposUser!.ethAddress
@@ -124,10 +126,14 @@ async function transferCards(
       payload.cardIds,
       payload.amounts)
     .send({ from: ethAccount })
-    console.log("reult", result);
-    
+    console.log("result", result)
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    // TODO: this is not working
+    CommonTypedStore.setSuccessMsg("Transferring cards success.")
+    plasmaModule.checkCardBalance()
     return result
   } catch (error) {
+    // TODO: this is not working
     CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
     throw error
   }

@@ -19,6 +19,7 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { plasmaModule } from '../../store/plasma';
 import { CommonTypedStore } from "../../store/common"
+import { DPOSTypedStore } from '@/store/dpos-old';
 
 @Component
 export default class TransferCardsModal extends Vue {
@@ -26,6 +27,7 @@ export default class TransferCardsModal extends Vue {
   receiverAddress: string = ""
   transferCards = plasmaModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   mounted() {
     this.amountToTransfer = 1
@@ -52,7 +54,9 @@ export default class TransferCardsModal extends Vue {
     this.transferCards({
       cardIds: [this.cardToTransfer.id],
       amounts: [this.amountToTransfer],
-      destinationDappchainAddress: this.receiverAddress})
+      destinationDappchainAddress: this.receiverAddress
+    })
+    this.$root.$emit("bv::hide::modal", "transfer-cards-modal")
   }
 
 }

@@ -1,9 +1,8 @@
 <template>
   <b-modal id="transfer-all-cards-modal" ref="modalRef" title="Transfer All Cards" hide-footer centered>
     <b-container fluid>
-       <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
+      <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
       <h6>Amount: {{cardsToTransfer.amount}}</h6>
-      <!-- <b-input type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input>  -->
       Reciever Loom Address:
       <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
       <b-button type="button" @click="transferAllCardsHandler()">Transfer All</b-button>
@@ -43,7 +42,6 @@ export default class TransferAllCardsModal extends Vue {
     const cardsToTransfer = this.cardsToTransfer.cards
     let cardIds: string[] = []
     let amounts: number[] = []
-    console.log("cardsToTransfer", cardsToTransfer)
     cardsToTransfer.map((card) => {
       cardIds.push(card.id)
       amounts.push(card.amount)
@@ -53,8 +51,8 @@ export default class TransferAllCardsModal extends Vue {
       amounts,
       destinationDappchainAddress: this.receiverAddress,
     })
+    this.$root.$emit("bv::hide::modal", "transfer-all-cards-modal")
   }
-
 }
 </script>
 <style lang="scss">

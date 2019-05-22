@@ -70,6 +70,13 @@ const createClient = (state, privateKeyString) => {
   return client
 }
 
+const checkLatestWithdrawal = () => {
+  let p = ""
+  const ls = localStorage.getItem('lastWithdrawTime')
+  if(ls) p = JSON.parse(ls)
+  return p || 0  
+}
+
 /**
  * overrides client.middleware SignedEthTxMiddleware.Handle
  * to notify vuex when the user has to sign
@@ -99,7 +106,6 @@ function reconfigureClient(client, commit) {
   return client
 }
 
-
 const defaultState = () => {
 
   return {
@@ -128,6 +134,7 @@ const defaultState = () => {
     isConnectedToDappChain: false,
     showSigningAlert: false,
     validators: [],
+    withdrewOn: checkLatestWithdrawal()
   }
 }
 
@@ -140,10 +147,6 @@ export default {
     },
     currentChain(state) {
       return state.chainUrls[state.networkId]
-    },
-    getWithdrewOn(state) {
-      const s = localStorage.getItem('lastWithdrawTime') || '0'
-      return parseInt(s,10) 
     },
     currentRPCUrl(state) {
       const network = state.chainUrls[state.networkId]
@@ -191,7 +194,8 @@ export default {
       }
     },
     setWithdrewOn(state, timestamp) {
-      localStorage.setItem('lastWithdrawTime',timestamp)
+      state.withdrewOn = timestamp
+      localStorage.setItem('lastWithdrawTime', JSON.stringify(timestamp))      
     },
     setDPOSUserV3(state, payload) {
       console.log("setting dpos user")
@@ -268,8 +272,7 @@ export default {
         debug("ethereumLoom.balanceOf")
         let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
         debug("ethereumLoom.balanceOf",result.toString())
-        let balance = formatToCrypto(result.toString())
-        const mainnetBalance = parseFloat(balance).toFixed(2)
+        let mainnetBalance = formatToCrypto(result.toString())
         const userBalance = rootState.DPOS.userBalance
         commit("DPOS/setUserBalance",Object.assign(userBalance,{mainnetBalance}),{root:true})
         return mainnetBalance
@@ -291,7 +294,7 @@ export default {
         dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
         chainId: chainId,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-        version: 1
+        version: 2
       })
       .then(user => {
         reconfigureClient(user.client, commit)
@@ -324,7 +327,7 @@ export default {
             dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-            version: 1
+            version: 2
           });
         } else {          
           user = await DPOSUserV3.createMetamaskUserAsync({
@@ -333,7 +336,7 @@ export default {
             dappchainPrivateKey: privateKeyString,
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-            version: 1
+            version: 2
           });
         }
       } catch(err) {
@@ -348,14 +351,19 @@ export default {
      * @returns {Promise<TransactionReceipt>}
      */
     async depositAsync({ state, commit }, {amount}) {
-      console.assert(state.dposUser, "Expected dposUser to be initialized")
-      commit('DPOS/setGatewayBusy', true, { root: true })
-      const user = await state.dposUser
-      const tokens = new BN( "" + parseInt(amount,10)) 
-      const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
-      const res = user.depositAsync(new BN(weiAmount, 10))
-      commit('DPOS/setGatewayBusy', false, { root: true })
-      return res
+      try {
+        console.assert(state.dposUser, "Expected dposUser to be initialized")
+        commit('DPOS/setGatewayBusy', true, { root: true })
+        const user = await state.dposUser
+        const tokens = new BN( "" + parseInt(amount,10)) 
+        const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
+        const res = user.depositAsync(new BN(weiAmount, 10))
+        commit('DPOS/setGatewayBusy', false, { root: true })
+        return res
+      } catch (error) {
+        console.log(error)
+        commit('DPOS/setGatewayBusy', false, { root: true })
+      }
     },
     /**
      * 
@@ -370,38 +378,41 @@ export default {
       const weiAmount = new BN(state.web3.utils.toWei(tokens, 'ether'), 10)
       commit('DPOS/setGatewayBusy', true, { root: true })
       console.log("withdrawAsync",weiAmount)
-      let res = await user.withdrawAsync(new BN(weiAmount, 10))
-      commit('DPOS/setGatewayBusy', false, { root: true })
-      return res
+      try {
+        let res = await user.withdrawAsync(new BN(weiAmount, 10))
+        return res
+        commit('DPOS/setGatewayBusy', false, { root: true })
+      } catch(err) {
+        commit('DPOS/setGatewayBusy', false, { root: true })
+      }
     },
     async approveAsync({ state, commit }, payload) {
-      commit('DPOS/setGatewayBusy', true, { root: true })
 
       if (!state.dposUser) {
         throw new Error("expected dposUser to be initialized")
       }
-
       const { amount } = payload
-      const user = await state.dposUser
-      
+      const user:DPOSUserV3 = await state.dposUser
       const token = user.ethereumLoom
       const gateway = user.ethereumGateway
-      await token.approve(gateway.address, amount)
-      
+      commit('DPOS/setGatewayBusy', true, { root: true })
+      try {
+        await token.approve(gateway.address, amount)
+      } catch (error) {
+        console.log(error)
+      }
+      commit('DPOS/setGatewayBusy', false, { root: true })
     },
     async getDappchainLoomBalance({ rootState, state, commit }) {
       
       if (!state.dposUser) {
         throw new Error("Expected dposUser to be initialized")
       }
-      const user = await state.dposUser
-
-      
+      const user:DPOSUserV3 = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
-      const balance = formatToCrypto(loomWei.toString())
+      const loomBalance = formatToCrypto(loomWei.toString())
       const userBalance = rootState.DPOS.userBalance
-      let loomBalance = parseFloat(balance).toFixed(2)
       commit("DPOS/setUserBalance", Object.assign(userBalance,{loomBalance}), {root:true})
       return loomBalance
     },
@@ -676,16 +687,16 @@ export default {
       }
     },
 
-    async withdrawCoinGatewayAsync({ state, dispatch, commit }, payload) {
+    async withdrawCoinGatewayAsync({ state, commit }, payload:{amount:BN,signature:string}) {
       console.assert(!!state.dposUser, "Expected dposUser to be initialised")
-
       var user:DPOSUserV3 = await state.dposUser
       commit('DPOS/setGatewayBusy', true, { root: true })
-      debug("withdrawCoinFromRinkebyGatewayAsync", payload);
+      let amount = payload.amount ? payload.amount.toString() : ""
+      debug("withdrawCoinGatewayAsync", amount, payload.signature);
       try {
         // @ts-ignore
-        const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
-        console.log("result", result);
+        //const result = await user.withdrawCoinFromDAppChainGatewayAsync(payload.amount, payload.signature)
+        const result = await user.resumeWithdrawalAsync()
         commit('DPOS/setGatewayBusy', false, { root: true })
         return  result
       } catch (err) {

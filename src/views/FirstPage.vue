@@ -32,7 +32,17 @@
                     or extension                      
                   </small>
                 </b-card>                  
-              </div>                
+              </div>      
+               <div class="col-sm-12 col-md-6">
+                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                  <h5>Trezor <small>via Metamask</small></h5>
+                  <img src="../assets/trezor_logo.png">
+                  <small>
+                    Connect to your Trezor wallet <br>
+                    via Metamask                    
+                  </small>
+                </b-card>                  
+              </div>                 
             </div>  
           </b-card>
 
@@ -119,7 +129,6 @@ export default class FirstPage extends Vue {
   async selectWallet(wallet) {
     if(wallet === "ledger") {
       this.setWalletType("ledger")
-      this.setUserIsLoggedIn(true)
      this.$refs.hardwareWalletConfigRef.show() 
     } else if(wallet === "metamask") {
       this.setWalletType("metamask")

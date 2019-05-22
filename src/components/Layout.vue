@@ -7,7 +7,7 @@
         {{ $t('Please sign the transaction on your wallet') }}
       </strong>
     </b-alert>
-
+    <div v-if="networkId === 'us1'" style="background: #FFC107;padding: 0 16px;">Testnet</div>
     <faucet-header v-on:update:chain="refresh()"></faucet-header>
     <div class="content">      
 		  <warning-overlay type="metamask"></warning-overlay>
@@ -25,6 +25,7 @@
           </b-modal>
           <transition name="page" mode="out-in">
           <router-view></router-view>
+          <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
           </transition>
         </div>
       </div> 
@@ -95,7 +96,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'account',
       'showSigningAlert',
       'metamaskError',
-      'mappingError'
+      'mappingError',
+      'networkId',
     ]),
     ...DPOSStore.mapState([
       'showSidebar',
@@ -193,6 +195,7 @@ export default class Layout extends Vue {
 
         if (this.currentMetamaskAddress && 
           this.currentMetamaskAddress !== accounts[0] ) {
+                localStorage.removeItem('lastWithdrawTime')
                 this.metamaskChangeAlert = true
                 window.ethereum.removeAllListeners()
         }

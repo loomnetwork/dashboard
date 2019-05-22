@@ -26,9 +26,6 @@
     </section>
     <section v-if="userIsLoggedIn" class="user-stakes">
       <h6 v-if="!isBootstrap">{{ $t('My stakes') }} </h6>
-      <p class="no-stakes" v-if="delegations.length === 0">
-        {{ $t("You haven't staked with {validator} yet", {validator:validator.Name}) }}
-      </p>
       <b-list-group v-if="validatorDelegations.length">
           <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
             <dl>
@@ -40,8 +37,10 @@
               <dd>{{delegation.updateAmount | tokenAmount}}</dd>
               <dt>{{ $t('views.validator_detail.timelock_tier') }}</dt>
               <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
+              <template v-if="delegation.lockTime > 0">
               <dt>Unlock time</dt>
               <dd>{{delegation.lockTime | date('seconds')}}</dd>
+              </template>
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
@@ -59,12 +58,13 @@
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
 
-      <div class="button-container">
+      <div class="button-container" v-if="!isBootstrap">
         <b-button class="stake mr-3" 
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="consolidate" v-if="multipleUnlockedStakes && false"
+
+        <b-button class="consolidate" v-if="multipleUnlockedStakes"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>

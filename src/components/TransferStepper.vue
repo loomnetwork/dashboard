@@ -1,6 +1,12 @@
 <template>
 <div>
-  <b-button v-b-modal.modalPrevent variant="outline-primary" @click="show = !show">{{buttonLabel}}</b-button>
+  <div v-if="enableCooldown">
+    <b-button v-b-modal.modalPrevent variant="outline-primary" :disabled="enableCooldown" @click="show = !show">
+      {{ $t('views.my_account.complete_withdraw') }}
+      <b-spinner variant="primary" label="Spinning" small/>
+    </b-button>
+  </div>
+  <b-button v-else v-b-modal.modalPrevent variant="outline-primary" @click="show = !show">{{buttonLabel}}</b-button>
   <b-modal id="gateway-transfer" title="BootstrapVue" v-model="show" :busy="true" 
     no-close-on-esc
     no-close-on-backdrop
@@ -61,12 +67,12 @@
       <div v-if="!resolveTxSuccess || txSuccessPromise" class="pending">
         <b-spinner variant="primary" label="Spinning"/>
         <p><slot name="confirmingMessage">Approval detected.</slot><br/>
-        <a target="_blank" :href="etherscanApprovalUrl" class="hash">View on EtherScan</a></p>
+        <a target="_blank" v-if="txHash" :href="etherscanApprovalUrl" class="hash">View on EtherScan</a></p>
         <b-btn v-if="txSuccessPromise === null" @click="reset" variant="outline-primary">new transfer</b-btn>
       </div>
       <div v-else-if="resolveTxSuccess" class="failure">
         <p><slot name="successTxt">Transaction sent:</slot><br/>
-        <a target="_blank" :href="etherscanDepositUrl" class="hash">View on EtherScan</a></p>
+        <a target="_blank" v-if="txHash" :href="etherscanDepositUrl" class="hash">View on EtherScan</a></p>
         <p>Mining transaction, please access the <router-link to="/history">history page</router-link> to see the progress.</p>
         <b-btn v-if="txSuccessPromise === null" @click="hide" variant="outline-primary">close</b-btn>
       </div>
@@ -87,7 +93,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     "transferAction",   // function (amount) => Promise<TransactionReceipt>
     "resolveTxSuccess", // function (TransactionReceipt) => Promise<void>
     "executionTitle",
-    "buttonLabel"
+    "buttonLabel",
+    "enableCooldown"
   ],
   computed: {
     ...DPOSStore.mapState([
@@ -158,13 +165,12 @@ export default class TransferStepper extends Vue {
     if (tx) {
       this.tx = tx
       this.txHash = tx.hash
-      this.etherscanApprovalUrl = `https://etherscan.io/tx/${tx.hash}`
-      
+      this.etherscanApprovalUrl = `https://etherscan.io/tx/${this.txHash}`
       if (this.resolveTxSuccess) {
         // resolved of deposit
         this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx )        
         this.txSuccessPromise.then((tx) => {
-          this.etherscanDepositUrl = `https://etherscan.io/tx/${tx.hash}`
+          this.etherscanDepositUrl = `https://etherscan.io/tx/${this.txHash}`
           this.transferSuccessful(), console.error
         })
 
@@ -172,6 +178,7 @@ export default class TransferStepper extends Vue {
         // resolved of withdraw
         this.$emit('withdrawalDone'); //this will call afterWithdrawalDone() of myAccount page
       }
+      this.$root.$emit('withdrawalExecuted')
       this.step = 3;
     } else {
       // withdraw fail: in IF case of executeWithdrawal()
@@ -181,8 +188,9 @@ export default class TransferStepper extends Vue {
   }
 
   transferFailed(error) {
-    if (error.message.includes("User denied transaction signature")) {
+    if (error.message.includes("User denied")) {
       this.errorMessage = "You rejected the transaction"
+      this.$emit('witdrawalRejected');
       this.$emit('withdrawalFailed'); //this will call afterWithdrawalFailed() of myAccount page 
       if (this.resolveTxSuccess) {
         // set to true only deposit case, this will shoe retry button
@@ -203,10 +211,9 @@ export default class TransferStepper extends Vue {
       this.hasTransferFailed = true;
       // report to sentry
     }
-    
+    this.hide()
+    this.reset()
     this.approvalPromise = null;
-   
-    
   }
 
   retryTransfer() {

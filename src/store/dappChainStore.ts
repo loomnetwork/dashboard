@@ -5,7 +5,6 @@ import {
 } from 'loom-js'
 
 import { createDefaultClient } from 'loom-js/dist/helpers'
-
 import networks from '../../chain-config'
 import { getMetamaskSigner, EthersSigner } from "loom-js/dist/solidity-helpers"
 import { getDomainType, formatToCrypto } from '../utils'
@@ -16,9 +15,7 @@ import Debug from "debug"
 import token from '../data/topTokensSymbol.json'
 //@ts-ignore
 import BinanceTokenJSON from '../contracts/BinanceToken.json'
-
 import Web3 from "web3"
-
 
 Debug.enable("dashboard.dapp")
 const debug = Debug("dashboard.dapp")
@@ -70,7 +67,6 @@ const createClient = (state, privateKeyString) => {
   client.on('error', msg => {
     console.error('PlasmaChain connection error', msg)
   })
-
   return client
 }
 
@@ -132,7 +128,6 @@ const defaultState = () => {
     isConnectedToDappChain: false,
     showSigningAlert: false,
     validators: [],
-    
   }
 }
 
@@ -419,7 +414,6 @@ export default {
       try {
         const ethCoinInstance:EthCoin = await state.ethCoinInstance
         let balance = await ethCoinInstance.getBalanceOfAsync(user.loomAddress)
-        balance = 1800000000000000
         commit('setDappchainBalance', {balance: balance, keyBalance: 'ETH'} )
       } catch (e) {
         commit('setDappchainBalance', {balance: 0, keyBalance: 'ETH'})
@@ -739,11 +733,9 @@ export default {
             commit('setCurrentTokenInstance', tokenInstance)
             console.log('tokenInstance:', tokenInstance);
             // commit('setCurrentTokenMainnetAddress', mainnetAddress)
-            
           }
           commit('setCurrentTokenSymbol', tokenSymbol)
           console.log(state.currentTokenSymbol);
-
           await dispatch('checkTokenBalance')
       } catch (error) {
         throw Error(`Can't use ${tokenSymbol} token, ${error}`)
@@ -751,7 +743,6 @@ export default {
       console.log("UPDATE TOKEN FINISH");
     },
     async checkTokenBalance({ rootState, state, commit, dispatch }) {
-
       try {
         let balance
         if (state.currentTokenSymbol === 'ETH') {
@@ -762,9 +753,7 @@ export default {
           console.log('loom is here');
           let loomBalance = await dispatch('getDappchainLoomBalance')
           balance = loomBalance
-
         } else {
-
           const user:DPOSUserV3 = await rootState.DappChain.dposUser
           const addr = user!.loomAddress.local.toString()
           balance = await state.currentTokenInstance.methods
@@ -776,37 +765,18 @@ export default {
       } catch (error) {
         commit('setCurrentTokenBalance', {balance:0})
         console.log("errorrrrr", error);
-        
         throw error
       }
     },
-    // async createEthCoinInstance({state, commit,dispatch}){
-    //   dispatch('init')
-    //   console.log('ethCoin', state.ethCoinInstance);
-    //   if (state.ethCoinInstance) return
-    //   try {
-    //     console.log('contract.eth', Contracts.EthCoin);
-    //     console.log('dapp', state.dAppChainClient);
-    //     console.log(state.localAddress);
-    //     debugger
-    //     let ethCoinInstance = await Contracts.EthCoin.createAsync(state.dAppChainClient, state.localAddress)
-    //     console.log('ethCoin2', state.ethCoinInstance);
-    //     commit('setEthCoinInstance', ethCoinInstance)
-    //   } catch (error) {
-    //     console.log('err',error);
-    //   }
-    // },
     
     async init({ state, commit, dispatch }, payload) {
       console.log('dposUser', state.dposUser);
-
       if(!state.dposUser) return
       const user = await state.dposUser
       console.log(user);
       const client = user.client
       const localAddress = user.loomAddress
       const account = localAddress.local.toString()
-
       console.log('client ',client, account, localAddress);
       commit('updateState', {
         account,
@@ -818,9 +788,6 @@ export default {
           console.log('initHandlers');
         }
       }
-      // payload.contractNames.forEach(async contractName => {
-      //   await initHandlers[contractName]()
-      // })
     },
 
     showMsg({ commit }, payload) {
@@ -828,6 +795,5 @@ export default {
       commit(msgType, payload.msg, { root: true })
     }
   } as ActionTree<any,DashboardState>
-
   
 }

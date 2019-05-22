@@ -39,7 +39,6 @@ import BN from 'bn.js';
 import { async } from 'rxjs/internal/scheduler/async';
 import { DPOSUserV3 } from 'loom-js';
 
-
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
 
@@ -76,9 +75,6 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'currentTokenBalance'
     ])
   },
-  watch: {
-
-  }
 })
 
 export default class DepositWithdraw extends Vue {
@@ -94,7 +90,6 @@ export default class DepositWithdraw extends Vue {
       return this.ready()
     }
   }
-
 
   @Watch("ethCoinInstance")
   async ready(){

@@ -1,5 +1,6 @@
 
 import BN from "bn.js"
+import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import Contract from "web3/eth/contract"
@@ -32,6 +33,23 @@ export interface PlasmaState {
         eth: TokenInfo<EthCoin>,
         [tokenSymbol: string]: TokenInfo<Coin|EthCoin|ERC20>,
     }
+
+    packsContract: {
+        [name: string]: Contract,
+    },
+    cardContract: MigratedZBGCard | null,
+    cardBalance: CardDetail[],
+    packBalance: PackDetail[],
+    cardToTransferSelected: CardDetail | {},
+    allCardsToTransferSelected: {
+        edition: string
+        cards: CardDetail[]
+        amount: number,
+    }
+    packToTransferSelected: {
+        type: string,
+        amount: number,
+    } | {}
 }
 
 export interface TokenInfo<C> {
@@ -46,10 +64,28 @@ export interface TransferRequest {
     to: string
 }
 
+export interface PackDetail {
+    type: string,
+    amount: number,
+}
+
 export interface PlasmaSigner {
     // chain id to be used with this signer (ex. eth for ethSigner, default for plasama pk)
     readonly chain: string
     getAddress(): Promise<string>
     signAsync(message: string): Promise<string>
     configureClient(client: Client)
+}
+
+export interface CardDetail {
+    id: string
+    amount: number
+    display_name: string
+    image: string
+    title: string
+    variant: string
+    variation: string
+    mould_type: string
+    element: string
+    originalID: string
 }

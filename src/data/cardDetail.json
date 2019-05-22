@@ -1,0 +1,3130 @@
+{
+  "10": {
+    "mouldId": 1,
+    "variant": "standard-edition"
+  },
+  "11": {
+    "mouldId": 1,
+    "variant": "backers-edition"
+  },
+  "12": {
+    "mouldId": 1,
+    "variant": "limited-edition"
+  },
+  "13": {
+    "mouldId": 1,
+    "variant": "binance-edition"
+  },
+  "14": {
+    "mouldId": 1,
+    "variant": "tron-edition"
+  },
+  "20": {
+    "mouldId": 2,
+    "variant": "standard-edition"
+  },
+  "21": {
+    "mouldId": 2,
+    "variant": "backers-edition"
+  },
+  "22": {
+    "mouldId": 2,
+    "variant": "limited-edition"
+  },
+  "23": {
+    "mouldId": 2,
+    "variant": "binance-edition"
+  },
+  "24": {
+    "mouldId": 2,
+    "variant": "tron-edition"
+  },
+  "30": {
+    "mouldId": 3,
+    "variant": "standard-edition"
+  },
+  "31": {
+    "mouldId": 3,
+    "variant": "backers-edition"
+  },
+  "32": {
+    "mouldId": 3,
+    "variant": "limited-edition"
+  },
+  "33": {
+    "mouldId": 3,
+    "variant": "binance-edition"
+  },
+  "34": {
+    "mouldId": 3,
+    "variant": "tron-edition"
+  },
+  "40": {
+    "mouldId": 4,
+    "variant": "standard-edition"
+  },
+  "41": {
+    "mouldId": 4,
+    "variant": "backers-edition"
+  },
+  "42": {
+    "mouldId": 4,
+    "variant": "limited-edition"
+  },
+  "43": {
+    "mouldId": 4,
+    "variant": "binance-edition"
+  },
+  "44": {
+    "mouldId": 4,
+    "variant": "tron-edition"
+  },
+  "50": {
+    "mouldId": 5,
+    "variant": "standard-edition"
+  },
+  "51": {
+    "mouldId": 5,
+    "variant": "backers-edition"
+  },
+  "52": {
+    "mouldId": 5,
+    "variant": "limited-edition"
+  },
+  "53": {
+    "mouldId": 5,
+    "variant": "binance-edition"
+  },
+  "54": {
+    "mouldId": 5,
+    "variant": "tron-edition"
+  },
+  "60": {
+    "mouldId": 6,
+    "variant": "standard-edition"
+  },
+  "61": {
+    "mouldId": 6,
+    "variant": "backers-edition"
+  },
+  "62": {
+    "mouldId": 6,
+    "variant": "limited-edition"
+  },
+  "63": {
+    "mouldId": 6,
+    "variant": "binance-edition"
+  },
+  "64": {
+    "mouldId": 6,
+    "variant": "tron-edition"
+  },
+  "70": {
+    "mouldId": 7,
+    "variant": "standard-edition"
+  },
+  "71": {
+    "mouldId": 7,
+    "variant": "backers-edition"
+  },
+  "72": {
+    "mouldId": 7,
+    "variant": "limited-edition"
+  },
+  "73": {
+    "mouldId": 7,
+    "variant": "binance-edition"
+  },
+  "74": {
+    "mouldId": 7,
+    "variant": "tron-edition"
+  },
+  "80": {
+    "mouldId": 8,
+    "variant": "standard-edition"
+  },
+  "81": {
+    "mouldId": 8,
+    "variant": "backers-edition"
+  },
+  "82": {
+    "mouldId": 8,
+    "variant": "limited-edition"
+  },
+  "83": {
+    "mouldId": 8,
+    "variant": "binance-edition"
+  },
+  "84": {
+    "mouldId": 8,
+    "variant": "tron-edition"
+  },
+  "90": {
+    "mouldId": 9,
+    "variant": "standard-edition"
+  },
+  "91": {
+    "mouldId": 9,
+    "variant": "backers-edition"
+  },
+  "92": {
+    "mouldId": 9,
+    "variant": "limited-edition"
+  },
+  "93": {
+    "mouldId": 9,
+    "variant": "binance-edition"
+  },
+  "94": {
+    "mouldId": 9,
+    "variant": "tron-edition"
+  },
+  "100": {
+    "mouldId": 10,
+    "variant": "standard-edition"
+  },
+  "101": {
+    "mouldId": 10,
+    "variant": "backers-edition"
+  },
+  "102": {
+    "mouldId": 10,
+    "variant": "limited-edition"
+  },
+  "103": {
+    "mouldId": 10,
+    "variant": "binance-edition"
+  },
+  "104": {
+    "mouldId": 10,
+    "variant": "tron-edition"
+  },
+  "110": {
+    "mouldId": 11,
+    "variant": "standard-edition"
+  },
+  "111": {
+    "mouldId": 11,
+    "variant": "backers-edition"
+  },
+  "112": {
+    "mouldId": 11,
+    "variant": "limited-edition"
+  },
+  "113": {
+    "mouldId": 11,
+    "variant": "binance-edition"
+  },
+  "114": {
+    "mouldId": 11,
+    "variant": "tron-edition"
+  },
+  "120": {
+    "mouldId": 12,
+    "variant": "standard-edition"
+  },
+  "121": {
+    "mouldId": 12,
+    "variant": "backers-edition"
+  },
+  "122": {
+    "mouldId": 12,
+    "variant": "limited-edition"
+  },
+  "123": {
+    "mouldId": 12,
+    "variant": "binance-edition"
+  },
+  "124": {
+    "mouldId": 12,
+    "variant": "tron-edition"
+  },
+  "130": {
+    "mouldId": 13,
+    "variant": "standard-edition"
+  },
+  "131": {
+    "mouldId": 13,
+    "variant": "backers-edition"
+  },
+  "132": {
+    "mouldId": 13,
+    "variant": "limited-edition"
+  },
+  "133": {
+    "mouldId": 13,
+    "variant": "binance-edition"
+  },
+  "134": {
+    "mouldId": 13,
+    "variant": "tron-edition"
+  },
+  "140": {
+    "mouldId": 14,
+    "variant": "standard-edition"
+  },
+  "141": {
+    "mouldId": 14,
+    "variant": "backers-edition"
+  },
+  "142": {
+    "mouldId": 14,
+    "variant": "limited-edition"
+  },
+  "143": {
+    "mouldId": 14,
+    "variant": "binance-edition"
+  },
+  "144": {
+    "mouldId": 14,
+    "variant": "tron-edition"
+  },
+  "150": {
+    "mouldId": 15,
+    "variant": "standard-edition"
+  },
+  "151": {
+    "mouldId": 15,
+    "variant": "backers-edition"
+  },
+  "152": {
+    "mouldId": 15,
+    "variant": "limited-edition"
+  },
+  "153": {
+    "mouldId": 15,
+    "variant": "binance-edition"
+  },
+  "154": {
+    "mouldId": 15,
+    "variant": "tron-edition"
+  },
+  "160": {
+    "mouldId": 16,
+    "variant": "standard-edition"
+  },
+  "161": {
+    "mouldId": 16,
+    "variant": "backers-edition"
+  },
+  "162": {
+    "mouldId": 16,
+    "variant": "limited-edition"
+  },
+  "163": {
+    "mouldId": 16,
+    "variant": "binance-edition"
+  },
+  "164": {
+    "mouldId": 16,
+    "variant": "tron-edition"
+  },
+  "170": {
+    "mouldId": 17,
+    "variant": "standard-edition"
+  },
+  "171": {
+    "mouldId": 17,
+    "variant": "backers-edition"
+  },
+  "172": {
+    "mouldId": 17,
+    "variant": "limited-edition"
+  },
+  "173": {
+    "mouldId": 17,
+    "variant": "binance-edition"
+  },
+  "174": {
+    "mouldId": 17,
+    "variant": "tron-edition"
+  },
+  "180": {
+    "mouldId": 18,
+    "variant": "standard-edition"
+  },
+  "181": {
+    "mouldId": 18,
+    "variant": "backers-edition"
+  },
+  "182": {
+    "mouldId": 18,
+    "variant": "limited-edition"
+  },
+  "183": {
+    "mouldId": 18,
+    "variant": "binance-edition"
+  },
+  "184": {
+    "mouldId": 18,
+    "variant": "tron-edition"
+  },
+  "190": {
+    "mouldId": 19,
+    "variant": "standard-edition"
+  },
+  "191": {
+    "mouldId": 19,
+    "variant": "backers-edition"
+  },
+  "192": {
+    "mouldId": 19,
+    "variant": "limited-edition"
+  },
+  "193": {
+    "mouldId": 19,
+    "variant": "binance-edition"
+  },
+  "194": {
+    "mouldId": 19,
+    "variant": "tron-edition"
+  },
+  "200": {
+    "mouldId": 20,
+    "variant": "standard-edition"
+  },
+  "201": {
+    "mouldId": 20,
+    "variant": "backers-edition"
+  },
+  "202": {
+    "mouldId": 20,
+    "variant": "limited-edition"
+  },
+  "203": {
+    "mouldId": 20,
+    "variant": "binance-edition"
+  },
+  "204": {
+    "mouldId": 20,
+    "variant": "tron-edition"
+  },
+  "210": {
+    "mouldId": 21,
+    "variant": "standard-edition"
+  },
+  "211": {
+    "mouldId": 21,
+    "variant": "backers-edition"
+  },
+  "212": {
+    "mouldId": 21,
+    "variant": "limited-edition"
+  },
+  "213": {
+    "mouldId": 21,
+    "variant": "binance-edition"
+  },
+  "214": {
+    "mouldId": 21,
+    "variant": "tron-edition"
+  },
+  "220": {
+    "mouldId": 22,
+    "variant": "standard-edition"
+  },
+  "221": {
+    "mouldId": 22,
+    "variant": "backers-edition"
+  },
+  "222": {
+    "mouldId": 22,
+    "variant": "limited-edition"
+  },
+  "223": {
+    "mouldId": 22,
+    "variant": "binance-edition"
+  },
+  "224": {
+    "mouldId": 22,
+    "variant": "tron-edition"
+  },
+  "230": {
+    "mouldId": 23,
+    "variant": "standard-edition"
+  },
+  "231": {
+    "mouldId": 23,
+    "variant": "backers-edition"
+  },
+  "232": {
+    "mouldId": 23,
+    "variant": "limited-edition"
+  },
+  "233": {
+    "mouldId": 23,
+    "variant": "binance-edition"
+  },
+  "234": {
+    "mouldId": 23,
+    "variant": "tron-edition"
+  },
+  "240": {
+    "mouldId": 24,
+    "variant": "standard-edition"
+  },
+  "241": {
+    "mouldId": 24,
+    "variant": "backers-edition"
+  },
+  "242": {
+    "mouldId": 24,
+    "variant": "limited-edition"
+  },
+  "243": {
+    "mouldId": 24,
+    "variant": "binance-edition"
+  },
+  "244": {
+    "mouldId": 24,
+    "variant": "tron-edition"
+  },
+  "250": {
+    "mouldId": 25,
+    "variant": "standard-edition"
+  },
+  "251": {
+    "mouldId": 25,
+    "variant": "backers-edition"
+  },
+  "252": {
+    "mouldId": 25,
+    "variant": "limited-edition"
+  },
+  "253": {
+    "mouldId": 25,
+    "variant": "binance-edition"
+  },
+  "254": {
+    "mouldId": 25,
+    "variant": "tron-edition"
+  },
+  "260": {
+    "mouldId": 26,
+    "variant": "standard-edition"
+  },
+  "261": {
+    "mouldId": 26,
+    "variant": "backers-edition"
+  },
+  "262": {
+    "mouldId": 26,
+    "variant": "limited-edition"
+  },
+  "263": {
+    "mouldId": 26,
+    "variant": "binance-edition"
+  },
+  "264": {
+    "mouldId": 26,
+    "variant": "tron-edition"
+  },
+  "270": {
+    "mouldId": 27,
+    "variant": "standard-edition"
+  },
+  "271": {
+    "mouldId": 27,
+    "variant": "backers-edition"
+  },
+  "272": {
+    "mouldId": 27,
+    "variant": "limited-edition"
+  },
+  "273": {
+    "mouldId": 27,
+    "variant": "binance-edition"
+  },
+  "274": {
+    "mouldId": 27,
+    "variant": "tron-edition"
+  },
+  "280": {
+    "mouldId": 28,
+    "variant": "standard-edition"
+  },
+  "281": {
+    "mouldId": 28,
+    "variant": "backers-edition"
+  },
+  "282": {
+    "mouldId": 28,
+    "variant": "limited-edition"
+  },
+  "283": {
+    "mouldId": 28,
+    "variant": "binance-edition"
+  },
+  "284": {
+    "mouldId": 28,
+    "variant": "tron-edition"
+  },
+  "290": {
+    "mouldId": 29,
+    "variant": "standard-edition"
+  },
+  "291": {
+    "mouldId": 29,
+    "variant": "backers-edition"
+  },
+  "292": {
+    "mouldId": 29,
+    "variant": "limited-edition"
+  },
+  "293": {
+    "mouldId": 29,
+    "variant": "binance-edition"
+  },
+  "294": {
+    "mouldId": 29,
+    "variant": "tron-edition"
+  },
+  "300": {
+    "mouldId": 30,
+    "variant": "standard-edition"
+  },
+  "301": {
+    "mouldId": 30,
+    "variant": "backers-edition"
+  },
+  "302": {
+    "mouldId": 30,
+    "variant": "limited-edition"
+  },
+  "303": {
+    "mouldId": 30,
+    "variant": "binance-edition"
+  },
+  "304": {
+    "mouldId": 30,
+    "variant": "tron-edition"
+  },
+  "310": {
+    "mouldId": 31,
+    "variant": "standard-edition"
+  },
+  "311": {
+    "mouldId": 31,
+    "variant": "backers-edition"
+  },
+  "312": {
+    "mouldId": 31,
+    "variant": "limited-edition"
+  },
+  "313": {
+    "mouldId": 31,
+    "variant": "binance-edition"
+  },
+  "314": {
+    "mouldId": 31,
+    "variant": "tron-edition"
+  },
+  "320": {
+    "mouldId": 32,
+    "variant": "standard-edition"
+  },
+  "321": {
+    "mouldId": 32,
+    "variant": "backers-edition"
+  },
+  "322": {
+    "mouldId": 32,
+    "variant": "limited-edition"
+  },
+  "323": {
+    "mouldId": 32,
+    "variant": "binance-edition"
+  },
+  "324": {
+    "mouldId": 32,
+    "variant": "tron-edition"
+  },
+  "330": {
+    "mouldId": 33,
+    "variant": "standard-edition"
+  },
+  "331": {
+    "mouldId": 33,
+    "variant": "backers-edition"
+  },
+  "332": {
+    "mouldId": 33,
+    "variant": "limited-edition"
+  },
+  "333": {
+    "mouldId": 33,
+    "variant": "binance-edition"
+  },
+  "334": {
+    "mouldId": 33,
+    "variant": "tron-edition"
+  },
+  "340": {
+    "mouldId": 34,
+    "variant": "standard-edition"
+  },
+  "341": {
+    "mouldId": 34,
+    "variant": "backers-edition"
+  },
+  "342": {
+    "mouldId": 34,
+    "variant": "limited-edition"
+  },
+  "343": {
+    "mouldId": 34,
+    "variant": "binance-edition"
+  },
+  "344": {
+    "mouldId": 34,
+    "variant": "tron-edition"
+  },
+  "350": {
+    "mouldId": 35,
+    "variant": "standard-edition"
+  },
+  "351": {
+    "mouldId": 35,
+    "variant": "backers-edition"
+  },
+  "352": {
+    "mouldId": 35,
+    "variant": "limited-edition"
+  },
+  "353": {
+    "mouldId": 35,
+    "variant": "binance-edition"
+  },
+  "354": {
+    "mouldId": 35,
+    "variant": "tron-edition"
+  },
+  "360": {
+    "mouldId": 36,
+    "variant": "standard-edition"
+  },
+  "361": {
+    "mouldId": 36,
+    "variant": "backers-edition"
+  },
+  "362": {
+    "mouldId": 36,
+    "variant": "limited-edition"
+  },
+  "363": {
+    "mouldId": 36,
+    "variant": "binance-edition"
+  },
+  "364": {
+    "mouldId": 36,
+    "variant": "tron-edition"
+  },
+  "370": {
+    "mouldId": 37,
+    "variant": "standard-edition"
+  },
+  "371": {
+    "mouldId": 37,
+    "variant": "backers-edition"
+  },
+  "372": {
+    "mouldId": 37,
+    "variant": "limited-edition"
+  },
+  "373": {
+    "mouldId": 37,
+    "variant": "binance-edition"
+  },
+  "374": {
+    "mouldId": 37,
+    "variant": "tron-edition"
+  },
+  "380": {
+    "mouldId": 38,
+    "variant": "standard-edition"
+  },
+  "381": {
+    "mouldId": 38,
+    "variant": "backers-edition"
+  },
+  "382": {
+    "mouldId": 38,
+    "variant": "limited-edition"
+  },
+  "383": {
+    "mouldId": 38,
+    "variant": "binance-edition"
+  },
+  "384": {
+    "mouldId": 38,
+    "variant": "tron-edition"
+  },
+  "390": {
+    "mouldId": 39,
+    "variant": "standard-edition"
+  },
+  "391": {
+    "mouldId": 39,
+    "variant": "backers-edition"
+  },
+  "392": {
+    "mouldId": 39,
+    "variant": "limited-edition"
+  },
+  "393": {
+    "mouldId": 39,
+    "variant": "binance-edition"
+  },
+  "394": {
+    "mouldId": 39,
+    "variant": "tron-edition"
+  },
+  "400": {
+    "mouldId": 40,
+    "variant": "standard-edition"
+  },
+  "401": {
+    "mouldId": 40,
+    "variant": "backers-edition"
+  },
+  "402": {
+    "mouldId": 40,
+    "variant": "limited-edition"
+  },
+  "403": {
+    "mouldId": 40,
+    "variant": "binance-edition"
+  },
+  "404": {
+    "mouldId": 40,
+    "variant": "tron-edition"
+  },
+  "410": {
+    "mouldId": 41,
+    "variant": "standard-edition"
+  },
+  "411": {
+    "mouldId": 41,
+    "variant": "backers-edition"
+  },
+  "412": {
+    "mouldId": 41,
+    "variant": "limited-edition"
+  },
+  "413": {
+    "mouldId": 41,
+    "variant": "binance-edition"
+  },
+  "414": {
+    "mouldId": 41,
+    "variant": "tron-edition"
+  },
+  "420": {
+    "mouldId": 42,
+    "variant": "standard-edition"
+  },
+  "421": {
+    "mouldId": 42,
+    "variant": "backers-edition"
+  },
+  "422": {
+    "mouldId": 42,
+    "variant": "limited-edition"
+  },
+  "423": {
+    "mouldId": 42,
+    "variant": "binance-edition"
+  },
+  "424": {
+    "mouldId": 42,
+    "variant": "tron-edition"
+  },
+  "430": {
+    "mouldId": 43,
+    "variant": "standard-edition"
+  },
+  "431": {
+    "mouldId": 43,
+    "variant": "backers-edition"
+  },
+  "432": {
+    "mouldId": 43,
+    "variant": "limited-edition"
+  },
+  "433": {
+    "mouldId": 43,
+    "variant": "binance-edition"
+  },
+  "434": {
+    "mouldId": 43,
+    "variant": "tron-edition"
+  },
+  "440": {
+    "mouldId": 44,
+    "variant": "standard-edition"
+  },
+  "441": {
+    "mouldId": 44,
+    "variant": "backers-edition"
+  },
+  "442": {
+    "mouldId": 44,
+    "variant": "limited-edition"
+  },
+  "443": {
+    "mouldId": 44,
+    "variant": "binance-edition"
+  },
+  "444": {
+    "mouldId": 44,
+    "variant": "tron-edition"
+  },
+  "450": {
+    "mouldId": 45,
+    "variant": "standard-edition"
+  },
+  "451": {
+    "mouldId": 45,
+    "variant": "backers-edition"
+  },
+  "452": {
+    "mouldId": 45,
+    "variant": "limited-edition"
+  },
+  "453": {
+    "mouldId": 45,
+    "variant": "binance-edition"
+  },
+  "454": {
+    "mouldId": 45,
+    "variant": "tron-edition"
+  },
+  "460": {
+    "mouldId": 46,
+    "variant": "standard-edition"
+  },
+  "461": {
+    "mouldId": 46,
+    "variant": "backers-edition"
+  },
+  "462": {
+    "mouldId": 46,
+    "variant": "limited-edition"
+  },
+  "463": {
+    "mouldId": 46,
+    "variant": "binance-edition"
+  },
+  "464": {
+    "mouldId": 46,
+    "variant": "tron-edition"
+  },
+  "470": {
+    "mouldId": 47,
+    "variant": "standard-edition"
+  },
+  "471": {
+    "mouldId": 47,
+    "variant": "backers-edition"
+  },
+  "472": {
+    "mouldId": 47,
+    "variant": "limited-edition"
+  },
+  "473": {
+    "mouldId": 47,
+    "variant": "binance-edition"
+  },
+  "474": {
+    "mouldId": 47,
+    "variant": "tron-edition"
+  },
+  "480": {
+    "mouldId": 48,
+    "variant": "standard-edition"
+  },
+  "481": {
+    "mouldId": 48,
+    "variant": "backers-edition"
+  },
+  "482": {
+    "mouldId": 48,
+    "variant": "limited-edition"
+  },
+  "483": {
+    "mouldId": 48,
+    "variant": "binance-edition"
+  },
+  "484": {
+    "mouldId": 48,
+    "variant": "tron-edition"
+  },
+  "490": {
+    "mouldId": 49,
+    "variant": "standard-edition"
+  },
+  "491": {
+    "mouldId": 49,
+    "variant": "backers-edition"
+  },
+  "492": {
+    "mouldId": 49,
+    "variant": "limited-edition"
+  },
+  "493": {
+    "mouldId": 49,
+    "variant": "binance-edition"
+  },
+  "494": {
+    "mouldId": 49,
+    "variant": "tron-edition"
+  },
+  "500": {
+    "mouldId": 50,
+    "variant": "standard-edition"
+  },
+  "501": {
+    "mouldId": 50,
+    "variant": "backers-edition"
+  },
+  "502": {
+    "mouldId": 50,
+    "variant": "limited-edition"
+  },
+  "503": {
+    "mouldId": 50,
+    "variant": "binance-edition"
+  },
+  "504": {
+    "mouldId": 50,
+    "variant": "tron-edition"
+  },
+  "510": {
+    "mouldId": 51,
+    "variant": "standard-edition"
+  },
+  "511": {
+    "mouldId": 51,
+    "variant": "backers-edition"
+  },
+  "512": {
+    "mouldId": 51,
+    "variant": "limited-edition"
+  },
+  "513": {
+    "mouldId": 51,
+    "variant": "binance-edition"
+  },
+  "514": {
+    "mouldId": 51,
+    "variant": "tron-edition"
+  },
+  "520": {
+    "mouldId": 52,
+    "variant": "standard-edition"
+  },
+  "521": {
+    "mouldId": 52,
+    "variant": "backers-edition"
+  },
+  "522": {
+    "mouldId": 52,
+    "variant": "limited-edition"
+  },
+  "523": {
+    "mouldId": 52,
+    "variant": "binance-edition"
+  },
+  "524": {
+    "mouldId": 52,
+    "variant": "tron-edition"
+  },
+  "530": {
+    "mouldId": 53,
+    "variant": "standard-edition"
+  },
+  "531": {
+    "mouldId": 53,
+    "variant": "backers-edition"
+  },
+  "532": {
+    "mouldId": 53,
+    "variant": "limited-edition"
+  },
+  "533": {
+    "mouldId": 53,
+    "variant": "binance-edition"
+  },
+  "534": {
+    "mouldId": 53,
+    "variant": "tron-edition"
+  },
+  "540": {
+    "mouldId": 54,
+    "variant": "standard-edition"
+  },
+  "541": {
+    "mouldId": 54,
+    "variant": "backers-edition"
+  },
+  "542": {
+    "mouldId": 54,
+    "variant": "limited-edition"
+  },
+  "543": {
+    "mouldId": 54,
+    "variant": "binance-edition"
+  },
+  "544": {
+    "mouldId": 54,
+    "variant": "tron-edition"
+  },
+  "550": {
+    "mouldId": 55,
+    "variant": "standard-edition"
+  },
+  "551": {
+    "mouldId": 55,
+    "variant": "backers-edition"
+  },
+  "552": {
+    "mouldId": 55,
+    "variant": "limited-edition"
+  },
+  "553": {
+    "mouldId": 55,
+    "variant": "binance-edition"
+  },
+  "554": {
+    "mouldId": 55,
+    "variant": "tron-edition"
+  },
+  "560": {
+    "mouldId": 56,
+    "variant": "standard-edition"
+  },
+  "561": {
+    "mouldId": 56,
+    "variant": "backers-edition"
+  },
+  "562": {
+    "mouldId": 56,
+    "variant": "limited-edition"
+  },
+  "563": {
+    "mouldId": 56,
+    "variant": "binance-edition"
+  },
+  "564": {
+    "mouldId": 56,
+    "variant": "tron-edition"
+  },
+  "570": {
+    "mouldId": 57,
+    "variant": "standard-edition"
+  },
+  "571": {
+    "mouldId": 57,
+    "variant": "backers-edition"
+  },
+  "572": {
+    "mouldId": 57,
+    "variant": "limited-edition"
+  },
+  "573": {
+    "mouldId": 57,
+    "variant": "binance-edition"
+  },
+  "574": {
+    "mouldId": 57,
+    "variant": "tron-edition"
+  },
+  "580": {
+    "mouldId": 58,
+    "variant": "standard-edition"
+  },
+  "581": {
+    "mouldId": 58,
+    "variant": "backers-edition"
+  },
+  "582": {
+    "mouldId": 58,
+    "variant": "limited-edition"
+  },
+  "583": {
+    "mouldId": 58,
+    "variant": "binance-edition"
+  },
+  "584": {
+    "mouldId": 58,
+    "variant": "tron-edition"
+  },
+  "590": {
+    "mouldId": 59,
+    "variant": "standard-edition"
+  },
+  "591": {
+    "mouldId": 59,
+    "variant": "backers-edition"
+  },
+  "592": {
+    "mouldId": 59,
+    "variant": "limited-edition"
+  },
+  "593": {
+    "mouldId": 59,
+    "variant": "binance-edition"
+  },
+  "594": {
+    "mouldId": 59,
+    "variant": "tron-edition"
+  },
+  "600": {
+    "mouldId": 60,
+    "variant": "standard-edition"
+  },
+  "601": {
+    "mouldId": 60,
+    "variant": "backers-edition"
+  },
+  "602": {
+    "mouldId": 60,
+    "variant": "limited-edition"
+  },
+  "603": {
+    "mouldId": 60,
+    "variant": "binance-edition"
+  },
+  "604": {
+    "mouldId": 60,
+    "variant": "tron-edition"
+  },
+  "610": {
+    "mouldId": 61,
+    "variant": "standard-edition"
+  },
+  "611": {
+    "mouldId": 61,
+    "variant": "backers-edition"
+  },
+  "612": {
+    "mouldId": 61,
+    "variant": "limited-edition"
+  },
+  "613": {
+    "mouldId": 61,
+    "variant": "binance-edition"
+  },
+  "614": {
+    "mouldId": 61,
+    "variant": "tron-edition"
+  },
+  "620": {
+    "mouldId": 62,
+    "variant": "standard-edition"
+  },
+  "621": {
+    "mouldId": 62,
+    "variant": "backers-edition"
+  },
+  "622": {
+    "mouldId": 62,
+    "variant": "limited-edition"
+  },
+  "623": {
+    "mouldId": 62,
+    "variant": "binance-edition"
+  },
+  "624": {
+    "mouldId": 62,
+    "variant": "tron-edition"
+  },
+  "630": {
+    "mouldId": 63,
+    "variant": "standard-edition"
+  },
+  "631": {
+    "mouldId": 63,
+    "variant": "backers-edition"
+  },
+  "632": {
+    "mouldId": 63,
+    "variant": "limited-edition"
+  },
+  "633": {
+    "mouldId": 63,
+    "variant": "binance-edition"
+  },
+  "634": {
+    "mouldId": 63,
+    "variant": "tron-edition"
+  },
+  "640": {
+    "mouldId": 64,
+    "variant": "standard-edition"
+  },
+  "641": {
+    "mouldId": 64,
+    "variant": "backers-edition"
+  },
+  "642": {
+    "mouldId": 64,
+    "variant": "limited-edition"
+  },
+  "643": {
+    "mouldId": 64,
+    "variant": "binance-edition"
+  },
+  "644": {
+    "mouldId": 64,
+    "variant": "tron-edition"
+  },
+  "650": {
+    "mouldId": 65,
+    "variant": "standard-edition"
+  },
+  "651": {
+    "mouldId": 65,
+    "variant": "backers-edition"
+  },
+  "652": {
+    "mouldId": 65,
+    "variant": "limited-edition"
+  },
+  "653": {
+    "mouldId": 65,
+    "variant": "binance-edition"
+  },
+  "654": {
+    "mouldId": 65,
+    "variant": "tron-edition"
+  },
+  "660": {
+    "mouldId": 66,
+    "variant": "standard-edition"
+  },
+  "661": {
+    "mouldId": 66,
+    "variant": "backers-edition"
+  },
+  "662": {
+    "mouldId": 66,
+    "variant": "limited-edition"
+  },
+  "663": {
+    "mouldId": 66,
+    "variant": "binance-edition"
+  },
+  "664": {
+    "mouldId": 66,
+    "variant": "tron-edition"
+  },
+  "670": {
+    "mouldId": 67,
+    "variant": "standard-edition"
+  },
+  "671": {
+    "mouldId": 67,
+    "variant": "backers-edition"
+  },
+  "672": {
+    "mouldId": 67,
+    "variant": "limited-edition"
+  },
+  "673": {
+    "mouldId": 67,
+    "variant": "binance-edition"
+  },
+  "674": {
+    "mouldId": 67,
+    "variant": "tron-edition"
+  },
+  "680": {
+    "mouldId": 68,
+    "variant": "standard-edition"
+  },
+  "681": {
+    "mouldId": 68,
+    "variant": "backers-edition"
+  },
+  "682": {
+    "mouldId": 68,
+    "variant": "limited-edition"
+  },
+  "683": {
+    "mouldId": 68,
+    "variant": "binance-edition"
+  },
+  "684": {
+    "mouldId": 68,
+    "variant": "tron-edition"
+  },
+  "690": {
+    "mouldId": 69,
+    "variant": "standard-edition"
+  },
+  "691": {
+    "mouldId": 69,
+    "variant": "backers-edition"
+  },
+  "692": {
+    "mouldId": 69,
+    "variant": "limited-edition"
+  },
+  "693": {
+    "mouldId": 69,
+    "variant": "binance-edition"
+  },
+  "694": {
+    "mouldId": 69,
+    "variant": "tron-edition"
+  },
+  "700": {
+    "mouldId": 70,
+    "variant": "standard-edition"
+  },
+  "701": {
+    "mouldId": 70,
+    "variant": "backers-edition"
+  },
+  "702": {
+    "mouldId": 70,
+    "variant": "limited-edition"
+  },
+  "703": {
+    "mouldId": 70,
+    "variant": "binance-edition"
+  },
+  "704": {
+    "mouldId": 70,
+    "variant": "tron-edition"
+  },
+  "710": {
+    "mouldId": 71,
+    "variant": "standard-edition"
+  },
+  "711": {
+    "mouldId": 71,
+    "variant": "backers-edition"
+  },
+  "712": {
+    "mouldId": 71,
+    "variant": "limited-edition"
+  },
+  "713": {
+    "mouldId": 71,
+    "variant": "binance-edition"
+  },
+  "714": {
+    "mouldId": 71,
+    "variant": "tron-edition"
+  },
+  "720": {
+    "mouldId": 72,
+    "variant": "standard-edition"
+  },
+  "721": {
+    "mouldId": 72,
+    "variant": "backers-edition"
+  },
+  "722": {
+    "mouldId": 72,
+    "variant": "limited-edition"
+  },
+  "723": {
+    "mouldId": 72,
+    "variant": "binance-edition"
+  },
+  "724": {
+    "mouldId": 72,
+    "variant": "tron-edition"
+  },
+  "730": {
+    "mouldId": 73,
+    "variant": "standard-edition"
+  },
+  "731": {
+    "mouldId": 73,
+    "variant": "backers-edition"
+  },
+  "732": {
+    "mouldId": 73,
+    "variant": "limited-edition"
+  },
+  "733": {
+    "mouldId": 73,
+    "variant": "binance-edition"
+  },
+  "734": {
+    "mouldId": 73,
+    "variant": "tron-edition"
+  },
+  "740": {
+    "mouldId": 74,
+    "variant": "standard-edition"
+  },
+  "741": {
+    "mouldId": 74,
+    "variant": "backers-edition"
+  },
+  "742": {
+    "mouldId": 74,
+    "variant": "limited-edition"
+  },
+  "743": {
+    "mouldId": 74,
+    "variant": "binance-edition"
+  },
+  "744": {
+    "mouldId": 74,
+    "variant": "tron-edition"
+  },
+  "750": {
+    "mouldId": 75,
+    "variant": "standard-edition"
+  },
+  "751": {
+    "mouldId": 75,
+    "variant": "backers-edition"
+  },
+  "752": {
+    "mouldId": 75,
+    "variant": "limited-edition"
+  },
+  "753": {
+    "mouldId": 75,
+    "variant": "binance-edition"
+  },
+  "754": {
+    "mouldId": 75,
+    "variant": "tron-edition"
+  },
+  "760": {
+    "mouldId": 76,
+    "variant": "standard-edition"
+  },
+  "761": {
+    "mouldId": 76,
+    "variant": "backers-edition"
+  },
+  "762": {
+    "mouldId": 76,
+    "variant": "limited-edition"
+  },
+  "763": {
+    "mouldId": 76,
+    "variant": "binance-edition"
+  },
+  "764": {
+    "mouldId": 76,
+    "variant": "tron-edition"
+  },
+  "770": {
+    "mouldId": 77,
+    "variant": "standard-edition"
+  },
+  "771": {
+    "mouldId": 77,
+    "variant": "backers-edition"
+  },
+  "772": {
+    "mouldId": 77,
+    "variant": "limited-edition"
+  },
+  "773": {
+    "mouldId": 77,
+    "variant": "binance-edition"
+  },
+  "774": {
+    "mouldId": 77,
+    "variant": "tron-edition"
+  },
+  "780": {
+    "mouldId": 78,
+    "variant": "standard-edition"
+  },
+  "781": {
+    "mouldId": 78,
+    "variant": "backers-edition"
+  },
+  "782": {
+    "mouldId": 78,
+    "variant": "limited-edition"
+  },
+  "783": {
+    "mouldId": 78,
+    "variant": "binance-edition"
+  },
+  "784": {
+    "mouldId": 78,
+    "variant": "tron-edition"
+  },
+  "790": {
+    "mouldId": 79,
+    "variant": "standard-edition"
+  },
+  "791": {
+    "mouldId": 79,
+    "variant": "backers-edition"
+  },
+  "792": {
+    "mouldId": 79,
+    "variant": "limited-edition"
+  },
+  "793": {
+    "mouldId": 79,
+    "variant": "binance-edition"
+  },
+  "794": {
+    "mouldId": 79,
+    "variant": "tron-edition"
+  },
+  "800": {
+    "mouldId": 80,
+    "variant": "standard-edition"
+  },
+  "801": {
+    "mouldId": 80,
+    "variant": "backers-edition"
+  },
+  "802": {
+    "mouldId": 80,
+    "variant": "limited-edition"
+  },
+  "803": {
+    "mouldId": 80,
+    "variant": "binance-edition"
+  },
+  "804": {
+    "mouldId": 80,
+    "variant": "tron-edition"
+  },
+  "810": {
+    "mouldId": 81,
+    "variant": "standard-edition"
+  },
+  "811": {
+    "mouldId": 81,
+    "variant": "backers-edition"
+  },
+  "812": {
+    "mouldId": 81,
+    "variant": "limited-edition"
+  },
+  "813": {
+    "mouldId": 81,
+    "variant": "binance-edition"
+  },
+  "814": {
+    "mouldId": 81,
+    "variant": "tron-edition"
+  },
+  "820": {
+    "mouldId": 82,
+    "variant": "standard-edition"
+  },
+  "821": {
+    "mouldId": 82,
+    "variant": "backers-edition"
+  },
+  "822": {
+    "mouldId": 82,
+    "variant": "limited-edition"
+  },
+  "823": {
+    "mouldId": 82,
+    "variant": "binance-edition"
+  },
+  "824": {
+    "mouldId": 82,
+    "variant": "tron-edition"
+  },
+  "830": {
+    "mouldId": 83,
+    "variant": "standard-edition"
+  },
+  "831": {
+    "mouldId": 83,
+    "variant": "backers-edition"
+  },
+  "832": {
+    "mouldId": 83,
+    "variant": "limited-edition"
+  },
+  "833": {
+    "mouldId": 83,
+    "variant": "binance-edition"
+  },
+  "834": {
+    "mouldId": 83,
+    "variant": "tron-edition"
+  },
+  "840": {
+    "mouldId": 84,
+    "variant": "standard-edition"
+  },
+  "841": {
+    "mouldId": 84,
+    "variant": "backers-edition"
+  },
+  "842": {
+    "mouldId": 84,
+    "variant": "limited-edition"
+  },
+  "843": {
+    "mouldId": 84,
+    "variant": "binance-edition"
+  },
+  "844": {
+    "mouldId": 84,
+    "variant": "tron-edition"
+  },
+  "850": {
+    "mouldId": 85,
+    "variant": "standard-edition"
+  },
+  "851": {
+    "mouldId": 85,
+    "variant": "backers-edition"
+  },
+  "852": {
+    "mouldId": 85,
+    "variant": "limited-edition"
+  },
+  "853": {
+    "mouldId": 85,
+    "variant": "binance-edition"
+  },
+  "854": {
+    "mouldId": 85,
+    "variant": "tron-edition"
+  },
+  "860": {
+    "mouldId": 86,
+    "variant": "standard-edition"
+  },
+  "861": {
+    "mouldId": 86,
+    "variant": "backers-edition"
+  },
+  "862": {
+    "mouldId": 86,
+    "variant": "limited-edition"
+  },
+  "863": {
+    "mouldId": 86,
+    "variant": "binance-edition"
+  },
+  "864": {
+    "mouldId": 86,
+    "variant": "tron-edition"
+  },
+  "870": {
+    "mouldId": 87,
+    "variant": "standard-edition"
+  },
+  "871": {
+    "mouldId": 87,
+    "variant": "backers-edition"
+  },
+  "872": {
+    "mouldId": 87,
+    "variant": "limited-edition"
+  },
+  "873": {
+    "mouldId": 87,
+    "variant": "binance-edition"
+  },
+  "874": {
+    "mouldId": 87,
+    "variant": "tron-edition"
+  },
+  "880": {
+    "mouldId": 88,
+    "variant": "standard-edition"
+  },
+  "881": {
+    "mouldId": 88,
+    "variant": "backers-edition"
+  },
+  "882": {
+    "mouldId": 88,
+    "variant": "limited-edition"
+  },
+  "883": {
+    "mouldId": 88,
+    "variant": "binance-edition"
+  },
+  "884": {
+    "mouldId": 88,
+    "variant": "tron-edition"
+  },
+  "890": {
+    "mouldId": 89,
+    "variant": "standard-edition"
+  },
+  "891": {
+    "mouldId": 89,
+    "variant": "backers-edition"
+  },
+  "892": {
+    "mouldId": 89,
+    "variant": "limited-edition"
+  },
+  "893": {
+    "mouldId": 89,
+    "variant": "binance-edition"
+  },
+  "894": {
+    "mouldId": 89,
+    "variant": "tron-edition"
+  },
+  "900": {
+    "mouldId": 90,
+    "variant": "standard-edition"
+  },
+  "901": {
+    "mouldId": 90,
+    "variant": "backers-edition"
+  },
+  "902": {
+    "mouldId": 90,
+    "variant": "limited-edition"
+  },
+  "903": {
+    "mouldId": 90,
+    "variant": "binance-edition"
+  },
+  "904": {
+    "mouldId": 90,
+    "variant": "tron-edition"
+  },
+  "910": {
+    "mouldId": 91,
+    "variant": "standard-edition"
+  },
+  "911": {
+    "mouldId": 91,
+    "variant": "backers-edition"
+  },
+  "912": {
+    "mouldId": 91,
+    "variant": "limited-edition"
+  },
+  "913": {
+    "mouldId": 91,
+    "variant": "binance-edition"
+  },
+  "914": {
+    "mouldId": 91,
+    "variant": "tron-edition"
+  },
+  "920": {
+    "mouldId": 92,
+    "variant": "standard-edition"
+  },
+  "921": {
+    "mouldId": 92,
+    "variant": "backers-edition"
+  },
+  "922": {
+    "mouldId": 92,
+    "variant": "limited-edition"
+  },
+  "923": {
+    "mouldId": 92,
+    "variant": "binance-edition"
+  },
+  "924": {
+    "mouldId": 92,
+    "variant": "tron-edition"
+  },
+  "930": {
+    "mouldId": 93,
+    "variant": "standard-edition"
+  },
+  "931": {
+    "mouldId": 93,
+    "variant": "backers-edition"
+  },
+  "932": {
+    "mouldId": 93,
+    "variant": "limited-edition"
+  },
+  "933": {
+    "mouldId": 93,
+    "variant": "binance-edition"
+  },
+  "934": {
+    "mouldId": 93,
+    "variant": "tron-edition"
+  },
+  "940": {
+    "mouldId": 94,
+    "variant": "standard-edition"
+  },
+  "941": {
+    "mouldId": 94,
+    "variant": "backers-edition"
+  },
+  "942": {
+    "mouldId": 94,
+    "variant": "limited-edition"
+  },
+  "943": {
+    "mouldId": 94,
+    "variant": "binance-edition"
+  },
+  "944": {
+    "mouldId": 94,
+    "variant": "tron-edition"
+  },
+  "950": {
+    "mouldId": 95,
+    "variant": "standard-edition"
+  },
+  "951": {
+    "mouldId": 95,
+    "variant": "backers-edition"
+  },
+  "952": {
+    "mouldId": 95,
+    "variant": "limited-edition"
+  },
+  "953": {
+    "mouldId": 95,
+    "variant": "binance-edition"
+  },
+  "954": {
+    "mouldId": 95,
+    "variant": "tron-edition"
+  },
+  "960": {
+    "mouldId": 96,
+    "variant": "standard-edition"
+  },
+  "961": {
+    "mouldId": 96,
+    "variant": "backers-edition"
+  },
+  "962": {
+    "mouldId": 96,
+    "variant": "limited-edition"
+  },
+  "963": {
+    "mouldId": 96,
+    "variant": "binance-edition"
+  },
+  "964": {
+    "mouldId": 96,
+    "variant": "tron-edition"
+  },
+  "970": {
+    "mouldId": 97,
+    "variant": "standard-edition"
+  },
+  "971": {
+    "mouldId": 97,
+    "variant": "backers-edition"
+  },
+  "972": {
+    "mouldId": 97,
+    "variant": "limited-edition"
+  },
+  "973": {
+    "mouldId": 97,
+    "variant": "binance-edition"
+  },
+  "974": {
+    "mouldId": 97,
+    "variant": "tron-edition"
+  },
+  "980": {
+    "mouldId": 98,
+    "variant": "standard-edition"
+  },
+  "981": {
+    "mouldId": 98,
+    "variant": "backers-edition"
+  },
+  "982": {
+    "mouldId": 98,
+    "variant": "limited-edition"
+  },
+  "983": {
+    "mouldId": 98,
+    "variant": "binance-edition"
+  },
+  "984": {
+    "mouldId": 98,
+    "variant": "tron-edition"
+  },
+  "990": {
+    "mouldId": 99,
+    "variant": "standard-edition"
+  },
+  "991": {
+    "mouldId": 99,
+    "variant": "backers-edition"
+  },
+  "992": {
+    "mouldId": 99,
+    "variant": "limited-edition"
+  },
+  "993": {
+    "mouldId": 99,
+    "variant": "binance-edition"
+  },
+  "994": {
+    "mouldId": 99,
+    "variant": "tron-edition"
+  },
+  "1000": {
+    "mouldId": 100,
+    "variant": "standard-edition"
+  },
+  "1001": {
+    "mouldId": 100,
+    "variant": "backers-edition"
+  },
+  "1002": {
+    "mouldId": 100,
+    "variant": "limited-edition"
+  },
+  "1003": {
+    "mouldId": 100,
+    "variant": "binance-edition"
+  },
+  "1004": {
+    "mouldId": 100,
+    "variant": "tron-edition"
+  },
+  "1010": {
+    "mouldId": 101,
+    "variant": "standard-edition"
+  },
+  "1011": {
+    "mouldId": 101,
+    "variant": "backers-edition"
+  },
+  "1012": {
+    "mouldId": 101,
+    "variant": "limited-edition"
+  },
+  "1013": {
+    "mouldId": 101,
+    "variant": "binance-edition"
+  },
+  "1014": {
+    "mouldId": 101,
+    "variant": "tron-edition"
+  },
+  "1020": {
+    "mouldId": 102,
+    "variant": "standard-edition"
+  },
+  "1021": {
+    "mouldId": 102,
+    "variant": "backers-edition"
+  },
+  "1022": {
+    "mouldId": 102,
+    "variant": "limited-edition"
+  },
+  "1023": {
+    "mouldId": 102,
+    "variant": "binance-edition"
+  },
+  "1024": {
+    "mouldId": 102,
+    "variant": "tron-edition"
+  },
+  "1030": {
+    "mouldId": 103,
+    "variant": "standard-edition"
+  },
+  "1031": {
+    "mouldId": 103,
+    "variant": "backers-edition"
+  },
+  "1032": {
+    "mouldId": 103,
+    "variant": "limited-edition"
+  },
+  "1033": {
+    "mouldId": 103,
+    "variant": "binance-edition"
+  },
+  "1034": {
+    "mouldId": 103,
+    "variant": "tron-edition"
+  },
+  "1040": {
+    "mouldId": 104,
+    "variant": "standard-edition"
+  },
+  "1041": {
+    "mouldId": 104,
+    "variant": "backers-edition"
+  },
+  "1042": {
+    "mouldId": 104,
+    "variant": "limited-edition"
+  },
+  "1043": {
+    "mouldId": 104,
+    "variant": "binance-edition"
+  },
+  "1044": {
+    "mouldId": 104,
+    "variant": "tron-edition"
+  },
+  "1050": {
+    "mouldId": 105,
+    "variant": "standard-edition"
+  },
+  "1051": {
+    "mouldId": 105,
+    "variant": "backers-edition"
+  },
+  "1052": {
+    "mouldId": 105,
+    "variant": "limited-edition"
+  },
+  "1053": {
+    "mouldId": 105,
+    "variant": "binance-edition"
+  },
+  "1054": {
+    "mouldId": 105,
+    "variant": "tron-edition"
+  },
+  "1060": {
+    "mouldId": 106,
+    "variant": "standard-edition"
+  },
+  "1061": {
+    "mouldId": 106,
+    "variant": "backers-edition"
+  },
+  "1062": {
+    "mouldId": 106,
+    "variant": "limited-edition"
+  },
+  "1063": {
+    "mouldId": 106,
+    "variant": "binance-edition"
+  },
+  "1064": {
+    "mouldId": 106,
+    "variant": "tron-edition"
+  },
+  "1070": {
+    "mouldId": 107,
+    "variant": "standard-edition"
+  },
+  "1071": {
+    "mouldId": 107,
+    "variant": "backers-edition"
+  },
+  "1072": {
+    "mouldId": 107,
+    "variant": "limited-edition"
+  },
+  "1073": {
+    "mouldId": 107,
+    "variant": "binance-edition"
+  },
+  "1074": {
+    "mouldId": 107,
+    "variant": "tron-edition"
+  },
+  "1080": {
+    "mouldId": 108,
+    "variant": "standard-edition"
+  },
+  "1081": {
+    "mouldId": 108,
+    "variant": "backers-edition"
+  },
+  "1082": {
+    "mouldId": 108,
+    "variant": "limited-edition"
+  },
+  "1083": {
+    "mouldId": 108,
+    "variant": "binance-edition"
+  },
+  "1084": {
+    "mouldId": 108,
+    "variant": "tron-edition"
+  },
+  "1090": {
+    "mouldId": 109,
+    "variant": "standard-edition"
+  },
+  "1091": {
+    "mouldId": 109,
+    "variant": "backers-edition"
+  },
+  "1092": {
+    "mouldId": 109,
+    "variant": "limited-edition"
+  },
+  "1093": {
+    "mouldId": 109,
+    "variant": "binance-edition"
+  },
+  "1094": {
+    "mouldId": 109,
+    "variant": "tron-edition"
+  },
+  "1100": {
+    "mouldId": 110,
+    "variant": "standard-edition"
+  },
+  "1101": {
+    "mouldId": 110,
+    "variant": "backers-edition"
+  },
+  "1102": {
+    "mouldId": 110,
+    "variant": "limited-edition"
+  },
+  "1103": {
+    "mouldId": 110,
+    "variant": "binance-edition"
+  },
+  "1104": {
+    "mouldId": 110,
+    "variant": "tron-edition"
+  },
+  "1110": {
+    "mouldId": 111,
+    "variant": "standard-edition"
+  },
+  "1111": {
+    "mouldId": 111,
+    "variant": "backers-edition"
+  },
+  "1112": {
+    "mouldId": 111,
+    "variant": "limited-edition"
+  },
+  "1113": {
+    "mouldId": 111,
+    "variant": "binance-edition"
+  },
+  "1114": {
+    "mouldId": 111,
+    "variant": "tron-edition"
+  },
+  "1120": {
+    "mouldId": 112,
+    "variant": "standard-edition"
+  },
+  "1121": {
+    "mouldId": 112,
+    "variant": "backers-edition"
+  },
+  "1122": {
+    "mouldId": 112,
+    "variant": "limited-edition"
+  },
+  "1123": {
+    "mouldId": 112,
+    "variant": "binance-edition"
+  },
+  "1124": {
+    "mouldId": 112,
+    "variant": "tron-edition"
+  },
+  "1130": {
+    "mouldId": 113,
+    "variant": "standard-edition"
+  },
+  "1131": {
+    "mouldId": 113,
+    "variant": "backers-edition"
+  },
+  "1132": {
+    "mouldId": 113,
+    "variant": "limited-edition"
+  },
+  "1133": {
+    "mouldId": 113,
+    "variant": "binance-edition"
+  },
+  "1134": {
+    "mouldId": 113,
+    "variant": "tron-edition"
+  },
+  "1140": {
+    "mouldId": 114,
+    "variant": "standard-edition"
+  },
+  "1141": {
+    "mouldId": 114,
+    "variant": "backers-edition"
+  },
+  "1142": {
+    "mouldId": 114,
+    "variant": "limited-edition"
+  },
+  "1143": {
+    "mouldId": 114,
+    "variant": "binance-edition"
+  },
+  "1144": {
+    "mouldId": 114,
+    "variant": "tron-edition"
+  },
+  "1150": {
+    "mouldId": 115,
+    "variant": "standard-edition"
+  },
+  "1151": {
+    "mouldId": 115,
+    "variant": "backers-edition"
+  },
+  "1152": {
+    "mouldId": 115,
+    "variant": "limited-edition"
+  },
+  "1153": {
+    "mouldId": 115,
+    "variant": "binance-edition"
+  },
+  "1154": {
+    "mouldId": 115,
+    "variant": "tron-edition"
+  },
+  "1160": {
+    "mouldId": 116,
+    "variant": "standard-edition"
+  },
+  "1161": {
+    "mouldId": 116,
+    "variant": "backers-edition"
+  },
+  "1162": {
+    "mouldId": 116,
+    "variant": "limited-edition"
+  },
+  "1163": {
+    "mouldId": 116,
+    "variant": "binance-edition"
+  },
+  "1164": {
+    "mouldId": 116,
+    "variant": "tron-edition"
+  },
+  "1170": {
+    "mouldId": 117,
+    "variant": "standard-edition"
+  },
+  "1171": {
+    "mouldId": 117,
+    "variant": "backers-edition"
+  },
+  "1172": {
+    "mouldId": 117,
+    "variant": "limited-edition"
+  },
+  "1173": {
+    "mouldId": 117,
+    "variant": "binance-edition"
+  },
+  "1174": {
+    "mouldId": 117,
+    "variant": "tron-edition"
+  },
+  "1180": {
+    "mouldId": 118,
+    "variant": "standard-edition"
+  },
+  "1181": {
+    "mouldId": 118,
+    "variant": "backers-edition"
+  },
+  "1182": {
+    "mouldId": 118,
+    "variant": "limited-edition"
+  },
+  "1183": {
+    "mouldId": 118,
+    "variant": "binance-edition"
+  },
+  "1184": {
+    "mouldId": 118,
+    "variant": "tron-edition"
+  },
+  "1190": {
+    "mouldId": 119,
+    "variant": "standard-edition"
+  },
+  "1191": {
+    "mouldId": 119,
+    "variant": "backers-edition"
+  },
+  "1192": {
+    "mouldId": 119,
+    "variant": "limited-edition"
+  },
+  "1193": {
+    "mouldId": 119,
+    "variant": "binance-edition"
+  },
+  "1194": {
+    "mouldId": 119,
+    "variant": "tron-edition"
+  },
+  "1200": {
+    "mouldId": 120,
+    "variant": "standard-edition"
+  },
+  "1201": {
+    "mouldId": 120,
+    "variant": "backers-edition"
+  },
+  "1202": {
+    "mouldId": 120,
+    "variant": "limited-edition"
+  },
+  "1203": {
+    "mouldId": 120,
+    "variant": "binance-edition"
+  },
+  "1204": {
+    "mouldId": 120,
+    "variant": "tron-edition"
+  },
+  "1210": {
+    "mouldId": 121,
+    "variant": "standard-edition"
+  },
+  "1211": {
+    "mouldId": 121,
+    "variant": "backers-edition"
+  },
+  "1212": {
+    "mouldId": 121,
+    "variant": "limited-edition"
+  },
+  "1213": {
+    "mouldId": 121,
+    "variant": "binance-edition"
+  },
+  "1214": {
+    "mouldId": 121,
+    "variant": "tron-edition"
+  },
+  "1220": {
+    "mouldId": 122,
+    "variant": "standard-edition"
+  },
+  "1221": {
+    "mouldId": 122,
+    "variant": "backers-edition"
+  },
+  "1222": {
+    "mouldId": 122,
+    "variant": "limited-edition"
+  },
+  "1223": {
+    "mouldId": 122,
+    "variant": "binance-edition"
+  },
+  "1224": {
+    "mouldId": 122,
+    "variant": "tron-edition"
+  },
+  "1230": {
+    "mouldId": 123,
+    "variant": "standard-edition"
+  },
+  "1231": {
+    "mouldId": 123,
+    "variant": "backers-edition"
+  },
+  "1232": {
+    "mouldId": 123,
+    "variant": "limited-edition"
+  },
+  "1233": {
+    "mouldId": 123,
+    "variant": "binance-edition"
+  },
+  "1234": {
+    "mouldId": 123,
+    "variant": "tron-edition"
+  },
+  "1240": {
+    "mouldId": 124,
+    "variant": "standard-edition"
+  },
+  "1241": {
+    "mouldId": 124,
+    "variant": "backers-edition"
+  },
+  "1242": {
+    "mouldId": 124,
+    "variant": "limited-edition"
+  },
+  "1243": {
+    "mouldId": 124,
+    "variant": "binance-edition"
+  },
+  "1244": {
+    "mouldId": 124,
+    "variant": "tron-edition"
+  },
+  "1250": {
+    "mouldId": 125,
+    "variant": "standard-edition"
+  },
+  "1251": {
+    "mouldId": 125,
+    "variant": "backers-edition"
+  },
+  "1252": {
+    "mouldId": 125,
+    "variant": "limited-edition"
+  },
+  "1253": {
+    "mouldId": 125,
+    "variant": "binance-edition"
+  },
+  "1254": {
+    "mouldId": 125,
+    "variant": "tron-edition"
+  },
+  "1260": {
+    "mouldId": 126,
+    "variant": "standard-edition"
+  },
+  "1261": {
+    "mouldId": 126,
+    "variant": "backers-edition"
+  },
+  "1262": {
+    "mouldId": 126,
+    "variant": "limited-edition"
+  },
+  "1263": {
+    "mouldId": 126,
+    "variant": "binance-edition"
+  },
+  "1264": {
+    "mouldId": 126,
+    "variant": "tron-edition"
+  },
+  "1270": {
+    "mouldId": 127,
+    "variant": "standard-edition"
+  },
+  "1271": {
+    "mouldId": 127,
+    "variant": "backers-edition"
+  },
+  "1272": {
+    "mouldId": 127,
+    "variant": "limited-edition"
+  },
+  "1273": {
+    "mouldId": 127,
+    "variant": "binance-edition"
+  },
+  "1274": {
+    "mouldId": 127,
+    "variant": "tron-edition"
+  },
+  "1280": {
+    "mouldId": 128,
+    "variant": "standard-edition"
+  },
+  "1281": {
+    "mouldId": 128,
+    "variant": "backers-edition"
+  },
+  "1282": {
+    "mouldId": 128,
+    "variant": "limited-edition"
+  },
+  "1283": {
+    "mouldId": 128,
+    "variant": "binance-edition"
+  },
+  "1284": {
+    "mouldId": 128,
+    "variant": "tron-edition"
+  },
+  "1290": {
+    "mouldId": 129,
+    "variant": "standard-edition"
+  },
+  "1291": {
+    "mouldId": 129,
+    "variant": "backers-edition"
+  },
+  "1292": {
+    "mouldId": 129,
+    "variant": "limited-edition"
+  },
+  "1293": {
+    "mouldId": 129,
+    "variant": "binance-edition"
+  },
+  "1294": {
+    "mouldId": 129,
+    "variant": "tron-edition"
+  },
+  "1300": {
+    "mouldId": 130,
+    "variant": "standard-edition"
+  },
+  "1301": {
+    "mouldId": 130,
+    "variant": "backers-edition"
+  },
+  "1302": {
+    "mouldId": 130,
+    "variant": "limited-edition"
+  },
+  "1303": {
+    "mouldId": 130,
+    "variant": "binance-edition"
+  },
+  "1304": {
+    "mouldId": 130,
+    "variant": "tron-edition"
+  },
+  "1310": {
+    "mouldId": 131,
+    "variant": "standard-edition"
+  },
+  "1311": {
+    "mouldId": 131,
+    "variant": "backers-edition"
+  },
+  "1312": {
+    "mouldId": 131,
+    "variant": "limited-edition"
+  },
+  "1313": {
+    "mouldId": 131,
+    "variant": "binance-edition"
+  },
+  "1314": {
+    "mouldId": 131,
+    "variant": "tron-edition"
+  },
+  "1320": {
+    "mouldId": 132,
+    "variant": "standard-edition"
+  },
+  "1321": {
+    "mouldId": 132,
+    "variant": "backers-edition"
+  },
+  "1322": {
+    "mouldId": 132,
+    "variant": "limited-edition"
+  },
+  "1323": {
+    "mouldId": 132,
+    "variant": "binance-edition"
+  },
+  "1324": {
+    "mouldId": 132,
+    "variant": "tron-edition"
+  },
+  "1330": {
+    "mouldId": 133,
+    "variant": "standard-edition"
+  },
+  "1331": {
+    "mouldId": 133,
+    "variant": "backers-edition"
+  },
+  "1332": {
+    "mouldId": 133,
+    "variant": "limited-edition"
+  },
+  "1333": {
+    "mouldId": 133,
+    "variant": "binance-edition"
+  },
+  "1334": {
+    "mouldId": 133,
+    "variant": "tron-edition"
+  },
+  "1340": {
+    "mouldId": 134,
+    "variant": "standard-edition"
+  },
+  "1341": {
+    "mouldId": 134,
+    "variant": "backers-edition"
+  },
+  "1342": {
+    "mouldId": 134,
+    "variant": "limited-edition"
+  },
+  "1343": {
+    "mouldId": 134,
+    "variant": "binance-edition"
+  },
+  "1344": {
+    "mouldId": 134,
+    "variant": "tron-edition"
+  },
+  "1350": {
+    "mouldId": 135,
+    "variant": "standard-edition"
+  },
+  "1351": {
+    "mouldId": 135,
+    "variant": "backers-edition"
+  },
+  "1352": {
+    "mouldId": 135,
+    "variant": "limited-edition"
+  },
+  "1353": {
+    "mouldId": 135,
+    "variant": "binance-edition"
+  },
+  "1354": {
+    "mouldId": 135,
+    "variant": "tron-edition"
+  },
+  "1360": {
+    "mouldId": 136,
+    "variant": "standard-edition"
+  },
+  "1361": {
+    "mouldId": 136,
+    "variant": "backers-edition"
+  },
+  "1362": {
+    "mouldId": 136,
+    "variant": "limited-edition"
+  },
+  "1363": {
+    "mouldId": 136,
+    "variant": "binance-edition"
+  },
+  "1364": {
+    "mouldId": 136,
+    "variant": "tron-edition"
+  },
+  "1370": {
+    "mouldId": 137,
+    "variant": "standard-edition"
+  },
+  "1371": {
+    "mouldId": 137,
+    "variant": "backers-edition"
+  },
+  "1372": {
+    "mouldId": 137,
+    "variant": "limited-edition"
+  },
+  "1373": {
+    "mouldId": 137,
+    "variant": "binance-edition"
+  },
+  "1374": {
+    "mouldId": 137,
+    "variant": "tron-edition"
+  },
+  "1380": {
+    "mouldId": 138,
+    "variant": "standard-edition"
+  },
+  "1381": {
+    "mouldId": 138,
+    "variant": "backers-edition"
+  },
+  "1382": {
+    "mouldId": 138,
+    "variant": "limited-edition"
+  },
+  "1383": {
+    "mouldId": 138,
+    "variant": "binance-edition"
+  },
+  "1384": {
+    "mouldId": 138,
+    "variant": "tron-edition"
+  },
+  "1390": {
+    "mouldId": 139,
+    "variant": "standard-edition"
+  },
+  "1391": {
+    "mouldId": 139,
+    "variant": "backers-edition"
+  },
+  "1392": {
+    "mouldId": 139,
+    "variant": "limited-edition"
+  },
+  "1393": {
+    "mouldId": 139,
+    "variant": "binance-edition"
+  },
+  "1394": {
+    "mouldId": 139,
+    "variant": "tron-edition"
+  },
+  "1400": {
+    "mouldId": 140,
+    "variant": "standard-edition"
+  },
+  "1401": {
+    "mouldId": 140,
+    "variant": "backers-edition"
+  },
+  "1402": {
+    "mouldId": 140,
+    "variant": "limited-edition"
+  },
+  "1403": {
+    "mouldId": 140,
+    "variant": "binance-edition"
+  },
+  "1404": {
+    "mouldId": 140,
+    "variant": "tron-edition"
+  },
+  "1410": {
+    "mouldId": 141,
+    "variant": "standard-edition"
+  },
+  "1411": {
+    "mouldId": 141,
+    "variant": "backers-edition"
+  },
+  "1412": {
+    "mouldId": 141,
+    "variant": "limited-edition"
+  },
+  "1413": {
+    "mouldId": 141,
+    "variant": "binance-edition"
+  },
+  "1414": {
+    "mouldId": 141,
+    "variant": "tron-edition"
+  },
+  "1420": {
+    "mouldId": 142,
+    "variant": "standard-edition"
+  },
+  "1421": {
+    "mouldId": 142,
+    "variant": "backers-edition"
+  },
+  "1422": {
+    "mouldId": 142,
+    "variant": "limited-edition"
+  },
+  "1423": {
+    "mouldId": 142,
+    "variant": "binance-edition"
+  },
+  "1424": {
+    "mouldId": 142,
+    "variant": "tron-edition"
+  },
+  "1430": {
+    "mouldId": 143,
+    "variant": "standard-edition"
+  },
+  "1431": {
+    "mouldId": 143,
+    "variant": "backers-edition"
+  },
+  "1432": {
+    "mouldId": 143,
+    "variant": "limited-edition"
+  },
+  "1433": {
+    "mouldId": 143,
+    "variant": "binance-edition"
+  },
+  "1434": {
+    "mouldId": 143,
+    "variant": "tron-edition"
+  },
+  "1440": {
+    "mouldId": 144,
+    "variant": "standard-edition"
+  },
+  "1441": {
+    "mouldId": 144,
+    "variant": "backers-edition"
+  },
+  "1442": {
+    "mouldId": 144,
+    "variant": "limited-edition"
+  },
+  "1443": {
+    "mouldId": 144,
+    "variant": "binance-edition"
+  },
+  "1444": {
+    "mouldId": 144,
+    "variant": "tron-edition"
+  },
+  "1450": {
+    "mouldId": 145,
+    "variant": "standard-edition"
+  },
+  "1451": {
+    "mouldId": 145,
+    "variant": "backers-edition"
+  },
+  "1452": {
+    "mouldId": 145,
+    "variant": "limited-edition"
+  },
+  "1453": {
+    "mouldId": 145,
+    "variant": "binance-edition"
+  },
+  "1454": {
+    "mouldId": 145,
+    "variant": "tron-edition"
+  },
+  "1460": {
+    "mouldId": 146,
+    "variant": "standard-edition"
+  },
+  "1461": {
+    "mouldId": 146,
+    "variant": "backers-edition"
+  },
+  "1462": {
+    "mouldId": 146,
+    "variant": "limited-edition"
+  },
+  "1463": {
+    "mouldId": 146,
+    "variant": "binance-edition"
+  },
+  "1464": {
+    "mouldId": 146,
+    "variant": "tron-edition"
+  },
+  "1470": {
+    "mouldId": 147,
+    "variant": "standard-edition"
+  },
+  "1471": {
+    "mouldId": 147,
+    "variant": "backers-edition"
+  },
+  "1472": {
+    "mouldId": 147,
+    "variant": "limited-edition"
+  },
+  "1473": {
+    "mouldId": 147,
+    "variant": "binance-edition"
+  },
+  "1474": {
+    "mouldId": 147,
+    "variant": "tron-edition"
+  },
+  "1480": {
+    "mouldId": 148,
+    "variant": "standard-edition"
+  },
+  "1481": {
+    "mouldId": 148,
+    "variant": "backers-edition"
+  },
+  "1482": {
+    "mouldId": 148,
+    "variant": "limited-edition"
+  },
+  "1483": {
+    "mouldId": 148,
+    "variant": "binance-edition"
+  },
+  "1484": {
+    "mouldId": 148,
+    "variant": "tron-edition"
+  },
+  "1490": {
+    "mouldId": 149,
+    "variant": "standard-edition"
+  },
+  "1491": {
+    "mouldId": 149,
+    "variant": "backers-edition"
+  },
+  "1492": {
+    "mouldId": 149,
+    "variant": "limited-edition"
+  },
+  "1493": {
+    "mouldId": 149,
+    "variant": "binance-edition"
+  },
+  "1494": {
+    "mouldId": 149,
+    "variant": "tron-edition"
+  },
+  "1500": {
+    "mouldId": 150,
+    "variant": "standard-edition"
+  },
+  "1501": {
+    "mouldId": 150,
+    "variant": "backers-edition"
+  },
+  "1502": {
+    "mouldId": 150,
+    "variant": "limited-edition"
+  },
+  "1503": {
+    "mouldId": 150,
+    "variant": "binance-edition"
+  },
+  "1504": {
+    "mouldId": 150,
+    "variant": "tron-edition"
+  },
+  "1510": {
+    "mouldId": 151,
+    "variant": "standard-edition"
+  },
+  "1511": {
+    "mouldId": 151,
+    "variant": "backers-edition"
+  },
+  "1512": {
+    "mouldId": 151,
+    "variant": "limited-edition"
+  },
+  "1513": {
+    "mouldId": 151,
+    "variant": "binance-edition"
+  },
+  "1514": {
+    "mouldId": 151,
+    "variant": "tron-edition"
+  },
+  "1520": {
+    "mouldId": 152,
+    "variant": "standard-edition"
+  },
+  "1521": {
+    "mouldId": 152,
+    "variant": "backers-edition"
+  },
+  "1522": {
+    "mouldId": 152,
+    "variant": "limited-edition"
+  },
+  "1523": {
+    "mouldId": 152,
+    "variant": "binance-edition"
+  },
+  "1524": {
+    "mouldId": 152,
+    "variant": "tron-edition"
+  },
+  "1530": {
+    "mouldId": 153,
+    "variant": "standard-edition"
+  },
+  "1531": {
+    "mouldId": 153,
+    "variant": "backers-edition"
+  },
+  "1532": {
+    "mouldId": 153,
+    "variant": "limited-edition"
+  },
+  "1533": {
+    "mouldId": 153,
+    "variant": "binance-edition"
+  },
+  "1534": {
+    "mouldId": 153,
+    "variant": "tron-edition"
+  },
+  "1540": {
+    "mouldId": 154,
+    "variant": "standard-edition"
+  },
+  "1541": {
+    "mouldId": 154,
+    "variant": "backers-edition"
+  },
+  "1542": {
+    "mouldId": 154,
+    "variant": "limited-edition"
+  },
+  "1543": {
+    "mouldId": 154,
+    "variant": "binance-edition"
+  },
+  "1544": {
+    "mouldId": 154,
+    "variant": "tron-edition"
+  },
+  "1550": {
+    "mouldId": 155,
+    "variant": "standard-edition"
+  },
+  "1551": {
+    "mouldId": 155,
+    "variant": "backers-edition"
+  },
+  "1552": {
+    "mouldId": 155,
+    "variant": "limited-edition"
+  },
+  "1553": {
+    "mouldId": 155,
+    "variant": "binance-edition"
+  },
+  "1554": {
+    "mouldId": 155,
+    "variant": "tron-edition"
+  },
+  "1560": {
+    "mouldId": 156,
+    "variant": "standard-edition"
+  },
+  "1561": {
+    "mouldId": 156,
+    "variant": "backers-edition"
+  },
+  "1562": {
+    "mouldId": 156,
+    "variant": "limited-edition"
+  },
+  "1563": {
+    "mouldId": 156,
+    "variant": "binance-edition"
+  },
+  "1564": {
+    "mouldId": 156,
+    "variant": "tron-edition"
+  },
+  "9004": {
+    "mouldId": 900,
+    "variant": "tron-edition"
+  },
+  "90013": {
+    "mouldId": 9001,
+    "variant": "binance-edition"
+  }
+}

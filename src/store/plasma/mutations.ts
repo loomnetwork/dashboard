@@ -21,3 +21,7 @@ export function setPackBalance(state: PlasmaState, payload: PackDetail[]) {
 export function setCardToTransferSelected(state: PlasmaState, payload: CardDetail) {
     state.cardToTransferSelected = payload
 }
+
+export function setAllCardsToTransferSelected(state: PlasmaState, payload: {edition: string, cards: CardDetail[], amount: number}) {
+    state.allCardsToTransferSelected = payload
+}

@@ -20,6 +20,11 @@ export interface PlasmaState {
     cardBalance: CardDetail[],
     packBalance: PackDetail[],
     cardToTransferSelected: CardDetail | {},
+    allCardsToTransferSelected: {
+        edition: string
+        cards: CardDetail[]
+        amount: number,
+    }
 }
 
 export interface PackDetail {
@@ -30,7 +35,7 @@ export interface PackDetail {
 export interface CardDetail {
     id: string
     amount: number
-    display_name: string,
+    display_name: string
     image: string
     title: string
     variant: string

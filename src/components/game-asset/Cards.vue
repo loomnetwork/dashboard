@@ -1,10 +1,21 @@
 <template>
  <b-card class="mb-5">
   <transfer-cards-modal ref="transferModalConfig"></transfer-cards-modal>
+  <transfer-all-cards-modal ref="transferAllCardsModalConfig"></transfer-all-cards-modal>
   <b-card-title>My Cards</b-card-title>
   <b-tabs card>
     <b-tab title="Standard-Edition">
-      <b-card-text>standard-edition amount: {{ standardEditionAmount }}</b-card-text>
+      <b-row class="mb-2">
+        <b-col>
+          <b-card-text>standard-edition amount: {{ standardEditionAmount }}</b-card-text>
+        </b-col>
+        <b-col>
+          <b-row>
+            <b-card-text >Transfer all Standard edition cards</b-card-text>
+            <b-button class="ml-2" type="button" @click="openBatchTransferCardsModal('Standard', seCards, standardEditionAmount)">Transfer All</b-button>
+          </b-row>
+        </b-col>
+      </b-row>
       <b-table
         v-show="standardEditionAmount > 0"
         striped
@@ -19,7 +30,17 @@
       </b-table>
     </b-tab>
     <b-tab title="Backer-Edition">
-      <b-card-text>backer-edition amount: {{ backerEditionAmount }}</b-card-text>
+       <b-row class="mb-2">
+        <b-col>
+          <b-card-text>backer-edition amount: {{ backerEditionAmount }}</b-card-text>
+        </b-col>
+        <b-col>
+          <b-row>
+            <b-card-text >Transfer all Backer edition cards</b-card-text>
+            <b-button class="ml-2" type="button" @click="openBatchTransferCardsModal('Backer', beCards, backerEditionAmount)">Transfer All</b-button>
+          </b-row>
+        </b-col>
+      </b-row>
       <b-table
         v-show="backerEditionAmount > 0"
         striped
@@ -34,7 +55,17 @@
       </b-table>
     </b-tab>
     <b-tab title="Limited-Edition">
-      <b-card-text>limited-edition amount: {{ limitedEditionAmount }}</b-card-text>
+      <b-row class="mb-2">
+        <b-col>
+          <b-card-text>limited-edition amount: {{ limitedEditionAmount }}</b-card-text>
+        </b-col>
+        <b-col>
+          <b-row>
+            <b-card-text >Transfer all Limited edition cards</b-card-text>
+            <b-button class="ml-2" type="button" @click="openBatchTransferCardsModal('Limited', leCards, limitedEditionAmount)">Transfer All</b-button>
+            </b-row>
+        </b-col>
+      </b-row>
       <b-table
         v-show="limitedEditionAmount > 0"
         striped
@@ -49,7 +80,17 @@
       </b-table>
     </b-tab>
     <b-tab title="Binance-Edition">
-      <b-card-text>binance-edition amount: {{ binanceEditionAmount }}</b-card-text>
+      <b-row class="mb-2">
+        <b-col>
+          <b-card-text>binance-edition amount: {{ binanceEditionAmount }}</b-card-text>
+        </b-col>
+        <b-col>
+          <b-row>
+            <b-card-text >Transfer all Binance edition cards</b-card-text>
+            <b-button class="ml-2" type="button" @click="openBatchTransferCardsModal('Binance', bneCards, binanceEditionAmount)">Transfer All</b-button>
+          </b-row>
+        </b-col>
+      </b-row>
       <b-table
         v-show="binanceEditionAmount > 0"
         striped
@@ -64,7 +105,17 @@
       </b-table>
     </b-tab>
     <b-tab title="Tron-Edition">
-      <b-card-text>tron-edition amount: {{ tronEditionAmount }}</b-card-text>
+      <b-row class="mb-2">
+        <b-col>
+          <b-card-text>tron-edition amount: {{ tronEditionAmount }}</b-card-text>
+        </b-col>
+        <b-col>
+          <b-row>
+            <b-card-text >Transfer all Tron edition cards</b-card-text>
+            <b-button class="ml-2" type="button" @click="openBatchTransferCardsModal('Tron', teCards, tronEditionAmount)">Transfer All</b-button>
+            </b-row>
+        </b-col>
+      </b-row>
       <b-table
         v-show="tronEditionAmount > 0"
         striped
@@ -92,7 +143,7 @@
         </b-col>
         <b-col>
           <b-card-text>Transfer all cards</b-card-text>
-          <b-button type="button" @click="openBatchTransferCardsModal('All')">Transfer All</b-button>
+          <b-button type="button" @click="openBatchTransferCardsModal('All', cards, userCardsAmount)">Transfer All</b-button>
         </b-col>
       </b-row>
       <b-table striped bordered hover :items="cards" :fields="cardTableFields">
@@ -112,16 +163,19 @@ import { plasmaModule } from "@/store/plasma"
 import { CardDetail } from "@/store/plasma/types"
 import { DashboardState } from "@/types"
 import TransferCardsModal from "@/components/modals/TransferCardsModal.vue"
+import TransferAllCardsModal from "@/components/modals/TransferAllCardsModal.vue"
 import { Modal } from "bootstrap-vue"
 
 @Component({
   components: {
     TransferCardsModal,
+    TransferAllCardsModal,
   }
 })
 export default class Cards extends Vue {
   checkCardBalance = plasmaModule.checkCardBalance
   setCardToTransferSelected = plasmaModule.setCardToTransferSelected
+  setAllCardsToTransferSelected = plasmaModule.setAllCardsToTransferSelected
   cards: CardDetail[] = []
   seCards: CardDetail[] = []
   leCards: CardDetail[] = []
@@ -134,9 +188,6 @@ export default class Cards extends Vue {
   backerEditionAmount: number = 0
   binanceEditionAmount: number = 0
   tronEditionAmount: number = 0
-  // amountTransfer: number = 0
-  // receiverAddress: string = ""
-  // cardIdTransfer: string = ""
   cardTableFields = [
     {
       key: "id",
@@ -180,6 +231,11 @@ export default class Cards extends Vue {
   openTransferCardsModal(item) {
     this.setCardToTransferSelected(item)
     this.$root.$emit("bv::show::modal", "transfer-cards-modal")
+  }
+
+  openBatchTransferCardsModal(edition, cards, amount) {
+    this.setAllCardsToTransferSelected({edition, cards, amount})
+    this.$root.$emit("bv::show::modal", "transfer-all-cards-modal")
   }
 
   resetCardAmount() {

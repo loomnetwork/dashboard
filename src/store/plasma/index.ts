@@ -3,12 +3,16 @@
  */
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
-
 import { PlasmaState, CardDetail, PackDetail } from "./types"
-import BN from "bn.js"
-import { TokenSymbol } from "../ethereum/types";
 import * as getters from "./getters"
 import * as mutations from "./mutations"
+import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { timer } from "rxjs"
+import { PlasmaState, HasPlasmaState, TransferRequest, PlasmaSigner } from "./types"
+import { Client, Address } from "loom-js"
+import BN from "bn.js"
+import { createDefaultClient, setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
+import { TokenSymbol } from "../ethereum/types"
 import { noop } from "vue-class-component/lib/util"
 import { DashboardState } from '@/types';
 import { getCardByTokenId } from "@/utils"
@@ -16,9 +20,18 @@ import { PACKS_NAME } from '../plasmaPlugin';
 import { CommonTypedStore } from '../common';
 import { DPOSTypedStore } from '../dpos-old';
 
+import configs from "@/envs"
+
 const initialState: PlasmaState = {
     // not state but...
-    client: null,
+    client: createClient(configs.us1),
+    signer: null,
+    address: "",
+    appKey: {
+        private: "",
+        public: "",
+        address: "",
+    },
     balances: {
         [TokenSymbol.LOOM]: new BN("0"),
         [TokenSymbol.ETH]: new BN("0"),
@@ -42,8 +55,9 @@ const stateGetter = builder.state()
 declare type ActionContext = BareActionContext<PlasmaState, DashboardState>
 
 export const plasmaModule = {
-    get state() { return stateGetter() },
 
+    get state() { return stateGetter() },
+      
     // Getters
     getCardInstance: builder.read(getters.getCardInstance),
 
@@ -52,7 +66,11 @@ export const plasmaModule = {
     checkPackBalance: builder.dispatch(checkPackBalance),
     transferPacks: builder.dispatch(transferPacks),
     transferCards: builder.dispatch(transferCards),
-
+    changeIdentity: builder.dispatch(changeIdentity),
+    updateBalance: builder.dispatch(updateBalance),
+    approve: builder.dispatch(approveTransfer),
+    transfer: builder.dispatch(transferTokens),
+      
     // mutation
     setPacksContract: builder.commit(mutations.setPacksContract),
     setCardContract:  builder.commit(mutations.setCardContract),
@@ -152,8 +170,87 @@ async function transferCards(
     CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
     throw error
   }
+
 }
 
-function createClient() {
-    noop()
+function createClient(env: {chainId: string, endpoint: string}) {
+    const { writer, reader } = setupProtocolsFromEndpoint(env.endpoint)
+    return new Client(env.chainId, writer, reader)
+}
+
+declare type ActionContext = BareActionContext<PlasmaState, HasPlasmaState>
+
+async function changeIdentity(ctx: ActionContext, id: {signer: PlasmaSigner|null, address: string}) {
+    ctx.state.signer = id.signer
+    // add the conresponding middleware
+    if ( id.signer === null ) {
+        ctx.state.client.txMiddleware = []
+    } else {
+        ctx.state.client.txMiddleware = id.signer.clientMiddleware()
+    }
+    ctx.state.address = id.address
+}
+
+// holds the contracts. We don't need to exposed these on the state
+const erc20Contracts: Map<TokenSymbol, ERC20> = new Map()
+
+function getErc20Contract(symbol: string): ERC20 {
+    // @ts-ignore
+    return null
+}
+
+/**
+ * deposit from ethereum account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+export function updateBalance(context: ActionContext, symbol: TokenSymbol) {
+    const contract = getErc20Contract(symbol)
+    return timer(2000).toPromise()
+}
+
+/**
+ * withdraw from plasma account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+export function approveTransfer(
+    context: ActionContext,
+    { symbol, tokenAmount, to }: TransferRequest,
+) {
+
+    const balance = context.state.balances[symbol]
+    const weiAmount = tokenAmount
+    if (weiAmount.gt(balance)) {
+        throw new Error("approval.balance.low")
+    }
+    const contract: ERC20 = getErc20Contract(symbol)
+
+    contract.functions.approve(to, weiAmount.toString())
+
+    return timer(2000).toPromise()
+}
+
+/**
+ * withdraw from gateway to ethereum account
+ * @param symbol
+ */
+export function transferTokens(
+    context: ActionContext,
+    payload: {
+        symbol: string,
+        tokenAmount: BN,
+        to: string,
+    },
+) {
+    return timer(2000).toPromise()
+}
+
+export function trasfertAsset(context: ActionContext,
+                              payload: {
+        symbol: string,
+        to: string,
+    },
+) {
+    return timer(2000).toPromise()
 }

@@ -3,6 +3,7 @@ import { Client, DPOSUserV3 } from "loom-js"
 import { HasGatewayState } from "./store/gateway/types"
 import { CommonState } from "./store/common/types"
 import Contract from "web3/eth/contract"
+import BN from "bn.js"
 
 export interface DashboardState extends HasGatewayState {
   DPOS: DposState
@@ -102,4 +103,9 @@ export interface DahboardEnvs {
     chainId: string;
     gatewayAddress: string;
   }
+}
+
+export interface Funds {
+  symbol: string
+  tokenAmount: BN
 }

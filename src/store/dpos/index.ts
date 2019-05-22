@@ -10,7 +10,10 @@ import { DPOSState, HasDPOSState } from "./types"
 
 import * as mutations from "./mutations"
 import BN from "bn.js"
-import { IDelegation } from "loom-js/dist/contracts/dpos3"
+import { IDelegation, ICandidate } from "loom-js/dist/contracts/dpos3"
+import { state } from "../common"
+import { Address } from "loom-js"
+import { plasmaModule } from "../plasma"
 
 const initialState: DPOSState = {
     contract: null,
@@ -37,15 +40,12 @@ const dposTypedModule = {
     redelegate: builder.dispatch(redelegate),
     consolidate: builder.dispatch(consolidate),
     undelegate: builder.dispatch(undelegate),
-    refreshRewards: builder.dispatch(refreshRewards),
     claimRewards: builder.dispatch(claimRewards),
+
     refreshElectionTime: builder.dispatch(refreshElectionTime),
-
-    setValidators: builder.commit(mutations.setValidators),
-    setDelegations: builder.commit(mutations.setDelegations),
-    setRewards: builder.commit(mutations.setRewards),
-    setElectionTime: builder.commit(mutations.setElectionTime),
-
+    refreshValidators: builder.dispatch(refreshValidators),
+    refreshDelegations: builder.dispatch(refreshDelegations),
+    refreshRewards: builder.dispatch(refreshRewards),
 }
 
 // standard vuex module
@@ -56,13 +56,40 @@ export { dposTypedModule }
 
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
+// read/static
+
 async function refreshElectionTime(context: ActionContext) {
-    await timer(2000).toPromise()
-    dposTypedModule.setElectionTime(new Date(Date.now() + 60 + 1000))
+    const contract = context.state.contract!
+    const time: BN = contract.getTimeUntilElectionAsync()
+    const date = Date.now() + (time.toNumber() * 1000)
+    dposModule.setElectionTime(new Date(date))
 }
 
-function delegate(context: ActionContext, delegation: IDelegation) {
-    return timer(2000).toPromise()
+async function refreshValidators(context: ActionContext) {
+    const contract = context.state.contract!
+    const candidates = await contract.getCandidatesAsync()
+    const validators = await contract.getValidatorsAsync()
+    const delegations = await contract.getAllDelegations()
+    dposModule.setValidators(candidates)
+}
+
+async function refreshDelegations(context: ActionContext) {
+    const contract = context.state.contract!
+    const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
+    dposModule.setDelegations(response!.delegationsArray)
+    dposModule.setValidators([])
+}
+
+async function refreshRewards(context: ActionContext) {
+    const contract = await context.state.contract!
+    const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
+    dposModule.setDelegations(response!.delegationsArray)
+}
+
+// write/[the bc word for it]
+
+async function delegate(context: ActionContext, delegation: IDelegation) {
+    await context.state.contract!.delegateAsync(delegation.validator, delegation.amount, delegation.lockTimeTier)
 }
 
 function redelegate(context: ActionContext, payload: IDelegation) {
@@ -74,27 +101,18 @@ function consolidate(context: ActionContext, payload: {symbol: string, tokenAmou
     return timer(2000).toPromise()
 }
 
-/**
- * withdraw from gateway to ethereum account
- * @param symbol
- */
-function undelegate(context: ActionContext, payload: IDelegation) {
-    return timer(2000).toPromise()
+async function undelegate(context: ActionContext, delegation: IDelegation) {
+    await context.state.contract!.unbondAsync(delegation.validator, delegation.updateAmount, delegation.index)
 }
 
 /**
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-async function refreshRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
-    await timer(2000).toPromise()
-    dposTypedModule.setRewards("0")
-}
-
-/**
- * withdraw from gateway to ethereum account
- * @param symbol
- */
-function claimRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
+function claimRewards(context: ActionContext) {
+    // filter delegations index = 0 amount > 0
+    // for each
+    // set message "claiming rewards from validator x"
+    //
     return timer(2000).toPromise()
 }

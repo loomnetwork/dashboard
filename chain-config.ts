@@ -1,7 +1,7 @@
 import { DahboardEnvs } from "@/types"
 const configs = {
   plasma: {
-    dappchainEndpoint : "https://plasma.dappchains.com",
+    dappchainEndpoint : "wss://plasma.dappchains.com",
     mainnetEndpoint : "https://mainnet.infura.io",
     chainId : "default",
     gatewayAddress : "0x8f8e8b3c4de76a31971fe6a87297d8f703be8570",

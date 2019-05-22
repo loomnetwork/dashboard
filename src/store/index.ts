@@ -15,18 +15,28 @@ import "./ethSignStore"
 import { DPOSTypedStore } from "./dpos-old"
 import { CommonStore } from "./common"
 import { EthSign } from "./ethSignStore"
+import { dposStorePlugin } from "./dposPlugin"
+import "./ethereum"
+import "./gateway"
+import "./plasma"
+import "./dpos"
+import { ethGatewayPlugin } from "./gateway/reactions"
+import { gatewayModule } from "./gateway/index"
+import { ethereumReactions } from "./ethereum/reactions"
+import { plasmaReactions } from "./plasma/reactions"
+import { dposReactions } from "./dpos/reactions"
 
 Vue.use(Vuex)
 
-const store = getStoreBuilder<DashboardState>().vuexStore({
-  // modules: {
-  //   //common: CommonStore,
-  //   //DappChain: DappChainStore,
-  //   //DPOS: DPOSStore,
-  //   //Locale: LocaleStore,
-  //   //EthSign: EthSignStore
-  // },
-  plugins: [dposStorePlugin, plasmaStorePlugin],
+const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore({
+  plugins: [
+    dposStorePlugin,
+    ethereumReactions,
+    plasmaReactions,
+    ethGatewayPlugin,
+    dposReactions,
+  ],
 })
 console.log(store)
 export default store
+

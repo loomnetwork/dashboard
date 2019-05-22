@@ -9,7 +9,7 @@
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center mb-3" @click="selectWallet('ledger')">
+                <b-card id="ledger-button" class="wallet-selection-card text-center mb-3" @click="setWallet('ledger')">
                   <h5>Ledger</h5>
                   <img src="../assets/ledger_logo.svg">
                   <small>
@@ -19,7 +19,7 @@
                 </b-card>
               </div>
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                <b-card id="metamask-button" class="wallet-selection-card text-center" @click="setWallet('metamask')">
                   <h5>Metamask</h5>
                   <img src="../assets/metamask_logo.png">
                   <small>
@@ -29,7 +29,7 @@
                 </b-card>                  
               </div>   
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('explore')">
+                <b-card id="explore-button" class="wallet-selection-card text-center" @click="setWallet('explore')">
                   <h5>Explore</h5>
                   <img src="../assets/metamask_logo.png">
                   <small>
@@ -58,10 +58,11 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
 import ChainSelector from "../components/ChainSelector"
-import RestoreAccountModal from "../components/modals/RestoreAccountModal.vue"
 import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
 import { setInterval } from "timers"
 import { Modal } from "bootstrap-vue"
+
+import { ethereumModule } from "@/store/ethereum"
 
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { CommonTypedStore } from "../store/common"
@@ -74,10 +75,7 @@ import { DashboardState } from "../types"
   },
 })
 export default class FirstPage extends Vue {
-  activeTab = 0
-  currentStatus = this.STATUS.NONE
-  showTabSpinner = false
-  isProduction = window.location.hostname === "dashboard.dappchains.com"
+
 
   get userIsLoggedIn() { return CommonTypedStore.getUserIsLoggedIn }
   get chainUrls() { return this.$state.DPOS.chainUrls }
@@ -86,99 +84,50 @@ export default class FirstPage extends Vue {
   get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
   get $state() { return (this.$store.state as DashboardState)}
 
+
+  setWallet = ethereumModule.setWalletType
+
   // vuex
-  setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
-  initializeDependencies = DPOSTypedStore.initializeDependencies
-  setWalletType = DPOSTypedStore.setWalletType
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
-  signOut = CommonTypedStore.signOut
+  // setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
+  // initializeDependencies = DPOSTypedStore.initializeDependencies
+  // setWalletType = DPOSTypedStore.setWalletType
+  // setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  // signOut = CommonTypedStore.signOut
 
   addChainUrl = DPOSTypedStore.addChainUrl
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus
 
-  async selectWallet(wallet) {
-    if (wallet === "ledger") {
-      this.setWalletType("ledger")
-      this.setUserIsLoggedIn(true)
+  // async selectWallet(wallet) {
+  //   if (wallet === "ledger") {
+  //     this.setWalletType("ledger")
+  //     this.setUserIsLoggedIn(true)
 
-      this.modal("hardwareWalletConfigRef").show()
-    } else if (wallet === "metamask") {
-      this.setWalletType("metamask")
-      this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-    } else {
-      return
-    }
-  }
+  //     this.modal("hardwareWalletConfigRef").show()
+  //   } else if (wallet === "metamask") {
+  //     this.setWalletType("metamask")
+  //     this.setUserIsLoggedIn(true)
+  //     await this.initializeDependencies()
+  //   } else {
+  //     return
+  //   }
+  // }
 
   modal(ref: string) {
    return this.$refs[ref] as Modal
   }
 
-  async openLoginModal() {
-    this.$root.$emit("bv::show::modal", "login-account-modal")
-  }
+  // async openLoginModal() {
+  //   this.$root.$emit("bv::show::modal", "login-account-modal")
+  // }
 
-  signOutHandler() {
-    this.signOut()
-    // @ts-ignore
-    this.$router.push("/")
-    this.setMappingError(null)
-    this.setMappingStatus("")
-  }
+  
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
   }
 
-  async onUserInputUrl(id) {
-    this.addChainUrl({id})
-    // this.onConnectionUrlChanged(id)
-    this.$forceUpdate()
-    window.location.reload()
-  }
 
-  async mounted() {
-    if (!this.isMobile) return
-    // @ts-ignore
-    const web3 = window.web3
-    if ((web3 && web3.currentProvider.isTrust) ||
-        "imToken" in window ||
-        (web3 && web3.currentProvider.isMetaMask) ||
-        (web3 && web3.isCobo)
-      ) {
-      this.setWalletType("metamask")
-      this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-    }
-
-  }
-
-  switchTab() {
-    this.showTabSpinner = true
-
-    setTimeout(() => {
-      this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
-      this.showTabSpinner = false
-    }, 1000)
-  }
-
-  get STATUS() {
-    return {
-      NONE: "NONE",
-      CREATE_ACCOUNT: "CREATE_ACCOUNT",
-      RESTORE_ACCOUNT: "RESTORE_ACCOUNT",
-    }
-  }
-
-  get isMobile() {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
-  }
-
-  async onWalletConfig() {
-    this.setWalletType("ledger")
-  }
 
 }
 </script>

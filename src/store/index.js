@@ -6,6 +6,7 @@ import DPOSStore from './dposStore'
 import { EthSignStore } from './ethSignStore'
 
 import { dposStorePlugin } from "./dposPlugin";
+import { tokensPlugin } from "./tokensPlugin";
 
 Vue.use(Vuex)
 
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
     Locale: LocaleStore,
     EthSign: EthSignStore
   },
-  plugins:[dposStorePlugin]
+  plugins:[
+    dposStorePlugin,
+    tokensPlugin,
+  ]
 })
 export default store

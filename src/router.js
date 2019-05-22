@@ -117,8 +117,7 @@ const router = new VueRouter({
         name: 'depositeWithdraw',
         component: DepositWithdraw,
         meta: {
-          requireLogIn: true,
-          requireLoomChain : ['ethCoin']
+          requireLogIn: true
         }
       },
       {

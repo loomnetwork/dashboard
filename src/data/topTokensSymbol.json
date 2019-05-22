@@ -77,7 +77,7 @@
       "filename": "ZILToken",
       "name": "Zilliqa",
       "decimal": 12,
-      "symbol": " ",
+      "symbol": "ZIL",
       "address": {
         "1": "0x05f4a42e251f2d52b8ed15E9FEdAacFcEF1FAD27",
         "asia1": "0x8907babd0681ce5fdb336abdd5dab448b3024d07",
@@ -1303,7 +1303,7 @@
       "symbol": "BNB",
       "address": {
         "1": "0xb8c77482e45f1f44de1745f52c74426c631bdd52",
-        "asia1": "0xb3ef3a97b3caaf2c7e25658ea8c04963db79045d",
+        "asia1": "0x4ae5d7520e7eb2995137c5a3ed14f6d89a44a920",
         "stage": "0x4f087fa9f997c850f3664e2f37eef262ad0781c2",
         "rinkeby-asia1": "0x1b2dc7a2a27431a4037455a5e8283587583260c7",
         "rinkeby-us1": "0x1b2dc7a2a27431a4037455a5e8283587583260c7",

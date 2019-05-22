@@ -3,18 +3,14 @@
     <div class="container">
       <div class="wallet-list">
         <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
-        
-        <div class="wallet-item" v-for="(wallet, index) in filteredToken" :key="index" @click="onSelectWallet(wallet)" :class="{ 'wallet-active': activeWallet === wallet}">
-          <!-- <img :src="wallet.img" /> -->
-          <h2>{{ `${wallet.balance} ${wallet.symbol}` }}</h2>
+        <div class="wallet-item" v-for="(wallet, index) in filteredToken" :key="index" @click="onSelectWallet(wallet)" :class="{ 'wallet-active': activeWallet === wallet.symbol}">
+          <h2>{{ `${wallet.symbol}` }}</h2>
           <div class="mask"></div>
         </div>
-
       </div>
       <div class="wallet-detail">
         <h2>{{ `${balance} ${activeWallet.symbol}` }}</h2>
-        <p>{{ activeWallet.address }}</p>
-          
+        <p>{{ activeWallet }}</p>
         <div class="buttons">
           <div class="button" @click="setShowDepositForm(true)">Deposit</div>
           <div class="button" @click="setShowDepositForm(true)">Withdraw</div>
@@ -30,14 +26,18 @@
 import Vue from 'vue'
 import LoomIcon from '@/components/LoomIcon'
 import DepositForm from '@/components/gateway/DepositForm'
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { createNamespacedHelpers } from 'vuex'
 import { CLIENT_RENEG_LIMIT } from 'tls';
-import { close } from 'fs';
+import { close, watch } from 'fs';
 import { filter } from 'rxjs/operators';
 import { get } from 'http';
-import { toBigNumber, getValueOfUnit, isBigNumber } from '../utils'
+import { toBigNumber, getValueOfUnit, isBigNumber, formatToCrypto } from '../utils'
 import { fileURLToPath } from 'url';
+import { log, debug } from 'util';
+import BN from 'bn.js';
+import { async } from 'rxjs/internal/scheduler/async';
+import { DPOSUserV3 } from 'loom-js';
 
 
 const DappChainStore = createNamespacedHelpers('DappChain')
@@ -58,7 +58,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'getDappchainLoomBalance',
       'getTokensDetails',
       'checkTokenBalance',
-      'updateCurrentToken'
+      'updateCurrentToken',
+      'checkDappchainEthBalance',
+      'createEthCoinInstance'
     ])
   },
   computed: {
@@ -70,61 +72,57 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'web3',
       'tokenDetails',
       'dappchainBalance',
-      'ethCoinInstance'
+      'ethCoinInstance',
+      'currentTokenBalance'
     ])
-  // },
-  // watch: {
-  //   currentTokenBalance: function(oldValue, newValue) {
-  //     if (newValue && this.balanceIntervalHandler) {
-  //       clearInterval(this.balanceIntervalHandler)
-  //       this.setDepositState(2)
-  //     }
-  //   }
+  },
+  watch: {
+
   }
 })
 
 export default class DepositWithdraw extends Vue {
   currentAllowance = 0
-  // currentUnit = 'ETH'
-  
   filteredToken = []
-    
   activeWallet = null
   tokens = []
   inputFilter = ''
+  balance = null
 
-  async mounted () {
-    const dposUser = await this.dposUser
-
-    Promise.all([this.getTokensDetails()])
-    .then(result => {
-      const [allToken] = result
-      const balance = parseFloat(this.dappchainBalance*Math.pow(10,18)).toFixed(2) //Eth plasma
-      const ethToken = {
-        filename: "Ethereum",
-        name: "ETH",
-        decimal: 18,
-        symbol: "ETH",
-        address: dposUser.ethAddress, // set ethAddress to wallet
-        balance: balance
-      }
-      this.filteredToken = [ethToken, ...allToken]
-      this.activeWallet = this.filteredToken[0]
-      console.log('filtered: ', this.ethCoinInstance.balance);
-    }) 
-
-    await this.unitChangeHandler('ETH')
+  mounted() {
+    if (this.ethCoinInstance) {
+      return this.ready()
+    }
   }
-  
-  // created () {
-  //   this.activeWallet = this.filteredToken[0]
-  //   console.logthis.activeWallet;
-  // }
+
+
+  @Watch("ethCoinInstance")
+  async ready(){
+    // Need to refactor
+    await this.unitChangeHandler('ETH')
+    const user = await this.dposUser
+    const tokenDetail = await Promise.all([this.getTokensDetails()])
+    const [allToken] = tokenDetail
+    const ethBalance = parseFloat(this.dappchainBalance.ETH*Math.pow(10,18)).toFixed(2) //Eth plasma
+    const ethToken = {
+      filename: "Ethereum",
+      name: "ETH",
+      decimal: 18,
+      symbol: "ETH",
+      address: user.ethAddress, // set ethAddress to wallet
+      balance: ethBalance
+    }
+    this.filteredToken = [ethToken, ...allToken]
+    this.activeWallet = ethToken
+    console.log(this.activeWallet);
+    this.balance = await this.getBalance("ETH")
+  }
   async onSelectWallet (wallet) {
       this.activeWallet = wallet
-      // this.balanceIntervalHandler = setInterval(() => this.checkTokenBalance(), 100000)
       await this.unitChangeHandler(wallet.symbol)
+      this.balance = await this.getBalance(wallet.symbol)
   }
+
   filterToken(){
     if(this.inputFilter != null) {
       let filterToken = this.tokens.filter(token => {
@@ -133,14 +131,21 @@ export default class DepositWithdraw extends Vue {
       this.filteredToken = filterToken
     } else { this.filteredToken.push(this.getTokensDetails()) }
   }
-  get balance() {
-        let returnValue = toBigNumber(this.currentTokenBalance).dividedBy(getValueOfUnit('ether'))
-        return isBigNumber(this.currentTokenBalance)
-          ? returnValue.toFixed(6)
-          : returnValue.toFixed(6).toString(10)
+
+  getBalance(symbol) {
+    let returnValue
+    if(symbol === 'LOOM'){
+      returnValue = toBigNumber(this.currentTokenBalance)
+    }else{
+      returnValue = toBigNumber(this.currentTokenBalance).dividedBy(getValueOfUnit('ether'))
+    }
+    return isBigNumber(this.currentTokenBalance)
+      ? returnValue.toFixed(6)
+      : returnValue.toFixed(6).toString(10)
   }
+
   async unitChangeHandler(symbol) {
-    await this.updateCurrentToken({ symbol: symbol })
+    await this.updateCurrentToken({ symbol })
   }
 }
 </script>
@@ -219,7 +224,7 @@ img {
   text-align: center;
   background-color: white;
   border-radius: 4px;
-  padding: 16px 0px;
+  padding: 16px 16px;
   margin: 24px 16px;
 }
 

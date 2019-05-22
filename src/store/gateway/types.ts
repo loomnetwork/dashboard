@@ -1,4 +1,4 @@
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { IWithdrawalReceipt, IUnclaimedToken } from "loom-js/dist/contracts/transfer-gateway"
 import { HasEthereumState } from "../ethereum/types"
 import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
@@ -11,8 +11,10 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 }
 
 export interface GatewayState {
+    mapping: IAddressMapping|null,
     pendingTransaction: any,
     pendingReceipt: IWithdrawalReceipt|null
+    unclaimedTokens: IUnclaimedToken[]
 }
 
 export class EthPlasmSigner implements PlasmaSigner {

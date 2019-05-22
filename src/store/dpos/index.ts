@@ -32,9 +32,15 @@ const initialState: DPOSState = {
 const builder = getStoreBuilder<HasDPOSState>().module("dpos", initialState)
 const stateGetter = builder.state()
 
-const dposTypedModule = {
+const dposModule = {
 
     get state() { return stateGetter() },
+
+    setContract: builder.commit(mutations.setContract),
+    setElectionTime: builder.commit(mutations.setElectionTime),
+    setValidators: builder.commit(mutations.setValidators),
+    setDelegations: builder.commit(mutations.setDelegations),
+    setRewards: builder.commit(mutations.setRewards),
 
     delegate: builder.dispatch(delegate),
     redelegate: builder.dispatch(redelegate),
@@ -48,11 +54,8 @@ const dposTypedModule = {
     refreshRewards: builder.dispatch(refreshRewards),
 }
 
-// standard vuex module
-export const dposModule = builder.vuexModule()
-
-// strongly typed module api
-export { dposTypedModule }
+// vuex module as a service
+export { dposModule }
 
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
@@ -92,13 +95,19 @@ async function delegate(context: ActionContext, delegation: IDelegation) {
     await context.state.contract!.delegateAsync(delegation.validator, delegation.amount, delegation.lockTimeTier)
 }
 
-function redelegate(context: ActionContext, payload: IDelegation) {
-    // playload .updateAmount .updateValidator .index
-    return timer(2000).toPromise()
+async function redelegate(context: ActionContext, delegation: IDelegation) {
+    await context.state.contract!.redelegateAsync(
+        delegation.validator,
+        delegation.updateValidator!,
+        delegation.updateAmount,
+        delegation.index,
+    )
+
 }
 
-function consolidate(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
-    return timer(2000).toPromise()
+async function consolidate(context: ActionContext, validator: ICandidate) {
+    await context.state.contract!.consolidateDelegations(validator.address)
+
 }
 
 async function undelegate(context: ActionContext, delegation: IDelegation) {

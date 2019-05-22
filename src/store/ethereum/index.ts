@@ -6,9 +6,8 @@ import { getStoreBuilder } from "vuex-typex"
 
 import { DashboardState, Transfer } from "@/types"
 
-import { EthereumState } from "./types"
+import { EthereumState, HasEthereumState, WalletType } from "./types"
 
-import * as actions from "./actions"
 import * as mutations from "./mutations"
 
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
@@ -39,6 +38,9 @@ const wallets: Map<string, WalletType> = new Map([
 
 const initialState: EthereumState = {
     provider: null,
+    address: "",
+    signer: null,
+    walletType: "",
     erc20Addresses: {
         // us1
         loom: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
@@ -51,9 +53,10 @@ const initialState: EthereumState = {
     },
 }
 
-const builder = getStoreBuilder<DashboardState>().module("ethereum", initialState)
+const builder = getStoreBuilder<HasEthereumState>().module("ethereum", initialState)
 const stateGetter = builder.state()
 
+// vuex typedd module
 export const ethereumModule = {
 
     get state() { return stateGetter() },
@@ -67,7 +70,7 @@ export const ethereumModule = {
     approve: builder.dispatch(approve),
     transfer: builder.dispatch(transfer),
 
-    setBalance: builder.commit(mutations.setBalance),
+    setWalletType: builder.dispatch(setWalletType),
 
     initERC20: builder.dispatch(initERC20),
 

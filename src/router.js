@@ -75,7 +75,7 @@ const router = new VueRouter({
       }
     },
     {
-      path: 'deposit-withdraw',
+      path: '/deposit-withdraw',
       name: 'depositeWithdraw',
       component: DepositWithdraw,
       meta: {

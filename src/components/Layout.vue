@@ -82,6 +82,7 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DPOSStore.mapActions([
       'initializeDependencies',
+      'getEthereumTxData'
     ]),
     ...DappChainStore.mapMutations([
       'setMappingError',
@@ -180,7 +181,10 @@ export default class Layout extends Vue {
   }
 
   async mounted() {
-      
+     
+    
+    await this.getEthereumTxData()
+    
     if(this.$route.meta.requireDeps) {
       this.attemptToInitialize()     
     } 

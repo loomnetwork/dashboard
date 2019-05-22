@@ -704,6 +704,20 @@ export default {
         () => gw.functions.depositERC20(amount.toString(), loom.address)
       )
     },
+    async getEthereumTxData({commit}, payload) {
+
+      try {
+        let dataPromise = await axios.get("https://ethgasstation.info/json/ethgasAPI.json")
+        let wait = dataPromise.data["avgWait"]
+        let waitInMin = parseInt(wait) * 60
+        let now = new Date().getTime() / 1000
+        debugger
+      } catch(err) {
+    
+      }
+      
+     }
+    
   } as ActionTree<any,any>,
 
 } as Module<any,DashboardState>

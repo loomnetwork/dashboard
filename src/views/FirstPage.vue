@@ -27,15 +27,6 @@
                     or extension                      
                   </small>
                 </b-card>                  
-              </div>   
-              <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('explore')">
-                  <h5>Explore</h5>
-                  <img src="../assets/metamask_logo.png">
-                  <small>
-                    Explore an account              
-                  </small>
-                </b-card>                  
               </div>                
             </div>  
           </b-card>

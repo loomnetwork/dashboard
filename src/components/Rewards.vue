@@ -2,22 +2,23 @@
   <b-card title="Rewards" class="mb-4">
     <div>
       <div class="mb-4">
-        <div v-if="rewardsResults && rewardsResults <= 0">
+        <div v-if="!rewardsResults">
+          <b-spinner variant="primary" label="Spinning" />
+        </div>
+        <div v-else-if="hasNoRewards">
           <h6>
             You do not have any rewards at the moment. Please visit the <router-link to="/validators" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validators') }}</router-link> page.
           </h6>
         </div>
-        <div v-else-if="rewardsResults > 0">
+        <div v-else-if="!hasNoRewards">
           <h6>
             {{ $t('views.rewards.unclaimed_rewards') }} 
           </h6>
           <h5 class="highlight">
-            {{rewardsResults.toString() + " LOOM"}}
+            {{formattedRewardResults}}
           </h5>
         </div>
-        <div v-else-if="!rewardsResults">
-          <b-spinner variant="primary" label="Spinning" />
-        </div>
+
       </div>
       <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasNoRewards">{{ $t('views.rewards.claim_reward') }}</b-button>
       <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 

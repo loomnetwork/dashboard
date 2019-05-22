@@ -25,6 +25,7 @@
           </b-modal>
           <transition name="page" mode="out-in">
           <router-view></router-view>
+          <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
           </transition>
         </div>
       </div> 

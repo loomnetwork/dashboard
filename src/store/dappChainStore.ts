@@ -231,8 +231,7 @@ export default {
         debug("ethereumLoom.balanceOf")
         let result = await dposUser.ethereumLoom.balanceOf(dposUser.ethAddress)
         debug("ethereumLoom.balanceOf",result.toString())
-        let balance = formatToCrypto(result.toString())
-        const mainnetBalance = parseFloat(balance).toFixed(2)
+        let mainnetBalance = formatToCrypto(result.toString())
         const userBalance = rootState.DPOS.userBalance
         commit("DPOS/setUserBalance",Object.assign(userBalance,{mainnetBalance}),{root:true})
         return mainnetBalance
@@ -253,7 +252,7 @@ export default {
         dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
         chainId: chainId,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-        version: 1
+        version: 2
       })
       .then(user => {
         reconfigureClient(user.client, commit)
@@ -286,7 +285,7 @@ export default {
             dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-            version: 1
+            version: 2
           });
         } else {          
           user = await DPOSUserV3.createMetamaskUserAsync({
@@ -295,7 +294,7 @@ export default {
             dappchainPrivateKey: privateKeyString,
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-            version: 1
+            version: 2
           });
         }
       } catch(err) {
@@ -369,9 +368,8 @@ export default {
       const user:DPOSUserV3 = await state.dposUser
       let loomWei = await user.getDAppChainBalanceAsync()
       debug("plasma loom balance",loomWei.toString())
-      const balance = formatToCrypto(loomWei.toString())
+      const loomBalance = formatToCrypto(loomWei.toString())
       const userBalance = rootState.DPOS.userBalance
-      let loomBalance = parseFloat(balance).toFixed(2)
       commit("DPOS/setUserBalance", Object.assign(userBalance,{loomBalance}), {root:true})
       return loomBalance
     },

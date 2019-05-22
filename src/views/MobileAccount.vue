@@ -88,8 +88,16 @@
 
     <b-card title="Election Cycle" class="mb-4">
         <h6>Time left</h6>
-        <h5 v-if="formattedTimeUntilElectionCycle" class="highlight">{{formattedTimeUntilElectionCycle}}</h5>
-        <b-spinner v-else variant="primary" label="Spinning"/>
+        <div v-if="electionIsRunning">
+          <strong>
+            <h5 class="highlight rmv-spacing animated flash slow infinite">Election is underway</h5>
+            <small>Please be patient</small>
+          </strong>
+        </div>
+        <div v-else>
+          <h5 v-if="formattedTimeUntilElectionCycle" class="highlight">{{formattedTimeUntilElectionCycle}}</h5>
+          <b-spinner v-else variant="primary" label="Spinning"/>
+        </div>
     </b-card>
 
     <!-- <b-card title="Rewards" class="mb-4">
@@ -107,14 +115,17 @@
                        header-tag="header"
                        class="d-flex justify-content-between p-2"
                        role="tab">
-          <span>{{delegation["Name"]}}</span>
+          <div>
+            <b-spinner v-if="delegation['State'] !== 'Bonded'" small variant="primary"  style="margin-right:16px;"></b-spinner>
+            <span>{{delegation["Name"]}}</span>
+          </div>
           <strong>{{delegation["Amount"]}}</strong>
         </b-card-header>
         <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
-          <b-card-body>
+          <b-card-body @click="gotoValidator(delegation.Name)">
             <ul>
               <li v-if="delegation['Update Amount'] !== '0.00'">Update amount: {{delegation["Update Amount"]}}</li>
-              <li>Unlock time: {{delegation["Locktime"]}}</li>
+              <li v-if="!delegation.unlocked">Unlock time: {{delegation["Locktime"]}}</li>
               <li>State: {{delegation["State"]}}</li>
             </ul>
           </b-card-body>
@@ -178,7 +189,8 @@ const ELECTION_CYCLE_MILLIS = 600000
       'delegations',
       'states',
       'currentMetamaskAddress',
-      'pendingTx'
+      'pendingTx',
+      'electionIsRunning',
     ]) 
   },
   methods: {
@@ -256,8 +268,8 @@ export default class MobileAccount extends Vue {
       this.beginPolling()
     })
 
-    this.$root.$on('witdrawalRejected', () => {
-      this.whenCooldown = null 
+    this.$root.$on('withdrawalExecuted', () => {
+      this.setWithdrewOn(Date.now())
     })
 
   }
@@ -281,7 +293,7 @@ export default class MobileAccount extends Vue {
     this.startTimer()
 
     // Only alert te user if the receipt is fresh
-    if (this.receipt && !this.enoughTimeHasPassed) {
+    if (this.receipt) {
       this.hasReceiptHandler(this.receipt)
     }
   }
@@ -317,11 +329,12 @@ export default class MobileAccount extends Vue {
     .map((delegation) => {
       let candidate = candidates.find(c => c.address === delegation.validator.local.toString())
       return { 
-              "Name": candidate.name,
-              "Amount": `${formatToCrypto(delegation.amount)}`,
-              "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-              "Locktime": `${new Date(delegation.lockTime * 1000)}`,
-              "State": `${this.states[delegation.state]}`,
+              Name: candidate.name,
+              Amount: formatToCrypto(delegation.amount),
+              "Update Amount": formatToCrypto(delegation.updateAmount),
+              Locktime: new Date(delegation.lockTime * 1000),
+              unlocked: delegation.lockTime * 1000 < Date.now(),
+              State: this.states[delegation.state],
               _cellVariants: { Status: 'active'}
       }
     })
@@ -442,6 +455,7 @@ export default class MobileAccount extends Vue {
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(this.receipt.amount.toString())
       this.unclaimSignature = this.receipt.signature
     }
+
     await this.refresh(true)
   }
 
@@ -454,20 +468,28 @@ export default class MobileAccount extends Vue {
 
 
   async hasReceiptHandler(receipt) {
-    const dposUser = await this.dposUser
-    if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
 
-      if(!this.enoughTimeHasPassed) return
+    const dposUser = await this.dposUser
+    // When a withdrawal is ongoing
+    if(this.withdrewOn && !this.enoughTimeHasPassed) {
+      return
+    }
+
+    // If there was a withdrawal that was iterrupted
+    if(receipt.signature && (receipt.signature != this.withdrewSignature)) {
 
       // have pending withdrawal
       this.unclaimWithdrawTokens = receipt.amount
       this.unclaimWithdrawTokensETH = this.web3.utils.fromWei(receipt.amount.toString())
       this.unclaimSignature = receipt.signature
+      
     } else if (receipt.amount) {
       // signature, amount didn't get update yet. need to wait for oracle update
       this.setErrorMsg('Waiting for withdrawal authorization.  Please check back later.')
     }
+
     let ethAddr = dposUser.ethAddress
+    
     // TODO: This is to handle a specific bug, once all users are fixed, remove this. 
     if (receipt.tokenOwner.toLowerCase() != ethAddr.toLowerCase()) {
       this.mismatchedReceiptHandler(receipt, ethAddr)
@@ -547,7 +569,6 @@ export default class MobileAccount extends Vue {
         return
       } else {
         let tx = await this.withdrawAsync({amount})
-        this.setWithdrewOn(Date.now()) 
         //await tx.wait()
         return tx
       }
@@ -569,6 +590,10 @@ export default class MobileAccount extends Vue {
       return result
     }
     return tx
+  }
+
+  gotoValidator(name) {
+    this.$router.push("validator/"+name)
   }
 
   destroyed() {

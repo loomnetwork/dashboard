@@ -27,12 +27,10 @@ export function isLocaleSupported(localeKey) {
 }
 
 export async function loadLocale(locale) {
-  if (i18n.locale !== locale) {
-    if (loadedLocales.indexOf(locale) === -1) {
-      const msgs = await import(`./locales/${locale}.json`)
-      i18n.setLocaleMessage(locale, msgs)
-      loadedLocales.push(locale)
-      i18n.locale = locale
-    }
+  if (loadedLocales.indexOf(locale) === -1) {
+    const msgs = await import(`./locales/${locale}.json`)
+    i18n.setLocaleMessage(locale, msgs)
+    loadedLocales.push(locale)
+    i18n.locale = locale
   }
 }

@@ -25,6 +25,10 @@ export interface PlasmaState {
         cards: CardDetail[]
         amount: number,
     }
+    packToTransferSelected: {
+        type: string,
+        amount: number,
+    } | {}
 }
 
 export interface PackDetail {

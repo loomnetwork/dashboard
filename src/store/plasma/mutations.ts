@@ -22,6 +22,16 @@ export function setCardToTransferSelected(state: PlasmaState, payload: CardDetai
     state.cardToTransferSelected = payload
 }
 
-export function setAllCardsToTransferSelected(state: PlasmaState, payload: {edition: string, cards: CardDetail[], amount: number}) {
+export function setPackToTransferSelected(state: PlasmaState, payload: {type: string, amount: number}) {
+    state.packToTransferSelected = payload
+}
+
+export function setAllCardsToTransferSelected(
+    state: PlasmaState,
+    payload: {
+        edition: string,
+        cards: CardDetail[],
+        amount: number,
+    }) {
     state.allCardsToTransferSelected = payload
 }

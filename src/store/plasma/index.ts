@@ -29,6 +29,7 @@ const initialState: PlasmaState = {
     cardBalance: [],
     packBalance: [],
     cardToTransferSelected: {},
+    packToTransferSelected: {},
     allCardsToTransferSelected: {
       edition: "none",
       cards: [],
@@ -59,6 +60,7 @@ export const plasmaModule = {
     setPackBalance: builder.commit(mutations.setPackBalance),
     setCardToTransferSelected: builder.commit(mutations.setCardToTransferSelected),
     setAllCardsToTransferSelected: builder.commit(mutations.setAllCardsToTransferSelected),
+    setPackToTransferSelected: builder.commit(mutations.setPackToTransferSelected),
   }
 
 async function checkCardBalance(context: ActionContext) {
@@ -99,12 +101,25 @@ async function transferPacks(
     packType: string,
     amount: number,
     destinationDappchainAddress: string}) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.local.toString()
-  const result = await context.state.packsContract[payload.packType].methods
-          .transfer(payload.destinationDappchainAddress, payload.amount)
-          .send({ from: account })
-  return result
+  try {
+    DPOSTypedStore.setShowLoadingSpinner(true)
+    const dposUser = await context.rootState.DPOS.dposUser
+    const ethAddress = dposUser!.ethAddress
+    const result = await context.state.packsContract[payload.packType].methods
+            .transfer(payload.destinationDappchainAddress, payload.amount)
+            .send({ from: ethAddress })
+    console.log("transfer packs result", result)
+    // TODO: this is not working
+    CommonTypedStore.setSuccessMsg("Transferring packs success.")
+    await plasmaModule.checkPackBalance()
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    return result
+  } catch (error) {
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    // TODO: this is not working
+    CommonTypedStore.setErrorMsg(`Error Transferring packs: ${error.message}`)
+    throw error
+  }
 }
 
 async function transferCards(
@@ -117,22 +132,22 @@ async function transferCards(
   try {
     DPOSTypedStore.setShowLoadingSpinner(true)
     const dposUser = await context.rootState.DPOS.dposUser
-    const dappchainAccount = dposUser!.loomAddress.local.toString()
-    const ethAccount = dposUser!.ethAddress
-    console.log("ethAddr", ethAccount);
+    const dappchainAddress = dposUser!.loomAddress.local.toString()
+    const ethAddress = dposUser!.ethAddress
     const result = await context.state.cardContract!.methods.batchTransferFrom(
-      dappchainAccount,
+      dappchainAddress,
       payload.destinationDappchainAddress,
       payload.cardIds,
       payload.amounts)
-    .send({ from: ethAccount })
-    console.log("result", result)
+    .send({ from: ethAddress })
+    console.log("transfer cards result", result)
     DPOSTypedStore.setShowLoadingSpinner(false)
     // TODO: this is not working
     CommonTypedStore.setSuccessMsg("Transferring cards success.")
-    plasmaModule.checkCardBalance()
+    await plasmaModule.checkCardBalance()
     return result
   } catch (error) {
+    DPOSTypedStore.setShowLoadingSpinner(false)
     // TODO: this is not working
     CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
     throw error

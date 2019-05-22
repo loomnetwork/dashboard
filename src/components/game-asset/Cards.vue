@@ -162,15 +162,15 @@ import { Component, Watch } from "vue-property-decorator"
 import { plasmaModule } from "@/store/plasma"
 import { CardDetail } from "@/store/plasma/types"
 import { DashboardState } from "@/types"
-import TransferCardsModal from "@/components/modals/TransferCardsModal.vue"
 import TransferAllCardsModal from "@/components/modals/TransferAllCardsModal.vue"
+import TransferCardsModal from "@/components/modals/TransferCardsModal.vue"
 import { Modal } from "bootstrap-vue"
 
 @Component({
   components: {
     TransferCardsModal,
     TransferAllCardsModal,
-  }
+  },
 })
 export default class Cards extends Vue {
   checkCardBalance = plasmaModule.checkCardBalance

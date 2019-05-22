@@ -1,5 +1,6 @@
 <template>
  <b-card class="mb-5">
+  <transfer-packs-modal ref="transferPackModalConfig"></transfer-packs-modal>
   <b-card-title>My Packs</b-card-title>
     <b-table
         v-show="packs && packs.length > 0"
@@ -9,17 +10,9 @@
         :items="packs"
         :fields="packTableFields"
     >
-        <template slot="reciever" slot-scope="row">
-        <b-input
-            type="text"
-            v-model="row.item.reciever"
-            class="d-block"
-            placeholder="dappchain address"
-        />
-        </template>
-        <template slot="transfer" slot-scope="row">
-        <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
-        </template>
+    <template slot="transfer" slot-scope="row">
+      <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+    </template>
     </b-table>
  </b-card>
 </template>
@@ -31,23 +24,33 @@ import { Component, Watch } from "vue-property-decorator"
 import { plasmaModule } from "@/store/plasma"
 import { DashboardState } from "@/types"
 import { plasmaStorePlugin, PACKS_NAME } from "../../store/plasmaPlugin"
-import { PackDetail } from '../../store/plasma/types';
+import TransferPacksModal from "@/components/modals/TransferPacksModal.vue"
+import { Modal } from "bootstrap-vue"
+import { PackDetail } from "@/store/plasma/types"
 
-@Component
+@Component({
+  components: {
+    TransferPacksModal,
+  },
+})
 export default class Packs extends Vue {
   checkPackBalance = plasmaModule.checkPackBalance
+  setPackToTransferSelected = plasmaModule.setPackToTransferSelected
   packTypes = PACKS_NAME
   packs: PackDetail[] = []
   packTableFields = [
     {
       key: "type",
-      sortable: true
+      sortable: true,
     },
     {
       key: "amount",
-      sortable: true
+      sortable: true,
     },
-    { key: "transfer", label: "Transfer" }
+    {
+      key: "transfer",
+      label: "Transfer",
+    },
   ]
 
   get state(): DashboardState {
@@ -61,6 +64,23 @@ export default class Packs extends Vue {
   async mounted() {
     await this.checkPackBalance()
     this.packs = await this.packBalance
+  }
+
+  modal(ref: string) {
+   return this.$refs[ref] as Modal
+  }
+
+  async transferpackTo(item) {
+    this.setPackToTransferSelected(item)
+    this.$root.$emit("bv::show::modal", "transfer-packs-modal")
+  }
+
+  @Watch("packBalance")
+  async onUserPackChanged(
+    newUserPacks: PackDetail[],
+    oldUserPacks: PackDetail[],
+  ) {
+    this.packs = newUserPacks
   }
 
 }

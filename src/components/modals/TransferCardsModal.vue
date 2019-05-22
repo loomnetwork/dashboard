@@ -7,7 +7,7 @@
        <h6> Your existing card: {{cardToTransfer.amount}} </h6>
       Amount: (max: {{cardToTransfer.amount}})
       <b-input type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input> 
-      Reciever Loom Address:
+      Receiver Loom Address:
       <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
       <b-button type="button" @click="transferCardsHandler()">Transfer</b-button>
     </b-container>
@@ -27,7 +27,6 @@ export default class TransferCardsModal extends Vue {
   receiverAddress: string = ""
   transferCards = plasmaModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   mounted() {
     this.amountToTransfer = 1
@@ -51,6 +50,7 @@ export default class TransferCardsModal extends Vue {
       this.setErrorMsg("Invalid receiver address")
       return
     }
+    // TODO: put confirmation popup here
     this.transferCards({
       cardIds: [this.cardToTransfer.id],
       amounts: [this.amountToTransfer],

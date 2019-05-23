@@ -4,6 +4,7 @@ import { gatewayModule } from "."
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { plasmaModule } from "../plasma"
 import { createContracts } from "./index"
+import { Provider } from "ethers/providers"
 
 export function ethGatewayPlugin(store: Store<HasGatewayState>) {
     store.watch(
@@ -19,7 +20,8 @@ export function ethGatewayPlugin(store: Store<HasGatewayState>) {
 
     function onProviderChange(provider: Provider | null, old) {
 
-       if(provider === null) return
+        // remove contract
+       if (provider === null) return
        createContracts(provider)
 
     }

@@ -59,7 +59,7 @@
           <div v-if="state.plasma.coins.loom.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
-          <!-- unclaimed -->
+          <!-- unclaimed 
           <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
             <p>{{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}}</p>
             <br>
@@ -83,6 +83,7 @@
               ></b-tooltip>
             </div>
           </div>
+          -->
           <b-modal
             id="wait-tx"
             title="Done"
@@ -152,11 +153,7 @@
 
     <b-card title="Election Cycle" class="mb-4">
       <h6>Time left</h6>
-      <h5
-        v-if="formattedTimeUntilElectionCycle"
-        class="highlight"
-      >{{formattedTimeUntilElectionCycle}}</h5>
-      <b-spinner v-else variant="primary" label="Spinning"/>
+      <ElectionTimer />
     </b-card>
 
     <rewards></rewards>
@@ -210,10 +207,11 @@ import DepositForm from "@/components/gateway/DepositForm.vue"
 import Rewards from "@/components/Rewards.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
-import { DashboardState } from '../types';
-import { ethereumModule } from '../store/ethereum';
-import { plasmaModule } from '../store/plasma';
-import { dposModule } from '../store/dpos';
+import { DashboardState } from "../types"
+import { ethereumModule } from "../store/ethereum";
+import { plasmaModule } from "../store/plasma";
+import { dposModule } from "../store/dpos";
+import ElectionTimer from "@/dpos/components/electionTimer.vue"
 
 const log = debug("mobileaccount")
 
@@ -225,20 +223,16 @@ const ELECTION_CYCLE_MILLIS = 600000
     TransferStepper,
     DepositForm,
     Rewards,
+    ElectionTimer,
   },
 })
 export default class MobileAccount extends Vue {
 
-  get state():DashboardState {
+  get state(): DashboardState {
     return this.$store.state
   }
 
-
   currentAllowance = 0
-
-  timerRefreshInterval: number | null = null
-  formattedTimeUntilElectionCycle = ""
-  timeLeft = 0
 
   // gateway related
   // unclaimed tokens
@@ -250,7 +244,6 @@ export default class MobileAccount extends Vue {
   receipt: any = null
   isWithdrawalInprogress = false
   withdrawLimit = 0
-  electionCycleTimer = 0
 
   showRefreshSpinner = false
 
@@ -274,7 +267,6 @@ export default class MobileAccount extends Vue {
   get web3() { return DPOSTypedStore.state.web3 }
   get dposUser() { return DPOSTypedStore.state.dposUser }
   get validators() { return DPOSTypedStore.state.validators }
-  get userBalance() { return DPOSTypedStore.state.userBalance }
   get gatewayBusy() { return DPOSTypedStore.state.gatewayBusy }
   get rewardsResults() { return DPOSTypedStore.state.rewardsResults }
   get timeUntilElectionCycle() { return DPOSTypedStore.state.timeUntilElectionCycle }
@@ -284,11 +276,6 @@ export default class MobileAccount extends Vue {
   get currentMetamaskAddress() { return DPOSTypedStore.state.currentMetamaskAddress }
   get pendingTx() { return DPOSTypedStore.state.pendingTx }
   get withdrewSignature() { return DPOSTypedStore.state.withdrewSignature }
-
-  mounted() {
-    this.updateTimeUntilElectionCycle()
-    this.startTimer()
-  }
 
 
   get formatedDelegations() {
@@ -338,49 +325,12 @@ export default class MobileAccount extends Vue {
     plasmaModule.refreshBalance("loom")
   }
 
-  startTimer() {
-    this.timerRefreshInterval = window.setInterval(() => this.decreaseTimer(), 1000)
-  }
 
-  get timerValue() {
-    return this.timeLeft > 0 ? Math.round((this.timeLeft * 100) / ELECTION_CYCLE_MILLIS) : 0
-  }
 
   get rewardsValue() {
     return this.rewardsResults ? (this.rewardsResults.toString() + " LOOM") : "0.00"
   }
 
-  async updateTimeUntilElectionCycle() {
-    const millis = this.state.dpos.electionTime.getTime() - Date.now()
-    this.electionCycleTimer = Math.ceil(millis / 1000)
-  }
-
-  async decreaseTimer() {
-    if (this.electionCycleTimer) {
-      let timeLeft = this.electionCycleTimer
-      if (timeLeft > 0) {
-        timeLeft--
-        this.timeLeft = timeLeft
-        this.electionCycleTimer = timeLeft
-        this.showTimeUntilElectionCycle()
-      } else {
-        await this.updateTimeUntilElectionCycle()
-        // this.electionCycleTimer
-      }
-    }
-  }
-
-  showTimeUntilElectionCycle() {
-    if (this.electionCycleTimer) {
-      const timeLeft = this.electionCycleTimer
-      const date = new Date(0)
-      date.setSeconds(timeLeft)
-      const result = date.toISOString().substr(11, 8)
-      this.formattedTimeUntilElectionCycle = result
-    } else {
-      this.formattedTimeUntilElectionCycle = ""
-    }
-  }
 
   // gateway
 
@@ -551,14 +501,6 @@ export default class MobileAccount extends Vue {
   //   }
   //   return tx
   // }
-
-  destroyed() {
-    this.deleteIntervals()
-  }
-
-  deleteIntervals() {
-    if (this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)
-  }
 
 }
 </script>

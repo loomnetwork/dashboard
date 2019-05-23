@@ -72,6 +72,7 @@ async function refreshElectionTime(context: ActionContext) {
     const contract = context.state.contract!
     const time: BN = await contract.getTimeUntilElectionAsync()
     const date = Date.now() + (time.toNumber() * 1000)
+    log("refreshElectionTime", new Date(date))
     dposModule.setElectionTime(new Date(date))
 }
 
@@ -112,17 +113,17 @@ async function refreshValidators(ctx: ActionContext) {
         address: c.address.local.toString(),
         personalStake: c.whitelistAmount,
         votingPower: c.delegationTotal,
-        delegationsTotal: c.delegationTotal.sub(c.whitelistAmount),
+        delegationTotal: c.delegationTotal.sub(c.whitelistAmount),
         active: false,
         isBootstrap: ctx.state.bootstrapNodes.includes(c.name),
         name: c.name,
         website: c.website,
         description: c.description,
-        fee: (c.fee / 100).toString(),
-        newFee: (c.newFee / 100).toString(),
+        fee: c.fee.div(new BN(100)).toString(),
+        newFee: c.newFee.div(new BN(100)).toString(),
       }),
     )
-    // helper
+    // Helper: if node not found in the array creates a new one with given addr and default from template
     const getOrCreate = (addr) => {
       let existing: any = nodes.find((node) => node.address === addr)
       if (!existing) {
@@ -140,7 +141,7 @@ async function refreshValidators(ctx: ActionContext) {
         personalStake: v.whitelistAmount,
         totalStaked: v.whitelistAmount, // default value for nodes without delegations
         votingPower: v.delegationTotal,
-        delegationsTotal: v.delegationTotal.sub(v.whitelistAmount),
+        delegationTotal: v.delegationTotal.sub(v.whitelistAmount),
       })
     })
 

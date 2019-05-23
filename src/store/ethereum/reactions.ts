@@ -2,7 +2,7 @@ import { Store } from "vuex"
 import { HasEthereumState } from "./types"
 import { Provider } from "ethers/providers"
 import { ethers } from "ethers"
-import BigNumber from "bignumber.js"
+import BN from "bn.js"
 import { ethereumModule } from "."
 
 export function ethereumReactions(store: Store<HasEthereumState>) {
@@ -23,6 +23,7 @@ export function ethereumReactions(store: Store<HasEthereumState>) {
     function onAddressChange(address, old) {
         // store.state.ethereum.provider!.(old)
         if (address === "") {
+            // should reset contracts
             return
         }
         ethereumModule.initERC20("loom")
@@ -42,7 +43,7 @@ function listenToEthBalance(store: Store<HasEthereumState>) {
     const provider = store.state.ethereum.provider!
 
     const setBalance = (balance: ethers.utils.BigNumber) => {
-        store.state.ethereum.balances.eth = new BigNumber(balance.toString())
+        store.state.ethereum.balances.eth = new BN(balance.toString())
     }
 
     provider.getBalance(address).then(setBalance)

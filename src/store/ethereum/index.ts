@@ -20,7 +20,7 @@ import { LedgerAdapter } from "./wallets/ledger"
 import { JsonRpcProvider } from "ethers/providers"
 import debug from "debug"
 import { ParamType } from "ethers/utils"
-import { Contract } from "ethers"
+import { Contract, ContractTransaction } from "ethers"
 
 const log = debug("dboard.ethereum")
 
@@ -30,6 +30,8 @@ const ERC20ABIs: ParamType[] = require("loom-js/dist/mainnet-contracts/ERC20.jso
 import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import { stat } from "fs"
 import { state } from "../common"
+
+const ZERO = new BN("0")
 
 const wallets: Map<string, WalletType> = new Map([
     ["metamask", MetaMaskAdapter],
@@ -48,28 +50,30 @@ const initialState: EthereumState = {
         usdc: "",
     },
     balances: {
-        eth: null,
-        loom: null,
+        eth: ZERO,
+        loom: ZERO,
     },
     loom: {
         contract: null,
-        balance: "",
+        balance: ZERO,
         address: "",
-    }
+    },
 }
 
 const builder = getStoreBuilder<HasEthereumState>().module("ethereum", initialState)
 const stateGetter = builder.state()
 
+function requireValue<T>(v: T|null|undefined, errorMessage: string): T {
+    if (v === null || v === undefined) {
+        throw new Error(errorMessage)
+    }
+    return v
+}
+
 // vuex typedd module
 export const ethereumModule = {
 
     get state() { return stateGetter() },
-
-    /**
-     * UI must not call this
-     */
-    setBalance: builder.commit(mutations.setBalance),
 
     refreshBalance: builder.dispatch(refreshBalance),
     approve: builder.dispatch(approve),
@@ -79,6 +83,7 @@ export const ethereumModule = {
     allowance: builder.dispatch(allowance),
 
     initERC20: builder.dispatch(initERC20),
+    clearERC20: builder.dispatch(clearERC20),
 
 }
 
@@ -86,29 +91,28 @@ export const ethereumModule = {
 const erc20Contracts: Map<string, ERC20> = new Map()
 
 async function setWalletType(context: ActionContext, walletType: string) {
-    const { state } = context
     const wallet = wallets.get(walletType)
     if (wallet === undefined) {
         console.error("unsuported wallet type " + walletType)
         // to do tell the user about the error
         return
     }
-    state.walletType = walletType
+    context.state.walletType = walletType
     if (wallet.isMultiAccount === false) {
         wallet.createProvider()
         .then((provider) => {
-            state.provider = provider
-            console.log("provider", provider)
+            context.state.provider = provider
+            log("provider", provider)
             return  provider.getSigner()
         })
         .then((signer) => {
-            state.signer = signer
-            console.log("signer", signer)
+            context.state.signer = signer
+            log("signer", signer)
             return signer.getAddress()
         })
         .then((address) => {
-            console.log("address", address)
-            state.address = address
+            log("address", address)
+            context.state.address = address
             log("wallet set")
         })
         .catch((e) => {
@@ -124,12 +128,9 @@ async function setWalletType(context: ActionContext, walletType: string) {
  * @param tokenAmount
  */
 export async function refreshBalance(context: ActionContext, symbol: string) {
-    const contract = erc20Contracts.get(symbol)
-    if (!contract) {
-        throw new Error("No contract found")
-    }
+    const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
     const ethersBN = await contract.functions.balanceOf(context.state.address)
-    console.log("refreshed ", symbol, ethersBN.toString())
+    log("balanceOf %s %s ", symbol, ethersBN.toString())
     context.state.balances[symbol] = new BN(ethersBN.toString())
 }
 
@@ -139,34 +140,36 @@ export async function refreshBalance(context: ActionContext, symbol: string) {
  * @param tokenAmount
  */
 export async function approve(context: ActionContext,  payload: Transfer) {
-    const {state, rootState} = context
-    const {symbol, tokenAmount, to} = payload
-    const contract = erc20Contracts.get(symbol)
-    await contract!.functions.approve(to, tokenAmount)
+    const {symbol, weiAmount, to} = payload
+    const contract = requireValue(erc20Contracts.get(symbol), "Contract not initialized")
+    await contract.functions.approve(to, weiAmount.toString())
 }
 
 /**
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-export function transfer(context: ActionContext, payload: Transfer) {
-    return timer(2000).toPromise()
+export async function transfer(context: ActionContext, payload: Transfer): Promise<ContractTransaction> {
+    const {symbol, weiAmount, to} = payload
+    const contract = requireValue(erc20Contracts.get(symbol), "Contract not initialized")
+    const tx = await contract.functions.transfer(to, weiAmount.toString())
+    log("transfer", tx)
+    return tx
 }
 
-export function allowance(context: ActionContext, payload: {symbol: string, spender: string}) {
+export async function allowance(context: ActionContext, payload: {symbol: string, spender: string}): Promise<BN> {
     const {symbol, spender} = payload
-    const contract = erc20Contracts.get(symbol)
-    let allowance = contract!.functions.allowance(
+    const contract = requireValue<ERC20>(erc20Contracts.get(symbol), "Expected contract")
+    const amount = await contract.functions.allowance(
       context.state.address,
       spender,
     )
-    return allowance
+    return new BN(amount.toString())
 }
 
 export function initERC20(context: ActionContext, symbol: string) {
     const provider = context.state.provider!
     const contractAddr = context.state.erc20Addresses[symbol]
-    // @ts-ignore
     const contract = new Contract(contractAddr, ERC20ABI, provider) as ERC20
     erc20Contracts.set(symbol, contract)
 
@@ -182,4 +185,8 @@ export function initERC20(context: ActionContext, symbol: string) {
     contract.on(receive, refresh)
 
     return contract
+}
+
+export function clearERC20() {
+    erc20Contracts.clear()
 }

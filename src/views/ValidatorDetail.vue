@@ -52,7 +52,7 @@
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
+      <p v-if="!validatorDelegations.length && !validator.isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
 
@@ -81,12 +81,12 @@ import LoadingSpinner from "../components/LoadingSpinner.vue"
 import SuccessModal from "../components/modals/SuccessModal.vue"
 import RedelegateModal from "../components/modals/RedelegateModal.vue"
 import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
-import { formatToCrypto } from "@/utils"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { Modal } from "bootstrap-vue"
 import { dposModule } from "../store/dpos"
 import { HasDPOSState } from "../store/dpos/types"
+import { Delegation } from "@/store/dpos/types"
 
 @Component({
   components: {
@@ -118,8 +118,6 @@ export default class ValidatorDetail extends Vue {
   }
 
   get userIsLoggedIn() { return this.state.plasma.address !== ""}
-
-  get validators() {return this.state.dpos.validators}
 
   get validator() {
     const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
@@ -159,8 +157,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get canConsolidate() {
-    // dev only. remove "true" on production
-    return this.state.dpos.delegations.filter((d) => !d.locked).length > 1
+    return 0 < this.state.dpos.delegations.filter((d) => !d.locked).length
   }
 
   async redelegateHandler() {
@@ -168,30 +165,17 @@ export default class ValidatorDetail extends Vue {
     return false
   }
 
-  get isBootstrap() {
-    return this.prohibitedNodes.includes(this.validator.name)
-  }
-
   openRequestDelegateModal() {
     // @ts-ignore
     this.$refs.delegateModalRef.show(this.validator.address, "")
   }
 
-  openRequestDelegationUpdateModal(delegation) {
-    // @ts-ignore
-    this.$refs.delegateModalRef.show(
-      this.validator.address,
-      "",
-      0, // formatToCrypto(delegation.amount),
-      delegation.lockTimeTier)
-  }
-
-  openRequestUnbondModal(delegation) {
+  openRequestUnbondModal(delegation: Delegation) {
     // @ts-ignore
     this.modal("delegateModalRef").show(this.validator.address, "unbond", 0, 0, delegation)
   }
 
-  openRedelegateModal(delegation) {
+  openRedelegateModal(delegation: Delegation) {
     // @ts-ignore
     this.modal("redelegateModalRef").show(delegation)
   }

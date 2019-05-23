@@ -108,7 +108,7 @@ export interface DahboardEnvs {
 
 export interface Funds {
   symbol: string
-  tokenAmount: BN
+  weiAmount: BN
 }
 
 export interface Transfer extends Funds {

@@ -27,9 +27,14 @@
                 tr-class="spacer"
                 :items="validators"
                 :fields="validatorFields"
-                :sort-by="weight"
                 :sort-desc="sortDesc"
                 @row-clicked="showValidatorDetail">
+                <template slot="delegationsTotal" slot-scope="data">
+                  {{data.item.totalStaked | tokenAmount}}
+                </template>
+                <template slot="active" slot-scope="data">
+                  {{data.item.active ? "Active" : ""}}
+                </template>
               </b-table>
           </template>
         </div>
@@ -46,13 +51,12 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import FaucetTable from "../components/FaucetTable.vue"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 
 import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
-import { HasDPOSState } from '../store/dpos/types';
+import { HasDPOSState } from "../store/dpos/types"
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -76,10 +80,9 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
       { key: "active", sortable: true, label: "Active" },
-      { key: "totalStaked", sortable: true, label: "Total Staked" },
-      { key: "fees", sortable: true, label: "Fees"  }
+      { key: "delegationsTotal", sortable: true, label: "Total Staked" },
+      { key: "fee", sortable: true, label: "Fee"  },
   ]
-
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -103,7 +106,7 @@ export default class ValidatorList extends Vue {
   }
 
   showValidatorDetail(record, index) {
-    this.$router.push(`/validator/${encodeURIComponent(record.Name)}`)
+    this.$router.push(`/validator/${encodeURIComponent(record.name)}`)
   }
 }
 </script>

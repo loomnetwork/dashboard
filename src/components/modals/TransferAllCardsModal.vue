@@ -10,7 +10,7 @@
         v-model="confirmCards"
         name="confirmCards"
         v-show="receiverAddress">        
-        I confirm to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}}.
+        I confirm to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}} address.
       </b-form-checkbox>
       <b-button class="my-2" type="button" @click="transferAllCardsHandler()" :disabled="!receiverAddress || !confirmCards" >Transfer All</b-button>
     </b-container>

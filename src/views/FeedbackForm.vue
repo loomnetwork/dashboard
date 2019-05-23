@@ -1,7 +1,6 @@
 <template>
   <div id="feedback-form">
     <b-card class="mb-4 form-contianer" no-body>
-      <!-- For Enabling CAPTCHA: add "&captcha=yes" in src property -->
       <iframe title="Feedback Form" 
         class="freshwidget-embedded-form"
         id="freshwidget-embedded-form" 
@@ -9,7 +8,7 @@
         scrolling="no"
         height="1100px"
         width="100%"
-        frameborder="0" >
+        frameborder="0">
       </iframe>
     </b-card>
   </div>

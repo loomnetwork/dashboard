@@ -24,11 +24,15 @@
           </b-card-text>
         </b-card>
 
+        <div>
+          {{state.ethereum.balances.eth}} eth
+        </div>
+
         <div class="p3">
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
-          <div v-if="userBalance.mainnetBalance">
+          <div>
             <h5 class="highlight">
-              {{userBalance.mainnetBalance + " LOOM"}}
+              {{state.ethereum.balances.loom | tokenAmount}} LOOM
               <loom-icon
                 v-if="!userBalance.isLoading"
                 :color="'#f0ad4e'"
@@ -37,22 +41,22 @@
               />
             </h5>
           </div>
-          <div v-else>
+          <div v-if="state.plasma.coins.loom.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>
-          <div v-if="userBalance.loomBalance">
+          <div>
             <h5 class="highlight">
-              {{userBalance.loomBalance + " LOOM"}}
+              {{state.plasma.coins.loom.balance | formatTokenAmount}} LOOM
               <loom-icon
-                v-if="!userBalance.isLoading"
+                v-if="!state.plasma.coins.loom.loading"
                 :color="'#f0ad4e'"
                 width="20px"
                 height="20px"
               />
             </h5>
           </div>
-          <div v-else>
+          <div v-if="state.plasma.coins.loom.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
           <!-- unclaimed -->
@@ -211,6 +215,7 @@ import DepositForm from "@/components/gateway/DepositForm.vue"
 import Rewards from "@/components/Rewards.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
+import { DashboardState } from '../types';
 
 const log = debug("mobileaccount")
 
@@ -225,6 +230,11 @@ const ELECTION_CYCLE_MILLIS = 600000
   },
 })
 export default class MobileAccount extends Vue {
+
+  get state():DashboardState {
+    return this.$store.state
+  }
+
 
   currentAllowance = 0
 

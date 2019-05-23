@@ -16,8 +16,11 @@ debug.enable("dashboard.dpos")
 
 export function dposStorePlugin(store: Store<DashboardState>) {
 
+    return
+
     store.subscribeAction({
         after(action) {
+            return
             if (action.type !== "DPOS/getTimeUntilElectionsAsync") {
                 return
             }

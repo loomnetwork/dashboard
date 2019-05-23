@@ -4,7 +4,7 @@
 
 import { getStoreBuilder } from "vuex-typex"
 
-import { DashboardState } from "@/types"
+import { DashboardState, Transfer } from "@/types"
 
 import { EthereumState, HasEthereumState, WalletType } from "./types"
 
@@ -19,10 +19,17 @@ import { MetaMaskAdapter } from "./wallets/metamask"
 import { LedgerAdapter } from "./wallets/ledger"
 import { JsonRpcProvider } from "ethers/providers"
 import debug from "debug"
+import { ParamType } from "ethers/utils"
+import { Contract } from "ethers"
 
 const log = debug("dboard.ethereum")
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
+
+const ERC20ABIs: ParamType[] = require("loom-js/dist/mainnet-contracts/ERC20.json")
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
+import { stat } from "fs"
+import { state } from "../common"
 
 const wallets: Map<string, WalletType> = new Map([
     ["metamask", MetaMaskAdapter],
@@ -35,7 +42,8 @@ const initialState: EthereumState = {
     signer: null,
     walletType: "",
     erc20Addresses: {
-        loom: "",
+        // us1
+        loom: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
         bnb: "",
         usdc: "",
     },
@@ -58,12 +66,19 @@ export const ethereumModule = {
 
     get state() { return stateGetter() },
 
+    /**
+     * UI must not call this
+     */
+    setBalance: builder.commit(mutations.setBalance),
+
     refreshBalance: builder.dispatch(refreshBalance),
     approve: builder.dispatch(approve),
     transfer: builder.dispatch(transfer),
 
     setWalletType: builder.dispatch(setWalletType),
     allowance: builder.dispatch(allowance),
+
+    initERC20: builder.dispatch(initERC20),
 
 }
 
@@ -74,19 +89,31 @@ async function setWalletType(context: ActionContext, walletType: string) {
     const {state} = context
     const wallet = wallets.get(walletType)
     if (wallet === undefined) {
-        // tell user error
         console.error("unsuported wallet type " + walletType)
+        // to do tell the user about the error
         return
     }
     state.walletType = walletType
     if (wallet.isMultiAccount === false) {
-        const provider = await wallet.createProvider()
-        state.provider = provider
-        // todo manage if no signer (readonly)
-        state.signer = provider.getSigner()
-        state.address = (await provider.getSigner().getAddress()).toLocaleLowerCase()
-        debugger
-        log("wallet set")
+        wallet.createProvider()
+        .then((provider) => {
+            state.provider = provider
+            console.log("provider", provider)
+            return  provider.getSigner()
+        })
+        .then((signer) => {
+            state.signer = signer
+            console.log("signer", signer)
+            return signer.getAddress()
+        })
+        .then((address) => {
+            console.log("address", address)
+            state.address = address
+            log("wallet set")
+        })
+        .catch((e) => {
+            console.error(e)
+        })
     }
 
 }
@@ -96,8 +123,14 @@ async function setWalletType(context: ActionContext, walletType: string) {
  * @param symbol
  * @param tokenAmount
  */
-export function refreshBalance(context: ActionContext, symbol: string) {
-    return timer(2000).toPromise()
+export async function refreshBalance(context: ActionContext, symbol: string) {
+    const contract = erc20Contracts.get(symbol)
+    if (!contract) {
+        throw new Error("No contract found")
+    }
+    const ethersBN = await contract.functions.balanceOf(context.state.address)
+    console.log("refreshed ", symbol, ethersBN.toString())
+    context.state.balances[symbol] = new BN(ethersBN.toString())
 }
 
 /**
@@ -105,7 +138,18 @@ export function refreshBalance(context: ActionContext, symbol: string) {
  * @param symbol
  * @param tokenAmount
  */
-export function approve(context: ActionContext,  payload: TransferRequest) {
+export function approve(context: ActionContext,  payload: Transfer) {
+    const coin = payload.symbol
+    switch (coin) {
+        case "eth":
+
+            break
+        case "loom":
+
+        break
+        default:
+            break
+    }
     return timer(2000).toPromise()
 }
 
@@ -113,7 +157,7 @@ export function approve(context: ActionContext,  payload: TransferRequest) {
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-export function transfer(context: ActionContext, payload: TransferRequest) {
+export function transfer(context: ActionContext, payload: Transfer) {
     return timer(2000).toPromise()
 }
 
@@ -124,4 +168,26 @@ export function allowance(context: ActionContext, spender: string) {
       spender,
     )
     return allowance
+}
+
+export function initERC20(context: ActionContext, symbol: string) {
+    const provider = context.state.provider!
+    const contractAddr = context.state.erc20Addresses[symbol]
+    debugger
+    // @ts-ignore
+    const contract = new Contract(contractAddr, ERC20ABI, provider) as ERC20
+    erc20Contracts.set(symbol, contract)
+
+    const account = context.state.address
+    // out out filters
+    const send = contract.filters.Transfer(account, null, null)
+    const receive = contract.filters.Transfer(null, account, null)
+
+    const refresh = () => ethereumModule.refreshBalance(symbol)
+
+    ethereumModule.refreshBalance(symbol)
+    contract.on(send, refresh)
+    contract.on(receive, refresh)
+
+    return contract
 }

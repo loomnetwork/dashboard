@@ -33,21 +33,24 @@ function initialState(): GatewayState {
 }
 }
 
-const builder = getStoreBuilder<HasGatewayState>().module("ethGateway", initialState())
+const builder = getStoreBuilder<HasGatewayState>().module("gateway", initialState())
 const stateGetter = builder.state()
 
 export const gatewayModule = {
 
     get state() { return stateGetter() },
 
-    deposit: builder.dispatch(deposit),
+    // gateway
+    ethereumDeposit: builder.dispatch(ethereumDeposit),
+    plasmaDeposit: builder.dispatch(plasmaDeposit),
     plasmaWithdraw: builder.dispatch(plasmaWithdraw),
     ethereumWithdraw: builder.dispatch(ethereumWithdraw),
     checkPendingReceipt: builder.dispatch(checkPendingReceipt),
 
-    checkMapping: builder.dispatch(loadMapping),
+    // mapper
+    loadMapping: builder.dispatch(loadMapping),
     createMapping: builder.dispatch(createMapping),
-
+    setMapping: builder.commit(mutations.setMapping),
 }
 
 /**
@@ -55,6 +58,27 @@ export const gatewayModule = {
  * @param symbol
  * @param tokenAmount
  */
+export async function ethereumDeposit( context: ActionContext, funds: Funds) {
+  // const gwAddress = funds.symbol === "loom" ? context.state.address.loomGateway : context.state.address.gateway
+  // // check allowas
+  // const allowance:BN = await ethereumModule.allowance({coin: funds.symbol, to: gwAddress, name: "Gateway"})
+  // let extraAllowance;
+  // if (allowance.lt(funds.tokenAmount)) {
+  //   // subtract
+  //   extraAllowance = funds.tokenAmount.lt(allowance)
+  // }
+
+  // if (extraAllowance.gt(new BN("0")))
+
+  return timer(2000).toPromise()
+}
+
+/**
+ * deposit from ethereum account to gateway
+ * @param symbol
+ * @param tokenAmount
+ */
+// TODO: Rename to plasmaDeposit?
 export function deposit( context: ActionContext, funds: Funds) {
   return ethereumModule.allowance(context.state.address)
 }
@@ -81,36 +105,52 @@ export function checkPendingReceipt(context: ActionContext) {
   return timer(2000).toPromise()
 }
 
-async function loadMapping(context: ActionContext, address: string) {
+//
+// mapper
+//
+
+export async function loadMapping(context: ActionContext, address: string) {
   const client = context.rootState.plasma.client!
-  const caller = context.rootState.plasma.genericAddress
-  const mapper = await AddressMapper.createAsync(client, caller)
+  const chainId = client.chainId
+  const caller = context.rootState.plasma.appKey.address
+  const mapper = await AddressMapper.createAsync(client, Address.fromString([chainId, caller].join(":")))
   try {
-    context.state.mapping = await mapper.getMappingAsync(Address.fromString(`eth:${address}`))
+    const mapping =  await mapper.getMappingAsync(Address.fromString(`eth:${address}`))
+    console.log("mapping", context.state.mapping)
+    context.state.mapping = mapping
+    console.log("got mapping", context.state.mapping)
   } catch (e) {
     if (e.message.includes("failed to map address")) {
-      context.state.mapping = {from: Address.fromString(`eth:${address}`), to: Address.fromString(":0x0000000000000000")}
+      context.state.mapping = {
+        from: Address.fromString(`eth:${address}`),
+        to: Address.fromString(":0x0000000000000000"),
+      }
     } else {
       console.error("Failed to load mapping, response was " + e.message)
-      // feedback.showError("mapper.errors.load")
+      // todo feedback.showError("mapper.errors.load")
     }
   }
 }
 
+function setMapping(state: GatewayState, mapping: IAddressMapping) {
+  state.mapping = mapping
+}
+
 async function createMapping(context: ActionContext) {
+  const {rootState, state} = context
   // create a temporary client for new napping
-  const client = getRequired(context.rootState.plasma.client, "plasma client")
-  const ethAddress = getRequired(context.state.mapping, "mapping").from
-  const signer = getRequired(context.rootState.ethereum.signer, "signer")
-  const caller = context.rootState.plasma.genericAddress
+  const client = getRequired(rootState.plasma.client, "plasma client")
+  const ethAddress = getRequired(state.mapping, "mapping").from
+  const signer = getRequired(rootState.ethereum.signer, "signer")
+  const caller = rootState.plasma.appKey.address
   // @ts-ignore, bignumber changed between version
   const ethSigner = new EthersSigner(signer)
   const plasmaId = generateNewId()
-  const mapper = await AddressMapper.createAsync(client, caller)
+  const mapper = await AddressMapper.createAsync(client, Address.fromString([client.chainId, caller].join()))
 
   try {
     await mapper.addIdentityMappingAsync(Address.fromString(`eth:${ethAddress}`), plasmaId.address, ethSigner)
-    context.state.mapping = await mapper.getMappingAsync(Address.fromString(`eth:${ethAddress}`))
+    state.mapping = await mapper.getMappingAsync(Address.fromString(`eth:${ethAddress}`))
   } catch (e) {
     console.error("could not get mapping after creating a new identity" + ethAddress + plasmaId.address)
     // feedback.showError("mapper.errors.create", e.message,{ethereum:ethAddress, plasma:plasmaId.address})

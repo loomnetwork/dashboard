@@ -1,6 +1,8 @@
 /* eslint-disable no-undef, func-names */
 import Web3 from "web3"
 import BigNumber from "bignumber.js"
+import Cards from './data/cards.json'
+import CardDetails from "./data/cardDetail.json"
 
 const unitMap = {
   noether:      "0",
@@ -127,3 +129,38 @@ export function dynamicSort(property) {
       return result * sortOrder
     }
   }
+
+export function getCardByTokenId(id: string) {
+    let cardDetail = CardDetails[id]
+    let card
+    if (!cardDetail) {
+      cardDetail = defaultCardData
+      card = Object.assign({}, cardDetail)
+    } else {
+      card = Object.assign(
+        {},
+        defaultCardData,
+        Cards.cards.find(cd => parseInt(cd.mould_type, 10) === cardDetail.mouldId)
+      )
+      let variation = cardDetail.variant.replace('-edition', '')
+      card.variation = variation === 'backers' ? 'backer' : variation
+    }
+    card.id = id
+    return card
+}
+
+export const defaultCardData = {
+  display_name: 'Card',
+  priceInUSD: 0.0,
+  priceInETH: 0.0,
+  image: 'question_card',
+  title: 'A Great Zombie',
+  inventory: 0,
+  variant: 'standard-edition',
+  variation: 'standard',
+  mould_type: '001',
+  element: 'AIR',
+  originalID: '001',
+  id: '001',
+  tradeable: false
+}

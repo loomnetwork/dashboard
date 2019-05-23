@@ -12,6 +12,8 @@ import * as mutations from "./mutations"
 import BN from "bn.js"
 import { IDelegation, ICandidate } from "loom-js/dist/contracts/dpos3"
 import { state } from "../common"
+import { Address } from "loom-js"
+import { plasmaModule } from "../plasma"
 
 const initialState: DPOSState = {
     contract: null,
@@ -46,11 +48,10 @@ const dposModule = {
     undelegate: builder.dispatch(undelegate),
     claimRewards: builder.dispatch(claimRewards),
 
-    refreshRewards: builder.dispatch(refreshRewards),
-
     refreshElectionTime: builder.dispatch(refreshElectionTime),
     refreshValidators: builder.dispatch(refreshValidators),
-
+    refreshDelegations: builder.dispatch(refreshDelegations),
+    refreshRewards: builder.dispatch(refreshRewards),
 }
 
 // vuex module as a service
@@ -58,17 +59,37 @@ export { dposModule }
 
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
+// read/static
+
 async function refreshElectionTime(context: ActionContext) {
-    const time: BN = await context.state.contract!.getTimeUntilElectionAsync()
+    const contract = context.state.contract!
+    const time: BN = contract.getTimeUntilElectionAsync()
     const date = Date.now() + (time.toNumber() * 1000)
     dposModule.setElectionTime(new Date(date))
 }
 
 async function refreshValidators(context: ActionContext) {
-    const time: BN = await context.state.contract!.getTimeUntilElectionAsync()
-    await timer(2000).toPromise()
+    const contract = context.state.contract!
+    const candidates = await contract.getCandidatesAsync()
+    const validators = await contract.getValidatorsAsync()
+    const delegations = await contract.getAllDelegations()
+    dposModule.setValidators(candidates)
+}
+
+async function refreshDelegations(context: ActionContext) {
+    const contract = context.state.contract!
+    const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
+    dposModule.setDelegations(response!.delegationsArray)
     dposModule.setValidators([])
 }
+
+async function refreshRewards(context: ActionContext) {
+    const contract = await context.state.contract!
+    const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
+    dposModule.setDelegations(response!.delegationsArray)
+}
+
+// write/[the bc word for it]
 
 async function delegate(context: ActionContext, delegation: IDelegation) {
     await context.state.contract!.delegateAsync(delegation.validator, delegation.amount, delegation.lockTimeTier)
@@ -89,21 +110,8 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
 
 }
 
-/**
- * withdraw from gateway to ethereum account
- * @param symbol
- */
 async function undelegate(context: ActionContext, delegation: IDelegation) {
     await context.state.contract!.unbondAsync(delegation.validator, delegation.updateAmount, delegation.index)
-}
-
-/**
- * withdraw from gateway to ethereum account
- * @param symbol
- */
-async function refreshRewards(context: ActionContext, payload: {symbol: string, tokenAmount: BN, to: string}) {
-    await timer(2000).toPromise()
-    dposModule.setRewards("0")
 }
 
 /**

@@ -30,6 +30,23 @@ const dynamicSort = (property) => {
   }
 }
 
+const loadInitialQue = () => {
+  // @ts-ignore
+  let events = JSON.parse(sessionStorage.getItem("events"))
+  if(!events || events.length <= 0) return []
+  return events
+}
+
+// @ts-ignore
+Array.prototype.push_to_cache = function(elem, limit) {
+  var limit = limit || 10
+  var length = this.length
+  if(length == limit) {
+    this.shift()
+  }
+  this.push(elem)
+}
+
 const defaultState = () => {
   return {
     isLoggedIn: false,
@@ -88,7 +105,7 @@ const defaultState = () => {
     showDepositConfirmed: false,
     pendingTx: null,
     electionIsRunning: false,
-    eventQue: [],
+    eventQue: loadInitialQue(),
     hasNewNotification: false,
   }
 }
@@ -251,6 +268,7 @@ export default {
     },
     setEventQue(state, payload) {
       state.eventQue = payload
+      sessionStorage.setItem("events", JSON.stringify(payload))
     },
     setEthTxETA(state, payload) {
       state.ethTxETA = payload
@@ -723,7 +741,7 @@ export default {
       if(type.includes("delegate")) label = "Delegation"
       if(type.includes("undelegate")) label = "Undelegation"
       let freshQue = Array.from(state.eventQue)
-      freshQue.push({type: label, timestamp})
+      freshQue.push_to_cache({type: label, timestamp})
       commit("setEventQue", freshQue)
     },
     async getEthereumTxData({commit}, payload) {

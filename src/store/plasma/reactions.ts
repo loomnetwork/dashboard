@@ -30,11 +30,11 @@ export function plasmaReactions(store: Store<HasPlasmaState>) {
         // create loom contract
         state.coins.loom.contract = await Coin.createAsync(state.client, callerAddress)
         state.coins.loom.loading = true
-        plasmaModule.updateBalance("loom")
+        plasmaModule.refreshBalance("loom")
 
         state.coins.eth.contract = await EthCoin.createAsync(state.client, callerAddress)
         state.coins.eth.loading = true
-        plasmaModule.updateBalance("eth")
+        plasmaModule.refreshBalance("eth")
         // createERC20Contracts() // or may be lazy on demand?
     }
 

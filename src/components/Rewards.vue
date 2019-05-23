@@ -2,21 +2,23 @@
   <b-card title="Rewards" class="mb-4">
     <div>
       <div class="mb-4">
-        <div v-if="rewardsResults && rewardsResults <= 0">
-          <h6>
-            You do not have any rewards at the moment. Please visit the <router-link to="/validators" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validators') }}</router-link> page.
-          </h6>
+        <div v-if="state.dpos.loading.delegations">
+          <b-spinner variant="primary" label="Spinning" />
         </div>
-        <div v-else-if="rewardsResults > 0">
+        <div v-else-if="hasRewards">
           <h6>
             {{ $t('views.rewards.unclaimed_rewards') }} 
           </h6>
           <h5 class="highlight">
-            {{rewardsResults.toString() + " LOOM"}}
+            {{state.dpos.rewards.toString()}} LOOM
           </h5>
         </div>
-        <div v-else-if="!rewardsResults">
-          <b-spinner variant="primary" label="Spinning" />
+        <div v-else>
+          <h6>
+            You do not have any rewards at the moment. 
+            <!-- only show this is user has no delegations -->
+            Please visit the <router-link to="/validators" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validators') }}</router-link> page.
+          </h6>
         </div>
       </div>
       <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasNoRewards">{{ $t('views.rewards.claim_reward') }}</b-button>
@@ -32,6 +34,9 @@ import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
 
+import BN from "bn.js"
+import { dposModule } from '../store/dpos';
+
 @Component
 export default class Rewards extends Vue {
 
@@ -40,8 +45,6 @@ export default class Rewards extends Vue {
 
   setSuccessMsg = CommonTypedStore.setSuccessMsg
   setErrorMsg = CommonTypedStore.setErrorMsg
-  queryRewards = DPOSTypedStore.queryRewards
-  claimRewardsAsync = DPOSTypedStore.claimRewardsAsync
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   get state(): DashboardState {
@@ -51,25 +54,19 @@ export default class Rewards extends Vue {
   get showLoadingSpinner() {
     return this.state.DPOS.showLoadingSpinner
   }
-  get rewardsResults() {
-    return this.state.DPOS.rewardsResults
-  }
 
-  get hasNoRewards() {
-    return this.rewardsResults === "0.00"
-  }
-
-  get formattedRewardResults() {
-    return this.rewardsResults.toString() + " LOOM"
+  get hasRewards() {
+    return this.state.dpos.rewards.gt(new BN("0"))
   }
 
   async claimRewardHandler() {
+    const rewards = this.state.dpos.rewards
     this.hideTooltip = true
     this.setShowLoadingSpinner(true)
     try {
-      await this.claimRewardsAsync()
+      await dposModule.claimRewards()
       this.setSuccessMsg({msg: "Successfully claimed rewards!" +
-        this.rewardsResults.toString(), forever: false})
+        rewards.toString(), forever: false})
     } catch (err) {
       this.setErrorMsg({msg: "Claiming reward failed", forever: false, report: true, cause: err})
     }

@@ -4,12 +4,13 @@ import Web3 from "web3"
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import BoosterPackJSON from "@/contracts/BoosterPack.json"
 import {
-    LoomProvider, Client, CryptoUtils, NonceTxMiddleware, SignedEthTxMiddleware, Address, LocalAddress
+    LoomProvider, Client, CryptoUtils, NonceTxMiddleware, SignedEthTxMiddleware, Address, LocalAddress,
   } from "loom-js"
-import { noop } from 'vue-class-component/lib/util';
-import { plasmaModule } from './plasma';
+import { noop } from "vue-class-component/lib/util"
+import { plasmaModule } from "./plasma"
 import packAddresses from "@/data/ZBGPackAddresses.json"
-import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
+import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
+import { ethers } from "ethers"
 
 function setupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return client.txMiddleware
@@ -45,7 +46,7 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
                 MigratedZBGCardJSON.abi,
                 MigratedZBGCardJSON.networks[networkId].address)
             for (const pack of PACKS_NAME) {
-                let packInstance = new web3.eth.Contract(BoosterPackJSON.abi,
+                const packInstance = new web3.eth.Contract(BoosterPackJSON.abi,
                     packAddresses[store.state.DPOS.networkId][pack])
                 plasmaModule.setPacksContract({name: pack, contract: packInstance})
             }

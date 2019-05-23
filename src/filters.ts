@@ -96,6 +96,5 @@ export function formatUrl(domainOrUrl: string) {
 }
 
 export function formatTokenAmount(wei: BN) {
-    debugger
     return wei.div(new BN("10").pow(new BN("18"))).toString()
 }

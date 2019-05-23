@@ -3,7 +3,7 @@ import Vuex, { Store } from "vuex"
 // import { state, getters, mutations, actions } from './applicationStore'
 
 import { dposStorePlugin } from "./dposPlugin"
-import { plasmaStorePlugin } from './plasmaPlugin';
+import { plasmaStorePlugin } from "./plasmaPlugin"
 import { LocaleStore } from "./locale"
 import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
@@ -15,7 +15,6 @@ import "./ethSignStore"
 import { DPOSTypedStore } from "./dpos-old"
 import { CommonStore } from "./common"
 import { EthSign } from "./ethSignStore"
-import { dposStorePlugin } from "./dposPlugin"
 import "./ethereum"
 import "./gateway"
 import "./plasma"
@@ -37,6 +36,5 @@ const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore
     dposReactions,
   ],
 })
-console.log(store)
 export default store
 

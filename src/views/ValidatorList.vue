@@ -9,19 +9,28 @@
           <template v-if="isSmallDevice">
             <b-list-group>
               <b-list-group-item 
-                v-for="validator in validators" :key="validator.Name"
+                v-for="validator in validators" :key="validator.address"
                 :disabled="!!validator.isBootstrap"
                 @click="showValidatorDetail(validator)"
                 >
-                  <h6>{{validator.Name}}</h6>
-                  <div class="fee"><label>Fee</label>{{validator.Fees}}</div>
-                  <div class="stakes"><label>Stake</label><span>{{validator.totalStaked}}</span></div>
-                  <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.Status}}</div>
+                  <h6>{{validator.name}}</h6>
+                  <div class="fee"><label>Fee</label>{{validator.fee}}</div>
+                  <div class="stakes"><label>Stake</label><span>{{validator.totalStaked | tokenAmount}}</span></div>
+                  <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.status}}</div>
               </b-list-group-item>  
             </b-list-group>
           </template>
           <template v-else>
-            <faucet-table :items="validators" :fields="validatorFields" sortBy="Weight" :rowClass="validatorCssClass" @row-clicked="showValidatorDetail"></faucet-table>
+              <b-table
+                responsive
+                table-active="table-active"
+                tr-class="spacer"
+                :items="validators"
+                :fields="validatorFields"
+                :sort-by="weight"
+                :sort-desc="sortDesc"
+                @row-clicked="showValidatorDetail">
+              </b-table>
           </template>
         </div>
       </div>
@@ -43,6 +52,7 @@ import LoadingSpinner from "../components/LoadingSpinner.vue"
 import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
+import { HasDPOSState } from '../store/dpos/types';
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -58,21 +68,25 @@ function random() {
 
 @Component({
   components: {
-    FaucetTable,
     LoadingSpinner,
   },
 })
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
-  validatorFields = DPOSTypedStore.state.validatorFields
+  validatorFields = [{ key: "name", sortable: true, label: "Name" },
+      { key: "active", sortable: true, label: "Active" },
+      { key: "totalStaked", sortable: true, label: "Total Staked" },
+      { key: "fees", sortable: true, label: "Fees"  }
+  ]
 
-  get getFormattedValidators() {
-    return DPOSTypedStore.getFormattedValidators()
+
+  get state(): HasDPOSState {
+    return this.$store.state
   }
 
   get validators() {
-    return this.getFormattedValidators.sort((a, b) => {
+    return this.state.dpos.validators.sort((a, b) => {
       const aValue = a.isBootstrap ? 0 : random() * 10000
       const bValue = b.isBootstrap ? 0 : random() * 10000
       return Math.floor(aValue) - Math.floor(bValue)
@@ -155,39 +169,6 @@ main.validators {
       }
     }
   }
-
 }
 
-.faucet {
-  main {
-    margin-left: 0;
-    min-height: 620px;
-    .bottom-border {
-      border-bottom: 2px solid lightgray;
-    }
-  }
-  .faucet-content {
-    .column {
-      flex-direction: column;
-    }
-    h4, h2, h1 {
-      color: gray;
-    }
-    th[aria-colindex="3"], td[aria-colindex="3"] {
-      text-align: right !important;
-    }
-    th[aria-colindex="4"], td[aria-colindex="4"] {
-      text-align: right !important;
-    }
-    #faucet-table.table tbody tr td.table-danger {
-      opacity: 0.5;
-    }
-    #faucet-table.table tbody tr td.table-danger ~ td {
-      opacity: 0.5
-    }
-  }
-}
-body {
-  overflow-y: scroll;
-}
 </style>

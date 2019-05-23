@@ -1,7 +1,7 @@
 import { HasDPOSState } from "./types"
 import { Store } from "vuex"
 import { dposModule } from "."
-import { plasmaModule } from "../plasma"
+import { plasmaModule } from "@/store/plasma"
 
 import debug from "debug"
 import { DPOS3 } from "loom-js/dist/contracts"
@@ -17,11 +17,11 @@ const DPOS_ACTIONS = [
 ]
 export function dposReactions(store: Store<HasDPOSState>) {
 
-    store.watch(
-        (s) => s.plasma.address,
-        () => createContract(store),
-        { immediate: true },
-    )
+    let scheduledElectionCall: number = -1
+
+    store.watch((s) => s.plasma.client, onClientReady)
+
+    store.watch((s) => s.plasma.address, onAccountChange)
 
     store.subscribeAction({
         after(action) {
@@ -43,14 +43,27 @@ export function dposReactions(store: Store<HasDPOSState>) {
         },
     })
 
+    async function onClientReady() {
+        await createContract(store)
+        dposModule.refreshElectionTime()
+
+    }
+
+    async function onAccountChange() {
+        // recreate the contract with the right caller
+        await createContract(store)
+        refreshDPoSUserState()
+    }
+
     function scheduleElectionTimeCall() {
         const time = store.state.dpos.electionTime.getTime()
         const delay = Math.max(time - Date.now(), 10000)
         log("elections call in", delay / 1000)
-        setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), delay)
+        scheduledElectionCall = window.setTimeout(() => dposModule.refreshElectionTime(), delay)
     }
 
     function refreshDPoSState() {
+        log("refreshDPoSState", store.state.plasma.address)
         dposModule.refreshValidators()
         if (store.state.plasma.address) {
             refreshDPoSUserState()
@@ -58,16 +71,18 @@ export function dposReactions(store: Store<HasDPOSState>) {
     }
 
     function refreshDPoSUserState() {
+        log("refreshDPoSUserState")
         plasmaModule.refreshBalance("loom")
         dposModule.refreshDelegations()
-        dposModule.refreshRewards()
     }
 
-    setTimeout(() => store.dispatch("DPOS/getTimeUntilElectionsAsync"), 1000)
+    setTimeout(() => dposModule.refreshElectionTime(), 1000)
 }
 
 async function createContract(store: Store<HasDPOSState>) {
     const caller = await plasmaModule.getCallerAddress()
     const client = store.state.plasma.client
     store.state.dpos.contract = await  DPOS3.createAsync(client, caller)
+
 }
+

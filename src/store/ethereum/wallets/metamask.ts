@@ -34,7 +34,6 @@ function isLegacyApi() {
 }
 
 function isCurrentApi() {
-    debugger
         // @ts-ignore
     return "ethereum" in window && window.ethereum.isMetaMask
 }

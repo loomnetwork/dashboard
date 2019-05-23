@@ -8,17 +8,19 @@ import { timer } from "rxjs"
 import { PlasmaState, HasPlasmaState, TransferRequest, PlasmaSigner, CardDetail, PackDetail } from "./types"
 import { Client, Address, LocalAddress } from "loom-js"
 import BN from "bn.js"
-import { TokenSymbol } from "../ethereum/types";
+import { TokenSymbol } from "../ethereum/types"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
-import { noop } from "vue-class-component/lib/util"
-import { DashboardState } from '@/types';
+import { DashboardState } from "@/types"
 import { getCardByTokenId } from "@/utils"
-import { PACKS_NAME } from '../plasmaPlugin';
-import { CommonTypedStore } from '../common';
-import { DPOSTypedStore } from '../dpos-old';
+import { PACKS_NAME } from "../plasmaPlugin"
+import { CommonTypedStore } from "../common"
+import { DPOSTypedStore } from "../dpos-old"
 import configs from "@/envs"
-import { setupProtocolsFromEndpoint } from 'loom-js/dist/helpers';
+import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
+import debug from "debug"
+
+const log = debug("plasma")
 
 const initialState: PlasmaState = {
     // not state but...
@@ -53,8 +55,8 @@ const initialState: PlasmaState = {
     cardContract: null,
     cardBalance: [],
     packBalance: [],
-    cardToTransferSelected: {},
-    packToTransferSelected: {},
+    cardToTransferSelected: null,
+    packToTransferSelected: null,
     allCardsToTransferSelected: {
       edition: "none",
       cards: [],
@@ -69,14 +71,6 @@ declare type ActionContext = BareActionContext<PlasmaState, DashboardState>
 export const plasmaModule = {
     get state() { return stateGetter() },
 
-    // Getters
-    getCardInstance: builder.read(getters.getCardInstance),
-
-    // actions
-    checkCardBalance: builder.dispatch(checkCardBalance),
-    checkPackBalance: builder.dispatch(checkPackBalance),
-    transferPacks: builder.dispatch(transferPacks),
-    transferCards: builder.dispatch(transferCards),
     getAddress: builder.read(getAddress),
 
     changeIdentity: builder.dispatch(changeIdentity),
@@ -84,7 +78,13 @@ export const plasmaModule = {
     refreshBalance: builder.dispatch(refreshBalance),
     approve: builder.dispatch(approveTransfer),
     transfer: builder.dispatch(transferTokens),
-    
+
+    // assets
+    getCardInstance: builder.read(getters.getCardInstance),
+    checkCardBalance: builder.dispatch(checkCardBalance),
+    checkPackBalance: builder.dispatch(checkPackBalance),
+    transferPacks: builder.dispatch(transferPacks),
+    transferCards: builder.dispatch(transferCards),
     // mutation
     setPacksContract: builder.commit(mutations.setPacksContract),
     setCardContract:  builder.commit(mutations.setCardContract),
@@ -93,6 +93,7 @@ export const plasmaModule = {
     setCardToTransferSelected: builder.commit(mutations.setCardToTransferSelected),
     setAllCardsToTransferSelected: builder.commit(mutations.setAllCardsToTransferSelected),
     setPackToTransferSelected: builder.commit(mutations.setPackToTransferSelected),
+
   }
 
 async function checkCardBalance(context: ActionContext) {
@@ -102,9 +103,9 @@ async function checkCardBalance(context: ActionContext) {
     const tokens = await context.state.cardContract!.methods
                 .tokensOwned(account)
                 .call({ from: ethAddr })
-    let cards: CardDetail[] = []
+    const cards: CardDetail[] = []
     tokens.indexes.forEach((id: string, i: number) => {
-      let card = getCardByTokenId(id)
+      const card = getCardByTokenId(id)
       card.amount = parseInt(tokens.balances[i], 10)
       cards.push(card)
     })
@@ -116,16 +117,15 @@ async function checkPackBalance(context: ActionContext) {
   const dposUser = await context.rootState.DPOS.dposUser
   const account = dposUser!.loomAddress.local.toString()
   const ethAddr = dposUser!.ethAddress
-  let packs: PackDetail[] = []
-  PACKS_NAME.forEach(async type => {
+  const packs: PackDetail[] = []
+  PACKS_NAME.forEach(async (type) => {
     const amount = await context.state.packsContract[type].methods
             .balanceOf(account)
             .call({ from: ethAddr })
-    let pack =  {type, amount}
+    const pack =  {type, amount}
     packs.push(pack)
   })
   plasmaModule.setPackBalance(packs)
-    
 
 }
 
@@ -242,9 +242,9 @@ function getErc20Contract(symbol: string): ERC20 {
  * @param tokenAmount
  */
 export async function refreshBalance(context: ActionContext, token: string) {
-    let balance: BN
     const coins = context.state.coins
     const addr = new Address("default", LocalAddress.fromHexString(context.state.address))
+    coins[token].loading = true
     switch (token) {
         case "loom":
             coins.loom.balance = await coins.loom.contract!.getBalanceOfAsync(addr)
@@ -259,6 +259,7 @@ export async function refreshBalance(context: ActionContext, token: string) {
             // balance = await state.erc20[symbol].functions.balanceOf(addr)
             coins[token].balance = new BN("0")
     }
+    coins[token].loading = false
 }
 
 /**

@@ -80,7 +80,7 @@ export const ethereumModule = {
 const erc20Contracts: Map<string, ERC20> = new Map()
 
 async function setWalletType(context: ActionContext, walletType: string) {
-    const {state} = context
+    const { state } = context
     const wallet = wallets.get(walletType)
     if (wallet === undefined) {
         console.error("unsuported wallet type " + walletType)
@@ -162,7 +162,6 @@ export function allowance(context: ActionContext, spender: string) {
 export function initERC20(context: ActionContext, symbol: string) {
     const provider = context.state.provider!
     const contractAddr = context.state.erc20Addresses[symbol]
-    debugger
     // @ts-ignore
     const contract = new Contract(contractAddr, ERC20ABI, provider) as ERC20
     erc20Contracts.set(symbol, contract)

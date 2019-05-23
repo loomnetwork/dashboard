@@ -15,9 +15,9 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from '@/store/plasma';
+import { plasmaModule } from "@/store/plasma"
 import { CommonTypedStore } from "@/store/common"
-import { DPOSTypedStore } from '@/store/dpos-old';
+import { DPOSTypedStore } from "@/store/dpos-old"
 
 @Component
 export default class TransferPacksModal extends Vue {
@@ -40,7 +40,7 @@ export default class TransferPacksModal extends Vue {
   }
 
   transferPacksHandler() {
-    if (this.amountToTransfer > this.packToTransfer.amount) {
+    if (this.amountToTransfer > this.packToTransfer!.amount) {
       this.setErrorMsg("Invalid amount")
       return
     }
@@ -50,9 +50,9 @@ export default class TransferPacksModal extends Vue {
     }
     // TODO: put confirmation popup here
     this.transferPacks({
-      packType: this.packToTransfer.type,
+      packType: this.packToTransfer!.type,
       amount: this.amountToTransfer,
-      destinationDappchainAddress: this.receiverAddress
+      destinationDappchainAddress: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-packs-modal")
   }

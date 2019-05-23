@@ -61,7 +61,7 @@
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="consolidate" v-if="multipleUnlockedStakes && false"
+        <b-button class="consolidate" v-if="canConsolidate && false"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>
@@ -85,6 +85,8 @@ import { formatToCrypto } from "@/utils"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { Modal } from "bootstrap-vue"
+import { dposModule } from "../store/dpos"
+import { HasDPOSState } from "../store/dpos/types"
 
 @Component({
   components: {
@@ -97,53 +99,30 @@ import { Modal } from "bootstrap-vue"
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
   prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
-  fields = [
-    { key: "Status" },
-    { key: "personalStake", label: "Validator Personal Stake"},
-    { key: "delegatedStake", label: "Delegators Stake"},
-    { key: "totalStaked", label: "Total Staked"},
-    // { key: 'votingPower', label: 'Reward Power'},
-    { key: "Fees", sortable: false },
-  ]
-  validatorName = ""
 
   hasDelegation = false
 
   finished = false
 
-  locktime = 0
-
-  unlockTime = {
-    seconds: 0,
-  }
-
-  lockTimeTiers = [
-    "2 weeks",
-    "3 months",
-    "6 months",
-    "1 year",
-  ]
-
   lockDays = [14, 90, 180, 365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
-  setErrorMsg = CommonTypedStore.setErrorMsg
-
-  setSuccess = CommonTypedStore.setSuccess
-
   consolidateDelegations = DPOSTypedStore.consolidateDelegations
 
-  async beforeMount() {
-    this.validatorName = this.$route.params.index
+  get state(): HasDPOSState {
+    return this.$store.state
+  }
+  get validatorName() {
+    return this.$route.params.index
   }
 
-  get userIsLoggedIn() { return CommonTypedStore.state.userIsLoggedIn}
+  get userIsLoggedIn() { return this.state.plasma.address !== ""}
 
-  get validators() {return DPOSTypedStore.state.validators}
+  get validators() {return this.state.dpos.validators}
 
   get validator() {
-    const validator = this.validators.find((v) => v.name === this.validatorName)
+    const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
     // todo add state.loadingValidators:boolean
     if (validator === undefined) {
       this.$router.push("../validators")
@@ -154,20 +133,12 @@ export default class ValidatorDetail extends Vue {
   get validatorDelegations() {
     const validator = this.validator
     if (!this.validator) return []
-    return this.delegations
-      .filter((d) => d.validatorStr === validator.address && d.index > 0)
+    return this.state.dpos.delegations
+      .filter((d) => d.validator.local.toString() === validator.address && d.index > 0)
       .map((d) => {
-        d.locked = parseInt(d.lockTime, 10) * 1000 > Date.now()
+        d.locked = d.lockTime * 1000 > Date.now()
         return d
       })
-  }
-
-  get delegations() {
-    return DPOSTypedStore.state.delegations
-  }
-
-  async mounted() {
-    this.finished = true
   }
 
   async delegateHandler() {
@@ -181,21 +152,20 @@ export default class ValidatorDetail extends Vue {
     this.$refs.address.select()
     const successful = document.execCommand("copy")
     if (successful) {
-        this.setSuccess("Address copied to clipboard")
+        CommonTypedStore.setSuccess("Address copied to clipboard")
     } else {
-        this.setSuccess("Somehow copy  didn't work...sorry")
+        CommonTypedStore.setSuccess("Somehow copy  didn't work...sorry")
     }
   }
 
-  get multipleUnlockedStakes() {
+  get canConsolidate() {
     // dev only. remove "true" on production
-    return true || this.delegations.filter((d) => d.unlocked).length > 1
+    return this.state.dpos.delegations.filter((d) => !d.locked).length > 1
   }
 
   async redelegateHandler() {
     // plugin listens to actions and refreshes accordingly
     return false
-    this.$root.$emit("refreshBalances")
   }
 
   get isBootstrap() {

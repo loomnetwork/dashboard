@@ -12,8 +12,6 @@ import { noop } from "vue-class-component/lib/util"
 
 const log = debug("dashboard.dpos")
 
-debug.enable("dashboard.dpos")
-
 export function dposStorePlugin(store: Store<DashboardState>) {
 
     return

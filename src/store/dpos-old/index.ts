@@ -29,7 +29,7 @@ import { getStoreBuilder } from "vuex-typex"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
 
-debug.enable("dashboard.DPOS")
+// debug.enable("dashboard.DPOS")
 const log = debug("dashboard.DPOS")
 const WEI_TOKEN = new BN("" + 10 ** 18)
 

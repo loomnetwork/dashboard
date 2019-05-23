@@ -17,9 +17,9 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from '../../store/plasma';
+import { plasmaModule } from "../../store/plasma";
 import { CommonTypedStore } from "../../store/common"
-import { DPOSTypedStore } from '@/store/dpos-old';
+import { DPOSTypedStore } from "@/store/dpos-old";
 
 @Component
 export default class TransferCardsModal extends Vue {
@@ -42,7 +42,7 @@ export default class TransferCardsModal extends Vue {
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > this.cardToTransfer.amount) {
+    if (this.amountToTransfer > this.cardToTransfer!.amount) {
       this.setErrorMsg("Invalid amount")
       return
     }
@@ -52,9 +52,9 @@ export default class TransferCardsModal extends Vue {
     }
     // TODO: put confirmation popup here
     this.transferCards({
-      cardIds: [this.cardToTransfer.id],
+      cardIds: [this.cardToTransfer!.id],
       amounts: [this.amountToTransfer],
-      destinationDappchainAddress: this.receiverAddress
+      destinationDappchainAddress: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-cards-modal")
   }

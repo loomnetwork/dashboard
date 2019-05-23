@@ -40,7 +40,7 @@ export interface PlasmaState {
     cardContract: MigratedZBGCard | null,
     cardBalance: CardDetail[],
     packBalance: PackDetail[],
-    cardToTransferSelected: CardDetail | {},
+    cardToTransferSelected: CardDetail | null,
     allCardsToTransferSelected: {
         edition: string
         cards: CardDetail[]
@@ -49,7 +49,7 @@ export interface PlasmaState {
     packToTransferSelected: {
         type: string,
         amount: number,
-    } | {}
+    } | null
 }
 
 export interface TokenInfo<C> {

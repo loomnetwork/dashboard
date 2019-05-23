@@ -6,7 +6,7 @@
         <b-spinner variant="primary" label="Spinning"></b-spinner>
       </div>
       <b-table class="wallet-detail" :items="filteredToken" :fields="selectedField" v-else> 
-        <template slot="btn" slot-scope="row">
+        <template slot="Action" slot-scope="row">
           <b-button class="button" @click="setShowDepositForm(true)">Deposit</b-button>
           <b-button class="button" @click="onSelectWallet()">Withdraw</b-button>
           <b-button class="button" disabled>Swap</b-button>
@@ -76,7 +76,7 @@ export default class DepositWithdraw extends Vue {
   currentAllowance = 0
   filteredToken = []
   activeWallet = null
-  selectedField = ['filename','balance','symbol','btn']
+  selectedField = ['symbol','balance','Action']
   tokens = []
   inputFilter = ''
   balance = null

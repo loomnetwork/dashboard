@@ -21,13 +21,17 @@
           <form class="form-inline" id="right-menu-container">
             <b-dropdown no-caret variant="primary">
               <template slot="button-content">
-                <span class="mr-1">Events</span><fa :icon="['far', 'bell']" fixed-width />
+                <span v-if="hasNewNotification" class="mr-1">Events 
+                  <fa :icon="['fas', 'bell']" class="animated heartBeat slow infinite" fixed-width />
+                </span>
+                <span v-else class="mr-1">Events <fa :icon="['far', 'bell']" fixed-width /></span>
               </template>
-              <b-dropdown-item v-for="(event, idx) in eventQue" :key="'event' + idx">
-                <span>Event: </span><strong>{{event.type}}</strong>
-                <span>Amount: </span><strong>{{event.payload.amount || 0}}</strong>
+
+              <b-dropdown-item v-for="(event, idx) in eventQue" :key="'event' + idx" offset="-144">
+                <event-item :event="event" />
               </b-dropdown-item>
-            </b-dropdown>            
+
+            </b-dropdown>    
             <LangSwitcher/>
           </form>
         </div>
@@ -102,6 +106,7 @@ import ChainSelector from './ChainSelector'
 import LoomIcon from '@/components/LoomIcon'
 import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
 import LangSwitcher from './LangSwitcher'
+import EventItem from './EventItem'
 
 const DappChainStore = createNamespacedHelpers('DappChain')
 const DPOSStore = createNamespacedHelpers('DPOS')
@@ -110,7 +115,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
   components: {
     ChainSelector,
     LangSwitcher,
-    LoomIcon
+    LoomIcon,
+    EventItem
   },
   props: {
     hideDashboard: {
@@ -144,7 +150,8 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     ]),
     ...DPOSStore.mapMutations([
       'setUserBalance',
-      'setShowLoadingSpinner'
+      'setShowLoadingSpinner',
+      'setHasNewNotification',
     ]),
     ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
     ...DappChainStore.mapActions([
@@ -171,7 +178,9 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       'userBalance',
       'status',
       'timeUntilElectionCycle',
-      'eventQue'
+      'eventQue',
+      'ethTxETA',
+      'hasNewNotification'
     ]),
     ...DappChainStore.mapState([
       'chainUrls',
@@ -240,6 +249,10 @@ export default class FaucetHeader extends Vue {
     this.$root.$on('logout', () => {
       this.logOut()
     })
+
+    this.$root.$on('bv::dropdown::show', bvEvent => {
+      this.setHasNewNotification(false)
+    })    
 
   }
 

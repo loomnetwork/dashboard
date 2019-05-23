@@ -75,27 +75,31 @@ export function dposStorePlugin(store: Store<DashboardState>) {
         "DappChain/delegateAsync",
         "DappChain/undelegateAsync",
         "DPOS/claimRewardsAsync",
-    ]
+		]
+		
+		const dappChainActions = [
+			"DappChain/delegateAsync",
+			"DappChain/undelegateAsync",
+			"DPOS/depositAsync",
+			"DPOS/withdrawAsync",
+		]
+
     store.subscribeAction({
         after(action) {
-            if (dposActions.find(a => a === action.type)) {
-
-                if(action.type === "DappChain/delegateAsync" ||
-                   action.type === "DappChain/undelegateAsync") {
-                    store.dispatch("DPOS/addEventToQue", action)
-                }
-
-                store.dispatch("DPOS/checkAllDelegations")
-                store.dispatch("DappChain/getDappchainLoomBalance")
-                store.dispatch("DPOS/queryRewards")
-                store.dispatch("DPOS/fetchDappChainEvents")
-                store.dispatch("DPOS/loadEthereumHistory")
+            if(dposActions.find(a => a === action.type)) {
+							store.dispatch("DPOS/checkAllDelegations")
+							store.dispatch("DappChain/getDappchainLoomBalance")
+							store.dispatch("DPOS/queryRewards")
+							store.dispatch("DPOS/fetchDappChainEvents")
+							store.dispatch("DPOS/loadEthereumHistory")
             }
-
-
-
-
-
+            if(dappChainActions.find(a => a === action.type)) {			
+							let eta = store.state.DPOS.ethTxETA || 0
+							let now = new Date()
+							let timestamp = now.setTime(now.getTime() + (eta * 60 * 1000))
+							store.dispatch("DPOS/addEventToQue", {type: action.type, timestamp})
+							store.commit("DPOS/setHasNewNotification", true)
+            }
         }
     })
 

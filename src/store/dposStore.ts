@@ -88,10 +88,8 @@ const defaultState = () => {
     showDepositConfirmed: false,
     pendingTx: null,
     electionIsRunning: false,
-<<<<<<< HEAD
     eventQue: [],
-=======
->>>>>>> develop
+    hasNewNotification: false,
   }
 }
 
@@ -254,6 +252,12 @@ export default {
     setEventQue(state, payload) {
       state.eventQue = payload
     },
+    setEthTxETA(state, payload) {
+      state.ethTxETA = payload
+    },
+    setHasNewNotification(state, payload) {
+      state.hasNewNotification = payload
+    }
   },
   actions: {
     async initializeDependencies({ state, commit, dispatch }, payload) {
@@ -712,18 +716,32 @@ export default {
       )
     },
     addEventToQue({state, commit}, event) {
-      const {type, payload} = event
+      const {type, timestamp} = event
+      let label = ""
+      if(type.includes("deposit")) label = "Deposit"
+      if(type.includes("withdraw")) label = "Withdrawal"
+      if(type.includes("delegate")) label = "Delegation"
+      if(type.includes("undelegate")) label = "Undelegation"
       let freshQue = Array.from(state.eventQue)
-      freshQue.push({type, payload})
+      freshQue.push({type: label, timestamp})
       commit("setEventQue", freshQue)
     },
+    async getEthereumTxData({commit}, payload) {
+      try {
+        let dataPromise = await axios.get("https://ethgasstation.info/json/ethgasAPI.json")
+        let wait = dataPromise.data["avgWait"]
+        let waitInSec = parseFloat(wait)
+        commit("setEthTxETA", waitInSec)
+      } catch(err) {
+        console.log("Error querying ethgasstation api", err);
+      }
+    }
   } as ActionTree<any,any>,
-
 } as Module<any,DashboardState>
 
 /**
  * 
- * @param {*} commit 
+ * @param {*} commit
  * @param {*} type 
  * @param {*} fn 
  * @see approveDeposit

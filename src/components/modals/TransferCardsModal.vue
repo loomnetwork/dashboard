@@ -17,7 +17,7 @@
         I confirm to transfer {{amountToTransfer}} cards to {{receiverAddress}} address.
       </b-form-checkbox>
       <b-button class="my-2" type="button" @click="transferCardsHandler()" 
-      :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > cardToTransfer.amount || amountToTransfer <= 0 || !confirmCard">Transfer</b-button>
+      :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard">Transfer</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -51,7 +51,7 @@ export default class TransferCardsModal extends Vue {
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > this.cardToTransfer.amount) {
+    if (this.amountToTransfer > parseInt(this.cardToTransfer.amount) || this.amountToTransfer%1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }

@@ -10,11 +10,11 @@ import { TokenSymbol } from "../ethereum/types"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
-import { DashboardState } from "@/types";
+import { DashboardState } from "@/types"
 import { getCardByTokenId } from "@/utils"
-import { PACKS_NAME } from "../plasmaPlugin";
-import { CommonTypedStore } from "../common";
-import { DPOSTypedStore } from "../dpos-old";
+import { PACKS_NAME } from "../plasmaPlugin"
+import { CommonTypedStore } from "../common"
+import { DPOSTypedStore } from "../dpos-old"
 
 const initialState: PlasmaState = {
     // not state but...
@@ -109,7 +109,9 @@ async function transferPacks(
             .transfer(payload.destinationDappchainAddress, payload.amount)
             .send({ from: ethAddress })
     console.log("transfer packs result", result)
-    CommonTypedStore.setSuccessMsg("Transferring packs success.")
+    CommonTypedStore.setSuccessMsg({
+      msg: `Transferring packs success. tx-hash: ${result.transactionHash}.`,
+      forever: true})
     await plasmaModule.checkPackBalance()
     DPOSTypedStore.setShowLoadingSpinner(false)
     return result
@@ -141,7 +143,9 @@ async function transferCards(
     .send({ from: ethAddress })
     console.log("transfer cards result", result)
     DPOSTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg("Transferring cards success.")
+    CommonTypedStore.setSuccessMsg({
+      msg: `Transferring cards success. tx-hash: ${result.transactionHash}.`,
+      forever: true})
     await plasmaModule.checkCardBalance()
     return result
   } catch (error) {

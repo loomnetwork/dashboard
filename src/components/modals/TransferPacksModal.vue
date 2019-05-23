@@ -16,7 +16,7 @@
       </b-form-checkbox>
       <b-button class="my-2" type="button" 
         @click="transferPacksHandler()" 
-        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > packToTransfer.amount || amountToTransfer <= 0 || !confirmPack">Transfer</b-button>
+        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer >  parseInt(packToTransfer.amount) || amountToTransfer <= 0 || !confirmPack">Transfer</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -50,7 +50,7 @@ export default class TransferPacksModal extends Vue {
   }
 
   transferPacksHandler() {
-    if (this.amountToTransfer > this.packToTransfer.amount) {
+    if (this.amountToTransfer > parseInt(this.packToTransfer.amount) || this.amountToTransfer%1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }

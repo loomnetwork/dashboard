@@ -229,19 +229,7 @@
         "rinkeby-us1": "0x7f67ed9c8611693dd8e2d82de48ed926d28fc1bd"
       }
     },
-    {
-      "filename": "THETAToken",
-      "name": "Theta Token",
-      "decimal": 18,
-      "symbol": "THETA",
-      "address": {
-        "1": "0x3883f5e181fccaF8410FA61e12b59BAd963fb645",
-        "asia1": "0xcfaef1552a11acc7794088ea2434c23af8434ced",
-        "rinkeby-asia1": "0xba00af62978423b20037df9588f5adaebaab49d1",
-        "stage": "0xf7adaec653aa7022d391f9f6e143481428f37bf9",
-        "rinkeby-us1": "0x86021159a7225f0f7ea3d8a5e4f5ada5c02434fd"
-      }
-    },
+
     {
       "filename": "WAXToken",
       "name": "WAX",

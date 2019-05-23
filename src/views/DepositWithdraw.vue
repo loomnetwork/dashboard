@@ -1,14 +1,24 @@
 <template>
   <div>
     <div class="container">
-      <div class="wallet-list">
+        <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
+        <b-table class="wallet-detail" :items="filteredToken" :fields="selectedField"> 
+          <template slot="btn" slot-scope="row">
+            <b-button @click="setShowDepositForm(true)">Deposit</b-button>
+            <b-button @click="onSelectWallet()">Withdraw</b-button>
+            <b-button disabled>Swap</b-button>
+          </template>
+        </b-table>
+
+      
+      <!-- <div class="wallet-list">
         <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
         <div class="wallet-item" v-for="(wallet, index) in filteredToken" :key="index" @click="onSelectWallet(wallet)" :class="{ 'wallet-active': activeWallet === wallet.symbol}">
           <h2>{{ `${wallet.symbol}` }}</h2>
           <div class="mask"></div>
         </div>
-      </div>
-      <div class="wallet-detail">
+      </div> -->
+      <!-- <div class="wallet-detail">
         <h2>{{ `${balance} ${activeWallet.symbol}` }}</h2>
         <p>{{ activeWallet }}</p>
         <div class="buttons">
@@ -16,7 +26,8 @@
           <div class="button" @click="setShowDepositForm(true)">Withdraw</div>
           <div class="disable">Swap</div>
         </div>
-      </div>
+      </div> -->
+
     </div>
     <DepositForm />
   </div>
@@ -81,17 +92,19 @@ export default class DepositWithdraw extends Vue {
   currentAllowance = 0
   filteredToken = []
   activeWallet = null
+  selectedField = ['filename','balance','symbol','btn']
   tokens = []
   inputFilter = ''
   balance = null
 
   mounted() {
-    if (this.ethCoinInstance) {
-      return this.ready()
-    }
+    // if (this.ethCoinInstance) {
+    //   return this.ready()
+    // }
+    this.ready()
   }
 
-  @Watch("ethCoinInstance")
+  @Watch("dposUser")
   async ready(){
     // Need to refactor
     await this.unitChangeHandler('ETH')
@@ -107,15 +120,22 @@ export default class DepositWithdraw extends Vue {
       address: user.ethAddress, // set ethAddress to wallet
       balance: ethBalance
     }
-    this.filteredToken = [ethToken, ...allToken]
-    this.activeWallet = ethToken
-    console.log(this.activeWallet);
+    this.tokens = [...allToken]
+    this.filteredToken = this.tokens
+    const tokensSymbol = this.filteredToken
+      .map(token => { return this.updateCurrentToken({symbol: token.symbol}) })
+  
     this.balance = await this.getBalance("ETH")
-  }
-  async onSelectWallet (wallet) {
-      this.activeWallet = wallet
-      await this.unitChangeHandler(wallet.symbol)
-      this.balance = await this.getBalance(wallet.symbol)
+    await Promise.all(tokensSymbol.slice(0,20))
+    await Promise.all(tokensSymbol.slice(20,40))
+    await Promise.all(tokensSymbol.slice(40,60))
+    await Promise.all(tokensSymbol.slice(60,80))
+    await Promise.all(tokensSymbol.slice(80))
+    console.log('filtered', this.filteredToken,' dappchain ', this.dappchainBalance );
+    this.filteredToken = this.filteredToken.map(token => {
+      if(!this.dappchainBalance[token.symbol]) return
+      return {...token, balance: this.dappchainBalance[token.symbol]} 
+    })
   }
 
   filterToken(){
@@ -130,7 +150,7 @@ export default class DepositWithdraw extends Vue {
   getBalance(symbol) {
     let returnValue
     if(symbol === 'LOOM'){
-      returnValue = toBigNumber(this.currentTokenBalance)
+      returnValue = toBigNumber(this.dappchainBalance[symbol])
     }else{
       returnValue = toBigNumber(this.currentTokenBalance).dividedBy(getValueOfUnit('ether'))
     }
@@ -140,7 +160,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   async unitChangeHandler(symbol) {
-    await this.updateCurrentToken({ symbol })
+    await this.updateCurrentToken({ symbol: symbol })
   }
 }
 </script>
@@ -151,7 +171,7 @@ export default class DepositWithdraw extends Vue {
   border-radius: 12px;
   margin: 16px;
   box-shadow: #cecece54 0 2px 5px 0px;
-  display: flex;
+
   padding: 0;
   .wallet-list {
     width: 30%;
@@ -199,10 +219,8 @@ export default class DepositWithdraw extends Vue {
         color: white;
         cursor: pointer;
       }
-  
     }
   }
-  
 }
 img {
   width: 64px;
@@ -223,6 +241,4 @@ img {
   margin: 24px 16px;
 }
 
-
 </style>
-

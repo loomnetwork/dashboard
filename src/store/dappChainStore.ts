@@ -27,6 +27,7 @@ import { DashboardState } from '@/types';
 import { dispatch } from 'rxjs/internal/observable/pairs';
 import { State } from 'loom-js/dist/proto/dposv3_pb';
 import { initFilters } from '@/filters';
+import { first } from 'rxjs/operators';
 
 
 const WEI_TOKEN = new BN(""+10**18)
@@ -216,6 +217,7 @@ export default {
     },
     setDappchainBalance(state, payload){
       state.dappchainBalance[payload.keyBalance] = payload.balance
+      console.log(state.dappchainBalance)
     },
     setEthCoinInstance(state, payload){
       state.ethCoinInstance = payload
@@ -299,6 +301,8 @@ export default {
       .then(user => {
         reconfigureClient(user.client, commit)
         console.log('dposUser ready')
+        console.log("user: ", user);
+        
         return user
       })
       .catch((err) => {
@@ -308,6 +312,9 @@ export default {
       })
       // set the promise
       commit("setDPOSUserV3", user)
+      console.log("set user", user);
+      
+
     },
     // TODO: this is added to fix mismatched account mapping issues, remove once all users are fixed.
     async switchDposUser({ state, rootState, getters, dispatch, commit }, payload) {
@@ -712,6 +719,7 @@ export default {
       if (!state.web3) await dispatch('init')
        // await dispatch('PackSaleStore/updateDefaultPayments', null, { root: true })
       const tokens = token.tokens
+      let tokenInstance
 
       try {
         if (tokenSymbol === 'ETH') {
@@ -720,75 +728,75 @@ export default {
           commit('setCurrentTokenInstance', state.ethCoinInstance)
           commit('setCurrentTokenBalance', state.dappchainBalance.ETH)
         } else {
-          let tokenData = tokens.find(token => { return token.symbol === tokenSymbol })
-          let tokenAddress =  tokenData.address.stage
-          let mainnetAddress = tokenData.address
 
-          const dposUser:DPOSUserV3 = await state.dposUser!
-          const client = dposUser.client
-          const pk = rootState.DPOS.dashboardPrivateKey
-          const pkUint8 = CryptoUtils.B64ToUint8Array(pk)
-
-          const loomProvider = new LoomProvider(
-            client, 
-            pkUint8
-            ,(client) => client.txMiddleware
-          )
-          loomProvider.setMiddlewaresForAddress(dposUser.ethAddress, client.txMiddleware)
-          loomProvider.callerChainId = "eth"
-          const plasmaWeb3 = new Web3(loomProvider)
-          let tokenInstance = new plasmaWeb3.eth.Contract(
-            BinanceTokenJSON.abi,
-            tokenAddress
+            let tokenData = tokens.find(token => { return token.symbol === tokenSymbol })
+            console.log('toknedata', tokenData);
+            let tokenAddress =  tokenData.address.stage
+            let mainnetAddress = tokenData.address
+  
+            const dposUser:DPOSUserV3 = await state.dposUser!
+            const client = dposUser.client
+            const pk = rootState.DPOS.dashboardPrivateKey
+            const pkUint8 = CryptoUtils.B64ToUint8Array(pk)
+  
+            const loomProvider = new LoomProvider(
+              client, 
+              pkUint8
+              ,(client) => client.txMiddleware
             )
+            loomProvider.setMiddlewaresForAddress(dposUser.ethAddress, client.txMiddleware)
+            loomProvider.callerChainId = "eth"
+            const plasmaWeb3 = new Web3(loomProvider)
+            tokenInstance = new plasmaWeb3.eth.Contract(
+              BinanceTokenJSON.abi,
+              tokenAddress
+              )
             commit('setCurrentTokenInstance', tokenInstance)
-            console.log('tokenInstance:', tokenInstance);
+            console.log(tokenInstance);
             // commit('setCurrentTokenMainnetAddress', mainnetAddress)
           }
           commit('setCurrentTokenSymbol', tokenSymbol)
-          console.log(state.currentTokenSymbol);
-          await dispatch('checkTokenBalance')
+          console.log(state.currentTokenSymbol,state.dappchainBalance.ETH);
+          await dispatch('checkTokenBalance', tokenSymbol)
       } catch (error) {
         throw Error(`Can't use ${tokenSymbol} token, ${error}`)
       }
-      console.log("UPDATE TOKEN FINISH");
+
     },
-    async checkTokenBalance({ rootState, state, commit, dispatch }) {
+    async checkTokenBalance({ rootState, state, commit, dispatch }, payload) {
       try {
         let balance
-        if (state.currentTokenSymbol === 'ETH') {
+        if(!payload) return
+        
+        if (payload === 'ETH') {
+          
           await dispatch('checkDappchainEthBalance')
           balance = state.dappchainBalance.ETH
-          console.log('balance', balance);
-        } else if(state.currentTokenSymbol =='LOOM') {
-          console.log('loom is here');
-          let loomBalance = await dispatch('getDappchainLoomBalance')
-          balance = loomBalance
+        } else if(payload ==='LOOM') {
+          balance = await dispatch('getDappchainLoomBalance')
         } else {
-          const user:DPOSUserV3 = await rootState.DappChain.dposUser
-          const addr = user!.loomAddress.local.toString()
+          let user:DPOSUserV3 = await state.dposUser
+          const addr = user.loomAddress.local.toString()     
           balance = await state.currentTokenInstance.methods
           .balanceOf(addr).call({ from: user.ethAddress })
-          console.log("addr", addr);
+          console.log("new balance is here", payload, state.currentTokenInstance);
         }
-        commit('setCurrentTokenBalance', balance.toString())
-        console.log('balance: ', balance);
+        commit('setDappchainBalance', { keyBalance: payload, balance: balance.toString() })
+        console.log('dappchainB', state.dappchainBalance)
+        
       } catch (error) {
         commit('setCurrentTokenBalance', {balance:0})
-        console.log("errorrrrr", error);
         throw error
       }
     },
     
     async init({ state, commit, dispatch }, payload) {
-      console.log('dposUser', state.dposUser);
+
       if(!state.dposUser) return
       const user = await state.dposUser
-      console.log(user);
       const client = user.client
       const localAddress = user.loomAddress
       const account = localAddress.local.toString()
-      console.log('client ',client, account, localAddress);
       commit('updateState', {
         account,
         localAddress,

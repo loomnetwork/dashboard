@@ -6,12 +6,14 @@ import debug from "debug"
 import BN from "bn.js"
 
 import { getStoreBuilder } from "vuex-typex"
-
+import { Provider } from 'ethers/providers'
 import { Address, LocalAddress, Client, IEthereumSigner, EthersSigner } from "loom-js"
 import { IAddressMapping, AddressMapper } from "loom-js/dist/contracts/address-mapper"
-
+import { ERC20Gateway_v2 } from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2"
+import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
+import { ethers, Contract } from 'ethers'
 
 import { GatewayState, HasGatewayState } from "./types"
 
@@ -19,21 +21,37 @@ import { timer } from "rxjs"
 import { BareActionContext } from "vuex-typex"
 
 import * as mutations from "./mutations"
-import { ethereumModule } from "../ethereum"
+import { ethereumModule } from '../ethereum';
 
 declare type ActionContext = BareActionContext<GatewayState, HasGatewayState>
 
 function initialState(): GatewayState {
   return {
-    mapping: null,
-    pendingReceipt: null,
-    pendingTransaction: null,
-    unclaimedTokens: [],
-}
+    mapping: null, 
+    loom: {
+      pendingReceipt: null,
+      pendingTransaction: null,
+      unclaimedTokens: [],
+      address: "",      
+    },
+    main: {
+      pendingReceipt: null,
+      pendingTransaction: null,
+      unclaimedTokens: [],
+      address: "",      
+    },    
+  }
 }
 
 const builder = getStoreBuilder<HasGatewayState>().module("gateway", initialState())
 const stateGetter = builder.state()
+const contracts: {
+  loom: ERC20Gateway_v2 | null,
+  main: ERC20Gateway_v2 | null,  
+} = {
+  loom: null,
+  main: null,
+}
 
 export const gatewayModule = {
 
@@ -52,24 +70,36 @@ export const gatewayModule = {
     setMapping: builder.commit(mutations.setMapping),
 }
 
+export const createContracts = (provider: Provider) => {
+  contracts.loom = new ethers.Contract(gatewayModule.state.loom.address, ERC20GatewayABI_v2, provider) as ERC20Gateway_v2
+  // @ts-ignore
+  contracts.main = new ethers.Contract(gatewayModule.state.main.address, ERC20GatewayABI_v2, provider) as ERC20Gateway_v2
+}
+
 /**
  * deposit from ethereum account to gateway
  * @param symbol
  * @param tokenAmount
  */
-export async function ethereumDeposit( context: ActionContext, funds: Funds) {
-  // const gwAddress = funds.symbol === "loom" ? context.state.address.loomGateway : context.state.address.gateway
-  // // check allowas
-  // const allowance:BN = await ethereumModule.allowance({coin: funds.symbol, to: gwAddress, name: "Gateway"})
-  // let extraAllowance;
-  // if (allowance.lt(funds.tokenAmount)) {
-  //   // subtract
-  //   extraAllowance = funds.tokenAmount.lt(allowance)
-  // }
+export async function ethereumDeposit(context: ActionContext, funds: Funds) {
 
-  // if (extraAllowance.gt(new BN("0")))
-
-  return timer(2000).toPromise()
+  const {state, rootState} = context
+  const {symbol, tokenAmount} = funds
+  const approvalAmount = ethereumModule.allowance({symbol, spender: context.state.main.address})
+  const approvalInBN = new BN(approvalAmount.toString())
+  const approvalPayload = {
+    to: context.state.main.address,
+    ...funds
+  }
+  if(tokenAmount.gt(approvalInBN)) {
+    await ethereumModule.approve(approvalPayload)
+  } else {
+    await contracts.main!.functions.depositERC20(
+      funds.tokenAmount.toString(),
+      rootState.ethereum.erc20Addresses[symbol],
+    )
+  }
+  
 }
 
 /**
@@ -78,7 +108,7 @@ export async function ethereumDeposit( context: ActionContext, funds: Funds) {
  * @param tokenAmount
  */
 export function plasmaDeposit( context: ActionContext, funds: Funds) {
-  return timer(2000).toPromise()
+
 }
 
 /**
@@ -87,6 +117,7 @@ export function plasmaDeposit( context: ActionContext, funds: Funds) {
  * @param tokenAmount
  */
 export function plasmaWithdraw( context: ActionContext, funds: Funds ) {
+
   return timer(2000).toPromise()
 }
 

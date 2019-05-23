@@ -1,5 +1,6 @@
-
 import BN from "bn.js"
+import BigNumber from 'bignumber.js';
+
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
@@ -27,7 +28,10 @@ export interface PlasmaState {
     erc20Addresses: {
         [erc20Symbol: string]: string,
     }
-
+    balances: {
+        [erc20Symbol: string]: BN,
+    },
+    loom: TokenInfo,
     coins: {
         loom: TokenInfo<Coin>,
         eth: TokenInfo<EthCoin>,
@@ -88,4 +92,10 @@ export interface CardDetail {
     mould_type: string
     element: string
     originalID: string
+}
+
+export interface TokenInfo {
+    contract: Coin | null,
+    balance: BN,
+    address: string,
 }

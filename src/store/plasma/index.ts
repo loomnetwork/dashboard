@@ -1,5 +1,5 @@
 /**
- * @module dpos-dashboard.gateway
+ * @module dpos-dashboard.plasma
  */
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
@@ -28,6 +28,10 @@ const initialState: PlasmaState = {
     web3: null,
     provider: null,
     signer: null,
+    genericAddress: "",
+    erc20Addresses: {
+        loom: "",
+    },
     address: "",
     appKey: {
         private: "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
@@ -62,6 +66,11 @@ const initialState: PlasmaState = {
       cards: [],
       amount: 0,
     },
+    loom: {
+        contract: null,
+        balance: "",
+        address: "",
+    }
 }
 
 const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)

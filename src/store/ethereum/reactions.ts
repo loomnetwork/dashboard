@@ -27,6 +27,14 @@ export function ethereumReactions(store: Store<HasEthereumState>) {
         }
         ethereumModule.initERC20("loom")
     }
+
+    // TODO: Add a guard to check dependencies
+    // store.subscribeAction({
+    //     before(action) {
+
+    //     },
+    // })
+
 }
 
 function listenToEthBalance(store: Store<HasEthereumState>) {

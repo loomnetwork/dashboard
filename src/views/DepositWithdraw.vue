@@ -1,33 +1,17 @@
 <template>
   <div>
     <div class="container">
-        <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
-        <b-table class="wallet-detail" :items="filteredToken" :fields="selectedField"> 
-          <template slot="btn" slot-scope="row">
-            <b-button @click="setShowDepositForm(true)">Deposit</b-button>
-            <b-button @click="onSelectWallet()">Withdraw</b-button>
-            <b-button disabled>Swap</b-button>
-          </template>
-        </b-table>
-
-      
-      <!-- <div class="wallet-list">
-        <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
-        <div class="wallet-item" v-for="(wallet, index) in filteredToken" :key="index" @click="onSelectWallet(wallet)" :class="{ 'wallet-active': activeWallet === wallet.symbol}">
-          <h2>{{ `${wallet.symbol}` }}</h2>
-          <div class="mask"></div>
-        </div>
-      </div> -->
-      <!-- <div class="wallet-detail">
-        <h2>{{ `${balance} ${activeWallet.symbol}` }}</h2>
-        <p>{{ activeWallet }}</p>
-        <div class="buttons">
-          <div class="button" @click="setShowDepositForm(true)">Deposit</div>
-          <div class="button" @click="setShowDepositForm(true)">Withdraw</div>
-          <div class="disable">Swap</div>
-        </div>
-      </div> -->
-
+      <b-form-input v-model="inputFilter" placeholder="Search" @keyup="filterToken"></b-form-input>
+      <div class="loading" v-if="filteredToken.length == 0">
+        <b-spinner variant="primary" label="Spinning"></b-spinner>
+      </div>
+      <b-table class="wallet-detail" :items="filteredToken" :fields="selectedField" v-else> 
+        <template slot="btn" slot-scope="row">
+          <b-button class="button" @click="setShowDepositForm(true)">Deposit</b-button>
+          <b-button class="button" @click="onSelectWallet()">Withdraw</b-button>
+          <b-button class="button" disabled>Swap</b-button>
+        </template>
+      </b-table>
     </div>
     <DepositForm />
   </div>
@@ -121,8 +105,7 @@ export default class DepositWithdraw extends Vue {
       balance: ethBalance
     }
     this.tokens = [...allToken]
-    this.filteredToken = this.tokens
-    const tokensSymbol = this.filteredToken
+    const tokensSymbol = this.tokens
       .map(token => { return this.updateCurrentToken({symbol: token.symbol}) })
   
     this.balance = await this.getBalance("ETH")
@@ -131,19 +114,19 @@ export default class DepositWithdraw extends Vue {
     await Promise.all(tokensSymbol.slice(40,60))
     await Promise.all(tokensSymbol.slice(60,80))
     await Promise.all(tokensSymbol.slice(80))
-    this.filteredToken = this.filteredToken.map(token => {
+    this.tokens = this.tokens.map(token => {
       if(!this.dappchainBalance[token.symbol]) return
       return {...token, balance: this.dappchainBalance[token.symbol]} 
     })
+    this.filteredToken = this.tokens
   }
 
   filterToken(){
     if(this.inputFilter != null) {
-      let filterToken = this.tokens.filter(token => {
+      this.filteredToken = this.tokens.filter(token => {
         return token.symbol.includes(this.inputFilter.toUpperCase()) ? token : null
       })
-      this.filteredToken = filterToken
-    } else { this.filteredToken.push(this.getTokensDetails()) }
+    } else { this.filteredToken = this.tokens }
   }
 
   getBalance(symbol) {
@@ -171,55 +154,13 @@ export default class DepositWithdraw extends Vue {
   margin: 16px;
   box-shadow: #cecece54 0 2px 5px 0px;
 
-  padding: 0;
-  .wallet-list {
-    width: 30%;
-    .wallet-item {
-      box-shadow: inset #d8d8d878 0 2px 12px 0px;
-      display: flex;
-      padding: 28px;
-      opacity: 0.5;
-      align-items: center;
-      h2 {
-        margin: 0;
-        font-size: 1.8rem;
-        white-space: nowrap;
-      }
-      .mask {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        background-color: rgba(0, 0, 0, 0.1);
-      }
-    }
-    .wallet-item:hover, .wallet-active {
-      opacity: 1;
-      box-shadow: none;
-    }
-  }
-  .wallet-detail {
-    width: 70%;
-    padding: 24px;
-    .buttons {
-      display: flex;
-      .button{
-        width: 33.33%;
-        text-align: center;
-        background-color: white;
-        color: #5756e6;
-        border: 1px solid #5756e6;
-        border-radius: 4px;
-        padding: 16px 0px;
-        margin: 24px 16px;
-      }
-      .button:hover{
-        box-shadow: #cececed6 0 2px 2px 0px;
-        background-color: #5756e6;
-        color: white;
-        cursor: pointer;
-      }
-    }
-  }
+  padding: 24px;
+}
+.wallet-detail {
+  padding: 24px;
+}
+.button {
+  margin: 0 8px;
 }
 img {
   width: 64px;
@@ -239,5 +180,9 @@ img {
   padding: 16px 16px;
   margin: 24px 16px;
 }
-
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 100px;
+}
 </style>

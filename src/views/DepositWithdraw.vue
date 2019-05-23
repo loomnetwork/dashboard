@@ -131,7 +131,6 @@ export default class DepositWithdraw extends Vue {
     await Promise.all(tokensSymbol.slice(40,60))
     await Promise.all(tokensSymbol.slice(60,80))
     await Promise.all(tokensSymbol.slice(80))
-    console.log('filtered', this.filteredToken,' dappchain ', this.dappchainBalance );
     this.filteredToken = this.filteredToken.map(token => {
       if(!this.dappchainBalance[token.symbol]) return
       return {...token, balance: this.dappchainBalance[token.symbol]} 

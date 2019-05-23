@@ -217,7 +217,6 @@ export default {
     },
     setDappchainBalance(state, payload){
       state.dappchainBalance[payload.keyBalance] = payload.balance
-      console.log(state.dappchainBalance)
     },
     setEthCoinInstance(state, payload){
       state.ethCoinInstance = payload
@@ -230,7 +229,6 @@ export default {
       state.currentTokenInstance = payload
     },
     setCurrentTokenBalance(state, payload){
-      console.log('setcurrentToken',payload);
       state.currentTokenBalance = payload
     },
     setCurrentTokenSymbol(state, payload){
@@ -242,7 +240,6 @@ export default {
     getTokensDetails({ state, commit }) {
       const tokens = token.tokens
       commit("setTokenDetails", tokens)
-      console.log("token: ", tokens)
       return tokens
     },
     addChainUrl({ state, commit }, payload) {
@@ -714,7 +711,6 @@ export default {
     },
     async updateCurrentToken({ rootState, state, commit, dispatch }, payload) {
       const tokenSymbol = payload.symbol.toUpperCase()
-      console.log('tokenSym : ', tokenSymbol);
 
       if (!state.web3) await dispatch('init')
        // await dispatch('PackSaleStore/updateDefaultPayments', null, { root: true })
@@ -723,22 +719,17 @@ export default {
 
       try {
         if (tokenSymbol === 'ETH') {
-          console.log("ETH TRUE", state.ethCoinInstance);
           await dispatch('checkDappchainEthBalance')
           commit('setCurrentTokenInstance', state.ethCoinInstance)
           commit('setCurrentTokenBalance', state.dappchainBalance.ETH)
         } else {
-
             let tokenData = tokens.find(token => { return token.symbol === tokenSymbol })
-            console.log('toknedata', tokenData);
-            let tokenAddress =  tokenData.address.stage
+            let tokenAddress =  state.networkId === 'us1' ? tokenData.address.stage : tokenData.address[state.networkId]
             let mainnetAddress = tokenData.address
-  
             const dposUser:DPOSUserV3 = await state.dposUser!
             const client = dposUser.client
             const pk = rootState.DPOS.dashboardPrivateKey
             const pkUint8 = CryptoUtils.B64ToUint8Array(pk)
-  
             const loomProvider = new LoomProvider(
               client, 
               pkUint8
@@ -752,11 +743,9 @@ export default {
               tokenAddress
               )
             commit('setCurrentTokenInstance', tokenInstance)
-            console.log(tokenInstance);
             // commit('setCurrentTokenMainnetAddress', mainnetAddress)
           }
           commit('setCurrentTokenSymbol', tokenSymbol)
-          console.log(state.currentTokenSymbol,state.dappchainBalance.ETH);
           await dispatch('checkTokenBalance', tokenSymbol)
       } catch (error) {
         throw Error(`Can't use ${tokenSymbol} token, ${error}`)
@@ -779,10 +768,8 @@ export default {
           const addr = user.loomAddress.local.toString()     
           balance = await state.currentTokenInstance.methods
           .balanceOf(addr).call({ from: user.ethAddress })
-          console.log("new balance is here", payload, state.currentTokenInstance);
         }
         commit('setDappchainBalance', { keyBalance: payload, balance: balance.toString() })
-        console.log('dappchainB', state.dappchainBalance)
         
       } catch (error) {
         commit('setCurrentTokenBalance', {balance:0})
@@ -791,7 +778,6 @@ export default {
     },
     
     async init({ state, commit, dispatch }, payload) {
-
       if(!state.dposUser) return
       const user = await state.dposUser
       const client = user.client

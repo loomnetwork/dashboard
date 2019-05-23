@@ -20,7 +20,6 @@ export function tokensPlugin(store: Store<DashboardState>) {
       const ethCoinInstance = await Contracts.EthCoin.createAsync(client, localAddress)
       const ethCoinBalance = await ethCoinInstance.getBalanceOfAsync(localAddress)
       const tenbalance = (ethCoinBalance.toString())
-      console.log('ETH: ', tenbalance);
       store.commit('DappChain/setEthCoinInstance', ethCoinInstance)
     }
     catch (e) {

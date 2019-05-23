@@ -14,6 +14,7 @@ import BlockExplorer from './views/BlockExplorer.vue'
 import Analytics from './views/Analytics.vue'
 import MobileAccount from './views/MobileAccount.vue'
 import Help from './views/Help.vue'
+import FeedbackForm from './views/FeedbackForm.vue'
 
 Vue.use(VueRouter)
 
@@ -72,6 +73,11 @@ const router = new VueRouter({
       meta: {
         requireDeps: true
       }
+    },
+    {
+      path: '/feedback',
+      name: 'feedbackForm',
+      component: FeedbackForm,
     },
     {
       path: '/blockexplorer',

@@ -12,10 +12,8 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 
 export interface GatewayState {
     mapping: IAddressMapping|null,
-    pendingTransaction: any,
-    pendingReceipt: IWithdrawalReceipt|null
-    unclaimedTokens: IUnclaimedToken[],
-    address: string,
+    loom: Gateway,
+    main: Gateway,
 }
 
 export class EthPlasmSigner implements PlasmaSigner {
@@ -38,3 +36,9 @@ export class EthPlasmSigner implements PlasmaSigner {
     }
 }
 
+interface Gateway {
+    pendingTransaction: any,
+    pendingReceipt: IWithdrawalReceipt|null
+    unclaimedTokens: IUnclaimedToken[],
+    address: string,
+}

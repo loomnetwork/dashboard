@@ -1,5 +1,5 @@
 /**
- * @module dpos-dashboard.gateway
+ * @module dpos-dashboard.plasma
  */
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"

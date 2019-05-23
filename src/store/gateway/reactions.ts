@@ -3,6 +3,7 @@ import { Store } from "vuex"
 import { gatewayModule } from "."
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { plasmaModule } from "../plasma"
+import { createContracts } from "./index"
 
 export function ethGatewayPlugin(store: Store<HasGatewayState>) {
     store.watch(
@@ -13,6 +14,15 @@ export function ethGatewayPlugin(store: Store<HasGatewayState>) {
         (s) => s.gateway.mapping,
         setPlasmaAccount,
     )
+
+    store.watch((s) => s.ethereum.provider, onProviderChange)
+
+    function onProviderChange(provider: Provider | null, old) {
+
+       if(provider === null) return
+       createContracts(provider)
+
+    }
 
     async function ethereumAddressSet(newAddress) {
         console.log("eth address set", newAddress)

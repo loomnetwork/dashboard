@@ -1,5 +1,5 @@
 /**
- * @module dpos-dashboard.gateway
+ * @module dpos-dashboard.ethereum
  */
 
 import { getStoreBuilder } from "vuex-typex"
@@ -134,23 +134,15 @@ export async function refreshBalance(context: ActionContext, symbol: string) {
 }
 
 /**
- * withdraw from plasma account to gateway
+ * approve amount for ERC20 tokens
  * @param symbol
  * @param tokenAmount
  */
-export function approve(context: ActionContext,  payload: Transfer) {
-    const coin = payload.symbol
-    switch (coin) {
-        case "eth":
-
-            break
-        case "loom":
-
-        break
-        default:
-            break
-    }
-    return timer(2000).toPromise()
+export async function approve(context: ActionContext,  payload: Transfer) {
+    const {state, rootState} = context
+    const {symbol, tokenAmount, to} = payload
+    const contract = erc20Contracts.get(symbol)
+    await contract!.functions.approve(to, tokenAmount)
 }
 
 /**
@@ -161,9 +153,10 @@ export function transfer(context: ActionContext, payload: Transfer) {
     return timer(2000).toPromise()
 }
 
-export function allowance(context: ActionContext, spender: string) {
-
-    let allowance = context.state.loom.contract!.functions.allowance(
+export function allowance(context: ActionContext, payload: {symbol: string, spender: string}) {
+    const {symbol, spender} = payload
+    const contract = erc20Contracts.get(symbol)
+    let allowance = contract!.functions.allowance(
       context.state.address,
       spender,
     )

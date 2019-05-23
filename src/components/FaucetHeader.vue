@@ -199,13 +199,13 @@ export default class FaucetHeader extends Vue {
   }
 
   get showErrorMsg() {
-    if (this.$store.state.errorMsg) {
+    if (this.state.common.errorMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
         ref: this.$refs.errorMsg,
       })
     }
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: "error" } : false
+    return this.state.common.errorMsg ? { message: this.state.common.errorMsg, variant: "error" } : false
   }
 
   get showSuccessMsg() {
@@ -215,7 +215,7 @@ export default class FaucetHeader extends Vue {
         ref: this.$refs.successMsg,
       })
     }
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: "success" } : false
+    return this.state.common.successMsg ? { message: this.state.common.successMsg, variant: "success" } : false
   }
 
   hideAlert(alertOpt) {

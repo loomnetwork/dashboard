@@ -4,10 +4,19 @@
       <h6> Pack type: {{packToTransfer.type}} </h6>
       <h6> Your existing pack: {{packToTransfer.amount}} </h6>
       Amount: (max: {{packToTransfer.amount}})
-      <b-input type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input> 
+      <b-input class="my-2" type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input> 
       Receiver Loom Address:
-      <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
-      <b-button type="button" @click="transferPacksHandler()">Transfer</b-button>
+      <b-input class="my-2" type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+      <b-form-checkbox class="my-2"
+        id="confirmPack"
+        v-model="confirmPack"
+        name="confirmPack"
+        v-show="amountToTransfer && receiverAddress">
+        I confirm to transfer {{amountToTransfer}} packs to {{receiverAddress}} address.
+      </b-form-checkbox>
+      <b-button class="my-2" type="button" 
+        @click="transferPacksHandler()" 
+        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > packToTransfer.amount || amountToTransfer <= 0 || !confirmPack">Transfer</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -25,6 +34,7 @@ export default class TransferPacksModal extends Vue {
   receiverAddress: string = ""
   transferPacks = plasmaModule.transferPacks
   setErrorMsg = CommonTypedStore.setErrorMsg
+  confirmPack = false
 
   mounted() {
     this.amountToTransfer = 1

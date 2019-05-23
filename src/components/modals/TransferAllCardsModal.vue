@@ -4,8 +4,15 @@
       <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
       <h6>Amount: {{cardsToTransfer.amount}}</h6>
       Receiver Loom Address:
-      <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
-      <b-button type="button" @click="transferAllCardsHandler()">Transfer All</b-button>
+      <b-input class="my-2" type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+      <b-form-checkbox class="my-2"
+        id="confirmCards"
+        v-model="confirmCards"
+        name="confirmCards"
+        v-show="receiverAddress">        
+        I confirm to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}}.
+      </b-form-checkbox>
+      <b-button class="my-2" type="button" @click="transferAllCardsHandler()" :disabled="!receiverAddress || !confirmCards" >Transfer All</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -21,6 +28,7 @@ export default class TransferAllCardsModal extends Vue {
   receiverAddress: string = ""
   transferCards = plasmaModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
+  confirmCards = false
 
   mounted() {
     this.receiverAddress = ""

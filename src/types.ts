@@ -101,5 +101,7 @@ export interface DahboardEnvs {
     mainnetEndpoint: string;
     chainId: string;
     gatewayAddress: string;
+    etherScan: string;
+    blockExplorer: string;
   }
 }

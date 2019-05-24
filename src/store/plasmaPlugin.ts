@@ -41,6 +41,7 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             loomProvider.callerChainId = "eth"
             const web3 = new Web3(loomProvider)
             const networkId = client.chainId
+            // TODO: update this for compat with every env
             const cardInstance = new web3.eth.Contract(
                 MigratedZBGCardJSON.abi,
                 MigratedZBGCardJSON.networks[networkId].address)

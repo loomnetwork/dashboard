@@ -75,7 +75,7 @@ export function readableDateTime(timestamp) {
     return new Date(timestamp * 1000).toLocaleDateString()
 }
 
-export function formatTokenAmount(wei: BN) {
+export function formatTokenAmounts(wei: BN) {
     return formatToCrypto(wei.toString())
 }
 
@@ -94,5 +94,9 @@ export function formatDomain(domainOrUrl: string) {
  */
 export function formatUrl(domainOrUrl: string) {
     return (domainOrUrl || "").match(/^https?:\/\//) ? domainOrUrl : "https://" + domainOrUrl
+}
+
+export function formatTokenAmount(wei: BN) {
+    return wei.div(new BN("10").pow(new BN("18"))).toString()
 }
 

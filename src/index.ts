@@ -91,6 +91,18 @@ if (!debugMode) {
     .install()
 }
 
+// when an address is plasma
+// take the user to the account page
+store.watch(
+  (s) => s.plasma.address,
+  (address) => {
+    if (address !== "") {
+      router.push("account")
+    } else {
+      router.push("/")
+    }
+  },
+)
 // todo should store key/project elsewhere (vault?)
 // Sentry.init({
 //   dsn: debugMode ? null : 'https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913"',

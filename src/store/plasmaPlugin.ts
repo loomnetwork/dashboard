@@ -10,6 +10,7 @@ import { noop } from "vue-class-component/lib/util"
 import { plasmaModule } from "./plasma"
 import packAddresses from "@/data/ZBGPackAddresses.json"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
+import { ethers } from "ethers"
 
 function setupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return client.txMiddleware

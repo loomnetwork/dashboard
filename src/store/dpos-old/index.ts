@@ -29,7 +29,7 @@ import { getStoreBuilder } from "vuex-typex"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
 
-debug.enable("dashboard.DPOS")
+// debug.enable("dashboard.DPOS")
 const log = debug("dashboard.DPOS")
 const WEI_TOKEN = new BN("" + 10 ** 18)
 
@@ -446,10 +446,11 @@ async function consolidateDelegations(ctx: Context, validator) {
   await user.dappchainDPOS.consolidateDelegations(address)
 }
 async function queryRewards(ctx: Context) {
+  throw new Error("Use new store")
   const user = await requireDposUser(ctx)
   try {
     log("queryRewards")
-    const result = await user.checkRewardsAsync()
+    const result = await user.checkDelegatorRewardsAsync()
     const formattedResult = formatToCrypto(result)
     DPOSTypedStore.setRewardsResults(formattedResult)
   } catch (err) {
@@ -470,7 +471,7 @@ async function claimRewardsAsync(ctx: Context) {
   const user = await requireDposUser(ctx)
   try {
     log("claimRewardsAsync")
-    await user.claimRewardsAsync()
+    await user.claimDelegatorRewardsAsync()
   } catch (err) {
     console.error(err)
   }
@@ -513,7 +514,7 @@ async function redelegateAsync(
   const { origin, target, amount, index } = payload
 
   try {
-    await user.redelegateAsync(origin, target, amount, index)
+    await user.redelegateAsync(origin, target, new BN(amount), index)
     CommonTypedStore.setSuccessMsg({
       msg: "Success redelegating stake",
       forever: false,
@@ -871,8 +872,8 @@ async function getValidatorsAsync(ctx: Context) {
       name: c.name,
       website: c.website,
       description: c.description,
-      fee: (c.fee / 100).toString(),
-      newFee: (c.newFee / 100).toString(),
+      fee: (c.fee.toNumber() / 100).toString(),
+      newFee: (c.newFee.toNumber() / 100).toString(),
     }),
   )
   // helper

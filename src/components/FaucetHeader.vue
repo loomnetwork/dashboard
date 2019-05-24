@@ -6,7 +6,7 @@
                :show="!!showErrorMsg"
                class="custom-alert text-center"
                ref="errorMsg">
-      {{this.$store.state.errorMsg}}
+      {{state.common.errorMsg}}
       </b-alert>
       <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
       <span class="text-dark" v-html="state.common.successMsg"></span>

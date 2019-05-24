@@ -109,7 +109,6 @@ async function transferPacks(
     const result = await context.state.packsContract[payload.packType].methods
     .transfer(receiver, payload.amount)
     .send({ from: ethAddress })
-    console.log("transfer packs result", result)
     CommonTypedStore.setSuccessMsg({
       msg: `Transferring packs success. tx-hash: ${result.transactionHash}.`,
       forever: true})
@@ -118,8 +117,8 @@ async function transferPacks(
     return result
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
-    // TODO: this is not working
-    CommonTypedStore.setErrorMsg(`Error Transferring packs: ${error.message}`)
+    const msg = plasmaErrorMessage(error.message)
+    CommonTypedStore.setErrorMsg(`Error Transferring packs: ${msg}`)
     throw error
   }
 }
@@ -142,7 +141,6 @@ async function transferCards(
     payload.cardIds,
     payload.amounts)
     .send({ from: ethAddress })
-    console.log("transfer cards result", result)
     DPOSTypedStore.setShowLoadingSpinner(false)
     CommonTypedStore.setSuccessMsg({
       msg: `Transferring cards success. tx-hash: ${result.transactionHash}.`,
@@ -150,11 +148,22 @@ async function transferCards(
     await plasmaModule.checkCardBalance()
     return result
   } catch (error) {
-    console.log("error", error)
     DPOSTypedStore.setShowLoadingSpinner(false)
-    // TODO: this is not working
-    CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
+    const msg = plasmaErrorMessage(error.message)
+    CommonTypedStore.setErrorMsg(`Error Transferring cards: ${msg}`)
     throw error
+  }
+}
+
+function plasmaErrorMessage(errorMsg: string) {
+  if (errorMsg.includes("invalid address")) {
+    return "Invalid address. Please provide receiver's Loom address."
+  } else if (errorMsg.includes("User denied message signature")) {
+    return "Transaction was denied."
+  } else if (errorMsg.includes("invalid number value")) {
+    return "Invalid amount. Please provide amount correctly."
+  } else {
+    return errorMsg
   }
 }
 

@@ -463,7 +463,7 @@ export default {
       
       try {
         debug("queryRewards")
-        const result = await user.checkRewardsAsync()
+        const result = await user.checkDelegatorRewardsAsync()
         const formattedResult = formatToCrypto(result)
         commit("setRewardsResults", formattedResult)
       } catch(err) {
@@ -482,8 +482,8 @@ export default {
       }
       const user:DPOSUserV3 = await rootState.DappChain.dposUser
       try {
-        debug("claimRewardsAsync")
-        await user.claimRewardsAsync()
+        debug("claimDelegatorRewardsAsync")
+        await user.claimDelegatorRewardsAsync()
       } catch(err) {
         console.error(err)
       }

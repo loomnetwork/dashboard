@@ -279,6 +279,14 @@ export default class MobileAccount extends Vue {
   get pendingTx() { return DPOSTypedStore.state.pendingTx }
   get withdrewSignature() { return DPOSTypedStore.state.withdrewSignature }
 
+  created() {
+    const action = this.$route.query.action
+    if (action === 'deposit') {
+      // Show deposit modal automatically
+      this.setShowDepositForm(true)
+    }
+  }
+
   mounted() {
     // Page might be mounted while dposUser is still initializing
     if (this.dposUser) {

@@ -24,6 +24,9 @@
     <b-nav-item>
       <router-link to="/game-assets" class="router" exact-active-class="router-active"> GameAssets </router-link>
     </b-nav-item>
+    <b-nav-item>
+      <router-link to="/add-key" class="router" exact-active-class="router-active"> Deploy to Plasmachain </router-link>
+    </b-nav-item>
     <b-nav-item v-if="state.common.userIsLoggedIn">
       <a class="nav-link">
         <a @click="logout">

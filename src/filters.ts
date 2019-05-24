@@ -27,6 +27,7 @@ export function initFilters() {
     Vue.filter("url", formatUrl)
     // Vue.filter('timeFromNow', formatDurationFromNow)
     Vue.filter("loomAddress", formatToLoomAddress)
+    Vue.filter("swapTextBase64AndHexLabel", swapTextBase64AndHexLabel)
 
 }
 
@@ -96,3 +97,6 @@ export function formatUrl(domainOrUrl: string) {
     return (domainOrUrl || "").match(/^https?:\/\//) ? domainOrUrl : "https://" + domainOrUrl
 }
 
+export function  swapTextBase64AndHexLabel(input) {
+    return input === "Base64" ? "Hex" : "Base64"
+}

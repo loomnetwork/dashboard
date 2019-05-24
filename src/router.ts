@@ -12,6 +12,7 @@ import Analytics from "./views/Analytics.vue"
 import MobileAccount from "./views/MobileAccount.vue"
 import Help from "./views/Help.vue"
 import GameAssets from "./views/GameAssets.vue"
+import AddKey from "./views/AddKey.vue"
 
 import { loadLocale, isLocaleSupported } from "./i18n"
 
@@ -114,6 +115,15 @@ const router = new VueRouter({
         },
       },
       {
+        path: "/add-key",
+        name: "addKey",
+        component: AddKey,
+        meta: {
+          requireLogIn: true,
+          requireDeps: true,
+        },
+      },
+      {
         path: "/validators",
         name: "validators",
         component: ValidatorList,
@@ -151,7 +161,5 @@ const router = new VueRouter({
     }
   },
 })
-
-
 
 export default router

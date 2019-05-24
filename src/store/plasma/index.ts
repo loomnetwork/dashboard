@@ -11,19 +11,13 @@ import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
-import { noop } from "vue-class-component/lib/util"
 import { DashboardState } from "@/types"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "../plasmaPlugin"
 import { CommonTypedStore } from "../common"
 import { DPOSTypedStore } from "../dpos-old"
-import { getCardByTokenId } from "@/utils"
 import configs from "@/envs"
 import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
-import debug from "debug"
-
-const log = debug("plasma")
-
 
 const initialState: PlasmaState = {
     // not state but...

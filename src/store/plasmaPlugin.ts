@@ -4,12 +4,12 @@ import Web3 from "web3"
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import BoosterPackJSON from "@/contracts/BoosterPack.json"
 import {
-    LoomProvider, Client, CryptoUtils, NonceTxMiddleware, SignedEthTxMiddleware, Address, LocalAddress
+    LoomProvider, Client, CryptoUtils, NonceTxMiddleware, SignedEthTxMiddleware, Address, LocalAddress,
   } from "loom-js"
-import { noop } from 'vue-class-component/lib/util';
-import { plasmaModule } from './plasma';
+import { noop } from "vue-class-component/lib/util"
+import { plasmaModule } from "./plasma"
 import packAddresses from "@/data/ZBGPackAddresses.json"
-import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
+import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 
 function setupMiddlewaresFunction(client: Client, privateKey: Uint8Array) {
     return client.txMiddleware
@@ -40,14 +40,15 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             loomProvider.setMiddlewaresForAddress(user.ethAddress, client.txMiddleware)
             loomProvider.callerChainId = "eth"
             const web3 = new Web3(loomProvider)
-            const networkId = client.chainId
-            // TODO: update this for compat with every env
+            const networkId = store.state.DPOS.networkId
+            // MigratedZBGCardJSON for abi and address
             const cardInstance = new web3.eth.Contract(
                 MigratedZBGCardJSON.abi,
                 MigratedZBGCardJSON.networks[networkId].address)
             for (const pack of PACKS_NAME) {
-                let packInstance = new web3.eth.Contract(BoosterPackJSON.abi,
-                    packAddresses[store.state.DPOS.networkId][pack])
+                // BoosterPackJSON for abi only, use address from ZBGPackAddress file
+                const packInstance = new web3.eth.Contract(BoosterPackJSON.abi,
+                    packAddresses[networkId][pack])
                 plasmaModule.setPacksContract({name: pack, contract: packInstance})
             }
             // @ts-ignore

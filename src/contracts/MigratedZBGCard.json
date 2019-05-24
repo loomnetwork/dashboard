@@ -3950,7 +3950,7 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {
-    "default": {
+    "us1": {
       "events": {
         "0x9bfcea2c03973b3a86fa004ee283c194c59d95caf3065736616f1e3a88c33e71": {
           "anonymous": false,

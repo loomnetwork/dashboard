@@ -11,7 +11,7 @@ import * as getters from "./getters"
 import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
 import { DashboardState } from "@/types"
-import { getCardByTokenId } from "@/utils"
+import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "../plasmaPlugin"
 import { CommonTypedStore } from "../common"
 import { DPOSTypedStore } from "../dpos-old"
@@ -105,9 +105,10 @@ async function transferPacks(
     DPOSTypedStore.setShowLoadingSpinner(true)
     const dposUser = await context.rootState.DPOS.dposUser
     const ethAddress = dposUser!.ethAddress
+    const receiver = formatFromLoomAddress(payload.destinationDappchainAddress)
     const result = await context.state.packsContract[payload.packType].methods
-            .transfer(payload.destinationDappchainAddress, payload.amount)
-            .send({ from: ethAddress })
+    .transfer(receiver, payload.amount)
+    .send({ from: ethAddress })
     console.log("transfer packs result", result)
     CommonTypedStore.setSuccessMsg({
       msg: `Transferring packs success. tx-hash: ${result.transactionHash}.`,
@@ -129,17 +130,17 @@ async function transferCards(
     cardIds: string[],
     amounts: number[],
     destinationDappchainAddress: string}) {
-  console.log("payload", payload)
   try {
     DPOSTypedStore.setShowLoadingSpinner(true)
     const dposUser = await context.rootState.DPOS.dposUser
     const dappchainAddress = dposUser!.loomAddress.local.toString()
     const ethAddress = dposUser!.ethAddress
+    const receiver = formatFromLoomAddress(payload.destinationDappchainAddress)
     const result = await context.state.cardContract!.methods.batchTransferFrom(
-      dappchainAddress,
-      payload.destinationDappchainAddress,
-      payload.cardIds,
-      payload.amounts)
+    dappchainAddress,
+    receiver,
+    payload.cardIds,
+    payload.amounts)
     .send({ from: ethAddress })
     console.log("transfer cards result", result)
     DPOSTypedStore.setShowLoadingSpinner(false)

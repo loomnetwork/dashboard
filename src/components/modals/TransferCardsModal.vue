@@ -59,7 +59,6 @@ export default class TransferCardsModal extends Vue {
       this.setErrorMsg("Invalid receiver address")
       return
     }
-    // TODO: put confirmation popup here
     this.transferCards({
       cardIds: [this.cardToTransfer.id],
       amounts: [this.amountToTransfer],

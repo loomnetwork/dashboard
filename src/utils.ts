@@ -1,7 +1,7 @@
 /* eslint-disable no-undef, func-names */
 import Web3 from "web3"
 import BigNumber from "bignumber.js"
-import Cards from './data/cards.json'
+import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
 
 const unitMap = {
@@ -140,27 +140,43 @@ export function getCardByTokenId(id: string) {
       card = Object.assign(
         {},
         defaultCardData,
-        Cards.cards.find(cd => parseInt(cd.mould_type, 10) === cardDetail.mouldId)
+        Cards.cards.find((cd) => parseInt(cd.mould_type, 10) === cardDetail.mouldId),
       )
-      let variation = cardDetail.variant.replace('-edition', '')
-      card.variation = variation === 'backers' ? 'backer' : variation
+      const variation = cardDetail.variant.replace("-edition", "")
+      card.variation = variation === "backers" ? "backer" : variation
     }
     card.id = id
     return card
 }
 
 export const defaultCardData = {
-  display_name: 'Card',
+  display_name: "Card",
   priceInUSD: 0.0,
   priceInETH: 0.0,
-  image: 'question_card',
-  title: 'A Great Zombie',
+  image: "question_card",
+  title: "A Great Zombie",
   inventory: 0,
-  variant: 'standard-edition',
-  variation: 'standard',
-  mould_type: '001',
-  element: 'AIR',
-  originalID: '001',
-  id: '001',
-  tradeable: false
+  variant: "standard-edition",
+  variation: "standard",
+  mould_type: "001",
+  element: "AIR",
+  originalID: "001",
+  id: "001",
+  tradeable: false,
+}
+
+export function formatToLoomAddress(address: string) {
+    if (address.slice(0, 2) === "0x") {
+        return address.replace("0x", "loom")
+    } else {
+        return address
+    }
+}
+
+export function formatFromLoomAddress(address: string) {
+  if (address.slice(0, 4) === "loom") {
+      return address.replace("loom", "0x")
+  } else {
+      return address
+  }
 }

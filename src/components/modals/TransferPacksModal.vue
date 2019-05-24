@@ -58,7 +58,6 @@ export default class TransferPacksModal extends Vue {
       this.setErrorMsg("Invalid receiver address")
       return
     }
-    // TODO: put confirmation popup here
     this.transferPacks({
       packType: this.packToTransfer.type,
       amount: this.amountToTransfer,

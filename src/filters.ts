@@ -1,7 +1,7 @@
 import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb"
 import Vue from "vue"
 import BN from "bn.js"
-import { formatToCrypto } from "./utils"
+import { formatToCrypto, formatToLoomAddress } from "./utils"
 
 // https://github.com/palantir/blueprint/issues/959#issuecomment-335965129\
 // const durationFormat = require("moment-duration-format")
@@ -26,6 +26,7 @@ export function initFilters() {
     Vue.filter("domain", formatDomain)
     Vue.filter("url", formatUrl)
     // Vue.filter('timeFromNow', formatDurationFromNow)
+    Vue.filter("loomAddress", formatToLoomAddress)
 
 }
 
@@ -94,3 +95,4 @@ export function formatDomain(domainOrUrl: string) {
 export function formatUrl(domainOrUrl: string) {
     return (domainOrUrl || "").match(/^https?:\/\//) ? domainOrUrl : "https://" + domainOrUrl
 }
+

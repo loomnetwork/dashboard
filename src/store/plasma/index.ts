@@ -15,6 +15,7 @@ import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "../plasmaPlugin"
 import { CommonTypedStore } from "../common"
 import { DPOSTypedStore } from "../dpos-old"
+import { CryptoUtils, LocalAddress } from "loom-js"
 
 const initialState: PlasmaState = {
     // not state but...
@@ -52,6 +53,7 @@ export const plasmaModule = {
     checkPackBalance: builder.dispatch(checkPackBalance),
     transferPacks: builder.dispatch(transferPacks),
     transferCards: builder.dispatch(transferCards),
+    generatePublicKeyFromPrivateKey: builder.dispatch(generatePublicKeyFromPrivateKey),
 
     // mutation
     setPacksContract: builder.commit(mutations.setPacksContract),
@@ -165,6 +167,12 @@ function plasmaErrorMessage(errorMsg: string) {
   } else {
     return errorMsg
   }
+}
+
+async function generatePublicKeyFromPrivateKey(context: ActionContext, payload: { privateKey: Uint8Array }) {
+  const publicKeyUint8Array = await CryptoUtils.publicKeyFromPrivateKey(payload.privateKey)
+  const publicAddress = LocalAddress.fromPublicKey(publicKeyUint8Array).toString()
+  return publicAddress
 }
 
 function createClient() {

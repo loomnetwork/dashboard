@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="seed-phrase-modal" ref="modalRef" title="Create Account" @ok="okHandler" ok-title="Next" ok-only ok-variant="outline-primary" centered no-close-on-backdrop>
+  <b-modal id="seed-phrase-modal" ref="modalRef" title="Create Account" centered no-close-on-backdrop hide-footer >
     <b-container fluid>
       <b-row class="warning align-items-center py-4">
         <b-col sm="1"><fa :icon="['fa', 'exclamation-triangle']" style="font-size: 40px;"/></b-col>
@@ -19,12 +19,32 @@
           <input type="text" ref="seedsLine" class="form-control" id="seedInput" v-model="seedsLine">
           <span class="input-group-append">
             <b-button type="button" class="input-group-text"
-                      @click="copySeedstoClipboard">
+                      @click="copyToClipboard('seedInput')">
+                      <fa :icon="['fa', 'clone']" style="font-size: 20px;"/>
+            </b-button>
+          </span>
+        </div>
+        
+      </b-row>
+      <b-row class="mt-3">
+        <div class="input-group mb-2 mr-sm-2">
+           <b-form-input type="text" class="form-control" :value="publicAddress | loomAddress" id="newPublicAddress"></b-form-input>
+           <span class="input-group-append">
+            <b-button type="button" class="input-group-text"
+                      @click="copyToClipboard('newPublicAddress')">
                       <fa :icon="['fa', 'clone']" style="font-size: 20px;"/>
             </b-button>
           </span>
         </div>
       </b-row>
+      <b-form-checkbox class="my-2"
+        id="confirmMnemonic"
+        v-model="confirmMnemonic"
+        name="confirmMnemonic">
+        I keep these seed phrase and public address somewhere safe.
+      </b-form-checkbox>
+      <b-button type="button" 
+        @click="closeModal()" class="input-group-text" :disabled="!confirmMnemonic"> DONE </b-button>
     </b-container>
   </b-modal>
 </template>
@@ -34,6 +54,10 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { mapActions, createNamespacedHelpers } from "vuex"
 import { CommonTypedStore } from "@/store/common"
+import { plasmaModule } from "@/store/plasma"
+import { Modal } from "bootstrap-vue"
+import { DPOSTypedStore } from "@/store/dpos-old"
+
 const bip39 = require("bip39")
 @Component({
 })
@@ -41,28 +65,44 @@ const bip39 = require("bip39")
 export default class SeedPhraseModal extends Vue {
   seeds = []
   seedsLine = ""
+  publicAddress = ""
+  confirmMnemonic = false
   setSuccessMsg = CommonTypedStore.setSuccessMsg
+  generatePublicKeyFromPrivateKey = plasmaModule.generatePublicKeyFromPrivateKey
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
-  okHandler() {
-    this.$emit("ok", this.seeds);
-  }
-  generateSeeds() {
+  async generateSeeds() {
     const mnemonic = bip39.generateMnemonic()
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
+    const privateKey = bip39.mnemonicToSeedSync(mnemonic)
+    const publicKey = await this.generatePublicKeyFromPrivateKey({privateKey})
+    this.publicAddress = publicKey
+    this.confirmMnemonic = false
+    this.setShowLoadingSpinner(false)
+
   }
 
   mounted() {
     this.$root.$on("bv::modal::show", () => {
+      this.setShowLoadingSpinner(true)
       this.generateSeeds()
     })
   }
 
-  copySeedstoClipboard() {
-    // @ts-ignore
-    this.$refs.seedsLine.select()
+  copyToClipboard(inputId) {
+    const copyText = document.getElementById(inputId)
+    copyText.select()
     document.execCommand("copy")
-    this.setSuccessMsg("Seeds copied to clipboard")
+    this.setSuccessMsg("copied to clipboard")
+  }
+
+  modal(ref: string): Modal {
+    return this.$refs[ref] as Modal
+  }
+
+  closeModal(){
+    this.modal("modalRef").hide()
   }
 }
 </script>

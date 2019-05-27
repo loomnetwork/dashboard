@@ -15,15 +15,34 @@
       </b-nav-item>      
     </div>
     <hr>
+    <div id="restricted-access-links"  @click="clickHandler">
+      <b-nav-item>
+        <router-link to="/deposit-withdraw" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.deposit_withdraw') }}</router-link>
+      </b-nav-item>
+    </div>
     <b-nav-item>
       <router-link to="/blockexplorer" class="router" exact-active-class="router-active">{{ $t('components.faucet_header.block_explorer') }}</router-link>
     </b-nav-item>
     <b-nav-item>
-      <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
+      <router-link to="/game-assets" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.game_assets') }}</router-link>
     </b-nav-item>
     <b-nav-item>
-      <router-link to="/game-assets" class="router" exact-active-class="router-active"> GameAssets </router-link>
+      <router-link to="/faq" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.faq') }}</router-link>
     </b-nav-item>
+    <div class="developer-menu">
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.block_explorer') }}</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.deploy_to_plasmachain') }}</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.transfer_gateway') }}</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/" class="router" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validator_management') }}</router-link>
+      </b-nav-item>
+    </div>
     <b-nav-item v-if="state.common.userIsLoggedIn">
       <a class="nav-link">
         <a @click="logout">
@@ -74,8 +93,17 @@ export default class FaucetSidebar extends Vue {
   font-weight: bold
 }
 .router {
+  font-size: 16px;
+  font-weight: normal;
   color: gray;
   padding: 5px 15px;
+}
+.developer-menu {
+  margin: 16px 0;
+  background-color: gray;
+  a {
+    color: white;
+  }
 }
 .column {
   flex-direction: column;

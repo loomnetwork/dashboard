@@ -12,6 +12,7 @@ import Analytics from "./views/Analytics.vue"
 import MobileAccount from "./views/MobileAccount.vue"
 import Help from "./views/Help.vue"
 import GameAssets from "./views/GameAssets.vue"
+import DepositWithdraw from "./views/DepositWithdraw.vue"
 
 import { loadLocale, isLocaleSupported } from "./i18n"
 
@@ -105,6 +106,14 @@ const router = new VueRouter({
         component: Help,
       },
       {
+        path: "/deposit-withdraw",
+        name: "depositeWithdraw",
+        component: DepositWithdraw,
+        meta: {
+          requireLogIn: true,
+        },
+      },
+      {
         path: "/game-assets",
         name: "gameAssets",
         component: GameAssets,
@@ -151,7 +160,5 @@ const router = new VueRouter({
     }
   },
 })
-
-
 
 export default router

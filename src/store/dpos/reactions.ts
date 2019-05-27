@@ -43,6 +43,17 @@ export function dposReactions(store: Store<HasDPOSState>) {
         },
     })
 
+    setTimeout(() => dposModule.refreshElectionTime(), 1000)
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+    window.addEventListener("visibilitychange", () => {
+       if (document.hidden) return
+       if (scheduledElectionCall > 0) {
+           window.clearTimeout(scheduledElectionCall)
+       }
+       dposModule.refreshElectionTime()
+   })
+
     async function onClientReady() {
         await createContract(store)
         dposModule.refreshElectionTime()
@@ -76,16 +87,6 @@ export function dposReactions(store: Store<HasDPOSState>) {
         dposModule.refreshDelegations()
     }
 
-    setTimeout(() => dposModule.refreshElectionTime(), 1000)
-
-     // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
-    window.addEventListener("visibilitychange", () => {
-        if (document.hidden) return
-        if (scheduledElectionCall > 0) {
-            window.clearTimeout(scheduledElectionCall)
-        }
-        dposModule.refreshElectionTime()
-    })
 }
 
 async function createContract(store: Store<HasDPOSState>) {

@@ -27,6 +27,16 @@
                     or extension                      
                   </small>
                 </b-card>                  
+              </div>                 
+               <div class="col-sm-12 col-md-6">
+                <b-card id="trezor-button" class="wallet-selection-card text-center" @click="setWallet('metamask')">
+                  <h5>Trezor <small>via Metamask</small></h5>
+                  <img src="../assets/trezor_logo.png">
+                  <small>
+                    Connect to your Trezor wallet <br>
+                    via Metamask                    
+                  </small>
+                </b-card>                  
               </div>   
               <div class="col-sm-12 col-md-6">
                 <b-card id="explore-button" class="wallet-selection-card text-center" @click="setWallet('explore')">
@@ -76,14 +86,12 @@ import { DashboardState } from "../types"
 })
 export default class FirstPage extends Vue {
 
-
   get userIsLoggedIn() { return CommonTypedStore.getUserIsLoggedIn }
   get chainUrls() { return this.$state.DPOS.chainUrls }
   get networkId() { return this.$state.DPOS.networkId }
   get walletType() { return this.$state.DPOS.walletType }
   get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
   get $state() { return (this.$store.state as DashboardState)}
-
 
   setWallet = ethereumModule.setWalletType
 
@@ -121,13 +129,9 @@ export default class FirstPage extends Vue {
   //   this.$root.$emit("bv::show::modal", "login-account-modal")
   // }
 
-  
-
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
   }
-
-
 
 }
 </script>

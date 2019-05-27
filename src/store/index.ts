@@ -28,7 +28,7 @@ Vue.use(Vuex)
 
 const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore({
   plugins: [
-    dposStorePlugin,
+    // dposStorePlugin,
     ethereumReactions,
     plasmaReactions,
     ethGatewayPlugin,

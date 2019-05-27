@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mb-5">
       <!-- Deployer Public key section -->
       <h4 class="mt-3">Deployer Public Keys</h4>
       <b-card v-for="pk in publicKeys" :key="pk.Hex" v-show="publicKeys.length > 0">
@@ -16,36 +16,38 @@
         </b-row>
       </b-card>  
       <!-- Add new key section -->
-      <b-row class="mt-5" >
-        <b-col cols="12" sm="3"><h4>Add New Key</h4></b-col>
-        <b-col cols="12" sm="9">
-          In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.
-          <router-link class="text-right" to="/faq">Developer FAQ</router-link>
-        </b-col>
-      </b-row>
-      <div role="group">
-        <label for="input-live">Your Loom Public Address</label>
-        <b-form-input v-model="newPubKey" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
-      </div>
-      <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
-      <seed-phrase-modal ref="seed-phrase-modal"/>
-      <label for="input-live"> Amount to Stake </label>
-      <div class="tierBlock tierDisplay"> 
-        <label v-for="tier in stakeTiers" v-bind:key="tier.value.no" class="radio">
-          <input type="radio" v-model="tierSelected" :value="tier.value" />
-          <b-card class="tierText"> 
-            <b-row>Tier: {{tier.value.no}}</b-row>
-            <b-row>Max: {{tier.value.max}} tx/min</b-row>
-            <b-row>{{tier.value.amount}} LOOM</b-row>
-          </b-card>
-        </label>
-      </div>
-      <b-button class="d-inline-flex" @click="addKey(tierSelected)"> Add Key </b-button>
-      <div class="remaining my-3">
-        <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
-        <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
-        <span class="text-right">)</span> 
-      </div>
+      <b-card class="my-5">
+        <b-row>
+          <b-col cols="12" sm="3"><h4>Add New Key</h4></b-col>
+          <b-col cols="12" sm="9">
+            In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.
+            <router-link class="text-right" to="/faq">Developer FAQ</router-link>
+          </b-col>
+        </b-row>
+        <div role="group">
+          <label for="input-live">Your Loom Public Address</label>
+          <b-form-input v-model="newPubKey" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
+        </div>
+        <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
+        <seed-phrase-modal ref="seed-phrase-modal"/>
+        <label for="input-live"> Amount to Stake </label>
+        <div class="tierBlock tierDisplay"> 
+          <label v-for="tier in stakeTiers" v-bind:key="tier.value.no" class="radio">
+            <input type="radio" v-model="tierSelected" :value="tier.value" />
+            <b-card class="tierText"> 
+              <b-row>Tier: {{tier.value.no}}</b-row>
+              <b-row>Max: {{tier.value.max}} tx/min</b-row>
+              <b-row>{{tier.value.amount}} LOOM</b-row>
+            </b-card>
+          </label>
+        </div>
+        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected"> Add Key </b-button>
+        <div class="remaining my-3">
+          <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
+          <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
+          <span class="text-right">)</span> 
+        </div>
+      </b-card>
     </div> 
 </template>
 
@@ -182,26 +184,10 @@ export default class AddKey extends Vue {
   position: relative;
   transition: all 0.25s linear;
 }
-.tierDisplay .tierText:before {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 50%;
-  -webkit-transform: translatey(-50%);
-          transform: translatey(-50%);
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: #ddd;
-  transition: all 0.25s linear;
-}
 .tierDisplay .radio input:checked + .tierText {
   background-color: #fff;
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
   color: #ffc107;
   border-color: #ffc107;
-}
-.tierDisplay .radio input:checked + .tierText:before {
-  background-color: #ffc107;
 }
 </style>

@@ -21,7 +21,6 @@
             <b-button type="button" class="input-group-text"
                       @click="copySeedstoClipboard">
                       <fa :icon="['fa', 'clone']" style="font-size: 20px;"/>
-              <!-- {{ $t('components.modals.seed_phrase_modal.copy_to_clipboard') }} -->
             </b-button>
           </span>
         </div>

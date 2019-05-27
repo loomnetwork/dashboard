@@ -1,13 +1,9 @@
-import { PlasmaState } from "../types";
+import { PlasmaState } from "../types"
 
 export function getCardInstance(state: PlasmaState) {
-    return (
-        state.cardContract
-    )
+  return state.cardContract
 }
 
 export function getPacksInstance(state: PlasmaState) {
-    return (
-        state.packsContract
-    )
+  return state.packsContract
 }

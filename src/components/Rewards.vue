@@ -3,26 +3,37 @@
     <div>
       <div class="mb-4">
         <div v-if="state.dpos.loading.delegations">
-          <b-spinner variant="primary" label="Spinning" />
+          <b-spinner variant="primary" label="Spinning"/>
         </div>
         <div v-else-if="hasRewards">
-          <h6>
-            {{ $t('views.rewards.unclaimed_rewards') }} 
-          </h6>
-          <h5 class="highlight">
-            {{state.dpos.rewards.toString()}} LOOM
-          </h5>
+          <h6>{{ $t('views.rewards.unclaimed_rewards') }}</h6>
+          <h5 class="highlight">{{state.dpos.rewards | tokenAmount}} LOOM</h5>
         </div>
         <div v-else>
           <h6>
-            You do not have any rewards at the moment. 
+            You do not have any rewards at the moment.
             <!-- only show this is user has no delegations -->
-            Please visit the <router-link to="/validators" exact-active-class="router-active">{{ $t('components.faucet_sidebar.validators') }}</router-link> page.
+            Please visit the
+            <router-link
+              to="/validators"
+              exact-active-class="router-active"
+            >{{ $t('components.faucet_sidebar.validators') }}</router-link>page.
           </h6>
         </div>
       </div>
-      <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasRewards == false">{{ $t('views.rewards.claim_reward') }}</b-button>
-      <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
+      <b-button
+        id="claimRewardBtn"
+        class="px-5 py-2"
+        variant="primary"
+        @click="claimRewardHandler"
+        :disabled="hasRewards == false"
+      >{{ $t('views.rewards.claim_reward') }}</b-button>
+      <b-tooltip
+        v-if="!hideTooltip"
+        target="claimRewardBtn"
+        placement="bottom"
+        title="Once the lock time period has expired, click here to claim your reward"
+      ></b-tooltip>
     </div>
   </b-card>
 </template>
@@ -65,10 +76,10 @@ export default class Rewards extends Vue {
     this.setShowLoadingSpinner(true)
     try {
       await dposModule.claimRewards()
-      this.setSuccessMsg({msg: "Successfully claimed rewards!" +
-        rewards.toString(), forever: false})
+      this.setSuccessMsg({        msg: "Successfully claimed rewards!" +
+          rewards.toString(), forever: false      })
     } catch (err) {
-      this.setErrorMsg({msg: "Claiming reward failed", forever: false, report: true, cause: err})
+      this.setErrorMsg({ msg: "Claiming reward failed", forever: false, report: true, cause: err })
     }
     this.setShowLoadingSpinner(false)
     this.hideTooltip = false
@@ -86,6 +97,5 @@ export default class Rewards extends Vue {
     color: #f0ad4e;
   }
 }
-
 </style>
 

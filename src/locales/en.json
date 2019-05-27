@@ -1,5 +1,5 @@
 {
-  "transfer_all":"All ({amount} LOOM)",
+  "transfer_all": "All ({amount} LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -183,6 +183,7 @@
       "deposit_withdraw": "Deposit/Withdraw",
       "faq": "F.A.Q",
       "account_explorer": "Account Explorer",
+      "game_assets": "Game Assets",
       "block_explorer": "Block Explorer",
       "deploy_to_plasmachain": "Deploy to Plasmachain",
       "transfer_gateway": "Transfer Gateway",

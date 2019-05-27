@@ -26,7 +26,9 @@ import { zbcardsReactions } from "@/store/plasma/assets/reactions"
 
 Vue.use(Vuex)
 
-const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore({
+const store: Store<DashboardState> = getStoreBuilder<
+  DashboardState
+>().vuexStore({
   plugins: [
     // dposStorePlugin,
     ethereumReactions,
@@ -37,4 +39,3 @@ const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore
   ],
 })
 export default store
-

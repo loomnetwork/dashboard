@@ -42,6 +42,10 @@ const dposModule = {
     setElectionTime: builder.commit(mutations.setElectionTime),
     setRewards: builder.commit(mutations.setRewards),
 
+    requestDelegation: builder.dispatch(requestDelegation),
+    requestRedelegation: builder.dispatch(requestRedelegation),
+    requestUndelegation: builder.dispatch(requestUndelegation),
+
     delegate: builder.dispatch(delegate),
     redelegate: builder.dispatch(redelegate),
     consolidate: builder.dispatch(consolidate),
@@ -191,6 +195,16 @@ async function refreshDelegations(context: ActionContext) {
     context.state.rewards = rewards
     log("rewards", rewards.toString())
     context.state.loading.delegations = false
+}
+
+function requestDelegation(context: ActionContext, d: IDelegation) {
+  // set state thqt triggers pop
+}
+function requestRedelegation(context: ActionContext, d: IDelegation) {
+  // set state thqt triggers pop
+}
+function requestUndelegation(context: ActionContext, d: IDelegation) {
+  // set state thqt triggers pop
 }
 
 // write/[the bc word for it]

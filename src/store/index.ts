@@ -3,7 +3,6 @@ import Vuex, { Store } from "vuex"
 // import { state, getters, mutations, actions } from './applicationStore'
 
 import { dposStorePlugin } from "./dposPlugin"
-import { plasmaStorePlugin } from "./plasmaPlugin"
 import { LocaleStore } from "./locale"
 import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
@@ -19,11 +18,11 @@ import "./ethereum"
 import "./gateway"
 import "./plasma"
 import "./dpos"
-import { ethGatewayPlugin } from "./gateway/reactions"
-import { gatewayModule } from "./gateway/index"
 import { ethereumReactions } from "./ethereum/reactions"
+import { ethGatewayPlugin } from "./gateway/reactions"
 import { plasmaReactions } from "./plasma/reactions"
 import { dposReactions } from "./dpos/reactions"
+import { zbcardsReactions } from "@/store/plasma/assets/reactions"
 
 Vue.use(Vuex)
 
@@ -34,6 +33,7 @@ const store: Store<DashboardState> = getStoreBuilder<DashboardState>().vuexStore
     plasmaReactions,
     ethGatewayPlugin,
     dposReactions,
+    zbcardsReactions,
   ],
 })
 export default store

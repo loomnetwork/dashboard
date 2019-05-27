@@ -1,4 +1,4 @@
-import { PlasmaState } from './types';
+import { PlasmaState } from "../types";
 
 export function getCardInstance(state: PlasmaState) {
     return (

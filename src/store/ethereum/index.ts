@@ -58,6 +58,12 @@ const initialState: EthereumState = {
         balance: ZERO,
         address: "",
     },
+    coins: {
+        loom: {
+            balance: ZERO,
+            loading: true,
+        },
+    },
 }
 
 const builder = getStoreBuilder<HasEthereumState>().module("ethereum", initialState)
@@ -127,11 +133,19 @@ async function setWalletType(context: ActionContext, walletType: string) {
  * @param symbol
  * @param tokenAmount
  */
-export async function refreshBalance(context: ActionContext, symbol: string) {
+export function refreshBalance(context: ActionContext, symbol: string) {
     const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
-    const ethersBN = await contract.functions.balanceOf(context.state.address)
-    log("balanceOf %s %s ", symbol, ethersBN.toString())
-    context.state.balances[symbol] = new BN(ethersBN.toString())
+    const coinState = context.state.coins[symbol]
+    coinState.loading = true
+    return contract.functions.balanceOf(context.state.address)
+        .then((ethersBN) => {
+            log("balanceOf %s %s ", symbol, ethersBN.toString())
+            context.state.balances[symbol] = new BN(ethersBN.toString())
+            coinState.balance = new BN(ethersBN.toString())
+        })
+        .finally(() => {
+            coinState.loading = false
+        })
 }
 
 /**

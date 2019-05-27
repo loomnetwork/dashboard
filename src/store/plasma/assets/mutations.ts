@@ -1,6 +1,7 @@
-import { PlasmaState, CardDetail, PackDetail } from './types';
-import Contract from 'web3/eth/contract';
-import { MigratedZBGCard } from '@/contracts/types/web3-contracts/MigratedZBGCard';
+import { PlasmaState, CardDetail, PackDetail } from "../types"
+import Contract, {} from "web3/eth/contract"
+import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
+import { BoosterPack } from "./web3-contracts/BoosterPack"
 
 export function setPacksContract(state: PlasmaState, payload: {name: string, contract: Contract}) {
     state.packsContract[payload.name] = payload.contract

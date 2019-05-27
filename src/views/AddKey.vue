@@ -11,7 +11,7 @@
             <b-button @click="switchPubKeyType(pk)"> View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
           </b-col>
           <b-col cols="12" sm="3">
-            <b-badge href="#" variant="success">Tier: {{pk.tier}}</b-badge>
+            <b-badge variant="success">Tier: {{pk.tier}}</b-badge>
           </b-col>
         </b-row>
       </b-card>  
@@ -30,20 +30,15 @@
       <p @click="generateNewPublicKey()" class="text-right text-link"> Generate New Public Address</p><br>
       <generate-public-key-modal :showModal="isShowGenPublicKeyModal" @hide="onHideGenPKModal" />
       <label for="input-live"> Amount to Stake </label>
-        <b-form-radio-group
-          id="btn-radios-2"
-          v-model="tierSelected"
-          :options="stakeTiers"
-          buttons
-          button-variant="outline-secondary"
-          size="lg"
-          name="radio-btn-outline"
-        ></b-form-radio-group>
-      <div class="my-3" v-show="tierSelected != ''">
-        <b-row><label class="my-2" for="input-live"> Tier Detail </label></b-row>
-        <b-row><label for="input-live"> Tier: {{tierSelected.no}} </label></b-row>
-        <b-row><label for="input-live"> Max: {{tierSelected.max}} </label></b-row>
-        <b-row><label for="input-live"> Amount: {{tierSelected.amount}} LOOM </label></b-row>
+      <div class="tierBlock tierDisplay"> 
+        <label v-for="tier in stakeTiers" v-bind:key="tier.value.no" class="radio">
+          <input type="radio" v-model="tierSelected" :value="tier.value" />
+          <b-card class="tierText"> 
+            <b-row>Tier: {{tier.value.no}}</b-row>
+            <b-row>Max: {{tier.value.max}} tx/min</b-row>
+            <b-row>{{tier.value.amount}} LOOM</b-row>
+          </b-card>
+        </label>
       </div>
       <b-button class="d-inline-flex" @click="addKey(tierSelected)"> Add Key </b-button>
       <div class="remaining my-3">
@@ -95,11 +90,11 @@ export default class AddKey extends Vue {
     },
   ] // TODO: wait for the real data
 
-  tierSelected = ''
+  tierSelected = ""
 
    stakeTiers = [
     {
-      text: "Tier1: 3000 LOOM",
+      text: `Tier1: 3000 LOOM`,
       value: {
         no: 1,
         max: 10,
@@ -124,32 +119,14 @@ export default class AddKey extends Vue {
       },
       disabled: true,
     },
-  ]
-
-  // stakeTiers = [
-  //   {
-  //     no: 1,
-  //     max: 10,
-  //     amount: 3000,
-  //   },
-  //   {
-  //     no: 2,
-  //     max: 20,
-  //     amount: 6000,
-  //   },
-  //   {
-  //     no: 3,
-  //     max: 30,
-  //     amount: 9000,
-  //   },
-  // ] // TODO: wait for the real data
+  ] // TODO: wait for the real data
 
   switchPubKeyType(inputKey) {
     inputKey.defaultFormat = inputKey.defaultFormat === "Base64" ? "Hex" : "Base64"
   }
 
   addKey(tier) {
-    alert(tier)
+    alert(tier.no)
   }
 
   generateNewPublicKey() {
@@ -173,15 +150,55 @@ export default class AddKey extends Vue {
 .text-right {
   text-align: right !important;
 }
- .text-link {
+.text-link {
   font-style: italic;
   color: #007bff;
 }
- .text-link:hover {
+.text-link:hover {
   color: #0651a2;
 }
 .remaining {
   align-self: flex-end;
 }
- </style>
-
+.tierBlock {
+  margin: 20px;
+}
+.tierBlock input {
+  display: none;
+}
+.tierBlock label {
+  margin-right: 50px;
+  display: inline-block;
+  cursor: pointer;
+}
+.tierDisplay .tierText {
+  display: block;
+  padding: 5px 25px 5px 25px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  position: relative;
+  transition: all 0.25s linear;
+}
+.tierDisplay .tierText:before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  -webkit-transform: translatey(-50%);
+          transform: translatey(-50%);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #ddd;
+  transition: all 0.25s linear;
+}
+.tierDisplay .radio input:checked + .tierText {
+  background-color: #fff;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+  color: #ffc107;
+  border-color: #ffc107;
+}
+.tierDisplay .radio input:checked + .tierText:before {
+  background-color: #ffc107;
+}
+</style>

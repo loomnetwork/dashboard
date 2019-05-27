@@ -21,7 +21,7 @@
           </h6>
         </div>
       </div>
-      <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasNoRewards">{{ $t('views.rewards.claim_reward') }}</b-button>
+      <b-button id="claimRewardBtn" class="px-5 py-2" variant="primary" @click="claimRewardHandler" :disabled="hasRewards == false">{{ $t('views.rewards.claim_reward') }}</b-button>
       <b-tooltip v-if="!hideTooltip" target="claimRewardBtn" placement="bottom" title="Once the lock time period has expired, click here to claim your reward"></b-tooltip> 
     </div>
   </b-card>
@@ -35,7 +35,7 @@ import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
 
 import BN from "bn.js"
-import { dposModule } from '../store/dpos';
+import { dposModule } from "../store/dpos"
 
 @Component
 export default class Rewards extends Vue {

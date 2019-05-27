@@ -24,17 +24,13 @@
           </b-card-text>
         </b-card>
 
-        <div>
-          {{state.ethereum.balances.eth}} eth
-        </div>
-
         <div class="p3">
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
           <div>
             <h5 class="highlight">
-              {{state.ethereum.balances.loom | tokenAmount}} LOOM
+              {{state.ethereum.coins.loom.balance | tokenAmount}} LOOM
               <loom-icon
-                v-if="!userBalance.isLoading"
+                v-if="!state.ethereum.coins.loom.loading"
                 :color="'#f0ad4e'"
                 width="20px"
                 height="20px"
@@ -91,6 +87,7 @@
             centered
             no-close-on-backdrop
           >{{ $t('views.my_account.wait_tx') }}</b-modal>
+          <!--
           <b-modal
             id="unclaimed-tokens"
             title="Unclaimed Tokens"
@@ -104,6 +101,7 @@
               @click="reclaimDepositHandler"
             >{{$t('views.my_account.reclaim_deposit')}}</b-btn>
           </b-modal>
+          -->
         </div>
       </b-card-body>
 

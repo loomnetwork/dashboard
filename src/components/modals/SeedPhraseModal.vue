@@ -80,7 +80,6 @@ export default class SeedPhraseModal extends Vue {
     this.publicAddress = publicKey
     this.confirmMnemonic = false
     this.setShowLoadingSpinner(false)
-
   }
 
   mounted() {

@@ -41,7 +41,7 @@
             </b-card>
           </label>
         </div>
-        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected"> Add Key </b-button>
+        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected || !newPubKey"> Add Key </b-button>
         <div class="remaining my-3">
           <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
           <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import {
   CryptoUtils, Client, LocalAddress, Contracts, Address, createJSONRPCClient, NonceTxMiddleware,
-  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUserV3, DPOSUser,
+  SignedTxMiddleware, SignedEthTxMiddleware, DPOSUserV3, DPOSUser, GatewayVersion
 } from 'loom-js'
 
 import { createDefaultClient } from 'loom-js/dist/helpers'
@@ -252,7 +252,7 @@ export default {
         dappchainEndpoint: state.chainUrls[state.networkId].dappchainEndpoint,
         chainId: chainId,
         gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-        version: 2
+        version: GatewayVersion.MULTISIG
       })
       .then(user => {
         reconfigureClient(user.client, commit)
@@ -285,7 +285,7 @@ export default {
             dappchainEndpoint: state.chainUrls[state.networkId],
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || GatewayJSON.networks[network].address,
-            version: 2
+            version: GatewayVersion.MULTISIG
           });
         } else {          
           user = await DPOSUserV3.createMetamaskUserAsync({
@@ -294,7 +294,7 @@ export default {
             dappchainPrivateKey: privateKeyString,
             chainId: chainId,
             gatewayAddress: GW_ADDRESS || state.currentChain["gatewayAddress"],
-            version: 2
+            version: GatewayVersion.MULTISIG
           });
         }
       } catch(err) {

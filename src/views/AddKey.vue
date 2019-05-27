@@ -27,8 +27,8 @@
         <label for="input-live">Your Loom Public Address</label>
         <b-form-input v-model="newPubKey" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
       </div>
-      <p @click="generateNewPublicKey()" class="text-right text-link"> Generate New Public Address</p><br>
-      <generate-public-key-modal :showModal="isShowGenPublicKeyModal" @hide="onHideGenPKModal" />
+      <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
+      <seed-phrase-modal ref="seed-phrase-modal"/>
       <label for="input-live"> Amount to Stake </label>
       <div class="tierBlock tierDisplay"> 
         <label v-for="tier in stakeTiers" v-bind:key="tier.value.no" class="radio">
@@ -54,11 +54,14 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import GeneratePublicKeyModal from "@/components/modals/GeneratePublicKeyModal.vue"
+import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
+import { Modal } from "bootstrap-vue"
 
 @Component({
   components: {
     GeneratePublicKeyModal,
+    SeedPhraseModal,
   },
 })
 
@@ -121,6 +124,10 @@ export default class AddKey extends Vue {
     },
   ] // TODO: wait for the real data
 
+  modal(ref: string) {
+   return this.$refs[ref] as Modal
+  }
+
   switchPubKeyType(inputKey) {
     inputKey.defaultFormat = inputKey.defaultFormat === "Base64" ? "Hex" : "Base64"
   }
@@ -129,12 +136,8 @@ export default class AddKey extends Vue {
     alert(tier.no)
   }
 
-  generateNewPublicKey() {
-    this.isShowGenPublicKeyModal = true
-  }
-
-  onHideGenPKModal() {
-    this.isShowGenPublicKeyModal = false
+  showSeedPhraseModal() {
+    this.$root.$emit("bv::show::modal", "seed-phrase-modal")
   }
 
   async mounted() {

@@ -230,7 +230,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "Note: these 12 words allow you to recover your wallet in case of loss or damage.",
-        "you_must_create_a_backup_nbsp": "You must create a backup!&nbsp;",
+        "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "Write or print it out and keep in a safe place.",
         "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
         "copy_to_clipboard": "Copy to Clipboard"

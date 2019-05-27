@@ -1,6 +1,8 @@
 <template>
   <main class="validator">
-    <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
+    <!--
+    <loading-spinner v-if="loading" :showBackdrop="true"></loading-spinner>
+    -->
     <header>
       <h1><router-link to="../validators" style="color: inherit;">{{ $t('views.validator_list.validators') }}</router-link></h1>
     </header>
@@ -42,10 +44,10 @@
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                <b-button variant="outline-primary" :disabled="delegation.pending"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1 || delegation.locked"
+                <b-button variant="outline-primary" :disabled="delegation.pending || delegation.locked"
                   @click="openRequestUnbondModal(delegation)"
                 >{{ $t('Undelegate') }}</b-button>
               </b-button-group>

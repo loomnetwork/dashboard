@@ -5,4 +5,3 @@ import { IWithdrawalReceipt, IUnclaimedToken } from "loom-js/dist/contracts/tran
 export function setMapping(state: GatewayState, mapping: IAddressMapping) {
     state.mapping = mapping
 }
-

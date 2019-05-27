@@ -20,7 +20,7 @@
             <p
               class="warning-copy mb-2"
             >{{currentAllowance}} LOOM awaiting transfer to plasmachain account.</p>
-            <b-btn size="sm" variant="primary" >Resume Deposit</b-btn>
+            <b-btn size="sm" variant="primary">Resume Deposit</b-btn>
           </b-card-text>
         </b-card>
 
@@ -147,11 +147,10 @@
       </b-card-footer>
       -->
     </b-card>
-  
 
     <b-card title="Election Cycle" class="mb-4">
       <h6>Time left</h6>
-      <ElectionTimer />
+      <ElectionTimer/>
     </b-card>
 
     <rewards></rewards>
@@ -175,8 +174,9 @@
         <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
           <b-card-body>
             <ul>
-              <li v-if="!delegation.updateAmount.isZero()"
-                >Update amount: {{delegation.updateAmount}}</li>
+              <li
+                v-if="!delegation.updateAmount.isZero()"
+              >Update amount: {{delegation.updateAmount}}</li>
               <li>Unlock time: {{delegation.lockTime}}</li>
               <li>State: {{delegation.state}}</li>
             </ul>
@@ -206,9 +206,9 @@ import Rewards from "@/components/Rewards.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
-import { ethereumModule } from "../store/ethereum";
-import { plasmaModule } from "../store/plasma";
-import { dposModule } from "../store/dpos";
+import { ethereumModule } from "../store/ethereum"
+import { plasmaModule } from "../store/plasma"
+import { dposModule } from "../store/dpos"
 import ElectionTimer from "@/dpos/components/electionTimer.vue"
 
 const log = debug("mobileaccount")
@@ -275,7 +275,6 @@ export default class MobileAccount extends Vue {
   get pendingTx() { return DPOSTypedStore.state.pendingTx }
   get withdrewSignature() { return DPOSTypedStore.state.withdrewSignature }
 
-
   get formatedDelegations() {
     const candidates = this.validators
     console.log(this.delegations)
@@ -323,12 +322,9 @@ export default class MobileAccount extends Vue {
     plasmaModule.refreshBalance("loom")
   }
 
-
-
   get rewardsValue() {
     return this.rewardsResults ? (this.rewardsResults.toString() + " LOOM") : "0.00"
   }
-
 
   // gateway
 

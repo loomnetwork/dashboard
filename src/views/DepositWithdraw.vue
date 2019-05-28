@@ -96,7 +96,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestDeposit(token: string) {
-
+    this.$root.$emit("bv::show::modal", "deposit-form")
   }
 
   requestWithdraw(token: string) {
@@ -104,7 +104,6 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestSwap(token: string) {
-
   }
 
   async ready() {

@@ -34,6 +34,7 @@
               >{{ $t("transfer_all", {amount: userBalance.mainnetBalance}) }}</b-btn>
             </b-col>
           </b-row>
+          <amount-input :min="1" :max="100" v-model="depositAmount" />
         </b-container>
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
         <footer style="display:flex">
@@ -63,8 +64,12 @@ import { ethers } from "ethers"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../../types"
-
-@Component
+import AmountInput from "@/components/AmountInput.vue"
+@Component({
+  components: {
+    AmountInput,
+  },
+})
 export default class DepositForm extends Vue {
 
   get userBalance() {
@@ -88,6 +93,8 @@ export default class DepositForm extends Vue {
   amountErrors: string[] = []
 
   status: string = ""
+
+  depositAmount: number = 0
 
   get visible() {
     console.log("showDepositForm", this.showDepositForm)

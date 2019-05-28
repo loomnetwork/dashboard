@@ -2,8 +2,15 @@
   <div>
     <b-row>
       <b-col>
-        <b-form-input id="input-amount" v-model="amount" :formatter="format" placeholder="Enter amount">
+        <b-form-input
+          id="input-amount"
+          v-model="amount"
+          :type="'number'"
+          placeholder="Enter amount"
+          aria-describedby="input-live-help input-live-feedback"
+          @keyup="validateAmount">
         </b-form-input>
+        <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col sm="4">
         <b-button variant="outline-primary" @click="setAllAmount">All (LOOM)</b-button>
@@ -16,19 +23,36 @@
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 @Component
 export default class AmountInput extends Vue {
-  @Prop(Number) min: number = 0
+  @Prop(Number) value!: number // v-model is it accepts a value prop and emit an input event.
+  @Prop(Number) min!: number
   @Prop(Number) max!: number
-  @Prop(Boolean) round: boolean = true
+  @Prop({default: true}) round!: boolean
 
   // State declaration
-  amount: number = 0
+  amount: any = this.value
+  errorMsg: string = ""
 
   // Call this function when amount changed
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-    this.$emit("input", this.amount)
+    this.$emit("input", Number(this.amount))
   }
 
+  validateAmount() {
+    if (this.round) {
+      this.amount = Math.floor(this.value)
+    }
+    if (this.amount > this.max) {
+      this.errorMsg = "Invalid amount. should be less than " + this.max
+      this.$emit("isError", true)
+    } else if (this.amount < this.min) {
+      this.errorMsg = "Invalid amount. should be more than " + this.min
+      this.$emit("isError", true)
+    } else {
+      this.errorMsg = ""
+      this.$emit("isError", false)
+    }
+  }
   // Button Action
   setAllAmount() {
     this.amount = this.max
@@ -37,4 +61,9 @@ export default class AmountInput extends Vue {
 </script>
 
 <style scoped>
+p {
+  margin-top: 0.2em;
+  font-size: 0.9em;
+  color: red;
+}
 </style>

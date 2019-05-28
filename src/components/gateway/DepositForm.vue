@@ -34,7 +34,7 @@
               >{{ $t("transfer_all", {amount: userBalance.mainnetBalance}) }}</b-btn>
             </b-col>
           </b-row>
-          <amount-input :min="0" :max="100" :round="false" />
+          <amount-input :min="1" :max="100" v-model="depositAmount" />
         </b-container>
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
         <footer style="display:flex">
@@ -93,6 +93,8 @@ export default class DepositForm extends Vue {
   amountErrors: string[] = []
 
   status: string = ""
+
+  depositAmount: number = 0
 
   get visible() {
     console.log("showDepositForm", this.showDepositForm)

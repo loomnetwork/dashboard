@@ -68,7 +68,7 @@ export default class SeedPhraseModal extends Vue {
   publicAddress = ""
   confirmMnemonic = false
   setSuccessMsg = CommonTypedStore.setSuccessMsg
-  generatePublicKeyFromPrivateKey = plasmaModule.generatePublicKeyFromPrivateKey
+  getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddressFromPrivateKeyUint8Array
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   async generateSeeds() {
@@ -76,7 +76,7 @@ export default class SeedPhraseModal extends Vue {
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
     const privateKey = bip39.mnemonicToSeedSync(mnemonic)
-    const publicKey = await this.generatePublicKeyFromPrivateKey({privateKey})
+    const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({privateKey})
     this.publicAddress = publicKey
     this.confirmMnemonic = false
     this.setShowLoadingSpinner(false)

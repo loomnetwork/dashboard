@@ -53,7 +53,7 @@ export const plasmaModule = {
     checkPackBalance: builder.dispatch(checkPackBalance),
     transferPacks: builder.dispatch(transferPacks),
     transferCards: builder.dispatch(transferCards),
-    generatePublicKeyFromPrivateKey: builder.dispatch(generatePublicKeyFromPrivateKey),
+    getPublicAddressFromPrivateKeyUint8Array: builder.dispatch(getPublicAddressFromPrivateKeyUint8Array),
 
     // mutation
     setPacksContract: builder.commit(mutations.setPacksContract),
@@ -169,7 +169,7 @@ function plasmaErrorMessage(errorMsg: string) {
   }
 }
 
-async function generatePublicKeyFromPrivateKey(context: ActionContext, payload: { privateKey: Uint8Array }) {
+async function getPublicAddressFromPrivateKeyUint8Array(context: ActionContext, payload: { privateKey: Uint8Array }) {
   const publicKeyUint8Array = await CryptoUtils.publicKeyFromPrivateKey(payload.privateKey)
   const publicAddress = LocalAddress.fromPublicKey(publicKeyUint8Array).toString()
   return publicAddress

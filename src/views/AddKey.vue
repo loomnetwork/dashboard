@@ -59,6 +59,7 @@ import GeneratePublicKeyModal from "@/components/modals/GeneratePublicKeyModal.v
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { Modal } from "bootstrap-vue"
+import { CommonTypedStore } from '@/store/common';
 
 @Component({
   components: {
@@ -69,6 +70,7 @@ import { Modal } from "bootstrap-vue"
 
 export default class AddKey extends Vue {
   getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
+  setErrorMsg = CommonTypedStore.setErrorMsg
 
   isShowGenPublicKeyModal = false
   loomBalance = ""
@@ -99,7 +101,6 @@ export default class AddKey extends Vue {
 
    stakeTiers = [
     {
-      text: `Tier1: 3000 LOOM`,
       value: {
         no: 1,
         max: 10,
@@ -107,7 +108,6 @@ export default class AddKey extends Vue {
       },
     },
     {
-      text: "Tier2: Coming soon",
       value: {
         no: 2,
         max: 20,
@@ -116,7 +116,6 @@ export default class AddKey extends Vue {
       disabled: true,
     },
     {
-      text: "Tier3: Coming soon",
       value: {
         no: 3,
         max: 30,
@@ -135,6 +134,10 @@ export default class AddKey extends Vue {
   }
 
   addKey(tier) {
+    if ( parseFloat(this.loomBalance) < tier.amount) {
+      this.setErrorMsg("Your balance isn't enough. Please deposit first.")
+      return
+    }
     alert(tier.no)
   }
 

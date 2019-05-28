@@ -292,8 +292,8 @@ export default class MobileAccount extends Vue {
     this.updateTimeUntilElectionCycle()
     this.startTimer()
 
-    // Only alert te user if the receipt is fresh
-    if (this.receipt && !this.enoughTimeHasPassed) {
+    // Only alert te user if the receipt is older than 5 minutes
+    if (this.receipt && this.enoughTimeHasPassed) {
       this.hasReceiptHandler(this.receipt)
     }
   }

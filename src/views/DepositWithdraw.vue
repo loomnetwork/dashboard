@@ -4,6 +4,8 @@
       <h1>Wallet</h1>
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
+    <transfer-tokens-form-modal/>here
+    <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc
       <br>(use $t with the key to some help text.)
@@ -30,7 +32,6 @@
             <b-button
               class="button"
               variant="outline-primary"
-              disabled
               @click="requestSwap(symbol)"
             >Swap</b-button>
           </b-button-group>
@@ -40,7 +41,6 @@
         <b-button class="button" variant="primary">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <DepositForm/>
   </main>
 </template>
 
@@ -50,10 +50,14 @@ import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
+import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue";
+import { Modal } from "bootstrap-vue";
+import { plasmaModule } from "../store/plasma";
 
 @Component({
   components: {
     DepositForm,
+    TransferTokensFormModal,
   },
   methods: {
     // ...DPOSStore.mapMutations([
@@ -66,6 +70,8 @@ export default class DepositWithdraw extends Vue {
   inputFilter = ""
 
   showHelp: boolean = false
+
+  setTokenSelected = plasmaModule.setTokenSelected
 
   // get the full list from state or somewhere else
   symbols = ["loom", "eth"]
@@ -84,6 +90,10 @@ export default class DepositWithdraw extends Vue {
     this.filterTokens()
   }
 
+   modal(ref: string) {
+    return this.$refs[ref] as Modal
+  }
+
   @Watch("inputFilter")
   filterTokens() {
     const filter = this.inputFilter.toLowerCase()
@@ -93,10 +103,11 @@ export default class DepositWithdraw extends Vue {
     // - symbol matches filter  and symbol is in the state,
     this.filteredSymbols = this.symbols
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
+
   }
 
   requestDeposit(token: string) {
-
+    this.$root.$emit("bv::show::modal", "deposit-form")
   }
 
   requestWithdraw(token: string) {
@@ -104,7 +115,8 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestSwap(token: string) {
-
+    this.setTokenSelected(token)
+    this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 
   async ready() {

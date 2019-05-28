@@ -53,6 +53,10 @@ export interface PlasmaState {
      type: string;
     amount: number;
   }
+
+  tokenSelected: string
+
+
 }
 
 export interface TokenInfo<C> {

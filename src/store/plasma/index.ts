@@ -29,7 +29,9 @@ import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
 
 // assets (make this a sepoerate module)
 import * as getters from "./assets/getters"
-import * as mutations from "./assets/mutations"
+import * as assetMutations from "./assets/mutations"
+// plasma
+import * as mutations from "../plasma/mutations"
 
 import debug from "debug"
 
@@ -84,6 +86,7 @@ const initialState: PlasmaState = {
     cards: [],
     amount: 0,
   },
+  tokenSelected: "",
 }
 
 const builder = getStoreBuilder<DashboardState>().module(
@@ -111,24 +114,28 @@ export const plasmaModule = {
 
   // Getters
   getCardInstance: builder.read(getters.getCardInstance),
-  // Mutations
-  setPacksContract: builder.commit(mutations.setPacksContract),
-  setCardContract: builder.commit(mutations.setCardContract),
-  setCardBalance: builder.commit(mutations.setCardBalance),
-  setPackBalance: builder.commit(mutations.setPackBalance),
+  // AssetMutations
+  setPacksContract: builder.commit(assetMutations.setPacksContract),
+  setCardContract: builder.commit(assetMutations.setCardContract),
+  setCardBalance: builder.commit(assetMutations.setCardBalance),
+  setPackBalance: builder.commit(assetMutations.setPackBalance),
   setCardToTransferSelected: builder.commit(
-    mutations.setCardToTransferSelected,
+    assetMutations.setCardToTransferSelected,
   ),
   setAllCardsToTransferSelected: builder.commit(
-    mutations.setAllCardsToTransferSelected,
+    assetMutations.setAllCardsToTransferSelected,
   ),
-  setPackToTransferSelected: builder.commit(mutations.setPackToTransferSelected),
+  setPackToTransferSelected: builder.commit(assetMutations.setPackToTransferSelected),
 
+  
   // Actions
   checkCardBalance: builder.dispatch(checkCardBalance),
   checkPackBalance: builder.dispatch(checkPackBalance),
   transferPacks: builder.dispatch(transferPacks),
   transferCards: builder.dispatch(transferCards),
+  //Mutations
+  setTokenSelected: builder.commit(mutations.setTokenSelected),
+
 }
 
 async function checkCardBalance(context: ActionContext) {

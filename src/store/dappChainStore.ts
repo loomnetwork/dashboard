@@ -395,7 +395,7 @@ export default {
       const weiAmount = new BN(""+payload.amount, 10).mul(WEI_TOKEN)     
       try {
         const result = await user.undelegateAsync(payload.candidate, weiAmount, payload.index)
-        commit('setSuccessMsg', {msg: `Success un-delegating ${weiAmount} tokens`, forever: false}, {root: true})
+        commit('setSuccessMsg', {msg: `Success un-delegating ${payload.amount} tokens`, forever: false}, {root: true})
       } catch(err) {
         commit('setErrorMsg', {msg: "Failed to undelegate", forever: false, report:true, cause:err}, {root: true})
       }

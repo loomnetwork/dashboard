@@ -10,12 +10,10 @@ import {
   PlasmaSigner,
   CardDetail,
   PackDetail,
+  HasPlasmaState,
+  ActionContext,
 } from "./types"
-import {
-  Client,
-  Address,
-  LocalAddress,
-} from "loom-js"
+import { Client, Address, LocalAddress } from "loom-js"
 import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types"
 
@@ -36,6 +34,8 @@ import debug from "debug"
 import Web3 from "web3"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 
+import * as Tokens from "./contracts/tokens"
+
 const log = debug("plasma")
 
 // web3 instance to use to interact with plasma contracts
@@ -47,27 +47,21 @@ const initialState: PlasmaState = {
   client: createClient(configs.us1),
   web3: null,
   provider: null,
+  ethersProvider: null,
   signer: null,
   address: "",
-  appKey: {
+  appId: {
     private:
       "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
     public: "",
     address: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
   },
-  erc20Addresses: {
-    [TokenSymbol.LOOM]: "",
-    [TokenSymbol.ETH]: "",
-    [TokenSymbol.BNB]: "",
-  },
   coins: {
     loom: {
-      contract: null,
       balance: new BN("0"),
       loading: false,
     },
     eth: {
-      contract: null,
       balance: new BN("0"),
       loading: false,
     },
@@ -86,12 +80,11 @@ const initialState: PlasmaState = {
   },
 }
 
-const builder = getStoreBuilder<DashboardState>().module(
+const builder = getStoreBuilder<HasPlasmaState>().module(
   "plasma",
   initialState,
 )
 const stateGetter = builder.state()
-declare type ActionContext = BareActionContext<PlasmaState, DashboardState>
 
 export const plasmaModule = {
   get state() {
@@ -103,9 +96,10 @@ export const plasmaModule = {
   getCallerAddress: builder.dispatch(getCallerAddress),
 
   // Coins
-  refreshBalance: builder.dispatch(refreshBalance),
-  approve: builder.dispatch(approveTransfer),
-  transfer: builder.dispatch(transferTokens),
+  refreshBalance: builder.dispatch(Tokens.refreshBalance),
+  allowance: builder.dispatch(Tokens.allowance),
+  approve: builder.dispatch(Tokens.approve),
+  transfer: builder.dispatch(Tokens.transfer),
 
   // Assets
 
@@ -122,7 +116,9 @@ export const plasmaModule = {
   setAllCardsToTransferSelected: builder.commit(
     mutations.setAllCardsToTransferSelected,
   ),
-  setPackToTransferSelected: builder.commit(mutations.setPackToTransferSelected),
+  setPackToTransferSelected: builder.commit(
+    mutations.setPackToTransferSelected,
+  ),
 
   // Actions
   checkCardBalance: builder.dispatch(checkCardBalance),
@@ -132,12 +128,12 @@ export const plasmaModule = {
 }
 
 async function checkCardBalance(context: ActionContext) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.local.toString()
-  const ethAddr = dposUser!.ethAddress
+  const account = context.state.address
+  const caller = plasmaModule.getCallerAddress()
+
   const tokens = await context.state
     .cardContract!.methods.tokensOwned(account)
-    .call({ from: ethAddr })
+    .call({ from: caller })
   const cards: CardDetail[] = []
   tokens.indexes.forEach((id: string, i: number) => {
     const card = getCardByTokenId(id)
@@ -151,6 +147,7 @@ async function checkPackBalance(context: ActionContext) {
   const account = context.state.address
   const caller = await plasmaModule.getCallerAddress()
   const packs: PackDetail[] = []
+
   PACKS_NAME.forEach(async (type) => {
     const amount = await context.state.packsContract[type].methods
       .balanceOf(account)
@@ -195,7 +192,13 @@ async function changeIdentity(
 }
 
 // getter but async so I guess it's an action according to vuex
-async function getCallerAddress(ctx: ActionContext) {
+/**
+ * - if we have a signer use it's address (connected wallet case)
+ * - if just address, use that (explorer case, readonly)
+ * - otherwise use the generic address (readonly)
+ * @param ctx
+ */
+async function getCallerAddress(ctx: ActionContext): Promise<Address> {
   const state = ctx.state
   let caller: string
   let chainId: string = state.client.chainId
@@ -205,9 +208,7 @@ async function getCallerAddress(ctx: ActionContext) {
   } else if (state.address) {
     caller = state.address
   } else {
-    caller = state.appKey.address
-    // todo get plasma chain id from current config
-    // as the client might be initialized witg a foreign chain id (or is it?)
+    caller = state.appId.address
   }
   return Address.fromString(`${chainId}:${caller}`)
 }
@@ -217,14 +218,14 @@ async function transferPacks(
   payload: {
     packType: string;
     amount: number;
-    destinationDappchainAddress: string;
+    receiver: string;
   },
 ) {
   try {
     DPOSTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
     const result = await context.state.packsContract[payload.packType].methods
-      .transfer(payload.destinationDappchainAddress, payload.amount)
+      .transfer(payload.receiver, payload.amount)
       .send({ from: ethAddress })
     console.log("transfer packs result", result)
     // TODO: this is not working
@@ -245,22 +246,22 @@ async function transferCards(
   payload: {
     cardIds: string[];
     amounts: number[];
-    destinationDappchainAddress: string;
+    receiver: string;
   },
 ) {
   console.log("payload", payload)
   try {
-    const dposUser = await context.rootState.DPOS.dposUser
-    const dappchainAddress = dposUser!.loomAddress.local.toString()
-    const ethAddress = dposUser!.ethAddress
+    // caller address is either eth if eth signer is there or plasma address i
+    const callerAddr = await getCallerAddress(context)
+    const plasmaAddress = context.state.address
     const result = await context.state
       .cardContract!.methods.batchTransferFrom(
-        dappchainAddress,
-        payload.destinationDappchainAddress,
+        plasmaAddress,
+        payload.receiver,
         payload.cardIds,
         payload.amounts,
       )
-      .send({ from: ethAddress })
+      .send({ from: callerAddr })
     console.log("transfer cards result", result)
     // TODO: this is not working
     CommonTypedStore.setSuccessMsg("Transferring cards success.")
@@ -276,87 +277,4 @@ async function transferCards(
 function getErc20Contract(symbol: string): ERC20 {
   // @ts-ignore
   return null
-}
-
-/**
- * deposit from ethereum account to gateway
- * @param symbol
- * @param tokenAmount
- */
-export async function refreshBalance(context: ActionContext, token: string) {
-  const coins = context.state.coins
-  const addr = new Address(
-    "default",
-    LocalAddress.fromHexString(context.state.address),
-  )
-  coins[token].loading = true
-  switch (token) {
-    case "loom":
-      coins.loom.balance = await coins.loom.contract!.getBalanceOfAsync(addr)
-      log("updateBalance", token, coins.loom.balance)
-      break
-    case "eth":
-      coins.eth.balance = await coins.eth.contract!.getBalanceOfAsync(addr)
-      log("updateBalance", token, coins.eth.balance)
-      break
-    default:
-      // const contract = getErc20Contract(token)
-      // balance = await state.erc20[symbol].functions.balanceOf(addr)
-      coins[token].balance = new BN("0")
-  }
-  coins[token].loading = false
-}
-
-/**
- * withdraw from plasma account to gateway
- * @param symbol
- * @param tokenAmount
- */
-export function approveTransfer(
-  context: ActionContext,
-  { symbol, tokenAmount, to }: TransferRequest,
-) {
-  const balance = context.state.coins[symbol].balance
-  const weiAmount = tokenAmount
-  if (weiAmount.gt(balance)) {
-    throw new Error("approval.balance.low")
-  }
-
-  const contract: ERC20 = getErc20Contract(symbol)
-
-  return contract.functions.approve(to, weiAmount.toString())
-}
-
-/**
- * withdraw from gateway to ethereum account
- * @param symbol
- */
-async function transferTokens(
-  context: ActionContext,
-  funds: {
-    symbol: string;
-    tokenAmount: BN;
-    to: string;
-  },
-) {
-  const {coins, chainId} = context.state
-  const {
-    symbol,
-    tokenAmount,
-    to,
-  } = funds
-  const contract = coins[symbol].contract!
-
-  const addrObject = Address.fromString(`${chainId}:${to}`)
-  switch (funds.symbol) {
-    case "loom":
-      await ( contract as Coin).transferAsync(addrObject, tokenAmount)
-      break
-    case "eth":
-      await ( contract as EthCoin).transferAsync(addrObject, tokenAmount)
-      break
-    default:
-      // const contract = getErc20Contract(token)
-      await (contract as ERC20).functions.transfer(funds.to, funds.tokenAmount.toString())
-  }
 }

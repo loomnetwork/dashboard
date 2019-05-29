@@ -1,5 +1,5 @@
 <template>
-  <div id="faucet-header" @login="startPolling" ref="header" class="header">
+  <div id="faucet-header" ref="header" class="header">
 
     <b-alert variant="danger"
                dismissible
@@ -225,11 +225,6 @@ export default class FaucetHeader extends Vue {
     //   await this.updateTimeUntilElectionCycle()
     //   this.startTimer()
     // })
-
-    // Listen to refreshBalances event
-    this.$root.$on('refreshBalances', async () => {
-      await this.refresh()
-    })
 
     this.$root.$on('logout', () => {
       this.logOut()

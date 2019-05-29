@@ -178,6 +178,7 @@ export default class TransferStepper extends Vue {
         // resolved of withdraw
         this.$emit('withdrawalDone'); //this will call afterWithdrawalDone() of myAccount page
       }
+      this.$root.$emit('withdrawalExecuted')
       this.step = 3;
     } else {
       // withdraw fail: in IF case of executeWithdrawal()

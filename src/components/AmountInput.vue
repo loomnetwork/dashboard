@@ -42,6 +42,12 @@ export default class AmountInput extends Vue {
     this.$emit("input", Number(this.amount))
   }
 
+  // Set default amount when select another token
+  @Watch("state.plasma.tokenSelected")
+  setDefaultAmount(newVal, oldVal){
+    this.amount = 0
+  }
+
   validateAmount() {
     if (this.round) {
       this.amount = Math.floor(this.value)

@@ -62,7 +62,6 @@ export default class TransferTokensFormModal extends Vue{
     }
 
     resetModal(){
-      this.transferAmount = 0
       this.receiverAddress = ""
     }
     

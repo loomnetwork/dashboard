@@ -483,6 +483,11 @@ export default {
       const user:DPOSUserV3 = await rootState.DappChain.dposUser
       try {
         debug("claimDelegatorRewardsAsync")
+        const limboValidator = "0x00000000000000000000000000000000"
+        const limboDelegations = await user.checkDelegationsAsync(limboValidator)
+        if (limboDelegations!.delegationsArray.length > 0) {
+          await user.undelegateAsync(limboValidator, 0, 0) 
+        }
         await user.claimDelegatorRewardsAsync()
       } catch(err) {
         console.error(err)

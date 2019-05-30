@@ -13,15 +13,19 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col sm="4">
-        <b-button variant="outline-primary" @click="setAllAmount">All (LOOM)</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount">All ({{ state.plasma.tokenSelected.toUpperCase() }})</b-button>
       </b-col>
     </b-row>
+    
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
+import { DashboardState } from '@/types';
+
 @Component
+
 export default class AmountInput extends Vue {
   @Prop(Number) value!: number // v-model is it accepts a value prop and emit an input event.
   @Prop(Number) min!: number
@@ -52,6 +56,10 @@ export default class AmountInput extends Vue {
       this.errorMsg = ""
       this.$emit("isError", false)
     }
+  }
+
+  get state() : DashboardState {
+    return this.$store.state
   }
   // Button Action
   setAllAmount() {

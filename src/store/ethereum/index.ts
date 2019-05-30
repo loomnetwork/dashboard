@@ -2,7 +2,7 @@
  * @module dpos-dashboard.ethereum
  */
 
-import { getStoreBuilder } from "vuex-typex"
+import { getStoreBuilder, ActionHandler } from "vuex-typex"
 
 import { DashboardState, Transfer } from "@/types"
 
@@ -101,6 +101,7 @@ export const ethereumModule = {
   transfer: builder.dispatch(transfer),
 
   setWalletType: builder.dispatch(setWalletType),
+  setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
 
   initERC20: builder.dispatch(initERC20),
@@ -147,6 +148,14 @@ async function setWalletType(context: ActionContext, walletType: string) {
         console.error(e)
       })
   }
+}
+
+async function setToExploreMode(context: ActionContext, address: string) {
+  web3 = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"))
+  // Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"));
+  // Signer is not used in explore mode
+  context.state.signer = null
+  context.state.address = address
 }
 
 /**

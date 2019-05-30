@@ -30,28 +30,15 @@ export function plasmaReactions(store: Store<DashboardState>) {
    */
   store.watch(
     (s) => s.plasma.address,
-    () => {
+    async () => {
       if (store.state.plasma.address === "") {
         // plasmaModule.resetState()
         Tokens.resetContracts()
         return
       }
-      createPlasmaWeb3(store)
+      await createPlasmaWeb3(store)
       resetLoomContract(store)
       resetEthContract(store)
-      resetERC20Contracts(store)
-    },
-  )
-
-  // on web3 change
-  // reset erc20 contracts
-  store.watch(
-    (s) => s.plasma.ethersProvider,
-    (provider) => {
-      if (provider === null) {
-        // clear erc20 contracts
-        return
-      }
       resetERC20Contracts(store)
     },
   )
@@ -105,16 +92,13 @@ async function resetERC20Contracts(store: Store<DashboardState>) {
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma
   const signer = state.signer
-  if (signer === null) {
-    // return dispose()
-    return
-  }
   const client = state.client
   // LoomProvider reaquires "plasma" private key (for now)
   // So we give it our default/generic app key
   const genericKey = state.appId.private
-  const loomProvider = await createLoomProvider(client, signer, genericKey)
-
+  const loomProvider = (signer === null) ?
+    await createSimpleLoomProvider(client, genericKey) :
+    await createLoomProvider(client, signer, genericKey)
   // @ts-ignore
   store.state.plasma.web3 = new Web3(loomProvider)
   store.state.plasma.ethersProvider = new Web3Provider(loomProvider)
@@ -142,6 +126,27 @@ async function createLoomProvider(
   // as th configuration is taken care of elsewhere
   loomProvider.setMiddlewaresForAddress(signerAddress, client.txMiddleware)
   loomProvider.callerChainId = chain
+  // remove dummy account
+  loomProvider.accounts.delete(dummyAccount)
+  // @ts-ignore
+  loomProvider._accountMiddlewares.delete(dummyAccount)
+  return loomProvider
+}
+
+async function createSimpleLoomProvider(
+  client: Client,
+  strDummyKey: string,
+) {
+  const dummyKey = CryptoUtils.B64ToUint8Array(strDummyKey)
+  const publicKey = publicKeyFromPrivateKey(dummyKey)
+  const dummyAccount = LocalAddress.fromPublicKey(publicKey).toString()
+  // LoomProvider reaquires "plasma" private key (for now)
+  // So we give it our default/generic app key
+  const loomProvider = new LoomProvider(
+    client,
+    dummyKey,
+    () => client.txMiddleware,
+  )
   // remove dummy account
   loomProvider.accounts.delete(dummyAccount)
   // @ts-ignore

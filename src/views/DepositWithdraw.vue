@@ -4,7 +4,7 @@
       <h1>Wallet</h1>
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <transfer-tokens-form-modal/>here
+    <transfer-tokens-form-modal/>
     <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc

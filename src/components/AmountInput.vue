@@ -65,6 +65,10 @@ export default class AmountInput extends Vue {
   setAllAmount() {
     this.amount = this.max
   }
+
+  mounted(){
+    this.amount = 0
+  }
 }
 </script>
 

@@ -1,8 +1,9 @@
 import {
   TransferGateway,
   LoomCoinTransferGateway,
+  Coin,
 } from "loom-js/dist/contracts"
-import { Address, CryptoUtils } from "loom-js"
+import { Address, CryptoUtils, Client } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import BN from "bn.js"
@@ -13,10 +14,8 @@ import { gatewayModule } from "."
 import { timer, of, interval } from "rxjs"
 
 import { filter, tap, switchMap, take } from "rxjs/operators"
-import { CommonTypedStore } from "../common"
-import { ethers } from "ethers"
-import { parseSigs } from "loom-js/dist/helpers"
-import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
+import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
+import Web3 from "web3"
 
 interface PlasmaGatewayAdapter {
   token: string
@@ -80,41 +79,71 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
   }
 }
 
-const adapters = new Map<string, PlasmaGatewayAdapter>()
+let instance: PlasmaGateways | null = null
+export async function init(
+  client: Client,
+  plasmaWeb3: Web3,
+  mapping: IAddressMapping,
+) {
+  // return new EthereumGateways()
+  // create gateways and vmc (maybe vmc does not care...)
+  const mainGateway = await TransferGateway.createAsync(client, mapping.to)
+  const loomGateway = await LoomCoinTransferGateway.createAsync(
+    client,
+    mapping.to,
+  )
 
-export function get(symbol: string): PlasmaGatewayAdapter {
-  const adapter = adapters.get(symbol)
-  if (adapter === undefined) {
-    throw new Error("No gateway for " + symbol)
-  }
-  return adapter
+  instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3)
 }
 
-export function addContract(
-  symbol: string,
-  contract: TransferGateway,
-  srcChainGateway: Address,
-) {
-  let adapter: PlasmaGatewayAdapter
-  switch (symbol) {
-    case "loom":
-      adapter = new LoomGatewayAdapter(
-        contract as LoomCoinTransferGateway,
-        srcChainGateway,
-      )
-      break
-    case "eth":
-      adapter = new EthGatewayAdapter(contract, srcChainGateway)
-      break
-    // case "tron":
+export function gateways() {
+  return instance!
+}
 
-    // break;
+class PlasmaGateways {
+  adapters = new Map<string, PlasmaGatewayAdapter>()
 
-    default:
-      adapter = new ERC20GatewayAdapter(contract, srcChainGateway, symbol)
-      break
+  constructor(
+    readonly mainGateway: TransferGateway,
+    readonly loomGateway: LoomCoinTransferGateway,
+    readonly web3: Web3,
+  ) {}
+
+  destroy() {
+    this.adapters.clear()
   }
-  adapters.set(symbol, adapter)
+
+  get(symbol: string): PlasmaGatewayAdapter {
+    const adapter = this.adapters.get(symbol)
+    if (adapter === undefined) {
+      throw new Error("No gateway for " + symbol)
+    }
+    return adapter
+  }
+
+  add(token: string, srcChainGateway: Address) {
+    let adapter: PlasmaGatewayAdapter
+    switch (token) {
+      case "loom":
+        adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway)
+        break
+      case "eth":
+        adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway)
+        break
+      // case "tron":
+
+      // break;
+
+      default:
+        adapter = new ERC20GatewayAdapter(
+          this.mainGateway,
+          srcChainGateway,
+          token,
+        )
+        break
+    }
+    this.adapters.set(token, adapter)
+  }
 }
 
 /* #region Vuex */
@@ -124,8 +153,8 @@ export function addContract(
  * @param symbol
  * @param tokenAmount
  */
-export async function withdraw(context: ActionContext, funds: Funds) {
-  const gateway = get(funds.symbol)
+export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
+  const gateway = gateways().get(funds.symbol)
   let receipt: IWithdrawalReceipt | null
   try {
     receipt = await gateway.withdrawalReceipt()
@@ -173,7 +202,8 @@ export async function refreshPendingReceipt(
   context: ActionContext,
   symbol: string,
 ) {
-  const receipt = await get(symbol).withdrawalReceipt()
+  const gateway = gateways().get(symbol)
+  const receipt = await gateway.withdrawalReceipt()
   context.state.withdrawalReceipts[symbol] = receipt
   return receipt
 }

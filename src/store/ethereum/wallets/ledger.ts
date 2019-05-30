@@ -16,6 +16,7 @@ import { Provider, Web3Provider } from "ethers/providers"
 // import blockies from "ethereum-blockies"
 import { merge, range } from "rxjs"
 import { mergeMap, tap } from "rxjs/operators"
+import { provider } from "web3-providers"
 
 export const LedgerAdapter: any & WalletType & MultiAccountWallet = {
   id: "ledger",
@@ -119,9 +120,9 @@ class LedgerWalletType implements WalletType, MultiAccountWallet {
     return this._transport
   }
 
-  async createProvider(): Promise<Web3Provider> {
-    const ethersProvider = new Web3Provider(this._provider)
-    return ethersProvider
+  async createProvider(): Promise<provider> {
+    // const ethersProvider = new Web3Provider(this._provider)
+    return this._provider
   }
   get derivationPaths() {
     return [

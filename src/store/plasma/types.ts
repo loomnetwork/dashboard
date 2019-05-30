@@ -3,11 +3,12 @@ import BN from "bn.js"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
-import Contract from "web3/eth/contract"
+import { Contract } from "web3-eth-contract"
 import Web3 from "web3"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
+import { DashboardState } from "@/types"
 
 export interface HasPlasmaState {
   plasma: PlasmaState
@@ -25,32 +26,32 @@ export interface PlasmaState {
   signer: PlasmaSigner | null
 
   appId: {
-    private: string;
-    public: string;
-    address: string;
+    private: string
+    public: string
+    address: string,
   }
 
   coins: {
-    loom: BalanceInfo;
-    [tokenSymbol: string]: BalanceInfo;
+    loom: BalanceInfo
+    [tokenSymbol: string]: BalanceInfo,
   }
 
   packsContract: {
-    [name: string]: Contract;
+    [name: string]: Contract,
   }
   cardContract: MigratedZBGCard | null
   cardBalance: CardDetail[]
   packBalance: PackDetail[]
   cardToTransferSelected: CardDetail | null
   allCardsToTransferSelected: {
-    edition: string;
-    cards: CardDetail[];
-    amount: number;
+    edition: string
+    cards: CardDetail[]
+    amount: number,
   }
 
   packToTransferSelected: null | {
-    type: string;
-    amount: number;
+    type: string
+    amount: number,
   }
 }
 
@@ -100,7 +101,7 @@ export interface CardDetail {
 }
 
 // helper/shorthand for plasma module action context
-export declare type ActionContext = BareActionContext<
+export declare type PlasmaContext = BareActionContext<
   PlasmaState,
   HasPlasmaState
 >

@@ -6,7 +6,7 @@ import {
 } from "./walletUtils"
 import ethUtil from "ethereumjs-util"
 import ethTx from "ethereumjs-tx"
-import web3 from "web3"
+import { toChecksumAddress } from "web3-utils"
 
 class WalletInterface {
   identifier: string
@@ -68,7 +68,7 @@ class WalletInterface {
 
   getChecksumAddressString() {
     const address = this.getAddressString()
-    return web3.utils.toChecksumAddress(address)
+    return toChecksumAddress(address)
   }
   signTransaction(txParams, signer) {
     if (this.isPubOnly && typeof signer !== "function") {

@@ -131,10 +131,7 @@ const defaultState = () => {
   } as DposState
 }
 
-const builder = getStoreBuilder<DashboardState>().module(
-  "DPOS",
-  defaultState(),
-)
+const builder = getStoreBuilder<DashboardState>().module("DPOS", defaultState())
 const stateGetter = builder.state()
 
 export const DPOSTypedStore = {
@@ -739,10 +736,7 @@ async function ensureIdentityMappingExists(
     metamaskAddress = ctx.rootState.DPOS.currentMetamaskAddress.toLowerCase()
   }
 
-  const client = createClient(
-    ctx.state,
-    ctx.rootState.DPOS.dashboardPrivateKey,
-  )
+  const client = createClient(ctx.state, ctx.rootState.DPOS.dashboardPrivateKey)
   DPOSTypedStore.setClient(client)
 
   try {
@@ -1090,16 +1084,16 @@ async function approveAsync(ctx: Context, payload) {
 }
 
 export function registerWeb3(ctx: Context, payload: { web3: Web3 }) {
-  try {
-    DPOSTypedStore.setWeb3(payload.web3)
-    // these are filled on yarn serve/build
-    ctx.state.GatewayInstance = new payload.web3.eth.Contract(
-      GatewayJSON.abi,
-      GW_ADDRESS || ctx.state.currentChain.gatewayAddress,
-    )
-  } catch (err) {
-    console.error(err)
-  }
+  // try {
+  //   DPOSTypedStore.setWeb3(payload.web3)
+  //   // these are filled on yarn serve/build
+  //   ctx.state.GatewayInstance = new payload.web3.eth.Contract(
+  //     GatewayJSON.abi,
+  //     GW_ADDRESS || ctx.state.currentChain.gatewayAddress,
+  //   )
+  // } catch (err) {
+  //   console.error(err)
+  // }
 }
 
 function createClient(state, privateKeyString) {

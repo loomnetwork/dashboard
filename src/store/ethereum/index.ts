@@ -10,26 +10,27 @@ import { EthereumState, HasEthereumState, WalletType } from "./types"
 
 import * as mutations from "./mutations"
 
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { timer } from "rxjs"
 import BN from "bn.js"
 import { BareActionContext } from "vuex-typex"
 import { TransferRequest } from "../plasma/types"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { LedgerAdapter } from "./wallets/ledger"
-import { JsonRpcProvider } from "ethers/providers"
+import { JsonRpcProvider, Web3Provider } from "ethers/providers"
 import debug from "debug"
 import { ParamType } from "ethers/utils"
-import { Contract, ContractTransaction } from "ethers"
+import { Contract, ContractTransaction, ethers } from "ethers"
 
 const log = debug("dboard.ethereum")
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
-const ERC20ABIs: ParamType[] = require("loom-js/dist/mainnet-contracts/ERC20.json")
 import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import { stat } from "fs"
 import { state } from "../common"
+import Web3 from "web3"
+import { Providers } from "web3-core"
 
 const ZERO = new BN("0")
 
@@ -66,6 +67,10 @@ const initialState: EthereumState = {
   },
 }
 
+// web3 instance
+// @ see
+let web3: Web3
+
 const builder = getStoreBuilder<HasEthereumState>().module(
   "ethereum",
   initialState,
@@ -83,6 +88,10 @@ function requireValue<T>(v: T | null | undefined, errorMessage: string): T {
 export const ethereumModule = {
   get state() {
     return stateGetter()
+  },
+
+  get web3() {
+    return web3
   },
 
   getERC20,
@@ -116,10 +125,13 @@ async function setWalletType(context: ActionContext, walletType: string) {
   if (wallet.isMultiAccount === false) {
     wallet
       .createProvider()
-      .then((provider) => {
-        context.state.provider = provider
-        log("provider", provider)
-        return provider.getSigner()
+      .then((web3provider) => {
+        // context.state.provider = web3provider
+        web3 = new Web3(web3provider)
+        log("web3 provider", web3provider)
+        // we need an ethers signer for eth signer.
+        // @ts-ignore
+        return new ethers.providers.Web3Provider(web3provider).getSigner()
       })
       .then((signer) => {
         context.state.signer = signer
@@ -143,22 +155,25 @@ async function setWalletType(context: ActionContext, walletType: string) {
  * @param tokenAmount
  */
 export function refreshBalance(context: ActionContext, symbol: string) {
-  const contract = requireValue(
-    erc20Contracts.get(symbol),
-    "No contract found",
-  )
+  const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
   const coinState = context.state.coins[symbol]
   coinState.loading = true
-  return contract.functions
-    .balanceOf(context.state.address)
-    .then((ethersBN) => {
-      log("balanceOf %s %s ", symbol, ethersBN.toString())
-      context.state.balances[symbol] = new BN(ethersBN.toString())
-      coinState.balance = new BN(ethersBN.toString())
-    })
-    .finally(() => {
-      coinState.loading = false
-    })
+  return (
+    contract.methods
+      .balanceOf(context.state.address)
+      // @ts-ignore
+      .call({
+        from: context.state.address,
+      })
+      .then((ethersBN) => {
+        log("balanceOf %s %s ", symbol, ethersBN.toString())
+        context.state.balances[symbol] = new BN(ethersBN.toString())
+        coinState.balance = new BN(ethersBN.toString())
+      })
+      .finally(() => {
+        coinState.loading = false
+      })
+  )
 }
 
 /**
@@ -172,7 +187,12 @@ export async function approve(context: ActionContext, payload: Transfer) {
     erc20Contracts.get(symbol),
     "Contract not initialized",
   )
-  await contract.functions.approve(to, weiAmount.toString())
+  await contract.methods
+    .approve(to, weiAmount.toString())
+    // @ts-ignore
+    .send({
+      from: context.state.address,
+    })
 }
 
 /**
@@ -188,7 +208,12 @@ export async function transfer(
     erc20Contracts.get(symbol),
     "Contract not initialized",
   )
-  const tx = await contract.functions.transfer(to, weiAmount.toString())
+  const tx = await contract.methods
+    .transfer(to, weiAmount.toString())
+    // @ts-ignore
+    .send({
+      from: context.state.address,
+    })
   log("transfer", tx)
   return tx
 }
@@ -202,29 +227,46 @@ export async function allowance(
     erc20Contracts.get(symbol),
     "Expected contract",
   )
-  const amount = await contract.functions.allowance(
-    context.state.address,
-    spender,
-  )
+  const amount = await contract.methods
+    .allowance(context.state.address, spender)
+    // @ts-ignore
+    .send({
+      from: context.state.address,
+    })
   return new BN(amount.toString())
 }
 
 export function initERC20(context: ActionContext, symbol: string) {
-  const provider = context.state.provider!
   const contractAddr = context.state.erc20Addresses[symbol]
-  const contract = new Contract(contractAddr, ERC20ABI, provider) as ERC20
+  const web3: Web3 = ethereumModule.web3!
+  // @ts-ignore
+  const contract = new web3.eth.Contract(ERC20ABI, contractAddr) as ERC20
   erc20Contracts.set(symbol, contract)
 
   const account = context.state.address
   // out out filters
-  const send = contract.filters.Transfer(account, null, null)
-  const receive = contract.filters.Transfer(null, account, null)
+  const send = contract.events.Transfer({
+    fromBlock: "latest",
+    filter: {
+      from: account,
+    },
+  })
+  const receive = contract.events.Transfer({
+    fromBlock: "latest",
+    filter: {
+      to: account,
+    },
+  })
+
+  // const receive = contract.filters.Transfer(null, account, null)
+  // contract.contract.on(send, refresh)
+  // contract.on(receive, refresh)
 
   const refresh = () => ethereumModule.refreshBalance(symbol)
+  send.on("data", refresh)
+  receive.on("data", refresh)
 
   ethereumModule.refreshBalance(symbol)
-  contract.on(send, refresh)
-  contract.on(receive, refresh)
 
   return contract
 }

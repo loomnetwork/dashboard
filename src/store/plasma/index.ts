@@ -11,7 +11,7 @@ import {
   CardDetail,
   PackDetail,
   HasPlasmaState,
-  ActionContext,
+  PlasmaContext,
 } from "./types"
 import { Client, Address, LocalAddress } from "loom-js"
 import BN from "bn.js"
@@ -100,7 +100,7 @@ export const plasmaModule = {
 
   // Assets
 
-  // Getters
+  // // Getters
   getCardInstance: builder.read(getters.getCardInstance),
   // Mutations
   setPacksContract: builder.commit(mutations.setPacksContract),
@@ -117,14 +117,14 @@ export const plasmaModule = {
     mutations.setPackToTransferSelected,
   ),
 
-  // Actions
+  // // Actions
   checkCardBalance: builder.dispatch(checkCardBalance),
   checkPackBalance: builder.dispatch(checkPackBalance),
   transferPacks: builder.dispatch(transferPacks),
   transferCards: builder.dispatch(transferCards),
 }
 
-async function checkCardBalance(context: ActionContext) {
+async function checkCardBalance(context: PlasmaContext) {
   const account = context.state.address
   const caller = await plasmaModule.getCallerAddress()
 
@@ -141,7 +141,7 @@ async function checkCardBalance(context: ActionContext) {
   plasmaModule.setCardBalance(cards)
 }
 
-async function checkPackBalance(context: ActionContext) {
+async function checkPackBalance(context: PlasmaContext) {
   const account = context.state.address
   const caller = await plasmaModule.getCallerAddress()
   const packs: PackDetail[] = []
@@ -173,7 +173,7 @@ function createClient(env: { chainId: string; endpoint: string }) {
  * @param id
  */
 async function changeIdentity(
-  ctx: ActionContext,
+  ctx: PlasmaContext,
   id: { signer: PlasmaSigner | null; address: string },
 ) {
   const { signer, address } = id
@@ -196,7 +196,7 @@ async function changeIdentity(
  * - otherwise use the generic address (readonly)
  * @param ctx
  */
-async function getCallerAddress(ctx: ActionContext): Promise<Address> {
+async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
   const state = ctx.state
   let caller: string
   let chainId: string = state.client.chainId
@@ -212,7 +212,7 @@ async function getCallerAddress(ctx: ActionContext): Promise<Address> {
 }
 
 async function transferPacks(
-  context: ActionContext,
+  context: PlasmaContext,
   payload: {
     packType: string
     amount: number
@@ -220,27 +220,21 @@ async function transferPacks(
   },
 ) {
   try {
-    DPOSTypedStore.setShowLoadingSpinner(true)
-    const ethAddress = await plasmaModule.getCallerAddress()
+    // DPOSTypedStore.setShowLoadingSpinner(true)
+    const ethAddress = await getCallerAddress(context)
     const result = await context.state.packsContract[payload.packType].methods
       .transfer(payload.receiver, payload.amount)
       .send({ from: ethAddress })
     console.log("transfer packs result", result)
-    // TODO: this is not working
-    CommonTypedStore.setSuccessMsg("Transferring packs success.")
-    await plasmaModule.checkPackBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
     return result
   } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    // TODO: this is not working
-    CommonTypedStore.setErrorMsg(`Error Transferring packs: ${error.message}`)
+    // DPOSTypedStore.setShowLoadingSpinner(false)
     throw error
   }
 }
 
 async function transferCards(
-  context: ActionContext,
+  context: PlasmaContext,
   payload: {
     cardIds: string[]
     amounts: number[]

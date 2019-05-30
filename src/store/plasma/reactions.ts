@@ -4,7 +4,7 @@ import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { ERC20 } from "./web3-contracts/ERC20"
 import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import Web3 from "web3"
 
@@ -12,6 +12,7 @@ import * as Tokens from "./contracts/tokens"
 import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
+import { DashboardState } from "@/types"
 
 /**
  * Vuex plugin that reacts to state changes:
@@ -21,7 +22,7 @@ import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
  *
  * @param store
  */
-export function plasmaReactions(store: Store<HasPlasmaState>) {
+export function plasmaReactions(store: Store<DashboardState>) {
   /**
    * on identity change
    * reinitialize coin contract
@@ -32,7 +33,7 @@ export function plasmaReactions(store: Store<HasPlasmaState>) {
     () => {
       if (store.state.plasma.address === "") {
         // plasmaModule.resetState()
-        Tokens.restContracts()
+        Tokens.resetContracts()
         return
       }
       createPlasmaWeb3(store)
@@ -56,7 +57,7 @@ export function plasmaReactions(store: Store<HasPlasmaState>) {
   )
 }
 
-async function resetLoomContract(store: Store<HasPlasmaState>) {
+async function resetLoomContract(store: Store<DashboardState>) {
   const state = store.state.plasma
   if (state.address === "") {
     // plasmaModule.resetState()
@@ -72,7 +73,7 @@ async function resetLoomContract(store: Store<HasPlasmaState>) {
   plasmaModule.refreshBalance("loom")
 }
 
-async function resetEthContract(store: Store<HasPlasmaState>) {
+async function resetEthContract(store: Store<DashboardState>) {
   const state = store.state.plasma
   const caller = await plasmaModule.getCallerAddress()
   const contract = await EthCoin.createAsync(state.client, caller)
@@ -84,7 +85,7 @@ async function resetEthContract(store: Store<HasPlasmaState>) {
   plasmaModule.refreshBalance("eth")
 }
 
-async function resetERC20Contracts(store: Store<HasPlasmaState>) {
+async function resetERC20Contracts(store: Store<DashboardState>) {
   const state = store.state.plasma
   // for each other token create a contract (also loomProvider)
   const tokens = [{ symbol: "", address: "" }]
@@ -101,7 +102,7 @@ async function resetERC20Contracts(store: Store<HasPlasmaState>) {
   })
 }
 
-async function createPlasmaWeb3(store: Store<HasPlasmaState>) {
+async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma
   const signer = state.signer
   if (signer === null) {
@@ -114,6 +115,7 @@ async function createPlasmaWeb3(store: Store<HasPlasmaState>) {
   const genericKey = state.appId.private
   const loomProvider = await createLoomProvider(client, signer, genericKey)
 
+  // @ts-ignore
   store.state.plasma.web3 = new Web3(loomProvider)
   store.state.plasma.ethersProvider = new Web3Provider(loomProvider)
 }

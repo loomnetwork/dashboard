@@ -8,8 +8,9 @@ import { Provider } from "ethers/providers"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { ethereumModule } from "../ethereum"
+import { DashboardState } from "@/types"
 
-export function ethGatewayPlugin(store: Store<HasGatewayState>) {
+export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
     (s) => s.ethereum.address,
     (newAddress) => gatewayModule.loadMapping(newAddress),
@@ -29,9 +30,9 @@ export function ethGatewayPlugin(store: Store<HasGatewayState>) {
 
       EthereumGateways.init(ethereumModule.web3)
       PlasmaGateways.init(
-        plasmaModule.client,
-        plasmaModule.provider,
-        mapping.from,
+        plasmaModule.state.client,
+        plasmaModule.state.web3!,
+        mapping,
       )
     },
   )

@@ -1,11 +1,10 @@
 <template>
   <b-modal id="transfer-packs-modal" ref="modalRef" title="Transfer Packs" hide-footer centered>
     <b-container fluid>
-      <h6> Pack type: {{packToTransfer.type}} </h6>
-      <h6> Your existing pack: {{packToTransfer.amount}} </h6>
+      <h6>Pack type: {{packToTransfer.type}}</h6>
+      <h6>Your existing pack: {{packToTransfer.amount}}</h6>
       Amount: (max: {{packToTransfer.amount}})
-      <b-input type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input> 
-      Receiver Loom Address:
+      <b-input type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input>Receiver Loom Address:
       <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
       <b-button type="button" @click="transferPacksHandler()">Transfer</b-button>
     </b-container>
@@ -52,7 +51,7 @@ export default class TransferPacksModal extends Vue {
     this.transferPacks({
       packType: this.packToTransfer!.type,
       amount: this.amountToTransfer,
-      destinationDappchainAddress: this.receiverAddress,
+      receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-packs-modal")
   }
@@ -60,5 +59,4 @@ export default class TransferPacksModal extends Vue {
 }
 </script>
 <style lang="scss">
-
 </style>

@@ -39,9 +39,13 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
   ) {}
 
   deposit(amount: BN) {
-    return this.contract.methods.depositERC20(
-      amount.toString(),
-      this.tokenAddress,
+    return (
+      this.contract.methods
+        .depositERC20(amount.toString(), this.tokenAddress)
+        // @ts-ignore
+        .send({
+          from: "",
+        })
     )
   }
 
@@ -158,7 +162,7 @@ class EthereumGateways {
  * @param symbol
  * @param tokenAmount
  */
-export async function deposit(context: ActionContext, funds: Funds) {
+export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const { symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
   const approvalAmount = await ethereumModule.allowance({
@@ -179,7 +183,7 @@ export async function deposit(context: ActionContext, funds: Funds) {
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-export async function withdraw(context: ActionContext, token: string) {
+export async function ethereumWithdraw(context: ActionContext, token: string) {
   const receipt = context.state.withdrawalReceipts[token]
   const gateway = service().get(token)
   if (receipt === null || receipt === undefined) {

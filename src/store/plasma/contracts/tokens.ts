@@ -1,7 +1,7 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { ERC20 } from "../web3-contracts/ERC20"
-import { ActionContext, TransferRequest, PlasmaTokenKind } from "../types"
+import { PlasmaContext, TransferRequest, PlasmaTokenKind } from "../types"
 import BN from "bn.js"
 
 import debug from "debug"
@@ -130,7 +130,7 @@ class ERC20Adapter implements ContractAdapter {
  * @param tokenAmount
  */
 export async function refreshBalance(
-  context: ActionContext,
+  context: PlasmaContext,
   tokenSymbol: string,
 ) {
   const adapter = getAdapter(tokenSymbol)
@@ -150,7 +150,7 @@ export async function refreshBalance(
  * @param payload
  */
 export async function allowance(
-  context: ActionContext,
+  context: PlasmaContext,
   payload: { token: string; spender: string },
 ) {
   const adapter = getAdapter(payload.token)
@@ -162,7 +162,7 @@ export async function allowance(
  * @param symbol
  * @param tokenAmount
  */
-export function approve(context: ActionContext, payload: TransferRequest) {
+export function approve(context: PlasmaContext, payload: TransferRequest) {
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
@@ -178,7 +178,7 @@ export function approve(context: ActionContext, payload: TransferRequest) {
  * @param symbol
  */
 export async function transfer(
-  context: ActionContext,
+  context: PlasmaContext,
   payload: TransferRequest,
 ) {
   const { symbol, weiAmount, to } = payload

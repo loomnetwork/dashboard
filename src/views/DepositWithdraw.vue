@@ -38,7 +38,11 @@
         </b-list-group-item>
       </b-list-group>
       <b-card-footer>
-        <b-button class="button" variant="primary">Add token</b-button>
+        <b-button
+          class="button"
+          variant="primary"
+          @click="addToken"
+        >Add token</b-button>
       </b-card-footer>
     </b-card>
   </main>
@@ -74,7 +78,7 @@ export default class DepositWithdraw extends Vue {
   setTokenSelected = plasmaModule.setTokenSelected
 
   // get the full list from state or somewhere else
-  symbols = ["loom", "eth"]
+  symbols = ["loom", "eth", "bnb"]
 
   filteredSymbols: string[] = []
 
@@ -103,6 +107,7 @@ export default class DepositWithdraw extends Vue {
     // - symbol matches filter  and symbol is in the state,
     this.filteredSymbols = this.symbols
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
+      console.log(this.filteredSymbols);
 
   }
 
@@ -111,12 +116,15 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestWithdraw(token: string) {
-
   }
 
   requestSwap(token: string) {
     this.setTokenSelected(token)
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
+  }
+
+  addToken(){
+    console.log("add token");
   }
 
   async ready() {

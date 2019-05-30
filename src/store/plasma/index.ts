@@ -73,6 +73,11 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
     },
+    bnb: {
+      contract: null,
+      balance: new BN("0"),
+      loading: false,
+    },
   },
   // these should go in a seperate module
   packsContract: {},
@@ -307,9 +312,11 @@ export async function refreshBalance(context: ActionContext, token: string) {
       log("updateBalance", token, coins.eth.balance)
       break
     default:
-      // const contract = getErc20Contract(token)
-      // balance = await state.erc20[symbol].functions.balanceOf(addr)
-      coins[token].balance = new BN("0")
+      const contract = coins[token].contract!
+
+      let result = await (contract as ERC20).functions.balanceOf(addr.toString())
+      console.log("result", result);
+      
   }
   coins[token].loading = false
 }

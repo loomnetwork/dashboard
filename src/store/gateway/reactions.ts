@@ -22,8 +22,12 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
     (s) => s.gateway.mapping,
     async (mapping) => {
-      if (mapping === null || mapping.to.isEmpty()) {
+      if (mapping === null) {
         // todo destroy anything that needs to be disposed of
+        return
+      }
+      if (mapping.to.isEmpty() && store.state.ethereum.signer) {
+        await gatewayModule.createMapping()
         return
       }
       await setPlasmaAccount(mapping)

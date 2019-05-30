@@ -12,18 +12,25 @@ import {
   LocalAddress,
 } from "loom-js"
 import { ethers } from "ethers"
+import { BareActionContext } from "vuex-typex"
 
-// Gateway module depoends on ethereum and plasma modules
+// Gateway module depends on ethereum and plasma modules
 export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
   gateway: GatewayState
 }
 
+/**
+ * Gateway state
+ */
 export interface GatewayState {
   mapping: IAddressMapping | null
-  loom: Gateway
-  main: Gateway
+  pendingTransactions: any[]
+  withdrawalReceipts: { [token: string]: IWithdrawalReceipt | null }
 }
 
+/**
+ *
+ */
 export class EthPlasmSigner implements PlasmaSigner {
   readonly chain = "eth"
   constructor(private signer: ethers.Signer) {}
@@ -47,9 +54,19 @@ export class EthPlasmSigner implements PlasmaSigner {
   }
 }
 
-interface Gateway {
-  pendingTransaction: any
-  pendingReceipt: IWithdrawalReceipt | null
-  unclaimedTokens: IUnclaimedToken[]
-  address: string
+export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {
+  decodedSig: {
+    valIndexes: Array<number | string>
+    vs: Array<number | string>
+    rs: Array<string | number[]>
+    ss: Array<string | number[]>,
+  }
 }
+
+/**
+ * shorhand for gateway vuex module action context
+ */
+export declare type ActionContext = BareActionContext<
+  GatewayState,
+  HasGatewayState
+>

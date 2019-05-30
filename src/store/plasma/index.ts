@@ -43,7 +43,7 @@ const log = debug("plasma")
 const initialState: PlasmaState = {
   networkId: "us1",
   chainId: "default",
-  // not state but...
+  // todo move these out of the state
   client: createClient(configs.us1),
   web3: null,
   provider: null,
@@ -80,10 +80,7 @@ const initialState: PlasmaState = {
   },
 }
 
-const builder = getStoreBuilder<HasPlasmaState>().module(
-  "plasma",
-  initialState,
-)
+const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
 
 export const plasmaModule = {
@@ -129,11 +126,12 @@ export const plasmaModule = {
 
 async function checkCardBalance(context: ActionContext) {
   const account = context.state.address
-  const caller = plasmaModule.getCallerAddress()
+  const caller = await plasmaModule.getCallerAddress()
 
   const tokens = await context.state
     .cardContract!.methods.tokensOwned(account)
-    .call({ from: caller })
+    // @ts-ignore
+    .call({ from: caller.local.toString() })
   const cards: CardDetail[] = []
   tokens.indexes.forEach((id: string, i: number) => {
     const card = getCardByTokenId(id)
@@ -216,9 +214,9 @@ async function getCallerAddress(ctx: ActionContext): Promise<Address> {
 async function transferPacks(
   context: ActionContext,
   payload: {
-    packType: string;
-    amount: number;
-    receiver: string;
+    packType: string
+    amount: number
+    receiver: string,
   },
 ) {
   try {
@@ -244,15 +242,15 @@ async function transferPacks(
 async function transferCards(
   context: ActionContext,
   payload: {
-    cardIds: string[];
-    amounts: number[];
-    receiver: string;
+    cardIds: string[]
+    amounts: number[]
+    receiver: string,
   },
 ) {
   console.log("payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
-    const callerAddr = await getCallerAddress(context)
+    const caller = await getCallerAddress(context)
     const plasmaAddress = context.state.address
     const result = await context.state
       .cardContract!.methods.batchTransferFrom(
@@ -261,7 +259,8 @@ async function transferCards(
         payload.cardIds,
         payload.amounts,
       )
-      .send({ from: callerAddr })
+      // @ts-ignore
+      .send({ from: caller })
     console.log("transfer cards result", result)
     // TODO: this is not working
     CommonTypedStore.setSuccessMsg("Transferring cards success.")
@@ -272,9 +271,4 @@ async function transferCards(
     CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
     throw error
   }
-}
-
-function getErc20Contract(symbol: string): ERC20 {
-  // @ts-ignore
-  return null
 }

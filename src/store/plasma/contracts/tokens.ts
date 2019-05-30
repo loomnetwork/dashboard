@@ -1,6 +1,6 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { ERC20 } from "../web3-contracts/ERC20"
 import { ActionContext, TransferRequest, PlasmaTokenKind } from "../types"
 import BN from "bn.js"
 
@@ -10,7 +10,7 @@ const log = debug("plasma")
 
 const contracts = new Map<string, ContractAdapter>()
 
-export function restContracts() {
+export function resetContracts() {
   contracts.clear()
 }
 
@@ -102,20 +102,23 @@ class ERC20Adapter implements ContractAdapter {
     return this.contract.address.toLocaleLowerCase()
   }
   balanceOf(account: string) {
-    return this.contract.functions
+    return this.contract.methods
       .balanceOf(account)
+      .call()
       .then((v) => new BN(v.toString()))
   }
   allowance(account: string, to: string) {
-    return this.contract.functions
+    return this.contract.methods
       .allowance(account, to)
-      .then((v) => new BN(v.toString()))
+      .call()
+      .then((v) => new BN(v))
   }
   approve(to: string, amount: BN) {
-    return this.contract.functions.approve(to, amount.toString())
+    const caller = ""
+    return this.contract.methods.approve(to, amount.toString()).send()
   }
   transfer(to: string, amount: BN) {
-    return this.contract.functions.transfer(to, amount.toString())
+    return this.contract.methods.transfer(to, amount.toString()).send()
   }
 }
 

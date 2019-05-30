@@ -4,7 +4,7 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import { PlasmaState, CardDetail, PackDetail } from "./types"
+import { PlasmaState, CardDetail, PackDetail, TierID } from "./types"
 import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types"
 import * as getters from "./getters"
@@ -15,7 +15,8 @@ import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "../plasmaPlugin"
 import { CommonTypedStore } from "../common"
 import { DPOSTypedStore } from "../dpos-old"
-import { CryptoUtils, LocalAddress } from "loom-js"
+import { CryptoUtils, LocalAddress, Contract, Address } from "loom-js"
+import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 
 const initialState: PlasmaState = {
     // not state but...
@@ -36,6 +37,8 @@ const initialState: PlasmaState = {
       cards: [],
       amount: 0,
     },
+    userDeployerWhitelist: null,
+    userDeployersAddress: [],
 }
 
 const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
@@ -63,6 +66,13 @@ export const plasmaModule = {
     setCardToTransferSelected: builder.commit(mutations.setCardToTransferSelected),
     setAllCardsToTransferSelected: builder.commit(mutations.setAllCardsToTransferSelected),
     setPackToTransferSelected: builder.commit(mutations.setPackToTransferSelected),
+
+    // developer-deploy
+    setUserDeployerWhitelist: builder.commit(mutations.setUserDeployerWhitelist),
+    setUserDeployersAddress: builder.commit(mutations.setUserDeployersAddress),
+    createUserDeployerWhitelistAsync: builder.dispatch(createUserDeployerWhitelistAsync),
+    addDeployerAsync: builder.dispatch(addDeployerAsync),
+    getDeployersAsync: builder.dispatch(getDeployersAsync),
   }
 
 async function checkCardBalance(context: ActionContext) {
@@ -177,4 +187,40 @@ async function getPublicAddressFromPrivateKeyUint8Array(context: ActionContext, 
 
 function createClient() {
     noop()
+}
+
+async function createUserDeployerWhitelistAsync(context: ActionContext) {
+  const dposUser = await context.rootState.DPOS.dposUser
+  const loomAddress = dposUser!.loomAddress
+  const account = dposUser!.loomAddress.local.toString()
+  console.log("account", account);
+  console.log("UserDeployerWhitelist.createAsync",UserDeployerWhitelist.createAsync);
+  debugger
+  const userDeployerWhitelist = await UserDeployerWhitelist.createAsync(
+    context.rootState.DPOS.client!,
+    loomAddress)
+  debugger
+  plasmaModule.setUserDeployerWhitelist(userDeployerWhitelist)
+}
+
+// TODO: update this if we have more tier
+async function addDeployerAsync(context: ActionContext, payload: {deployer: string}) {
+  const userDeployerWhitelist = context.state.userDeployerWhitelist
+  const deployAddress = new Address(
+    context.state.client!.chainId,
+    LocalAddress.fromHexString(payload.deployer),
+  )
+  const result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
+  console.log("result", result)
+  await plasmaModule.getDeployersAsync()
+}
+
+async function getDeployersAsync(context: ActionContext) {
+  const dposUser = await context.rootState.DPOS.dposUser
+  const loomAddress = dposUser!.loomAddress
+  debugger
+  const userDeployerWhitelist = context.state.userDeployerWhitelist
+  const result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
+  console.log("result", result)
+  plasmaModule.setUserDeployersAddress(result)
 }

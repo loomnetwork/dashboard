@@ -53,6 +53,7 @@ export function plasmaStorePlugin(store: Store<DashboardState>) {
             }
             // @ts-ignore
             plasmaModule.setCardContract(cardInstance)
+            await plasmaModule.createUserDeployerWhitelistAsync()
         },
     )
 }

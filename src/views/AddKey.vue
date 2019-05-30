@@ -2,6 +2,7 @@
     <div class="container mb-5">
       <!-- Deployer Public key section -->
       <h4 class="mt-3">Deployer Public Keys</h4>
+      {{userDeployersAddress}}
       <b-card v-for="pk in publicKeys" :key="pk.Hex" v-show="publicKeys.length > 0">
         <b-row>
           <b-col cols="12" sm="6">
@@ -60,6 +61,8 @@ import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { Modal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
+import { plasmaModule } from '@/store/plasma';
+import { PlasmaState } from '../store/plasma/types';
 
 @Component({
   components: {
@@ -71,11 +74,14 @@ import { CommonTypedStore } from '@/store/common';
 export default class AddKey extends Vue {
   getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
   setErrorMsg = CommonTypedStore.setErrorMsg
+  addDeployerAsync = plasmaModule.addDeployerAsync
+  getDeployersAsync = plasmaModule.getDeployersAsync
 
   isShowGenPublicKeyModal = false
   loomBalance = ""
   pubKeyType = "Hex"
   newPubKey = ""
+  deployersAddress = []
   publicKeys = [
     {
       Hex: "0x8e577b518b00831480e657d68d4683e686c9d6b2",
@@ -133,12 +139,21 @@ export default class AddKey extends Vue {
     inputKey.defaultFormat = inputKey.defaultFormat === "Base64" ? "Hex" : "Base64"
   }
 
-  addKey(tier) {
+  get state(): PlasmaState {
+    return this.$store.state
+  }
+
+  get userDeployersAddress() {
+    return this.state.userDeployersAddress
+  }
+
+  async addKey(tier) {
     if ( parseFloat(this.loomBalance) < tier.amount) {
       this.setErrorMsg("Your balance isn't enough. Please deposit first.")
       return
     }
-    alert(tier.no)
+    let result = await this.addDeployerAsync({deployer: this.newPubKey})
+    console.log("result", result);
   }
 
   showSeedPhraseModal() {
@@ -147,6 +162,7 @@ export default class AddKey extends Vue {
 
   async mounted() {
     this.loomBalance = await this.getDappchainLoomBalance()
+    await this.getDeployersAsync()
   }
 }
 </script>

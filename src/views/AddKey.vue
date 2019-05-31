@@ -2,7 +2,6 @@
     <div class="container mb-5">
       <!-- Deployer Public key section -->
       <h4 class="mt-3">Deployer Public Keys</h4>
-      {{publicKeys}}
       <b-card v-for="(pk, index) in publicKeys" :key="pk.hex" v-show="publicKeys.length > 0">
         <b-row>
           <b-col cols="12" sm="6">
@@ -74,13 +73,10 @@ import { Address } from "loom-js";
 })
 
 export default class AddKey extends Vue {
-  // getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
   setErrorMsg = CommonTypedStore.setErrorMsg
   addDeployerAsync = whiteListModule.addDeployerAsync
   getDeployersAsync = whiteListModule.getDeployersAsync
-
   isShowGenPublicKeyModal = false
-  // defaultKeyType = "hex"
   newPubKey = ""
   tierSelected: Tier | {} = {}
 
@@ -106,19 +102,7 @@ export default class AddKey extends Vue {
   }
 
   get publicKeys() {
-    let addresses = this.state.userDeployersAddress
-    let deployerAddresses: DeployerAddress[] = []
-    // @ts-ignore
-    addresses.map((address: Address) => {
-      const deployer: DeployerAddress = {
-        hex: address.local.toString(),
-        tier: 0,
-        base64: Buffer.from(address.local.toString().split("x")[1], "hex").toString("base64") ,
-        defaultFormat: "hex",
-      }
-      deployerAddresses.push(deployer)
-    })
-    return deployerAddresses
+    return this.state.userDeployersAddress
   }
 
   async addKey(tier: Tier) {

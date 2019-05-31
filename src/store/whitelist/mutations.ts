@@ -1,7 +1,7 @@
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb"
-import { WhiteListState } from "./types";
-import { Address } from 'loom-js';
+import { WhiteListState, DeployerAddress } from "./types"
+import { Address } from "loom-js";
 
 export function setUserDeployerWhitelist(
   state: WhiteListState,
@@ -12,7 +12,7 @@ export function setUserDeployerWhitelist(
 
 export function setUserDeployersAddress(
   state: WhiteListState,
-  payload: UserDeployerState[],
+  payload: DeployerAddress[],
 ) {
   state.userDeployersAddress = payload
 }

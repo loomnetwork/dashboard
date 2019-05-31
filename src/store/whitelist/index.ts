@@ -1,6 +1,6 @@
 
 import { getStoreBuilder } from "vuex-typex"
-import { WhiteListState, HasWhiteListState, Tier } from "@/store/whitelist/types"
+import { WhiteListState, HasWhiteListState, Tier, DeployerAddress } from "@/store/whitelist/types"
 import * as mutations from "./mutations"
 import { WhiteListContext } from "./types"
 import { Address, LocalAddress } from "loom-js"
@@ -137,7 +137,7 @@ async function getDeployersAsync(context: WhiteListContext) {
 */
 //
 function formatDeployersAddress(context: WhiteListContext, deployers: []) {
-  const formattedDeployersAddress: Address[] = []
+  const formattedDeployersAddress: DeployerAddress[] = []
   deployers.forEach((deployer) => {
     //  @ts-ignore
     let array = deployer.array[0]
@@ -145,7 +145,13 @@ function formatDeployersAddress(context: WhiteListContext, deployers: []) {
           array[0],
           new LocalAddress(array[1]))
     log("deployerAddress", deployerAddress)
-    formattedDeployersAddress.push(deployerAddress)
+    formattedDeployersAddress.push({
+      address: deployerAddress,
+      hex: deployerAddress.local.toString(),
+      tier: 0,
+      base64: Buffer.from(deployerAddress.local.toString().split("x")[1], "hex").toString("base64"),
+      defaultFormat: "hex",
+    })
   })
   return formattedDeployersAddress
 }

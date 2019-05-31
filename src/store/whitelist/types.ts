@@ -10,7 +10,7 @@ export interface HasWhiteListState extends HasPlasmaState {
 
 export interface WhiteListState {
   userDeployerWhitelist: UserDeployerWhitelist | null
-  userDeployersAddress: UserDeployerState[] | [],
+  userDeployersAddress: Address[] | [],
   whiteListContractAddress: Address | null,
   tiers: Tier[]
 }
@@ -21,6 +21,14 @@ export interface Tier {
     name: string,
     enabled: boolean,
 }
+
+export interface DeployerAddress {
+  address: string,
+  tier: number,
+  // base64: string,
+  // defaultFormat: "hex" | "base64"
+}
+
 // helper/shorthand for plasma module action context
 export declare type WhiteListContext = BareActionContext<
   WhiteListState,

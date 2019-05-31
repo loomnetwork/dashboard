@@ -39,7 +39,6 @@ export function setAllCardsToTransferSelected(
 }
 
 export function setUserDeployerWhitelist(state: PlasmaState, payload: UserDeployerWhitelist) {
-    debugger
     state.userDeployerWhitelist = payload
 }
 

@@ -195,11 +195,9 @@ async function createUserDeployerWhitelistAsync(context: ActionContext) {
   const account = dposUser!.loomAddress.local.toString()
   console.log("account", account);
   console.log("UserDeployerWhitelist.createAsync",UserDeployerWhitelist.createAsync);
-  debugger
   const userDeployerWhitelist = await UserDeployerWhitelist.createAsync(
     context.rootState.DPOS.client!,
     loomAddress)
-  debugger
   plasmaModule.setUserDeployerWhitelist(userDeployerWhitelist)
 }
 
@@ -218,7 +216,6 @@ async function addDeployerAsync(context: ActionContext, payload: {deployer: stri
 async function getDeployersAsync(context: ActionContext) {
   const dposUser = await context.rootState.DPOS.dposUser
   const loomAddress = dposUser!.loomAddress
-  debugger
   const userDeployerWhitelist = context.state.userDeployerWhitelist
   const result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
   console.log("result", result)

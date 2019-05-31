@@ -10,7 +10,6 @@
     "deploy:ganache": "truffle deploy --reset --network ganache",
     "format": "./node_modules/.bin/eslint --fix src",
     "import-sheet": "node import-sheet.js",
-    "postinstall": "rm -f ./node_modules/web3/index.d.ts",
     "proto": "protoc --plugin=\"protoc-gen-ts=node_modules/.bin/protoc-gen-ts\" --js_out=\"import_style=commonjs,binary:.\" --ts_out=\".\" src/components/blockExplorer/pbs/*.proto",
     "truffle:test": "truffle test --network ganache"
   },
@@ -72,7 +71,8 @@
     "vuex-router-sync": "^5.0.0",
     "vuex-typex": "^3.1.5",
     "waypoints": "^4.0.1",
-    "web3": "1.0.0-beta.36",
+    "web3": "^1.0.0-beta.55",
+    "web3-eth-contract": "^1.0.0-beta.55",
     "web3-provider-engine": "^14.1.0",
     "yarn": "^1.7.0"
   },
@@ -85,7 +85,6 @@
     "@types/debug": "^4.1.4",
     "@types/google-protobuf": "^3.2.7",
     "@types/retry": "^0.10.2",
-    "@types/web3": "^1.0.18",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-plugin-typescript": "^3.7.0",

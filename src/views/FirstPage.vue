@@ -39,9 +39,9 @@
                 </b-card>                  
               </div>   
               <div class="col-sm-12 col-md-6">
-                <b-card id="explore-button" class="wallet-selection-card text-center" @click="setWallet('explore')">
+                <b-card id="explore-button" class="wallet-selection-card text-center" @click="addressModalShow = !addressModalShow">
                   <h5>Explore</h5>
-                  <img src="../assets/metamask_logo.png">
+                  <img id="wallet-card-img-large" src="../assets/network-error-graphic.png">
                   <small>
                     Explore an account              
                   </small>
@@ -49,7 +49,13 @@
               </div>                
             </div>  
           </b-card>
-
+          
+          <b-modal v-model="addressModalShow" hide-header hide-footer>
+            <div>
+              <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
+              <b-button type="submit" @click="setExploreMode(address)" variant="primary">Submit</b-button>
+            </div>   
+          </b-modal>
 
           <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
                       v-if="!isProduction"
@@ -94,7 +100,7 @@ export default class FirstPage extends Vue {
   get $state() { return (this.$store.state as DashboardState)}
 
   setWallet = ethereumModule.setWalletType
-
+  setExploreMode = ethereumModule.setToExploreMode
   // vuex
   // setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
   // initializeDependencies = DPOSTypedStore.initializeDependencies
@@ -105,6 +111,9 @@ export default class FirstPage extends Vue {
   addChainUrl = DPOSTypedStore.addChainUrl
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus
+
+  address = ""
+  addressModalShow = false
 
   // async selectWallet(wallet) {
   //   if (wallet === "ledger") {
@@ -258,6 +267,7 @@ export default class FirstPage extends Vue {
 .wallet-provider-container {
   .wallet-selection-card {
     position: relative;
+    min-height: 220px;
     img {
       width: 72px;
       height: auto;
@@ -280,6 +290,11 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
   }
+}
+
+#wallet-card-img-large {
+  height: auto;
+  width: 96px;
 }
 
 </style>

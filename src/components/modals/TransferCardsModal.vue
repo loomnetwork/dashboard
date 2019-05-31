@@ -1,13 +1,12 @@
 <template>
   <b-modal id="transfer-cards-modal" ref="modalRef" title="Transfer Cards" hide-footer centered>
     <b-container fluid>
-      <h6> Card ID: {{cardToTransfer.id}} </h6>
-       <h6> Name: {{cardToTransfer.display_name}} </h6>
-       <h6> Variation: {{cardToTransfer.variation}} </h6>
-       <h6> Your existing card: {{cardToTransfer.amount}} </h6>
+      <h6>Card ID: {{cardToTransfer.id}}</h6>
+      <h6>Name: {{cardToTransfer.display_name}}</h6>
+      <h6>Variation: {{cardToTransfer.variation}}</h6>
+      <h6>Your existing card: {{cardToTransfer.amount}}</h6>
       Amount: (max: {{cardToTransfer.amount}})
-      <b-input type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input> 
-      Receiver Loom Address:
+      <b-input type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input>Receiver Loom Address:
       <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
       <b-button type="button" @click="transferCardsHandler()">Transfer</b-button>
     </b-container>
@@ -54,7 +53,7 @@ export default class TransferCardsModal extends Vue {
     this.transferCards({
       cardIds: [this.cardToTransfer!.id],
       amounts: [this.amountToTransfer],
-      destinationDappchainAddress: this.receiverAddress,
+      receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-cards-modal")
   }
@@ -62,5 +61,4 @@ export default class TransferCardsModal extends Vue {
 }
 </script>
 <style lang="scss">
-
 </style>

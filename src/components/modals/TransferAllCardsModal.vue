@@ -58,7 +58,7 @@ export default class TransferAllCardsModal extends Vue {
     this.transferCards({
       cardIds,
       amounts,
-      destinationDappchainAddress: this.receiverAddress,
+      receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-all-cards-modal")
   }

@@ -19,6 +19,7 @@ import { DashboardState } from "@/types"
 
 import { CommonTypedStore } from "../common"
 import configs from "@/envs"
+import networks from "@/../chain-config"
 import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
 
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"

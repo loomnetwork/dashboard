@@ -6,43 +6,44 @@ import debug from "debug"
 import BN from "bn.js"
 
 import { getStoreBuilder } from "vuex-typex"
+import { GatewayState, HasGatewayState, ActionContext } from "./types"
+import * as Mapper from "./mapper"
+import * as PlasmaGateways from "./plasma"
+import * as EthereumGateways from "./ethereum"
 
-import { Address, LocalAddress } from "loom-js"
-import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
+const log = debug("dash.gateway")
 
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { Transaction } from "ethers/utils"
-import { DashboardState } from "@/types"
-
-import * as actions from "./actions"
-import { GatewayState, HasGatewayState } from "./types"
-import { Store } from "vuex"
-
-const initialState: GatewayState = {
-    pendingReceipt: null,
-    pendingTransaction: null,
+function initialState(): GatewayState {
+  return {
+    mapping: null,
+    withdrawalReceipts: {
+      eth: null,
+      loom: null,
+    },
+    pendingTransactions: [],
+  }
 }
 
-const builder = getStoreBuilder<DashboardState>().module("gateway", initialState)
+const builder = getStoreBuilder<HasGatewayState>().module(
+  "gateway",
+  initialState(),
+)
 const stateGetter = builder.state()
 
 export const gatewayModule = {
+  get state() {
+    return stateGetter()
+  },
 
-    get state() { return stateGetter() },
+  // gateway
+  ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
+  ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
 
-    deposit: builder.dispatch(actions.deposit),
-    withdrawToGateway: builder.dispatch(actions.withdrawToGateway),
-    withdrawFromGateway: builder.dispatch(actions.withdrawFromGateway),
-    checkPendingReceipt: builder.dispatch(actions.checkPendingReceipt),
+  plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
+  refreshPendingReceipt: builder.dispatch(PlasmaGateways.refreshPendingReceipt),
+  pollReceipt: builder.dispatch(PlasmaGateways.pollReceipt),
 
-}
-
-function gatewayModulePlugin(store: Store<HasGatewayState>) {
-
-    store.watch(
-        (state) => store.state.gateway.pendingReceipt,
-        (value, old) => {
-            console.log("pending receipt")
-        },
-    )
+  // mapper
+  loadMapping: builder.dispatch(Mapper.loadMapping),
+  createMapping: builder.dispatch(Mapper.createMapping),
 }

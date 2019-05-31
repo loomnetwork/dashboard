@@ -1,5 +1,11 @@
 <template>
-  <b-modal id="transfer-all-cards-modal" ref="modalRef" title="Transfer All Cards" hide-footer centered>
+  <b-modal
+    id="transfer-all-cards-modal"
+    ref="modalRef"
+    title="Transfer All Cards"
+    hide-footer
+    centered
+  >
     <b-container fluid>
       <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
       <h6>Amount: {{cardsToTransfer.amount}}</h6>
@@ -20,13 +26,13 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from "../../store/plasma"
+import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
 
 @Component
 export default class TransferAllCardsModal extends Vue {
   receiverAddress: string = ""
-  transferCards = plasmaModule.transferCards
+  transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
   confirmCards = false
 
@@ -39,7 +45,7 @@ export default class TransferAllCardsModal extends Vue {
   }
 
   get cardsToTransfer() {
-    return this.state.plasma.allCardsToTransferSelected
+    return this.state.assets.allCardsToTransferSelected
   }
 
   transferAllCardsHandler() {
@@ -48,8 +54,8 @@ export default class TransferAllCardsModal extends Vue {
       return
     }
     const cardsToTransfer = this.cardsToTransfer.cards
-    let cardIds: string[] = []
-    let amounts: number[] = []
+    const cardIds: string[] = []
+    const amounts: number[] = []
     cardsToTransfer.map((card) => {
       cardIds.push(card.id)
       amounts.push(card.amount)
@@ -57,12 +63,9 @@ export default class TransferAllCardsModal extends Vue {
     this.transferCards({
       cardIds,
       amounts,
-      destinationDappchainAddress: this.receiverAddress,
+      receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-all-cards-modal")
   }
 }
 </script>
-<style lang="scss">
-
-</style>

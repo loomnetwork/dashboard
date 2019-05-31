@@ -2,9 +2,18 @@ import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
 import { Client, DPOSUserV3 } from "loom-js"
 import { HasGatewayState } from "./store/gateway/types"
 import { CommonState } from "./store/common/types"
-import Contract from "web3/eth/contract"
+import { Contract } from "web3-eth-contract"
+import BN from "bn.js"
+import { HasDPOSState } from "./store/dpos/types"
+import { HasEthereumState } from "./store/ethereum/types"
+import { HasPlasmaState } from "./store/plasma/types"
+import { HasAssetsState } from "./store/plasma/assets/types"
 
-export interface DashboardState extends HasGatewayState {
+export interface DashboardState
+  extends HasGatewayState,
+    HasDPOSState,
+    HasAssetsState {
+  // remove
   DPOS: DposState
   // DappChain: DappchainState
   common: CommonState
@@ -18,7 +27,7 @@ export interface UserBalance {
 }
 
 export interface DposState {
-  GatewayInstance: Contract|null
+  GatewayInstance: Contract | null
   showSigningAlert: boolean
   mappingStatus: string
   isConnectedToDappChain: boolean
@@ -97,11 +106,22 @@ export interface DposState {
 
 export interface DahboardEnvs {
   [netwotkId: string]: {
-    dappchainEndpoint: string;
-    mainnetEndpoint: string;
-    chainId: string;
-    gatewayAddress: string;
-    etherScan: string;
-    blockExplorer: string;
+    dappchainEndpoint: string
+    mainnetEndpoint: string
+    chainId: string
+    gatewayAddress: string,
   }
+}
+
+export interface Funds {
+  symbol: string
+  weiAmount: BN
+}
+
+export interface Transfer extends Funds {
+  /**
+   * destination or spender address
+   */
+  to: string
+  toName?: string
 }

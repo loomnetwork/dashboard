@@ -165,6 +165,7 @@ import { DashboardState } from "@/types"
 import TransferAllCardsModal from "@/components/modals/TransferAllCardsModal.vue"
 import TransferCardsModal from "@/components/modals/TransferCardsModal.vue"
 import { Modal } from "bootstrap-vue"
+import { assetsModule } from "../../store/plasma/assets"
 
 @Component({
   components: {
@@ -173,9 +174,9 @@ import { Modal } from "bootstrap-vue"
   },
 })
 export default class Cards extends Vue {
-  checkCardBalance = plasmaModule.checkCardBalance
-  setCardToTransferSelected = plasmaModule.setCardToTransferSelected
-  setAllCardsToTransferSelected = plasmaModule.setAllCardsToTransferSelected
+  checkCardBalance = assetsModule.checkCardBalance
+  setCardToTransferSelected = assetsModule.setCardToTransferSelected
+  setAllCardsToTransferSelected = assetsModule.setAllCardsToTransferSelected
   cards: CardDetail[] = []
   seCards: CardDetail[] = []
   leCards: CardDetail[] = []
@@ -208,15 +209,15 @@ export default class Cards extends Vue {
     {
       key: "transfer",
       label: "Transfer",
-    }
-  ];
+    },
+  ]
 
   get state(): DashboardState {
     return this.$store.state
   }
 
   get cardBalance() {
-    return this.state.plasma.cardBalance
+    return this.state.assets.cardBalance
   }
 
   async mounted() {
@@ -225,7 +226,7 @@ export default class Cards extends Vue {
   }
 
   modal(ref: string) {
-   return this.$refs[ref] as Modal
+    return this.$refs[ref] as Modal
   }
 
   openTransferCardsModal(item) {
@@ -234,7 +235,7 @@ export default class Cards extends Vue {
   }
 
   openBatchTransferCardsModal(edition, cards, amount) {
-    this.setAllCardsToTransferSelected({edition, cards, amount})
+    this.setAllCardsToTransferSelected({ edition, cards, amount })
     this.$root.$emit("bv::show::modal", "transfer-all-cards-modal")
   }
 
@@ -261,7 +262,7 @@ export default class Cards extends Vue {
     this.resetCardAmount()
     if (newUserCards.length > 0) {
       this.cards = newUserCards
-      this.cards.forEach(cd => {
+      this.cards.forEach((cd) => {
         if (cd.id.endsWith("0")) {
           this.standardEditionAmount += cd.amount
           this.seCards.push(cd)
@@ -278,10 +279,10 @@ export default class Cards extends Vue {
           this.tronEditionAmount += cd.amount
           this.teCards.push(cd)
         } else {
-          console.log("wrong card id", cd)
+          console.error("wrong card id " + cd)
         }
         this.userCardsAmount += cd.amount
-      });
+      })
     }
   }
 }

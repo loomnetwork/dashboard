@@ -13,7 +13,7 @@ export const i18n = new VueI18n({
 const loadedLocales = ["en"]
 
 export const supportedLocales = [
-  { key: "en", localizedName: "English", localizedShortName: "EN"},
+  { key: "en", localizedName: "English", localizedShortName: "EN" },
   { key: "zh", localizedName: "中文", localizedShortName: "中文" },
   { key: "es", localizedName: "Español", localizedShortName: "ES" },
   { key: "ja", localizedName: "日本語 ", localizedShortName: "日本" },

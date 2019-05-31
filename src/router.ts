@@ -1,7 +1,6 @@
 // PlasmaChain Delegators
 import Vue from "vue"
 import VueRouter from "vue-router"
-import store from "./store"
 
 import FirstPage from "./views/FirstPage.vue"
 import History from "./views/MobileHistory.vue"
@@ -13,8 +12,7 @@ import MobileAccount from "./views/MobileAccount.vue"
 import Help from "./views/Help.vue"
 import GameAssets from "./views/GameAssets.vue"
 import AddKey from "./views/AddKey.vue"
-
-import { loadLocale, isLocaleSupported } from "./i18n"
+import DepositWithdraw from "./views/DepositWithdraw.vue"
 
 Vue.use(VueRouter)
 
@@ -76,84 +74,93 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: "history",
   routes: [
+    {
+      path: "/login",
+      name: "firstPage",
+      component: FirstPage,
+    },
+    {
+      path: "/account",
+      name: "account",
+      component: MobileAccount,
+      meta: {
+        requireLogIn: true,
+        requireDeps: true,
+      },
+    },
+    {
+      path: "/history",
+      name: "history",
+      component: History,
+      meta: {
+        requireLogIn: true,
+        requireDeps: true,
+      },
+    },
+    {
+      path: "/faq",
+      name: "FAQ",
+      component: Help,
+    },
+    {
+      path: "/wallet",
+      name: "depositeWithdraw",
+      component: DepositWithdraw,
+      meta: {
+        requireLogIn: true,
+        requireDeps: true,
+      },
+    },
+    {
+      path: "/add-key",
+      name: "addKey",
+      component: AddKey,
+      meta: {
+        requireLogIn: true,
+        requireDeps: true,
+      },
+    },
 
-      {
-        path: "/login",
-        name: "firstPage",
-        component: FirstPage,
+    {
+      path: "/game-assets",
+      name: "gameAssets",
+      component: GameAssets,
+      meta: {
+        requireLogIn: true,
+        requireDeps: true,
       },
-      {
-        path: "/account",
-        name: "account",
-        component: MobileAccount,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true,
-        },
+    },
+    {
+      path: "/validators",
+      name: "validators",
+      component: ValidatorList,
+      meta: {
+        requireDeps: true,
       },
-      {
-        path: "/history",
-        name: "history",
-        component: History,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true,
-        },
+    },
+    {
+      path: "/validator/:index",
+      name: "validatorDetail",
+      component: ValidatorDetail,
+      meta: {
+        requireDeps: true,
       },
-      {
-        path: "/faq",
-        name: "FAQ",
-        component: Help,
-      },
-      {
-        path: "/game-assets",
-        name: "gameAssets",
-        component: GameAssets,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true,
-        },
-      },
-      {
-        path: "/add-key",
-        name: "addKey",
-        component: AddKey,
-        meta: {
-          requireLogIn: true,
-          requireDeps: true,
-        },
-      },
-      {
-        path: "/validators",
-        name: "validators",
-        component: ValidatorList,
-        meta: {
-          requireDeps: true,
-        },
-      },
-      {
-        path: "/validator/:index",
-        name: "validatorDetail",
-        component: ValidatorDetail,
-        meta: {
-          requireDeps: true,
-        },
-      },
-      {
-        path: "/blockexplorer",
-        name: "blockexplorer",
-        component: BlockExplorer,
-      },
-      {
-        path: "/analytics",
-        name: "analytics",
-        component: Analytics,
-      },
-      {
-        path: "/",
-        redirect: "/login",
-      },
-    ],
+    },
+    {
+      path: "/blockexplorer",
+      name: "blockexplorer",
+      component: BlockExplorer,
+    },
+    {
+      path: "/analytics",
+      name: "analytics",
+      component: Analytics,
+    },
+    {
+      path: "/",
+      redirect: "/login",
+    },
+  ],
   scrollBehavior() {
     return {
       x: 0,

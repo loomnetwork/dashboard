@@ -10,6 +10,7 @@ export interface HasDPOSState extends HasPlasmaState {
 }
 
 export interface DPOSState {
+    bootstrapNodes: string[]
     contract: DPOS3|null
     loading: {
         electionTime: boolean,
@@ -19,10 +20,18 @@ export interface DPOSState {
     }
     electionTime: Date
     validators: any[]
-    delegations: IDelegation[]
+    delegations: Delegation[]
     rewards: BN
 }
 
+/**
+ * represents the merged structures from IValidator, ICandidate and Delegations
+ */
 export interface Validator extends IValidator, ICandidate {
     totalDelegated: BN
+}
+
+export interface Delegation extends IDelegation {
+    locked: boolean
+    pending: boolean
 }

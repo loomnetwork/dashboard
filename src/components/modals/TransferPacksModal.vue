@@ -1,8 +1,8 @@
 <template>
   <b-modal id="transfer-packs-modal" ref="modalRef" title="Transfer Packs" hide-footer centered>
     <b-container fluid>
-      <h6> Pack type: {{packToTransfer.type}} </h6>
-      <h6> Your existing pack: {{packToTransfer.amount}} </h6>
+      <h6>Pack type: {{packToTransfer.type}}</h6>
+      <h6>Your existing pack: {{packToTransfer.amount}}</h6>
       Amount: (max: {{packToTransfer.amount}})
       <b-input class="my-2" type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input> 
       Receiver Loom Address:
@@ -24,15 +24,15 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from '@/store/plasma';
+import { assetsModule } from "@/store/plasma/assets"
 import { CommonTypedStore } from "@/store/common"
-import { DPOSTypedStore } from '@/store/dpos-old';
+import { DPOSTypedStore } from "@/store/dpos-old"
 
 @Component
 export default class TransferPacksModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
-  transferPacks = plasmaModule.transferPacks
+  transferPacks = assetsModule.transferPacks
   setErrorMsg = CommonTypedStore.setErrorMsg
   confirmPack = false
 
@@ -46,11 +46,11 @@ export default class TransferPacksModal extends Vue {
   }
 
   get packToTransfer() {
-    return this.state.plasma.packToTransferSelected
+    return this.state.assets.packToTransferSelected
   }
 
   transferPacksHandler() {
-    if (this.amountToTransfer > parseInt(this.packToTransfer.amount) || this.amountToTransfer%1 !== 0) {
+    if (this.amountToTransfer > parseInt(this.packToTransfer.amount, 10) || this.amountToTransfer % 1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }
@@ -59,9 +59,9 @@ export default class TransferPacksModal extends Vue {
       return
     }
     this.transferPacks({
-      packType: this.packToTransfer.type,
+      packType: this.packToTransfer!.type,
       amount: this.amountToTransfer,
-      destinationDappchainAddress: this.receiverAddress
+      receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-packs-modal")
   }
@@ -69,5 +69,4 @@ export default class TransferPacksModal extends Vue {
 }
 </script>
 <style lang="scss">
-
 </style>

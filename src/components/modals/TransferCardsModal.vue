@@ -1,10 +1,10 @@
 <template>
   <b-modal id="transfer-cards-modal" ref="modalRef" title="Transfer Cards" hide-footer centered>
     <b-container fluid>
-      <h6> Card ID: {{cardToTransfer.id}} </h6>
-       <h6> Name: {{cardToTransfer.display_name}} </h6>
-       <h6> Variation: {{cardToTransfer.variation}} </h6>
-       <h6> Your existing card: {{cardToTransfer.amount}} </h6>
+      <h6>Card ID: {{cardToTransfer.id}}</h6>
+      <h6>Name: {{cardToTransfer.display_name}}</h6>
+      <h6>Variation: {{cardToTransfer.variation}}</h6>
+      <h6>Your existing card: {{cardToTransfer.amount}}</h6>
       Amount: (max: {{cardToTransfer.amount}})
       <b-input class="my-2" type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input> 
       Receiver Loom Address:
@@ -25,15 +25,15 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from '@/store/plasma';
-import { CommonTypedStore } from "@/store/common"
-import { DPOSTypedStore } from '@/store/dpos-old';
+import { assetsModule } from "../../store/plasma/assets"
+import { CommonTypedStore } from "../../store/common"
+import { DPOSTypedStore } from "@/store/dpos-old"
 
 @Component
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
-  transferCards = plasmaModule.transferCards
+  transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
   confirmCard = false
 
@@ -47,11 +47,11 @@ export default class TransferCardsModal extends Vue {
   }
 
   get cardToTransfer() {
-    return this.state.plasma.cardToTransferSelected
+    return this.state.assets.cardToTransferSelected
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > parseInt(this.cardToTransfer.amount) || this.amountToTransfer % 1 !== 0) {
+    if (this.amountToTransfer > parseInt(this.cardToTransfer.amount, 10) || this.amountToTransfer % 1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }
@@ -60,9 +60,9 @@ export default class TransferCardsModal extends Vue {
       return
     }
     this.transferCards({
-      cardIds: [this.cardToTransfer.id],
+      cardIds: [this.cardToTransfer!.id],
       amounts: [this.amountToTransfer],
-      destinationDappchainAddress: this.receiverAddress
+      receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-cards-modal")
   }
@@ -70,5 +70,4 @@ export default class TransferCardsModal extends Vue {
 }
 </script>
 <style lang="scss">
-
 </style>

@@ -1,6 +1,22 @@
 <template>
   <div>
-    <b-button v-b-modal.modalPrevent variant="outline-primary" @click="show = !show">{{buttonLabel}}</b-button>
+    <div v-if="enableCooldown">
+      <b-button
+        v-b-modal.modalPrevent
+        variant="outline-primary"
+        :disabled="enableCooldown"
+        @click="show = !show"
+      >
+        {{ $t('views.my_account.complete_withdraw') }}
+        <b-spinner variant="primary" label="Spinning" small/>
+      </b-button>
+    </div>
+    <b-button
+      v-else
+      v-b-modal.modalPrevent
+      variant="outline-primary"
+      @click="show = !show"
+    >{{buttonLabel}}</b-button>
     <b-modal
       id="gateway-transfer"
       title="BootstrapVue"
@@ -106,53 +122,52 @@
   </div>
 </template>
 <script lang="ts">
+// @tslint-disable
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator"
-import { createNamespacedHelpers, Store } from "vuex"
-import { DashboardState } from "../types"
+import { createNamespacedHelpers } from "vuex"
 
-@Component
+const DPOSStore = createNamespacedHelpers("DPOS")
+
+@Component({
+  props: [
+    "balance",          // number
+    "transferAction",   // function (amount) => Promise<TransactionReceipt>
+    "resolveTxSuccess", // function (TransactionReceipt) => Promise<void>
+    "executionTitle",
+    "buttonLabel",
+    "enableCooldown",
+  ],
+  computed: {
+    ...DPOSStore.mapState([
+      "gatewayBusy",
+    ]),
+  },
+})
 export default class TransferStepper extends Vue {
-
-  @Prop({ required: true })
-  balance!: number
-  @Prop({ required: true })
-  transferAction!: (amount) => Promise<any>
-  @Prop({ required: true })
-  resolveTxSuccess!: (amount, tx) => Promise<any>
-  @Prop({ required: false })
-  executionTitle: string = ""
-  @Prop({ required: false })
-  buttonLabel: string = ""
-
   show = false
   errorMessage = ""
   step = 1
-  transferAmount = 1
+  transferAmount = "1"
   tx = null
   txHash = ""
   etherscanApprovalUrl = ""
   etherscanDepositUrl = ""
   // {Promise} approval/execution promise
-  approvalPromise: Promise<any> | null = null
+  approvalPromise = null
   // set to true when approvalPromise fails
   hasTransferFailed = false
   txSuccessfull = false
   // only used when resolveTxSuccess is provided
-  txSuccessPromise: Promise<any> | null = null
-  etherscanTxUrl: string = ""
+  txSuccessPromise = null
 
-  amountErrors: string[] = []
-
-  get gatewayBusy() {
-    return (this.$store as Store<DashboardState>).state.DPOS.gatewayBusy
-  }
+  amountErrors = []
 
   validateAmount() {
 
     const errors: string[] = []
     const num = parseInt("" + this.transferAmount, 10)
     const int = Math.floor(num)
-    if (!/^[1-9]\d*$/.test("" + this.transferAmount)) {
+    if (!/^[1-9]\d*$/.test(this.transferAmount)) {
       errors.push("Please enter a valid amount.")
     }
     if (int !== num) {
@@ -161,20 +176,22 @@ export default class TransferStepper extends Vue {
     if (int < 1) {
       errors.push("At least 1 loom")
     }
+    // @ts-ignore
     if (int > this.balance) {
       errors.push("Not enough funds in your account")
     }
+    // @ts-ignore
     this.amountErrors = errors
   }
 
   startTransfer() {
     console.log("initiating transfer " + this.transferAmount)
 
-    this.approvalPromise = this.transferAction(this.transferAmount)
-      .then(
-        (tx) => this.transferExecuted(tx),
-        (error) => this.transferFailed(error),
-      )
+    // @ts-ignore
+    this.approvalPromise = this.transferAction(this.transferAmount).then(
+      (tx) => this.transferExecuted(tx),
+    ).catch((error) => this.transferFailed(error))
+
     this.step = 2
   }
 
@@ -183,6 +200,7 @@ export default class TransferStepper extends Vue {
   }
 
   transferAll() {
+    // @ts-ignore
     this.transferAmount = Math.floor(this.balance)
     this.amountErrors = []
   }
@@ -192,19 +210,22 @@ export default class TransferStepper extends Vue {
       this.tx = tx
       this.txHash = tx.hash
       this.etherscanApprovalUrl = `https://etherscan.io/tx/${this.txHash}`
+      // @ts-ignore
       if (this.resolveTxSuccess) {
         // resolved of deposit
+        // @ts-ignore
         this.txSuccessPromise = this.resolveTxSuccess(this.transferAmount, tx)
-        this.txSuccessPromise.then(() => {
+        // @ts-ignore
+        this.txSuccessPromise.then((tx) => {
           this.etherscanDepositUrl = `https://etherscan.io/tx/${this.txHash}`
-          this.transferSuccessful()
-        }, console.error)
+          this.transferSuccessful(), console.error
+        })
 
       } else {
         // resolved of withdraw
-        // this will call afterWithdrawalDone() of myAccount page
-        this.$emit("withdrawalDone")
+        this.$emit("withdrawalDone") // this will call afterWithdrawalDone() of myAccount page
       }
+      this.$root.$emit("withdrawalExecuted")
       this.step = 3
     } else {
       // withdraw fail: in IF case of executeWithdrawal()
@@ -216,17 +237,16 @@ export default class TransferStepper extends Vue {
   transferFailed(error) {
     if (error.message.includes("User denied")) {
       this.errorMessage = "You rejected the transaction"
-      // this will call afterWithdrawalFailed() of myAccount page
-      this.$emit("withdrawalFailed")
+      this.$emit("witdrawalRejected")
+      this.$emit("withdrawalFailed") // this will call afterWithdrawalFailed() of myAccount page
+      // @ts-ignore
       if (this.resolveTxSuccess) {
         // set to true only deposit case, this will shoe retry button
         this.hasTransferFailed = true
       }
-    } else if (error.message.includes("signature, amount didn't get update yet") ||
-      this.resolveTxSuccess === undefined
-    ) {
-      // this will call afterWithdrawalFailed() of myAccount page
-      this.$emit("withdrawalFailed")
+      // @ts-ignore
+    } else if (error.message.includes("signature, amount didn't get update yet") || this.resolveTxSuccess === undefined) {
+      this.$emit("withdrawalFailed") // this will call afterWithdrawalFailed() of myAccount page
     } else if (error.message.includes("Ledger") || error.message.includes("U2F")) {
       this.errorMessage = "Please update your Ledger firmware AND enable Contract Data setting on your device."
       console.error("transferFailed", error)
@@ -255,10 +275,12 @@ export default class TransferStepper extends Vue {
 
   reset() {
     this.step = 1
+    // @ts-ignore
     this.transferAmount = 1
     this.hasTransferFailed = false
     this.tx = null
     this.txHash = ""
+    // @ts-ignore
     this.etherscanTxUrl = ""
     this.approvalPromise = null
     this.txSuccessPromise = null

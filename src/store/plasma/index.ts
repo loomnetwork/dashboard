@@ -1,208 +1,208 @@
 /**
- * @module dpos-dashboard.gateway
+ * @module dpos-dashboard.plasma
  */
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
 import { PlasmaState, CardDetail, PackDetail, TierID } from "./types"
 import BN from "bn.js"
-import { TokenSymbol } from "../ethereum/types"
-import * as getters from "./getters"
 import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
-import { DashboardState } from "@/types"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
-import { PACKS_NAME } from "../plasmaPlugin"
-import { CommonTypedStore } from "../common"
 import { DPOSTypedStore } from "../dpos-old"
-import { CryptoUtils, LocalAddress, Contract, Address } from "loom-js"
+import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
+import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
+import { TokenSymbol } from "../ethereum/types"
+
+import { DashboardState } from "@/types"
+
+import { CommonTypedStore } from "../common"
+import configs from "@/envs"
+import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
+
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 
-const initialState: PlasmaState = {
-    // not state but...
-    client: null,
-    balances: {
-        [TokenSymbol.LOOM]: new BN("0"),
-        [TokenSymbol.ETH]: new BN("0"),
-        [TokenSymbol.BNB]: new BN("0"),
-    },
-    packsContract: {},
-    cardContract: null,
-    cardBalance: [],
-    packBalance: [],
-    cardToTransferSelected: {},
-    packToTransferSelected: {},
-    allCardsToTransferSelected: {
-      edition: "none",
-      cards: [],
-      amount: 0,
-    },
-    userDeployerWhitelist: null,
-    userDeployersAddress: [],
-}
+// assets (make this a sepoerate module)
 
-const builder = getStoreBuilder<DashboardState>().module("plasma", initialState)
+import debug from "debug"
+
+import * as Tokens from "./tokens"
+
+const log = debug("plasma")
+
+// web3 instance to use to interact with plasma contracts
+
+const initialState: PlasmaState = {
+  networkId: "us1",
+  chainId: "default",
+  // todo move these out of the state
+  client: createClient(configs.us1),
+  web3: null,
+  provider: null,
+  ethersProvider: null,
+  signer: null,
+  address: "",
+  appId: {
+    private:
+      "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
+    public: "",
+    address: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
+  },
+  coins: {
+    loom: {
+      balance: new BN("0"),
+      loading: false,
+    },
+    eth: {
+      balance: new BN("0"),
+      loading: false,
+    },
+  },
+  userDeployerWhitelist: null,
+  userDeployersAddress: [],
+  // these should go in a seperate module
+  // packsContract: {},
+  // cardContract: null,
+  // cardBalance: [],
+  // packBalance: [],
+  // cardToTransferSelected: null,
+  // packToTransferSelected: null,
+  // allCardsToTransferSelected: {
+  //   edition: "none",
+  //   cards: [],
+  //   amount: 0,}
+}
+const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
-declare type ActionContext = BareActionContext<PlasmaState, DashboardState>
 
 export const plasmaModule = {
-    get state() { return stateGetter() },
+  get state() {
+    return stateGetter()
+  },
 
-    // Getters
-    getCardInstance: builder.read(getters.getCardInstance),
+  getAddress: builder.read(getAddress),
+  changeIdentity: builder.dispatch(changeIdentity),
+  getCallerAddress: builder.dispatch(getCallerAddress),
 
-    // actions
-    checkCardBalance: builder.dispatch(checkCardBalance),
-    checkPackBalance: builder.dispatch(checkPackBalance),
-    transferPacks: builder.dispatch(transferPacks),
-    transferCards: builder.dispatch(transferCards),
-    getPublicAddressFromPrivateKeyUint8Array: builder.dispatch(getPublicAddressFromPrivateKeyUint8Array),
+  // Coins
+  addToken: builder.dispatch(Tokens.addToken),
+  refreshBalance: builder.dispatch(Tokens.refreshBalance),
+  allowance: builder.dispatch(Tokens.allowance),
+  approve: builder.dispatch(Tokens.approve),
+  transfer: builder.dispatch(Tokens.transfer),
 
-    // mutation
-    setPacksContract: builder.commit(mutations.setPacksContract),
-    setCardContract:  builder.commit(mutations.setCardContract),
-    setCardBalance: builder.commit(mutations.setCardBalance),
-    setPackBalance: builder.commit(mutations.setPackBalance),
-    setCardToTransferSelected: builder.commit(mutations.setCardToTransferSelected),
-    setAllCardsToTransferSelected: builder.commit(mutations.setAllCardsToTransferSelected),
-    setPackToTransferSelected: builder.commit(mutations.setPackToTransferSelected),
+  // Assets
 
-    // developer-deploy
-    setUserDeployerWhitelist: builder.commit(mutations.setUserDeployerWhitelist),
-    setUserDeployersAddress: builder.commit(mutations.setUserDeployersAddress),
-    createUserDeployerWhitelistAsync: builder.dispatch(createUserDeployerWhitelistAsync),
-    addDeployerAsync: builder.dispatch(addDeployerAsync),
-    getDeployersAsync: builder.dispatch(getDeployersAsync),
-  }
+  // // Getters
+  // getCardInstance: builder.read(getters.getCardInstance),
+  // // Mutations
+  // setPacksContract: builder.commit(mutations.setPacksContract),
+  // setCardContract: builder.commit(mutations.setCardContract),
+  // setCardBalance: builder.commit(mutations.setCardBalance),
+  // setPackBalance: builder.commit(mutations.setPackBalance),
+  // setCardToTransferSelected: builder.commit(
+  //   mutations.setCardToTransferSelected,
+  // ),
+  // setAllCardsToTransferSelected: builder.commit(
+  //   mutations.setAllCardsToTransferSelected,
+  // ),
+  // setPackToTransferSelected: builder.commit(
+  //   mutations.setPackToTransferSelected,
+  // ),
+  // // Actions
+  // checkCardBalance: builde   r.dispathheckCardBalance),
+  // checkPackBalance: builder.dispatch(checkPackBalance),
+  // transferPacks: builder.dispatchtnsferPacks),
+  // ransferCards: builder.dispatch(tr ansfCards),
 
-async function checkCardBalance(context: ActionContext) {
-    const dposUser = await context.rootState.DPOS.dposUser
-    const account = dposUser!.loomAddress.local.toString()
-    const ethAddr = dposUser!.ethAddress
-    const tokens = await context.state.cardContract!.methods
-                .tokensOwned(account)
-                .call({ from: ethAddr })
-    const cards: CardDetail[] = []
-    tokens.indexes.forEach((id: string, i: number) => {
-      const card = getCardByTokenId(id)
-      card.amount = parseInt(tokens.balances[i], 10)
-      cards.push(card)
-    })
-    plasmaModule.setCardBalance(cards)
-
+  getPublicAddrePriaKeyUint8Array: builder.dispatch(
+    getPublicAddressFromPrivateKeyUint8Array,
+  ),
+  setUserDeployerWhitelist: builder.commit(mutations.setUserDeployerWhitelist),
+  setUserDeployersAddress: builder.commit(mutations.setUserDeployersAddress),
+  createUserDeployerWhitelistAsync: builder.dispatch(
+    createUserDeployerWhitelistAsync,
+  ),
+  addDeployerAsync: builder.dispatch(addDeployerAsync),
+  getDeployersAsync: builder.dispatch(getDeployersAsync),
 }
 
-async function checkPackBalance(context: ActionContext) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.local.toString()
-  const ethAddr = dposUser!.ethAddress
-  const packs: PackDetail[] = []
-  PACKS_NAME.forEach(async (type) => {
-    const amount = await context.state.packsContract[type].methods
-            .balanceOf(account)
-            .call({ from: ethAddr })
-    const pack =  {type, amount}
-    packs.push(pack)
-  })
-  plasmaModule.setPackBalance(packs)
+// getter
+function getAddress(state: PlasmaState): Address {
+  const chainId = "default" // state.chainId
+  return new Address(chainId, LocalAddress.fromHexString(state.address))
 }
 
-async function transferPacks(
-  context: ActionContext,
-  payload: {
-    packType: string,
-    amount: number,
-    destinationDappchainAddress: string}) {
-  try {
-    DPOSTypedStore.setShowLoadingSpinner(true)
-    const dposUser = await context.rootState.DPOS.dposUser
-    const ethAddress = dposUser!.ethAddress
-    const receiver = formatFromLoomAddress(payload.destinationDappchainAddress)
-    const result = await context.state.packsContract[payload.packType].methods
-    .transfer(receiver, payload.amount)
-    .send({ from: ethAddress })
-    CommonTypedStore.setSuccessMsg({
-      msg: `Transferring packs success. tx-hash: ${result.transactionHash}.`,
-      forever: true})
-    await plasmaModule.checkPackBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    return result
-  } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    const msg = plasmaErrorMessage(error.message)
-    CommonTypedStore.setErrorMsg(`Error Transferring packs: ${msg}`)
-    throw error
-  }
+function createClient(env: { chainId: string; endpoint: string }) {
+  const { writer, reader } = setupProtocolsFromEndpoint(env.endpoint)
+  return new Client(env.chainId, writer, reader)
 }
 
-async function transferCards(
-  context: ActionContext,
-  payload: {
-    cardIds: string[],
-    amounts: number[],
-    destinationDappchainAddress: string}) {
-  try {
-    DPOSTypedStore.setShowLoadingSpinner(true)
-    const dposUser = await context.rootState.DPOS.dposUser
-    const dappchainAddress = dposUser!.loomAddress.local.toString()
-    const ethAddress = dposUser!.ethAddress
-    const receiver = formatFromLoomAddress(payload.destinationDappchainAddress)
-    const result = await context.state.cardContract!.methods.batchTransferFrom(
-    dappchainAddress,
-    receiver,
-    payload.cardIds,
-    payload.amounts)
-    .send({ from: ethAddress })
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg({
-      msg: `Transferring cards success. tx-hash: ${result.transactionHash}.`,
-      forever: true})
-    await plasmaModule.checkCardBalance()
-    return result
-  } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    const msg = plasmaErrorMessage(error.message)
-    CommonTypedStore.setErrorMsg(`Error Transferring cards: ${msg}`)
-    throw error
-  }
-}
-
-function plasmaErrorMessage(errorMsg: string) {
-  if (errorMsg.includes("invalid address")) {
-    return "Invalid address. Please provide receiver's Loom address."
-  } else if (errorMsg.includes("User denied message signature")) {
-    return "Transaction was denied."
-  } else if (errorMsg.includes("invalid number value")) {
-    return "Invalid amount. Please provide amount correctly."
+/**
+ * on identify change set signer, configure client with signer middleware
+ * reinitialise loom provider and web3 for contracts
+ * @param ctx
+ * @param id
+ */
+async function changeIdentity(
+  ctx: PlasmaContext,
+  id: { signer: PlasmaSigner | null; address: string },
+) {
+  const { signer, address } = id
+  ctx.state.address = address
+  ctx.state.signer = signer
+  // add the conresponding middleware
+  if (signer === null) {
+    // reset client middleware
+    ctx.state.client.txMiddleware = []
+    // destroy loomProvider and old web3
   } else {
-    return errorMsg
+    await signer.configureClient(ctx.state.client)
   }
 }
 
-async function getPublicAddressFromPrivateKeyUint8Array(context: ActionContext, payload: { privateKey: Uint8Array }) {
-  const publicKeyUint8Array = await CryptoUtils.publicKeyFromPrivateKey(payload.privateKey)
-  const publicAddress = LocalAddress.fromPublicKey(publicKeyUint8Array).toString()
-  return publicAddress
+// getter but async so I guess it's an action according to vuex
+/**
+ * - if we have a signer use it's address (connected wallet case)
+ * - if just address, use that (explorer case, readonly)
+ * - otherwise use the generic address (readonly)
+ * @param ctx
+ */
+async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
+  const state = ctx.state
+  let caller: string
+  let chainId: string = state.client.chainId
+  if (state.signer) {
+    caller = await state.signer.getAddress()
+    chainId = state.signer.chain
+  } else if (state.address) {
+    caller = state.address
+  } else {
+    caller = state.appId.address
+  }
+  return Address.fromString(`${chainId}:${caller}`)
 }
 
-function createClient() {
-    noop()
-}
+// deploy wl
 
-async function createUserDeployerWhitelistAsync(context: ActionContext) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const loomAddress = dposUser!.loomAddress
-  const account = dposUser!.loomAddress.local.toString()
-  console.log("account", account);
-  console.log("UserDeployerWhitelist.createAsync",UserDeployerWhitelist.createAsync);
+async function createUserDeployerWhitelistAsync(context: PlasmaContext) {
+  const chainId = context.state.chainId
+  const address = context.state.address
+  const loomAddress = Address.fromString(`${chainId}:${address}`)
+  log("account", address)
   const userDeployerWhitelist = await UserDeployerWhitelist.createAsync(
-    context.rootState.DPOS.client!,
-    loomAddress)
+    context.state.client,
+    loomAddress,
+  )
   plasmaModule.setUserDeployerWhitelist(userDeployerWhitelist)
 }
 
 // TODO: update this if we have more tier
-async function addDeployerAsync(context: ActionContext, payload: {deployer: string}) {
+async function addDeployerAsync(
+  context: PlasmaContext,
+  payload: { deployer: string },
+) {
   const userDeployerWhitelist = context.state.userDeployerWhitelist
   const deployAddress = new Address(
     context.state.client!.chainId,
@@ -213,11 +213,26 @@ async function addDeployerAsync(context: ActionContext, payload: {deployer: stri
   await plasmaModule.getDeployersAsync()
 }
 
-async function getDeployersAsync(context: ActionContext) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const loomAddress = dposUser!.loomAddress
+async function getDeployersAsync(context: PlasmaContext) {
+  const chainId = context.state.chainId
+  const loomAddress = context.state.address
   const userDeployerWhitelist = context.state.userDeployerWhitelist
-  const result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
+  const result = await userDeployerWhitelist!.getDeployersAsync(
+    Address.fromString(`${chainId}:${loomAddress}`),
+  )
   console.log("result", result)
   plasmaModule.setUserDeployersAddress(result)
+}
+
+async function getPublicAddressFromPrivateKeyUint8Array(
+  context: PlasmaContext,
+  payload: { privateKey: Uint8Array },
+) {
+  const publicKeyUint8Array = await CryptoUtils.publicKeyFromPrivateKey(
+    payload.privateKey,
+  )
+  const publicAddress = LocalAddress.fromPublicKey(
+    publicKeyUint8Array,
+  ).toString()
+  return publicAddress
 }

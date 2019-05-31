@@ -3,7 +3,6 @@ import Vuex, { Store } from "vuex"
 // import { state, getters, mutations, actions } from './applicationStore'
 
 import { dposStorePlugin } from "./dposPlugin"
-import { plasmaStorePlugin } from './plasmaPlugin';
 import { LocaleStore } from "./locale"
 import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
@@ -12,21 +11,32 @@ import "./locale"
 import "./dpos-old"
 import "./common"
 import "./ethSignStore"
-import { DPOSTypedStore } from "./dpos-old"
-import { CommonStore } from "./common"
-import { EthSign } from "./ethSignStore"
+import "./ethereum"
+import "./gateway"
+import "./plasma"
+import "./dpos"
+import "./plasma/assets"
+
+import { ethereumReactions } from "./ethereum/reactions"
+import { gatewayReactions } from "./gateway/reactions"
+import { plasmaReactions } from "./plasma/reactions"
+import { dposReactions } from "./dpos/reactions"
+import { zbcardsReactions } from "@/store/plasma/assets/reactions"
 
 Vue.use(Vuex)
 
-const store = getStoreBuilder<DashboardState>().vuexStore({
-  // modules: {
-  //   //common: CommonStore,
-  //   //DappChain: DappChainStore,
-  //   //DPOS: DPOSStore,
-  //   //Locale: LocaleStore,
-  //   //EthSign: EthSignStore
-  // },
-  plugins: [dposStorePlugin, plasmaStorePlugin],
+const store: Store<DashboardState> = getStoreBuilder<
+  DashboardState
+>().vuexStore({
+  plugins: [
+    (store_) => {
+      dposStorePlugin(store_)
+      ethereumReactions(store_)
+      plasmaReactions(store_)
+      gatewayReactions(store_)
+      dposReactions(store_)
+      zbcardsReactions(store_)
+    },
+  ],
 })
-console.log(store)
 export default store

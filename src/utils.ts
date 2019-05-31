@@ -5,33 +5,33 @@ import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
 
 const unitMap = {
-  noether:      "0",
-  wei:          "1",
-  kwei:         "1000",
-  Kwei:         "1000",
-  babbage:      "1000",
-  femtoether:   "1000",
-  mwei:         "1000000",
-  Mwei:         "1000000",
-  lovelace:     "1000000",
-  picoether:    "1000000",
-  gwei:         "1000000000",
-  Gwei:         "1000000000",
-  shannon:      "1000000000",
-  nanoether:    "1000000000",
-  nano:         "1000000000",
-  szabo:        "1000000000000",
-  microether:   "1000000000000",
-  micro:        "1000000000000",
-  finney:       "1000000000000000",
-  milliether:   "1000000000000000",
-  milli:        "1000000000000000",
-  ether:        "1000000000000000000",
-  kether:       "1000000000000000000000",
-  grand:        "1000000000000000000000",
-  mether:       "1000000000000000000000000",
-  gether:       "1000000000000000000000000000",
-  tether:       "1000000000000000000000000000000",
+  noether: "0",
+  wei: "1",
+  kwei: "1000",
+  Kwei: "1000",
+  babbage: "1000",
+  femtoether: "1000",
+  mwei: "1000000",
+  Mwei: "1000000",
+  lovelace: "1000000",
+  picoether: "1000000",
+  gwei: "1000000000",
+  Gwei: "1000000000",
+  shannon: "1000000000",
+  nanoether: "1000000000",
+  nano: "1000000000",
+  szabo: "1000000000000",
+  microether: "1000000000000",
+  micro: "1000000000000",
+  finney: "1000000000000000",
+  milliether: "1000000000000000",
+  milli: "1000000000000000",
+  ether: "1000000000000000000",
+  kether: "1000000000000000000000",
+  grand: "1000000000000000000000",
+  mether: "1000000000000000000000000",
+  gether: "1000000000000000000000000000",
+  tether: "1000000000000000000000000000000",
 }
 
 export function toBigNumber(num) {
@@ -47,19 +47,25 @@ export function toBigNumber(num) {
 }
 
 export function isBigNumber(object) {
-  return (object && (object instanceof BigNumber || (object.constructor && object.constructor.name === "BigNumber")))
+  return (
+    object &&
+    (object instanceof BigNumber ||
+      (object.constructor && object.constructor.name === "BigNumber"))
+  )
 }
 
 function isString(object) {
-  return typeof object === "string" ||
-      (object && object.constructor && object.constructor.name === "String")
+  return (
+    typeof object === "string" ||
+    (object && object.constructor && object.constructor.name === "String")
+  )
 }
 
 export function getValueOfUnit(unit) {
   unit = unit ? unit.toLowerCase() : "ether"
   const unitValue = unitMap[unit]
   if (unitValue === undefined) {
-      throw new Error(`Unknown unit '${unit}'`)
+    throw new Error(`Unknown unit '${unit}'`)
   }
   return new BigNumber(unitValue, 10)
 }
@@ -76,7 +82,7 @@ export async function getNetworkType() {
   // @ts-ignore
   if (typeof window.web3 !== "undefined") {
     return new Promise((resolve) => {
-        // @ts-ignore
+      // @ts-ignore
       web3.version.getNetwork((err, netId) => {
         resolve(netId)
       })
@@ -88,9 +94,9 @@ export async function getNetworkType() {
 export function formatToCrypto(amount) {
   const conversion = new BigNumber(amount / 10 ** 18, 10)
   // show gwei if less than one
-  return conversion.lt(1) && conversion.gt(0) ?
-    conversion.toFormat(9) :
-    conversion.toFormat(2)
+  return conversion.lt(1) && conversion.gt(0)
+    ? conversion.toFormat(9)
+    : conversion.toFormat(2)
 }
 
 export const DOMAIN_NETWORK_ID = {
@@ -112,41 +118,43 @@ const capitalize = (s) => {
 }
 
 export const simpleMutations = (stateName) => ({
-  [`set${capitalize(stateName)}`]: (state, payload) => (state[stateName] = payload),
+  [`set${capitalize(stateName)}`]: (state, payload) =>
+    (state[stateName] = payload),
 })
 
 export const buildMutationsFromState = (state) =>
   Object.assign({}, ...Object.keys(state).map((name) => simpleMutations(name)))
 
 export function dynamicSort(property) {
-    let sortOrder = 1
-    if (property[0] === "-") {
-        sortOrder = -1
-        property = property.substr(1)
-    }
-    return (a, b) => {
-      const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0
-      return result * sortOrder
-    }
+  let sortOrder = 1
+  if (property[0] === "-") {
+    sortOrder = -1
+    property = property.substr(1)
   }
+  return (a, b) => {
+    const result =
+      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0
+    return result * sortOrder
+  }
+}
 
 export function getCardByTokenId(id: string) {
-    let cardDetail = CardDetails[id]
-    let card
-    if (!cardDetail) {
-      cardDetail = defaultCardData
-      card = Object.assign({}, cardDetail)
-    } else {
-      card = Object.assign(
-        {},
-        defaultCardData,
-        Cards.cards.find((cd) => parseInt(cd.mould_type, 10) === cardDetail.mouldId),
-      )
-      const variation = cardDetail.variant.replace("-edition", "")
-      card.variation = variation === "backers" ? "backer" : variation
-    }
-    card.id = id
-    return card
+  let cardDetail = CardDetails[id]
+  let card
+  if (!cardDetail) {
+    cardDetail = defaultCardData
+    card = Object.assign({}, cardDetail)
+  } else {
+    card = Object.assign(
+      {},
+      defaultCardData,
+      Cards.cards.find((cd) => parseInt(cd.mould_type, 10) === cardDetail.mouldId),
+    )
+    const variation = cardDetail.variant.replace("-edition", "")
+    card.variation = variation === "backers" ? "backer" : variation
+  }
+  card.id = id
+  return card
 }
 
 export const defaultCardData = {
@@ -166,17 +174,24 @@ export const defaultCardData = {
 }
 
 export function formatToLoomAddress(address: string) {
-    if (address.slice(0, 2) === "0x") {
-        return address.replace("0x", "loom")
-    } else {
-        return address
-    }
+  if (address.slice(0, 2) === "0x") {
+    return address.replace("0x", "loom")
+  } else {
+    return address
+  }
 }
 
 export function formatFromLoomAddress(address: string) {
   if (address.slice(0, 4) === "loom") {
-      return address.replace("loom", "0x")
+    return address.replace("loom", "0x")
   } else {
-      return address
+    return address
   }
+}
+
+export function getRequired<T>(value: T | null | undefined, name: string): T {
+  if (value === null || value === undefined) {
+    throw new Error("Value required but was null " + name)
+  }
+  return value
 }

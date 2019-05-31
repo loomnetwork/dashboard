@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
-        <Account/>
-        <Packs/>
-        <Cards/>
-    </div>
+  <div class="container">
+    <Account/>
+    <Packs/>
+    <Cards/>
+  </div>
 </template>
 
 <script lang="ts">

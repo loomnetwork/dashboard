@@ -36,7 +36,8 @@
             no-close-on-backdrop
           >{{ $t('components.layout.already_mapped') }}</b-modal>
           <transition name="page" mode="out-in">
-            <router-view></router-view>
+          <router-view></router-view>
+          <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
           </transition>
         </div>
       </div>
@@ -99,7 +100,7 @@ import { DPOSTypedStore } from "../store/dpos-old"
 })
 export default class Layout extends Vue {
 
-  //get $state() { return (this.$store.state as DashboardState) }
+  // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
 
   get userIsLoggedIn() { return this.s.common.userIsLoggedIn }
@@ -193,11 +194,13 @@ export default class Layout extends Vue {
         if (window.resolvingMismatchedReceipt) {
           return
         }
+
         if (this.currentMetamaskAddress &&
-          this.currentMetamaskAddress !== accounts[0]) {
-          this.metamaskChangeAlert = true
-          // @ts-ignore
-          window.ethereum.removeAllListeners()
+          this.currentMetamaskAddress !== accounts[0] ) {
+                localStorage.removeItem("lastWithdrawTime")
+                this.metamaskChangeAlert = true
+                // @ts-ignore
+                window.ethereum.removeAllListeners()
         }
 
       })

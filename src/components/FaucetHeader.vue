@@ -16,8 +16,8 @@
       <nav class="navbar">
         <div class="container-fluid">
           <router-link to="/account" class="navbar-brand">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'"/> Plasmachain          
-          </router-link>          
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>Plasmachain
+          </router-link>
           <form class="form-inline">
             <LangSwitcher/>
           </form>
@@ -28,14 +28,10 @@
     <div class="d-sm-block d-md-none">
       <nav class="mobile-navbar">
         <b-navbar toggleable="md" type="dark">
-          <div class="container d-flex justify-content-between ensure-padded">        
-
+          <div class="container d-flex justify-content-between ensure-padded">
             <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
-              <strong>
-                Back
-              </strong>
+              <strong>Back</strong>
             </a>
-
 
             <b-navbar-brand href="#">
               <loom-icon :color="'#ffffff'"/>
@@ -43,10 +39,8 @@
 
             <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
             <b-collapse is-nav id="nav_collapse">
-
               <!-- Right aligned nav items -->
               <b-navbar-nav class="mobile-nav ml-auto">
-                
                 <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <router-link to="/account" class="router text-light hover-warning">Account</router-link>
@@ -65,9 +59,12 @@
                 <div v-if="isMobile">
                   <b-nav-item>
                     <h5>
-                      <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+                      <router-link
+                        to="/blockexplorer"
+                        class="router text-light hover-warning"
+                      >Block Explorer</router-link>
                     </h5>
-                  </b-nav-item>              
+                  </b-nav-item>
                 </div>
                 <LangSwitcher/>
                 <b-nav-item v-if="state.common.userIsLoggedIn">
@@ -76,12 +73,11 @@
                   </h5>
                 </b-nav-item>
               </b-navbar-nav>
-            </b-collapse>        
+            </b-collapse>
           </div>
-        </b-navbar> 
-      </nav>      
+        </b-navbar>
+      </nav>
     </div>
-
   </div>
 </template>
 
@@ -143,7 +139,6 @@ export default class FaucetHeader extends Vue {
   get state(): DashboardState {
     return this.$store.state
   }
-
 
   setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
   setMappingError = DPOSTypedStore.setMappingError
@@ -236,7 +231,6 @@ export default class FaucetHeader extends Vue {
 }
 </script>
 <style lang="scss">
-
 .navbar {
   background: #5756e6;
   .navbar-brand {
@@ -244,10 +238,14 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-.mobile-navbar {  
+.mobile-navbar {
   .navbar {
     padding: 0;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
+    background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.13)
+    );
     width: 100%;
     .navbar-brand {
       position: absolute;
@@ -259,7 +257,6 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-
 .rmv-margin {
   margin: 0;
 }
@@ -267,7 +264,7 @@ export default class FaucetHeader extends Vue {
 .refresh-icon {
   color: #6eb1ff;
   &:hover {
-    transform:rotate(360deg);
+    transform: rotate(360deg);
     transition: all 0.5s;
   }
 }
@@ -279,7 +276,7 @@ export default class FaucetHeader extends Vue {
   margin-right: auto;
 }
 
-.sign-out-link {  
+.sign-out-link {
   color: #007bff !important;
 }
 
@@ -300,7 +297,7 @@ a.hover-warning:hover {
 
 .custom-alert {
   position: absolute;
-  width: 100%;  
+  width: 100%;
   font-weight: 600;
   margin-bottom: 0px;
   border: 0px;
@@ -366,7 +363,7 @@ a.hover-warning:hover {
   position: relative;
   right: 0px;
   margin-left: auto;
-  padding-right: 0;  
+  padding-right: 0;
 }
 
 .mobile-nav {
@@ -378,7 +375,7 @@ a.hover-warning:hover {
   }
   li {
     list-style: none;
-  } 
+  }
 }
 
 .back-btn {
@@ -386,10 +383,5 @@ a.hover-warning:hover {
     color: #ffffff;
   }
 }
-
 </style>
 
-  // form {
-  //   flex-direction: column;
-  //   align-items: normal;    
-  // }

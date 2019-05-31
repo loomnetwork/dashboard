@@ -1,6 +1,8 @@
 <template>
   <main class="validator">
-    <loading-spinner v-if="!finished" :showBackdrop="true"></loading-spinner>
+    <!--
+    <loading-spinner v-if="loading" :showBackdrop="true"></loading-spinner>
+    -->
     <header>
       <h1><router-link to="../validators" style="color: inherit;">{{ $t('views.validator_list.validators') }}</router-link></h1>
     </header>
@@ -37,31 +39,33 @@
               <dd>{{delegation.updateAmount | tokenAmount}}</dd>
               <dt>{{ $t('views.validator_detail.timelock_tier') }}</dt>
               <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
+              <template v-if="delegation.lockTime > 0">
               <dt>Unlock time</dt>
               <dd>{{delegation.lockTime | date('seconds')}}</dd>
+              </template>
             </dl>
             <footer class="actions">
               <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1"
+                <b-button variant="outline-primary" :disabled="delegation.pending"
                   @click="openRedelegateModal(delegation)"
                 >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="delegation.state !== 1 || delegation.locked"
+                <b-button variant="outline-primary" :disabled="delegation.pending || delegation.locked"
                   @click="openRequestUnbondModal(delegation)"
                 >{{ $t('Undelegate') }}</b-button>
               </b-button-group>
             </footer>
           </b-list-group-item>
       </b-list-group>
-      <p v-if="!validatorDelegations.length && !isBootstrap" class="no-stakes">
+      <p v-if="!validatorDelegations.length && !validator.isBootstrap" class="no-stakes">
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
       </p>
 
-      <div class="button-container">
+      <div class="button-container" v-if="!isBootstrap">
         <b-button class="stake mr-3" 
           @click="openRequestDelegateModal()">
           {{ $t("Stake tokens") }}
         </b-button>
-        <b-button class="consolidate" v-if="multipleUnlockedStakes && false"
+        <b-button class="consolidate" v-if="canConsolidate"
           @click="consolidateDelegations(validator)">
           {{ $t("views.validator_detail.consolidate") }}
         </b-button>
@@ -81,10 +85,12 @@ import LoadingSpinner from "../components/LoadingSpinner.vue"
 import SuccessModal from "../components/modals/SuccessModal.vue"
 import RedelegateModal from "../components/modals/RedelegateModal.vue"
 import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
-import { formatToCrypto } from "@/utils"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { Modal } from "bootstrap-vue"
+import { dposModule } from "../store/dpos"
+import { HasDPOSState } from "../store/dpos/types"
+import { Delegation } from "@/store/dpos/types"
 
 @Component({
   components: {
@@ -97,53 +103,28 @@ import { Modal } from "bootstrap-vue"
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
   prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
-  fields = [
-    { key: "Status" },
-    { key: "personalStake", label: "Validator Personal Stake"},
-    { key: "delegatedStake", label: "Delegators Stake"},
-    { key: "totalStaked", label: "Total Staked"},
-    // { key: 'votingPower', label: 'Reward Power'},
-    { key: "Fees", sortable: false },
-  ]
-  validatorName = ""
 
   hasDelegation = false
 
   finished = false
 
-  locktime = 0
-
-  unlockTime = {
-    seconds: 0,
-  }
-
-  lockTimeTiers = [
-    "2 weeks",
-    "3 months",
-    "6 months",
-    "1 year",
-  ]
-
   lockDays = [14, 90, 180, 365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
-  setErrorMsg = CommonTypedStore.setErrorMsg
-
-  setSuccess = CommonTypedStore.setSuccess
-
   consolidateDelegations = DPOSTypedStore.consolidateDelegations
 
-  async beforeMount() {
-    this.validatorName = this.$route.params.index
+  get state(): HasDPOSState {
+    return this.$store.state
+  }
+  get validatorName() {
+    return this.$route.params.index
   }
 
-  get userIsLoggedIn() { return CommonTypedStore.state.userIsLoggedIn}
-
-  get validators() {return DPOSTypedStore.state.validators}
+  get userIsLoggedIn() { return this.state.plasma.address !== ""}
 
   get validator() {
-    const validator = this.validators.find((v) => v.name === this.validatorName)
+    const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
     // todo add state.loadingValidators:boolean
     if (validator === undefined) {
       this.$router.push("../validators")
@@ -154,20 +135,12 @@ export default class ValidatorDetail extends Vue {
   get validatorDelegations() {
     const validator = this.validator
     if (!this.validator) return []
-    return this.delegations
-      .filter((d) => d.validatorStr === validator.address && d.index > 0)
+    return this.state.dpos.delegations
+      .filter((d) => d.validator.local.toString() === validator.address && d.index > 0)
       .map((d) => {
-        d.locked = parseInt(d.lockTime, 10) * 1000 > Date.now()
+        d.locked = d.lockTime * 1000 > Date.now()
         return d
       })
-  }
-
-  get delegations() {
-    return DPOSTypedStore.state.delegations
-  }
-
-  async mounted() {
-    this.finished = true
   }
 
   async delegateHandler() {
@@ -181,25 +154,19 @@ export default class ValidatorDetail extends Vue {
     this.$refs.address.select()
     const successful = document.execCommand("copy")
     if (successful) {
-        this.setSuccess("Address copied to clipboard")
+        CommonTypedStore.setSuccess("Address copied to clipboard")
     } else {
-        this.setSuccess("Somehow copy  didn't work...sorry")
+        CommonTypedStore.setSuccess("Somehow copy  didn't work...sorry")
     }
   }
 
-  get multipleUnlockedStakes() {
-    // dev only. remove "true" on production
-    return true || this.delegations.filter((d) => d.unlocked).length > 1
+  get canConsolidate() {
+    return 0 < this.state.dpos.delegations.filter((d) => !d.locked).length
   }
 
   async redelegateHandler() {
     // plugin listens to actions and refreshes accordingly
     return false
-    this.$root.$emit("refreshBalances")
-  }
-
-  get isBootstrap() {
-    return this.prohibitedNodes.includes(this.validator.name)
   }
 
   openRequestDelegateModal() {
@@ -207,21 +174,12 @@ export default class ValidatorDetail extends Vue {
     this.$refs.delegateModalRef.show(this.validator.address, "")
   }
 
-  openRequestDelegationUpdateModal(delegation) {
-    // @ts-ignore
-    this.$refs.delegateModalRef.show(
-      this.validator.address,
-      "",
-      0, // formatToCrypto(delegation.amount),
-      delegation.lockTimeTier)
-  }
-
-  openRequestUnbondModal(delegation) {
+  openRequestUnbondModal(delegation: Delegation) {
     // @ts-ignore
     this.modal("delegateModalRef").show(this.validator.address, "unbond", 0, 0, delegation)
   }
 
-  openRedelegateModal(delegation) {
+  openRedelegateModal(delegation: Delegation) {
     // @ts-ignore
     this.modal("redelegateModalRef").show(delegation)
   }

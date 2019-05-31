@@ -8,11 +8,13 @@ import { ERC20 } from "./web3-contracts/ERC20"
 import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import Web3 from "web3"
 
-import * as Tokens from "./contracts/tokens"
+import * as Tokens from "./tokens"
 import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
+
+import TOKENS from "@/data/topTokensSymbol.json"
 
 /**
  * Vuex plugin that reacts to state changes:
@@ -75,15 +77,20 @@ async function resetEthContract(store: Store<DashboardState>) {
 async function resetERC20Contracts(store: Store<DashboardState>) {
   const state = store.state.plasma
   // for each other token create a contract (also loomProvider)
-  const tokens = [{ symbol: "", address: "" }]
+  const tokens = TOKENS.tokens.slice(0, 4)
   const provider = state.ethersProvider!
-  const Contract = state.web3!.eth.Contract
-  tokens.forEach(async ({ symbol, address }) => {
-    state.coins[symbol] = {
+  const web3 = state.web3!
+  const network = state.networkId
+  tokens.forEach(async (tokenInfo) => {
+    const address = tokenInfo.address[network]
+    const symbol = tokenInfo.symbol
+    state.coins[tokenInfo.symbol] = {
+      decimals: tokenInfo.decimal,
       balance: new BN("0"),
       loading: true,
     }
-    const contract = new ethers.Contract(address, ERC20abi, provider) as ERC20
+    // @ts-ignore
+    const contract = new web3.eth.Contract(address, ERC20abi, provider) as ERC20
     await Tokens.addContract(symbol, PlasmaTokenKind.ERC20, contract)
     plasmaModule.refreshBalance(symbol)
   })
@@ -96,9 +103,10 @@ async function createPlasmaWeb3(store: Store<DashboardState>) {
   // LoomProvider reaquires "plasma" private key (for now)
   // So we give it our default/generic app key
   const genericKey = state.appId.private
-  const loomProvider = (signer === null) ?
-    await createSimpleLoomProvider(client, genericKey) :
-    await createLoomProvider(client, signer, genericKey)
+  const loomProvider =
+    signer === null
+      ? await createSimpleLoomProvider(client, genericKey)
+      : await createLoomProvider(client, signer, genericKey)
   // @ts-ignore
   store.state.plasma.web3 = new Web3(loomProvider)
   store.state.plasma.ethersProvider = new Web3Provider(loomProvider)
@@ -133,10 +141,7 @@ async function createLoomProvider(
   return loomProvider
 }
 
-async function createSimpleLoomProvider(
-  client: Client,
-  strDummyKey: string,
-) {
+async function createSimpleLoomProvider(client: Client, strDummyKey: string) {
   const dummyKey = CryptoUtils.B64ToUint8Array(strDummyKey)
   const publicKey = publicKeyFromPrivateKey(dummyKey)
   const dummyAccount = LocalAddress.fromPublicKey(publicKey).toString()

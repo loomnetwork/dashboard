@@ -2,42 +2,43 @@ import { PlasmaState, CardDetail, PackDetail } from "../types"
 import { Contract } from "web3-eth-contract"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 import { BoosterPack } from "./web3-contracts/BoosterPack"
+import { AssetsState } from "./types"
 
 export function setPacksContract(
-  state: PlasmaState,
+  state: AssetsState,
   payload: { name: string; contract: Contract },
 ) {
   state.packsContract[payload.name] = payload.contract
 }
 
-export function setCardContract(state: PlasmaState, payload: MigratedZBGCard) {
+export function setCardContract(state: AssetsState, payload: MigratedZBGCard) {
   state.cardContract = payload
 }
 
-export function setCardBalance(state: PlasmaState, payload: CardDetail[]) {
+export function setCardBalance(state: AssetsState, payload: CardDetail[]) {
   state.cardBalance = payload
 }
 
-export function setPackBalance(state: PlasmaState, payload: PackDetail[]) {
+export function setPackBalance(state: AssetsState, payload: PackDetail[]) {
   state.packBalance = payload
 }
 
 export function setCardToTransferSelected(
-  state: PlasmaState,
+  state: AssetsState,
   payload: CardDetail,
 ) {
   state.cardToTransferSelected = payload
 }
 
 export function setPackToTransferSelected(
-  state: PlasmaState,
+  state: AssetsState,
   payload: { type: string; amount: number },
 ) {
   state.packToTransferSelected = payload
 }
 
 export function setAllCardsToTransferSelected(
-  state: PlasmaState,
+  state: AssetsState,
   payload: {
     edition: string
     cards: CardDetail[]

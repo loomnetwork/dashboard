@@ -14,7 +14,7 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from "@/store/plasma"
+import { assetsModule } from "@/store/plasma/assets"
 import { CommonTypedStore } from "@/store/common"
 import { DPOSTypedStore } from "@/store/dpos-old"
 
@@ -22,7 +22,7 @@ import { DPOSTypedStore } from "@/store/dpos-old"
 export default class TransferPacksModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
-  transferPacks = plasmaModule.transferPacks
+  transferPacks = assetsModule.transferPacks
   setErrorMsg = CommonTypedStore.setErrorMsg
 
   mounted() {
@@ -35,7 +35,7 @@ export default class TransferPacksModal extends Vue {
   }
 
   get packToTransfer() {
-    return this.state.plasma.packToTransferSelected
+    return this.state.assets.packToTransferSelected
   }
 
   transferPacksHandler() {

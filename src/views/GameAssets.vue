@@ -1,21 +1,29 @@
 <template>
-    <div class="container">
-        <b-card class="mb-5">
-          <b-card-title>My Account</b-card-title>
-          <b-row>
-            <b-col cols="3">Ethereum:</b-col>
-            <b-col cols="6"><h6 class="highlight">{{ethAccount}}</h6></b-col>
-            <b-col cols="3"><router-link to="gotoEtherScan">Show in EtherScan </router-link></b-col>
-          </b-row>
-          <b-row>
-            <b-col cols="3">Loom:</b-col>
-            <b-col cols="6"><h6 class="highlight">{{dappchainAccount}}</h6></b-col>
-            <b-col cols="3"><router-link to="gotoBlockExplorer">Show in Block Explorer</router-link></b-col>
-          </b-row>
-        </b-card>
-        <Packs/>
-        <Cards/>
-    </div>
+  <div class="container">
+    <b-card class="mb-5">
+      <b-card-title>My Account</b-card-title>
+      <b-row>
+        <b-col cols="3">Ethereum:</b-col>
+        <b-col cols="6">
+          <h6 class="highlight">{{ethAccount}}</h6>
+        </b-col>
+        <b-col cols="3">
+          <router-link to="gotoEtherScan">Show in EtherScan</router-link>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col cols="3">Loom:</b-col>
+        <b-col cols="6">
+          <h6 class="highlight">{{dappchainAccount}}</h6>
+        </b-col>
+        <b-col cols="3">
+          <router-link to="gotoBlockExplorer">Show in Block Explorer</router-link>
+        </b-col>
+      </b-row>
+    </b-card>
+    <Packs/>
+    <Cards/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -45,7 +53,7 @@ export default class GameAssets extends Vue {
   }
 
   get ethAccount() {
-    return this.state.DPOS.currentMetamaskAddress
+    return this.state.ethereum.address
   }
 
   async mounted() {

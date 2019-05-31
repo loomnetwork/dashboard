@@ -16,7 +16,7 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from "../../store/plasma";
+import { assetsModule } from "../../store/plasma/assets";
 import { CommonTypedStore } from "../../store/common"
 import { DPOSTypedStore } from "@/store/dpos-old";
 
@@ -24,7 +24,7 @@ import { DPOSTypedStore } from "@/store/dpos-old";
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
-  transferCards = plasmaModule.transferCards
+  transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
 
   mounted() {
@@ -37,7 +37,7 @@ export default class TransferCardsModal extends Vue {
   }
 
   get cardToTransfer() {
-    return this.state.plasma.cardToTransferSelected
+    return this.state.assets.cardToTransferSelected
   }
 
   transferCardsHandler() {

@@ -36,23 +36,23 @@ export interface PlasmaState {
     [tokenSymbol: string]: BalanceInfo,
   }
 
-  packsContract: {
-    [name: string]: Contract,
-  }
-  cardContract: MigratedZBGCard | null
-  cardBalance: CardDetail[]
-  packBalance: PackDetail[]
-  cardToTransferSelected: CardDetail | null
-  allCardsToTransferSelected: {
-    edition: string
-    cards: CardDetail[]
-    amount: number,
-  }
+  // packsContract: {
+  //   [name: string]: Contract,
+  // }
+  // cardContract: MigratedZBGCard | null
+  // cardBalance: CardDetail[]
+  // packBalance: PackDetail[]
+  // cardToTransferSelected: CardDetail | null
+  // allCardsToTransferSelected: {
+  //   edition: string
+  //   cards: CardDetail[]
+  //   amount: number,
+  // }
 
-  packToTransferSelected: null | {
-    type: string
-    amount: number,
-  }
+  // packToTransferSelected: null | {
+  //   type: string
+  //   amount: number,
+  // }
 }
 
 export enum PlasmaTokenKind {
@@ -64,6 +64,7 @@ export enum PlasmaTokenKind {
 }
 
 export interface BalanceInfo {
+  decimals?: number
   balance: BN
   loading: boolean
 }

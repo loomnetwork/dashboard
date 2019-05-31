@@ -11,13 +11,12 @@ import "./locale"
 import "./dpos-old"
 import "./common"
 import "./ethSignStore"
-import { DPOSTypedStore } from "./dpos-old"
-import { CommonStore } from "./common"
-// import { EthSign } from "./ethSignStore"
 import "./ethereum"
 import "./gateway"
 import "./plasma"
 import "./dpos"
+import "./plasma/assets"
+
 import { ethereumReactions } from "./ethereum/reactions"
 import { gatewayReactions } from "./gateway/reactions"
 import { plasmaReactions } from "./plasma/reactions"
@@ -30,12 +29,14 @@ const store: Store<DashboardState> = getStoreBuilder<
   DashboardState
 >().vuexStore({
   plugins: [
-    dposStorePlugin,
-    ethereumReactions,
-    plasmaReactions,
-    gatewayReactions,
-    dposReactions,
-    zbcardsReactions,
+    (store_) => {
+      dposStorePlugin(store_)
+      ethereumReactions(store_)
+      plasmaReactions(store_)
+      gatewayReactions(store_)
+      dposReactions(store_)
+      zbcardsReactions(store_)
+    },
   ],
 })
 export default store

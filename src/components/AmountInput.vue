@@ -33,7 +33,7 @@ export default class AmountInput extends Vue {
   @Prop({default: true}) round!: boolean
 
   // State declaration
-  amount: any = this.value
+  amount: any = ""
   errorMsg: string = ""
 
   // Call this function when amount changed
@@ -44,19 +44,23 @@ export default class AmountInput extends Vue {
 
   // Set default amount when select another token
   @Watch("state.plasma.tokenSelected")
-  setDefaultAmount(newVal, oldVal){
-    this.amount = 0
+  setDefaultAmount(newVal, oldVal) {
+    this.amount = ""
   }
 
   validateAmount() {
+    let amount = this.amount
     if (this.round) {
-      this.amount = Math.floor(this.value)
+      amount = Math.floor(this.value)
     }
-    if (this.amount > this.max) {
-      this.errorMsg = "Invalid amount. should be less than " + this.max
+    if (!this.amount) {
+      this.errorMsg = ""
       this.$emit("isError", true)
-    } else if (this.amount < this.min) {
-      this.errorMsg = "Invalid amount. should be more than " + this.min
+    } else if (amount > this.max) {
+      this.errorMsg = `Invalid amount. should be less than ${this.max}`
+      this.$emit("isError", true)
+    } else if (amount < this.min) {
+      this.errorMsg = `Invalid amount. should be more than ${this.min}`
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""
@@ -75,6 +79,10 @@ export default class AmountInput extends Vue {
   mounted(){
     this.amount = 0
   }
+
+  get isError() {
+    return Boolean(this.errorMsg)
+  }
 }
 </script>
 
@@ -83,5 +91,10 @@ p {
   margin-top: 0.2em;
   font-size: 0.9em;
   color: red;
+}
+
+input:invalid {
+  border: 1px solid #ced4da;
+  color: #495057;
 }
 </style>

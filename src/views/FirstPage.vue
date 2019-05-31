@@ -57,12 +57,11 @@
             </div>   
           </b-modal>
 
-          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
-                      v-if="!isProduction"
-                      :allowedUrls="chainUrls"
-                      :serverUrl="networkId"
-                      @urlClicked="onUserInputUrl"
-                      @urlInput="onUserInputUrl"/>
+          <ChainSelector style="width: 250px; margin: 24px auto;"
+                         class="connection-status"
+                         v-if="!isProduction"
+                         :allowedUrls="chainUrls"
+                         :serverUrl="networkId"/>
 
 
         </div>

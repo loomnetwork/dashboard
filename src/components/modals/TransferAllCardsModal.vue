@@ -7,13 +7,18 @@
     centered
   >
     <b-container fluid>
-      <h6>
-        This will transfer all of your
-        <strong>{{cardsToTransfer.edition}}</strong> edition cards.
-      </h6>
-      <h6>Amount: {{cardsToTransfer.amount}}</h6>Receiver Loom Address:
-      <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
-      <b-button type="button" @click="transferAllCardsHandler()">Transfer All</b-button>
+      <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
+      <h6>Amount: {{cardsToTransfer.amount}}</h6>
+      Receiver Loom Address:
+      <b-input class="my-2" type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+      <b-form-checkbox class="my-2"
+        id="confirmCards"
+        v-model="confirmCards"
+        name="confirmCards"
+        v-show="receiverAddress">        
+        I confirm to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}} address.
+      </b-form-checkbox>
+      <b-button class="my-2" type="button" @click="transferAllCardsHandler()" :disabled="!receiverAddress || !confirmCards" >Transfer All</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -29,6 +34,7 @@ export default class TransferAllCardsModal extends Vue {
   receiverAddress: string = ""
   transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
+  confirmCards = false
 
   mounted() {
     this.receiverAddress = ""
@@ -47,7 +53,6 @@ export default class TransferAllCardsModal extends Vue {
       this.setErrorMsg("Invalid receiver address")
       return
     }
-    // TODO: put confirmation popup here
     const cardsToTransfer = this.cardsToTransfer.cards
     const cardIds: string[] = []
     const amounts: number[] = []

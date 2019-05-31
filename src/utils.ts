@@ -173,9 +173,21 @@ export const defaultCardData = {
   tradeable: false,
 }
 
-//
-// mapper
-//
+export function formatToLoomAddress(address: string) {
+  if (address.slice(0, 2) === "0x") {
+    return address.replace("0x", "loom")
+  } else {
+    return address
+  }
+}
+
+export function formatFromLoomAddress(address: string) {
+  if (address.slice(0, 4) === "loom") {
+    return address.replace("loom", "0x")
+  } else {
+    return address
+  }
+}
 
 export function getRequired<T>(value: T | null | undefined, name: string): T {
   if (value === null || value === undefined) {

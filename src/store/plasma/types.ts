@@ -1,6 +1,8 @@
 import BN from "bn.js"
 
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
+import { UserDeployerWhitelist } from "loom-js/dist/contracts"
+import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb"
 import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { Contract } from "web3-eth-contract"
@@ -35,6 +37,9 @@ export interface PlasmaState {
     loom: BalanceInfo
     [tokenSymbol: string]: BalanceInfo,
   }
+
+  userDeployerWhitelist: UserDeployerWhitelist | null
+  userDeployersAddress: UserDeployerState[] | []
 
   // packsContract: {
   //   [name: string]: Contract,
@@ -101,6 +106,9 @@ export interface CardDetail {
   originalID: string
 }
 
+export enum TierID {
+    DEFAULT = 0,
+}
 // helper/shorthand for plasma module action context
 export declare type PlasmaContext = BareActionContext<
   PlasmaState,

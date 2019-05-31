@@ -10,9 +10,9 @@
       :items="packs"
       :fields="packTableFields"
     >
-      <template slot="transfer" slot-scope="row">
-        <b-button type="button" @click="transferpackTo(row.item)">Transfer</b-button>
-      </template>
+    <template slot="transfer" slot-scope="row">
+      <b-button type="button" @click="transferpackTo(row.item)" :disabled="row.item.amount == '0'"> Transfer </b-button>
+    </template>
     </b-table>
   </b-card>
 </template>

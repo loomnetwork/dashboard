@@ -9,6 +9,7 @@ import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCar
 
 import debug from "debug"
 import { DashboardState } from "@/types"
+import { assetsModule } from "."
 
 const log = debug("ui.assets")
 
@@ -42,7 +43,7 @@ export function zbcardsReactions(store: Store<DashboardState>) {
         MigratedZBGCardJSON.abi,
         MigratedZBGCardJSON.networks[envName].address,
       ) as MigratedZBGCard
-      plasmaModule.setCardContract(cardInstance)
+      assetsModule.setCardContract(cardInstance)
 
       for (const pack of PACKS_NAME) {
         const packInstance = new web3.eth.Contract(
@@ -50,7 +51,7 @@ export function zbcardsReactions(store: Store<DashboardState>) {
           BoosterPackJSON.abi,
           packAddresses[envName][pack],
         )
-        plasmaModule.setPacksContract({ name: pack, contract: packInstance })
+        assetsModule.setPacksContract({ name: pack, contract: packInstance })
       }
     },
   )

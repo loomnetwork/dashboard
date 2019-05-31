@@ -56,17 +56,17 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
-import GeneratePublicKeyModal from "@/components/modals/GeneratePublicKeyModal.vue"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { Modal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
-import { plasmaModule } from '@/store/plasma';
-import { PlasmaState } from '../store/plasma/types';
+import { whiteListModule } from '@/store/whitelist';
+import { WhiteListState } from '@/store/whitelist/types';
+import { plasmaModule } from '../store/plasma';
+import { formatFromLoomAddress } from "@/utils"
 
 @Component({
   components: {
-    GeneratePublicKeyModal,
     SeedPhraseModal,
   },
 })
@@ -74,8 +74,8 @@ import { PlasmaState } from '../store/plasma/types';
 export default class AddKey extends Vue {
   getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
   setErrorMsg = CommonTypedStore.setErrorMsg
-  addDeployerAsync = plasmaModule.addDeployerAsync
-  getDeployersAsync = plasmaModule.getDeployersAsync
+  addDeployerAsync = whiteListModule.addDeployerAsync
+  getDeployersAsync = whiteListModule.getDeployersAsync
 
   isShowGenPublicKeyModal = false
   loomBalance = ""
@@ -110,7 +110,7 @@ export default class AddKey extends Vue {
       value: {
         no: 1,
         max: 10,
-        amount: 3000,
+        amount: 10,
       },
     },
     {
@@ -139,8 +139,8 @@ export default class AddKey extends Vue {
     inputKey.defaultFormat = inputKey.defaultFormat === "Base64" ? "Hex" : "Base64"
   }
 
-  get state(): PlasmaState {
-    return this.$store.state
+  get state(): WhiteListState {
+    return this.$store.state.whiteList
   }
 
   get userDeployersAddress() {
@@ -148,11 +148,12 @@ export default class AddKey extends Vue {
   }
 
   async addKey(tier) {
-    if ( parseFloat(this.loomBalance) < tier.amount) {
-      this.setErrorMsg("Your balance isn't enough. Please deposit first.")
-      return
-    }
-    let result = await this.addDeployerAsync({deployer: this.newPubKey})
+    // if ( parseFloat(this.loomBalance) < tier.amount) {
+    //   this.setErrorMsg("Your balance isn't enough. Please deposit first.")
+    //   return
+    // }
+    const loomAddress =  formatFromLoomAddress(this.newPubKey)
+    let result = await this.addDeployerAsync({deployer: loomAddress})
     console.log("result", result);
   }
 
@@ -161,7 +162,8 @@ export default class AddKey extends Vue {
   }
 
   async mounted() {
-    this.loomBalance = await this.getDappchainLoomBalance()
+    // this.loomBalance = await this.getDappchainLoomBalance()
+    this.loomBalance = "0"
     await this.getDeployersAsync()
   }
 }

@@ -68,7 +68,7 @@ export default class SeedPhraseModal extends Vue {
   publicAddress = ""
   confirmMnemonic = false
   setSuccessMsg = CommonTypedStore.setSuccessMsg
-  getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddressFromPrivateKeyUint8Array
+  getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   async generateSeeds() {
@@ -91,7 +91,8 @@ export default class SeedPhraseModal extends Vue {
 
   copyToClipboard(inputId) {
     const copyText = document.getElementById(inputId)
-    copyText.select()
+    // @ts-ignore
+    copyText!.select()
     document.execCommand("copy")
     this.setSuccessMsg("copied to clipboard")
   }

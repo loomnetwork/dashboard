@@ -187,7 +187,8 @@
       "block_explorer": "Block Explorer",
       "deploy_to_plasmachain": "Deploy to Plasmachain",
       "transfer_gateway": "Transfer Gateway",
-      "validator_management": "Validator Management"
+      "validator_management": "Validator Management",
+      "feedback_form": "Contact Support"
     },
     "gateway": {
       "complete_deposit": "Complete deposit",

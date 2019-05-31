@@ -19,7 +19,7 @@ import "./gateway"
 import "./plasma"
 import "./dpos"
 import { ethereumReactions } from "./ethereum/reactions"
-import { ethGatewayPlugin } from "./gateway/reactions"
+import { gatewayReactions } from "./gateway/reactions"
 import { plasmaReactions } from "./plasma/reactions"
 import { dposReactions } from "./dpos/reactions"
 import { zbcardsReactions } from "@/store/plasma/assets/reactions"
@@ -30,10 +30,10 @@ const store: Store<DashboardState> = getStoreBuilder<
   DashboardState
 >().vuexStore({
   plugins: [
-    // dposStorePlugin,
+    dposStorePlugin,
     ethereumReactions,
     plasmaReactions,
-    ethGatewayPlugin,
+    gatewayReactions,
     dposReactions,
     zbcardsReactions,
   ],

@@ -3,56 +3,59 @@ import { Store } from "vuex"
 import { gatewayModule } from "."
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { plasmaModule } from "../plasma"
-import { createContracts } from "./index"
 import { Provider } from "ethers/providers"
 
-export function ethGatewayPlugin(store: Store<HasGatewayState>) {
-    store.watch(
-        (s) => s.ethereum.address,
-        ethereumAddressSet,
-    )
-    store.watch(
-        (s) => s.gateway.mapping,
-        setPlasmaAccount,
-    )
+import * as EthereumGateways from "./ethereum"
+import * as PlasmaGateways from "./plasma"
+import { ethereumModule } from "../ethereum"
+import { DashboardState } from "@/types"
 
-    store.watch((s) => s.ethereum.provider, onProviderChange)
+export function gatewayReactions(store: Store<DashboardState>) {
+  store.watch(
+    (s) => s.ethereum.address,
+    (newAddress) => gatewayModule.loadMapping(newAddress),
+  )
 
-    function onProviderChange(provider: Provider | null, old) {
+  // When we have a mapping
+  // set the identity on the plasma module
+  // reset ethereum and plasma gateway services
+  store.watch(
+    (s) => s.gateway.mapping,
+    async (mapping) => {
+      if (mapping === null) {
+        // todo destroy anything that needs to be disposed of
+        return
+      }
+      if (mapping.to.isEmpty() && store.state.ethereum.signer) {
+        await gatewayModule.createMapping()
+        return
+      }
+      await setPlasmaAccount(mapping)
 
-        // remove contract
-       if (provider === null) return
-       createContracts(provider)
+      EthereumGateways.init(ethereumModule.web3)
+      PlasmaGateways.init(
+        plasmaModule.state.client,
+        plasmaModule.state.web3!,
+        mapping,
+      )
+    },
+  )
 
-    }
+  function setPlasmaAccount(mapping: IAddressMapping | null) {
+    console.log("setPlasmaIdy", mapping)
+    const plasmaAddress =
+      mapping === null || mapping.to.isEmpty()
+        ? ""
+        : mapping.to.local.toString()
 
-    async function ethereumAddressSet(newAddress) {
-        console.log("eth address set", newAddress)
-        await gatewayModule.loadMapping(newAddress)
-    }
+    const state = store.state
+    console.log("set plasma address and signer if any")
+    // assuming from is always ethereum
+    const signer =
+      state.ethereum.signer !== null
+        ? new EthPlasmSigner(state.ethereum.signer!)
+        : null
 
-    function setPlasmaAccount(mapping: IAddressMapping|null) {
-        console.log("setPlasmaIdy", mapping)
-
-        // do nothing if mapping is incomplete
-        if (mapping === null || mapping.from.isEmpty() || mapping.to.isEmpty()) {
-            return
-        }
-        const state = store.state
-        console.log("set plasma address and signer if any")
-        // assuming from is always ethereum
-        state.plasma.address = mapping.to.toString()
-        if (state.ethereum.signer) {
-            plasmaModule.changeIdentity({
-                signer:  new EthPlasmSigner(state.ethereum.signer!),
-                address: mapping.to.local.toString(),
-            })
-        } else {
-            plasmaModule.changeIdentity({
-                signer: null,
-                address: mapping.to.local.toString(),
-            })
-        }
-
-    }
+    plasmaModule.changeIdentity({ signer, address: plasmaAddress })
+  }
 }

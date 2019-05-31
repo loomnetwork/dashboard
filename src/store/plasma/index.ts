@@ -10,12 +10,10 @@ import {
   PlasmaSigner,
   CardDetail,
   PackDetail,
+  HasPlasmaState,
+  PlasmaContext,
 } from "./types"
-import {
-  Client,
-  Address,
-  LocalAddress,
-} from "loom-js"
+import { Client, Address, LocalAddress } from "loom-js"
 import BN from "bn.js"
 import { TokenSymbol } from "../ethereum/types"
 
@@ -38,6 +36,8 @@ import debug from "debug"
 import Web3 from "web3"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 
+import * as Tokens from "./contracts/tokens"
+
 const log = debug("plasma")
 
 // web3 instance to use to interact with plasma contracts
@@ -45,31 +45,25 @@ const log = debug("plasma")
 const initialState: PlasmaState = {
   networkId: "us1",
   chainId: "default",
-  // not state but...
+  // todo move these out of the state
   client: createClient(configs.us1),
   web3: null,
   provider: null,
+  ethersProvider: null,
   signer: null,
   address: "",
-  appKey: {
+  appId: {
     private:
       "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
     public: "",
     address: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
   },
-  erc20Addresses: {
-    [TokenSymbol.LOOM]: "",
-    [TokenSymbol.ETH]: "",
-    [TokenSymbol.BNB]: "",
-  },
   coins: {
     loom: {
-      contract: null,
       balance: new BN("0"),
       loading: false,
     },
     eth: {
-      contract: null,
       balance: new BN("0"),
       loading: false,
     },
@@ -94,12 +88,8 @@ const initialState: PlasmaState = {
   tokenSelected: "",
 }
 
-const builder = getStoreBuilder<DashboardState>().module(
-  "plasma",
-  initialState,
-)
+const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
-declare type ActionContext = BareActionContext<PlasmaState, DashboardState>
 
 export const plasmaModule = {
   get state() {
@@ -111,13 +101,14 @@ export const plasmaModule = {
   getCallerAddress: builder.dispatch(getCallerAddress),
 
   // Coins
-  refreshBalance: builder.dispatch(refreshBalance),
-  approve: builder.dispatch(approveTransfer),
-  transfer: builder.dispatch(transferTokens),
+  refreshBalance: builder.dispatch(Tokens.refreshBalance),
+  allowance: builder.dispatch(Tokens.allowance),
+  approve: builder.dispatch(Tokens.approve),
+  transfer: builder.dispatch(Tokens.transfer),
 
   // Assets
 
-  // Getters
+  // // Getters
   getCardInstance: builder.read(getters.getCardInstance),
   // AssetMutations
   setPacksContract: builder.commit(assetMutations.setPacksContract),
@@ -143,13 +134,14 @@ export const plasmaModule = {
 
 }
 
-async function checkCardBalance(context: ActionContext) {
-  const dposUser = await context.rootState.DPOS.dposUser
-  const account = dposUser!.loomAddress.local.toString()
-  const ethAddr = dposUser!.ethAddress
+async function checkCardBalance(context: PlasmaContext) {
+  const account = context.state.address
+  const caller = await plasmaModule.getCallerAddress()
+
   const tokens = await context.state
     .cardContract!.methods.tokensOwned(account)
-    .call({ from: ethAddr })
+    // @ts-ignore
+    .call({ from: caller.local.toString() })
   const cards: CardDetail[] = []
   tokens.indexes.forEach((id: string, i: number) => {
     const card = getCardByTokenId(id)
@@ -159,10 +151,11 @@ async function checkCardBalance(context: ActionContext) {
   plasmaModule.setCardBalance(cards)
 }
 
-async function checkPackBalance(context: ActionContext) {
+async function checkPackBalance(context: PlasmaContext) {
   const account = context.state.address
   const caller = await plasmaModule.getCallerAddress()
   const packs: PackDetail[] = []
+
   PACKS_NAME.forEach(async (type) => {
     const amount = await context.state.packsContract[type].methods
       .balanceOf(account)
@@ -190,7 +183,7 @@ function createClient(env: { chainId: string; endpoint: string }) {
  * @param id
  */
 async function changeIdentity(
-  ctx: ActionContext,
+  ctx: PlasmaContext,
   id: { signer: PlasmaSigner | null; address: string },
 ) {
   const { signer, address } = id
@@ -207,7 +200,13 @@ async function changeIdentity(
 }
 
 // getter but async so I guess it's an action according to vuex
-async function getCallerAddress(ctx: ActionContext) {
+/**
+ * - if we have a signer use it's address (connected wallet case)
+ * - if just address, use that (explorer case, readonly)
+ * - otherwise use the generic address (readonly)
+ * @param ctx
+ */
+async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
   const state = ctx.state
   let caller: string
   let chainId: string = state.client.chainId
@@ -217,62 +216,55 @@ async function getCallerAddress(ctx: ActionContext) {
   } else if (state.address) {
     caller = state.address
   } else {
-    caller = state.appKey.address
-    // todo get plasma chain id from current config
-    // as the client might be initialized witg a foreign chain id (or is it?)
+    caller = state.appId.address
   }
   return Address.fromString(`${chainId}:${caller}`)
 }
 
 async function transferPacks(
-  context: ActionContext,
+  context: PlasmaContext,
   payload: {
-    packType: string;
-    amount: number;
-    destinationDappchainAddress: string;
+    packType: string
+    amount: number
+    receiver: string,
   },
 ) {
   try {
-    DPOSTypedStore.setShowLoadingSpinner(true)
-    const ethAddress = await plasmaModule.getCallerAddress()
+    // DPOSTypedStore.setShowLoadingSpinner(true)
+    const ethAddress = await getCallerAddress(context)
     const result = await context.state.packsContract[payload.packType].methods
-      .transfer(payload.destinationDappchainAddress, payload.amount)
+      .transfer(payload.receiver, payload.amount)
       .send({ from: ethAddress })
     console.log("transfer packs result", result)
-    // TODO: this is not working
-    CommonTypedStore.setSuccessMsg("Transferring packs success.")
-    await plasmaModule.checkPackBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
     return result
   } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    // TODO: this is not working
-    CommonTypedStore.setErrorMsg(`Error Transferring packs: ${error.message}`)
+    // DPOSTypedStore.setShowLoadingSpinner(false)
     throw error
   }
 }
 
 async function transferCards(
-  context: ActionContext,
+  context: PlasmaContext,
   payload: {
-    cardIds: string[];
-    amounts: number[];
-    destinationDappchainAddress: string;
+    cardIds: string[]
+    amounts: number[]
+    receiver: string,
   },
 ) {
   console.log("payload", payload)
   try {
-    const dposUser = await context.rootState.DPOS.dposUser
-    const dappchainAddress = dposUser!.loomAddress.local.toString()
-    const ethAddress = dposUser!.ethAddress
+    // caller address is either eth if eth signer is there or plasma address i
+    const caller = await getCallerAddress(context)
+    const plasmaAddress = context.state.address
     const result = await context.state
       .cardContract!.methods.batchTransferFrom(
-        dappchainAddress,
-        payload.destinationDappchainAddress,
+        plasmaAddress,
+        payload.receiver,
         payload.cardIds,
         payload.amounts,
       )
-      .send({ from: ethAddress })
+      // @ts-ignore
+      .send({ from: caller })
     console.log("transfer cards result", result)
     // TODO: this is not working
     CommonTypedStore.setSuccessMsg("Transferring cards success.")

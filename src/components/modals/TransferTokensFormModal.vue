@@ -3,17 +3,23 @@
     id="transfer-tokens-form-modal"
     ref="modalRef"
     title="Transfer Token"
+    hide-footer
     @show="resetModal"
     @hide="resetModal">
-        <b-card>
-            <h6> Token type: {{ state.plasma.tokenSelected }} </h6>
-            <h6> Your token balance: {{ balance | tokenAmount }} {{ state.plasma.tokenSelected }} </h6>
-            Amount: (max: {{ balance | tokenAmount }} )
-            <amount-input :min="1" :max="balance | tokenAmount" v-model="transferAmount" @isError="onAmountError"/>
-            Receiver Loom Address:
-            <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
-            <b-button type="button" @click="transferToken()">Transfer</b-button>
-        </b-card>
+      <b-card>
+        <h6> Token type: {{ state.plasma.tokenSelected }} </h6>
+        <h6> Your token balance: {{ balance | tokenAmount }} {{ state.plasma.tokenSelected }} </h6>
+        <div class="input-section">
+          <span>Amount: (max: {{ balance | tokenAmount }} )</span>
+          <amount-input :min="1" :max="balance | tokenAmount" :round="false" v-model="transferAmount" @isError="onAmountError"/>
+        </div>
+        <div class="input-section">
+          <span>Receiver Loom Address:</span>
+          <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+        </div>
+        <b-button 
+          type="button" @click="transferToken()" >Transfer</b-button>
+      </b-card>
     </b-modal>
 </template>
 
@@ -37,6 +43,7 @@ export default class TransferTokensFormModal extends Vue{
     transfer = plasmaModule.transfer
     transferAmount: number = 0
     receiverAddress: string = ""
+    amountError = false
 
 
     get state() : DashboardState {
@@ -51,7 +58,7 @@ export default class TransferTokensFormModal extends Vue{
       const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
       this.transfer({
         symbol: this.state.plasma.tokenSelected,
-        tokenAmount: amount,
+        weiAmount: amount,
         to: this.receiverAddress 
       })
       this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
@@ -59,14 +66,17 @@ export default class TransferTokensFormModal extends Vue{
 
     onAmountError(val){
       console.log('val:', val);
+      this.amountError = val
+
     }
 
     resetModal(){
       this.receiverAddress = ""
     }
-    
 }
 </script>
-<style>
-
+<style scoped>
+.input-section {
+  margin: 16px 0;
+}
 </style>

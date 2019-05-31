@@ -97,7 +97,6 @@ class CoinAdapter implements ContractAdapter {
 
 class ERC20Adapter implements ContractAdapter {
   constructor(readonly token: string, public contract: ERC20) {}
-
   get contractAddress() {
     return this.contract.address.toLocaleLowerCase()
   }
@@ -133,6 +132,7 @@ export async function refreshBalance(
   context: PlasmaContext,
   tokenSymbol: string,
 ) {
+
   const adapter = getAdapter(tokenSymbol)
 
   // caution make sure balanceState is always set befor calling refreshBalance
@@ -185,8 +185,9 @@ export async function transfer(
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
 
+
   if (weiAmount.gt(balance)) {
-    throw new Error("plasma.tramsfer.balance.low")
+    throw new Error("plasma.transfer.balance.low")
   }
   return adapter.transfer(to, weiAmount)
 }

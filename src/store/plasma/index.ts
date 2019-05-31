@@ -67,11 +67,6 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
     },
-    bnb: {
-      contract: null,
-      balance: new BN("0"),
-      loading: false,
-    },
   },
   // these should go in a seperate module
   packsContract: {},
@@ -86,6 +81,7 @@ const initialState: PlasmaState = {
     amount: 0,
   },
   tokenSelected: "",
+  tokensSymbol: ["loom", "eth"],
 }
 
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
@@ -105,6 +101,7 @@ export const plasmaModule = {
   allowance: builder.dispatch(Tokens.allowance),
   approve: builder.dispatch(Tokens.approve),
   transfer: builder.dispatch(Tokens.transfer),
+  // addTokens: builder.dispatch(Tokens.addContract),
 
   // Assets
 
@@ -280,89 +277,4 @@ async function transferCards(
 function getErc20Contract(symbol: string): ERC20 {
   // @ts-ignore
   return null
-}
-
-/**
- * deposit from ethereum account to gateway
- * @param symbol
- * @param tokenAmount
- */
-export async function refreshBalance(context: ActionContext, token: string) {
-  const coins = context.state.coins
-  const addr = new Address(
-    "default",
-    LocalAddress.fromHexString(context.state.address),
-  )
-  coins[token].loading = true
-  switch (token) {
-    case "loom":
-      coins.loom.balance = await coins.loom.contract!.getBalanceOfAsync(addr)
-      log("updateBalance", token, coins.loom.balance)
-      break
-    case "eth":
-      coins.eth.balance = await coins.eth.contract!.getBalanceOfAsync(addr)
-      log("updateBalance", token, coins.eth.balance)
-      break
-    default:
-      const contract = coins[token].contract!
-
-      let result = await (contract as ERC20).functions.balanceOf(addr.toString())
-      console.log("result", result);
-      
-  }
-  coins[token].loading = false
-}
-
-/**
- * withdraw from plasma account to gateway
- * @param symbol
- * @param tokenAmount
- */
-export function approveTransfer(
-  context: ActionContext,
-  { symbol, tokenAmount, to }: TransferRequest,
-) {
-  const balance = context.state.coins[symbol].balance
-  const weiAmount = tokenAmount
-  if (weiAmount.gt(balance)) {
-    throw new Error("approval.balance.low")
-  }
-
-  const contract: ERC20 = getErc20Contract(symbol)
-
-  return contract.functions.approve(to, weiAmount.toString())
-}
-
-/**
- * withdraw from gateway to ethereum account
- * @param symbol
- */
-async function transferTokens(
-  context: ActionContext,
-  funds: {
-    symbol: string;
-    tokenAmount: BN;
-    to: string;
-  },
-) {
-  const {coins, chainId} = context.state
-  const {
-    symbol,
-    tokenAmount,
-    to,
-  } = funds
-  const contract = coins[symbol].contract!
-
-  const addrObject = Address.fromString(`${chainId}:${to}`)
-  switch (funds.symbol) {
-    case "loom":
-      await ( contract as Coin).transferAsync(addrObject, tokenAmount)
-      break
-    case "eth":
-      await ( contract as EthCoin).transferAsync(addrObject, tokenAmount)
-      break
-    default:
-      // const contract = getErc20Contract(token)
-      await (contract as ERC20).functions.transfer(funds.to, funds.tokenAmount.toString())
-  }
 }

@@ -5,6 +5,7 @@
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
     <transfer-tokens-form-modal/>
+    <add-token-modal/>
     <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc
@@ -41,7 +42,7 @@
         <b-button
           class="button"
           variant="primary"
-          @click="addToken"
+          @click="addToken()"
         >Add token</b-button>
       </b-card-footer>
     </b-card>
@@ -50,18 +51,22 @@
 
 <script lang="ts">
 import DepositForm from "@/components/gateway/DepositForm.vue"
+import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue";
+import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
-import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue";
 import { Modal } from "bootstrap-vue";
 import { plasmaModule } from "../store/plasma";
+import { formatTokenAmount } from '../filters';
+import { refreshBalance } from '../store/ethereum';
 
 @Component({
   components: {
     DepositForm,
     TransferTokensFormModal,
+    AddTokenModal,
   },
   methods: {
     // ...DPOSStore.mapMutations([
@@ -72,13 +77,12 @@ import { plasmaModule } from "../store/plasma";
 export default class DepositWithdraw extends Vue {
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
-
   showHelp: boolean = false
-
   setTokenSelected = plasmaModule.setTokenSelected
+  refreshBalance = plasmaModule.refreshBalance
 
   // get the full list from state or somewhere else
-  symbols = ["loom", "eth", "bnb"]
+  symbols = this.plasma.tokensSymbol
 
   filteredSymbols: string[] = []
 
@@ -95,7 +99,7 @@ export default class DepositWithdraw extends Vue {
   }
 
    modal(ref: string) {
-    return this.$refs[ref] as Modal
+     return this.$refs[ref] as Modal
   }
 
   @Watch("inputFilter")
@@ -108,7 +112,6 @@ export default class DepositWithdraw extends Vue {
     this.filteredSymbols = this.symbols
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
       console.log(this.filteredSymbols);
-
   }
 
   requestDeposit(token: string) {
@@ -124,7 +127,8 @@ export default class DepositWithdraw extends Vue {
   }
 
   addToken(){
-    console.log("add token");
+    console.log('add!!');
+    this.$root.$emit("bv::show::modal", "add-token-modal")
   }
 
   async ready() {

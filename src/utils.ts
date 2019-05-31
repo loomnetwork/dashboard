@@ -1,5 +1,6 @@
 /* eslint-disable no-undef, func-names */
 import Web3 from "web3"
+import BN from "bn.js"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
@@ -97,6 +98,10 @@ export function formatToCrypto(amount) {
   return conversion.lt(1) && conversion.gt(0)
     ? conversion.toFormat(9)
     : conversion.toFormat(2)
+}
+
+export function parseToWei(amount: string) {
+  return new BN(amount).mul(new BN(`${10 ** 18}`))
 }
 
 export const DOMAIN_NETWORK_ID = {

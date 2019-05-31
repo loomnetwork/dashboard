@@ -21,7 +21,7 @@ export interface DPOSState {
     electionTime: Date
     validators: any[]
     delegations: Delegation[]
-    rewards: BN
+    rewards: BN,
 }
 
 /**

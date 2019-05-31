@@ -40,7 +40,7 @@
         <b-button class="button" variant="primary">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <DepositForm/>
+    <DepositForm :token="selectedToken" />
   </main>
 </template>
 
@@ -50,6 +50,7 @@ import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
+import { gatewayModule } from "../store/gateway"
 
 @Component({
   components: {
@@ -62,6 +63,9 @@ import { PlasmaState } from "../store/plasma/types"
   },
 })
 export default class DepositWithdraw extends Vue {
+
+  setShowDepositForm = gatewayModule.setShowDepositForm
+  selectedToken = "loom"
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
 
@@ -96,7 +100,8 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestDeposit(token: string) {
-
+    this.selectedToken = token
+    this.setShowDepositForm(true)
   }
 
   requestWithdraw(token: string) {

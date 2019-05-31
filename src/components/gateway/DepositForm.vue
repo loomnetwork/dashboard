@@ -57,15 +57,19 @@
   </b-modal>
 </template>
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
+import BN from "bn.js"
 
 import { DPOSTypedStore } from "@/store/dpos-old"
-import { formatToCrypto } from "@/utils"
+import { formatToCrypto, parseToWei } from "@/utils"
 import { DashboardState } from "../../types"
+import { gatewayModule } from "../../store/gateway"
 
 @Component
 export default class DepositForm extends Vue {
+
+  @Prop({required: true}) token!: string // prettier-ignore
 
   get userBalance() {
     return DPOSTypedStore.state.userBalance
@@ -76,12 +80,11 @@ export default class DepositForm extends Vue {
   }
 
   get showDepositForm() {
-    return this.state.DPOS.showDepositForm
+    return this.state.gateway.showDepositForm
   }
 
-  setShowDepositForm = DPOSTypedStore.setShowDepositForm
-
-  approveDeposit = DPOSTypedStore.approveDeposit
+  setShowDepositForm = gatewayModule.setShowDepositForm
+  approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
   transferAmount: number | "" = ""
@@ -131,7 +134,13 @@ export default class DepositForm extends Vue {
     bvModalEvt.preventDefault()
     this.status = "sending"
     try {
-      await this.approveDeposit("" + this.transferAmount)
+      const stringAmount = this.transferAmount.toString()
+      const weiAmount = parseToWei(stringAmount)
+      const payload = {
+        symbol: this.token,
+        weiAmount,
+      }
+      await this.approveDeposit(payload)
       this.status = "sent"
     } catch (e) {
       this.status = "failed"

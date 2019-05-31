@@ -1,7 +1,7 @@
 import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb"
 import Vue from "vue"
 import BN from "bn.js"
-import { formatToCrypto } from "./utils"
+import { formatToCrypto, formatToLoomAddress } from "./utils"
 
 // https://github.com/palantir/blueprint/issues/959#issuecomment-335965129\
 // const durationFormat = require("moment-duration-format")
@@ -26,13 +26,13 @@ export function initFilters() {
   Vue.filter("domain", formatDomain)
   Vue.filter("url", formatUrl)
   // Vue.filter('timeFromNow', formatDurationFromNow)
+  Vue.filter("loomAddress", formatToLoomAddress)
+  Vue.filter("swapTextBase64AndHexLabel", swapTextBase64AndHexLabel)
 }
 
 export function formatValidatorWebsite(validator: { Website: string }) {
   const str = validator.Website || "https://loomx.io/"
-  return str.match(/^http/)
-    ? validator.Website
-    : "https://" + validator.Website
+  return str.match(/^http/) ? validator.Website : "https://" + validator.Website
 }
 
 export function formateDelegationState(value: DelegationState) {
@@ -99,4 +99,8 @@ export function formatUrl(domainOrUrl: string) {
 export function formatTokenAmount(wei: BN) {
   const token = wei.div(new BN("" + 10 ** 18))
   return token.lt(new BN(0)) ? token.toString(10) : token.toString(10)
+}
+
+export function swapTextBase64AndHexLabel(input) {
+  return input === "Base64" ? "Hex" : "Base64"
 }

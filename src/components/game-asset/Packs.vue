@@ -1,20 +1,20 @@
 <template>
- <b-card class="mb-5">
-  <transfer-packs-modal ref="transferPackModalConfig"></transfer-packs-modal>
-  <b-card-title>My Packs</b-card-title>
+  <b-card class="mb-5">
+    <transfer-packs-modal ref="transferPackModalConfig"></transfer-packs-modal>
+    <b-card-title>My Packs</b-card-title>
     <b-table
-        v-show="packs && packs.length > 0"
-        striped
-        bordered
-        hover
-        :items="packs"
-        :fields="packTableFields"
+      v-show="packs && packs.length > 0"
+      striped
+      bordered
+      hover
+      :items="packs"
+      :fields="packTableFields"
     >
     <template slot="transfer" slot-scope="row">
-      <b-button type="button" @click="transferpackTo(row.item)"> Transfer </b-button>
+      <b-button type="button" @click="transferpackTo(row.item)" :disabled="row.item.amount == '0'"> Transfer </b-button>
     </template>
     </b-table>
- </b-card>
+  </b-card>
 </template>
 
 
@@ -22,11 +22,12 @@
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import { plasmaModule } from "@/store/plasma"
-import { DashboardState } from "@/types"
+import { assetsModule } from "@/store/plasma/assets"
 import { PACKS_NAME } from "@/store/plasma/assets/reactions"
 import TransferPacksModal from "@/components/modals/TransferPacksModal.vue"
 import { Modal } from "bootstrap-vue"
 import { PackDetail } from "@/store/plasma/types"
+import { HasAssetsState } from "../../store/plasma/assets/types"
 
 @Component({
   components: {
@@ -34,8 +35,8 @@ import { PackDetail } from "@/store/plasma/types"
   },
 })
 export default class Packs extends Vue {
-  checkPackBalance = plasmaModule.checkPackBalance
-  setPackToTransferSelected = plasmaModule.setPackToTransferSelected
+  checkPackBalance = assetsModule.checkPackBalance
+  setPackToTransferSelected = assetsModule.setPackToTransferSelected
   packTypes = PACKS_NAME
   packs: PackDetail[] = []
   packTableFields = [
@@ -53,12 +54,12 @@ export default class Packs extends Vue {
     },
   ]
 
-  get state(): DashboardState {
+  get state(): HasAssetsState {
     return this.$store.state
   }
 
   get packBalance() {
-    return this.state.plasma.packBalance
+    return this.state.assets.packBalance
   }
 
   async mounted() {
@@ -67,7 +68,7 @@ export default class Packs extends Vue {
   }
 
   modal(ref: string) {
-   return this.$refs[ref] as Modal
+    return this.$refs[ref] as Modal
   }
 
   async transferpackTo(item) {

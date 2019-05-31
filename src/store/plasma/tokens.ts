@@ -1,7 +1,7 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
-import { ERC20 } from "../web3-contracts/ERC20"
-import { PlasmaContext, TransferRequest, PlasmaTokenKind } from "../types"
+import { ERC20 } from "./web3-contracts/ERC20"
+import { PlasmaContext, TransferRequest, PlasmaTokenKind } from "./types"
 import BN from "bn.js"
 
 import debug from "debug"
@@ -121,7 +121,7 @@ class ERC20Adapter implements ContractAdapter {
   }
 }
 
-// keeping contracts out of the state
+export function addToken(context: PlasmaContext, tokenSymbol: string) {}
 
 /**
  * deposit from ethereum account to gateway

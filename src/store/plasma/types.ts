@@ -1,6 +1,8 @@
 import BN from "bn.js"
 
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
+import { UserDeployerWhitelist } from "loom-js/dist/contracts"
+import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb"
 import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { Contract } from "web3-eth-contract"
@@ -37,28 +39,29 @@ export interface PlasmaState {
     [tokenSymbol: string]: BalanceInfo,
   }
 
-  packsContract: {
-    [name: string]: Contract,
-  }
-  cardContract: MigratedZBGCard | null
-  cardBalance: CardDetail[]
-  packBalance: PackDetail[]
-  cardToTransferSelected: CardDetail | null
-  allCardsToTransferSelected: {
-    edition: string
-    cards: CardDetail[]
-    amount: number,
-  }
+  userDeployerWhitelist: UserDeployerWhitelist | null
+  userDeployersAddress: UserDeployerState[] | []
 
-  packToTransferSelected: null | {
-    type: string
-    amount: number,
-  }
+  // packsContract: {
+  //   [name: string]: Contract,
+  // }
+  // cardContract: MigratedZBGCard | null
+  // cardBalance: CardDetail[]
+  // packBalance: PackDetail[]
+  // cardToTransferSelected: CardDetail | null
+  // allCardsToTransferSelected: {
+  //   edition: string
+  //   cards: CardDetail[]
+  //   amount: number,
+  // }
+
+  // packToTransferSelected: null | {
+  //   type: string
+  //   amount: number,
+  // }
 
   tokenSelected: string
   tokensSymbol: string[]
-
-
 
 }
 
@@ -71,6 +74,7 @@ export enum PlasmaTokenKind {
 }
 
 export interface BalanceInfo {
+  decimals?: number
   balance: BN
   loading: boolean
 }
@@ -107,6 +111,9 @@ export interface CardDetail {
   originalID: string
 }
 
+export enum TierID {
+    DEFAULT = 0,
+}
 // helper/shorthand for plasma module action context
 export declare type PlasmaContext = BareActionContext<
   PlasmaState,

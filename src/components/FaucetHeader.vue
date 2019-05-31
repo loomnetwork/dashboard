@@ -1,19 +1,14 @@
 <template>
   <div id="faucet-header" ref="header" class="header">
-    <b-alert
-      variant="danger"
-      dismissible
-      :show="!!showErrorMsg"
-      class="custom-alert text-center"
-      ref="errorMsg"
-    >{{this.$store.state.errorMsg}}</b-alert>
-    <b-alert
-      variant="success"
-      class="custom-alert text-center"
-      dismissible
-      :show="!!showSuccessMsg"
-      ref="successMsg"
-    >
+
+    <b-alert variant="danger"
+               dismissible
+               :show="!!showErrorMsg"
+               class="custom-alert text-center"
+               ref="errorMsg">
+      {{state.common.errorMsg}}
+      </b-alert>
+      <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
       <span class="text-dark" v-html="state.common.successMsg"></span>
     </b-alert>
 
@@ -199,13 +194,13 @@ export default class FaucetHeader extends Vue {
   }
 
   get showErrorMsg() {
-    if (this.$store.state.errorMsg) {
+    if (this.state.common.errorMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
         ref: this.$refs.errorMsg,
       })
     }
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: "error" } : false
+    return this.state.common.errorMsg ? { message: this.state.common.errorMsg, variant: "error" } : false
   }
 
   get showSuccessMsg() {
@@ -215,7 +210,7 @@ export default class FaucetHeader extends Vue {
         ref: this.$refs.successMsg,
       })
     }
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: "success" } : false
+    return this.state.common.successMsg ? { message: this.state.common.successMsg, variant: "success" } : false
   }
 
   hideAlert(alertOpt) {

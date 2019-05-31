@@ -61,7 +61,7 @@
       </b-nav-item>
       <b-nav-item>
         <router-link
-          to="/"
+          to="/add-key"
           class="router"
           exact-active-class="router-active"
         >{{ $t('components.faucet_sidebar.deploy_to_plasmachain') }}</router-link>

@@ -11,6 +11,7 @@ import Analytics from "./views/Analytics.vue"
 import MobileAccount from "./views/MobileAccount.vue"
 import Help from "./views/Help.vue"
 import GameAssets from "./views/GameAssets.vue"
+import AddKey from "./views/AddKey.vue"
 import DepositWithdraw from "./views/DepositWithdraw.vue"
 
 Vue.use(VueRouter)
@@ -110,6 +111,16 @@ const router = new VueRouter({
         requireDeps: true,
       },
     },
+    {
+      path: "/add-key",
+      name: "addKey",
+      component: AddKey,
+      meta: {
+        requireLogIn: true,
+        requireDeps: true,
+      },
+    },
+
     {
       path: "/game-assets",
       name: "gameAssets",

@@ -7,12 +7,12 @@ import BN from "bn.js"
 import { HasDPOSState } from "./store/dpos/types"
 import { HasEthereumState } from "./store/ethereum/types"
 import { HasPlasmaState } from "./store/plasma/types"
+import { HasAssetsState } from "./store/plasma/assets/types"
 
 export interface DashboardState
-  extends HasEthereumState,
-    HasPlasmaState,
-    HasGatewayState,
-    HasDPOSState {
+  extends HasGatewayState,
+    HasDPOSState,
+    HasAssetsState {
   // remove
   DPOS: DposState
   // DappChain: DappchainState

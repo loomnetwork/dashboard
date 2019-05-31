@@ -6,9 +6,18 @@
       <h6>Variation: {{cardToTransfer.variation}}</h6>
       <h6>Your existing card: {{cardToTransfer.amount}}</h6>
       Amount: (max: {{cardToTransfer.amount}})
-      <b-input type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input>Receiver Loom Address:
-      <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
-      <b-button type="button" @click="transferCardsHandler()">Transfer</b-button>
+      <b-input class="my-2" type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input> 
+      Receiver Loom Address:
+      <b-input class="my-2" type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+       <b-form-checkbox class="my-2"
+        id="confirmCard"
+        v-model="confirmCard"
+        name="confirmCard"
+        v-show="amountToTransfer && receiverAddress">
+        I confirm to transfer {{amountToTransfer}} cards to {{receiverAddress}} address.
+      </b-form-checkbox>
+      <b-button class="my-2" type="button" @click="transferCardsHandler()" 
+      :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard">Transfer</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -16,16 +25,17 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { plasmaModule } from "../../store/plasma";
+import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
-import { DPOSTypedStore } from "@/store/dpos-old";
+import { DPOSTypedStore } from "@/store/dpos-old"
 
 @Component
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
-  transferCards = plasmaModule.transferCards
+  transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
+  confirmCard = false
 
   mounted() {
     this.amountToTransfer = 1
@@ -37,11 +47,11 @@ export default class TransferCardsModal extends Vue {
   }
 
   get cardToTransfer() {
-    return this.state.plasma.cardToTransferSelected
+    return this.state.assets.cardToTransferSelected
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > this.cardToTransfer!.amount) {
+    if (this.amountToTransfer > parseInt(this.cardToTransfer.amount, 10) || this.amountToTransfer % 1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }
@@ -49,7 +59,6 @@ export default class TransferCardsModal extends Vue {
       this.setErrorMsg("Invalid receiver address")
       return
     }
-    // TODO: put confirmation popup here
     this.transferCards({
       cardIds: [this.cardToTransfer!.id],
       amounts: [this.amountToTransfer],

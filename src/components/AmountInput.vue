@@ -22,6 +22,7 @@
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "@/types"
+import  BN  from "bn.js";
 
 @Component
 export default class AmountInput extends Vue {
@@ -37,7 +38,9 @@ export default class AmountInput extends Vue {
   // Call this function when amount changed
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-    this.$emit("input", Number(this.amount))
+
+    const amount = new BN(this.amount).mul(new BN("" + 10 ** 18))
+    this.$emit("input", amount)
   }
 
   // Set default amount when select another token

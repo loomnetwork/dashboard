@@ -15,6 +15,14 @@ const initialState: WhiteListState = {
   userDeployerWhitelist: null,
   userDeployersAddress: [],
   whiteListContractAddress: null,
+  tiers: [
+    {
+      id: 0,
+      fee: 10,
+      name: "Tier1",
+      enabled: true,
+    },
+  ],
 }
 const builder = getStoreBuilder<HasWhiteListState>().module("whiteList", initialState)
 const stateGetter = builder.state()

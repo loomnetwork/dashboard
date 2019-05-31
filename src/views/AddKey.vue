@@ -33,12 +33,12 @@
         <seed-phrase-modal ref="seed-phrase-modal"/>
         <label for="input-live"> Amount to Stake </label>
         <div class="tierBlock tierDisplay"> 
-          <label v-for="tier in stakeTiers" v-bind:key="tier.value.no" class="radio">
-            <input type="radio" v-model="tierSelected" :value="tier.value" />
+          <label v-for="tier in tiers" v-bind:key="tier.id" class="radio">
+            <input type="radio" v-model="tierSelected" :value="tier" />
             <b-card class="tierText"> 
-              <b-row>Tier: {{tier.value.no}}</b-row>
-              <b-row>Max: {{tier.value.max}} tx/min</b-row>
-              <b-row>{{tier.value.amount}} LOOM</b-row>
+              <b-row>Tier: {{tier.id}}</b-row>
+              <b-row>Name: {{tier.name}} tx/min</b-row>
+              <b-row>{{tier.fee}} LOOM</b-row>
             </b-card>
           </label>
         </div>
@@ -61,9 +61,10 @@ import { DPOSTypedStore } from "@/store/dpos-old"
 import { Modal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
 import { whiteListModule } from '@/store/whitelist';
-import { WhiteListState } from '@/store/whitelist/types';
-import { plasmaModule } from '../store/plasma';
+import { WhiteListState, Tier } from '@/store/whitelist/types';
+import { plasmaModule } from '@/store/plasma';
 import { formatFromLoomAddress } from "@/utils"
+import { formatTokenAmount } from "@/filters"
 
 @Component({
   components: {
@@ -72,13 +73,12 @@ import { formatFromLoomAddress } from "@/utils"
 })
 
 export default class AddKey extends Vue {
-  getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
+  // getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
   setErrorMsg = CommonTypedStore.setErrorMsg
   addDeployerAsync = whiteListModule.addDeployerAsync
   getDeployersAsync = whiteListModule.getDeployersAsync
 
   isShowGenPublicKeyModal = false
-  loomBalance = ""
   pubKeyType = "Hex"
   newPubKey = ""
   deployersAddress = []
@@ -103,33 +103,7 @@ export default class AddKey extends Vue {
     },
   ] // TODO: wait for the real data
 
-  tierSelected = ""
-
-   stakeTiers = [
-    {
-      value: {
-        no: 1,
-        max: 10,
-        amount: 10,
-      },
-    },
-    {
-      value: {
-        no: 2,
-        max: 20,
-        amount: 6000,
-      },
-      disabled: true,
-    },
-    {
-      value: {
-        no: 3,
-        max: 30,
-        amount: 9000,
-      },
-      disabled: true,
-    },
-  ] // TODO: wait for the real data
+  tierSelected: Tier | {} = {}
 
   modal(ref: string) {
    return this.$refs[ref] as Modal
@@ -147,11 +121,20 @@ export default class AddKey extends Vue {
     return this.state.userDeployersAddress
   }
 
-  async addKey(tier) {
-    // if ( parseFloat(this.loomBalance) < tier.amount) {
-    //   this.setErrorMsg("Your balance isn't enough. Please deposit first.")
-    //   return
-    // }
+  get loomBalance() {
+    const loomBalanceBN = plasmaModule.state.coins.loom.balance
+    return formatTokenAmount(loomBalanceBN)
+  }
+
+  get tiers() {
+    return this.state.tiers
+  }
+
+  async addKey(tier: Tier) {
+    if (parseFloat(this.loomBalance!) < tier.fee) {
+      this.setErrorMsg("Your balance isn't enough. Please deposit first.")
+      return
+    }
     const loomAddress =  formatFromLoomAddress(this.newPubKey)
     let result = await this.addDeployerAsync({deployer: loomAddress})
     console.log("result", result);
@@ -162,8 +145,6 @@ export default class AddKey extends Vue {
   }
 
   async mounted() {
-    // this.loomBalance = await this.getDappchainLoomBalance()
-    this.loomBalance = "0"
     await this.getDeployersAsync()
   }
 }

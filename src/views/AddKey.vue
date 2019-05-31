@@ -26,7 +26,7 @@
         </b-row>
         <div role="group">
           <label for="input-live">Your Loom Public Address</label>
-          <b-form-input v-model="newPubKey" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
+          <b-form-input v-model="newPublicAddress" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
         </div>
         <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
         <seed-phrase-modal ref="seed-phrase-modal"/>
@@ -41,7 +41,7 @@
             </b-card>
           </label>
         </div>
-        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected || !newPubKey"> Add Key </b-button>
+        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected || !newPublicAddress"> Add Key </b-button>
         <div class="remaining my-3">
           <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
           <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
@@ -77,7 +77,7 @@ export default class AddKey extends Vue {
   addDeployerAsync = whiteListModule.addDeployerAsync
   getDeployersAsync = whiteListModule.getDeployersAsync
   isShowGenPublicKeyModal = false
-  newPubKey = ""
+  newPublicAddress = ""
   tierSelected: Tier | {} = {}
 
   modal(ref: string) {
@@ -110,7 +110,7 @@ export default class AddKey extends Vue {
       this.setErrorMsg("Your balance isn't enough. Please deposit first.")
       return
     }
-    const loomAddress =  formatFromLoomAddress(this.newPubKey)
+    const loomAddress =  formatFromLoomAddress(this.newPublicAddress)
     let result = await this.addDeployerAsync({deployer: loomAddress, tier})
     console.log("result", result);
   }

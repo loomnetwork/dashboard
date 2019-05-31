@@ -144,7 +144,7 @@ function formatDeployersAddress(context: WhiteListContext, deployers: []) {
     const deployerAddress = new Address(
           array[0],
           new LocalAddress(array[1]))
-    log("deployerAddress", deployerAddress)
+    // TODO: fix this when get tier from contract
     formattedDeployersAddress.push({
       address: deployerAddress,
       hex: deployerAddress.local.toString(),

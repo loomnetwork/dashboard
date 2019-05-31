@@ -180,6 +180,7 @@
       "my_delegations": "My Delegations",
       "rewards": "Rewards",
       "history": "History",
+<<<<<<< HEAD
       "deposit_withdraw": "Deposit/Withdraw",
       "faq": "F.A.Q",
       "account_explorer": "Account Explorer",
@@ -188,6 +189,10 @@
       "deploy_to_plasmachain": "Deploy to Plasmachain",
       "transfer_gateway": "Transfer Gateway",
       "validator_management": "Validator Management"
+=======
+      "feedback_form": "Contact Support",
+      "faq": "F.A.Q"
+>>>>>>> develop
     },
     "gateway": {
       "complete_deposit": "Complete deposit",

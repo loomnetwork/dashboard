@@ -20,7 +20,7 @@
             <b-button
               class="button"
               variant="outline-primary"
-              @click="requestDeposit(true,symbol)"
+              @click="requestDeposit(symbol)"
             >Deposit</b-button>
             <b-button
               class="button"

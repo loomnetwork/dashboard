@@ -18,8 +18,8 @@
             <b-col>
               <b-form-input
                 type="number"
-                :placeholder="'Max. ' + userBalance.mainnetBalance"
-                :max="userBalance.mainnetBalance"
+                :placeholder="'Max. ' + userBalance"
+                :max="userBalance"
                 :min="1"
                 v-model="transferAmount"
                 pattern="[1-9]\d*"
@@ -31,7 +31,7 @@
               <b-btn
                 variant="outline-primary"
                 @click="depositAll"
-              >{{ $t("transfer_all", {amount: userBalance.mainnetBalance}) }}</b-btn>
+              >{{ $t("transfer_all", {amount: userBalance}) }}</b-btn>
             </b-col>
           </b-row>
         </b-container>
@@ -72,7 +72,7 @@ export default class DepositForm extends Vue {
   @Prop({required: true}) token!: string // prettier-ignore
 
   get userBalance() {
-    return DPOSTypedStore.state.userBalance
+    return parseInt(formatToCrypto(this.state.ethereum.coins[this.token].balance), 10)
   }
 
   get state(): DashboardState {
@@ -111,7 +111,7 @@ export default class DepositForm extends Vue {
   }
 
   depositAll() {
-    this.transferAmount = Number.parseInt("" + this.userBalance.mainnetBalance, 10)
+    this.transferAmount = Number.parseInt("" + this.userBalance, 10)
   }
 
   validateAmount() {
@@ -123,7 +123,7 @@ export default class DepositForm extends Vue {
     const int = Number.parseInt("" + input, 10)
     if (int !== input) errors.push("Only round amounts allowed")
     if (int < 1) errors.push("At least 1 loom")
-    if (int > this.userBalance.mainnetBalance) errors.push("Not enough funds in your account")
+    if (int > this.userBalance) errors.push("Not enough funds in your account")
     this.amountErrors = errors
   }
 

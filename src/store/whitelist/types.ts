@@ -23,10 +23,10 @@ export interface Tier {
 }
 
 export interface DeployerAddress {
-  address: string,
+  hex: string,
   tier: number,
-  // base64: string,
-  // defaultFormat: "hex" | "base64"
+  base64: string,
+  defaultFormat: "hex" | "base64"
 }
 
 // helper/shorthand for plasma module action context

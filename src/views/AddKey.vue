@@ -3,13 +3,13 @@
       <!-- Deployer Public key section -->
       <h4 class="mt-3">Deployer Public Keys</h4>
       {{publicKeys}}
-      <b-card v-for="pk in publicKeys" :key="pk.hex" v-show="publicKeys.length > 0">
+      <b-card v-for="(pk, index) in publicKeys" :key="pk.hex" v-show="publicKeys.length > 0">
         <b-row>
           <b-col cols="12" sm="6">
-            <h6>{{pk.address | loomAddress}}</h6>
+            <h6>{{pk[pk.defaultFormat] | loomAddress}}</h6>
           </b-col>
           <b-col cols="12" sm="3">
-            <b-button @click="switchPubKeyType(pk)"> View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
+            <b-button @click="switchPubKeyType(index)"> View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
           </b-col>
           <b-col cols="12" sm="3">
             <b-badge variant="success">Tier: {{pk.tier}}</b-badge>
@@ -80,30 +80,8 @@ export default class AddKey extends Vue {
   getDeployersAsync = whiteListModule.getDeployersAsync
 
   isShowGenPublicKeyModal = false
-  defaultKeyType = "hex"
+  // defaultKeyType = "hex"
   newPubKey = ""
-  // deployersAddress = []
-  // publicKeys = [
-  //   {
-  //     hex: "0x8e577b518b00831480e657d68d4683e686c9d6b2",
-  //     base64: "jld7UYsAgxSA5lfWjUaD5obJ1rI=",
-  //     tier: 1,
-  //     defaultFormat: "hex",
-  //   },
-  //   {
-  //     hex: "0x1c10178d476db5e0f4a22594799e675579d68a1e",
-  //     base64: "HBAXjUdtteD0oiWUeZ5nVXnWih4=",
-  //     tier: 1,
-  //     defaultFormat: "hex",
-  //   },
-  //   {
-  //     hex: "0x7894c25242de46701f54599922086591cc714c0c",
-  //     base64: "eJTCUkLeRnAfVFmZIghlkcxxTAw=",
-  //     tier: 1,
-  //     defaultFormat: "hex",
-  //   },
-  // ] // TODO: wait for the real data
-
   tierSelected: Tier | {} = {}
 
   modal(ref: string) {
@@ -111,16 +89,7 @@ export default class AddKey extends Vue {
   }
 
   switchPubKeyType(inputKey) {
-    switch (this.defaultKeyType) {
-      case "hex":
-        inputKey.address = Buffer.from(inputKey.address.split("x")[1], "hex").toString("base64")
-        this.defaultKeyType = "base64"
-        break;
-      case "base64":
-        inputKey.address = Buffer.from(inputKey.address, "base64").toString("hex")
-        this.defaultKeyType = "hex"
-        break;
-    }
+    this.publicKeys[inputKey].defaultFormat = this.publicKeys[inputKey].defaultFormat === "hex" ? "base64" : "hex"
   }
 
   get state(): WhiteListState {
@@ -142,10 +111,10 @@ export default class AddKey extends Vue {
     // @ts-ignore
     addresses.map((address: Address) => {
       const deployer: DeployerAddress = {
-        address: address.local.toString(),
+        hex: address.local.toString(),
         tier: 0,
-        // base64: "" ,
-        // defaultFormat: "hex",
+        base64: Buffer.from(address.local.toString().split("x")[1], "hex").toString("base64") ,
+        defaultFormat: "hex",
       }
       deployerAddresses.push(deployer)
     })

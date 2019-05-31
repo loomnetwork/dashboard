@@ -6,9 +6,10 @@ import * as mutations from "./mutations"
 
 import { CardDetail, PackDetail } from "../types"
 import { CommonTypedStore } from "@/store/common"
-import { getCardByTokenId } from "@/utils"
+import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
+import { DPOSTypedStore } from "@/store/dpos-old";
 
 function initialState(): AssetsState {
   return {
@@ -16,8 +17,22 @@ function initialState(): AssetsState {
     cardContract: null,
     cardBalance: [],
     packBalance: [],
-    cardToTransferSelected: null,
-    packToTransferSelected: null,
+    cardToTransferSelected: {
+      id: "0",
+      amount: 0,
+      display_name: "default",
+      image: "default",
+      title: "default",
+      variant: "default",
+      variation: "default",
+      mould_type: "default",
+      element: "default",
+      originalID: "default",
+    },
+    packToTransferSelected: {
+      type: "Booster",
+      amount: 0,
+    },
     allCardsToTransferSelected: {
       edition: "none",
       cards: [],
@@ -70,7 +85,7 @@ async function checkCardBalance(context: AssetsContext) {
     .call({ from: caller.local.toString() })
   const cards: CardDetail[] = []
   tokens.indexes.forEach((id: string, i: number) => {
-    const card = getCardByTokenId(id)
+    const card = getCardByTokenId(id.toString())
     card.amount = parseInt(tokens.balances[i], 10)
     cards.push(card)
   })
@@ -86,7 +101,7 @@ async function checkPackBalance(context: AssetsContext) {
     const amount = await context.state.packsContract[type].methods
       .balanceOf(account)
       .call({ from: caller.local.toString() })
-    packs.push({ type, amount })
+    packs.push({ type, amount: amount.toNumber() })
   })
   assetsModule.setPackBalance(packs)
 }
@@ -102,17 +117,17 @@ async function transferCards(
   console.log("payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
-    const caller = await plasmaModule.getCallerAddress()
+    const callerEthAddress = await plasmaModule.getCallerAddress()
     const plasmaAddress = context.rootState.plasma.address
     const result = await context.state
       .cardContract!.methods.batchTransferFrom(
         plasmaAddress,
-        payload.receiver,
+        formatFromLoomAddress(payload.receiver),
         payload.cardIds,
         payload.amounts,
       )
       // @ts-ignore
-      .send({ from: caller })
+      .send({ from: callerEthAddress.local.toString() })
     console.log("transfer cards result", result)
     // TODO: this is not working
     CommonTypedStore.setSuccessMsg("Transferring cards success.")
@@ -134,15 +149,15 @@ async function transferPacks(
   },
 ) {
   try {
-    // DPOSTypedStore.setShowLoadingSpinner(true)
+    DPOSTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
     const result = await context.state.packsContract[payload.packType].methods
-      .transfer(payload.receiver, payload.amount)
+      .transfer(formatFromLoomAddress(payload.receiver), payload.amount)
       .send({ from: ethAddress })
     console.log("transfer packs result", result)
     return result
   } catch (error) {
-    // DPOSTypedStore.setShowLoadingSpinner(false)
+    DPOSTypedStore.setShowLoadingSpinner(false)
     throw error
   }
 }

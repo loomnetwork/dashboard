@@ -9,7 +9,7 @@ import { CommonTypedStore } from "@/store/common"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
-import { DPOSTypedStore } from "@/store/dpos-old";
+import { DPOSTypedStore } from "@/store/dpos-old"
 
 function initialState(): AssetsState {
   return {
@@ -151,11 +151,19 @@ async function transferPacks(
   try {
     DPOSTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
-    const result = await context.state.packsContract[payload.packType].methods
-      .transfer(formatFromLoomAddress(payload.receiver), payload.amount)
-      .send({ from: ethAddress })
-    console.log("transfer packs result", result)
-    return result
+    const loomAddress = await plasmaModule.getAddress()
+    console.log("loomAddress.local.toString()", loomAddress.local.toString())
+    const ethAddressString = ethAddress.local.toString()
+    console.log("ethAddressString", ethAddressString)
+    const receiver = formatFromLoomAddress(payload.receiver)
+    console.log("receiver", receiver)
+    console.log("context.state.packsContract[payload.packType]", context.state.packsContract[payload.packType])
+    debugger
+    // const result = await context.state.packsContract[payload.packType].methods
+    //   .transfer(receiver, payload.amount)
+    //   .send({ from: loomAddress.local.toString() })
+    // console.log("transfer packs result", result)
+    // return result
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
     throw error

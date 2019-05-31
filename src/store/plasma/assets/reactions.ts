@@ -33,10 +33,13 @@ export function zbcardsReactions(store: Store<DashboardState>) {
   store.watch(
     (state) => state.plasma.web3,
     (web3) => {
+      debugger
       if (web3 === null) {
         // todo dispose of contracts if that's a thing
         return
       }
+      console.log("web3",web3);
+      
       const envName = store.state.plasma.networkId
       const cardInstance = new web3.eth.Contract(
         // @ts-ignore

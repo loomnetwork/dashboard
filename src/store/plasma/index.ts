@@ -178,3 +178,4 @@ async function getPublicAddressFromPrivateKeyUint8Array(
   ).toString()
   return publicAddress
 }
+

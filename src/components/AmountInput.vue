@@ -16,16 +16,14 @@
         <b-button variant="outline-primary" @click="setAllAmount">All ({{ state.plasma.tokenSelected.toUpperCase() }})</b-button>
       </b-col>
     </b-row>
-    
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
-import { DashboardState } from '@/types';
+import { DashboardState } from "@/types"
 
 @Component
-
 export default class AmountInput extends Vue {
   @Prop(Number) value!: number // v-model is it accepts a value prop and emit an input event.
   @Prop(Number) min!: number
@@ -68,7 +66,7 @@ export default class AmountInput extends Vue {
     }
   }
 
-  get state() : DashboardState {
+  get state(): DashboardState {
     return this.$store.state
   }
   // Button Action
@@ -76,12 +74,8 @@ export default class AmountInput extends Vue {
     this.amount = this.max
   }
 
-  mounted(){
+  mounted() {
     this.amount = 0
-  }
-
-  get isError() {
-    return Boolean(this.errorMsg)
   }
 }
 </script>
@@ -94,6 +88,7 @@ p {
 }
 
 input:invalid {
+  /* Override Style => ignore invalid when input float amount */
   border: 1px solid #ced4da;
   color: #495057;
 }

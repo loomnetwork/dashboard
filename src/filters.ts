@@ -102,5 +102,5 @@ export function formatTokenAmount(wei: BN) {
 }
 
 export function swapTextBase64AndHexLabel(input) {
-  return input === "Base64" ? "Hex" : "Base64"
+  return input === "base64" ? "hex" : "base64"
 }

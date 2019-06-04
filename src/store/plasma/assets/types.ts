@@ -21,7 +21,7 @@ export interface AssetsState {
     amount: number,
   }
 
-  packToTransferSelected: null | {
+  packToTransferSelected: {
     type: string
     amount: number,
   }

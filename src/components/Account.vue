@@ -3,13 +3,27 @@
     <b-card-title>My Account</b-card-title>
     <b-row>
       <b-col cols="3">Ethereum:</b-col>
-      <b-col cols="6"><h6 class="highlight">{{ethAccount}}</h6></b-col>
-      <b-col cols="3"><a :href="etherScanUrl"  target="_blank">Show in EtherScan <fa icon="external-link-alt"/></a></b-col>
+      <b-col cols="6">
+        <h6 class="highlight">{{ethAccount}}</h6>
+      </b-col>
+      <b-col cols="3">
+        <a :href="etherScanUrl" target="_blank">
+          Show in EtherScan
+          <fa icon="external-link-alt"/>
+        </a>
+      </b-col>
     </b-row>
     <b-row>
       <b-col cols="3">Loom:</b-col>
-      <b-col cols="6"><h6 class="highlight">{{dappchainAddress | loomAddress}}</h6></b-col>
-      <b-col cols="3"><a :href="blockExplorerUrl" target="_blank">Show in Block Explorer <fa icon="external-link-alt"/></a></b-col>
+      <b-col cols="6">
+        <h6 class="highlight">{{dappchainAddress | loomAddress}}</h6>
+      </b-col>
+      <b-col cols="3">
+        <a :href="blockExplorerUrl" target="_blank">
+          Show in Block Explorer
+          <fa icon="external-link-alt"/>
+        </a>
+      </b-col>
     </b-row>
   </b-card>
 </template>
@@ -24,8 +38,6 @@ import { DPOSUserV3 } from "loom-js"
 
 @Component
 export default class Account extends Vue {
-  dposUser: DPOSUserV3 | null = null
-  dappchainAddress = ""
   etherScanUrl = `${this.dposState.currentChain.etherScan}/address/${this.ethAccount}`
   blockExplorerUrl = `${this.dposState.currentChain.blockExplorer}`
 
@@ -38,13 +50,13 @@ export default class Account extends Vue {
   }
 
   get ethAccount() {
-    return this.state.DPOS.currentMetamaskAddress
+    return this.state.ethereum.address
   }
 
-  async mounted() {
-    this.dposUser = await this.state.DPOS.dposUser
-    this.dappchainAddress = this.dposUser!.loomAddress.local.toString()
+  get dappchainAddress() {
+    return this.state.plasma.address
   }
+
 
 }
 </script>

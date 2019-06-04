@@ -106,15 +106,8 @@ async function getDeployersAsync(context: WhiteListContext) {
       loomAddress,
     )
     deployerAddresses = await whiteListModule.formatDeployersAddress(result)
-
   } catch (error) {
       console.error(error)
-
-    // if (!error.data.includes("not found")) {
-    //   // if `not found` = have no deployer => don't show error
-    //   // else = other internal error => show error
-      // console.error(error.data)
-    // }
       deployerAddresses = []
   }
   whiteListModule.setUserDeployersAddress(deployerAddresses)

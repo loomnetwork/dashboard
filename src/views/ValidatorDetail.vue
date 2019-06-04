@@ -4,16 +4,28 @@
     <loading-spinner v-if="loading" :showBackdrop="true"></loading-spinner>
     -->
     <header>
-      <h1><router-link to="../validators" style="color: inherit;">{{ $t('views.validator_list.validators') }}</router-link></h1>
+      <h1>
+        <router-link
+          to="../validators"
+          style="color: inherit;"
+        >{{ $t('views.validator_list.validators') }}</router-link>
+      </h1>
     </header>
     <section class="validator-details">
       <header>
-      <h1>{{validator.name }}<span> {{validator.isBootstrap ? "(bootstrap)" : ''}}</span></h1>
-      <small>loom{{validator.address.substring(2)}}</small>
-      <p v-if="validator.description" style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0">
-        {{validator.description}}
-      </p>
-      <a :href="validator.website | url" target="_blank">{{validator.website | domain}} <fa icon="external-link-alt"/></a>
+        <h1>
+          {{validator.name }}
+          <span>{{validator.isBootstrap ? "(bootstrap)" : ''}}</span>
+        </h1>
+        <small>loom{{validator.address.substring(2)}}</small>
+        <p
+          v-if="validator.description"
+          style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0"
+        >{{validator.description}}</p>
+        <a :href="validator.website | url" target="_blank">
+          {{validator.website | domain}}
+          <fa icon="external-link-alt"/>
+        </a>
       </header>
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
@@ -27,52 +39,31 @@
       </dl>
     </section>
     <section v-if="userIsLoggedIn" class="user-stakes">
-      <h6 v-if="!isBootstrap">{{ $t('My stakes') }} </h6>
-      <b-list-group v-if="validatorDelegations.length">
-          <b-list-group-item v-for="delegation in validatorDelegations" :key="delegation.unlockTime">
-            <dl>
-              <dt>{{ $t('views.validator_detail.state') }}</dt>
-              <dd>{{delegation.state | delegationState}}</dd>
-              <dt>{{ $t('views.validator_detail.amount_delegated') }}</dt>
-              <dd>{{delegation.amount | tokenAmount}}</dd>
-              <dt>{{ $t('views.validator_detail.updated_amount') }}</dt>
-              <dd>{{delegation.updateAmount | tokenAmount}}</dd>
-              <dt>{{ $t('views.validator_detail.timelock_tier') }}</dt>
-              <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
-              <template v-if="delegation.lockTime > 0">
-              <dt>Unlock time</dt>
-              <dd>{{delegation.lockTime | date('seconds')}}</dd>
-              </template>
-            </dl>
-            <footer class="actions">
-              <b-button-group style="display: flex;">
-                <b-button variant="outline-primary" :disabled="delegation.pending"
-                  @click="openRedelegateModal(delegation)"
-                >{{ $t('Redelegate') }}</b-button>
-                <b-button variant="outline-primary" :disabled="delegation.pending || delegation.locked"
-                  @click="openRequestUnbondModal(delegation)"
-                >{{ $t('Undelegate') }}</b-button>
-              </b-button-group>
-            </footer>
-          </b-list-group-item>
-      </b-list-group>
-      <p v-if="!validatorDelegations.length && !validator.isBootstrap" class="no-stakes">
-        {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}<br/>
+      <h6 v-if="!isBootstrap">{{ $t('My stakes') }}</h6>
+      <delegations-list :delegations="validator.delegations"/>
+      <p
+        class="no-stakes"
+        v-if="validator.isBootstrap === false && validator.delegations.length === 0"
+      >
+        {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}
+        <br>
       </p>
 
       <div class="button-container" v-if="!isBootstrap">
-        <b-button class="stake mr-3" 
-          @click="openRequestDelegateModal()">
-          {{ $t("Stake tokens") }}
-        </b-button>
-        <b-button class="consolidate" v-if="canConsolidate"
-          @click="consolidateDelegations(validator)">
-          {{ $t("views.validator_detail.consolidate") }}
-        </b-button>
+        <b-button class="stake mr-3" @click="requestDelegation()">{{ $t("Stake tokens") }}</b-button>
+        <b-button
+          class="consolidate"
+          v-if="canConsolidate"
+          @click="consolidateDelegations(validator)"
+        >{{ $t("views.validator_detail.consolidate") }}</b-button>
       </div>
 
       <!-- dialogs -->
-      <faucet-delegate-modal @onDelegate="delegateHandler" ref="delegateModalRef" :hasDelegation="hasDelegation"></faucet-delegate-modal>
+      <faucet-delegate-modal
+        @onDelegate="delegateHandler"
+        ref="delegateModalRef"
+        :hasDelegation="hasDelegation"
+      ></faucet-delegate-modal>
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
       <success-modal></success-modal>
     </section>
@@ -121,7 +112,7 @@ export default class ValidatorDetail extends Vue {
     return this.$route.params.index
   }
 
-  get userIsLoggedIn() { return this.state.plasma.address !== ""}
+  get userIsLoggedIn() { return this.state.plasma.address !== "" }
 
   get validator() {
     const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
@@ -130,17 +121,6 @@ export default class ValidatorDetail extends Vue {
       this.$router.push("../validators")
     }
     return validator
-  }
-
-  get validatorDelegations() {
-    const validator = this.validator
-    if (!this.validator) return []
-    return this.state.dpos.delegations
-      .filter((d) => d.validator.local.toString() === validator.address && d.index > 0)
-      .map((d) => {
-        d.locked = d.lockTime * 1000 > Date.now()
-        return d
-      })
   }
 
   async delegateHandler() {
@@ -154,9 +134,9 @@ export default class ValidatorDetail extends Vue {
     this.$refs.address.select()
     const successful = document.execCommand("copy")
     if (successful) {
-        CommonTypedStore.setSuccess("Address copied to clipboard")
+      CommonTypedStore.setSuccess("Address copied to clipboard")
     } else {
-        CommonTypedStore.setSuccess("Somehow copy  didn't work...sorry")
+      CommonTypedStore.setSuccess("Somehow copy  didn't work...sorry")
     }
   }
 
@@ -167,6 +147,10 @@ export default class ValidatorDetail extends Vue {
   async redelegateHandler() {
     // plugin listens to actions and refreshes accordingly
     return false
+  }
+
+  requestDelegation() {
+    dposModule.requestDelegation(this.validator!)
   }
 
   openRequestDelegateModal() {
@@ -210,11 +194,11 @@ main.validator {
     padding-bottom: 16px;
   }
 
-
   dl {
     display: flex;
     flex-wrap: wrap;
-    dt,dd {
+    dt,
+    dd {
       flex: 50%;
       border-bottom: 1px solid rgba(0, 0, 0, 0.09);
       line-height: 24px;
@@ -222,7 +206,7 @@ main.validator {
       margin: 0;
     }
     dt {
-      font-weight: normal
+      font-weight: normal;
     }
     dd {
       font-weight: 500;
@@ -239,12 +223,10 @@ main.validator {
       margin-bottom: 5px;
       padding-bottom: 5px;
       > h1 {
-      color: black;
-      font-size: 1.8em;
+        color: black;
+        font-size: 1.8em;
       }
-      
     }
-
   }
 
   .user-stakes {
@@ -254,7 +236,7 @@ main.validator {
       button {
         background-color: #5448da;
         border-color: #5448da;
-            margin-top: 15px;
+        margin-top: 15px;
       }
     }
     > footer {
@@ -268,10 +250,10 @@ main.validator {
       box-shadow: 0px -1px 5px grey;
       > button {
         background-color: #5448da;
-        border-color: #5448da
+        border-color: #5448da;
       }
     }
-  }  
+  }
 }
 
 .loading-backdrop {
@@ -283,8 +265,7 @@ main.validator {
   left: 0px;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 9999;
 }
-
 </style>

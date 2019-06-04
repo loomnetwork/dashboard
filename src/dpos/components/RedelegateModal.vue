@@ -3,6 +3,7 @@
     id="redelegate-modal"
     ref="modalRef"
     title="Redelegate"
+    v-model="visible"
     @hidden="clear"
     hide-footer
     no-close-on-backdrop
@@ -39,6 +40,8 @@ import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
 import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
+import { dposModule } from '../../store/dpos';
+import { Validator } from '../../store/dpos/types';
 
 @Component({
   components: {
@@ -51,100 +54,74 @@ export default class RedelegateModal extends Vue {
 
   dropdownTemplate = RedelegateDropdownTemplate
   dropdownDelegationTemplate = RedelegateDelegationDropdownTemplate
-  filteredTargetItems: any[] = []
-  delegation: any = null
-  targetDelegations: any[] = []
-  selectedTargetDelegation: any = null
-  origin: any = {}
-  target: any = {}
+  filteredTargetItems: Validator[] = []
 
   errorMsg = ""
   originErrorMsg = ""
 
+  get visible() {
+    const dpos = this.state.dpos
+    return dpos.intent === "redelegate" && dpos.delegation != null
+  }
+
+  set visible(val: boolean) {
+    // clear
+  }
+
+  get sourceDelegation() {
+    return this.state.dpos.delegation
+  }
+
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
-  redelegateAsync = DPOSTypedStore.redelegateAsync
 
   get state(): DashboardState {
     return this.$store.state
   }
 
   get validators() {
-    return this.state.DPOS.validators
+    return this.state.dpos.validators
   }
   get delegations() {
-    return this.state.DPOS.delegations
+    return this.state.dpos.delegations
   }
 
-  show(delegation) {
-    const originAddr = delegation.validatorStr
-    this.delegation = delegation
-    this.origin = this.validators.find((v) => v.address === originAddr)
-    this.updateTargetItems()
-    // @ts-ignore
-    this.$refs.modalRef.show()
-  }
-
-  clear() {
-    this.delegation = null
-    this.targetDelegations = []
-    this.selectedTargetDelegation = null
-    this.origin = {}
-    this.target = {}
+  get delegation() {
+    return this.state.dpos.delegation
   }
 
   async okHandler() {
     this.errorMsg = ""
-    if (!this.target.address) {
+    const delegation = this.delegation!
+    if (delegation.updateValidator === undefined) {
       this.errorMsg = "Please select a target validator"
       return
     }
-    if (this.origin.address === this.target.address) {
+    if (delegation.validator === delegation.updateValidator) {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
 
-    this.setShowLoadingSpinner(true)
+    dposModule.redelegate(delegation)
 
-    const payload = {
-      origin: this.origin.address,
-      target: this.target.address,
-      amount: this.delegation!.amount,
-      index: this.delegation!.index,
-    }
-
-    await this.redelegateAsync(payload)
-
-    this.setShowLoadingSpinner(false)
-    // this.$emit("ok")
-    this.closeModal()
-
-  }
-
-  closeModal() {
-    this.clear()
-    // @ts-ignore
-    this.$refs.modalRef.hide()
   }
 
   getLabel(item) {
     return item ? item.name : "Please select a validator"
   }
 
-  getDelegationLabel(item) {
-    return item ? item.index : "Please select a delegation"
-  }
-
   updateTargetItems(query = "") {
-    const validators = this.validators.filter((v) => !v.isBootstrap)
-    const origin = this.origin
+    const validators = this.validators
+    const origin = this.delegation!.validator
     const str = query.toLowerCase()
     if (str.length > 0) {
       this.filteredTargetItems = validators.filter((item) =>
+        !item.isBootstrap &&
         origin !== item &&
         item.name.toLowerCase().includes(str),
       )
     } else {
       this.filteredTargetItems = validators.filter((item) =>
+        !item.isBootstrap &&
         origin !== item,
       )
     }
@@ -152,31 +129,7 @@ export default class RedelegateModal extends Vue {
 
   selectTargetItem(validator) {
     this.errorMsg = ""
-    this.target = validator
-  }
-
-  selectDelegation(delegation) {
-    if (this.selectedTargetDelegation === delegation.index) {
-      this.selectedTargetDelegation = null
-      return
-    }
-    if (delegation.state !== 1) {
-      this.errorMsg = "The selected delegation is in a bonding state, please try again later."
-    } else {
-      this.selectedTargetDelegation = delegation.index
-    }
-  }
-
-  validatorDelegations() {
-    if (!this.target || this.delegations.length <= 0) return
-    const validator = this.target
-    return this.delegations
-      .filter((d) => d.validatorStr === validator.address)
-      .map((d, idx) => {
-        d.locked = parseInt(d.lockTime, 10) * 1000 > Date.now()
-        d.index = (idx + 1)
-        return d
-      })
+    this.delegation!.updateValidator = validator
   }
 
 }

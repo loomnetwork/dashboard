@@ -1,8 +1,7 @@
-/* eslint-disable no-undef, func-names */
-import Web3 from "web3"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
+import BN from "bn.js"
 
 const unitMap = {
   noether: "0",
@@ -33,6 +32,8 @@ const unitMap = {
   gether: "1000000000000000000000000000",
   tether: "1000000000000000000000000000000",
 }
+
+export const ZERO = new BN("0")
 
 export function toBigNumber(num) {
   num = num || 0

@@ -101,7 +101,7 @@ async function checkPackBalance(context: AssetsContext) {
     const amount = await context.state.packsContract[type].methods
       .balanceOf(account)
       .call({ from: caller.local.toString() })
-    packs.push({ type, amount: amount.toNumber() })
+    packs.push({ type, amount })
   })
   assetsModule.setPackBalance(packs)
 }
@@ -114,10 +114,13 @@ async function transferCards(
     receiver: string,
   },
 ) {
+  DPOSTypedStore.setShowLoadingSpinner(true)
+
   console.log("payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
-    const callerEthAddress = await plasmaModule.getCallerAddress()
+    const ethAddress = await plasmaModule.getCallerAddress()
+    const ethAddressString = ethAddress.local.toString()
     const plasmaAddress = context.rootState.plasma.address
     const result = await context.state
       .cardContract!.methods.batchTransferFrom(
@@ -127,16 +130,20 @@ async function transferCards(
         payload.amounts,
       )
       // @ts-ignore
-      .send({ from: callerEthAddress.local.toString() })
+      .send({ from: ethAddressString })
     console.log("transfer cards result", result)
-    // TODO: this is not working
-    CommonTypedStore.setSuccessMsg("Transferring cards success.")
     await assetsModule.checkCardBalance()
-    return result
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setSuccessMsg("Transferring cards success. Tx: " + result.transactionHash)
   } catch (error) {
-    // TODO: this is not working
-    CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
-    throw error
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    debugger
+    if (error.message.includes("denied")) {
+      CommonTypedStore.setErrorMsg("You denied the transaction")
+    } else {
+      CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
+      throw error
+    }
   }
 }
 
@@ -151,21 +158,23 @@ async function transferPacks(
   try {
     DPOSTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
-    const loomAddress = await plasmaModule.getAddress()
-    console.log("loomAddress.local.toString()", loomAddress.local.toString())
     const ethAddressString = ethAddress.local.toString()
-    console.log("ethAddressString", ethAddressString)
     const receiver = formatFromLoomAddress(payload.receiver)
-    console.log("receiver", receiver)
-    console.log("context.state.packsContract[payload.packType]", context.state.packsContract[payload.packType])
-    debugger
-    // const result = await context.state.packsContract[payload.packType].methods
-    //   .transfer(receiver, payload.amount)
-    //   .send({ from: loomAddress.local.toString() })
-    // console.log("transfer packs result", result)
-    // return result
+    const result = await context.state.packsContract[payload.packType].methods
+      .transfer(receiver, payload.amount)
+      .send({ from: ethAddressString })
+    console.log("transfer packs result", result)
+    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setSuccessMsg("Transferring packs success. Tx: " + result.transactionHash)
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
-    throw error
+    console.log("error.message == ", error.message)
+    console.log("error.message.includes...", error.message.includes("denied"))
+    if (error.message.includes("denied")) {
+      CommonTypedStore.setErrorMsg("You denied the transaction")
+    } else {
+      CommonTypedStore.setErrorMsg(`Error Transferring packs: ${error.message}`)
+      throw error
+    }
   }
 }

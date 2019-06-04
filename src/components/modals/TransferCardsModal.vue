@@ -27,8 +27,6 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
-import { DPOSTypedStore } from "@/store/dpos-old"
-
 @Component
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
@@ -51,7 +49,7 @@ export default class TransferCardsModal extends Vue {
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > parseInt(this.cardToTransfer.amount, 10) || this.amountToTransfer % 1 !== 0) {
+    if (this.amountToTransfer > this.cardToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }

@@ -3,13 +3,13 @@
 <template>
   <div id="chain-selector">
     <b-input-group size="sm">
-      <b-form-input type="text" aria-label="Connection URL" :value="chainUrl" @change="setUrl">
+      <b-form-input type="text" aria-label="Connection URL" :value="chainUrl">
       </b-form-input>
       <b-input-group-append>
         <b-dropdown variant="dark" size="sm">
           <b-dropdown-item-button v-for="(chain, index) in Object.keys(allowedUrls)"
                                   :key="`chain-${index}`"
-                                  @click="onUrlClicked(chain)">            
+                                  @click="addChainUrl({id: chain})">            
             <span>
               <strong>{{ index + 1 }}</strong>
               {{ chain }} : {{allowedUrls[chain]["dappchainEndpoint"] }}

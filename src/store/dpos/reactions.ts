@@ -75,9 +75,9 @@ export function dposReactions(store: Store<DashboardState>) {
     )
   }
 
-  function refreshDPoSState() {
+  async function refreshDPoSState() {
     log("refreshDPoSState", store.state.plasma.address)
-    dposModule.refreshValidators()
+    await dposModule.refreshValidators()
     if (store.state.plasma.address) {
       refreshDPoSUserState()
     }

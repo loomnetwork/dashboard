@@ -11,12 +11,17 @@ import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
 import { ethereumModule } from "../ethereum"
+import networks from "@/../chain-config"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
 import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
+import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
 import { CryptoUtils } from "loom-js"
 import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
+import { plasmaModule } from '../plasma';
+import { AbiItem } from 'web3-utils';
+
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -98,12 +103,19 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
   }
 }
 
-const instance: EthereumGateways | null = null
-
+let instance: EthereumGateways | null = null
 export function init(web3: Web3) {
   // return new EthereumGateways()
   const account = web3.eth.defaultAccount
   // create gateways and vmc (maybe vmc does not care...)
+
+  const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
+  const loomGateway = new web3.eth.Contract((ERC20GatewayABI_v2 as AbiItem[]), gwAddress)
+  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "")
+  const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, "", {})
+
+  instance = new EthereumGateways(loomGateway, mainGateway, vmcContract, web3)
+
 }
 
 export function service() {

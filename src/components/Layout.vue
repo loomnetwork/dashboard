@@ -36,8 +36,8 @@
             no-close-on-backdrop
           >{{ $t('components.layout.already_mapped') }}</b-modal>
           <transition name="page" mode="out-in">
-          <router-view></router-view>
-          <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
+            <router-view></router-view>
+            <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
           </transition>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default class Layout extends Vue {
   get showSigningAlert() { return this.s.DPOS.showSigningAlert }
   get metamaskError() { return this.s.DPOS.metamaskError }
   get mappingError() { return this.s.DPOS.mappingError }
-  get networkId() { return this.s.DPOS.networkId }
+  get networkId() { return this.s.plasma.networkId }
 
   setErrorMsg = CommonTypedStore.setErrorMsg
   initializeDependencies = DPOSTypedStore.initializeDependencies
@@ -196,11 +196,11 @@ export default class Layout extends Vue {
         }
 
         if (this.currentMetamaskAddress &&
-          this.currentMetamaskAddress !== accounts[0] ) {
-                localStorage.removeItem("lastWithdrawTime")
-                this.metamaskChangeAlert = true
-                // @ts-ignore
-                window.ethereum.removeAllListeners()
+          this.currentMetamaskAddress !== accounts[0]) {
+          localStorage.removeItem("lastWithdrawTime")
+          this.metamaskChangeAlert = true
+          // @ts-ignore
+          window.ethereum.removeAllListeners()
         }
 
       })

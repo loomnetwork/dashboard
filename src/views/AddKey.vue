@@ -2,7 +2,8 @@
     <div class="container mb-5">
       <!-- Deployer Public key section -->
       <h4 class="mt-3">Deployer Public Keys</h4>
-      <b-card v-for="(pk, index) in publicKeys" :key="pk.hex" v-show="publicKeys.length > 0">
+      <div  v-if="publicKeys.length > 0">
+      <b-card v-for="(pk, index) in publicKeys" :key="pk.hex">
         <b-row>
           <b-col cols="12" sm="6">
             <h6>{{pk[pk.defaultFormat] | loomAddress}}</h6>
@@ -14,7 +15,11 @@
             <b-badge variant="success">Tier: {{pk.tier}}</b-badge>
           </b-col>
         </b-row>
-      </b-card>  
+      </b-card>
+      </div>
+      <div v-else class="mt-3">
+        You have no deployer address.
+      </div>
       <!-- Add new key section -->
       <b-card class="my-5">
         <b-row>
@@ -41,7 +46,7 @@
             </b-card>
           </label>
         </div>
-        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected || !newPublicAddress"> Add Key </b-button>
+        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress"> Add Key </b-button>
         <div class="remaining my-3">
           <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
           <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
@@ -79,6 +84,7 @@ export default class AddKey extends Vue {
   isShowGenPublicKeyModal = false
   newPublicAddress = ""
   tierSelected: Tier | {} = {}
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   modal(ref: string) {
    return this.$refs[ref] as Modal
@@ -111,8 +117,9 @@ export default class AddKey extends Vue {
       return
     }
     const loomAddress =  formatFromLoomAddress(this.newPublicAddress)
+    this.setShowLoadingSpinner(true)
     let result = await this.addDeployerAsync({deployer: loomAddress, tier})
-    console.log("result", result);
+    this.setShowLoadingSpinner(false)
   }
 
   showSeedPhraseModal() {

@@ -30,6 +30,12 @@ export interface DeployerAddress {
   defaultFormat: "hex" | "base64"
 }
 
+export interface DeployerAddressResponse {
+  address: Address,
+  contracts: [],
+  tierId: number,
+}
+
 // helper/shorthand for plasma module action context
 export declare type WhiteListContext = BareActionContext<
   WhiteListState,

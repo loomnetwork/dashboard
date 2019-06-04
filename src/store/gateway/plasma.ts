@@ -96,7 +96,7 @@ export async function init(
   instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3)
 }
 
-export function gateways() {
+export function service() {
   return instance!
 }
 

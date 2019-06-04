@@ -121,7 +121,8 @@ export default class DepositForm extends Vue {
       return errors.push("Invalid amount")
     }
     const int = Number.parseInt("" + input, 10)
-    if (int !== input) errors.push("Only round amounts allowed")
+    // TODO: Add validation for decimal values
+    // if (int !== input) errors.push("Only round amounts allowed")
     if (int < 1) errors.push("At least 1 loom")
     if (int > this.userBalance) errors.push("Not enough funds in your account")
     this.amountErrors = errors

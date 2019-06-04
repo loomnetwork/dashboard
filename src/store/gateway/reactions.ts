@@ -4,6 +4,7 @@ import { gatewayModule } from "."
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { plasmaModule } from "../plasma"
 import { Provider } from "ethers/providers"
+import { Address } from "loom-js"
 
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
@@ -31,13 +32,24 @@ export function gatewayReactions(store: Store<DashboardState>) {
         return
       }
       await setPlasmaAccount(mapping)
-
+      // Initialize Ethereum gateways & coin contracts
       EthereumGateways.init(ethereumModule.web3)
+      const ethGateway = EthereumGateways.service()
+      ethGateway.add("loom", store.state.ethereum.erc20Addresses.loom)
+      ethGateway.add("eth", "") // Ether does not have a contract address
+      // Initialize Plasma gateways & coin contracts
       PlasmaGateways.init(
         plasmaModule.state.client,
         plasmaModule.state.web3!,
         mapping,
       )
+
+      const loomGatewayAddr = Address.fromString(ethGateway.loomGateway.address)
+      const ethGatewayAddr = Address.fromString(ethGateway.mainGateway.address)
+      const plasmaGateway = PlasmaGateways.service()
+      plasmaGateway.add("loom", loomGatewayAddr)
+      plasmaGateway.add("eth", ethGatewayAddr)
+
     },
   )
 

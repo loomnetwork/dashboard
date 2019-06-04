@@ -155,7 +155,7 @@ class EthereumGateways {
     let adapter: EthereumGatewayAdapter
     switch (token) {
       case "eth":
-        adapter = new EthGatewayAdapter(vmc, mainGateway, tokenAddress, web3)
+        adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
       case "loom":
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)

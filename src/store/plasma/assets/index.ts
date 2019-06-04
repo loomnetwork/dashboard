@@ -10,6 +10,8 @@ import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
 import { DPOSTypedStore } from "@/store/dpos-old"
+import debug from "debug"
+const log = debug("assets")
 
 function initialState(): AssetsState {
   return {
@@ -115,8 +117,7 @@ async function transferCards(
   },
 ) {
   DPOSTypedStore.setShowLoadingSpinner(true)
-
-  console.log("payload", payload)
+  log("transferCards payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
     const ethAddress = await plasmaModule.getCallerAddress()
@@ -131,13 +132,12 @@ async function transferCards(
       )
       // @ts-ignore
       .send({ from: ethAddressString })
-    console.log("transfer cards result", result)
+    log("transfer cards result", result)
     await assetsModule.checkCardBalance()
     DPOSTypedStore.setShowLoadingSpinner(false)
     CommonTypedStore.setSuccessMsg("Transferring cards success. Tx: " + result.transactionHash)
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
-    debugger
     if (error.message.includes("denied")) {
       CommonTypedStore.setErrorMsg("You denied the transaction")
     } else {
@@ -155,6 +155,7 @@ async function transferPacks(
     receiver: string,
   },
 ) {
+  log("transferPacks payload", payload)
   try {
     DPOSTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
@@ -163,13 +164,11 @@ async function transferPacks(
     const result = await context.state.packsContract[payload.packType].methods
       .transfer(receiver, payload.amount)
       .send({ from: ethAddressString })
-    console.log("transfer packs result", result)
+    log("transfer packs result", result)
     DPOSTypedStore.setShowLoadingSpinner(false)
     CommonTypedStore.setSuccessMsg("Transferring packs success. Tx: " + result.transactionHash)
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
-    console.log("error.message == ", error.message)
-    console.log("error.message.includes...", error.message.includes("denied"))
     if (error.message.includes("denied")) {
       CommonTypedStore.setErrorMsg("You denied the transaction")
     } else {

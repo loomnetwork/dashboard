@@ -1,6 +1,6 @@
 
 import { getStoreBuilder } from "vuex-typex"
-import { WhiteListState, HasWhiteListState, Tier, DeployerAddress } from "@/store/whitelist/types"
+import { WhiteListState, HasWhiteListState, Tier, DeployerAddress, DeployerAddressResponse } from "@/store/whitelist/types"
 import * as mutations from "./mutations"
 import { WhiteListContext } from "./types"
 import { Address, LocalAddress } from "loom-js"
@@ -104,9 +104,7 @@ async function getDeployersAsync(context: WhiteListContext) {
     result = await userDeployerWhitelist!.getDeployersAsync(
       loomAddress,
     )
-    log("getDeployersAsync result", result)
     deployerAddresses = await whiteListModule.formatDeployersAddress(result)
-    log("deployerAddresses", deployerAddresses)
 
   } catch (error) {
       console.error(error)
@@ -121,34 +119,14 @@ async function getDeployersAsync(context: WhiteListContext) {
   whiteListModule.setUserDeployersAddress(deployerAddresses)
 }
 
-/**
- * [
- * { "wrappers_": null,
- * "arrayIndexOffset_": -1,
- * "array": [
- * [ "default", { "0": 132, "1": 46, "2": 166, "3": 34, "4": 253, "5": 231, "6": 30, "7": 128, "8": 83, "9": 175, "10": 91, "11": 212, "12": 28, "13": 74, "14": 38, "15": 134, "16": 64, "17": 197, "18": 153, "19": 214 } ],
- * []
- * ],
- * "pivot_": 1.7976931348623157e+308,
- * "convertedFloatingPointFields_": {} },
- * { "wrappers_": null, "arrayIndexOffset_": -1, "array": [ [ "default", { "0": 74, "1": 40, "2": 226, "3": 212, "4": 185, "5": 142, "6": 187, "7": 166, "8": 102, "9": 49, "10": 176, "11": 67, "12": 255, "13": 191, "14": 245, "15": 98, "16": 174, "17": 141, "18": 204, "19": 30 } ], [] ], "pivot_": 1.7976931348623157e+308, "convertedFloatingPointFields_": {} }
- * ]
- *
-*/
-//
-function formatDeployersAddress(context: WhiteListContext, deployers: []) {
+function formatDeployersAddress(context: WhiteListContext, deployers: DeployerAddressResponse[]) {
   const formattedDeployersAddress: DeployerAddress[] = []
   deployers.forEach((deployer) => {
-    //  @ts-ignore
-    let array = deployer.array[0]
-    const deployerAddress = new Address(
-          array[0],
-          new LocalAddress(array[1]))
-    // TODO: fix this when get tier from contract
+    const deployerAddress = deployer.address
     formattedDeployersAddress.push({
       address: deployerAddress,
       hex: deployerAddress.local.toString(),
-      tier: 0,
+      tier: deployer.tierId,
       base64: Buffer.from(deployerAddress.local.toString().split("x")[1], "hex").toString("base64"),
       defaultFormat: "hex",
     })

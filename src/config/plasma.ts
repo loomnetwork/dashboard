@@ -1,45 +1,41 @@
-
 export const envs = [
-    {
-        name: "production",
-        networkId: "plasma",
-        chainId: "default",
-        endpoint: "wss:",
-        loom: "",
-        eth: "",
-        erc20: {
-            bnb: "",
-            tron: "",
-        },
+  {
+    name: "production",
+    networkId: "plasma",
+    chainId: "default",
+    endpoint: "wss://plasma.dappchains.com",
+    loom: "",
+    eth: "",
+    erc20: {
+      bnb: "",
+      tron: "",
     },
-    {
-        name: "staging",
-        networkId: "us1",
-        chainId: "default",
-        loom: "",
-        eth: "",
-        erc20: {
-
-        },
-    },
-    {
-        name: "test",
-        networkId: "asia1",
-        chainId: "asia1",
-        loom: "",
-        eth: "",
-        erc20: {
-
-        },
-    },
-    {
-        name: "dev",
-        networkId: "default",
-        chainId: "default",
-        loom: "",
-        eth: "",
-        erc20: {
-
-        },
-    },
+  },
+  {
+    name: "stage",
+    networkId: "us1",
+    chainId: "default",
+    endpoint: "wss://test-z-us1.dappchains.com",
+    loom: "",
+    eth: "",
+    erc20: {},
+  },
+  {
+    name: "test",
+    networkId: "asia1",
+    chainId: "asia1",
+    endpoint: "wss://test-z-asia1.dappchains.com",
+    loom: "",
+    eth: "",
+    erc20: {},
+  },
+  {
+    name: "dev",
+    networkId: "default",
+    chainId: "default",
+    endpoint: "ws://localhost:46658",
+    loom: "",
+    eth: "",
+    erc20: {},
+  },
 ]

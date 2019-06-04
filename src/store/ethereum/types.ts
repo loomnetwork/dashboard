@@ -4,21 +4,21 @@ import { ethers } from "ethers"
 import { Observable } from "rxjs"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { GatewayState } from "../gateway/types"
-import {
-  provider,
-  HttpProvider,
-  WebsocketProvider,
-  Web3EthereumProvider,
-  CustomProvider,
-} from "web3-providers"
+import { provider } from "web3-providers"
+import { Environment } from "@/types"
 
 // Interface for application stores than include EthereumState
 export interface HasEthereumState {
+  env: Environment
   ethereum: EthereumState
   gateway: GatewayState
 }
 
 export interface EthereumState {
+  networkId: string
+  networkName: string
+  chainId: string
+  blockExplorer: string
   // not really state but...
   // see type provider in web3-provider
   provider: provider
@@ -48,12 +48,6 @@ export interface EthereumState {
       loading: boolean,
     },
   }
-}
-
-export enum TokenSymbol {
-  ETH = "eth",
-  LOOM = "loom",
-  BNB = "bnb",
 }
 
 export interface WalletType {

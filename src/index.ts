@@ -29,7 +29,7 @@ import "animate.css/animate.css"
 import { i18n } from "./i18n"
 import App from "./App.vue"
 import router from "./router"
-import store from "./store"
+import { store } from "./store"
 
 durationFormatSetup(moment)
 
@@ -57,11 +57,7 @@ Vue.use(BootstrapVue)
 Vue.use(VueAwesomeSwiper, {})
 Vue.use(Autocomplete)
 Vue.use(Progress)
-FontAwesome.library.add(
-  BrandsFontAwesome,
-  SolidFontAwesome,
-  RegularFontAwesome,
-)
+// FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)
 Vue.component("fa", FontAwesomeIcon)
 Vue.config.productionTip = false
 

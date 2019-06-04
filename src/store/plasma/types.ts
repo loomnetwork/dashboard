@@ -10,15 +10,16 @@ import Web3 from "web3"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
-import { DashboardState } from "@/types"
+import { DashboardState, Environment } from "@/types"
 
 export interface HasPlasmaState {
+  env: Environment
   plasma: PlasmaState
 }
 
 export interface PlasmaState {
   networkId: string
-  chainId: "default" | "asia1"
+  chainId: string // "default" | "asia1"
   client: Client
   provider: LoomProvider | null
   // for normal contracts
@@ -107,7 +108,7 @@ export interface CardDetail {
 }
 
 export enum TierID {
-    DEFAULT = 0,
+  DEFAULT = 0,
 }
 // helper/shorthand for plasma module action context
 export declare type PlasmaContext = BareActionContext<

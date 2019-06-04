@@ -13,9 +13,8 @@ import { DPOSTypedStore } from "../dpos-old"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
-import { TokenSymbol } from "../ethereum/types"
 
-import { DashboardState } from "@/types"
+import { DashboardState, Environment } from "@/types"
 
 import { CommonTypedStore } from "../common"
 import configs from "@/envs"
@@ -29,6 +28,8 @@ import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 import debug from "debug"
 
 import * as Tokens from "./tokens"
+
+import { envs } from "@/config/plasma"
 
 const log = debug("plasma")
 
@@ -71,6 +72,8 @@ export const plasmaModule = {
     return stateGetter()
   },
 
+  setEnv: builder.commit(setEnv),
+
   getAddress: builder.read(getAddress),
   changeIdentity: builder.dispatch(changeIdentity),
   getCallerAddress: builder.dispatch(getCallerAddress),
@@ -109,6 +112,21 @@ export const plasmaModule = {
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,
   ),
+}
+
+function setEnv(state: PlasmaState, envName: Environment) {
+  log("setEnv", envName)
+
+  const env = envs.find((entry) => entry.name === envName)
+  if (env === undefined) {
+    throw new Error("Cannot find config for env " + envName)
+  }
+  state.chainId = env.chainId
+  const { chainId, networkId, endpoint } = env
+  // @ts-ignore
+  state.chainId = chainId
+  state.networkId = networkId
+  state.client = createClient({ chainId, endpoint })
 }
 
 // getter
@@ -179,3 +197,15 @@ async function getPublicAddressFromPrivateKeyUint8Array(
   ).toString()
   return publicAddress
 }
+
+// function addChainUrl(ctx: PlasmaContext, payload: { id: string }) {
+//   if (ctx.state.networkId === payload.id) return
+//   const chains = Object.keys(ctx.state.chainUrls)
+//   const existingId = chains.indexOf(payload.id)
+//   if (existingId > -1) {
+//     DPOSTypedStore.setNetworkId(payload.id)
+//     DPOSTypedStore.setCurrentChain(ctx.state.chainUrls[payload.id])
+//   } else {
+//     return
+//   }
+// }

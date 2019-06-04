@@ -7,6 +7,12 @@ import { ethereumModule } from "."
 import { DashboardState } from "@/types"
 
 export function ethereumReactions(store: Store<DashboardState>) {
+  store.watch(
+    (s) => s.env,
+    (env) => {
+      ethereumModule.setEnv(env)
+    },
+  )
   store.watch((s) => s.ethereum.provider, onProviderChange)
   store.watch((s) => s.ethereum.address, onAddressChange)
 

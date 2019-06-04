@@ -1,4 +1,4 @@
-import { HasPlasmaState, PlasmaSigner, PlasmaTokenKind } from "./types"
+import { PlasmaSigner, PlasmaTokenKind } from "./types"
 import { Store } from "vuex"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
@@ -25,6 +25,13 @@ import TOKENS from "@/data/topTokensSymbol.json"
  * @param store
  */
 export function plasmaReactions(store: Store<DashboardState>) {
+  store.watch(
+    (s) => s.env,
+    (env) => {
+      plasmaModule.setEnv(env)
+    },
+  )
+
   /**
    * on identity change
    * reinitialize coin contract

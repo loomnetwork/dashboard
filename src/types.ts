@@ -8,13 +8,16 @@ import { HasDPOSState } from "./store/dpos/types"
 import { HasEthereumState } from "./store/ethereum/types"
 import { HasPlasmaState } from "./store/plasma/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
-import { HasWhiteListState } from "./store/whitelist/types";
+import { HasWhiteListState } from "./store/whitelist/types"
+
+export declare type Environment = "production" | "stage" | "dev" | "custom"
 
 export interface DashboardState
   extends HasGatewayState,
     HasDPOSState,
     HasWhiteListState,
     HasAssetsState {
+  env: Environment
   // remove
   DPOS: DposState
   // DappChain: DappchainState

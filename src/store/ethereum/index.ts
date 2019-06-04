@@ -4,14 +4,14 @@
 
 import { getStoreBuilder, ActionHandler } from "vuex-typex"
 
-import { DashboardState, Transfer } from "@/types"
+import { DashboardState, Transfer, Environment } from "@/types"
 
 import { EthereumState, HasEthereumState, WalletType } from "./types"
 
 import * as mutations from "./mutations"
 
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import { timer } from "rxjs"
+import { timer, from } from "rxjs"
 import BN from "bn.js"
 import { BareActionContext } from "vuex-typex"
 import { TransferRequest } from "../plasma/types"
@@ -23,6 +23,8 @@ import { ParamType } from "ethers/utils"
 import { Contract, ContractTransaction, ethers } from "ethers"
 
 const log = debug("dboard.ethereum")
+
+import { envs } from "@/config/ethereum"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -40,6 +42,10 @@ const wallets: Map<string, WalletType> = new Map([
 ])
 
 const initialState: EthereumState = {
+  chainId: "",
+  networkId: "",
+  networkName: "",
+  blockExplorer: "",
   provider: null,
   address: "",
   signer: null,
@@ -69,7 +75,7 @@ const initialState: EthereumState = {
 
 // web3 instance
 // @ see
-let web3: Web3
+let web3: Web3 | null
 
 const builder = getStoreBuilder<HasEthereumState>().module(
   "ethereum",
@@ -95,6 +101,8 @@ export const ethereumModule = {
   },
 
   getERC20,
+
+  setEnv: builder.commit(setEnv),
 
   refreshBalance: builder.dispatch(refreshBalance),
   approve: builder.dispatch(approve),
@@ -151,11 +159,27 @@ async function setWalletType(context: ActionContext, walletType: string) {
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
-  web3 = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"))
+  web3 = new Web3(
+    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"),
+  )
   // Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"));
   // Signer is not used in explore mode
   context.state.signer = null
   context.state.address = address
+}
+
+function setEnv(state: EthereumState, envName: Environment) {
+  log("setEnv", envName)
+
+  const env = envs.find((entry) => entry.name === envName)
+  if (env === undefined) {
+    throw new Error("Cannot find config for env " + envName)
+  }
+  state.networkId = env.networkId
+  state.networkName = env.networkName
+  state.chainId = env.chainId
+  // remove any web3 stuff
+  web3 = null
 }
 
 /**

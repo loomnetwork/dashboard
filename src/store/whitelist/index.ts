@@ -87,6 +87,7 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
+    CommonTypedStore.setSuccessMsg("Add deployer address successful.")
   } catch (error) {
     CommonTypedStore.setErrorMsg(`Error Adding a key: ${error.message}`)
     return

@@ -8,10 +8,12 @@ import { HasDPOSState } from "./store/dpos/types"
 import { HasEthereumState } from "./store/ethereum/types"
 import { HasPlasmaState } from "./store/plasma/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
+import { HasWhiteListState } from "./store/whitelist/types";
 
 export interface DashboardState
   extends HasGatewayState,
     HasDPOSState,
+    HasWhiteListState,
     HasAssetsState {
   // remove
   DPOS: DposState

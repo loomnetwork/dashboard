@@ -22,6 +22,7 @@ import { gatewayReactions } from "./gateway/reactions"
 import { plasmaReactions } from "./plasma/reactions"
 import { dposReactions } from "./dpos/reactions"
 import { zbcardsReactions } from "@/store/plasma/assets/reactions"
+import { whiteListReaction } from "./whitelist/reactions";
 
 Vue.use(Vuex)
 
@@ -36,6 +37,7 @@ const store: Store<DashboardState> = getStoreBuilder<
       gatewayReactions(store_)
       dposReactions(store_)
       zbcardsReactions(store_)
+      whiteListReaction(store_)
     },
   ],
 })

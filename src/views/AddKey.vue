@@ -2,20 +2,24 @@
     <div class="container mb-5">
       <!-- Deployer Public key section -->
       <h4 class="mt-3">Deployer Public Keys</h4>
-      {{userDeployersAddress}}
-      <b-card v-for="pk in publicKeys" :key="pk.Hex" v-show="publicKeys.length > 0">
+      <div  v-if="publicKeys.length > 0">
+      <b-card v-for="(pk, index) in publicKeys" :key="pk.hex">
         <b-row>
           <b-col cols="12" sm="6">
             <h6>{{pk[pk.defaultFormat] | loomAddress}}</h6>
           </b-col>
           <b-col cols="12" sm="3">
-            <b-button @click="switchPubKeyType(pk)"> View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
+            <b-button @click="switchPubKeyType(index)"> View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
           </b-col>
           <b-col cols="12" sm="3">
             <b-badge variant="success">Tier: {{pk.tier}}</b-badge>
           </b-col>
         </b-row>
-      </b-card>  
+      </b-card>
+      </div>
+      <div v-else class="mt-3">
+        You have no deployer address.
+      </div>
       <!-- Add new key section -->
       <b-card class="my-5">
         <b-row>
@@ -27,22 +31,22 @@
         </b-row>
         <div role="group">
           <label for="input-live">Your Loom Public Address</label>
-          <b-form-input v-model="newPubKey" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
+          <b-form-input v-model="newPublicAddress" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
         </div>
         <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
         <seed-phrase-modal ref="seed-phrase-modal"/>
         <label for="input-live"> Amount to Stake </label>
         <div class="tierBlock tierDisplay"> 
-          <label v-for="tier in stakeTiers" v-bind:key="tier.value.no" class="radio">
-            <input type="radio" v-model="tierSelected" :value="tier.value" />
+          <label v-for="tier in tiers" v-bind:key="tier.id" class="radio">
+            <input type="radio" v-model="tierSelected" :value="tier" />
             <b-card class="tierText"> 
-              <b-row>Tier: {{tier.value.no}}</b-row>
-              <b-row>Max: {{tier.value.max}} tx/min</b-row>
-              <b-row>{{tier.value.amount}} LOOM</b-row>
+              <b-row>Tier: {{tier.id}}</b-row>
+              <b-row>Name: {{tier.name}} tx/min</b-row>
+              <b-row>{{tier.fee}} LOOM</b-row>
             </b-card>
           </label>
         </div>
-        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="!tierSelected || !newPubKey"> Add Key </b-button>
+        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress"> Add Key </b-button>
         <div class="remaining my-3">
           <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
           <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
@@ -56,104 +60,66 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
-import GeneratePublicKeyModal from "@/components/modals/GeneratePublicKeyModal.vue"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { Modal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
+import { whiteListModule } from '@/store/whitelist';
+import { WhiteListState, Tier, DeployerAddress } from '@/store/whitelist/types';
 import { plasmaModule } from '@/store/plasma';
-import { PlasmaState } from '../store/plasma/types';
+import { formatFromLoomAddress } from "@/utils"
+import { formatTokenAmount } from "@/filters"
+import { Address } from "loom-js";
 
 @Component({
   components: {
-    GeneratePublicKeyModal,
     SeedPhraseModal,
   },
 })
 
 export default class AddKey extends Vue {
-  getDappchainLoomBalance = DPOSTypedStore.getDappchainLoomBalance
   setErrorMsg = CommonTypedStore.setErrorMsg
-  addDeployerAsync = plasmaModule.addDeployerAsync
-  getDeployersAsync = plasmaModule.getDeployersAsync
-
+  addDeployerAsync = whiteListModule.addDeployerAsync
+  getDeployersAsync = whiteListModule.getDeployersAsync
   isShowGenPublicKeyModal = false
-  loomBalance = ""
-  pubKeyType = "Hex"
-  newPubKey = ""
-  deployersAddress = []
-  publicKeys = [
-    {
-      Hex: "0x8e577b518b00831480e657d68d4683e686c9d6b2",
-      Base64: "jld7UYsAgxSA5lfWjUaD5obJ1rI=",
-      tier: 1,
-      defaultFormat: "Hex",
-    },
-    {
-      Hex: "0x1c10178d476db5e0f4a22594799e675579d68a1e",
-      Base64: "HBAXjUdtteD0oiWUeZ5nVXnWih4=",
-      tier: 1,
-      defaultFormat: "Hex",
-    },
-    {
-      Hex: "0x7894c25242de46701f54599922086591cc714c0c",
-      Base64: "eJTCUkLeRnAfVFmZIghlkcxxTAw=",
-      tier: 1,
-      defaultFormat: "Hex",
-    },
-  ] // TODO: wait for the real data
-
-  tierSelected = ""
-
-   stakeTiers = [
-    {
-      value: {
-        no: 1,
-        max: 10,
-        amount: 3000,
-      },
-    },
-    {
-      value: {
-        no: 2,
-        max: 20,
-        amount: 6000,
-      },
-      disabled: true,
-    },
-    {
-      value: {
-        no: 3,
-        max: 30,
-        amount: 9000,
-      },
-      disabled: true,
-    },
-  ] // TODO: wait for the real data
+  newPublicAddress = ""
+  tierSelected: Tier | {} = {}
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
 
   modal(ref: string) {
    return this.$refs[ref] as Modal
   }
 
   switchPubKeyType(inputKey) {
-    inputKey.defaultFormat = inputKey.defaultFormat === "Base64" ? "Hex" : "Base64"
+    this.publicKeys[inputKey].defaultFormat = this.publicKeys[inputKey].defaultFormat === "hex" ? "base64" : "hex"
   }
 
-  get state(): PlasmaState {
-    return this.$store.state
+  get state(): WhiteListState {
+    return this.$store.state.whiteList
   }
 
-  get userDeployersAddress() {
+  get loomBalance() {
+    const loomBalanceBN = plasmaModule.state.coins.loom.balance
+    return formatTokenAmount(loomBalanceBN)
+  }
+
+  get tiers() {
+    return this.state.tiers
+  }
+
+  get publicKeys() {
     return this.state.userDeployersAddress
   }
 
-  async addKey(tier) {
-    if ( parseFloat(this.loomBalance) < tier.amount) {
+  async addKey(tier: Tier) {
+    if (parseFloat(this.loomBalance!) < tier.fee) {
       this.setErrorMsg("Your balance isn't enough. Please deposit first.")
       return
     }
-    let result = await this.addDeployerAsync({deployer: this.newPubKey})
-    console.log("result", result);
+    const loomAddress =  formatFromLoomAddress(this.newPublicAddress)
+    this.setShowLoadingSpinner(true)
+    let result = await this.addDeployerAsync({deployer: loomAddress, tier})
+    this.setShowLoadingSpinner(false)
   }
 
   showSeedPhraseModal() {
@@ -161,7 +127,6 @@ export default class AddKey extends Vue {
   }
 
   async mounted() {
-    this.loomBalance = await this.getDappchainLoomBalance()
     await this.getDeployersAsync()
   }
 }

@@ -61,7 +61,6 @@ export interface PlasmaState {
   // }
 
   tokenSelected: string
-  tokensSymbol: string[]
 
 }
 

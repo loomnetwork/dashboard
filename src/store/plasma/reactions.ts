@@ -5,7 +5,7 @@ import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
 import { plasmaModule } from "."
 import BN from "bn.js"
 import { ERC20 } from "./web3-contracts/ERC20"
-import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
+// import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import Web3 from "web3"
 
 import * as Tokens from "./tokens"
@@ -90,7 +90,7 @@ async function resetERC20Contracts(store: Store<DashboardState>) {
       loading: true,
     }
     // @ts-ignore
-    const contract = new web3.eth.Contract(address, ERC20abi, provider) as ERC20
+    const contract = new web3.eth.Contract(address, ERC20, provider) as ERC20
     await Tokens.addContract(symbol, PlasmaTokenKind.ERC20, contract)
     plasmaModule.refreshBalance(symbol)
   })

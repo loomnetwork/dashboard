@@ -78,12 +78,10 @@ export default class DepositWithdraw extends Vue {
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
-  setTokenSelected = plasmaModule.setTokenSelected
   refreshBalance = plasmaModule.refreshBalance
+  selectedToken = ""
 
   // get the full list from state or somewhere else
-  symbols = this.plasma.tokensSymbol
-
   filteredSymbols: string[] = []
 
   get state(): DashboardState {
@@ -109,7 +107,7 @@ export default class DepositWithdraw extends Vue {
     // return token if :
     // - no filter and symbol is in the state,
     // - symbol matches filter  and symbol is in the state,
-    this.filteredSymbols = this.symbols
+    this.filteredSymbols = Object.keys(coins)
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
       console.log(this.filteredSymbols);
   }
@@ -122,7 +120,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestSwap(token: string) {
-    this.setTokenSelected(token)
+    this.selectedToken = token
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 

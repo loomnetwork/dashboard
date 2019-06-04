@@ -59,12 +59,12 @@
       </div>
 
       <!-- dialogs -->
-      <faucet-delegate-modal
+      <!-- <faucet-delegate-modal
         @onDelegate="delegateHandler"
         ref="delegateModalRef"
         :hasDelegation="hasDelegation"
       ></faucet-delegate-modal>
-      <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
+      <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal> -->
       <success-modal></success-modal>
     </section>
   </main>
@@ -74,8 +74,8 @@ import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 import SuccessModal from "../components/modals/SuccessModal.vue"
-import RedelegateModal from "../components/modals/RedelegateModal.vue"
-import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
+// import RedelegateModal from "../components/modals/RedelegateModal.vue"
+// import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { Modal } from "bootstrap-vue"
@@ -86,8 +86,8 @@ import { Delegation } from "@/store/dpos/types"
 @Component({
   components: {
     SuccessModal,
-    RedelegateModal,
-    FaucetDelegateModal,
+    // RedelegateModal,
+    // FaucetDelegateModal,
     LoadingSpinner,
   },
 })

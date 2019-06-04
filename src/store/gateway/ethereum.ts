@@ -114,7 +114,7 @@ export function init(web3: Web3) {
   const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "")
   const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, "", {})
 
-  instance = new EthereumGateways(loomGateway, mainGateway, vmcContract, web3)
+  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
 
 }
 

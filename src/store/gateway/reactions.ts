@@ -10,6 +10,9 @@ import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { ethereumModule } from "../ethereum"
 import { DashboardState } from "@/types"
+import { ERC20Gateway_v2 } from 'loom-js/dist/mainnet-contracts/ERC20Gateway_v2';
+import { ERC20 } from 'loom-js/dist/mainnet-contracts/ERC20';
+import { log } from 'console';
 
 export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
@@ -50,6 +53,17 @@ export function gatewayReactions(store: Store<DashboardState>) {
       plasmaGateway.add("loom", loomGatewayAddr)
       plasmaGateway.add("eth", ethGatewayAddr)
 
+      // Listen to approval & deposit events
+      listenToDepositApproval(ethereumModule.state.address,
+                            ethGateway.loomGateway.address,
+                            ethereumModule.getERC20("loom"),
+                            store)
+
+      listenToDeposit(ethereumModule.state.address,
+                      ethGateway.loomGateway.address,
+                      ethereumModule.getERC20("loom"),
+                      store)
+
     },
   )
 
@@ -70,4 +84,40 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
     plasmaModule.changeIdentity({ signer, address: plasmaAddress })
   }
+}
+
+function listenToDepositApproval(
+  account,
+  gw: ERC20Gateway_v2,
+  loom: ERC20,
+  store: Store<DashboardState>,
+) {
+  const approval = loom.filters.Approval(account, gw.address, null)
+  loom.on(approval, (from, _, weiAmount) => {
+    log("approval " + weiAmount.toString() + " tokens from " + from)
+    gatewayModule.setShowDepositForm(false)
+    gatewayModule.setShowDepositApproved(true)
+    gatewayModule.setShowDepositConfirmed(false)
+    // empty pendingTx
+    // todo: theoratically not necessary but test hash, we never know...
+    // gatewayModule.setPendingTx(null)
+  })
+}
+
+function listenToDeposit(
+  account,
+  gw: ERC20Gateway_v2,
+  loom: ERC20,
+  store: Store<any>,
+) {
+  const transfer = loom.filters.Transfer(account, gw.address, null)
+  loom.on(transfer, (from, to, weiAmount) => {
+    log(
+      "transfer " + weiAmount.toString() + " tokens from " + from + " to " + to,
+    )
+    gatewayModule.setShowDepositForm(false)
+    gatewayModule.setShowDepositApproved(false)
+    gatewayModule.setShowDepositConfirmed(false)
+    // gatewayModule.setPendingTx(null)
+  })
 }

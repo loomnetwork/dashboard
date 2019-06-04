@@ -53,5 +53,7 @@ export const gatewayModule = {
 
   // mutations
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
+  setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
+  setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
 
 }

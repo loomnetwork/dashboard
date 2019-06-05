@@ -13,6 +13,13 @@ export interface HasEthereumState {
 
 export interface EthereumState {
   chainId: string
+  networkId: string
+  networkName: string
+  /**
+   * url template for links to transactions in a blockexplorer
+   * (ie. etherscan)
+   */
+  blockExplorer: string
   // not really state but...
   // see type provider in web3-provider
   provider: provider | null

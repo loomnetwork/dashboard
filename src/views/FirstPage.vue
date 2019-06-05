@@ -82,7 +82,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
-import ChainSelector from "../components/ChainSelector"
+import ChainSelector from "../components/ChainSelector.vue"
 import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
 import { setInterval } from "timers"
 import { Modal } from "bootstrap-vue"

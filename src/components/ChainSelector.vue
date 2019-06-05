@@ -1,4 +1,29 @@
-<script lang="ts" src="./ChainSelector.ts">
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator"
+import { dashboardStore } from "@/store"
+import { ethereumModule } from "@/store/ethereum"
+import { plasmaModule } from "@/store/plasma"
+import { DashboardState } from "@/types"
+
+@Component
+export default class ChainSelector extends Vue {
+  get envName() {
+    return this.$store.state.envName
+  }
+
+  set envName(name) {
+    console.log("name", name)
+    dashboardStore.setEnv(name)
+    ethereumModule.setEnv(name)
+    plasmaModule.setEnv(name)
+  }
+
+  get envs() {
+    console.log("get envs", this.$store.state.envs)
+    return (this.$store.state as DashboardState).envs
+  }
+}
+
 </script>
 <template>
   <div id="chain-selector" v-if="envs.length > 0">

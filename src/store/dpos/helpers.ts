@@ -3,14 +3,18 @@ import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import { Validator, Delegation } from "./types"
 
 export function fromIDelegation(d: IDelegation, validators: Validator[]) {
-  const validator = validators.find((v) =>
-    v.address.local.equals(d.validator.local),
+  const addr = d.validator.local.toString()
+  const validator = validators.find(
+    (v) =>
+      // loom-js local.equals is broken
+      v.address.local.toString() === addr,
   )!
   const updateValidatorAddr = d.updateValidator
   let updateValidator: Validator | undefined
   if (updateValidatorAddr !== undefined) {
+    const addr = updateValidatorAddr.local.toString()
     updateValidator = validators.find((v) =>
-      v.address.local.equals(updateValidatorAddr.local),
+      v.address.local.toString() === addr,
     )!
   }
   const locked = d.lockTime * 1000 > Date.now()

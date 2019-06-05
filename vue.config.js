@@ -1,30 +1,30 @@
 /* eslint-disable */
-var PrerenderSpaPlugin = require('prerender-spa-plugin')
-var path = require('path')
+var PrerenderSpaPlugin = require("prerender-spa-plugin")
+var path = require("path")
 const Renderer = PrerenderSpaPlugin.PuppeteerRenderer
-const SentryCliPlugin = require('@sentry/webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const SentryCliPlugin = require("@sentry/webpack-plugin")
+const TerserPlugin = require("terser-webpack-plugin")
 
-const baseUrl = '/'
+const baseUrl = "/"
 
 module.exports = {
   //publicPath: baseUrl,
   //baseUrl: baseUrl,
   pages: {
-      index: {
-        title: 'Index Page',
-       entry: 'src/index.ts',
-        template: 'public/index.html',
-        filename: 'index.html'
-      }
+    index: {
+      title: "Index Page",
+      entry: "src/index.ts",
+      template: "public/index.html",
+      filename: "index.html"
+    }
   },
   runtimeCompiler: true,
   devServer: {
     https: true,
-    disableHostCheck: true,
+    disableHostCheck: true
   },
   configureWebpack: config => {
-    console.log('nodeenv:', process.env.NODE_ENV)
+    console.log("nodeenv:", process.env.NODE_ENV)
     let plugins = []
     config.optimization = {
       minimizer: [
@@ -42,19 +42,19 @@ module.exports = {
             nameCache: null,
             ie8: false,
             keep_classnames: undefined,
-            keep_fnames: false,
-            safari10: false,
-          },
-        }),
+            keep_fnames: true,
+            safari10: false
+          }
+        })
       ]
-    }    
+    }
     return {
       plugins: plugins
     }
   },
   chainWebpack: config => {
-    config.module.rules.delete('eslint');
-    config.resolve.set('symlinks', false); // makes yarn link loom-js work
-    config.module.rules.delete('uglify');
+    config.module.rules.delete("eslint")
+    config.resolve.set("symlinks", false) // makes yarn link loom-js work
+    config.module.rules.delete("uglify")
   }
 }

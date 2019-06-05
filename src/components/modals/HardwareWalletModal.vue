@@ -215,6 +215,7 @@ export default class HardwareWalletModal extends Vue {
     const web3account = (await this.web3js!.eth.getAccounts())[0]
     console.assert(web3account === selectedAddress,
       `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
+    // @ts-ignore
     this.setWeb3(this.web3js!)
     // @ts-ignore
     this.$refs.modalRef.hide()
@@ -339,6 +340,7 @@ export default class HardwareWalletModal extends Vue {
       // @ts-ignore
       window.ledgerweb3 = web3js
       this.web3js = web3js
+      // @ts-ignore
       this.setWeb3(web3js)
     }
   }

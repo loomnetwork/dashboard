@@ -8,7 +8,7 @@
       Amount: (max: {{cardToTransfer.amount}})
       <b-input class="my-2" type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input> 
       Receiver Loom Address:
-      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidLoomAddress"/>
+      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
        <b-form-checkbox class="my-2"
         id="confirmCard"
         v-model="confirmCard"
@@ -71,7 +71,7 @@ export default class TransferCardsModal extends Vue {
     this.$root.$emit("bv::hide::modal", "transfer-cards-modal")
   }
 
-  isValidLoomAddress(isValid) {
+  isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
     console.log(this.isValidAddress);
   }

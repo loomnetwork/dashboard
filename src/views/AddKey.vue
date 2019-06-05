@@ -31,7 +31,7 @@
         </b-row>
         <div role="group">
           <label for="input-live">Your Loom Public Address</label>
-          <input-address v-model="newPublicAddress" :placeholder="'loom000000000000000000000000000000000000000'" @isValid="isValidLoomAddress"/>
+          <input-address v-model="newPublicAddress" :placeholder="'loom0000000000000000000000000000000000000000'" @isValid="isValidAddressFormat"/>
         </div>
         <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
         <seed-phrase-modal ref="seed-phrase-modal"/>
@@ -88,6 +88,7 @@ export default class AddKey extends Vue {
   tierSelected: Tier | {} = {}
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
   isValidAddress = false
+  loomAddress = "loom0000000000000000000000000000000000000000"
 
   modal(ref: string) {
    return this.$refs[ref] as Modal
@@ -125,9 +126,8 @@ export default class AddKey extends Vue {
     this.setShowLoadingSpinner(false)
   }
 
-  isValidLoomAddress(isValid) {
+  isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
-    console.log(this.isValidAddress);
   }
 
   showSeedPhraseModal() {

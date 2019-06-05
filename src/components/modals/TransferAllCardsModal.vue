@@ -10,7 +10,7 @@
       <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
       <h6>Amount: {{cardsToTransfer.amount}}</h6>
       Receiver Loom Address:
-      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidLoomAddress"/>
+      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
       <b-form-checkbox class="my-2"
         id="confirmCards"
         v-model="confirmCards"
@@ -74,7 +74,7 @@ export default class TransferAllCardsModal extends Vue {
     this.$root.$emit("bv::hide::modal", "transfer-all-cards-modal")
   }
 
-  isValidLoomAddress(isValid) {
+  isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
     console.log(this.isValidAddress);
   }

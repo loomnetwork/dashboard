@@ -6,7 +6,7 @@
       Amount: (max: {{packToTransfer.amount}})
       <b-input class="my-2" type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input> 
       Receiver Loom Address:
-      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidLoomAddress"/>
+      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
       <b-form-checkbox class="my-2"
         id="confirmPack"
         v-model="confirmPack"
@@ -72,7 +72,7 @@ export default class TransferPacksModal extends Vue {
     this.$root.$emit("bv::hide::modal", "transfer-packs-modal")
   }
 
-  isValidLoomAddress(isValid) {
+  isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
     console.log(this.isValidAddress);
   }

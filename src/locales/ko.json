@@ -180,8 +180,15 @@
       "my_delegations": "내 위임",
       "rewards": "보상",
       "history": "거래 내역",
-      "feedback_form": "Contact Support",
-      "faq": "F.A.Q"
+      "deposit_withdraw": "Deposit/Withdraw",
+      "faq": "F.A.Q",
+      "account_explorer": "Account Explorer",
+      "game_assets": "Game Assets",
+      "block_explorer": "Block Explorer",
+      "deploy_to_plasmachain": "Deploy to Plasmachain",
+      "transfer_gateway": "Transfer Gateway",
+      "validator_management": "Validator Management",
+      "feedback_form": "Contact Support"
     },
     "gateway": {
       "complete_deposit": "Complete deposit",
@@ -232,7 +239,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "주의: 지갑 분실 또는 파손 시에 이 12개의 단어로 복구할 수 있습니다.",
-        "you_must_create_a_backup_nbsp": "백업을 꼭 해두셔야 합니다!&nbsp;",
+        "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "적어두거나 인쇄하여 안전한 곳에 보관하세요.",
         "without_it_you_will_not": "이 시드가 없으면 문제가 생겼을 때 여러분의 토큰을 복구할 수 없습니다.",
         "copy_to_clipboard": "클립보드에 복사"

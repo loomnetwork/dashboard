@@ -36,8 +36,6 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
-import { DPOSTypedStore } from "@/store/dpos-old"
-
 @Component
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1

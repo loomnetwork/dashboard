@@ -175,14 +175,3 @@ async function getPublicAddressFromPrivateKeyUint8Array(
   return publicAddress
 }
 
-// function addChainUrl(ctx: PlasmaContext, payload: { id: string }) {
-//   if (ctx.state.networkId === payload.id) return
-//   const chains = Object.keys(ctx.state.chainUrls)
-//   const existingId = chains.indexOf(payload.id)
-//   if (existingId > -1) {
-//     DPOSTypedStore.setNetworkId(payload.id)
-//     DPOSTypedStore.setCurrentChain(ctx.state.chainUrls[payload.id])
-//   } else {
-//     return
-//   }
-// }

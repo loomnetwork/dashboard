@@ -180,8 +180,15 @@
       "my_delegations": "委任について",
       "rewards": "報酬",
       "history": "履歴",
-      "feedback_form": "Contact Support",
-      "faq": "F.A.Q"
+      "deposit_withdraw": "Deposit/Withdraw",
+      "faq": "F.A.Q",
+      "account_explorer": "Account Explorer",
+      "game_assets": "Game Assets",
+      "block_explorer": "Block Explorer",
+      "deploy_to_plasmachain": "Deploy to Plasmachain",
+      "transfer_gateway": "Transfer Gateway",
+      "validator_management": "Validator Management",
+      "feedback_form": "Contact Support"
     },
     "gateway": {
       "complete_deposit": "Complete deposit",
@@ -232,7 +239,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "注: 紛失や破損の際に、この12単語でウォレットを回復することができます。",
-        "you_must_create_a_backup_nbsp": "バックアップの作成が必須です!&nbsp;",
+        "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "メモか印刷をして、安全な場所で保管してください。",
         "without_it_you_will_not": "これを失くすと、万一の場合にトークンを回復することができません。",
         "copy_to_clipboard": "クリップボードにコピー"

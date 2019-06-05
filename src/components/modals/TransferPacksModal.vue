@@ -26,7 +26,6 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "@/store/plasma/assets"
 import { CommonTypedStore } from "@/store/common"
-import { DPOSTypedStore } from "@/store/dpos-old"
 
 @Component
 export default class TransferPacksModal extends Vue {
@@ -50,7 +49,7 @@ export default class TransferPacksModal extends Vue {
   }
 
   transferPacksHandler() {
-    if (this.amountToTransfer > parseInt(this.packToTransfer.amount, 10) || this.amountToTransfer % 1 !== 0) {
+    if (this.amountToTransfer > this.packToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
       this.setErrorMsg("Invalid amount")
       return
     }

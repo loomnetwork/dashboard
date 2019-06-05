@@ -19,10 +19,9 @@ import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/Validato
 import { CryptoUtils } from "loom-js"
 import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
-import { plasmaModule } from '../plasma';
-import { AbiItem } from 'web3-utils';
-import { state } from '../common';
-
+import { plasmaModule } from "../plasma"
+import { AbiItem } from "web3-utils"
+import { state } from "../common"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -85,6 +84,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 
   deposit(amount: BN) {
     this.web3.eth.sendTransaction({
+      // @ts-ignore
       to: this.contract.address,
       value: amount.toString(),
     })
@@ -181,10 +181,12 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const gateway = service().get(funds.symbol)
   const approvalAmount = await ethereumModule.allowance({
     symbol,
+    // @ts-ignore
     spender: gateway.contract.address,
   })
   if (weiAmount.gt(approvalAmount)) {
     await ethereumModule.approve({
+      // @ts-ignore
       to: gateway.contract.address,
       ...funds,
     })
@@ -247,6 +249,7 @@ async function createWithdrawalHash(
 ): Promise<string> {
   const ethAddress = receipt.tokenOwner.local.toString()
   const tokenAddress = receipt.tokenContract.local.toString()
+  // @ts-ignore
   const gatewayAddress = gatewayContract.address
   const amount = receipt.tokenAmount!.toString()
   const amountHashed = ethers.utils.solidityKeccak256(

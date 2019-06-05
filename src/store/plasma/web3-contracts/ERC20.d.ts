@@ -57,4 +57,5 @@ export class ERC20 extends Contract {
       cb?: Callback<EventLog>
     ) => EventEmitter
   }
+  address: string
 }

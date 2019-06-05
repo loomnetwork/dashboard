@@ -40,7 +40,7 @@
     "ethers": "^4.0.27",
     "google-protobuf": "^3.6.0",
     "ledger-wallet-provider": "loomnetwork/ledger-wallet-provider.git",
-    "loom-js": "1.54.0",
+    "loom-js": "1.54.1",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
     "node-sass": "^4.9.0",
@@ -73,7 +73,10 @@
     "waypoints": "^4.0.1",
     "web3": "^1.0.0-beta.33",
     "web3-eth-contract": "^1.0.0-beta.55",
+    "web3": "1.0.0-beta.36",
+    "web3-eth-contract": "1.0.0-beta.36",
     "web3-provider-engine": "^14.1.0",
+    "web3-providers": "^1.0.0-beta.38",
     "yarn": "^1.7.0"
   },
   "devDependencies": {

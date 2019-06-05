@@ -3,18 +3,24 @@
  */
 
 import { getStoreBuilder } from "vuex-typex"
-import { timer } from "rxjs"
 import { BareActionContext } from "vuex-typex"
 
-import { DPOSState, HasDPOSState } from "./types"
+import { DPOSState, HasDPOSState, Delegation, Validator } from "./types"
 
 import * as mutations from "./mutations"
 import BN from "bn.js"
-import { IDelegation, ICandidate } from "loom-js/dist/contracts/dpos3"
+import {
+  IDelegation,
+  ICandidate,
+  IValidator,
+} from "loom-js/dist/contracts/dpos3"
 import { plasmaModule } from "../plasma"
 
 import debug from "debug"
 import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
+import { ZERO } from "@/utils"
+import { Address, LocalAddress } from "loom-js"
+import { fromIDelegation } from "./helpers"
 const log = debug("dpos")
 
 const initialState: DPOSState = {
@@ -30,6 +36,9 @@ const initialState: DPOSState = {
   validators: [],
   delegations: [],
   rewards: new BN(0),
+
+  intent: "",
+  delegation: null,
 }
 
 const builder = getStoreBuilder<HasDPOSState>().module("dpos", initialState)
@@ -90,22 +99,6 @@ async function refreshElectionTime(context: ActionContext) {
  */
 async function refreshValidators(ctx: ActionContext) {
   const contract = ctx.state.contract!
-  const ZERO = new BN("0")
-  const template = {
-    address: "",
-    active: false,
-    isBootstrap: false,
-    totalStaked: ZERO,
-    personalStake: ZERO,
-    votingPower: ZERO,
-    delegationTotal: ZERO,
-    delegatedStake: ZERO,
-    name: "",
-    website: "",
-    description: "",
-    fee: "N/A",
-    newFee: "N/A",
-  }
   log("getValidatorsAsync")
   // Get all validators, candidates and delegations
   const [validators, candidates, delegations] = await Promise.all([
@@ -113,56 +106,40 @@ async function refreshValidators(ctx: ActionContext) {
     contract.getCandidatesAsync(),
     contract.getAllDelegations(),
   ])
-  const nodes = candidates.map((c) =>
-    Object.assign({}, template, {
-      address: c.address.local.toString(),
-      personalStake: c.whitelistAmount,
-      votingPower: c.delegationTotal,
-      delegationTotal: c.delegationTotal.sub(c.whitelistAmount),
-      active: false,
-      isBootstrap: ctx.state.bootstrapNodes.includes(c.name),
-      name: c.name,
-      website: c.website,
-      description: c.description,
-      fee: c.fee.div(new BN(100)).toString(),
-      newFee: c.newFee.div(new BN(100)).toString(),
-    }),
-  )
-  // Helper: if node not found in the array creates a new one with given addr and default from template
+  //
+  const nodes = candidates.map((c) => {
+    const node = new Validator()
+    node.setCandidateData(c)
+    return node
+  })
+  // Helper: if node not found in the array
+  // creates a new one with given addr
   const getOrCreate = (addr) => {
-    let existing: any = nodes.find((node) => node.address === addr)
-    if (!existing) {
-      existing = Object.assign({}, template, { address: addr })
+    let existing = nodes.find((node) => node.addr === addr)
+    if (existing === undefined) {
+      existing = new Validator()
+      existing.addr = addr
       nodes.push(existing)
     }
     return existing
   }
 
   validators.forEach((v) => {
-    const addr = v.address.local.toString()
-    const node = getOrCreate(addr)
-    Object.assign(node, {
-      active: true,
-      personalStake: v.whitelistAmount,
-      totalStaked: v.whitelistAmount, // default value for nodes without delegations
-      votingPower: v.delegationTotal,
-      delegationTotal: v.delegationTotal.sub(v.whitelistAmount),
-    })
+    const node = getOrCreate(v.address.local.toString())
+    node.setValidatorData(v)
   })
 
   delegations
     .filter((d) => d.delegationsArray.length > 0)
     .forEach((d) => {
       const addr = d.delegationsArray[0].validator.local.toString()
-      const delegatedStake = d.delegationTotal
       const node = getOrCreate(addr)
-      Object.assign(node, {
-        delegatedStake,
-        totalStaked: node.personalStake.add(delegatedStake),
-      })
+      node.stakedAmount = d.delegationTotal
     })
   // use the address for those without names
-  nodes.filter((n) => n.name === "").forEach((n) => (n.name = n.address))
+  nodes
+    .filter((n) => n.name === "")
+    .forEach((n) => (n.name = n.addr.replace("0x", "loom")))
 
   ctx.state.validators = nodes
   log("setValidators", nodes)
@@ -177,78 +154,132 @@ async function refreshValidators(ctx: ActionContext) {
  * @see {dpos.reactions}
  */
 async function refreshDelegations(context: ActionContext) {
-  const contract = context.state.contract!
-  context.state.loading.delegations = true
+  const { state } = context
+  const contract = state.contract!
+  state.loading.delegations = true
   const response = await contract.checkAllDelegationsAsync(
     plasmaModule.getAddress(),
   )
 
-  context.state.delegations = response!.delegationsArray.map((d) => ({
-    ...d,
-    locked: d.lockTime * 1000 > Date.now(),
-    pending: d.state !== DelegationState.BONDED,
-  }))
-  log("delegations", plasmaModule.getAddress().toString(), response)
+  state.delegations = response!.delegationsArray.map((item: IDelegation) => {
+    const d: Delegation = fromIDelegation(item, state.validators)
+    // add it to the corresponding validator so we avoid filtering downstream
+    d.validator.delegations.push(d)
+    return d
+  })
 
+  log("delegations", plasmaModule.getAddress().toString(), response)
   const rewards = response.delegationsArray
     .filter((d) => d.index === 0)
-    .reduce((sum: BN, d) => sum.add(d.amount), new BN("0"))
+    .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
 
-  context.state.rewards = rewards
+  state.rewards = rewards
   log("rewards", rewards.toString())
-  context.state.loading.delegations = false
+  state.loading.delegations = false
 }
 
-function requestDelegation(context: ActionContext, d: IDelegation) {
+function requestDelegation(context: ActionContext, validator: ICandidate) {
+  const { state } = context
+  state.intent = "delegate"
+  state.delegation = fromIDelegation(
+    {
+      validator: validator.address,
+      delegator: plasmaModule.getAddress(),
+      index: -1,
+      amount: ZERO,
+      updateAmount: ZERO,
+      lockTime: -1,
+      lockTimeTier: -1,
+      state: -1,
+      referrer: "",
+    },
+    state.validators,
+  )
   // set state thqt triggers pop
 }
-function requestRedelegation(context: ActionContext, d: IDelegation) {
-  // set state thqt triggers pop
+
+/**
+ * this should have been just a mutation but mutations
+ * cannot access rootState...
+ * @param state
+ * @param d
+ */
+function requestRedelegation(context: ActionContext, d: Delegation) {
+  const { state } = context
+  state.intent = "redelegate"
+  // copy
+  state.delegation = { ...d }
 }
-function requestUndelegation(context: ActionContext, d: IDelegation) {
-  // set state thqt triggers pop
+function requestUndelegation(context: ActionContext, d: Delegation) {
+  const { state } = context
+  state.intent = "undelegate"
+  // copy
+  state.delegation = { ...d }
 }
 
 // write/[the bc word for it]
 
-async function delegate(context: ActionContext, delegation: IDelegation) {
-  const contract = context.state.contract!
-  // feedback.beginProcess("delegating")
+async function delegate(context: ActionContext, delegation: Delegation) {
+  const { state } = context
+  const contract = state.contract!
+
+  // feedback.setTask("delegating x loom to {validatror.name}")
   await plasmaModule.approve({
     symbol: "loom",
     weiAmount: delegation.amount,
     to: contract.address.local.toString(),
   })
-  // feedback.nextStep("delegating...<amoubt> to <validator>")
+  // feedback.setStep("delegating...<amoubt> to <validator>")
   await context.state.contract!.delegateAsync(
-    delegation.validator,
+    delegation.validator.address,
     delegation.amount,
     delegation.lockTimeTier,
+    // referer
   )
-  // feedbacl.endProcess()
+  // feedback.endTask()
 }
 
-async function redelegate(context: ActionContext, delegation: IDelegation) {
-  // feedback.beginProcess("redalgating")
-  // feedback.nextStep("redelegating...<amoubt> to <validator>")
+/**
+ * -
+ * @param context
+ * @param delegation  where:
+ *  - validator is the source validator
+ *  - index is the delegation index in the source validator
+ *  - updateValidator is the target validator
+ *  - updateAmount is the amount to redelegate
+ */
+async function redelegate(context: ActionContext, delegation: Delegation) {
+  // feedback.setTask("redalgating")
+  // feedback.setStep("redelegating...<amoubt> to <validator>")
   await context.state.contract!.redelegateAsync(
-    delegation.validator,
-    delegation.updateValidator!,
+    delegation.validator.address,
+    delegation.updateValidator!.address,
     delegation.updateAmount,
     delegation.index,
+    // referer
   )
-  // feedback.endProcess()
+  // feedback.endTask()
 }
 
 async function consolidate(context: ActionContext, validator: ICandidate) {
-  // feedback.pending("consolidate delegations on <validator>")
+  // feedback.setTask("consolidating")
+  // feedback.setStep("consolidate delegations on <validator>")
   await context.state.contract!.consolidateDelegations(validator.address)
   // feedback.done()
 }
 
-async function undelegate(context: ActionContext, delegation: IDelegation) {
+/**
+ *
+ * @param context
+ * @param delegation   where:
+ *  - validator is the source validator
+ *  - index is the delegation index in the source validator
+ *  - updateAmount is the amount to un-delegate
+ */
+async function undelegate(context: ActionContext, delegation: Delegation) {
+  // feedback.setTask("dpos.undelegating", {validator:delegation.validator.name, amount: delegation.updateAmoumt.div(config.coins.loom.decimals)})
   await context.state.contract!.unbondAsync(
-    delegation.validator,
+    delegation.validator.address,
     delegation.updateAmount,
     delegation.index,
   )
@@ -260,10 +291,9 @@ async function undelegate(context: ActionContext, delegation: IDelegation) {
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-function claimRewards(context: ActionContext) {
-  // filter delegations index = 0 amount > 0
-  // for each
-  // set message "claiming rewards from validator x"
-  //
-  return timer(2000).toPromise()
+async function claimRewards(context: ActionContext) {
+  // feedback.setTask("dpos.claiming_rewards")
+  return context.state.contract!.claimDelegatorRewardsAsync()
+  // .then(() => feedback.endTask(), () => feedback.endTask())
+  // feedback.endTask()
 }

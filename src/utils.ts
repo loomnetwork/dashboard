@@ -36,6 +36,8 @@ const unitMap = {
   tether: "1000000000000000000000000000000",
 }
 
+export const ZERO = new BN("0")
+
 export function toBigNumber(num) {
   num = num || 0
   if (isBigNumber(num)) {

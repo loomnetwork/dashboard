@@ -16,7 +16,7 @@
       </b-form-checkbox>
       <b-button class="my-2" type="button" 
         @click="transferPacksHandler()" 
-        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer >  parseInt(packToTransfer.amount) || amountToTransfer <= 0 || !confirmPack || !isValidAddres">Transfer</b-button>
+        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer >  parseInt(packToTransfer.amount) || amountToTransfer <= 0 || !confirmPack || !isValidAddress">Transfer</b-button>
     </b-container>
   </b-modal>
 </template>

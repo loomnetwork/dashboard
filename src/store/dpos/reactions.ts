@@ -92,6 +92,6 @@ export function dposReactions(store: Store<DashboardState>) {
 
 async function createContract(store: Store<DashboardState>) {
   const caller = await plasmaModule.getCallerAddress()
-  const client = store.state.plasma.client
+  const client = store.state.plasma.client!
   store.state.dpos.contract = await DPOS3.createAsync(client, caller)
 }

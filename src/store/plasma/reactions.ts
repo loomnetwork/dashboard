@@ -53,7 +53,7 @@ async function resetLoomContract(store: Store<DashboardState>) {
     return
   }
   const caller = await plasmaModule.getCallerAddress()
-  const contract = await Coin.createAsync(state.client, caller)
+  const contract = await Coin.createAsync(state.client!, caller)
   await Tokens.addContract("loom", PlasmaTokenKind.LOOMCOIN, contract)
   state.coins.loom = {
     balance: new BN("0"),
@@ -65,7 +65,7 @@ async function resetLoomContract(store: Store<DashboardState>) {
 async function resetEthContract(store: Store<DashboardState>) {
   const state = store.state.plasma
   const caller = await plasmaModule.getCallerAddress()
-  const contract = await EthCoin.createAsync(state.client, caller)
+  const contract = await EthCoin.createAsync(state.client!, caller)
   await Tokens.addContract("eth", PlasmaTokenKind.ETH, contract)
   state.coins.eth = {
     balance: new BN("0"),
@@ -99,7 +99,7 @@ async function resetERC20Contracts(store: Store<DashboardState>) {
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma
   const signer = state.signer
-  const client = state.client
+  const client = state.client!
   // LoomProvider reaquires "plasma" private key (for now)
   // So we give it our default/generic app key
   const genericKey = state.appId.private

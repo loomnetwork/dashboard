@@ -60,8 +60,6 @@ export interface PlasmaState {
   //   amount: number,
   // }
 
-  tokenSelected: string
-
 }
 
 export enum PlasmaTokenKind {

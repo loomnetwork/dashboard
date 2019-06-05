@@ -59,7 +59,7 @@ export default class DepositApproved extends Vue {
     return this.state.gateway.showDepositApproved
   }
 
-  setShowDepositApproved = DPOSTypedStore.setShowDepositApproved
+  setShowDepositApproved = gatewayModule.setShowDepositApproved
   executeDeposit = gatewayModule.ethereumDeposit
 
   get visible() {
@@ -83,7 +83,9 @@ export default class DepositApproved extends Vue {
     e.preventDefault()
     try {
       const txObj = this.state.gateway.pendingTransactions[0]
-      await this.executeDeposit(txObj.funds)
+      this.executeDeposit(txObj.funds).catch((err) => {
+        throw Error(err)
+      })
       this.status = "sent"
     } catch (error) {
       console.log(error)

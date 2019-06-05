@@ -141,7 +141,10 @@ export default class DepositForm extends Vue {
         symbol: this.token,
         weiAmount,
       }
-      await this.approveDeposit(payload)
+      const approvePromise = this.approveDeposit(payload)
+      approvePromise.catch((err) => {
+        throw new Error(err)
+      })
       this.status = "sent"
     } catch (e) {
       this.status = "failed"

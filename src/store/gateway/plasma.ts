@@ -85,6 +85,7 @@ export async function init(
   plasmaWeb3: Web3,
   mapping: IAddressMapping,
 ) {
+
   // return new EthereumGateways()
   // create gateways and vmc (maybe vmc does not care...)
   const mainGateway = await TransferGateway.createAsync(client, mapping.to)
@@ -154,7 +155,8 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
-  const gateway = gateways().get(funds.symbol)
+
+  const gateway = service().get(funds.symbol)
   let receipt: IWithdrawalReceipt | null
   try {
     receipt = await gateway.withdrawalReceipt()
@@ -202,7 +204,7 @@ export async function refreshPendingReceipt(
   context: ActionContext,
   symbol: string,
 ) {
-  const gateway = gateways().get(symbol)
+  const gateway = service().get(symbol)
   const receipt = await gateway.withdrawalReceipt()
   context.state.withdrawalReceipts[symbol] = receipt
   return receipt

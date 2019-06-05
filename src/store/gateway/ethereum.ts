@@ -21,6 +21,7 @@ import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
 import { plasmaModule } from '../plasma';
 import { AbiItem } from 'web3-utils';
+import { state } from '../common';
 
 
 /**
@@ -31,7 +32,7 @@ interface EthereumGatewayAdapter {
   token: string
   contract: ERC20Gateway_v2 | Gateway
 
-  deposit(amount: BN)
+  deposit(amount: BN, address: string)
   withdraw(receipt: IWithdrawalReceipt)
 }
 
@@ -43,13 +44,13 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     readonly token: string,
   ) {}
 
-  deposit(amount: BN) {
+  deposit(amount: BN, address: string) {
     return (
       this.contract.methods
         .depositERC20(amount.toString(), this.tokenAddress)
         // @ts-ignore
         .send({
-          from: "",
+          from: address,
         })
     )
   }
@@ -111,7 +112,8 @@ export function init(web3: Web3) {
 
   const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
   const loomGateway = new web3.eth.Contract((ERC20GatewayABI_v2 as AbiItem[]), gwAddress)
-  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "")
+  // TODO: Move to config
+  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3")
   const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, "", {})
 
   instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
@@ -186,9 +188,9 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       to: gateway.contract.address,
       ...funds,
     })
+  } else {
+    await gateway.deposit(funds.weiAmount, context.rootState.ethereum.address)
   }
-
-  await gateway.deposit(funds.weiAmount)
 }
 
 /**

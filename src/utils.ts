@@ -4,6 +4,7 @@ import BN from "bn.js"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
+import tokenMetaData from "./data/topTokensSymbol.json"
 
 const unitMap = {
   noether: "0",
@@ -199,4 +200,12 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
     throw new Error("Value required but was null " + name)
   }
   return value
+}
+
+export function getTokenSymbolFromAddress(address: string) {
+  // TODO: Change to US-1
+  const chainPrefix = "rinkeby-us1"
+  return tokenMetaData.tokens.find((token) => {
+    return token.address[chainPrefix].toLowerCase() === address.toLowerCase()
+  })
 }

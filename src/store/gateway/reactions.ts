@@ -5,14 +5,20 @@ import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { plasmaModule } from "../plasma"
 import { Provider } from "ethers/providers"
 import { Address } from "loom-js"
+import BN from "bn.js"
 
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { ethereumModule } from "../ethereum"
 import { DashboardState } from "@/types"
-import { ERC20Gateway_v2 } from 'loom-js/dist/mainnet-contracts/ERC20Gateway_v2';
-import { ERC20 } from 'loom-js/dist/mainnet-contracts/ERC20';
-import { log } from 'console';
+import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
+import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
+import { Funds } from "@/types"
+import debug from "debug"
+import { getTokenSymbolFromAddress } from "@/utils"
+import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
+
+const log = debug("dboard.gatway.reactions")
 
 export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
@@ -36,32 +42,32 @@ export function gatewayReactions(store: Store<DashboardState>) {
       }
       await setPlasmaAccount(mapping)
       // Initialize Ethereum gateways & coin contracts
-      EthereumGateways.init(ethereumModule.web3)
+      await EthereumGateways.init(ethereumModule.web3)
       const ethGateway = EthereumGateways.service()
       ethGateway.add("loom", store.state.ethereum.erc20Addresses.loom)
       ethGateway.add("eth", "") // Ether does not have a contract address
       // Initialize Plasma gateways & coin contracts
-      PlasmaGateways.init(
+      await PlasmaGateways.init(
         plasmaModule.state.client,
         plasmaModule.state.web3!,
         mapping,
       )
 
-      const loomGatewayAddr = Address.fromString(ethGateway.loomGateway.address)
-      const ethGatewayAddr = Address.fromString(ethGateway.mainGateway.address)
+      const loomGatewayAddr = Address.fromString(`${store.state.plasma.chainId}:${ethGateway.loomGateway.address}`)
+      const ethGatewayAddr = Address.fromString(`${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`)
       const plasmaGateway = PlasmaGateways.service()
       plasmaGateway.add("loom", loomGatewayAddr)
       plasmaGateway.add("eth", ethGatewayAddr)
 
       // Listen to approval & deposit events
       listenToDepositApproval(ethereumModule.state.address,
-                            ethGateway.loomGateway.address,
-                            ethereumModule.getERC20("loom"),
-                            store)
+                              ethGateway.loomGateway,
+                              ethereumModule.getERC20("loom")!,
+                              store)
 
       listenToDeposit(ethereumModule.state.address,
-                      ethGateway.loomGateway.address,
-                      ethereumModule.getERC20("loom"),
+                      ethGateway.loomGateway,
+                      ethereumModule.getERC20("loom")!,
                       store)
 
     },
@@ -87,37 +93,62 @@ export function gatewayReactions(store: Store<DashboardState>) {
 }
 
 function listenToDepositApproval(
-  account,
+  account: string,
   gw: ERC20Gateway_v2,
   loom: ERC20,
   store: Store<DashboardState>,
 ) {
-  const approval = loom.filters.Approval(account, gw.address, null)
-  loom.on(approval, (from, _, weiAmount) => {
-    log("approval " + weiAmount.toString() + " tokens from " + from)
+  // const approval = loom.filters.Approval(account, gw.address, null)
+  loom.events.Approval({
+    filter: {
+      from: account,
+      to: gw.address,
+    },
+    fromBlock: "latest",
+  }, (error, event) => {
+    console.log("EVENT LOGGED", error, event)
+
+    // Get token symbol from token address
+    const contractAddress = event.address
+    const symbol = getTokenSymbolFromAddress(contractAddress)!.symbol.toLowerCase()
+
+    const funds: Funds = {
+      symbol,
+      weiAmount: new BN(event.returnValues.value.toString()),
+    }
+
+    const payload = {...event, funds}
+
+    // log("approval " + weiAmount.toString() + " tokens from " + from)
     gatewayModule.setShowDepositForm(false)
     gatewayModule.setShowDepositApproved(true)
     gatewayModule.setShowDepositConfirmed(false)
-    // empty pendingTx
-    // todo: theoratically not necessary but test hash, we never know...
-    // gatewayModule.setPendingTx(null)
+    gatewayModule.setPendingTransactions(payload)
+    // TODO: Clear specific hash
+    // gatewayModule.clearPendingTransactions()
   })
 }
 
 function listenToDeposit(
-  account,
+  account: string,
   gw: ERC20Gateway_v2,
   loom: ERC20,
   store: Store<any>,
 ) {
-  const transfer = loom.filters.Transfer(account, gw.address, null)
-  loom.on(transfer, (from, to, weiAmount) => {
+  loom.events.Transfer({
+    filter: {
+      from: account,
+      to: gw.address,
+    },
+    fromBlock: "latest",
+  }).on("data", (from, to, weiAmount) => {
     log(
       "transfer " + weiAmount.toString() + " tokens from " + from + " to " + to,
     )
     gatewayModule.setShowDepositForm(false)
     gatewayModule.setShowDepositApproved(false)
     gatewayModule.setShowDepositConfirmed(false)
-    // gatewayModule.setPendingTx(null)
+    // TODO: Clear specific hash
+    gatewayModule.clearPendingTransactions()
   })
 }

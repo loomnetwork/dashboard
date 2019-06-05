@@ -82,7 +82,7 @@ async function resetERC20Contracts(store: Store<DashboardState>) {
   const web3 = state.web3!
   const network = state.networkId
   tokens.forEach(async (tokenInfo) => {
-    const address = tokenInfo.address[network]
+    const address = tokenInfo.address['stage']
     const symbol = tokenInfo.symbol
     state.coins[tokenInfo.symbol] = {
       decimals: tokenInfo.decimal,

@@ -42,7 +42,7 @@
         <b-button
           class="button"
           variant="primary"
-          @click="addToken()"
+          @click="requestAddToken()"
         >Add token</b-button>
       </b-card-footer>
     </b-card>
@@ -58,9 +58,12 @@ import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
 import { Modal } from "bootstrap-vue";
-import { plasmaModule } from "../store/plasma";
-import { formatTokenAmount } from '../filters';
-import { refreshBalance } from '../store/ethereum';
+import { plasmaModule } from "../store/plasma"
+import { formatTokenAmount } from '../filters'
+import { refreshBalance } from '../store/ethereum'
+import * as Mutations from "@/store/plasma/mutations"
+import { debuglog } from 'util';
+
 
 @Component({
   components: {
@@ -79,7 +82,6 @@ export default class DepositWithdraw extends Vue {
   inputFilter = ""
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
-  selectedToken = ""
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
@@ -109,7 +111,7 @@ export default class DepositWithdraw extends Vue {
     // - symbol matches filter  and symbol is in the state,
     this.filteredSymbols = Object.keys(coins)
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
-      console.log(this.filteredSymbols);
+      console.log(this.filteredSymbols)
   }
 
   requestDeposit(token: string) {
@@ -120,12 +122,11 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestSwap(token: string) {
-    this.selectedToken = token
+    Mutations.setSelectedToken(this.plasma, token)
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 
-  addToken(){
-    console.log('add!!');
+  requestAddToken(){
     this.$root.$emit("bv::show::modal", "add-token-modal")
   }
 

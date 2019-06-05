@@ -7,11 +7,11 @@
     @show="resetModal"
     @hide="resetModal">
       <b-card>
-        <h6> Token type: {{ state.plasma.tokenSelected }} </h6>
-        <h6> Your token balance: {{ balance | tokenAmount }} {{ state.plasma.tokenSelected }} </h6>
+        <h6> Token type: {{ selectedToken }} </h6>
+        <h6> Your token balance: {{ balance }} {{ selectedToken }} </h6>
         <div class="input-section">
-          <span>Amount: (max: {{ balance | tokenAmount }} )</span>
-          <amount-input :min="1" :max="balance | tokenAmount" :round="false" v-model="transferAmount" @isError="onAmountError"/>
+          <span>Amount: (max: {{ balance }} )</span>
+          <amount-input :min="1" :max="Number(balance)" :round="false" v-model="transferAmount" @isError="onAmountError"/>
         </div>
         <div class="input-section">
           <span>Receiver Loom Address:</span>
@@ -25,13 +25,15 @@
 
 <script lang="ts">
 
-import { Component, Watch, Vue } from "vue-property-decorator"
+import { Component, Watch, Vue, Prop } from "vue-property-decorator"
 import { PlasmaState } from "../../store/plasma/types";
 import { DashboardState } from "@/types";
 import { plasmaModule } from "../../store/plasma";
 import AmountInput from "@/components/AmountInput.vue";
 import BN from "bn.js"
 import { toBigNumber } from "@/utils"
+import { formatTokenAmount } from "@/filters"
+
 @Component({
   components: {
     AmountInput,
@@ -45,19 +47,25 @@ export default class TransferTokensFormModal extends Vue{
     receiverAddress: string = ""
     amountError = false
 
+    selectedToken = this.plasma.selectedToken
 
     get state() : DashboardState {
         return this.$store.state
     }
+    get plasma() : PlasmaState {
+      return this.state.plasma
+    }
 
     get balance(){
-      return this.state.plasma.coins[this.state.plasma.tokenSelected].balance
+      const balance = this.state.plasma.coins[this.selectedToken].balance
+      console.log('balance: ', balance)
+      return formatTokenAmount(balance)
     }
 
     transferToken(){
       const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
       this.transfer({
-        symbol: this.state.plasma.tokenSelected,
+        symbol: this.selectedToken,
         weiAmount: amount,
         to: this.receiverAddress 
       })

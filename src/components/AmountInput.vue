@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col sm="4">
-        <b-button variant="outline-primary" @click="setAllAmount">All ({{ state.plasma.tokenSelected.toUpperCase() }})</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount">All ({{ state.plasma.tokenSelected }})</b-button>
       </b-col>
     </b-row>
   </div>
@@ -23,10 +23,11 @@
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import  BN  from "bn.js";
+import { formatTokenAmount } from "@/filters"
 
 @Component
 export default class AmountInput extends Vue {
-  @Prop(Number) value!: number // v-model is it accepts a value prop and emit an input event.
+  @Prop(Number) value!: any // v-model is it accepts a value prop and emit an input event.
   @Prop(Number) min!: number
   @Prop(Number) max!: number
   @Prop({default: true}) round!: boolean
@@ -40,13 +41,14 @@ export default class AmountInput extends Vue {
   onAmountChanged(newVal, oldVal) {
 
     const amount = new BN(this.amount).mul(new BN("" + 10 ** 18))
-    this.$emit("input", amount)
+    const strAmount = formatTokenAmount(amount)
+    this.$emit("input", Number(strAmount))
   }
 
   // Set default amount when select another token
   @Watch("state.plasma.tokenSelected")
   setDefaultAmount(newVal, oldVal) {
-    this.amount = ""
+    this.amount = 0
   }
 
   validateAmount() {

@@ -103,7 +103,9 @@ class ERC20Adapter implements ContractAdapter {
   balanceOf(account: string) {
     return this.contract.methods
       .balanceOf(account)
-      .call()
+      .call({
+        from: account
+      })
       .then((v) => new BN(v.toString()))
   }
   allowance(account: string, to: string) {
@@ -121,7 +123,9 @@ class ERC20Adapter implements ContractAdapter {
   }
 }
 
-export function addToken(context: PlasmaContext, tokenSymbol: string) {}
+export function addToken(context: PlasmaContext, tokenSymbol: string) {
+  console.log('added!!');
+}
 
 /**
  * deposit from ethereum account to gateway
@@ -136,11 +140,13 @@ export async function refreshBalance(
   const adapter = getAdapter(tokenSymbol)
 
   // caution make sure balanceState is always set befor calling refreshBalance
-  const balanceState = context.state.coins[tokenSymbol]
+  let balanceState = context.state.coins[tokenSymbol]
+  debugger
   try {
     balanceState.balance = await adapter.balanceOf(context.state.address)
-  } catch {
+  } catch (e){
     console.error("Could not refresh balance of " + tokenSymbol)
+    console.error(e);
   }
 }
 

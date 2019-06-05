@@ -72,7 +72,7 @@ export default class TransferTokensFormModal extends Vue {
     }
 
     addToken(){
-      const symbol = this.selectedToken.toLowerCase()
+      const symbol = this.selectedToken.toUpperCase()
       this.plasma.coins[symbol] = {balance: new BN("0"), loading: false}
 
       this.$root.$emit("bv::hide::modal", "add-token-modal")

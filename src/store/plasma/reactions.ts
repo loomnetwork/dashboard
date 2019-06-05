@@ -28,8 +28,6 @@ const log = debug("dash.plasma")
  * @param store
  */
 export function plasmaReactions(store: Store<DashboardState>) {
-  store.watch((s) => s.env, (env) => plasmaModule.setEnv(env))
-
   /**
    * on identity change
    * reinitialize coin contract

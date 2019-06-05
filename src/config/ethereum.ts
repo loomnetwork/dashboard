@@ -6,10 +6,9 @@ export const envs = [
     chainId: "eth",
     endpoint: "wss://mainnet.infura.io/ws",
     blockExplorer: "https://etherscan.com/{txHash}",
-    erc20: {
-      loom: "",
-      bnb: "",
-      tron: "",
+    contracts: {
+      gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+      loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
   },
   {
@@ -19,10 +18,9 @@ export const envs = [
     chainId: "eth",
     endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.com/{txHash}",
-    erc20: {
-      loom: "",
-      bnb: "",
-      tron: "",
+    contracts: {
+      gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+      loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
   },
   {
@@ -32,10 +30,9 @@ export const envs = [
     endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.com/{txHash}",
     chainId: "eth",
-    erc20: {
-      loom: "",
-      bnb: "",
-      tron: "",
+    contracts: {
+      gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+      loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
   },
   {
@@ -45,10 +42,9 @@ export const envs = [
     endpoint: "ws://localhost:8484",
     blockExplorer: "",
     chainId: "eth",
-    erc20: {
-      loom: "",
-      bnb: "",
-      tron: "",
+    contracts: {
+      gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+      loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
   },
 ]

@@ -57,7 +57,6 @@ const CommonTypedStore = {
   // actions
   registerWeb3: builder.dispatch(registerWeb3),
   setError: builder.dispatch(setError),
-
 }
 
 function getPrivateKey(_: CommonState) {
@@ -74,17 +73,23 @@ const CommonStore = builder.vuexModule()
 declare type ActionContext = BareActionContext<CommonState, DashboardState>
 
 function registerWeb3(ctx: ActionContext, payload: { web3: Web3 }) {
+  // @ts-ignore
   CommonTypedStore.setWeb3(payload.web3)
 }
 
-function setError(ctx: ActionContext, payload: {err: any, msg: string, report?: boolean, cause?: Error}) {
+function setError(
+  ctx: ActionContext,
+  payload: { err: any; msg: string; report?: boolean; cause?: Error },
+) {
   const { msg, err } = payload
   let errMsg = msg
   if (err.toString().includes("User denied transaction signature")) {
     errMsg = "Transaction cancelled"
-  } else if (err.toString().includes("cant burn coins more than available balance")) {
+  } else if (
+    err.toString().includes("cant burn coins more than available balance")
+  ) {
     errMsg = "Insufficient funds"
- }
+  }
 
   CommonTypedStore.setErrorMsg({ msg: errMsg, forever: false })
 }

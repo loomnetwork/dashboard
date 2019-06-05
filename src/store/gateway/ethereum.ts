@@ -19,9 +19,8 @@ import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/Validato
 import { CryptoUtils } from "loom-js"
 import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
-import { plasmaModule } from '../plasma';
-import { AbiItem } from 'web3-utils';
-
+import { plasmaModule } from "../plasma"
+import { AbiItem } from "web3-utils"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -84,6 +83,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 
   deposit(amount: BN) {
     this.web3.eth.sendTransaction({
+      // @ts-ignore
       to: this.contract.address,
       value: amount.toString(),
     })
@@ -110,12 +110,14 @@ export function init(web3: Web3) {
   // create gateways and vmc (maybe vmc does not care...)
 
   const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
-  const loomGateway = new web3.eth.Contract((ERC20GatewayABI_v2 as AbiItem[]), gwAddress)
-  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "")
+  const loomGateway = new web3.eth.Contract(
+    ERC20GatewayABI_v2 as AbiItem[],
+    gwAddress,
+  )
+  const mainGateway = new web3.eth.Contract(GatewayABI as AbiItem[], "")
   const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, "", {})
 
   instance = new EthereumGateways(loomGateway, mainGateway, vmcContract, web3)
-
 }
 
 export function service() {
@@ -179,10 +181,12 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const gateway = service().get(funds.symbol)
   const approvalAmount = await ethereumModule.allowance({
     symbol,
+    // @ts-ignore
     spender: gateway.contract.address,
   })
   if (weiAmount.gt(approvalAmount)) {
     await ethereumModule.approve({
+      // @ts-ignore
       to: gateway.contract.address,
       ...funds,
     })
@@ -245,6 +249,7 @@ async function createWithdrawalHash(
 ): Promise<string> {
   const ethAddress = receipt.tokenOwner.local.toString()
   const tokenAddress = receipt.tokenContract.local.toString()
+  // @ts-ignore
   const gatewayAddress = gatewayContract.address
   const amount = receipt.tokenAmount!.toString()
   const amountHashed = ethers.utils.solidityKeccak256(

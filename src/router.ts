@@ -20,6 +20,8 @@ Vue.use(VueRouter)
 function requireAccount(to, from, next) {
   if (plasmaModule.state.address === "") {
     next("/login")
+  } else {
+    next()
   }
 }
 

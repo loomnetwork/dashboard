@@ -34,7 +34,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
       EthereumGateways.init(ethereumModule.web3)
       PlasmaGateways.init(
-        plasmaModule.state.client,
+        plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
       )

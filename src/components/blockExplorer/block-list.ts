@@ -1,15 +1,15 @@
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
-import formatDate from 'date-fns/format'
+import { Component, Prop, Vue } from "vue-property-decorator"
+import distanceInWordsToNow from "date-fns/distance_in_words_to_now"
+import formatDate from "date-fns/format"
 
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import BlockInfo from './BlockInfo.vue'
+import BlockInfo from "./BlockInfo.vue"
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import ConnectionStatus from './ConnectionStatus.vue'
+import ConnectionStatus from "./ConnectionStatus.vue"
 
-import { IBlockInfoProps } from './block-info'
-import { Blockchain, IBlockchainBlock } from './blockchain'
-import { ISearchQuery } from '../../views/block-explorer'
+import { IBlockInfoProps } from "./block-info"
+import { Blockchain, IBlockchainBlock } from "./blockchain"
+import { ISearchQuery } from "../../views/block-explorer"
 
 interface IBlockListItem {
   blockHeight: number
@@ -23,8 +23,8 @@ interface IBlockListItem {
 @Component({
   components: {
     BlockInfo,
-    ConnectionStatus
-  }
+    ConnectionStatus,
+  },
 })
 export default class BlockList extends Vue {
   @Prop({ required: true }) blockchain!: Blockchain // prettier-ignore
@@ -33,15 +33,15 @@ export default class BlockList extends Vue {
   // @Prop({ default: () => ({ blockHeight: null }) }) searchQuery!: ISearchQuery // prettier-ignore
 
   blockHeight: string | null = null
-  sortBy = 'blockHeight'
+  sortBy = "blockHeight"
   sortDesc = true
   fields = [
-    { key: 'blockHeight', label: 'Block', sortable: true },
-    { key: 'hash', label: 'Hash', sortable: true },
-    { key: 'age', sortable: true },
-    { key: 'time', sortable: true }
+    { key: "blockHeight", label: "Block", sortable: true },
+    { key: "hash", label: "Hash", sortable: true },
+    { key: "age", sortable: true },
+    { key: "time", sortable: true },
   ]
-  muted = 'gray'
+  muted = "gray"
   selectedItem: IBlockListItem | null = null
   isBlockInfoVisible = false
   currentPage = 1
@@ -58,9 +58,9 @@ export default class BlockList extends Vue {
     if (this.refreshTimer === null) {
       this.refreshTimer = window.setInterval(() => {
         if (this.totalNumBlocks !== this.blockchain.totalNumBlocks && this.currentPage === 1) {
-          this.totalNumBlocks = parseInt(String(this.blockchain.totalNumBlocks))
+          this.totalNumBlocks = parseInt("" + this.blockchain.totalNumBlocks, 10)
           if (this.$refs.blocksTable) {
-            ;(this.$refs.blocksTable as any).refresh()
+            (this.$refs.blocksTable as any).refresh()
           }
         }
       }, 5000)
@@ -100,15 +100,15 @@ export default class BlockList extends Vue {
         minHeight,
         maxHeight,
         limit: this.perPage,
-        autoFetch
+        autoFetch,
       })
-      items = blocks.map<IBlockListItem>(block => ({
+      items = blocks.map<IBlockListItem>((block) => ({
         blockHeight: block.height,
         numTransactions: block.numTxs,
         hash: block.hash,
         age: distanceInWordsToNow(new Date(block.time)),
-        time: formatDate(new Date(block.time), 'YYYY-MM-DD HH:mm:ss.SSS (Z)'),
-        block
+        time: formatDate(new Date(block.time), "YYYY-MM-DD HH:mm:ss.SSS (Z)"),
+        block,
       }))
     } catch (err) {
       console.error(err)
@@ -117,7 +117,7 @@ export default class BlockList extends Vue {
     if (autoFetch) {
       this.setRefreshTimer()
     }
-    this.totalNumBlocks = parseInt(String(this.blockchain.totalNumBlocks))
+    this.totalNumBlocks = parseInt("" + this.blockchain.totalNumBlocks, 10)
     return items
   }
 
@@ -128,8 +128,8 @@ export default class BlockList extends Vue {
       numTransactions: block.numTxs,
       hash: block.hash,
       age: distanceInWordsToNow(new Date(block.time)),
-      time: formatDate(new Date(block.time), 'YYYY-MM-DD HH:mm:ss.SSS (Z)'),
-      block
+      time: formatDate(new Date(block.time), "YYYY-MM-DD HH:mm:ss.SSS (Z)"),
+      block,
     }
     this.selectItem(item)
   }
@@ -139,12 +139,12 @@ export default class BlockList extends Vue {
       transaction: null,
       block: this.selectedItem ? this.selectedItem.block : null,
       blockchain: this.blockchain,
-      onCloseBtnClicked: this.closeBlockInfoOverlay
+      onCloseBtnClicked: this.closeBlockInfoOverlay,
     }
   }
 
   get paginationAlignment(): string {
-    return this.showConnectionDropdown ? 'right' : 'center'
+    return this.showConnectionDropdown ? "right" : "center"
   }
 
   selectItem(item: IBlockListItem) {
@@ -179,8 +179,8 @@ export default class BlockList extends Vue {
     }
   }
 
-  onUserInputUrl(url:string){
-    this.$store.commit('addChainUrl', { url })//.addChainUrl(url)
+  onUserInputUrl(url: string) {
+    this.$store.commit("addChainUrl", { url })// .addChainUrl(url)
     this.onConnectionUrlChanged(url)
   }
 
@@ -200,9 +200,9 @@ export default class BlockList extends Vue {
   }
 
   async searchWithBlockHeight() {
-    if(this.blockHeight) {
-      let blockHeight = parseInt(this.blockHeight!)
-      if(blockHeight <= 0) return
+    if (this.blockHeight) {
+      const blockHeight = parseInt(this.blockHeight!, 10)
+      if (blockHeight <= 0) return
       // let block = await this.blockchain.fetchBlock(blockHeight);
       this.showBlock(blockHeight)
     }

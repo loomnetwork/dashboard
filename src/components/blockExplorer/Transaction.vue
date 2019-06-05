@@ -18,9 +18,9 @@
   </div>
 </template>
 
-<script>
-  import Vue from 'vue'
-  import { Component } from 'vue-property-decorator'
+<script lang="ts">
+  import Vue from "vue"
+  import { Component } from "vue-property-decorator"
 
   @Component
   export default class Transaction extends Vue {
@@ -28,9 +28,10 @@
     preload = false
 
     mounted() {
-      console.log('Card ribbon mounted with prop', this.daysRemaining)
+      // console.log("Card ribbon mounted with prop", this.daysRemaining)
     }
-  }</script>
+  }
+</script>
 <style lang="scss" scoped>
 #transaction {
   color: #ffffff;

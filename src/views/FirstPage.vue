@@ -3,18 +3,13 @@
   <div class="">
     <div class="pt-3">
       <main>
-        <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
-        <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
-        <seed-phrase-modal ref="seedPhraseRef" @ok="onGenerateSeeds"/>
-        <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
-        <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
         <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
         <div class="container-fluid mb-5 rmv-padding">
      
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center mb-3" @click="selectWallet('ledger')">
+                <b-card id="ledger-button" class="wallet-selection-card text-center mb-3" @click="setWallet('ledger')">
                   <h5>Ledger</h5>
                   <img src="../assets/ledger_logo.svg">
                   <small>
@@ -24,7 +19,7 @@
                 </b-card>
               </div>
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                <b-card id="metamask-button" class="wallet-selection-card text-center" @click="setWallet('metamask')">
                   <h5>Metamask</h5>
                   <img src="../assets/metamask_logo.png">
                   <small>
@@ -32,9 +27,9 @@
                     or extension                      
                   </small>
                 </b-card>                  
-              </div>      
+              </div>                 
                <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                <b-card id="trezor-button" class="wallet-selection-card text-center" @click="setWallet('metamask')">
                   <h5>Trezor <small>via Metamask</small></h5>
                   <img src="../assets/trezor_logo.png">
                   <small>
@@ -42,17 +37,31 @@
                     via Metamask                    
                   </small>
                 </b-card>                  
-              </div>                 
+              </div>   
+              <div class="col-sm-12 col-md-6">
+                <b-card id="explore-button" class="wallet-selection-card text-center" @click="addressModalShow = !addressModalShow">
+                  <h5>Explore</h5>
+                  <img id="wallet-card-img-large" src="../assets/network-error-graphic.png">
+                  <small>
+                    Explore an account              
+                  </small>
+                </b-card>                  
+              </div>                
             </div>  
           </b-card>
+          
+          <b-modal v-model="addressModalShow" hide-header hide-footer>
+            <div>
+              <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
+              <b-button type="submit" @click="setExploreMode(address)" variant="primary">Submit</b-button>
+            </div>   
+          </b-modal>
 
-
-          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
-                      v-if="!isProduction"
-                      :allowedUrls="chainUrls"
-                      :serverUrl="networkId"
-                      @urlClicked="onUserInputUrl"
-                      @urlInput="onUserInputUrl"/>
+          <ChainSelector style="width: 250px; margin: 24px auto;"
+                         class="connection-status"
+                         v-if="!isProduction"
+                         :allowedUrls="chainUrls"
+                         :serverUrl="networkId"/>
 
 
         </div>
@@ -61,208 +70,75 @@
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
-import ChainSelector from '../components/ChainSelector'
-import SeedPhraseModal from '../components/modals/SeedPhraseModal'
-import ConfirmSeedModal from '../components/modals/ConfirmSeedModal'
-import RestoreAccountModal from '../components/modals/RestoreAccountModal'
-import HardwareWalletModal from '../components/modals/HardwareWalletModal'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { setInterval } from 'timers';
-const bip39 = require('bip39')
+<script lang="ts">
+import { Vue, Component, Watch } from "vue-property-decorator"
+import ChainSelector from "../components/ChainSelector"
+import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
+import { setInterval } from "timers"
+import { Modal } from "bootstrap-vue"
 
-const DPOSStore = createNamespacedHelpers('DPOS')
-const DappChainStore = createNamespacedHelpers('DappChain')
+import { ethereumModule } from "@/store/ethereum"
+
+import { DPOSTypedStore } from "@/store/dpos-old"
+import { CommonTypedStore } from "../store/common"
+import { DashboardState } from "../types"
 
 @Component({
   components: {
-    FaucetHeader,
-    FaucetFooter,
     ChainSelector,
-    SeedPhraseModal,
-    ConfirmSeedModal,
     HardwareWalletModal,
-    RestoreAccountModal
   },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DappChainStore.mapState([
-      'chainUrls',
-      'networkId'
-    ]),    
-    ...DPOSStore.mapState([
-      'isLoggedIn',
-      'walletType',
-      'mappingSuccess'
-    ]),
-    ...mapGetters([
-      'getPrivateKey'
-    ])
-  },
-  methods: {    
-    ...mapActions(['signOut', 'setPrivateKey']),
-    ...DPOSStore.mapActions(['storePrivateKeyFromSeed','initializeDependencies']),
-    ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
-    ...DappChainStore.mapActions([
-      'addChainUrl'
-    ]),    
-    ...mapMutations(['setUserIsLoggedIn']),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ]) 
-  }
 })
 export default class FirstPage extends Vue {
-  seedPhrases = []
-  activeTab = 0
-  currentStatus = this.STATUS.NONE
-  showTabSpinner = false
-  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
-  async selectWallet(wallet) {
-    if(wallet === "ledger") {
-      this.setWalletType("ledger")
-     this.$refs.hardwareWalletConfigRef.show() 
-    } else if(wallet === "metamask") {
-      this.setWalletType("metamask")
-      this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-      console.log("done initializeDependencies")
-      //this.$root.$emit("login")
-      
-    } else {
-      return
-    }
+  get userIsLoggedIn() { return CommonTypedStore.getUserIsLoggedIn }
+  get chainUrls() { return this.$state.DPOS.chainUrls }
+  get networkId() { return this.$state.DPOS.networkId }
+  get walletType() { return this.$state.DPOS.walletType }
+  get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
+  get $state() { return (this.$store.state as DashboardState)}
+
+  setWallet = ethereumModule.setWalletType
+  setExploreMode = ethereumModule.setToExploreMode
+  // vuex
+  // setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
+  // initializeDependencies = DPOSTypedStore.initializeDependencies
+  // setWalletType = DPOSTypedStore.setWalletType
+  // setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  // signOut = CommonTypedStore.signOut
+
+  addChainUrl = DPOSTypedStore.addChainUrl
+  setMappingError = DPOSTypedStore.setMappingError
+  setMappingStatus = DPOSTypedStore.setMappingStatus
+
+  address = ""
+  addressModalShow = false
+
+  // async selectWallet(wallet) {
+  //   if (wallet === "ledger") {
+  //     this.setWalletType("ledger")
+  //     this.setUserIsLoggedIn(true)
+
+  //     this.modal("hardwareWalletConfigRef").show()
+  //   } else if (wallet === "metamask") {
+  //     this.setWalletType("metamask")
+  //     this.setUserIsLoggedIn(true)
+  //     await this.initializeDependencies()
+  //   } else {
+  //     return
+  //   }
+  // }
+
+  modal(ref: string) {
+   return this.$refs[ref] as Modal
   }
 
-  async openLoginModal() {
-    this.$root.$emit('bv::show::modal', 'login-account-modal')
-  }
-
-  signOutHandler() {
-    this.signOut()
-    this.$router.push('/')
-    this.setMappingError(null)
-    this.setMappingStatus(null)
-  }
-
-  async onLoginAccount() {
-    if (this.currentStatus === this.STATUS.CREATE_ACCOUNT) {
-      this.openCreateAccountModal()
-    } else if (this.currentStatus === this.STATUS.RESTORE_ACCOUNT) {
-      this.openRestoreAccountModal()
-    }
-  }
-
-  openCreateAccountModal() {
-    this.currentStatus = this.STATUS.CREATE_ACCOUNT
-    if (this.userIsLoggedIn) {
-      this.$refs.seedPhraseRef.show()
-    } else {
-      this.openLoginModal()
-    }
-  }
-
-  onGenerateSeeds(seeds) {
-    this.seedPhrases = seeds
-    this.$refs.confirmSeedRef.show(seeds)
-  }
+  // async openLoginModal() {
+  //   this.$root.$emit("bv::show::modal", "login-account-modal")
+  // }
 
   onConnectionUrlChanged(newUrl) {
-    this.$emit('update:chain')
-    // this.blockchain.setServerUrl(newUrl)
-  }
-
-  async onUserInputUrl(id){
-    this.addChainUrl({id})
-    // this.onConnectionUrlChanged(id)
-    this.$forceUpdate()
-    window.location.reload()
-  }  
-
-  async onConfirmSeeds() {
-    this.currentStatus = this.STATUS.NONE
-    const mnemonic = this.seedPhrases.join(' ')
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    await this.storePrivateKeyFromSeed({
-      seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab()
-  }
-
-  newUser() {
-    this.$refs.seedPhraseRef.show()
-  }
-
-  returningUser() {
-    this.$refs.restoreAccountModal.show()
-  }
-
-  openRestoreAccountModal() {
-    this.currentStatus = this.STATUS.RESTORE_ACCOUNT
-    if (this.userIsLoggedIn) {
-      this.$refs.restoreAccountModal.show()
-    } else {
-      this.openLoginModal()
-    }
-  }
-
-  async onRestoreAccount(mnemonic) {
-    this.currentStatus = this.STATUS.NONE
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    await this.storePrivateKeyFromSeed({
-      seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab() 
-  }
-
-  async mounted() {
-    if(!this.isMobile) return
-    if ((window.web3 && window.web3.currentProvider.isTrust) || 
-        !!window.imToken ||
-        (window.web3 && window.web3.currentProvider.isMetaMask) ||
-        (window.web3 && window.web3.isCobo)
-      ) {
-      this.setWalletType("metamask")
-      this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-    // this.$root.$emit("login") 
-    }
-
-  }
-  
-  switchTab() {
-    this.showTabSpinner = true
-
-    setTimeout(() => {
-      this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
-      this.showTabSpinner = false
-    }, 1000)
-  }
-
-  get STATUS() {
-    return {
-      NONE: 'NONE',
-      CREATE_ACCOUNT: 'CREATE_ACCOUNT',
-      RESTORE_ACCOUNT: 'RESTORE_ACCOUNT'
-    }
-  }
-
-  get isMobile() {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
-  }
-
-  async onWalletConfig() {
-    this.setWalletType("ledger")
+    this.$emit("update:chain")
   }
 
 }
@@ -390,6 +266,7 @@ export default class FirstPage extends Vue {
 .wallet-provider-container {
   .wallet-selection-card {
     position: relative;
+    min-height: 220px;
     img {
       width: 72px;
       height: auto;
@@ -412,6 +289,11 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
   }
+}
+
+#wallet-card-img-large {
+  height: auto;
+  width: 96px;
 }
 
 </style>

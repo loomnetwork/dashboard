@@ -1,11 +1,11 @@
 <template>
-  <b-modal id="seed-phrase-modal" ref="modalRef" title="Create Account" @ok="okHandler" ok-title="Next" ok-only ok-variant="outline-primary" centered no-close-on-backdrop>
+  <b-modal id="seed-phrase-modal" ref="modalRef" title="Create Account" centered no-close-on-backdrop hide-footer >
     <b-container fluid>
       <b-row class="warning align-items-center py-4">
         <b-col sm="1"><fa :icon="['fa', 'exclamation-triangle']" style="font-size: 40px;"/></b-col>
         <b-col sm="11">
           <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.note_these_12_words_allow') }}</span>
-          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.you_must_create_a_backup_nbsp') }}<b>{{ $t('components.modals.seed_phrase_modal.write_or_print_it_out') }}</b></span>
+          <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.you_must_create_a_backup_nbsp') }}<b> &nbsp; {{ $t('components.modals.seed_phrase_modal.write_or_print_it_out') }}</b></span>
           <span class="text-white d-inline-flex align-items-center my-1"><fa :icon="['fa', 'circle']" style="padding-right: 10px;"/>{{ $t('components.modals.seed_phrase_modal.without_it_you_will_not') }}</span>
         </b-col>
       </b-row>
@@ -19,53 +19,94 @@
           <input type="text" ref="seedsLine" class="form-control" id="seedInput" v-model="seedsLine">
           <span class="input-group-append">
             <b-button type="button" class="input-group-text"
-                      @click="copySeedstoClipboard">
-              {{ $t('components.modals.seed_phrase_modal.copy_to_clipboard') }}
+                      @click="copyToClipboard('seedInput')">
+                      <fa :icon="['fa', 'clone']" style="font-size: 20px;"/>
+            </b-button>
+          </span>
+        </div>
+        
+      </b-row>
+      <b-row class="mt-3">
+        <div class="input-group mb-2 mr-sm-2">
+           <b-form-input type="text" class="form-control" :value="publicAddress | loomAddress" id="newPublicAddress"></b-form-input>
+           <span class="input-group-append">
+            <b-button type="button" class="input-group-text"
+                      @click="copyToClipboard('newPublicAddress')">
+                      <fa :icon="['fa', 'clone']" style="font-size: 20px;"/>
             </b-button>
           </span>
         </div>
       </b-row>
+      <b-form-checkbox class="my-2"
+        id="confirmMnemonic"
+        v-model="confirmMnemonic"
+        name="confirmMnemonic">
+        I keep these seed phrase and public address somewhere safe.
+      </b-form-checkbox>
+      <b-button type="button" 
+        @click="closeModal()" class="input-group-text" :disabled="!confirmMnemonic"> DONE </b-button>
     </b-container>
   </b-modal>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { mapActions, createNamespacedHelpers } from 'vuex'
-const DappChainStore = createNamespacedHelpers('DappChain')
-const bip39 = require('bip39')
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
+import { mapActions, createNamespacedHelpers } from "vuex"
+import { CommonTypedStore } from "@/store/common"
+import { plasmaModule } from "@/store/plasma"
+import { Modal } from "bootstrap-vue"
+import { DPOSTypedStore } from "@/store/dpos-old"
 
+const bip39 = require("bip39")
 @Component({
-  methods: {
-    ...mapActions([
-      'setSuccess'
-    ])
-  }
 })
 
 export default class SeedPhraseModal extends Vue {
   seeds = []
   seedsLine = ""
-  okHandler() {
-    this.$emit('ok', this.seeds);
-  }
-  generateSeeds() {
+  publicAddress = ""
+  confirmMnemonic = false
+  setSuccessMsg = CommonTypedStore.setSuccessMsg
+  getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
+  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+
+  async generateSeeds() {
     const mnemonic = bip39.generateMnemonic()
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
-  }
-  show() {
-    this.generateSeeds()
-    this.$refs.modalRef.show()
-  }
-  copySeedstoClipboard() {
-    this.$refs.seedsLine.select();
-    document.execCommand('copy');
-    this.setSuccess("Seeds copied to clipboard")
+    const privateKey = bip39.mnemonicToSeedSync(mnemonic)
+    const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({privateKey})
+    this.publicAddress = publicKey
+    this.confirmMnemonic = false
+    this.setShowLoadingSpinner(false)
   }
 
-}</script>
+  mounted() {
+    this.$root.$on("bv::modal::show", () => {
+      this.setShowLoadingSpinner(true)
+      this.generateSeeds()
+    })
+  }
+
+  copyToClipboard(inputId) {
+    const copyText = document.getElementById(inputId)
+    // @ts-ignore
+    copyText!.select()
+    document.execCommand("copy")
+    this.setSuccessMsg("copied to clipboard")
+  }
+
+  modal(ref: string): Modal {
+    return this.$refs[ref] as Modal
+  }
+
+  closeModal(){
+    this.modal("modalRef").hide()
+  }
+}
+</script>
+
 <style lang="scss">
 #seed-phrase-modal .modal-dialog {
   width: 720px;

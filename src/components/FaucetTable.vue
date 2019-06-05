@@ -12,22 +12,22 @@
   </b-table>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
 
 @Component({
-  props: ['items', 'fields', 'sortBy', 'sortDesc']
+  props: ["items", "fields", "sortBy", "sortDesc"],
 })
-
 export default class FaucetTable extends Vue {
   rowClickHandler(record, index) {
-    let highlightedText = getSelection().toString()
-    if(!highlightedText) {
-      this.$emit('row-clicked', record, index);
+    const highlightedText = getSelection()!.toString()
+    if (!highlightedText) {
+      this.$emit("row-clicked", record, index)
     }
   }
-}</script>
+}
+</script>
 <style lang="scss">
 @import url('https://use.typekit.net/nbq4wog.css');
 #faucet-table.table {

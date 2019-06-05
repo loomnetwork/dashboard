@@ -1,5 +1,5 @@
 // @ts-ignore
-import { CryptoUtils } from 'loom-js'
+import { CryptoUtils } from "loom-js"
 import {
   SignedTx,
   NonceTx,
@@ -7,10 +7,9 @@ import {
   MessageTx,
   CallTx,
   Request,
-  ContractMethodCall
-} from 'loom-js/dist/proto/loom_pb'
-import { MapEntry } from '@/components/blockExplorer/pbs/common_pb'
-
+  ContractMethodCall,
+} from "loom-js/dist/proto/loom_pb"
+import { MapEntry } from "@/components/blockExplorer/pbs/common_pb"
 
 export interface ISigned {
   sig: Uint8Array
@@ -24,9 +23,8 @@ export interface IOneSigTx {
 
 export interface IDecodedTx {
   method: string
-  arrData: Array<any>
+  arrData: any[]
 }
-
 
 export function extractTxDataFromStr(base64Str: string): IOneSigTx {
   const pbBuf = CryptoUtils.bufferToProtobufBytes(CryptoUtils.B64ToUint8Array(base64Str))
@@ -54,7 +52,7 @@ function readTxPayload(i: Uint8Array): IDecodedTx {
   const deCallTx = CallTx.deserializeBinary(deMessageTx.toArray()[2])
   const deRequest = Request.deserializeBinary(deCallTx.toArray()[1])
   const deContractMethodCall = ContractMethodCall.deserializeBinary(deRequest.toArray()[2])
-  let txArrData = readProtoData(deContractMethodCall)
+  const txArrData = readProtoData(deContractMethodCall)
   return txArrData
 }
 
@@ -64,7 +62,6 @@ function readProtoData(cmc: ContractMethodCall): IDecodedTx {
   const txStringArrData = txData.toArray()
   return { method: methodName, arrData: txStringArrData }
 }
-
 
 function readTxSignature(i: Uint8Array): ISigned {
   const deSignedTx = SignedTx.deserializeBinary(i)

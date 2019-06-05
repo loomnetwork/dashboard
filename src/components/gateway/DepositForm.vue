@@ -56,64 +56,55 @@
     </div>
   </b-modal>
 </template>
-
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+import { Vue, Component } from "vue-property-decorator"
 import { ethers } from "ethers"
 
-import {
-  State,
-  Getter,
-  Action,
-  Mutation,
-  namespace
-} from 'vuex-class'
-import { formatToCrypto } from '@/utils';
-
-const dposModule = namespace('DPOS')
+import { DPOSTypedStore } from "@/store/dpos-old"
+import { formatToCrypto } from "@/utils"
+import { DashboardState } from "../../types"
 
 @Component
 export default class DepositForm extends Vue {
 
-  @dposModule.State("userBalance")
-  userBalance: {
-    loomBalance: any,
-    mainnetBalance: any,
+  get userBalance() {
+    return DPOSTypedStore.state.userBalance
   }
 
-  @dposModule.State("showDepositForm")
-  showDepositForm: boolean
+  get state(): DashboardState {
+    return this.$store.state
+  }
 
-  @dposModule.Mutation("setShowDepositForm")
-  setShowDepositForm
+  get showDepositForm() {
+    return this.state.DPOS.showDepositForm
+  }
 
-  @dposModule.Action("approveDeposit")
-  approveDeposit: Function
+  setShowDepositForm = DPOSTypedStore.setShowDepositForm
+
+  approveDeposit = DPOSTypedStore.approveDeposit
 
   // vue returns either number or empty string for input number
   transferAmount: number | "" = ""
   amountErrors: string[] = []
 
-  status: string = ''
-
+  status: string = ""
 
   get visible() {
-    console.log('showDepositForm', this.showDepositForm)
+    console.log("showDepositForm", this.showDepositForm)
     return this.showDepositForm
   }
 
   set visible(val) {
     if (val === false) {
       this.setShowDepositForm(false)
-      this.status = ''
+      this.status = ""
       this.transferAmount = ""
-      this.amountErrors.length === 0
+      this.amountErrors.length = 0
     }
   }
 
   close() {
-     this.visible = false
+    this.visible = false
   }
 
   depositAll() {
@@ -124,12 +115,12 @@ export default class DepositForm extends Vue {
     const errors: string[] = []
     const input = this.transferAmount
     if (input === "") {
-      return errors.push('Invalid amount')
+      return errors.push("Invalid amount")
     }
     const int = Number.parseInt("" + input, 10)
-    if (int != input) errors.push('Only round amounts allowed')
-    if (int < 1) errors.push('At least 1 loom')
-    if (int > this.userBalance.mainnetBalance) errors.push('Not enough funds in your account')
+    if (int !== input) errors.push("Only round amounts allowed")
+    if (int < 1) errors.push("At least 1 loom")
+    if (int > this.userBalance.mainnetBalance) errors.push("Not enough funds in your account")
     this.amountErrors = errors
   }
 

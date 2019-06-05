@@ -72,12 +72,12 @@ async function addDeployerAsync(
     log("approved", approvedResult)
   } catch (error) {
     let errorMessage = error.message
-    if (!error.message.includes("User denied message signature")) {
-      errorMessage = "User denied message signature"
+    if (!error.message.includes("message.user_denied_sign_tx")) {
+      errorMessage = "message.user_denied_sign_tx"
       console.log("Denided...............")
 
     }
-    CommonTypedStore.setErrorMsg(`Error Approving Transaction: ${errorMessage}`)
+    CommonTypedStore.setErrorMsg(`message.transaction_apprv_err_tx ${errorMessage}`)
     return
   }
 
@@ -87,9 +87,9 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
-    CommonTypedStore.setSuccessMsg("Add deployer address successful.")
+    CommonTypedStore.setSuccessMsg("message.add_deployer_addr_success_tx")
   } catch (error) {
-    CommonTypedStore.setErrorMsg(`Error Adding a key: ${error.message}`)
+    CommonTypedStore.setErrorMsg(`message.add_key_err_tx ${error.message}`)
     return
   }
 }

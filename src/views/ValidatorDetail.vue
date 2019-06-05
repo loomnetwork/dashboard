@@ -134,9 +134,9 @@ export default class ValidatorDetail extends Vue {
     this.$refs.address.select()
     const successful = document.execCommand("copy")
     if (successful) {
-      CommonTypedStore.setSuccess("Address copied to clipboard")
+      CommonTypedStore.setSuccess("messagse.copy_addr_success_tx")
     } else {
-      CommonTypedStore.setSuccess("Somehow copy  didn't work...sorry")
+      CommonTypedStore.setSuccess("message.copy_addr_err_tx")
     }
   }
 

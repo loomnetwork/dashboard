@@ -21,7 +21,6 @@
             @click="addToken"
             >Add</b-button>
         </b-card>
-        {{this.plasma.coins}}
       </b-card>
     </b-modal>
 </template>

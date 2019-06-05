@@ -513,13 +513,13 @@ async function redelegateAsync(
   try {
     await user.redelegateAsync(origin, target, new BN(amount), index)
     CommonTypedStore.setSuccessMsg({
-      msg: "Success redelegating stake",
+      msg: "message.redelegate_success_tx",
       forever: false,
     })
   } catch (err) {
     console.error(err)
     CommonTypedStore.setErrorMsg({
-      msg: "Failed to redelegate stake",
+      msg: "message.redelegate_err_tx",
       forever: false,
       report: true,
       cause: err,
@@ -800,7 +800,7 @@ async function delegateAsync(
     })
   } catch (err) {
     CommonTypedStore.setErrorMsg({
-      msg: "Error delegating",
+      msg: "message.delegate_err_tx",
       forever: false,
       report: true,
       cause: err,
@@ -824,7 +824,7 @@ async function undelegateAsync(
     })
   } catch (err) {
     CommonTypedStore.setErrorMsg({
-      msg: "Failed to undelegate",
+      msg: "message.undelegate_err_tx",
       forever: false,
       report: true,
       cause: err,
@@ -978,7 +978,7 @@ async function initDposUser(ctx: Context) {
   user.catch((err) => {
     console.error(err)
     CommonTypedStore.setErrorMsg({
-      msg: "Error initDposUser",
+      msg: "message.init_dposUser_err_tx",
       forever: false,
       report: true,
       cause: err,
@@ -1017,7 +1017,7 @@ async function switchDposUser(ctx: Context, payload: { web3?: any }) {
     }
   } catch (err) {
     CommonTypedStore.setErrorMsg({
-      msg: "Error initDposUser",
+      msg: "message.switch_dpouser_err_tx",
       forever: false,
       report: true,
       cause: err,

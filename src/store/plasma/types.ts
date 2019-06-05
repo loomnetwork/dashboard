@@ -20,7 +20,7 @@ export interface HasPlasmaState {
 export interface PlasmaState {
   networkId: string
   chainId: string // "default" | "asia1"
-  client: Client
+  client: Client | null
   provider: LoomProvider | null
   // for normal contracts
   web3: Web3 | null

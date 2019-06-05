@@ -1,16 +1,14 @@
 <script lang="ts" src="./ChainSelector.ts">
 </script>
 <template>
-  <div id="chain-selector">
-    <b-input-group size="sm">
+  <div id="chain-selector" v-if="envs.length > 0">
+    <b-form-select v-model="envName" size="sm" class="mt-3">
+      <option v-for="(env,index) in envs" :value="env" :key="index">{{env}}</option>
+    </b-form-select>
+    <!-- <b-input-group size="sm">
       <b-form-input type="text" aria-label="Connection URL" :value="chainUrl"></b-form-input>
+
       <b-input-group-append>
-        <b-form-select v-model="envName" size="sm" class="mt-3">
-          <option value="production">Production</option>
-          <option value="stage">Stage (us1)</option>
-          <option value="dev">Test (asia1)</option>
-          <option value="custom">Custom</option>
-        </b-form-select>
         <b-dropdown variant="dark" size="sm">
           <b-dropdown-item-button
             v-for="(chain, index) in Object.keys(allowedUrls)"
@@ -24,7 +22,7 @@
           </b-dropdown-item-button>
         </b-dropdown>
       </b-input-group-append>
-    </b-input-group>
+    </b-input-group>-->
   </div>
 </template>
 <style lang="scss">

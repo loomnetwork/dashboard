@@ -4,7 +4,7 @@ export const envs = [
     networkId: "1",
     networkName: "mainnet",
     chainId: "eth",
-    endpoing: "wss://mainnet.infura.io/ws",
+    endpoint: "wss://mainnet.infura.io/ws",
     blockExplorer: "https://etherscan.com/{txHash}",
     erc20: {
       loom: "",
@@ -17,7 +17,7 @@ export const envs = [
     networkId: "4",
     networkName: "rinkeby",
     chainId: "eth",
-    endpoing: "wss://rinkeby.infura.io/ws",
+    endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.com/{txHash}",
     erc20: {
       loom: "",
@@ -29,7 +29,7 @@ export const envs = [
     name: "dev",
     networkId: "4",
     networkName: "rinkeby",
-    endpoing: "wss://rinkeby.infura.io/ws",
+    endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.com/{txHash}",
     chainId: "eth",
     erc20: {
@@ -42,7 +42,7 @@ export const envs = [
     name: "custom",
     networkId: "default",
     networkName: "Local",
-    endpoing: "ws://localhost:8484",
+    endpoint: "ws://localhost:8484",
     blockExplorer: "",
     chainId: "eth",
     erc20: {

@@ -18,6 +18,7 @@ export interface DashboardState
     HasWhiteListState,
     HasAssetsState {
   env: Environment
+  envs: string[]
   // remove
   DPOS: DposState
   // DappChain: DappchainState

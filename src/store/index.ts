@@ -24,6 +24,9 @@ import { dposReactions } from "./dpos/reactions"
 import { zbcardsReactions } from "@/store/plasma/assets/reactions"
 import { whiteListReaction } from "./whitelist/reactions"
 
+import debug from "debug"
+const log = debug("dash")
+
 Vue.use(Vuex)
 
 const builder = getStoreBuilder<DashboardState>()
@@ -32,39 +35,38 @@ const dashboardStore = {
   setEnv: builder.commit(function setEnv(state, env: Environment) {
     state.env = env
   }),
+  setEnvs: builder.commit(function setEnvs(state, envs: Environment[]) {
+    console.log(envs)
+    state.envs = envs
+  }),
 }
 
 const store: Store<DashboardState> = builder.vuexStore({
-  plugins: [
-    (store_) => {
-      dposStorePlugin(store_)
-      ethereumReactions(store_)
-      plasmaReactions(store_)
-      gatewayReactions(store_)
-      dposReactions(store_)
-      zbcardsReactions(store_)
-      whiteListReaction(store_)
-    },
-  ],
+  plugins: [plugin],
 })
 
-// const store: Store<DashboardState> = getStoreBuilder<
-//   DashboardState
-// >().vuexStore({
-//   plugins: [
-//     (store_) => {
-//       dposStorePlugin(store_)
-//       ethereumReactions(store_)
-//       plasmaReactions(store_)
-//       gatewayReactions(store_)
-//       dposReactions(store_)
-//       zbcardsReactions(store_)
-//       whiteListReaction(store_)
-//     },
-//   ],
-// })
-Object.assign(store.state, {
-  env: "",
-})
+// set available envs
+if (window.location.host === "dashboard.dappchains.com") {
+  dashboardStore.setEnvs(["production"])
+} else {
+  console.log("all envsxs")
+  dashboardStore.setEnvs(["production", "stage", "dev", "custom"])
+}
+
+function plugin(store_: Store<DashboardState>) {
+  store_.subscribeAction({
+    before(action) {
+      log("action", action)
+    },
+  })
+
+  dposStorePlugin(store_)
+  ethereumReactions(store_)
+  plasmaReactions(store_)
+  gatewayReactions(store_)
+  dposReactions(store_)
+  zbcardsReactions(store_)
+  whiteListReaction(store_)
+}
 
 export { dashboardStore, store }

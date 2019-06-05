@@ -10,10 +10,13 @@ import * as PlasmaGateways from "./plasma"
 import { ethereumModule } from "../ethereum"
 import { DashboardState } from "@/types"
 
+import debug from "debug"
+const log = debug("dash.gateway")
+
 export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
     (s) => s.ethereum.address,
-    (newAddress) => gatewayModule.loadMapping(newAddress),
+    (address) => gatewayModule.loadMapping(address),
   )
 
   // When we have a mapping
@@ -34,7 +37,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
       EthereumGateways.init(ethereumModule.web3)
       PlasmaGateways.init(
-        plasmaModule.state.client,
+        plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
       )

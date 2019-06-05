@@ -2,38 +2,28 @@
  * @module dpos-dashboard.ethereum
  */
 
-import { getStoreBuilder, ActionHandler } from "vuex-typex"
+import { getStoreBuilder } from "vuex-typex"
 
-import { DashboardState, Transfer, Environment } from "@/types"
+import { Transfer, Environment } from "@/types"
 
 import { EthereumState, HasEthereumState, WalletType } from "./types"
 
-import * as mutations from "./mutations"
-
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import { timer, from } from "rxjs"
 import BN from "bn.js"
 import { BareActionContext } from "vuex-typex"
-import { TransferRequest } from "../plasma/types"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { LedgerAdapter } from "./wallets/ledger"
-import { JsonRpcProvider, Web3Provider } from "ethers/providers"
+import { ethers } from "ethers"
 import debug from "debug"
-import { ParamType } from "ethers/utils"
-import { Contract, ContractTransaction, ethers } from "ethers"
-
-const log = debug("dboard.ethereum")
 
 import { envs } from "@/config/ethereum"
 
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
+import Web3 from "web3"
+
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
-import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
-import { stat } from "fs"
-import { state } from "../common"
-import Web3 from "web3"
-import { Providers } from "web3-core"
-
+const log = debug("dash.ethereum")
 const ZERO = new BN("0")
 
 const wallets: Map<string, WalletType> = new Map([
@@ -138,7 +128,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
         // context.state.provider = web3provider
         web3 = new Web3(web3provider)
         log("web3 provider", web3provider)
-        // we need an ethers signer for eth signer.
+        // using web3 but  need an ethers signer for eth signing.
         // @ts-ignore
         return new ethers.providers.Web3Provider(web3provider).getSigner()
       })
@@ -169,7 +159,7 @@ async function setToExploreMode(context: ActionContext, address: string) {
 }
 
 function setEnv(state: EthereumState, envName: Environment) {
-  log("setEnv", envName)
+  log("env", envName)
 
   const env = envs.find((entry) => entry.name === envName)
   if (env === undefined) {
@@ -235,7 +225,7 @@ export async function approve(context: ActionContext, payload: Transfer) {
 export async function transfer(
   context: ActionContext,
   payload: Transfer,
-): Promise<ContractTransaction> {
+): Promise<any> {
   const { symbol, weiAmount, to } = payload
   const contract = requireValue(
     erc20Contracts.get(symbol),

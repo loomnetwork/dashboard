@@ -1,69 +1,79 @@
 <!-- PlasmaChain Delegators -->
 <template>
-  <div class="">
+  <div class>
     <div class="pt-3">
       <main>
-        <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
+        <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
         <div class="container-fluid mb-5 rmv-padding">
-     
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">
-                <b-card id="ledger-button" class="wallet-selection-card text-center mb-3" @click="setWallet('ledger')">
+                <b-card
+                  id="ledger-button"
+                  class="wallet-selection-card text-center mb-3"
+                  @click="setWallet('ledger')"
+                >
                   <h5>Ledger</h5>
                   <img src="../assets/ledger_logo.svg">
                   <small>
-                    Connect & sign via your <br>
-                    hardware wallet                      
+                    Connect & sign via your
+                    <br>hardware wallet
                   </small>
                 </b-card>
               </div>
               <div class="col-sm-12 col-md-6">
-                <b-card id="metamask-button" class="wallet-selection-card text-center" @click="setWallet('metamask')">
+                <b-card
+                  id="metamask-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('metamask')"
+                >
                   <h5>Metamask</h5>
                   <img src="../assets/metamask_logo.png">
                   <small>
-                    Connect & sign via your browser <br>
-                    or extension                      
+                    Connect & sign via your browser
+                    <br>or extension
                   </small>
-                </b-card>                  
-              </div>                 
-               <div class="col-sm-12 col-md-6">
-                <b-card id="trezor-button" class="wallet-selection-card text-center" @click="setWallet('metamask')">
-                  <h5>Trezor <small>via Metamask</small></h5>
+                </b-card>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <b-card
+                  id="trezor-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('metamask')"
+                >
+                  <h5>
+                    Trezor
+                    <small>via Metamask</small>
+                  </h5>
                   <img src="../assets/trezor_logo.png">
                   <small>
-                    Connect to your Trezor wallet <br>
-                    via Metamask                    
+                    Connect to your Trezor wallet
+                    <br>via Metamask
                   </small>
-                </b-card>                  
-              </div>   
+                </b-card>
+              </div>
               <div class="col-sm-12 col-md-6">
-                <b-card id="explore-button" class="wallet-selection-card text-center" @click="addressModalShow = !addressModalShow">
+                <b-card
+                  id="explore-button"
+                  class="wallet-selection-card text-center"
+                  @click="addressModalShow = !addressModalShow"
+                >
                   <h5>Explore</h5>
                   <img id="wallet-card-img-large" src="../assets/network-error-graphic.png">
-                  <small>
-                    Explore an account              
-                  </small>
-                </b-card>                  
-              </div>                
-            </div>  
+                  <small>Explore an account</small>
+                </b-card>
+              </div>
+            </div>
           </b-card>
-          
+
           <b-modal v-model="addressModalShow" hide-header hide-footer>
             <div>
               <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
               <b-button type="submit" @click="setExploreMode(address)" variant="primary">Submit</b-button>
-            </div>   
+            </div>
           </b-modal>
 
-          <ChainSelector style="width: 250px; margin: 24px auto;"
-                         class="connection-status"
-                         v-if="!isProduction"
-                         :allowedUrls="chainUrls"
-                         :serverUrl="networkId"/>
-
-
+          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"/>
         </div>
       </main>
     </div>
@@ -96,7 +106,7 @@ export default class FirstPage extends Vue {
   get networkId() { return this.$state.DPOS.networkId }
   get walletType() { return this.$state.DPOS.walletType }
   get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
-  get $state() { return (this.$store.state as DashboardState)}
+  get $state() { return (this.$store.state as DashboardState) }
 
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
@@ -130,7 +140,7 @@ export default class FirstPage extends Vue {
   // }
 
   modal(ref: string) {
-   return this.$refs[ref] as Modal
+    return this.$refs[ref] as Modal
   }
 
   // async openLoginModal() {
@@ -144,57 +154,51 @@ export default class FirstPage extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-  .button-container {
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 2px solid #f2f1f3;
+}
+.banner-container .col {
+  padding: 0 36px;
+}
+
+.button-inner-container {
+  width: 250px;
+}
+
+.rmv-padding {
+  padding: 0 !important;
+}
+
+#login-tab {
+  .actions {
     display: flex;
     justify-content: center;
-    align-items: center;
-    border-left: 2px solid #f2f1f3;
+    button {
+      width: 250px;
+      margin: 16px;
+    }
   }
-  .banner-container .col {
-    padding: 0 36px;
-  }
+}
 
-  .button-inner-container {
-    width: 250px;
-  }
-
-  .rmv-padding {
-    padding: 0 !important;
-  }
-
+@media (max-width: 767px) {
   #login-tab {
     .actions {
       display: flex;
-      justify-content: center;
-      button {
-        width: 250px;
-        margin:16px;
-      }
-    }
-  }
-
-  @media (max-width: 767px) { 
-    #login-tab {
-      .actions {
-      display: flex;
       flex-direction: column;
-        button {
-          width:100%;
-          margin:8px 0;
-        }
+      button {
+        width: 100%;
+        margin: 8px 0;
       }
     }
-
   }
-
-
+}
 </style>
 
 
 <style lang="scss">
-
-
-
 .header {
   .navbar {
     padding: 0;
@@ -239,7 +243,8 @@ export default class FirstPage extends Vue {
     justify-content: center;
   }
   color: gray;
-  h3,h1 {
+  h3,
+  h1 {
     color: gray;
   }
   .bottom-border {
@@ -253,7 +258,7 @@ export default class FirstPage extends Vue {
   }
   .no-bottom-border {
     border-bottom: 0;
-  }  
+  }
   .button {
     border-left: 0;
     border-right: 0;
@@ -275,9 +280,9 @@ export default class FirstPage extends Vue {
     small {
       display: block;
     }
-    span.qa {        
+    span.qa {
       display: inline-block;
-      line-height: 20px;        
+      line-height: 20px;
       right: 12px;
       bottom: 12px;
       position: absolute;
@@ -295,7 +300,6 @@ export default class FirstPage extends Vue {
   height: auto;
   width: 96px;
 }
-
 </style>
 <style>
 body {

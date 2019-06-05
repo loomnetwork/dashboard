@@ -31,7 +31,7 @@ import * as Tokens from "./tokens"
 
 import { envs } from "@/config/plasma"
 
-const log = debug("plasma")
+const log = debug("dash.plasma")
 
 // web3 instance to use to interact with plasma contracts
 
@@ -39,7 +39,7 @@ const initialState: PlasmaState = {
   networkId: "us1",
   chainId: "default",
   // todo move these out of the state
-  client: createClient(configs.us1),
+  client: null, // createClient(configs.us1),
   web3: null,
   provider: null,
   ethersProvider: null,
@@ -75,6 +75,7 @@ export const plasmaModule = {
   setEnv: builder.commit(setEnv),
 
   getAddress: builder.read(getAddress),
+
   changeIdentity: builder.dispatch(changeIdentity),
   getCallerAddress: builder.dispatch(getCallerAddress),
 
@@ -85,37 +86,13 @@ export const plasmaModule = {
   approve: builder.dispatch(Tokens.approve),
   transfer: builder.dispatch(Tokens.transfer),
 
-  // Assets
-
-  // // Getters
-  // getCardInstance: builder.read(getters.getCardInstance),
-  // // Mutations
-  // setPacksContract: builder.commit(mutations.setPacksContract),
-  // setCardContract: builder.commit(mutations.setCardContract),
-  // setCardBalance: builder.commit(mutations.setCardBalance),
-  // setPackBalance: builder.commit(mutations.setPackBalance),
-  // setCardToTransferSelected: builder.commit(
-  //   mutations.setCardToTransferSelected,
-  // ),
-  // setAllCardsToTransferSelected: builder.commit(
-  //   mutations.setAllCardsToTransferSelected,
-  // ),
-  // setPackToTransferSelected: builder.commit(
-  //   mutations.setPackToTransferSelected,
-  // ),
-  // // Actions
-  // checkCardBalance: builde   r.dispathheckCardBalance),
-  // checkPackBalance: builder.dispatch(checkPackBalance),
-  // transferPacks: builder.dispatchtnsferPacks),
-  // ransferCards: builder.dispatch(tr ansfCards),
-
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,
   ),
 }
 
 function setEnv(state: PlasmaState, envName: Environment) {
-  log("setEnv", envName)
+  log("env", envName)
 
   const env = envs.find((entry) => entry.name === envName)
   if (env === undefined) {
@@ -156,10 +133,10 @@ async function changeIdentity(
   // add the conresponding middleware
   if (signer === null) {
     // reset client middleware
-    ctx.state.client.txMiddleware = []
+    ctx.state.client!.txMiddleware = []
     // destroy loomProvider and old web3
   } else {
-    await signer.configureClient(ctx.state.client)
+    await signer.configureClient(ctx.state.client!)
   }
 }
 
@@ -173,7 +150,7 @@ async function changeIdentity(
 async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
   const state = ctx.state
   let caller: string
-  let chainId: string = state.client.chainId
+  let chainId: string = state.client!.chainId
   if (state.signer) {
     caller = await state.signer.getAddress()
     chainId = state.signer.chain

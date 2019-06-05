@@ -37,7 +37,7 @@
               />
             </h5>
           </div>
-          <div v-if="state.plasma.coins.loom.loading">
+          <div v-if="state.ethereum.coins.loom.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>

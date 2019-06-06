@@ -1,19 +1,15 @@
-import {
-  IWithdrawalReceipt,
-  IUnclaimedToken,
-} from "loom-js/dist/contracts/transfer-gateway"
-import { HasEthereumState } from "../ethereum/types"
-import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
-import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
+import { ethers } from "ethers"
 import {
   Address,
+  LocalAddress,
   NonceTxMiddleware,
   SignedEthTxMiddleware,
-  LocalAddress,
 } from "loom-js"
-import { ethers } from "ethers"
+import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { BareActionContext } from "vuex-typex"
-import { Environment } from "@/types"
+import { HasEthereumState } from "../ethereum/types"
+import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
 
 // Gateway module depends on ethereum and plasma modules
 export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
@@ -26,10 +22,10 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 export interface GatewayState {
   mapping: IAddressMapping | null
   pendingTransactions: any[]
-  withdrawalReceipts: { [token: string]: IWithdrawalReceipt | null },
-  showDepositForm: boolean,
-  showDepositApproved: boolean,
-  showDepositConfirmed: boolean,
+  withdrawalReceipts: { [token: string]: IWithdrawalReceipt | null }
+  showDepositForm: boolean
+  showDepositApproved: boolean
+  showDepositConfirmed: boolean
 }
 
 /**

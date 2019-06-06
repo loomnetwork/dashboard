@@ -2,27 +2,22 @@
  * @module dpos-dashboard.ethereum
  */
 
-import { getStoreBuilder } from "vuex-typex"
-
-import { Transfer, Environment } from "@/types"
-
+import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
+import { Transfer } from "@/types"
+import BN from "bn.js"
+import debug from "debug"
+import { ethers } from "ethers"
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
+import { BareActionContext, getStoreBuilder } from "vuex-typex"
+import Web3 from "web3"
 import {
+  EthereumConfig,
   EthereumState,
   HasEthereumState,
   WalletType,
-  EthereumConfig,
 } from "./types"
-
-import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import BN from "bn.js"
-import { BareActionContext } from "vuex-typex"
-import { MetaMaskAdapter } from "./wallets/metamask"
 import { LedgerAdapter } from "./wallets/ledger"
-import { ethers } from "ethers"
-import debug from "debug"
-
-import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
-import Web3 from "web3"
+import { MetaMaskAdapter } from "./wallets/metamask"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -90,7 +85,7 @@ export const ethereumModule = {
     return stateGetter()
   },
 
-  get web3() {
+  get web3(): Web3 {
     return web3
   },
 
@@ -255,7 +250,6 @@ export async function allowance(
   return new BN(amount.toString())
 }
 
-
 // async depositAsync(amount: BN): Promise<ethers.ContractTransaction> {
 //   let currentApproval = await this._ethereumLoom.functions.allowance(
 //     await this.ethAddress,
@@ -278,8 +272,6 @@ export async function allowance(
 //     this._ethereumLoom.address
 //   )
 // }
-
-
 
 export function initERC20(context: ActionContext, symbol: string) {
   log("initERC20")

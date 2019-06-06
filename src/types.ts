@@ -106,7 +106,7 @@ export interface DposState {
 //   validators: any[]
 // }
 
-export interface DahboardEnvs {
+export interface DashboardEnvs {
   [netwotkId: string]: {
     dappchainEndpoint: string
     mainnetEndpoint: string

@@ -13,8 +13,10 @@ import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
+const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
 
 import TOKENS from "@/data/topTokensSymbol.json"
+import { type } from 'os';
 
 /**
  * Vuex plugin that reacts to state changes:
@@ -43,6 +45,14 @@ export function plasmaReactions(store: Store<DashboardState>) {
       resetEthContract(store)
       resetERC20Contracts(store)
     },
+  )
+  store.subscribeAction(
+    {async after(action){
+      if(action.type === "plasma/transfer" || action.type === "plasma/addToken"){
+        console.log("in subscription",action);
+        // await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
+      }
+    }}
   )
 }
 
@@ -75,7 +85,20 @@ async function resetEthContract(store: Store<DashboardState>) {
 }
 
 async function resetERC20Contracts(store: Store<DashboardState>) {
-  
+  const state = store.state.plasma
+  const tokens = TOKENS.tokens["BNB"]
+
+  const caller = await plasmaModule.getCallerAddress()
+  const web3 = state.web3!
+  const address = tokens.address['stage']
+
+  const contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
+  await Tokens.addContract("BNB", PlasmaTokenKind.ERC20, contract)
+  state.coins.bnb = {
+    balance: new BN("0"),
+    loading: true,
+  }
+  await plasmaModule.refreshBalance("BNB")
 }
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {

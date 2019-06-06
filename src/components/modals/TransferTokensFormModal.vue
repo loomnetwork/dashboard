@@ -33,6 +33,7 @@ import BN from "bn.js"
 import { toBigNumber } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import * as Mutations from "@/store/plasma/mutations";
+import { async } from "rxjs/internal/scheduler/async";
 
 @Component({
   components: {
@@ -59,7 +60,7 @@ export default class TransferTokensFormModal extends Vue{
       return formatTokenAmount(balance)
     }
 
-    transferToken(){
+    async transferToken(){
       const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
       this.transfer({
         symbol: this.plasma.selectedToken,

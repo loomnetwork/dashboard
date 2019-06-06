@@ -4,7 +4,7 @@
       <h1>Wallet</h1>
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <transfer-tokens-form-modal/>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm/>
     <b-alert :show="showHelp">
@@ -18,6 +18,7 @@
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
           <label class="symbol">{{symbol}}</label>
+          <!-- BNB: {{plasmaBalance}} -->
           <span class="balance">{{plasma.coins[symbol].balance | tokenAmount}}</span>
           <b-button-group class="actions">
             <b-button
@@ -45,6 +46,8 @@
           @click="requestAddToken()"
         >Add token</b-button>
       </b-card-footer>
+      <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
+      {{plasmaBalance}}
     </b-card>
   </main>
 </template>
@@ -59,7 +62,6 @@ import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
 import { Modal } from "bootstrap-vue";
 import { plasmaModule } from "../store/plasma"
-import { formatTokenAmount } from '../filters'
 import { refreshBalance } from '../store/ethereum'
 import * as Mutations from "@/store/plasma/mutations"
 import { debuglog } from 'util';
@@ -91,6 +93,10 @@ export default class DepositWithdraw extends Vue {
 
   get plasma(): PlasmaState {
     return this.state.plasma
+  }
+
+  get plasmaBalance(): BN {
+    return (this.state.plasma.coins["bnb"] || {}).balance
   }
 
   mounted() {

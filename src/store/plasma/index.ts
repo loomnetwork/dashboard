@@ -59,6 +59,10 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
     },
+    // bnb: {
+    //   balance: new BN("0"),
+    //   loading: false,
+    // },
   },
   userDeployerWhitelist: null,
   userDeployersAddress: [],

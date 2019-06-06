@@ -11,6 +11,8 @@ const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json")
 import debug from "debug"
 import { async } from 'rxjs/internal/scheduler/async';
 
+import * as Mutations from "@/store/plasma/mutations"
+
 const log = debug("plasma")
 
 const contracts = new Map<string, ContractAdapter>()
@@ -107,7 +109,7 @@ class ERC20Adapter implements ContractAdapter {
   }
   async balanceOf(account: string) {
     const caller = await plasmaModule.getCallerAddress()
-    return this.contract.methods
+    return await this.contract.methods
       .balanceOf(account)
       .call({
         from: caller.local.toString()
@@ -120,12 +122,17 @@ class ERC20Adapter implements ContractAdapter {
       .call()
       .then((v) => new BN(v))
   }
-  approve(to: string, amount: BN) {
-    const caller = ""
-    return this.contract.methods.approve(to, amount.toString()).send()
+  async approve(to: string, amount: BN) {
+    const caller = await plasmaModule.getCallerAddress()
+    return this.contract.methods.approve(to, amount.toString()).send({from: caller.local.toString()})
   }
-  transfer(to: string, amount: BN) {
-    return this.contract.methods.transfer(to, amount.toString()).send()
+  async transfer(to: string, amount: BN) {
+    const caller = await plasmaModule.getCallerAddress() 
+    let result = await this.contract.methods.transfer(to, amount.toString()).send({from: caller.local.toString()})
+    console.log("transferred.");
+    console.log("transferred result", result);
+    
+    return result
   }
 }
 
@@ -148,7 +155,6 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   try {
     contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
     await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
-    await plasmaModule.refreshBalance(tokenSymbol)
   } catch (error) {
     console.log("error ",error);
   }
@@ -163,14 +169,16 @@ export async function refreshBalance(
   context: PlasmaContext,
   tokenSymbol: string,
 ) {
-
   const adapter = getAdapter(tokenSymbol)
-  // const caller = await plasmaModule.getCallerAddress()
-
+  const caller = await plasmaModule.getCallerAddress()
   // caution make sure balanceState is always set befor calling refreshBalance
   let balanceState = context.state.coins[tokenSymbol]
   try {
-    balanceState.balance = await adapter.balanceOf(context.state.address)
+    console.log('refresh! ', balanceState.balance, tokenSymbol);
+    const balance = new BN("983298329")//await adapter.balanceOf(context.state.address)
+    console.log("balanceState.balance", balanceState.balance);
+    Mutations.setBalance(context.state,{symbol:tokenSymbol,balance})
+    
   } catch (e){
     console.error("Could not refresh balance of " + tokenSymbol)
     console.error(e);
@@ -214,13 +222,15 @@ export async function transfer(
   context: PlasmaContext,
   payload: TransferRequest,
 ) {
+  console.log("transferring....");
+  
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
-
-
   if (weiAmount.gt(balance)) {
     throw new Error("plasma.transfer.balance.low")
   }
-  return adapter.transfer(to, weiAmount)
+
+  // plasmaModule.refreshBalance(payload.symbol)
+  return await adapter.transfer(to, weiAmount)
 }

@@ -35,6 +35,7 @@ export interface PlasmaState extends PlasmaConfig {
     loom: BalanceInfo
     [tokenSymbol: string]: BalanceInfo,
   }
+  selectedToken: string
 }
 
 export enum PlasmaTokenKind {

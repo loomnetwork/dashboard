@@ -2,31 +2,16 @@
  * @module dpos-dashboard.plasma
  */
 
-import { getStoreBuilder, BareActionContext } from "vuex-typex"
+import { getStoreBuilder } from "vuex-typex"
 
-import {
-  PlasmaState,
-  CardDetail,
-  PackDetail,
-  TierID,
-  PlasmaConfig,
-} from "./types"
+import { PlasmaState, PlasmaConfig } from "./types"
 import BN from "bn.js"
-import * as mutations from "./mutations"
-import { noop } from "vue-class-component/lib/util"
-import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
-import { DPOSTypedStore } from "../dpos-old"
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 
-import { DashboardState, Environment } from "@/types"
+import * as mutations from "./mutations"
 
-import { CommonTypedStore } from "../common"
-import networks from "@/../chain-config"
 import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
-
-import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 
 // assets (make this a sepoerate module)
 
@@ -65,6 +50,7 @@ const initialState: PlasmaState = {
       loading: false,
     },
   },
+  selectedToken: "",
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
@@ -88,6 +74,8 @@ export const plasmaModule = {
   approve: builder.dispatch(Tokens.approve),
   transfer: builder.dispatch(Tokens.transfer),
   // addTokens: builder.dispatch(Tokens.addContract),
+
+  setSelectedToken: builder.commit(mutations.setSelectedToken),
 
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,

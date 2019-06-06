@@ -13,16 +13,13 @@ import { ethereumModule } from "../ethereum"
 import { DashboardState } from "@/types"
 import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import { Funds, TokenMetaData } from "@/types"
+import { Funds } from "@/types"
 import debug from "debug"
 import { getTokenSymbolFromAddress } from "@/utils"
 import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
-import { EventLog } from 'web3-core';
-import { from } from 'rxjs';
+import { EventLog } from "web3-core"
+import { from } from "rxjs"
 
-const log = debug("dboard.gatway.reactions")
-
-import debug from "debug"
 const log = debug("dash.gateway")
 
 export function gatewayReactions(store: Store<DashboardState>) {
@@ -58,23 +55,33 @@ export function gatewayReactions(store: Store<DashboardState>) {
         mapping,
       )
 
-      const loomGatewayAddr = Address.fromString(`${store.state.plasma.chainId}:${ethGateway.loomGateway.address}`)
-      const ethGatewayAddr = Address.fromString(`${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`)
+      const loomGatewayAddr = Address.fromString(
+        // @ts-ignore
+        `${store.state.plasma.chainId}:${ethGateway.loomGateway.address}`,
+      )
+      // @ts-ignore
+      const ethGatewayAddr = Address.fromString(
+        // @ts-ignore
+        `${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`,
+      )
       const plasmaGateway = PlasmaGateways.service()
       plasmaGateway.add("loom", loomGatewayAddr)
       plasmaGateway.add("eth", ethGatewayAddr)
 
       // Listen to approval & deposit events
-      listenToDepositApproval(ethereumModule.state.address,
-                              ethGateway.loomGateway,
-                              ethereumModule.getERC20("loom")!,
-                              store)
+      listenToDepositApproval(
+        ethereumModule.state.address,
+        ethGateway.loomGateway,
+        ethereumModule.getERC20("loom")!,
+        store,
+      )
 
-      listenToDeposit(ethereumModule.state.address,
-                      ethGateway.loomGateway,
-                      ethereumModule.getERC20("loom")!,
-                      store)
-
+      listenToDeposit(
+        ethereumModule.state.address,
+        ethGateway.loomGateway,
+        ethereumModule.getERC20("loom")!,
+        store,
+      )
     },
   )
 
@@ -104,26 +111,30 @@ function listenToDepositApproval(
   store: Store<DashboardState>,
 ) {
   // const approval = loom.filters.Approval(account, gw.address, null)
-  loom.events.Approval({
-    filter: {
-      from: account,
-      to: gw.address,
+  loom.events.Approval(
+    {
+      filter: {
+        from: account,
+        // @ts-ignore
+        to: gw.address,
+      },
+      fromBlock: "latest",
     },
-    fromBlock: "latest",
-  }, (error, event) => {
+    (error, event) => {
+      log(
+        `transfer ${event.returnValues.value.toString()}
+       tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
+      )
 
-    log(
-      `transfer ${event.returnValues.value.toString()}
-       tokens from ${event.returnValues.from} to ${event.returnValues.to}`)
-
-    const payload = formatTxFromEvent(event)
-    gatewayModule.setShowDepositForm(false)
-    gatewayModule.setShowDepositApproved(true)
-    gatewayModule.setShowDepositConfirmed(false)
-    gatewayModule.setPendingTransactions(payload)
-    // TODO: Clear specific hash
-    // gatewayModule.clearPendingTransactions()
-  })
+      const payload = formatTxFromEvent(event)
+      gatewayModule.setShowDepositForm(false)
+      gatewayModule.setShowDepositApproved(true)
+      gatewayModule.setShowDepositConfirmed(false)
+      gatewayModule.setPendingTransactions(payload)
+      // TODO: Clear specific hash
+      // gatewayModule.clearPendingTransactions()
+    },
+  )
 }
 
 function listenToDeposit(
@@ -132,34 +143,38 @@ function listenToDeposit(
   loom: ERC20,
   store: Store<any>,
 ) {
-  loom.events.Transfer({
-    filter: {
-      from: account,
-      to: gw.address,
+  loom.events.Transfer(
+    {
+      filter: {
+        from: account,
+        // @ts-ignore
+        to: gw.address,
+      },
+      fromBlock: "latest",
     },
-    fromBlock: "latest",
-  }, (error, event) => {
+    (error, event) => {
+      log(
+        `transfer ${event.returnValues.value.toString()}
+       tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
+      )
 
-    log(
-      `transfer ${event.returnValues.value.toString()}
-       tokens from ${event.returnValues.from} to ${event.returnValues.to}`)
-
-    const payload = formatTxFromEvent(event)
-    gatewayModule.setShowDepositForm(false)
-    gatewayModule.setShowDepositApproved(false)
-    gatewayModule.setShowDepositConfirmed(true)
-    gatewayModule.setPendingTransactions(payload)
-    // TODO: Clear specific hash
-    // gatewayModule.clearPendingTransactions()
-  })
+      const payload = formatTxFromEvent(event)
+      gatewayModule.setShowDepositForm(false)
+      gatewayModule.setShowDepositApproved(false)
+      gatewayModule.setShowDepositConfirmed(true)
+      gatewayModule.setPendingTransactions(payload)
+      // TODO: Clear specific hash
+      // gatewayModule.clearPendingTransactions()
+    },
+  )
 }
 
-function formatTxFromEvent(event: EventLog)  {
+function formatTxFromEvent(event: EventLog) {
   const contractAddr = event.address
   const symbol = getTokenSymbolFromAddress(contractAddr)!.symbol.toLowerCase()
   const funds: Funds = {
     symbol,
     weiAmount: new BN(event.returnValues.value.toString()),
   }
-  return {...event, funds}
+  return { ...event, funds }
 }

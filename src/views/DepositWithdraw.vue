@@ -30,23 +30,15 @@
               variant="outline-primary"
               @click="requestWithdraw(symbol)"
             >Withdraw</b-button>
-            <b-button
-              class="button"
-              variant="outline-primary"
-              @click="requestSwap(symbol)"
-            >Swap</b-button>
+            <b-button class="button" variant="outline-primary" @click="requestSwap(symbol)">Swap</b-button>
           </b-button-group>
         </b-list-group-item>
       </b-list-group>
       <b-card-footer>
-        <b-button
-          class="button"
-          variant="primary"
-          @click="requestAddToken()"
-        >Add token</b-button>
+        <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <DepositForm :token="selectedToken" />
+    <DepositForm :token="selectedToken"/>
   </main>
 </template>
 
@@ -63,7 +55,6 @@ import { Modal } from "bootstrap-vue";
 import { plasmaModule } from "../store/plasma"
 import { formatTokenAmount } from "../filters"
 import { refreshBalance } from "../store/ethereum"
-import * as Mutations from "@/store/plasma/mutations"
 import { debuglog } from "util"
 
 @Component({
@@ -102,8 +93,8 @@ export default class DepositWithdraw extends Vue {
     this.filterTokens()
   }
 
-   modal(ref: string) {
-     return this.$refs[ref] as Modal
+  modal(ref: string) {
+    return this.$refs[ref] as Modal
   }
 
   @Watch("inputFilter")
@@ -120,18 +111,17 @@ export default class DepositWithdraw extends Vue {
   requestDeposit(token: string) {
     this.selectedToken = token
     this.setShowDepositForm(true)
-    this.$root.$emit("bv::show::modal", "deposit-form")
   }
 
   requestWithdraw(token: string) {
   }
 
   requestSwap(token: string) {
-    Mutations.setSelectedToken(this.plasma, token)
+    plasmaModule.setSelectedToken(token)
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 
-  requestAddToken(){
+  requestAddToken() {
     this.$root.$emit("bv::show::modal", "add-token-modal")
   }
 

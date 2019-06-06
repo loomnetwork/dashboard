@@ -1,21 +1,30 @@
-import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
-import { Client, DPOSUserV3 } from "loom-js"
-import { HasGatewayState } from "./store/gateway/types"
-import { CommonState } from "./store/common/types"
-import { Contract } from "web3-eth-contract"
 import BN from "bn.js"
+import { Client, DPOSUserV3 } from "loom-js"
+import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
+import { Contract } from "web3-eth-contract"
+import { CommonState } from "./store/common/types"
 import { HasDPOSState } from "./store/dpos/types"
-import { HasEthereumState } from "./store/ethereum/types"
-import { HasPlasmaState } from "./store/plasma/types"
+import { EthereumConfig } from "./store/ethereum/types"
+import { HasGatewayState } from "./store/gateway/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
-import { EventLog } from "web3-core"
+import { PlasmaConfig } from "./store/plasma/types"
 import { HasWhiteListState } from "./store/whitelist/types"
+
+export interface DashboardConfig {
+  name: string
+  coinDataUrl: string
+  plasma: PlasmaConfig
+  ethereum: EthereumConfig
+}
 
 export interface DashboardState
   extends HasGatewayState,
     HasDPOSState,
     HasWhiteListState,
     HasAssetsState {
+  env: string
+  envs: DashboardConfig[]
+
   // remove
   DPOS: DposState
   // DappChain: DappchainState

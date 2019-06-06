@@ -63,6 +63,7 @@ import { formatTokenAmount } from "../filters"
 import { refreshBalance } from "../store/ethereum"
 import * as Mutations from "@/store/plasma/mutations"
 import { debuglog } from "util"
+
 import TokenService from "@/services/TokenService"
 
 @Component({

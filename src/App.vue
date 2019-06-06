@@ -12,6 +12,15 @@ export default {
   name: "App",
   components: {
     Layout
+  },
+  watch: {
+    "$store.state.plasma.address"(address) {
+      if (address !== "") {
+        this.$router.push("/account");
+      } else {
+        this.$router.router.push("/");
+      }
+    }
   }
 };
 </script>

@@ -102,7 +102,7 @@ async function resetERC20Contracts(store: Store<DashboardState>) {
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma
   const signer = state.signer
-  const client = state.client
+  const client = state.client!
   // LoomProvider reaquires "plasma" private key (for now)
   // So we give it our default/generic app key
   const genericKey = state.appId.private

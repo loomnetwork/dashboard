@@ -12,14 +12,18 @@ import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
 import { DashboardState, Environment } from "@/types"
 
+export interface PlasmaConfig {
+  networkId: string
+  chainId: string
+  endpoint: string
+}
+
 export interface HasPlasmaState {
-  env: Environment
+  env: string
   plasma: PlasmaState
 }
 
-export interface PlasmaState {
-  networkId: string
-  chainId: string // "default" | "asia1"
+export interface PlasmaState extends PlasmaConfig {
   client: Client | null
   provider: LoomProvider | null
   // for normal contracts
@@ -38,27 +42,6 @@ export interface PlasmaState {
     loom: BalanceInfo
     [tokenSymbol: string]: BalanceInfo,
   }
-
-  userDeployerWhitelist: UserDeployerWhitelist | null
-  userDeployersAddress: UserDeployerState[] | []
-
-  // packsContract: {
-  //   [name: string]: Contract,
-  // }
-  // cardContract: MigratedZBGCard | null
-  // cardBalance: CardDetail[]
-  // packBalance: PackDetail[]
-  // cardToTransferSelected: CardDetail | null
-  // allCardsToTransferSelected: {
-  //   edition: string
-  //   cards: CardDetail[]
-  //   amount: number,
-  // }
-
-  // packToTransferSelected: null | {
-  //   type: string
-  //   amount: number,
-  // }
 }
 
 export enum PlasmaTokenKind {

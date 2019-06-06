@@ -5,7 +5,7 @@ import Vuex, { Store } from "vuex"
 import { dposStorePlugin } from "./dposPlugin"
 import { LocaleStore } from "./locale"
 import { getStoreBuilder } from "vuex-typex"
-import { DashboardState, Environment } from "@/types"
+import { DashboardConfig, DashboardState } from "@/types"
 
 import "./locale"
 import "./dpos-old"
@@ -24,7 +24,15 @@ import { dposReactions } from "./dpos/reactions"
 import { zbcardsReactions } from "@/store/plasma/assets/reactions"
 import { whiteListReaction } from "./whitelist/reactions"
 
+import production from "@/config/production"
+import stage from "@/config/stage"
+import dev from "@/config/dev"
+import local from "@/config/local"
+
 import debug from "debug"
+import { plasmaModule } from "./plasma"
+import { ethereumModule } from "./ethereum"
+
 const log = debug("dash")
 
 Vue.use(Vuex)
@@ -32,10 +40,12 @@ Vue.use(Vuex)
 const builder = getStoreBuilder<DashboardState>()
 
 const dashboardStore = {
-  setEnv: builder.commit(function setEnv(state, env: Environment) {
-    state.env = env
+  setEnv: builder.commit(function setEnv(state, env: DashboardConfig) {
+    state.env = env.name
+    plasmaModule.setConfig(env.plasma)
+    ethereumModule.setConfig(env.ethereum)
   }),
-  setEnvs: builder.commit(function setEnvs(state, envs: Environment[]) {
+  setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     console.log(envs)
     state.envs = envs
   }),
@@ -47,10 +57,10 @@ const store: Store<DashboardState> = builder.vuexStore({
 
 // set available envs
 if (window.location.host === "dashboard.dappchains.com") {
-  dashboardStore.setEnvs(["production"])
+  dashboardStore.setEnvs([production])
 } else {
   console.log("all envsxs")
-  dashboardStore.setEnvs(["production", "stage", "dev", "custom"])
+  dashboardStore.setEnvs([production, stage, dev, local])
 }
 
 function plugin(store_: Store<DashboardState>) {

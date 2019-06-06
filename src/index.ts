@@ -7,7 +7,6 @@ import Raven from "raven-js"
 import RavenVue from "raven-js/plugins/vue"
 import Vue from "vue"
 import { sync } from "vuex-router-sync"
-import * as Sentry from "@sentry/browser"
 import Progress from "vue-multiple-progress"
 
 import moment from "moment"
@@ -87,15 +86,10 @@ export default new Vue({
 
 // set available envs
 if (window.location.host === "dashboard.dappchains.com") {
-  store.commit("setEnvs", ["production"])
   Raven.config("https://46e40f8393dc4d63833d13c06c9fe267@sentry.io/1279387")
     .addPlugin(RavenVue, Vue)
     .install()
-} else {
-  console.log("all envsxs")
-  dashboardStore.setEnvs(["production", "stage", "dev", "custom"])
 }
-
 // todo should store key/project elsewhere (vault?)
 // Sentry.init({
 //   dsn: debugMode ? null : 'https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913"',

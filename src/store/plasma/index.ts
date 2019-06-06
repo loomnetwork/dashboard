@@ -4,7 +4,13 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import { PlasmaState, CardDetail, PackDetail, TierID } from "./types"
+import {
+  PlasmaState,
+  CardDetail,
+  PackDetail,
+  TierID,
+  PlasmaConfig,
+} from "./types"
 import BN from "bn.js"
 import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
@@ -17,7 +23,6 @@ import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 import { DashboardState, Environment } from "@/types"
 
 import { CommonTypedStore } from "../common"
-import configs from "@/envs"
 import networks from "@/../chain-config"
 import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
 
@@ -29,15 +34,14 @@ import debug from "debug"
 
 import * as Tokens from "./tokens"
 
-import { envs } from "@/config/plasma"
-
 const log = debug("dash.plasma")
 
 // web3 instance to use to interact with plasma contracts
 
 const initialState: PlasmaState = {
-  networkId: "us1",
-  chainId: "default",
+  networkId: "",
+  chainId: "",
+  endpoint: "",
   // todo move these out of the state
   client: null, // createClient(configs.us1),
   web3: null,
@@ -61,8 +65,6 @@ const initialState: PlasmaState = {
       loading: false,
     },
   },
-  userDeployerWhitelist: null,
-  userDeployersAddress: [],
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
@@ -72,7 +74,7 @@ export const plasmaModule = {
     return stateGetter()
   },
 
-  setEnv: builder.commit(setEnv),
+  setConfig: builder.commit(setConfig),
 
   getAddress: builder.read(getAddress),
 
@@ -91,19 +93,13 @@ export const plasmaModule = {
   ),
 }
 
-function setEnv(state: PlasmaState, envName: Environment) {
-  log("env", envName)
-
-  const env = envs.find((entry) => entry.name === envName)
-  if (env === undefined) {
-    throw new Error("Cannot find config for env " + envName)
-  }
-  state.chainId = env.chainId
-  const { chainId, networkId, endpoint } = env
-  // @ts-ignore
-  state.chainId = chainId
-  state.networkId = networkId
-  state.client = createClient({ chainId, endpoint })
+function setConfig(state: PlasmaState, config: PlasmaConfig) {
+  log("config", config)
+  Object.assign(state, config)
+  state.client = createClient({
+    chainId: state.chainId,
+    endpoint: state.endpoint,
+  })
 }
 
 // getter

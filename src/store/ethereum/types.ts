@@ -5,21 +5,25 @@ import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { GatewayState } from "../gateway/types"
 import { provider } from "web3-providers"
 
-// Interface for application stores than include EthereumState
-export interface HasEthereumState {
-  ethereum: EthereumState
-  gateway: GatewayState
-}
-
-export interface EthereumState {
-  chainId: string
+export interface EthereumConfig {
   networkId: string
   networkName: string
+  chainId: string
+  endpoint: string
+
   /**
    * url template for links to transactions in a blockexplorer
    * (ie. etherscan)
    */
   blockExplorer: string
+}
+
+// Interface for application stores than include EthereumState
+export interface HasEthereumState {
+  ethereum: EthereumState
+}
+
+export interface EthereumState extends EthereumConfig {
   // not really state but...
   // see type provider in web3-provider
   provider: provider | null

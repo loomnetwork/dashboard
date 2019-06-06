@@ -6,7 +6,12 @@ import { getStoreBuilder } from "vuex-typex"
 
 import { Transfer, Environment } from "@/types"
 
-import { EthereumState, HasEthereumState, WalletType } from "./types"
+import {
+  EthereumState,
+  HasEthereumState,
+  WalletType,
+  EthereumConfig,
+} from "./types"
 
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import BN from "bn.js"
@@ -15,8 +20,6 @@ import { MetaMaskAdapter } from "./wallets/metamask"
 import { LedgerAdapter } from "./wallets/ledger"
 import { ethers } from "ethers"
 import debug from "debug"
-
-import { envs } from "@/config/ethereum"
 
 import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import Web3 from "web3"
@@ -32,9 +35,10 @@ const wallets: Map<string, WalletType> = new Map([
 ])
 
 const initialState: EthereumState = {
-  chainId: "",
   networkId: "",
   networkName: "",
+  chainId: "",
+  endpoint: "",
   blockExplorer: "",
   provider: null,
   address: "",
@@ -92,7 +96,7 @@ export const ethereumModule = {
 
   getERC20,
 
-  setEnv: builder.commit(setEnv),
+  setConfig: builder.commit(setConfig),
 
   refreshBalance: builder.dispatch(refreshBalance),
   approve: builder.dispatch(approve),
@@ -152,22 +156,14 @@ async function setToExploreMode(context: ActionContext, address: string) {
   web3 = new Web3(
     new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"),
   )
-  // Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"));
   // Signer is not used in explore mode
   context.state.signer = null
   context.state.address = address
 }
 
-function setEnv(state: EthereumState, envName: Environment) {
-  log("env", envName)
-
-  const env = envs.find((entry) => entry.name === envName)
-  if (env === undefined) {
-    throw new Error("Cannot find config for env " + envName)
-  }
-  state.networkId = env.networkId
-  state.networkName = env.networkName
-  state.chainId = env.chainId
+function setConfig(state: EthereumState, config: EthereumConfig) {
+  log("config", config)
+  Object.assign(state, config)
   // remove any web3 stuff
   web3 = null
 }

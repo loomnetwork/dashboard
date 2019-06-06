@@ -7,15 +7,13 @@ import { DashboardState } from "@/types"
 
 @Component
 export default class ChainSelector extends Vue {
-  get envName() {
-    return this.$store.state.envName
+  get env() {
+    return this.$store.state.env
   }
 
-  set envName(name) {
-    console.log("name", name)
-    dashboardStore.setEnv(name)
-    ethereumModule.setEnv(name)
-    plasmaModule.setEnv(name)
+  set env(config) {
+    console.log("config", config)
+    dashboardStore.setEnv(config)
   }
 
   get envs() {
@@ -27,8 +25,8 @@ export default class ChainSelector extends Vue {
 </script>
 <template>
   <div id="chain-selector" v-if="envs.length > 0">
-    <b-form-select v-model="envName" size="sm" class="mt-3">
-      <option v-for="(env,index) in envs" :value="env" :key="index">{{env}}</option>
+    <b-form-select v-model="env" size="sm" class="mt-3">
+      <option v-for="env in envs" :value="env" :key="env.name">{{env.name}}</option>
     </b-form-select>
     <!-- <b-input-group size="sm">
       <b-form-input type="text" aria-label="Connection URL" :value="chainUrl"></b-form-input>

@@ -17,7 +17,6 @@ import { Environment } from "@/types"
 
 // Gateway module depends on ethereum and plasma modules
 export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
-  env: Environment
   gateway: GatewayState
 }
 

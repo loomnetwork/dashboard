@@ -31,7 +31,6 @@ import { stat } from "fs"
 import { state } from "../common"
 import Web3 from "web3"
 import { Providers } from "web3-core"
-import { CommonTypedStore } from "../common"
 
 const ZERO = new BN("0")
 
@@ -148,7 +147,6 @@ async function setWalletType(context: ActionContext, walletType: string) {
       .catch((e) => {
         console.error(e)
       })
-    CommonTypedStore.setUserIsLoggedIn(true)
   }
 }
 

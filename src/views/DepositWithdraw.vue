@@ -118,12 +118,9 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestDeposit(token: string) {
-<<<<<<< HEAD
     this.selectedToken = token
     this.setShowDepositForm(true)
-=======
     this.$root.$emit("bv::show::modal", "deposit-form")
->>>>>>> develop
   }
 
   requestWithdraw(token: string) {

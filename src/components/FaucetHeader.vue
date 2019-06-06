@@ -296,8 +296,9 @@ a.hover-warning:hover {
 }
 
 .custom-alert {
-  position: absolute;
+  position: fixed;
   width: 100%;
+  top: 0;
   font-weight: 600;
   margin-bottom: 0px;
   border: 0px;

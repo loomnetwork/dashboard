@@ -143,10 +143,10 @@ async function changeIdentity(
   // add the conresponding middleware
   if (signer === null) {
     // reset client middleware
-    ctx.state.client.txMiddleware = []
+    ctx.state.client!.txMiddleware = []
     // destroy loomProvider and old web3
   } else {
-    await signer.configureClient(ctx.state.client)
+    await signer.configureClient(ctx.state.client!)
   }
 }
 
@@ -160,7 +160,7 @@ async function changeIdentity(
 async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
   const state = ctx.state
   let caller: string
-  let chainId: string = state.client.chainId
+  let chainId: string = state.client!.chainId
   if (state.signer) {
     caller = await state.signer.getAddress()
     chainId = state.signer.chain

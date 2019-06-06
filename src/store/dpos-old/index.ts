@@ -360,6 +360,7 @@ async function initWeb3Local(ctx: Context) {
     const web3js: Web3 = await web3init()
     const accounts = await web3js.eth.getAccounts()
     const metamaskAccount = accounts[0]
+    // @ts-ignore
     DPOSTypedStore.setWeb3(web3js)
     DPOSTypedStore.setCurrentMetamaskAddress(metamaskAccount)
   } else if (ctx.state.walletType === "ledger") {
@@ -406,6 +407,7 @@ async function initWeb3(ctx: Context) {
       msg: "User denied access to Metamask",
     })
   }
+  // @ts-ignore
   DPOSTypedStore.setWeb3(web3js)
 }
 

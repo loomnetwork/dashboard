@@ -4,13 +4,7 @@ import { ethers } from "ethers"
 import { Observable } from "rxjs"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { GatewayState } from "../gateway/types"
-import {
-  provider,
-  HttpProvider,
-  WebsocketProvider,
-  Web3EthereumProvider,
-  CustomProvider,
-} from "web3-providers"
+import { provider } from "web3-providers"
 
 // Interface for application stores than include EthereumState
 export interface HasEthereumState {
@@ -21,7 +15,7 @@ export interface HasEthereumState {
 export interface EthereumState {
   // not really state but...
   // see type provider in web3-provider
-  provider: provider
+  provider: provider | null
   address: string
   signer: ethers.Signer | null
   walletType: string

@@ -31,7 +31,7 @@
         </b-row>
         <div role="group">
           <label for="input-live">Your Loom Public Address</label>
-          <b-form-input v-model="newPublicAddress" class="my-2" placeholder="loom0000000000000000000"></b-form-input>
+          <input-address v-model="newPublicAddress" :placeholder="'loom0000000000000000000000000000000000000000'" @isValid="isValidAddressFormat"/>
         </div>
         <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
         <seed-phrase-modal ref="seed-phrase-modal"/>
@@ -46,7 +46,7 @@
             </b-card>
           </label>
         </div>
-        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress"> Add Key </b-button>
+        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress || !isValidAddress" v-model="loomAddress"> Add Key </b-button>
         <div class="remaining my-3">
           <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
           <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
@@ -70,10 +70,12 @@ import { plasmaModule } from '@/store/plasma';
 import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js";
+import InputAddress from "@/components/InputAddress.vue"
 
 @Component({
   components: {
     SeedPhraseModal,
+    InputAddress,
   },
 })
 
@@ -85,6 +87,8 @@ export default class AddKey extends Vue {
   newPublicAddress = ""
   tierSelected: Tier | {} = {}
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  isValidAddress = false
+  loomAddress = "loom0000000000000000000000000000000000000000"
 
   modal(ref: string) {
    return this.$refs[ref] as Modal
@@ -116,10 +120,14 @@ export default class AddKey extends Vue {
       this.setErrorMsg("Your balance isn't enough. Please deposit first.")
       return
     }
-    const loomAddress =  formatFromLoomAddress(this.newPublicAddress)
+    const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     this.setShowLoadingSpinner(true)
     let result = await this.addDeployerAsync({deployer: loomAddress, tier})
     this.setShowLoadingSpinner(false)
+  }
+
+  isValidAddressFormat(isValid) {
+    this.isValidAddress = isValid
   }
 
   showSeedPhraseModal() {

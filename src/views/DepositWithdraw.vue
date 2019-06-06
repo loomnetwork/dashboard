@@ -5,7 +5,7 @@
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
     <transfer-tokens-form-modal/>
-    <add-token-modal/>
+    <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc
@@ -63,7 +63,6 @@ import { formatTokenAmount } from '../filters'
 import { refreshBalance } from '../store/ethereum'
 import * as Mutations from "@/store/plasma/mutations"
 import { debuglog } from 'util';
-
 
 @Component({
   components: {

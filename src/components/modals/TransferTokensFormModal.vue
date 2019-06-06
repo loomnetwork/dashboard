@@ -4,11 +4,10 @@
     ref="modalRef"
     title="Transfer Token"
     hide-footer
-    @show="resetModal"
     @hide="resetModal">
       <b-card>
-        <h6> Token type: {{ selectedToken }} </h6>
-        <h6> Your token balance: {{ balance }} {{ selectedToken }} </h6>
+        <h6> Token type: {{ this.plasma.selectedToken }} </h6>
+        <h6> Your token balance: {{ balance }} {{ this.plasma.selectedToken }} </h6>
         <div class="input-section">
           <span>Amount: (max: {{ balance }} )</span>
           <amount-input :min="1" :max="Number(balance)" :round="false" v-model="transferAmount" @isError="onAmountError"/>
@@ -33,6 +32,7 @@ import AmountInput from "@/components/AmountInput.vue";
 import BN from "bn.js"
 import { toBigNumber } from "@/utils"
 import { formatTokenAmount } from "@/filters"
+import * as Mutations from "@/store/plasma/mutations";
 
 @Component({
   components: {
@@ -47,8 +47,6 @@ export default class TransferTokensFormModal extends Vue{
     receiverAddress: string = ""
     amountError = false
 
-    selectedToken = this.plasma.selectedToken
-
     get state() : DashboardState {
         return this.$store.state
     }
@@ -57,14 +55,14 @@ export default class TransferTokensFormModal extends Vue{
     }
 
     get balance(){
-      const balance = this.state.plasma.coins[this.selectedToken].balance
+      const balance = this.state.plasma.coins[this.plasma.selectedToken].balance
       return formatTokenAmount(balance)
     }
 
     transferToken(){
       const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
       this.transfer({
-        symbol: this.selectedToken,
+        symbol: this.plasma.selectedToken,
         weiAmount: amount,
         to: this.receiverAddress 
       })
@@ -73,7 +71,6 @@ export default class TransferTokensFormModal extends Vue{
 
     onAmountError(val){
       this.amountError = val
-
     }
 
     resetModal(){

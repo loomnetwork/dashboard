@@ -62,6 +62,7 @@ const initialState: PlasmaState = {
   },
   userDeployerWhitelist: null,
   userDeployersAddress: [],
+  selectedToken: "loom",
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
@@ -70,6 +71,9 @@ export const plasmaModule = {
   get state() {
     return stateGetter()
   },
+  
+  // Mutaitons
+  setSelectedToken: builder.commit(mutations.setSelectedToken),
 
   getAddress: builder.read(getAddress),
   changeIdentity: builder.dispatch(changeIdentity),
@@ -81,6 +85,7 @@ export const plasmaModule = {
   allowance: builder.dispatch(Tokens.allowance),
   approve: builder.dispatch(Tokens.approve),
   transfer: builder.dispatch(Tokens.transfer),
+  // addTokens: builder.dispatch(Tokens.addContract),
 
   // Assets
 

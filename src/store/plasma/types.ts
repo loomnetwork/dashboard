@@ -11,6 +11,7 @@ import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
 import { DashboardState } from "@/types"
+import { TokenSymbol } from '../ethereum/types';
 
 export interface HasPlasmaState {
   plasma: PlasmaState
@@ -58,6 +59,9 @@ export interface PlasmaState {
   //   type: string
   //   amount: number,
   // }
+
+  selectedToken: string
+
 }
 
 export enum PlasmaTokenKind {

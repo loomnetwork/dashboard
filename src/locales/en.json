@@ -1,4 +1,29 @@
 {
+  "messages": {
+    "user_denied_tx":"You denied the transaction",
+    "transfer_card_success_tx": "Transferring cards success. Tx: ",
+    "transfer_pack_success_tx": "Transferring packs success. Tx: ",
+    "transfer_card_err_tx":"Error Transferring cards: ",
+    "transfer_pack_err_tx":"Error Transferring packs: ",
+    "user_denied_sign_tx":"User denied message signature",
+    "transaction_apprv_err_tx": "Error Approving Transaction: ",
+    "add_deployer_addr_succ_tx": "Add deployer address successful.",
+    "add_key_err_tx": "Error Adding a key: ",
+    "copy_addr_success_tx": "Address copied to clipboard",
+    "copy_addr_err_tx": "Somehow copy didn't work...sorry",
+    "redelegate_success_tx": "Success redelegating stake",
+    "redelegate_err_tx": "Failed to redelegate stake",
+    "delegate_err_tx": "Error delegating",
+    "undelegate_err_tx": "Failed to undelegate",
+    "init_DposUser_err_tx": "Error initDposUser",
+    "switch_dpouser_err_tx": "Error initDposUser",
+    "select_path_err_tx": "Can't connect to your wallet. Please try again.",
+    "load_wallet_err_tx": "Error loading your wallet accounts. Please try again.",
+    "copied_tx": "copied to clipboard",
+    "receiver_addr_err_tx": "Invalid receiver address",
+    "invalid_amount": "Invalid amount",
+    "invalid_addr": "Invalid receiver address"
+  },
   "transfer_all": "All ({amount} LOOM)",
   "views": {
     "candidate_detail": {

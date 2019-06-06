@@ -150,7 +150,7 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
     await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
     await plasmaModule.refreshBalance(tokenSymbol)
   } catch (error) {
-    console.log("error",error);
+    console.log("error ",error);
   }
 }
 

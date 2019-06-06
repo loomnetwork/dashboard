@@ -20,7 +20,6 @@
             variant="primary"
             @click="addToken"
             >Add</b-button>
-          {{ this.plasma.coins }}
         </b-card>
       </b-card>
     </b-modal>

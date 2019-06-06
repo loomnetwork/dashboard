@@ -2,7 +2,7 @@ import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { ERC20 } from "./web3-contracts/ERC20"
 import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
-import { PlasmaContext, TransferRequest, PlasmaTokenKind } from "./types"
+import { PlasmaContext, TransferRequest, PlasmaTokenKind, PlasmaState } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
 import TOKENS from "@/data/topTokensSymbol.json"
@@ -136,6 +136,15 @@ class ERC20Adapter implements ContractAdapter {
   }
 }
 
+
+export function addCoinState(state:PlasmaState, symbol:string) {
+  state.coins[symbol] = {
+    decimals: 18,
+    balance: new BN("0"),
+    loading: true,
+  }
+}
+
 export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   const state = context.state
   const tokens = TOKENS.tokens.find(token => token.symbol === tokenSymbol)
@@ -146,11 +155,14 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   }
   const address = tokens.address['stage']
   const symbol = tokens.symbol
+  // plasmaModule.addCoinState(symbol)
   state.coins[tokens.symbol] = {
     decimals: tokens.decimal,
     balance: new BN("0"),
     loading: true,
   }
+  state.coins = Object.assign({},state.coins)
+
   let contract
   try {
     contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
@@ -174,11 +186,8 @@ export async function refreshBalance(
   // caution make sure balanceState is always set befor calling refreshBalance
   let balanceState = context.state.coins[tokenSymbol]
   try {
-    console.log('refresh! ', balanceState.balance, tokenSymbol);
-    const balance = new BN("983298329")//await adapter.balanceOf(context.state.address)
-    console.log("balanceState.balance", balanceState.balance);
-    Mutations.setBalance(context.state,{symbol:tokenSymbol,balance})
-    
+    const balance = await adapter.balanceOf(context.state.address)
+    balanceState.balance = balance
   } catch (e){
     console.error("Could not refresh balance of " + tokenSymbol)
     console.error(e);

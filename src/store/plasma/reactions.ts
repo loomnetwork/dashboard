@@ -50,7 +50,7 @@ export function plasmaReactions(store: Store<DashboardState>) {
     {async after(action){
       if(action.type === "plasma/transfer" || action.type === "plasma/addToken"){
         console.log("in subscription",action);
-        // await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
+        await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
       }
     }}
   )

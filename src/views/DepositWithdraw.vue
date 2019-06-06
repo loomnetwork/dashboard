@@ -46,8 +46,8 @@
           @click="requestAddToken()"
         >Add token</b-button>
       </b-card-footer>
-      <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
-      {{plasmaBalance}}
+      <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
+      {{plasmaBalance}} -->
     </b-card>
   </main>
 </template>

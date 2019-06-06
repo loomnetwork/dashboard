@@ -94,7 +94,7 @@ export default class SeedPhraseModal extends Vue {
     // @ts-ignore
     copyText!.select()
     document.execCommand("copy")
-    this.setSuccessMsg("copied to clipboard")
+    this.setSuccessMsg("message.copied_tx")
   }
 
   modal(ref: string): Modal {

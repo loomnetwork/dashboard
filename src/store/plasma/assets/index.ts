@@ -135,13 +135,13 @@ async function transferCards(
     log("transfer cards result", result)
     await assetsModule.checkCardBalance()
     DPOSTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg("Transferring cards success. Tx: " + result.transactionHash)
+    CommonTypedStore.setSuccessMsg("message.transfer_card_success_tx" + result.transactionHash)
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
-      CommonTypedStore.setErrorMsg("You denied the transaction")
+      CommonTypedStore.setErrorMsg("messages.user_denied_tx")
     } else {
-      CommonTypedStore.setErrorMsg(`Error Transferring cards: ${error.message}`)
+      CommonTypedStore.setErrorMsg(`message.transfer_card_err_tx ${error.message}`)
       throw error
     }
   }
@@ -166,13 +166,13 @@ async function transferPacks(
       .send({ from: ethAddressString })
     log("transfer packs result", result)
     DPOSTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg("Transferring packs success. Tx: " + result.transactionHash)
+    CommonTypedStore.setSuccessMsg("message.transfer_pack_success_tx" + result.transactionHash)
   } catch (error) {
     DPOSTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
-      CommonTypedStore.setErrorMsg("You denied the transaction")
+      CommonTypedStore.setErrorMsg("messages.user_denied_tx")
     } else {
-      CommonTypedStore.setErrorMsg(`Error Transferring packs: ${error.message}`)
+      CommonTypedStore.setErrorMsg(`message.transfer_pack_err_tx ${error.message}`)
       throw error
     }
   }

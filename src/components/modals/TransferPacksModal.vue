@@ -57,11 +57,11 @@ export default class TransferPacksModal extends Vue {
 
   transferPacksHandler() {
     if (this.amountToTransfer > this.packToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
-      this.setErrorMsg("Invalid amount")
+      this.setErrorMsg("message.invalid_amount")
       return
     }
     if (this.receiverAddress === "") {
-      this.setErrorMsg("Invalid receiver address")
+      this.setErrorMsg("message.invalid_addr")
       return
     }
     this.transferPacks({

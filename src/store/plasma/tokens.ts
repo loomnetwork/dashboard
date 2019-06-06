@@ -1,10 +1,15 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { ERC20 } from "./web3-contracts/ERC20"
+import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import { PlasmaContext, TransferRequest, PlasmaTokenKind } from "./types"
+import { plasmaModule } from "."
 import BN from "bn.js"
-
+import TOKENS from "@/data/topTokensSymbol.json"
+import BoosterPackJson from "@/contracts/BoosterPack.json"
+const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
 import debug from "debug"
+import { async } from 'rxjs/internal/scheduler/async';
 
 const log = debug("plasma")
 
@@ -97,14 +102,16 @@ class CoinAdapter implements ContractAdapter {
 
 class ERC20Adapter implements ContractAdapter {
   constructor(readonly token: string, public contract: ERC20) {}
-
   get contractAddress() {
     return this.contract.address.toLocaleLowerCase()
   }
-  balanceOf(account: string) {
+  async balanceOf(account: string) {
+    const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .balanceOf(account)
-      .call()
+      .call({
+        from: caller.local.toString()
+      })
       .then((v) => new BN(v.toString()))
   }
   allowance(account: string, to: string) {
@@ -122,7 +129,30 @@ class ERC20Adapter implements ContractAdapter {
   }
 }
 
-export function addToken(context: PlasmaContext, tokenSymbol: string) {}
+export async function addToken(context: PlasmaContext, tokenSymbol: string) {
+  const state = context.state
+  const tokens = TOKENS.tokens.find(token => token.symbol === tokenSymbol)
+  const web3 = state.web3!
+  const network = state.networkId
+  if (tokens === undefined){
+    throw new Error("Could not find token symbol "+ tokenSymbol)
+  }
+  const address = tokens.address['stage']
+  const symbol = tokens.symbol
+  state.coins[tokens.symbol] = {
+    decimals: tokens.decimal,
+    balance: new BN("0"),
+    loading: true,
+  }
+  let contract
+  try {
+    contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
+    await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
+    await plasmaModule.refreshBalance(tokenSymbol)
+  } catch (error) {
+    console.log("error ",error);
+  }
+}
 
 /**
  * deposit from ethereum account to gateway
@@ -133,14 +163,17 @@ export async function refreshBalance(
   context: PlasmaContext,
   tokenSymbol: string,
 ) {
+
   const adapter = getAdapter(tokenSymbol)
+  // const caller = await plasmaModule.getCallerAddress()
 
   // caution make sure balanceState is always set befor calling refreshBalance
-  const balanceState = context.state.coins[tokenSymbol]
+  let balanceState = context.state.coins[tokenSymbol]
   try {
     balanceState.balance = await adapter.balanceOf(context.state.address)
-  } catch {
+  } catch (e){
     console.error("Could not refresh balance of " + tokenSymbol)
+    console.error(e);
   }
 }
 
@@ -185,8 +218,9 @@ export async function transfer(
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
 
+
   if (weiAmount.gt(balance)) {
-    throw new Error("plasma.tramsfer.balance.low")
+    throw new Error("plasma.transfer.balance.low")
   }
   return adapter.transfer(to, weiAmount)
 }

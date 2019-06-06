@@ -83,7 +83,7 @@ import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"
-import store from "../store"
+import { store } from "../store"
 
 @Component({
   components: {

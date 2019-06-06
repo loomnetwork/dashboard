@@ -165,6 +165,7 @@ async function transferPacks(
       .transfer(receiver, payload.amount)
       .send({ from: ethAddressString })
     log("transfer packs result", result)
+    await assetsModule.checkPackBalance()
     DPOSTypedStore.setShowLoadingSpinner(false)
     CommonTypedStore.setSuccessMsg("message.transfer_pack_success_tx" + result.transactionHash)
   } catch (error) {

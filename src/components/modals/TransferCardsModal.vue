@@ -6,18 +6,31 @@
       <h6>Variation: {{cardToTransfer.variation}}</h6>
       <h6>Your existing card: {{cardToTransfer.amount}}</h6>
       Amount: (max: {{cardToTransfer.amount}})
-      <b-input class="my-2" type="number" v-model="amountToTransfer" :max="cardToTransfer.amount" :min="1"></b-input> 
-      Receiver Loom Address:
-      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
-       <b-form-checkbox class="my-2"
+      <b-input
+        class="my-2"
+        type="number"
+        v-model="amountToTransfer"
+        :max="cardToTransfer.amount"
+        :min="1"
+      ></b-input>Receiver Loom Address:
+      <input-address
+        v-model="receiverAddress"
+        :placeholder="'Loom Address'"
+        @isValid="isValidAddressFormat"
+      />
+      <b-form-checkbox
+        class="my-2"
         id="confirmCard"
         v-model="confirmCard"
         name="confirmCard"
-        v-show="amountToTransfer && receiverAddress">
-        I confirm to transfer {{amountToTransfer}} cards to {{receiverAddress}} address.
-      </b-form-checkbox>
-      <b-button class="my-2" type="button" @click="transferCardsHandler()" 
-      :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard || !isValidAddress">Transfer</b-button>
+        v-show="amountToTransfer && receiverAddress"
+      >I confirm to transfer {{amountToTransfer}} cards to {{receiverAddress}} address.</b-form-checkbox>
+      <b-button
+        class="my-2"
+        type="button"
+        @click="transferCardsHandler()"
+        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard || !isValidAddress"
+      >Transfer</b-button>
     </b-container>
   </b-modal>
 </template>

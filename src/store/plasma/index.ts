@@ -4,7 +4,13 @@
 
 import { getStoreBuilder, BareActionContext } from "vuex-typex"
 
-import { PlasmaState, CardDetail, PackDetail, TierID } from "./types"
+import {
+  PlasmaState,
+  CardDetail,
+  PackDetail,
+  TierID,
+  PlasmaConfig,
+} from "./types"
 import BN from "bn.js"
 import * as mutations from "./mutations"
 import { noop } from "vue-class-component/lib/util"
@@ -13,12 +19,10 @@ import { DPOSTypedStore } from "../dpos-old"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
-import { TokenSymbol } from "../ethereum/types"
 
-import { DashboardState } from "@/types"
+import { DashboardState, Environment } from "@/types"
 
 import { CommonTypedStore } from "../common"
-import configs from "@/envs"
 import networks from "@/../chain-config"
 import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
 
@@ -30,15 +34,16 @@ import debug from "debug"
 
 import * as Tokens from "./tokens"
 
-const log = debug("plasma")
+const log = debug("dash.plasma")
 
 // web3 instance to use to interact with plasma contracts
 
 const initialState: PlasmaState = {
-  networkId: "us1",
-  chainId: "default",
+  networkId: "",
+  chainId: "",
+  endpoint: "",
   // todo move these out of the state
-  client: createClient(configs.us1),
+  client: null, // createClient(configs.us1),
   web3: null,
   provider: null,
   ethersProvider: null,
@@ -60,9 +65,6 @@ const initialState: PlasmaState = {
       loading: false,
     },
   },
-  userDeployerWhitelist: null,
-  userDeployersAddress: [],
-  selectedToken: "loom",
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
@@ -71,11 +73,11 @@ export const plasmaModule = {
   get state() {
     return stateGetter()
   },
-  
-  // Mutaitons
-  setSelectedToken: builder.commit(mutations.setSelectedToken),
+
+  setConfig: builder.commit(setConfig),
 
   getAddress: builder.read(getAddress),
+
   changeIdentity: builder.dispatch(changeIdentity),
   getCallerAddress: builder.dispatch(getCallerAddress),
 
@@ -87,33 +89,18 @@ export const plasmaModule = {
   transfer: builder.dispatch(Tokens.transfer),
   // addTokens: builder.dispatch(Tokens.addContract),
 
-  // Assets
-
-  // // Getters
-  // getCardInstance: builder.read(getters.getCardInstance),
-  // // Mutations
-  // setPacksContract: builder.commit(mutations.setPacksContract),
-  // setCardContract: builder.commit(mutations.setCardContract),
-  // setCardBalance: builder.commit(mutations.setCardBalance),
-  // setPackBalance: builder.commit(mutations.setPackBalance),
-  // setCardToTransferSelected: builder.commit(
-  //   mutations.setCardToTransferSelected,
-  // ),
-  // setAllCardsToTransferSelected: builder.commit(
-  //   mutations.setAllCardsToTransferSelected,
-  // ),
-  // setPackToTransferSelected: builder.commit(
-  //   mutations.setPackToTransferSelected,
-  // ),
-  // // Actions
-  // checkCardBalance: builde   r.dispathheckCardBalance),
-  // checkPackBalance: builder.dispatch(checkPackBalance),
-  // transferPacks: builder.dispatchtnsferPacks),
-  // ransferCards: builder.dispatch(tr ansfCards),
-
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,
   ),
+}
+
+function setConfig(state: PlasmaState, config: PlasmaConfig) {
+  log("config", config)
+  Object.assign(state, config)
+  state.client = createClient({
+    chainId: state.chainId,
+    endpoint: state.endpoint,
+  })
 }
 
 // getter

@@ -83,6 +83,7 @@ import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"
+import store from "../store"
 
 @Component({
   components: {
@@ -195,8 +196,8 @@ export default class Layout extends Vue {
           return
         }
 
-        if (this.currentMetamaskAddress &&
-          this.currentMetamaskAddress !== accounts[0]) {
+        if (store.state.ethereum.address &&
+          store.state.ethereum.address !== accounts[0]) {
           localStorage.removeItem("lastWithdrawTime")
           this.metamaskChangeAlert = true
           // @ts-ignore

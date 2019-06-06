@@ -202,7 +202,7 @@ import debug from "debug"
 import { formatToCrypto, sleep } from "@/utils.ts"
 import TransferStepper from "../components/TransferStepper.vue"
 import DepositForm from "@/components/gateway/DepositForm.vue"
-// import Rewards from "@/components/Rewards.vue"
+import Rewards from "@/dpos/components/Rewards.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
@@ -220,7 +220,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     LoomIcon,
     TransferStepper,
     DepositForm,
-    // Rewards,
+    Rewards,
     ElectionTimer,
   },
 })

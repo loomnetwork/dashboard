@@ -59,10 +59,11 @@ import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
 import { Modal } from "bootstrap-vue";
 import { plasmaModule } from "../store/plasma"
-import { formatTokenAmount } from '../filters'
-import { refreshBalance } from '../store/ethereum'
+import { formatTokenAmount } from "../filters"
+import { refreshBalance } from "../store/ethereum"
 import * as Mutations from "@/store/plasma/mutations"
-import { debuglog } from 'util';
+import { debuglog } from "util"
+import TokenService from "@/services/TokenService"
 
 @Component({
   components: {
@@ -77,6 +78,7 @@ import { debuglog } from 'util';
   },
 })
 export default class DepositWithdraw extends Vue {
+  tokenService = new TokenService()
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
@@ -156,7 +158,10 @@ export default class DepositWithdraw extends Vue {
     // })
     // this.filteredToken = this.tokens
   }
-
+  async created() {
+    await this.tokenService.init()
+    this.tokenService.getAllTokenSymbol()
+  }
 }
 </script>
 

@@ -1,4 +1,9 @@
-import { PlasmaSigner, PlasmaTokenKind } from "./types"
+import {
+  HasPlasmaState,
+  PlasmaSigner,
+  PlasmaTokenKind,
+  PlasmaState,
+} from "./types"
 import { Store } from "vuex"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
@@ -77,27 +82,7 @@ async function resetEthContract(store: Store<DashboardState>) {
   plasmaModule.refreshBalance("eth")
 }
 
-async function resetERC20Contracts(store: Store<DashboardState>) {
-  const state = store.state.plasma
-  // for each other token create a contract (also loomProvider)
-  const tokens = TOKENS.tokens.slice(0, 4)
-  const provider = state.ethersProvider!
-  const web3 = state.web3!
-  const network = state.networkId
-  tokens.forEach(async (tokenInfo) => {
-    const address = tokenInfo.address[network]
-    const symbol = tokenInfo.symbol
-    state.coins[tokenInfo.symbol] = {
-      decimals: tokenInfo.decimal,
-      balance: new BN("0"),
-      loading: true,
-    }
-    // @ts-ignore
-    const contract = new web3.eth.Contract(address, ERC20abi, provider) as ERC20
-    await Tokens.addContract(symbol, PlasmaTokenKind.ERC20, contract)
-    plasmaModule.refreshBalance(symbol)
-  })
-}
+async function resetERC20Contracts(store: Store<DashboardState>) {}
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma

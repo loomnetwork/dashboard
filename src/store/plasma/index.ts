@@ -87,6 +87,7 @@ export const plasmaModule = {
   allowance: builder.dispatch(Tokens.allowance),
   approve: builder.dispatch(Tokens.approve),
   transfer: builder.dispatch(Tokens.transfer),
+  // addTokens: builder.dispatch(Tokens.addContract),
 
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,

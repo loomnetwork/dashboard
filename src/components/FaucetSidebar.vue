@@ -81,7 +81,7 @@
         >{{ $t('components.faucet_sidebar.validator_management') }}</router-link>
       </b-nav-item>
     </div>
-    <b-nav-item v-if="state.common.userIsLoggedIn">
+    <b-nav-item v-if="!!state.plasma.address">
       <a class="nav-link">
         <a @click="logout">Sign out</a>
       </a>

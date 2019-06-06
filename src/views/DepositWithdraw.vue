@@ -4,6 +4,9 @@
       <h1>Wallet</h1>
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
+    <transfer-tokens-form-modal/>
+    <add-token-modal @refreshTokenList="filterTokens"/>
+    <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc
       <br>(use $t with the key to some help text.)
@@ -30,30 +33,42 @@
             <b-button
               class="button"
               variant="outline-primary"
-              disabled
               @click="requestSwap(symbol)"
             >Swap</b-button>
           </b-button-group>
         </b-list-group-item>
       </b-list-group>
       <b-card-footer>
-        <b-button class="button" variant="primary">Add token</b-button>
+        <b-button
+          class="button"
+          variant="primary"
+          @click="requestAddToken()"
+        >Add token</b-button>
       </b-card-footer>
     </b-card>
-    <DepositForm/>
   </main>
 </template>
 
 <script lang="ts">
 import DepositForm from "@/components/gateway/DepositForm.vue"
+import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue";
+import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
+import { Modal } from "bootstrap-vue";
+import { plasmaModule } from "../store/plasma"
+import { formatTokenAmount } from '../filters'
+import { refreshBalance } from '../store/ethereum'
+import * as Mutations from "@/store/plasma/mutations"
+import { debuglog } from 'util';
 
 @Component({
   components: {
     DepositForm,
+    TransferTokensFormModal,
+    AddTokenModal,
   },
   methods: {
     // ...DPOSStore.mapMutations([
@@ -64,12 +79,10 @@ import { PlasmaState } from "../store/plasma/types"
 export default class DepositWithdraw extends Vue {
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
-
   showHelp: boolean = false
+  refreshBalance = plasmaModule.refreshBalance
 
   // get the full list from state or somewhere else
-  symbols = ["loom", "eth"]
-
   filteredSymbols: string[] = []
 
   get state(): DashboardState {
@@ -84,6 +97,10 @@ export default class DepositWithdraw extends Vue {
     this.filterTokens()
   }
 
+   modal(ref: string) {
+     return this.$refs[ref] as Modal
+  }
+
   @Watch("inputFilter")
   filterTokens() {
     const filter = this.inputFilter.toLowerCase()
@@ -91,20 +108,24 @@ export default class DepositWithdraw extends Vue {
     // return token if :
     // - no filter and symbol is in the state,
     // - symbol matches filter  and symbol is in the state,
-    this.filteredSymbols = this.symbols
+    this.filteredSymbols = Object.keys(coins)
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
   }
 
   requestDeposit(token: string) {
-
+    this.$root.$emit("bv::show::modal", "deposit-form")
   }
 
   requestWithdraw(token: string) {
-
   }
 
   requestSwap(token: string) {
+    Mutations.setSelectedToken(this.plasma, token)
+    this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
+  }
 
+  requestAddToken(){
+    this.$root.$emit("bv::show::modal", "add-token-modal")
   }
 
   async ready() {

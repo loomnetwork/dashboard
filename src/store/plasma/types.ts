@@ -1,16 +1,9 @@
 import BN from "bn.js"
 
-import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
-import { UserDeployerWhitelist } from "loom-js/dist/contracts"
-import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb"
-import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
-import { Coin, EthCoin } from "loom-js/dist/contracts"
-import { Contract } from "web3-eth-contract"
+import { Client, LoomProvider } from "loom-js"
 import Web3 from "web3"
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
-import { DashboardState, Environment } from "@/types"
 
 export interface PlasmaConfig {
   networkId: string

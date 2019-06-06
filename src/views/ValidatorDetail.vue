@@ -74,8 +74,8 @@ import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 import SuccessModal from "../components/modals/SuccessModal.vue"
-import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
-// import FaucetDelegateModal from "@/dpos/components/FaucetDelegateModal.vue"
+import RedelegateModal from "../dpos/components/RedelegateModal.vue"
+// import FaucetDelegateModal from "../dpos/components/FaucetDelegateModal.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { Modal } from "bootstrap-vue"
@@ -134,9 +134,9 @@ export default class ValidatorDetail extends Vue {
     this.$refs.address.select()
     const successful = document.execCommand("copy")
     if (successful) {
-      CommonTypedStore.setSuccess("Address copied to clipboard")
+      CommonTypedStore.setSuccess("messagse.copy_addr_success_tx")
     } else {
-      CommonTypedStore.setSuccess("Somehow copy  didn't work...sorry")
+      CommonTypedStore.setSuccess("message.copy_addr_err_tx")
     }
   }
 

@@ -13,7 +13,11 @@
         :max="cardToTransfer.amount"
         :min="1"
       ></b-input>Receiver Loom Address:
-      <b-input class="my-2" type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+      <input-address
+        v-model="receiverAddress"
+        :placeholder="'Loom Address'"
+        @isValid="isValidAddressFormat"
+      />
       <b-form-checkbox
         class="my-2"
         id="confirmCard"
@@ -25,24 +29,30 @@
         class="my-2"
         type="button"
         @click="transferCardsHandler()"
-        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard"
+        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard || !isValidAddress"
       >Transfer</b-button>
     </b-container>
   </b-modal>
 </template>
 <script lang="ts">
 import Vue from "vue"
+import InputAddress from "../InputAddress.vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
-@Component
+@Component({
+  components: {
+    InputAddress
+  }
+})
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
   transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
   confirmCard = false
+  isValidAddress = false
 
   mounted() {
     this.amountToTransfer = 1
@@ -59,11 +69,11 @@ export default class TransferCardsModal extends Vue {
 
   transferCardsHandler() {
     if (this.amountToTransfer > this.cardToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
-      this.setErrorMsg("Invalid amount")
+      this.setErrorMsg("message.invalid_amount")
       return
     }
     if (this.receiverAddress === "") {
-      this.setErrorMsg("Invalid receiver address")
+      this.setErrorMsg("message.invalid_addr")
       return
     }
     this.transferCards({
@@ -72,6 +82,11 @@ export default class TransferCardsModal extends Vue {
       receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-cards-modal")
+  }
+
+  isValidAddressFormat(isValid) {
+    this.isValidAddress = isValid
+    console.log(this.isValidAddress);
   }
 
 }

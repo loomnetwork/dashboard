@@ -1,26 +1,23 @@
 import BN from "bn.js"
 
-import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
-import { UserDeployerWhitelist } from "loom-js/dist/contracts"
-import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb"
-import { Client, Address, ITxMiddlewareHandler, LoomProvider } from "loom-js"
-import { Coin, EthCoin } from "loom-js/dist/contracts"
-import { Contract } from "web3-eth-contract"
+import { Client, LoomProvider } from "loom-js"
 import Web3 from "web3"
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
-import { DashboardState } from "@/types"
-import { TokenSymbol } from '../ethereum/types';
+
+export interface PlasmaConfig {
+  networkId: string
+  chainId: string
+  endpoint: string
+}
 
 export interface HasPlasmaState {
+  env: string
   plasma: PlasmaState
 }
 
-export interface PlasmaState {
-  networkId: string
-  chainId: "default" | "asia1"
-  client: Client
+export interface PlasmaState extends PlasmaConfig {
+  client: Client | null
   provider: LoomProvider | null
   // for normal contracts
   web3: Web3 | null
@@ -38,30 +35,7 @@ export interface PlasmaState {
     loom: BalanceInfo
     [tokenSymbol: string]: BalanceInfo,
   }
-
-  userDeployerWhitelist: UserDeployerWhitelist | null
-  userDeployersAddress: UserDeployerState[] | []
-
-  // packsContract: {
-  //   [name: string]: Contract,
-  // }
-  // cardContract: MigratedZBGCard | null
-  // cardBalance: CardDetail[]
-  // packBalance: PackDetail[]
-  // cardToTransferSelected: CardDetail | null
-  // allCardsToTransferSelected: {
-  //   edition: string
-  //   cards: CardDetail[]
-  //   amount: number,
-  // }
-
-  // packToTransferSelected: null | {
-  //   type: string
-  //   amount: number,
-  // }
-
   selectedToken: string
-
 }
 
 export enum PlasmaTokenKind {
@@ -111,7 +85,7 @@ export interface CardDetail {
 }
 
 export enum TierID {
-    DEFAULT = 0,
+  DEFAULT = 0,
 }
 // helper/shorthand for plasma module action context
 export declare type PlasmaContext = BareActionContext<

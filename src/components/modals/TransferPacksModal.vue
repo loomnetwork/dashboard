@@ -4,19 +4,31 @@
       <h6>Pack type: {{packToTransfer.type}}</h6>
       <h6>Your existing pack: {{packToTransfer.amount}}</h6>
       Amount: (max: {{packToTransfer.amount}})
-      <b-input class="my-2" type="number" v-model="amountToTransfer" :max="packToTransfer.amount" :min="1"></b-input> 
-      Receiver Loom Address:
-      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
-      <b-form-checkbox class="my-2"
+      <b-input
+        class="my-2"
+        type="number"
+        v-model="amountToTransfer"
+        :max="packToTransfer.amount"
+        :min="1"
+      ></b-input>Receiver Loom Address:
+      <input-address
+        v-model="receiverAddress"
+        :placeholder="'Loom Address'"
+        @isValid="isValidAddressFormat"
+      />
+      <b-form-checkbox
+        class="my-2"
         id="confirmPack"
         v-model="confirmPack"
         name="confirmPack"
-        v-show="amountToTransfer && receiverAddress">
-        I confirm to transfer {{amountToTransfer}} packs to {{receiverAddress}} address.
-      </b-form-checkbox>
-      <b-button class="my-2" type="button" 
-        @click="transferPacksHandler()" 
-        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer >  parseInt(packToTransfer.amount) || amountToTransfer <= 0 || !confirmPack || !isValidAddress">Transfer</b-button>
+        v-show="amountToTransfer && receiverAddress"
+      >I confirm to transfer {{amountToTransfer}} packs to {{receiverAddress}} address.</b-form-checkbox>
+      <b-button
+        class="my-2"
+        type="button"
+        @click="transferPacksHandler()"
+        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer >  parseInt(packToTransfer.amount) || amountToTransfer <= 0 || !confirmPack || !isValidAddress"
+      >Transfer</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -28,8 +40,8 @@ import { assetsModule } from "@/store/plasma/assets"
 import { CommonTypedStore } from "@/store/common"
 import InputAddress from "../InputAddress.vue"
 
-@Component ({
-  components : {
+@Component({
+  components: {
     InputAddress
   }
 })

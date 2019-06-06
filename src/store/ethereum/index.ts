@@ -2,36 +2,26 @@
  * @module dpos-dashboard.ethereum
  */
 
-import { getStoreBuilder, ActionHandler } from "vuex-typex"
-
-import { DashboardState, Transfer } from "@/types"
-
-import { EthereumState, HasEthereumState, WalletType } from "./types"
-
-import * as mutations from "./mutations"
-
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import { timer } from "rxjs"
+import { Transfer } from "@/types"
 import BN from "bn.js"
-import { BareActionContext } from "vuex-typex"
-import { TransferRequest } from "../plasma/types"
-import { MetaMaskAdapter } from "./wallets/metamask"
-import { LedgerAdapter } from "./wallets/ledger"
-import { JsonRpcProvider, Web3Provider } from "ethers/providers"
 import debug from "debug"
-import { ParamType } from "ethers/utils"
-import { Contract, ContractTransaction, ethers } from "ethers"
-
-const log = debug("dboard.ethereum")
+import { ethers } from "ethers"
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
+import { BareActionContext, getStoreBuilder } from "vuex-typex"
+import Web3 from "web3"
+import {
+  EthereumConfig,
+  EthereumState,
+  HasEthereumState,
+  WalletType,
+} from "./types"
+import { LedgerAdapter } from "./wallets/ledger"
+import { MetaMaskAdapter } from "./wallets/metamask"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
-import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
-import { stat } from "fs"
-import { state } from "../common"
-import Web3 from "web3"
-import { Providers } from "web3-core"
-
+const log = debug("dash.ethereum")
 const ZERO = new BN("0")
 
 const wallets: Map<string, WalletType> = new Map([
@@ -40,13 +30,18 @@ const wallets: Map<string, WalletType> = new Map([
 ])
 
 const initialState: EthereumState = {
+  networkId: "",
+  networkName: "",
+  chainId: "",
+  endpoint: "",
+  blockExplorer: "",
   provider: null,
   address: "",
   signer: null,
   walletType: "",
   erc20Addresses: {
     // us1
-    loom: "0x165245382ff23A5D3782b48286B6A81b6fd0508e",
+    loom: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
     bnb: "",
     usdc: "",
   },
@@ -69,7 +64,7 @@ const initialState: EthereumState = {
 
 // web3 instance
 // @ see
-let web3: Web3
+let web3: Web3 | null
 
 const builder = getStoreBuilder<HasEthereumState>().module(
   "ethereum",
@@ -90,11 +85,13 @@ export const ethereumModule = {
     return stateGetter()
   },
 
-  get web3() {
+  get web3(): Web3 {
     return web3
   },
 
   getERC20,
+
+  setConfig: builder.commit(setConfig),
 
   refreshBalance: builder.dispatch(refreshBalance),
   approve: builder.dispatch(approve),
@@ -130,7 +127,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
         // context.state.provider = web3provider
         web3 = new Web3(web3provider)
         log("web3 provider", web3provider)
-        // we need an ethers signer for eth signer.
+        // using web3 but  need an ethers signer for eth signing.
         // @ts-ignore
         return new ethers.providers.Web3Provider(web3provider).getSigner()
       })
@@ -151,11 +148,19 @@ async function setWalletType(context: ActionContext, walletType: string) {
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
-  web3 = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"))
-  // Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"));
+  web3 = new Web3(
+    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"),
+  )
   // Signer is not used in explore mode
   context.state.signer = null
   context.state.address = address
+}
+
+function setConfig(state: EthereumState, config: EthereumConfig) {
+  log("config", config)
+  Object.assign(state, config)
+  // remove any web3 stuff
+  web3 = null
 }
 
 /**
@@ -211,7 +216,7 @@ export async function approve(context: ActionContext, payload: Transfer) {
 export async function transfer(
   context: ActionContext,
   payload: Transfer,
-): Promise<ContractTransaction> {
+): Promise<any> {
   const { symbol, weiAmount, to } = payload
   const contract = requireValue(
     erc20Contracts.get(symbol),
@@ -239,11 +244,34 @@ export async function allowance(
   const amount = await contract.methods
     .allowance(context.state.address, spender)
     // @ts-ignore
-    .send({
+    .call({
       from: context.state.address,
     })
   return new BN(amount.toString())
 }
+
+// async depositAsync(amount: BN): Promise<ethers.ContractTransaction> {
+//   let currentApproval = await this._ethereumLoom.functions.allowance(
+//     await this.ethAddress,
+//     this._ethereumGateway.address
+//   )
+
+//   let currentApprovalBN = new BN(currentApproval.toString())
+
+//   log('Current approval:', currentApproval)
+//   if (amount.gt(currentApprovalBN)) {
+//     let tx = await this._ethereumLoom.functions.approve(
+//       this._ethereumGateway.address,
+//       amount.sub(currentApprovalBN).toString()
+//     )
+//     await tx.wait()
+//     log('Approved an extra', amount.sub(currentApprovalBN))
+//   }
+//   return this._ethereumGateway.functions.depositERC20(
+//     amount.toString(),
+//     this._ethereumLoom.address
+//   )
+// }
 
 export function initERC20(context: ActionContext, symbol: string) {
   log("initERC20")

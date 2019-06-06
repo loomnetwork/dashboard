@@ -1,14 +1,19 @@
 <template>
   <div id="faucet-header" ref="header" class="header">
-
-    <b-alert variant="danger"
-               dismissible
-               :show="!!showErrorMsg"
-               class="custom-alert text-center"
-               ref="errorMsg">
-      {{state.common.errorMsg}}
-      </b-alert>
-      <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
+    <b-alert
+      variant="danger"
+      dismissible
+      :show="!!showErrorMsg"
+      class="custom-alert text-center"
+      ref="errorMsg"
+    >{{state.common.errorMsg}}</b-alert>
+    <b-alert
+      variant="success"
+      class="custom-alert text-center"
+      dismissible
+      :show="!!showSuccessMsg"
+      ref="successMsg"
+    >
       <span class="text-dark" v-html="state.common.successMsg"></span>
     </b-alert>
 
@@ -84,7 +89,7 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import ChainSelector from "./ChainSelector"
+import ChainSelector from "./ChainSelector.vue"
 import LoomIcon from "@/components/LoomIcon.vue"
 import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"

@@ -96,6 +96,7 @@ import { CommonTypedStore } from "@/store/common"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import Web3 from "web3"
+import { ethereumModule } from '../../store/ethereum';
 
 @Component({
   components: {
@@ -131,9 +132,8 @@ export default class HardwareWalletModal extends Vue {
   setErrorMsg = CommonTypedStore.setErrorMsg
   setSuccessMsg = CommonTypedStore.setSuccessMsg
 
-  setCurrentMetamaskAddress = DPOSTypedStore.setCurrentMetamaskAddress
-  setConnectedToMetamask = DPOSTypedStore.setConnectedToMetamask
-  setWeb3 = DPOSTypedStore.setWeb3
+  // @ts-ignore
+  setWeb3 = ethereumModule.setWeb3
   setSelectedAccount = DPOSTypedStore.setSelectedAccount
   setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
   setStatus = DPOSTypedStore.setStatus
@@ -206,7 +206,6 @@ export default class HardwareWalletModal extends Vue {
   async okHandler() {
     this.disableProgressBtn = true
     const selectedAddress = this.selectedAccount.account
-    this.setCurrentMetamaskAddress(selectedAddress)
 
     this.setSelectedLedgerPath(this.path)
     // @ts-ignore
@@ -218,8 +217,6 @@ export default class HardwareWalletModal extends Vue {
       `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
     // @ts-ignore
     this.setWeb3(this.web3js!)
-    this.registerWeb3({ web3: this.web3js! })
-    this.setConnectedToMetamask(true)
     // @ts-ignore
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)

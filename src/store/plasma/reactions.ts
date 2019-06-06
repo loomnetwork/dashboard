@@ -1,4 +1,9 @@
-import { HasPlasmaState, PlasmaSigner, PlasmaTokenKind, PlasmaState } from "./types"
+import {
+  HasPlasmaState,
+  PlasmaSigner,
+  PlasmaTokenKind,
+  PlasmaState,
+} from "./types"
 import { Store } from "vuex"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
@@ -15,6 +20,9 @@ import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
 
 import TOKENS from "@/data/topTokensSymbol.json"
+
+import debug from "debug"
+const log = debug("dash.plasma")
 
 /**
  * Vuex plugin that reacts to state changes:
@@ -39,9 +47,9 @@ export function plasmaReactions(store: Store<DashboardState>) {
         return
       }
       await createPlasmaWeb3(store)
-      resetLoomContract(store)
-      resetEthContract(store)
-      resetERC20Contracts(store)
+      await resetLoomContract(store)
+      await resetEthContract(store)
+      await resetERC20Contracts(store)
     },
   )
 }
@@ -74,9 +82,7 @@ async function resetEthContract(store: Store<DashboardState>) {
   plasmaModule.refreshBalance("eth")
 }
 
-async function resetERC20Contracts(store: Store<DashboardState>) {
-  
-}
+async function resetERC20Contracts(store: Store<DashboardState>) {}
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma
@@ -87,8 +93,8 @@ async function createPlasmaWeb3(store: Store<DashboardState>) {
   const genericKey = state.appId.private
   const loomProvider =
     signer === null
-      ? await createSimpleLoomProvider(client, genericKey)
-      : await createLoomProvider(client, signer, genericKey)
+      ? await createSimpleLoomProvider(client!, genericKey)
+      : await createLoomProvider(client!, signer, genericKey)
   // @ts-ignore
   store.state.plasma.web3 = new Web3(loomProvider)
   store.state.plasma.ethersProvider = new Web3Provider(loomProvider)

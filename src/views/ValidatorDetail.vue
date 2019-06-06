@@ -75,7 +75,7 @@ import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 import SuccessModal from "../components/modals/SuccessModal.vue"
 import RedelegateModal from "../dpos/components/RedelegateModal.vue"
-import FaucetDelegateModal from "../dpos/components/FaucetDelegateModal.vue"
+// import FaucetDelegateModal from "../dpos/components/FaucetDelegateModal.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { Modal } from "bootstrap-vue"
@@ -87,7 +87,7 @@ import { Delegation } from "@/store/dpos/types"
   components: {
     SuccessModal,
     RedelegateModal,
-    FaucetDelegateModal,
+    // FaucetDelegateModal,
     LoadingSpinner,
   },
 })

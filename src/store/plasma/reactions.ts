@@ -75,25 +75,7 @@ async function resetEthContract(store: Store<DashboardState>) {
 }
 
 async function resetERC20Contracts(store: Store<DashboardState>) {
-  const state = store.state.plasma
-  // for each other token create a contract (also loomProvider)
-  const tokens = TOKENS.tokens.slice(0, 4)
-  const provider = state.ethersProvider!
-  const web3 = state.web3!
-  const network = state.networkId
-  tokens.forEach(async (tokenInfo) => {
-    const address = tokenInfo.address['stage']
-    const symbol = tokenInfo.symbol
-    state.coins[tokenInfo.symbol] = {
-      decimals: tokenInfo.decimal,
-      balance: new BN("0"),
-      loading: true,
-    }
-    // const contract = new web3.eth.Contract(address, ERC20abi, provider) as ERC20
-    const contract = new web3.eth.Contract(ERC20abi, address) as ERC20
-    await Tokens.addContract(symbol, PlasmaTokenKind.ERC20, contract)
-    plasmaModule.refreshBalance(symbol)
-  })
+  
 }
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {

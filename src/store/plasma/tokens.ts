@@ -1,10 +1,15 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { ERC20 } from "./web3-contracts/ERC20"
+import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import { PlasmaContext, TransferRequest, PlasmaTokenKind } from "./types"
+import { plasmaModule } from "."
 import BN from "bn.js"
-
+import TOKENS from "@/data/topTokensSymbol.json"
+import BoosterPackJson from "@/contracts/BoosterPack.json"
+const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
 import debug from "debug"
+import { async } from 'rxjs/internal/scheduler/async';
 
 const log = debug("plasma")
 
@@ -100,11 +105,12 @@ class ERC20Adapter implements ContractAdapter {
   get contractAddress() {
     return this.contract.address.toLocaleLowerCase()
   }
-  balanceOf(account: string) {
+  async balanceOf(account: string) {
+    const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .balanceOf(account)
       .call({
-        from: account
+        from: caller.local.toString()
       })
       .then((v) => new BN(v.toString()))
   }
@@ -123,8 +129,29 @@ class ERC20Adapter implements ContractAdapter {
   }
 }
 
-export function addToken(context: PlasmaContext, tokenSymbol: string) {
-  console.log('added!!');
+export async function addToken(context: PlasmaContext, tokenSymbol: string) {
+  const state = context.state
+  const tokens = TOKENS.tokens.find(token => token.symbol === tokenSymbol)
+  const web3 = state.web3!
+  const network = state.networkId
+  if (tokens === undefined){
+    throw new Error("Could not find token symbol "+ tokenSymbol)
+  }
+  const address = tokens.address['stage']
+  const symbol = tokens.symbol
+  state.coins[tokens.symbol] = {
+    decimals: tokens.decimal,
+    balance: new BN("0"),
+    loading: true,
+  }
+  let contract
+  try {
+    contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
+    await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
+    await plasmaModule.refreshBalance(tokenSymbol)
+  } catch (error) {
+    console.log("error",error);
+  }
 }
 
 /**
@@ -138,10 +165,10 @@ export async function refreshBalance(
 ) {
 
   const adapter = getAdapter(tokenSymbol)
+  // const caller = await plasmaModule.getCallerAddress()
 
   // caution make sure balanceState is always set befor calling refreshBalance
   let balanceState = context.state.coins[tokenSymbol]
-  debugger
   try {
     balanceState.balance = await adapter.balanceOf(context.state.address)
   } catch (e){

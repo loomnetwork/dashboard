@@ -62,7 +62,7 @@ const initialState: PlasmaState = {
   },
   userDeployerWhitelist: null,
   userDeployersAddress: [],
-  selectedToken: "",
+  selectedToken: "loom",
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()

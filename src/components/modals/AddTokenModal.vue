@@ -8,8 +8,8 @@
     @hide="resetModal">
       <b-card>
         <h6>Token Symbol</h6>
-        <b-form-input v-model="selectedToken" list="token-synbol" id="input-with-list" placeholder="Search"></b-form-input>
-        <datalist id="token-synbol">
+        <b-form-input v-model="selectedToken" list="token-symbol" id="input-with-list" placeholder="Search"></b-form-input>
+        <datalist id="token-symbol">
           <option v-for="token in filteredSymbols" :value="token" :key="token">{{ token }}</option>
         </datalist>
         <b-card v-if="selectedToken">
@@ -20,6 +20,7 @@
             variant="primary"
             @click="addToken"
             >Add</b-button>
+          {{ this.plasma.coins }}
         </b-card>
       </b-card>
     </b-modal>
@@ -71,8 +72,9 @@ export default class TransferTokensFormModal extends Vue {
     }
 
     addToken(){
-      plasmaModule.addToken(this.plasma.selectedToken)
+      plasmaModule.addToken(this.selectedToken)
       this.$root.$emit("bv::hide::modal", "add-token-modal")
+
     }
 
 }

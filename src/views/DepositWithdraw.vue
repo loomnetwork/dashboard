@@ -111,7 +111,6 @@ export default class DepositWithdraw extends Vue {
     // - symbol matches filter  and symbol is in the state,
     this.filteredSymbols = Object.keys(coins)
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
-      console.log(this.filteredSymbols)
   }
 
   requestDeposit(token: string) {

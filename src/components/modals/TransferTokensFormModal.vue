@@ -57,8 +57,8 @@ export default class TransferTokensFormModal extends Vue{
     }
 
     get balance(){
+      console.log('balance: ', 'from: ', this.selectedToken)
       const balance = this.state.plasma.coins[this.selectedToken].balance
-      console.log('balance: ', balance)
       return formatTokenAmount(balance)
     }
 

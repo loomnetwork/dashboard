@@ -21,6 +21,7 @@ import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
 import { plasmaModule } from "../plasma"
 import { AbiItem } from "web3-utils"
+import { state } from "../common"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -30,7 +31,7 @@ interface EthereumGatewayAdapter {
   token: string
   contract: ERC20Gateway_v2 | Gateway
 
-  deposit(amount: BN)
+  deposit(amount: BN, address: string)
   withdraw(receipt: IWithdrawalReceipt)
 }
 
@@ -42,13 +43,13 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     readonly token: string,
   ) {}
 
-  deposit(amount: BN) {
+  deposit(amount: BN, address: string) {
     return (
       this.contract.methods
         .depositERC20(amount.toString(), this.tokenAddress)
         // @ts-ignore
         .send({
-          from: "",
+          from: address,
         })
     )
   }
@@ -110,14 +111,13 @@ export function init(web3: Web3) {
   // create gateways and vmc (maybe vmc does not care...)
 
   const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
-  const loomGateway = new web3.eth.Contract(
-    ERC20GatewayABI_v2 as AbiItem[],
-    gwAddress,
-  )
-  const mainGateway = new web3.eth.Contract(GatewayABI as AbiItem[], "")
+  const loomGateway = new web3.eth.Contract((ERC20GatewayABI_v2 as AbiItem[]), gwAddress)
+  // TODO: Move to config
+  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3")
   const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, "", {})
 
-  instance = new EthereumGateways(loomGateway, mainGateway, vmcContract, web3)
+  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
+
 }
 
 export function service() {
@@ -157,7 +157,7 @@ class EthereumGateways {
     let adapter: EthereumGatewayAdapter
     switch (token) {
       case "eth":
-        adapter = new EthGatewayAdapter(vmc, mainGateway, tokenAddress, web3)
+        adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
       case "loom":
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
@@ -190,9 +190,9 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       to: gateway.contract.address,
       ...funds,
     })
+  } else {
+    await gateway.deposit(funds.weiAmount, context.rootState.ethereum.address)
   }
-
-  await gateway.deposit(funds.weiAmount)
 }
 
 /**

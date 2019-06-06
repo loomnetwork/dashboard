@@ -194,7 +194,7 @@ function listenToDeposit(
     )
     DPOSTypedStore.setShowDepositForm(false)
     DPOSTypedStore.setShowDepositApproved(false)
-    DPOSTypedStore.setShowDepositConfirmed(false)
+    DPOSTypedStore.setShowDepositConfirmed(true)
     DPOSTypedStore.setPendingTx(null)
   })
 }

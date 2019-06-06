@@ -10,6 +10,7 @@ import { GatewayState, HasGatewayState, ActionContext } from "./types"
 import * as Mapper from "./mapper"
 import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
+import * as mutations from "./mutations"
 
 const log = debug("dash.gateway")
 
@@ -21,6 +22,9 @@ function initialState(): GatewayState {
       loom: null,
     },
     pendingTransactions: [],
+    showDepositForm: false,
+    showDepositApproved: false,
+    showDepositConfirmed: false,
   }
 }
 
@@ -46,4 +50,11 @@ export const gatewayModule = {
   // mapper
   loadMapping: builder.dispatch(Mapper.loadMapping),
   createMapping: builder.dispatch(Mapper.createMapping),
+
+  // mutations
+  setShowDepositForm: builder.commit(mutations.setShowDepositForm),
+  setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
+  setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
+  setPendingTransactions: builder.commit(mutations.setPendingTransactions),
+  clearPendingTransactions: builder.commit(mutations.clearPendingTransactions),
 }

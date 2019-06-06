@@ -21,7 +21,7 @@
           <abbr>{{item.fee}}%</abbr>
         </strong>
 
-      </div>         
+      </div>
     </div>
   </div>
 </template>

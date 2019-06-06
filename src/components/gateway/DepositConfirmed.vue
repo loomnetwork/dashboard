@@ -16,21 +16,24 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { DPOSTypedStore } from "../../store/dpos-old"
+import { gatewayModule } from "../../store/gateway"
 
 @Component
 export default class DepositConfirmed extends Vue {
+
+  setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
 
   get state(): DashboardState {
     return this.$store.state
   }
 
   get visible() {
-    return this.state.DPOS.showDepositConfirmed
+    return this.state.gateway.showDepositConfirmed
   }
 
   set visible(value) {
     if (value === false) {
-      DPOSTypedStore.setShowDepositConfirmed(false)
+      this.setShowDepositConfirmed(false)
       this.$root.$emit("refreshBalances")
     }
   }

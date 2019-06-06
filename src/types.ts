@@ -5,26 +5,17 @@ import { CommonState } from "./store/common/types"
 import { Contract } from "web3-eth-contract"
 import BN from "bn.js"
 import { HasDPOSState } from "./store/dpos/types"
-import { HasEthereumState, EthereumConfig } from "./store/ethereum/types"
-import { HasPlasmaState, PlasmaConfig } from "./store/plasma/types"
+import { HasEthereumState } from "./store/ethereum/types"
+import { HasPlasmaState } from "./store/plasma/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
+import { EventLog } from "web3-core"
 import { HasWhiteListState } from "./store/whitelist/types"
 
-export declare type Environment = "production" | "stage" | "dev" | "custom"
-
-export interface DashboardConfig {
-  name: string
-  coinDataUrl: string
-  plasma: PlasmaConfig
-  ethereum: EthereumConfig
-}
 export interface DashboardState
   extends HasGatewayState,
     HasDPOSState,
     HasWhiteListState,
     HasAssetsState {
-  env: string
-  envs: DashboardConfig[]
   // remove
   DPOS: DposState
   // DappChain: DappchainState

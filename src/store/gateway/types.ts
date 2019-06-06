@@ -26,7 +26,10 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 export interface GatewayState {
   mapping: IAddressMapping | null
   pendingTransactions: any[]
-  withdrawalReceipts: { [token: string]: IWithdrawalReceipt | null }
+  withdrawalReceipts: { [token: string]: IWithdrawalReceipt | null },
+  showDepositForm: boolean,
+  showDepositApproved: boolean,
+  showDepositConfirmed: boolean,
 }
 
 /**

@@ -60,10 +60,10 @@ export default class AmountInput extends Vue {
       this.errorMsg = ""
       this.$emit("isError", true)
     } else if (amount > this.max) {
-      this.errorMsg = `Invalid amount. should be less than ${this.max}`
+      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: this.max }).toString()
       this.$emit("isError", true)
     } else if (amount < this.min) {
-      this.errorMsg = `Invalid amount. should be more than ${this.min}`
+      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: this.min }).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""

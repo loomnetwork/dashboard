@@ -23,9 +23,9 @@ const DPOS_ACTIONS = [
 export function dposReactions(store: Store<DashboardState>) {
   let scheduledElectionCall: number = -1
 
-  store.watch((s) => s.plasma.client, onClientReady)
+  //store.watch((s) => s.plasma.client, onClientReady)
 
-  store.watch((s) => s.plasma.address, onAccountChange)
+  //store.watch((s) => s.plasma.address, onAccountChange)
 
   store.subscribeAction({
     after(action) {

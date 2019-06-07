@@ -1,5 +1,8 @@
 <template>
   <main class="validator">
+    <!--
+    <loading-spinner v-if="loading" :showBackdrop="true"></loading-spinner>
+    -->
     <header>
       <h1>
         <router-link
@@ -11,10 +14,10 @@
     <section class="validator-details">
       <header>
         <h1>
-          {{ validator.name }}
+          {{validator.name }}
           <span>{{validator.isBootstrap ? "(bootstrap)" : ''}}</span>
         </h1>
-        <small>loom{{validator.address}}</small>
+        <small>loom{{validator.address.substring(2)}}</small>
         <p
           v-if="validator.description"
           style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0"
@@ -28,16 +31,15 @@
         <dt>{{ $t('views.validator_detail.state') }}</dt>
         <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
         <dt>Delegators Stake</dt>
-        <dd>{{validator.stakedAmount | tokenAmount}}</dd>
+        <dd>{{validator.delegatedStake | tokenAmount}}</dd>
         <dt>Total Staked</dt>
         <dd>{{validator.totalStaked | tokenAmount}}</dd>
         <dt>Fee</dt>
-        <dd v-if="validator.isBootstrap">NA</dd>
-        <dd v-else>{{validator.fee}}</dd>
+        <dd>{{validator.fee}}</dd>
       </dl>
     </section>
-    <section v-if="!!state.plasma.address" class="user-stakes">
-      <h6 v-if="!validator.isBootstrap">{{ $t('My stakes') }}</h6>
+    <section v-if="userIsLoggedIn" class="user-stakes">
+      <h6 v-if="!isBootstrap">{{ $t('My stakes') }}</h6>
       <delegations-list :delegations="validator.delegations"/>
       <p
         class="no-stakes"
@@ -47,12 +49,12 @@
         <br>
       </p>
 
-      <div class="button-container" v-if="!validator.isBootstrap">
+      <div class="button-container" v-if="!isBootstrap">
         <b-button class="stake mr-3" @click="requestDelegation()">{{ $t("Stake tokens") }}</b-button>
         <b-button
           class="consolidate"
           v-if="canConsolidate"
-          @click="consolidate(validator)"
+          @click="consolidateDelegations(validator)"
         >{{ $t("views.validator_detail.consolidate") }}</b-button>
       </div>
 
@@ -61,37 +63,47 @@
         @onDelegate="delegateHandler"
         ref="delegateModalRef"
         :hasDelegation="hasDelegation"
-      ></faucet-delegate-modal>-->
-      <redelegate-modal></redelegate-modal>
+      ></faucet-delegate-modal> -->
+      <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
+      <success-modal></success-modal>
     </section>
   </main>
 </template>
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
+import LoadingSpinner from "../components/LoadingSpinner.vue"
+import SuccessModal from "../components/modals/SuccessModal.vue"
 import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
-// import FaucetDelegateModal from "../dpos/components/FaucetDelegateModal.vue"
-import { CommonTypedStore } from "@/store/common"
-import { BModal } from "bootstrap-vue"
-import { dposModule } from "@/dpos/store"
-import { Delegation, HasDPOSState } from "@/dpos/store/types"
-import DelegationsList from "@/dpos/components/Delegations.vue"
+// import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
+import { DPOSTypedStore } from "../store/dpos-old"
+import { CommonTypedStore } from "../store/common"
+import { Modal } from "bootstrap-vue"
+import { dposModule } from "../store/dpos"
+import { HasDPOSState } from "../store/dpos/types"
+import { Delegation } from "@/store/dpos/types"
 
 @Component({
   components: {
+    SuccessModal,
     RedelegateModal,
-    DelegationsList,
     // FaucetDelegateModal,
+    LoadingSpinner,
   },
 })
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
+  prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
+
+  hasDelegation = false
+
+  finished = false
 
   lockDays = [14, 90, 180, 365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
-  consolidate = dposModule.consolidate
+  consolidateDelegations = DPOSTypedStore.consolidateDelegations
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -99,6 +111,8 @@ export default class ValidatorDetail extends Vue {
   get validatorName() {
     return this.$route.params.index
   }
+
+  get userIsLoggedIn() { return this.state.plasma.address !== "" }
 
   get validator() {
     const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
@@ -127,7 +141,12 @@ export default class ValidatorDetail extends Vue {
   }
 
   get canConsolidate() {
-    return this.validator && 0 < this.validator.delegations.filter((d) => !d.locked).length
+    return 0 < this.state.dpos.delegations.filter((d) => !d.locked).length
+  }
+
+  async redelegateHandler() {
+    // plugin listens to actions and refreshes accordingly
+    return false
   }
 
   requestDelegation() {
@@ -149,8 +168,8 @@ export default class ValidatorDetail extends Vue {
     this.modal("redelegateModalRef").show(delegation)
   }
 
-  modal(ref: string): BModal {
-    return this.$refs[ref] as BModal
+  modal(ref: string): Modal {
+    return this.$refs[ref] as Modal
   }
 
 }

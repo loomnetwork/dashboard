@@ -13,6 +13,7 @@ import Help from "./views/Help.vue"
 import GameAssets from "./views/GameAssets.vue"
 import AddKey from "./views/AddKey.vue"
 import DepositWithdraw from "./views/DepositWithdraw.vue"
+import FeedbackForm from "./views/FeedbackForm.vue"
 import { plasmaModule } from "./store/plasma"
 
 Vue.use(VueRouter)
@@ -88,6 +89,12 @@ const router = new VueRouter({
       path: "/analytics",
       name: "analytics",
       component: Analytics,
+    },
+    {
+      path: "/feedback",
+      name: "feedback",
+      component: FeedbackForm,
+      beforeEnter: requireAccount,
     },
     {
       path: "/",

@@ -137,9 +137,6 @@ export default class FaucetHeader extends Vue {
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
-  dismissSecs = 2
-  dismissCountDown = 0
-
   get state(): DashboardState {
     return this.$store.state
   }

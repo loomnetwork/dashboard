@@ -56,7 +56,6 @@ import { mapActions, createNamespacedHelpers } from "vuex"
 import { CommonTypedStore } from "@/store/common"
 import { plasmaModule } from "@/store/plasma"
 import { Modal } from "bootstrap-vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
 
 const bip39 = require("bip39")
 @Component({
@@ -69,7 +68,7 @@ export default class SeedPhraseModal extends Vue {
   confirmMnemonic = false
   setSuccessMsg = CommonTypedStore.setSuccessMsg
   getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   async generateSeeds() {
     const mnemonic = bip39.generateMnemonic()

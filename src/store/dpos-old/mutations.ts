@@ -119,9 +119,6 @@ export function setShowSigningAlert(state: DposState, payload: boolean) {
   state.showSigningAlert = payload
 }
 
-export function setShowLoadingSpinner(state: DposState, payload: boolean) {
-  state.showLoadingSpinner = payload
-}
 export function setSignWalletModal(state: DposState, payload: boolean) {
   state.showSignWalletModal = payload
 }

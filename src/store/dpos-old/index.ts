@@ -73,7 +73,6 @@ const defaultState = () => {
     walletType: undefined,
     selectedAccount: undefined,
     metamaskDisabled: false,
-    showLoadingSpinner: false,
     showSignWalletModal: false,
     showSigningAlert: false,
     showAlreadyMappedModal: false,
@@ -154,7 +153,6 @@ export const DPOSTypedStore = {
     mutations.setCurrentMetamaskAddress,
   ),
   setStatus: builder.commit(mutations.setStatus),
-  setShowLoadingSpinner: builder.commit(mutations.setShowLoadingSpinner),
   setShowSidebar: builder.commit(mutations.setShowSidebar),
   setShowSigningAlert: builder.commit(mutations.setShowSigningAlert),
   setSignWalletModal: builder.commit(mutations.setSignWalletModal),
@@ -272,7 +270,7 @@ import { createDefaultClient } from "loom-js/dist/helpers"
 declare type Context = BareActionContext<DposState, DashboardState>
 
 async function initializeDependencies(ctx: Context, payload) {
-  DPOSTypedStore.setShowLoadingSpinner(true)
+  CommonTypedStore.setShowLoadingSpinner(true)
   try {
     await DPOSTypedStore.initWeb3Local()
     await DPOSTypedStore.ensureIdentityMappingExists({})
@@ -288,10 +286,10 @@ async function initializeDependencies(ctx: Context, payload) {
       report: true,
       cause: err,
     })
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     throw err
   }
-  DPOSTypedStore.setShowLoadingSpinner(false)
+  CommonTypedStore.setShowLoadingSpinner(false)
 }
 
 async function checkMappingAccountStatus(ctx: Context) {
@@ -303,10 +301,10 @@ async function checkMappingAccountStatus(ctx: Context) {
   ) {
     try {
       DPOSTypedStore.setSignWalletModal(true)
-      DPOSTypedStore.setShowLoadingSpinner(true)
+      CommonTypedStore.setShowLoadingSpinner(true)
       await DPOSTypedStore.createNewPlasmaUser()
       // await DappChainTypedModule.addMappingAsync(  null )
-      DPOSTypedStore.setShowLoadingSpinner(false)
+      CommonTypedStore.setShowLoadingSpinner(false)
       DPOSTypedStore.setMappingSuccess(true)
       DPOSTypedStore.setSignWalletModal(false)
     } catch (err) {
@@ -336,7 +334,7 @@ async function checkMappingAccountStatus(ctx: Context) {
   } else if (ctx.state.status === "mapped") {
     DPOSTypedStore.setMappingSuccess(true)
   }
-  DPOSTypedStore.setShowLoadingSpinner(false)
+  CommonTypedStore.setShowLoadingSpinner(false)
 }
 async function storePrivateKeyFromSeed(ctx, payload) {
   const privateKey = CryptoUtils.generatePrivateKeyFromSeed(

@@ -66,6 +66,7 @@ import HistoryEvent from "../components/HistoryEvent.vue"
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
 import { DPOSTypedStore } from "../store/dpos-old"
+import { CommonTypedStore } from "@/store/common"
 
 @Component({
   components: {
@@ -97,7 +98,7 @@ export default class History extends Vue {
   get cachedEvents() { return DPOSTypedStore.getCachedEvents() }
 
   fetchDappChainEvents = DPOSTypedStore.fetchDappChainEvents
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setLatesBlockNumber = DPOSTypedStore.setLatesBlockNumber
   setCachedEvents = DPOSTypedStore.setCachedEvents
 

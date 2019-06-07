@@ -135,7 +135,7 @@ export default class HardwareWalletModal extends Vue {
   // @ts-ignore
   setWeb3 = ethereumModule.setWeb3
   setSelectedAccount = DPOSTypedStore.setSelectedAccount
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setStatus = DPOSTypedStore.setStatus
   setSelectedLedgerPath = DPOSTypedStore.setSelectedLedgerPath
 

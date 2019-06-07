@@ -86,7 +86,7 @@ export default class AddKey extends Vue {
   isShowGenPublicKeyModal = false
   newPublicAddress = ""
   tierSelected: Tier | {} = {}
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   isValidAddress = false
   loomAddress = "loom0000000000000000000000000000000000000000"
 

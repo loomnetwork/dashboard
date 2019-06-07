@@ -72,7 +72,7 @@ export default class RedelegateModal extends Vue {
     return this.state.dpos.delegation
   }
 
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   get state(): DashboardState {
     return this.$store.state

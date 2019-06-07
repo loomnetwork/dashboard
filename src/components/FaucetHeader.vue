@@ -148,7 +148,7 @@ export default class FaucetHeader extends Vue {
   setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   clearPrivateKey = DPOSTypedStore.clearPrivateKey
 
   logOut() {

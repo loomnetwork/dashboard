@@ -1,7 +1,10 @@
+/* eslint-disable no-undef, func-names */
+import Web3 from "web3"
+import BN from "bn.js"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
-import BN from "bn.js"
+import tokenMetaData from "./data/topTokensSymbol.json"
 
 const unitMap = {
   noether: "0",
@@ -100,6 +103,10 @@ export function formatToCrypto(amount) {
     : conversion.toFormat(2)
 }
 
+export function parseToWei(amount: string) {
+  return new BN(amount).mul(new BN(`${10 ** 18}`))
+}
+
 export const DOMAIN_NETWORK_ID = {
   1: ["loom"],
   4: ["rinkeby", "stage", "local"],
@@ -195,4 +202,12 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
     throw new Error("Value required but was null " + name)
   }
   return value
+}
+
+export function getTokenSymbolFromAddress(address: string) {
+  // TODO: Change to US-1
+  const chainPrefix = "rinkeby-us1"
+  return tokenMetaData.tokens.find((token) => {
+    return token.address[chainPrefix].toLowerCase() === address.toLowerCase()
+  })
 }

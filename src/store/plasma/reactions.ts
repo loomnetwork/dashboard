@@ -1,4 +1,9 @@
-import { HasPlasmaState, PlasmaSigner, PlasmaTokenKind, PlasmaState } from "./types"
+import {
+  HasPlasmaState,
+  PlasmaSigner,
+  PlasmaTokenKind,
+  PlasmaState,
+} from "./types"
 import { Store } from "vuex"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
@@ -17,6 +22,9 @@ const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json")
 
 import TOKENS from "@/data/topTokensSymbol.json"
 import { type } from 'os';
+
+import debug from "debug"
+const log = debug("dash.plasma")
 
 /**
  * Vuex plugin that reacts to state changes:
@@ -41,9 +49,9 @@ export function plasmaReactions(store: Store<DashboardState>) {
         return
       }
       await createPlasmaWeb3(store)
-      resetLoomContract(store)
-      resetEthContract(store)
-      resetERC20Contracts(store)
+      await resetLoomContract(store)
+      await resetEthContract(store)
+      await resetERC20Contracts(store)
     },
   )
   store.subscribeAction(
@@ -84,22 +92,7 @@ async function resetEthContract(store: Store<DashboardState>) {
   plasmaModule.refreshBalance("eth")
 }
 
-async function resetERC20Contracts(store: Store<DashboardState>) {
-  const state = store.state.plasma
-  const tokens = TOKENS.tokens["BNB"]
-
-  const caller = await plasmaModule.getCallerAddress()
-  const web3 = state.web3!
-  const address = tokens.address['stage']
-
-  const contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
-  await Tokens.addContract("BNB", PlasmaTokenKind.ERC20, contract)
-  state.coins.bnb = {
-    balance: new BN("0"),
-    loading: true,
-  }
-  await plasmaModule.refreshBalance("BNB")
-}
+async function resetERC20Contracts(store: Store<DashboardState>) {}
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma
@@ -110,8 +103,8 @@ async function createPlasmaWeb3(store: Store<DashboardState>) {
   const genericKey = state.appId.private
   const loomProvider =
     signer === null
-      ? await createSimpleLoomProvider(client, genericKey)
-      : await createLoomProvider(client, signer, genericKey)
+      ? await createSimpleLoomProvider(client!, genericKey)
+      : await createLoomProvider(client!, signer, genericKey)
   // @ts-ignore
   store.state.plasma.web3 = new Web3(loomProvider)
   store.state.plasma.ethersProvider = new Web3Provider(loomProvider)

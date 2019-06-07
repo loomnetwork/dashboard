@@ -24,31 +24,24 @@
             <b-button
               class="button"
               variant="outline-primary"
-              @click="requestDeposit(true,symbol)"
+              @click="requestDeposit(symbol)"
             >Deposit</b-button>
             <b-button
               class="button"
               variant="outline-primary"
               @click="requestWithdraw(symbol)"
             >Withdraw</b-button>
-            <b-button
-              class="button"
-              variant="outline-primary"
-              @click="requestSwap(symbol)"
-            >Swap</b-button>
+            <b-button class="button" variant="outline-primary" @click="requestSwap(symbol)">Swap</b-button>
           </b-button-group>
         </b-list-group-item>
       </b-list-group>
       <b-card-footer>
-        <b-button
-          class="button"
-          variant="primary"
-          @click="requestAddToken()"
-        >Add token</b-button>
+        <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
       <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
       {{plasmaBalance}} -->
     </b-card>
+    <DepositForm :token="selectedToken"/>
   </main>
 </template>
 
@@ -60,11 +53,12 @@ import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
+import { gatewayModule } from "../store/gateway"
 import { Modal } from "bootstrap-vue";
 import { plasmaModule } from "../store/plasma"
-import { refreshBalance } from '../store/ethereum'
-import * as Mutations from "@/store/plasma/mutations"
-import { debuglog } from 'util';
+import { formatTokenAmount } from "../filters"
+import { refreshBalance } from "../store/ethereum"
+import { debuglog } from "util"
 
 @Component({
   components: {
@@ -79,6 +73,9 @@ import { debuglog } from 'util';
   },
 })
 export default class DepositWithdraw extends Vue {
+
+  setShowDepositForm = gatewayModule.setShowDepositForm
+  selectedToken = "loom"
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
@@ -103,8 +100,8 @@ export default class DepositWithdraw extends Vue {
     this.filterTokens()
   }
 
-   modal(ref: string) {
-     return this.$refs[ref] as Modal
+  modal(ref: string) {
+    return this.$refs[ref] as Modal
   }
 
   @Watch("inputFilter")
@@ -119,18 +116,19 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestDeposit(token: string) {
-    this.$root.$emit("bv::show::modal", "deposit-form")
+    this.selectedToken = token
+    this.setShowDepositForm(true)
   }
 
   requestWithdraw(token: string) {
   }
 
   requestSwap(token: string) {
-    Mutations.setSelectedToken(this.plasma, token)
+    plasmaModule.setSelectedToken(token)
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 
-  requestAddToken(){
+  requestAddToken() {
     this.$root.$emit("bv::show::modal", "add-token-modal")
   }
 

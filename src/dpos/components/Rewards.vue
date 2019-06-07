@@ -74,4 +74,3 @@ export default class Rewards extends Vue {
   }
 }
 </style>
-

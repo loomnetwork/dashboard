@@ -1,11 +1,10 @@
 <template>
   <div>
-    <b-form-input 
-    v-bind:value="value"
-    :placeholder="placeholder"
-    v-on:input="updateAddress"
-    v-on:keyup="validateAddressFormat"
-    class="my-2" ></b-form-input>
+    <b-form-input v-bind:value="value"
+                  :placeholder="placeholder"
+                  v-on:input="updateAddress"
+                  v-on:keyup="validateAddressFormat"
+                  class="my-2" ></b-form-input>
     <p v-show="!isValidAddress" style="">Invalid address format!</p>
   </div>
 </template>

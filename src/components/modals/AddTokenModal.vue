@@ -15,11 +15,9 @@
         <b-card v-if="selectedToken">
           <h4>{{ selectedToken }}</h4>
           <p>{{ token.name }}</p>
-          <b-button 
-            type="button"
-            variant="primary"
-            @click="addToken"
-            >Add</b-button>
+          <b-button type="button"
+                    variant="primary"
+                    @click="addToken">Add</b-button>
         </b-card>
       </b-card>
     </b-modal>

@@ -60,6 +60,8 @@ import { formatTokenAmount } from "../filters"
 import { refreshBalance } from "../store/ethereum"
 import { debuglog } from "util"
 
+import TokenService from "@/services/TokenService"
+
 @Component({
   components: {
     DepositForm,
@@ -76,6 +78,7 @@ export default class DepositWithdraw extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   selectedToken = "loom"
+  tokenService = new TokenService()
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
@@ -160,7 +163,9 @@ export default class DepositWithdraw extends Vue {
     // })
     // this.filteredToken = this.tokens
   }
-
+  async created() {
+    await this.tokenService.init()
+  }
 }
 </script>
 

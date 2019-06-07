@@ -12,8 +12,8 @@
       <br>(use $t with the key to some help text.)
     </b-alert>
     <b-card class="balances" no-body>
-      <b-card-body>
-        <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
+      <b-card-body v-if="filteredSymbols.length > 7">
+        <b-form-input v-model="inputFilter" placeholder="Search" ></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">

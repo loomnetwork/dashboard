@@ -22,13 +22,21 @@ class TokenService {
   }
   /**
    * 
-   * @param coinSymbol like BNB, LOOM, ETH
+   * @param coinSymbol like BNB ETH LOOM... etc
+   * @param chain address from plasma | ethereum
    */
-  getTokenAddressBySymbol(coinSymbol: string) {
+  getTokenAddressBySymbol(coinSymbol: string, chain: string) {
     const address = this.symbols.find((token) => {
       return token.symbol === coinSymbol
     })
-    return address.plasma_addr
+    switch (chain.toLowerCase()) {
+      case "plasma":
+        return address.plasma_addr
+      case "ethereum":
+        return address.address
+      default:
+        return null
+    }
   }
 
   /**

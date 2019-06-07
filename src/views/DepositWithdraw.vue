@@ -165,7 +165,6 @@ export default class DepositWithdraw extends Vue {
   }
   async created() {
     await this.tokenService.init()
-    this.tokenService.getAllTokenSymbol()
   }
 }
 </script>

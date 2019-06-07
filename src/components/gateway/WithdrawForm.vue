@@ -5,7 +5,7 @@
            hide-header-close
            id="deposit-approval-success"  title="Withdraw">
     <div>
-      <amount-input :min="1" :max="100" v-model="amount" @isError="errorHandler"/>
+      <amount-input :min="1" :max="100" @input="inputHandler" @isError="errorHandler"/>
     </div>
     <template slot="modal-footer">
       <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
@@ -27,6 +27,7 @@ import { gatewayReactions } from "../../store/gateway/reactions"
 
 import AmountInput from "@/components/AmountInput.vue"
 import { plasmaWithdraw } from "../../store/gateway/plasma"
+import { setShowWithdrawProgress } from '../../store/gateway/mutations';
 
 @Component({
   components: {
@@ -41,7 +42,8 @@ export default class WithdrawForm extends Vue {
   amountIsValid: boolean = false
 
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
-  plasmaWithdraw = gatewayModule.plasmaWithdraw
+  setShowWithdrawProgress = gatewayModule.setShowWithdrawProgress
+  beginWithdrawal = gatewayModule.plasmaWithdraw
 
   get state(): DashboardState {
     return this.$store.state
@@ -65,6 +67,10 @@ export default class WithdrawForm extends Vue {
     this.amountIsValid = isValid
   }
 
+  inputHandler(amount: BN) {
+    this.amount = amount
+  }
+
   async requestWithdrawHandler(e) {
     e.preventDefault()
     try {
@@ -76,7 +82,9 @@ export default class WithdrawForm extends Vue {
         weiAmount: this.amount,
       }
 
-      this.plasmaWithdraw(payload)
+      this.beginWithdrawal(payload)
+      this.close()
+      this.setShowWithdrawProgress(true)
 
     } catch (error) {
       console.log(error)

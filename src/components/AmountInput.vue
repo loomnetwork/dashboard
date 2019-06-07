@@ -39,10 +39,8 @@ export default class AmountInput extends Vue {
   // Call this function when amount changed
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-
-    const amount = new BN(this.amount).mul(new BN("" + 10 ** 18))
-    const strAmount = formatTokenAmount(amount)
-    this.$emit("input", Number(strAmount))
+    const amountBN = new BN(this.amount).mul(new BN("" + 10 ** 18))
+    this.$emit("input", amountBN)
   }
 
   // Set default amount when select another token

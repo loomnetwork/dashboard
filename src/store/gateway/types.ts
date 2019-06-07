@@ -26,7 +26,9 @@ export interface GatewayState {
   showDepositForm: boolean
   showDepositApproved: boolean
   showDepositConfirmed: boolean
-  showWithdrawForm: boolean
+  showWithdrawForm: boolean,
+  showWithdrawProgress: boolean,
+  withdrawStates: WithdrawState[],
 }
 
 /**
@@ -62,6 +64,11 @@ export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {
     rs: Array<string | number[]>
     ss: Array<string | number[]>,
   }
+}
+
+export interface WithdrawState {
+  text: string,
+  isComplete: boolean,
 }
 
 /**

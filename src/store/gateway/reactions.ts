@@ -66,7 +66,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
         `${store.state.plasma.chainId}:${ethGateway.mainGateway._address}`,
       )
       const plasmaGateway = PlasmaGateways.service()
-      debugger
       plasmaGateway.add("loom", loomGatewayAddr)
       plasmaGateway.add("eth", ethGatewayAddr)
 

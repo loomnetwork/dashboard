@@ -26,6 +26,13 @@ function initialState(): GatewayState {
     showDepositApproved: false,
     showDepositConfirmed: false,
     showWithdrawForm: false,
+    showWithdrawProgress: false,
+    withdrawStates: [
+      {text: "Checking for pre-existing receipts...", isComplete: false},
+      {text: "Depositing to Plasmachain Gateway...", isComplete: false},
+      {text: "Withdrawing to your Ethereum account...", isComplete: false},
+      {text: "Withdrawal complete", isComplete: false},
+    ],
   }
 }
 
@@ -57,6 +64,7 @@ export const gatewayModule = {
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
   setShowWithdrawForm: builder.commit(mutations.setShowWithdrawForm),
+  setShowWithdrawProgress: builder.commit(mutations.setShowWithdrawProgress),
   setPendingTransactions: builder.commit(mutations.setPendingTransactions),
   clearPendingTransactions: builder.commit(mutations.clearPendingTransactions),
 }

@@ -66,11 +66,7 @@
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
-
-    <WithdrawForm/>
-    <PlasmaWithdraw/>
-    <EthereumWithdraw/>
-
+    <WithdrawProgress/>
     
   </div>
 </template>
@@ -86,9 +82,7 @@ import WarningOverlay from "../components/WarningOverlay.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
-
-import PlasmaWithdraw from "@/components/gateway/PlasmaWithdraw.vue"
-import EthereumWithdraw from "@/components/gateway/EthereumWithdraw.vue"
+import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
@@ -104,6 +98,7 @@ import { store } from "../store"
     WarningOverlay,
     DepositApproved,
     DepositConfirmed,
+    WithdrawProgress,
   },
   props: {
     data: Object,

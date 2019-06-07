@@ -64,15 +64,15 @@ export default class TransferTokensFormModal extends Vue {
     return formatTokenAmount(balance)
   }
 
-  transferToken() {
-    const amount = new BN("" + this.transferAmount).mul(new BN("" + 10 ** 18))
-    this.transfer({
-      symbol: this.plasma.selectedToken,
-      weiAmount: amount,
-      to: this.receiverAddress
-    })
-    this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
-  }
+    async transferToken(){
+      const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
+      this.transfer({
+        symbol: this.plasma.selectedToken,
+        weiAmount: amount,
+        to: this.receiverAddress 
+      })
+      this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
+    }
 
   onAmountError(val) {
     this.amountError = val

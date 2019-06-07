@@ -18,8 +18,10 @@ import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
+const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
 
 import TOKENS from "@/data/topTokensSymbol.json"
+import { type } from 'os';
 
 import debug from "debug"
 const log = debug("dash.plasma")
@@ -51,6 +53,14 @@ export function plasmaReactions(store: Store<DashboardState>) {
       await resetEthContract(store)
       await resetERC20Contracts(store)
     },
+  )
+  store.subscribeAction(
+    {async after(action){
+      if(action.type === "plasma/transfer" || action.type === "plasma/addToken"){
+        console.log("in subscription",action);
+        await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
+      }
+    }}
   )
 }
 

@@ -1,5 +1,6 @@
 <template>
   <b-modal
+    lazy
     id="redelegate-modal"
     ref="modalRef"
     title="Redelegate"
@@ -14,7 +15,7 @@
     <div class="dropdown-container mb-4">
       <v-autocomplete
         class="mb-4"
-        v-model="target"
+        v-model="delegation.updateValidator"
         placeholder="Please select a validator"
         :items="filteredTargetItems"
         :get-label="getLabel"
@@ -40,8 +41,8 @@ import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
 import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
-import { dposModule } from '../../store/dpos';
-import { Validator } from '../../store/dpos/types';
+import { dposModule } from "@/dpos/store"
+import { Validator } from "@/dpos/store/types"
 
 @Component({
   components: {

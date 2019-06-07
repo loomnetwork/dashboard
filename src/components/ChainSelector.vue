@@ -3,15 +3,16 @@ import { Component, Vue } from "vue-property-decorator"
 import { dashboardStore } from "@/store"
 import { ethereumModule } from "@/store/ethereum"
 import { plasmaModule } from "@/store/plasma"
-import { DashboardState } from "@/types"
+import { DashboardState, DashboardConfig } from "@/types"
 
 @Component
 export default class ChainSelector extends Vue {
-  get env() {
-    return this.$store.state.env
+  get env(): DashboardConfig {
+    const state = this.$store.state as DashboardState
+    return state.envs.find((env => env.name === state.env))!
   }
 
-  set env(config) {
+  set env(config: DashboardConfig) {
     console.log("config", config)
     dashboardStore.setEnv(config)
   }

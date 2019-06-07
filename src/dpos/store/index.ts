@@ -1,26 +1,17 @@
 /**
- * @module dpos-dashboard.gateway
+ * @module dashboard.dpos
  */
 
-import { getStoreBuilder } from "vuex-typex"
-import { BareActionContext } from "vuex-typex"
-
-import { DPOSState, HasDPOSState, Delegation, Validator } from "./types"
-
-import * as mutations from "./mutations"
-import BN from "bn.js"
-import {
-  IDelegation,
-  ICandidate,
-  IValidator,
-} from "loom-js/dist/contracts/dpos3"
-import { plasmaModule } from "../plasma"
-
-import debug from "debug"
-import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
+import { plasmaModule } from "@/store/plasma"
 import { ZERO } from "@/utils"
-import { Address, LocalAddress } from "loom-js"
+import BN from "bn.js"
+import debug from "debug"
+import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
+import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation } from "./helpers"
+import * as mutations from "./mutations"
+import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
+
 const log = debug("dpos")
 
 const initialState: DPOSState = {
@@ -82,6 +73,10 @@ declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
  * @see {dpos.reactions}
  */
 async function refreshElectionTime(context: ActionContext) {
+  if (context.state.contract === null) {
+    console.warn("DPoS contract not initialized yet")
+    return
+  }
   log("refreshElectionTime")
   const contract = context.state.contract!
   const time: BN = await contract.getTimeUntilElectionAsync()
@@ -163,7 +158,7 @@ async function refreshDelegations(context: ActionContext) {
 
   state.delegations = response!.delegationsArray.map((item: IDelegation) => {
     const d: Delegation = fromIDelegation(item, state.validators)
-    // add it to the corresponding validator so we avoid filtering downstream
+    // add it to the corresponding validator so we avoid filtering later
     d.validator.delegations.push(d)
     return d
   })

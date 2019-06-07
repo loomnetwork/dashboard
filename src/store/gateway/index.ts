@@ -25,6 +25,7 @@ function initialState(): GatewayState {
     showDepositForm: false,
     showDepositApproved: false,
     showDepositConfirmed: false,
+    showWithdrawForm: false,
   }
 }
 
@@ -55,6 +56,7 @@ export const gatewayModule = {
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
+  setShowWithdrawForm: builder.commit(mutations.setShowWithdrawForm),
   setPendingTransactions: builder.commit(mutations.setPendingTransactions),
   clearPendingTransactions: builder.commit(mutations.clearPendingTransactions),
 }

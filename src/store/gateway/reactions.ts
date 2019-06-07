@@ -49,7 +49,8 @@ export function gatewayReactions(store: Store<DashboardState>) {
       ethGateway.add("loom", store.state.ethereum.erc20Addresses.loom)
       ethGateway.add("eth", "") // Ether does not have a contract address
       EthereumGateways.init(ethereumModule.web3)
-      PlasmaGateways.init(
+
+      await PlasmaGateways.init(
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
@@ -57,14 +58,15 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
       const loomGatewayAddr = Address.fromString(
         // @ts-ignore
-        `${store.state.plasma.chainId}:${ethGateway.loomGateway.address}`,
+        `${store.state.plasma.chainId}:${ethGateway.loomGateway._address}`,
       )
       // @ts-ignore
       const ethGatewayAddr = Address.fromString(
         // @ts-ignore
-        `${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`,
+        `${store.state.plasma.chainId}:${ethGateway.mainGateway._address}`,
       )
       const plasmaGateway = PlasmaGateways.service()
+      debugger
       plasmaGateway.add("loom", loomGatewayAddr)
       plasmaGateway.add("eth", ethGatewayAddr)
 

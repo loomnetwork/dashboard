@@ -93,7 +93,6 @@ export async function init(
     client,
     mapping.to,
   )
-
   instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3)
 }
 
@@ -155,7 +154,6 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
-
   const gateway = service().get(funds.symbol)
   let receipt: IWithdrawalReceipt | null
   try {
@@ -176,18 +174,20 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     console.error(error)
     return
   }
+
   // or rx style :)
   // of(gateway.withdrawalReceipt())
   //   .pipe(
   //     tap((x) => {if (x !== null) console.log("tell user withdraw on going")}),
   //     filter((x) => x === null),
   //     switchMap(() => gateway.withdraw(funds.weiAmount)),
-  //     switchMap(() => pollForReceipt())
+  //     switchMap(() => gatewayModule.pollReceipt(funds.symbol)),
   //   )
   //   .subscribe(
   //     () => console.log("tell user to intiate ethereum withdraw"),
-  //     (e) => console.error(e)
+  //     (e) => console.error(e),
   //   )
+
 }
 
 export function pollReceipt(context: ActionContext, symbol: string) {

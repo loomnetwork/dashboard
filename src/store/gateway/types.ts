@@ -26,6 +26,7 @@ export interface GatewayState {
   showDepositForm: boolean
   showDepositApproved: boolean
   showDepositConfirmed: boolean
+  showWithdrawForm: boolean
 }
 
 /**

@@ -22,7 +22,7 @@
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import  BN  from "bn.js";
+import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
 
 @Component

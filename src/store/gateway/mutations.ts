@@ -12,6 +12,10 @@ export function setShowDepositConfirmed(state: GatewayState, payload: boolean) {
   state.showDepositConfirmed = payload
 }
 
+export function setShowWithdrawForm(state: GatewayState, payload: boolean) {
+  state.showWithdrawForm = payload
+}
+
 export function setPendingTransactions(state: GatewayState, payload: object) {
   state.pendingTransactions.push(payload)
 }

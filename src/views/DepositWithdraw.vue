@@ -39,27 +39,32 @@
       </b-card-footer>
     </b-card>
     <DepositForm :token="selectedToken"/>
+    <WithdrawForm :token="selectedToken"/>
   </main>
 </template>
 
 <script lang="ts">
 import DepositForm from "@/components/gateway/DepositForm.vue"
-import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue";
+import WithdrawForm from "@/components/gateway/WithdrawForm.vue"
+import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
 import { gatewayModule } from "../store/gateway"
-import { Modal } from "bootstrap-vue";
+import { Modal } from "bootstrap-vue"
 import { plasmaModule } from "../store/plasma"
 import { formatTokenAmount } from "../filters"
 import { refreshBalance } from "../store/ethereum"
 import { debuglog } from "util"
+import { setShowWithdrawForm } from "../store/gateway/mutations"
+import { gatewayReactions } from "../store/gateway/reactions"
 
 @Component({
   components: {
     DepositForm,
+    WithdrawForm,
     TransferTokensFormModal,
     AddTokenModal,
   },
@@ -72,6 +77,7 @@ import { debuglog } from "util"
 export default class DepositWithdraw extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
+  setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   selectedToken = "loom"
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
@@ -114,6 +120,8 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestWithdraw(token: string) {
+    this.selectedToken = token
+    this.setShowWithdrawForm(true)
   }
 
   requestSwap(token: string) {

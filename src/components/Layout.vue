@@ -66,6 +66,12 @@
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
+
+    <WithdrawForm/>
+    <PlasmaWithdraw/>
+    <EthereumWithdraw/>
+
+    
   </div>
 </template>
 
@@ -80,6 +86,10 @@ import WarningOverlay from "../components/WarningOverlay.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
+
+import PlasmaWithdraw from "@/components/gateway/PlasmaWithdraw.vue"
+import EthereumWithdraw from "@/components/gateway/EthereumWithdraw.vue"
+
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"

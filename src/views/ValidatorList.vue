@@ -54,7 +54,6 @@ import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 
 import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js"
-import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { HasDPOSState } from "../store/dpos/types"
 

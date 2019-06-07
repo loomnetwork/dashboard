@@ -92,6 +92,5 @@ export function signOut(state: CommonState) {
 }
 
 export function setShowLoadingSpinner(state: CommonState, payload: boolean) {
-  console.log("|======= common setShowLoadingSpinner =======|", payload)
   state.showLoadingSpinner = payload
 }

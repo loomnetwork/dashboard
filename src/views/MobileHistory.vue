@@ -88,7 +88,7 @@ export default class History extends Vue {
   }
 
   get currentMetamaskAddress() { return this.state.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.state.DPOS.showLoadingSpinner }
+  get showLoadingSpinner() { return this.state.common.showLoadingSpinner }
   get dappChainEventUrl() { return this.state.DPOS.dappChainEventUrl }
   get dappChainEvents() { return this.state.DPOS.dappChainEvents }
   get web3() { return this.state.DPOS.web3 }

@@ -61,7 +61,6 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { Modal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
 import { whiteListModule } from '@/store/whitelist';

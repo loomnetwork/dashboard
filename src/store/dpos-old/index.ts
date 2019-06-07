@@ -218,7 +218,6 @@ export const DPOSTypedStore = {
   createNewPlasmaUser: builder.dispatch(createNewPlasmaUser),
   checkMappingAccountStatus: builder.dispatch(checkMappingAccountStatus),
   storePrivateKeyFromSeed: builder.dispatch(storePrivateKeyFromSeed),
-  clearPrivateKey: builder.dispatch(clearPrivateKey),
   checkIfConnected: builder.dispatch(checkIfConnected),
 
   fetchDappChainEvents: builder.dispatch(fetchDappChainEvents),
@@ -344,10 +343,7 @@ async function storePrivateKeyFromSeed(ctx, payload) {
   sessionStorage.setItem("privatekey", privateKeyString)
   DPOSTypedStore.setIsLoggedIn(true)
 }
-async function clearPrivateKey(ctx: Context) {
-  sessionStorage.removeItem("privatekey")
-  DPOSTypedStore.setIsLoggedIn(false)
-}
+
 async function checkIfConnected(ctx: Context) {
   if (!ctx.state.web3) await DPOSTypedStore.initWeb3()
 }

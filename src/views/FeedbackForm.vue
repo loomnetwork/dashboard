@@ -16,59 +16,7 @@
 
 <script>
 export default {
-  data() {
-    return {
-      form: {
-        email: '',
-        title: '',
-        ethAddress: '',
-        catSelected: null,
-        walletSelected: null,
-        platformSelected: null,
-        categories: [
-          {text: 'Select One', value: null, disabled: true},
-          {text: 'Deposit', value: 'Deposit'},
-          {text: 'Withdraw', value: 'Withdraw'},
-          {text: 'Delegate', value: 'Delegate'},
-          {text: 'Re-delegate', value: 'Re-delegate'},
-          {text: 'Undelegate', value: 'Undelegate'},
-          {text: 'Rewards', value: 'Rewards'},
-          {text: 'Other', value: 'Other'}
-        ],
-        wallets: [
-          {text: 'Select One', value: null, disabled: true},
-          {text: 'MetaMask', value: 'MetaMask'},
-          {text: 'Ledger', value: 'Ledger'},
-          {text: 'Cobo', value: 'Cobo'},
-          {text: 'imToken', value: 'imToken'},
-          {text: 'Trust Wallet', value: 'Trust Wallet'},
-          {text: 'Trezor', value: 'Trezor'}
-        ],
-        platforms: [
-          {text: 'Select One', value: null, disabled: true},
-          {text: 'Android', value: 'Android'},
-          {text: 'iOS', value: 'iOS'},
-          {text: 'Windows', value: 'Windows'},
-          {text: 'macOS', value: 'macOS'}
-        ],
-        browser: '',
-        errorMsg: '',
-        additionalContext: '',
-        file: null
-      }
-    }
-  },
-  methods: {
-    onSubmit() {
-      console.log('onSubmit')
-      console.log(this.form)
-    }
-  },
-  computed: {
-    fileName() {
-      return this.form.file ? this.form.file.name : ''
-    }
-  }
+
 }
 </script>
 

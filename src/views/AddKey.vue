@@ -1,59 +1,74 @@
 <template>
-    <div class="container mb-5">
-      <!-- Deployer Public key section -->
-      <h4 class="mt-3">Deployer Public Keys</h4>
-      <div  v-if="publicKeys.length > 0">
+  <div class="container mb-5">
+    <!-- Deployer Public key section -->
+    <h4 class="mt-3">Deployer Public Keys</h4>
+    <div v-if="publicKeys.length > 0">
       <b-card v-for="(pk, index) in publicKeys" :key="pk.hex">
         <b-row>
           <b-col cols="12" sm="6">
             <h6>{{pk[pk.defaultFormat] | loomAddress}}</h6>
           </b-col>
           <b-col cols="12" sm="3">
-            <b-button @click="switchPubKeyType(index)"> View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
+            <b-button
+              @click="switchPubKeyType(index)"
+            >View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
           </b-col>
           <b-col cols="12" sm="3">
             <b-badge variant="success">Tier: {{pk.tier}}</b-badge>
           </b-col>
         </b-row>
       </b-card>
+    </div>
+    <div v-else class="mt-3">You have no deployer address.</div>
+    <!-- Add new key section -->
+    <b-card class="my-5">
+      <b-row>
+        <b-col cols="12" sm="3">
+          <h4>Add New Key</h4>
+        </b-col>
+        <b-col cols="12" sm="9">
+          In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.
+          <router-link class="text-right" to="/faq">Developer FAQ</router-link>
+        </b-col>
+      </b-row>
+      <div role="group">
+        <label for="input-live">Your Loom Public Address</label>
+        <input-address
+          v-model="newPublicAddress"
+          :placeholder="'loom0000000000000000000000000000000000000000'"
+          @isValid="isValidAddressFormat"
+        />
       </div>
-      <div v-else class="mt-3">
-        You have no deployer address.
+      <p @click="showSeedPhraseModal()" class="text-right text-link">Generate New Public Address</p>
+      <br>
+      <seed-phrase-modal ref="seed-phrase-modal"/>
+      <label for="input-live">Amount to Stake</label>
+      <div class="tierBlock tierDisplay">
+        <label v-for="tier in tiers" v-bind:key="tier.id" class="radio">
+          <input type="radio" v-model="tierSelected" :value="tier">
+          <b-card class="tierText">
+            <b-row>Tier: {{tier.id}}</b-row>
+            <b-row>Name: {{tier.name}} tx/min</b-row>
+            <b-row>{{tier.fee}} LOOM</b-row>
+          </b-card>
+        </label>
       </div>
-      <!-- Add new key section -->
-      <b-card class="my-5">
-        <b-row>
-          <b-col cols="12" sm="3"><h4>Add New Key</h4></b-col>
-          <b-col cols="12" sm="9">
-            In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.
-            <router-link class="text-right" to="/faq">Developer FAQ</router-link>
-          </b-col>
-        </b-row>
-        <div role="group">
-          <label for="input-live">Your Loom Public Address</label>
-          <input-address v-model="newPublicAddress" :placeholder="'loom0000000000000000000000000000000000000000'" @isValid="isValidAddressFormat"/>
-        </div>
-        <p @click="showSeedPhraseModal()" class="text-right text-link"> Generate New Public Address</p><br>
-        <seed-phrase-modal ref="seed-phrase-modal"/>
-        <label for="input-live"> Amount to Stake </label>
-        <div class="tierBlock tierDisplay"> 
-          <label v-for="tier in tiers" v-bind:key="tier.id" class="radio">
-            <input type="radio" v-model="tierSelected" :value="tier" />
-            <b-card class="tierText"> 
-              <b-row>Tier: {{tier.id}}</b-row>
-              <b-row>Name: {{tier.name}} tx/min</b-row>
-              <b-row>{{tier.fee}} LOOM</b-row>
-            </b-card>
-          </label>
-        </div>
-        <b-button class="d-inline-flex" @click="addKey(tierSelected)" :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress || !isValidAddress" v-model="loomAddress"> Add Key </b-button>
-        <div class="remaining my-3">
-          <span class="text-right"> Remaining Balance: {{ loomBalance }} LOOM (</span>
-          <router-link class="text-right" :to='{name :"account", query: { action: "deposit" } }'>deposit</router-link>
-          <span class="text-right">)</span> 
-        </div>
-      </b-card>
-    </div> 
+      <b-button
+        class="d-inline-flex"
+        @click="addKey(tierSelected)"
+        :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress || !isValidAddress"
+        v-model="loomAddress"
+      >Add Key</b-button>
+      <div class="remaining my-3">
+        <span class="text-right">Remaining Balance: {{ loomBalance }} LOOM (</span>
+        <router-link
+          class="text-right"
+          :to="{name :"account", query: { action: "deposit" } }"
+        >deposit</router-link>
+        <span class="text-right">)</span>
+      </div>
+    </b-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -62,7 +77,7 @@ import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { DPOSTypedStore } from "@/store/dpos-old"
-import { Modal } from "bootstrap-vue"
+import { BModal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
 import { whiteListModule } from '@/store/whitelist';
 import { WhiteListState, Tier, DeployerAddress } from '@/store/whitelist/types';
@@ -91,7 +106,7 @@ export default class AddKey extends Vue {
   loomAddress = "loom0000000000000000000000000000000000000000"
 
   modal(ref: string) {
-   return this.$refs[ref] as Modal
+    return this.$refs[ref] as BModal
   }
 
   switchPubKeyType(inputKey) {
@@ -122,7 +137,7 @@ export default class AddKey extends Vue {
     }
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     this.setShowLoadingSpinner(true)
-    let result = await this.addDeployerAsync({deployer: loomAddress, tier})
+    let result = await this.addDeployerAsync({ deployer: loomAddress, tier })
     this.setShowLoadingSpinner(false)
   }
 

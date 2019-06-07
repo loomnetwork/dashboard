@@ -10,9 +10,13 @@
       :items="packs"
       :fields="packTableFields"
     >
-    <template slot="transfer" slot-scope="row">
-      <b-button type="button" @click="transferpackTo(row.item)" :disabled="row.item.amount == '0'"> Transfer </b-button>
-    </template>
+      <template slot="transfer" slot-scope="row">
+        <b-button
+          type="button"
+          @click="transferpackTo(row.item)"
+          :disabled="row.item.amount == '0'"
+        >Transfer</b-button>
+      </template>
     </b-table>
   </b-card>
 </template>
@@ -25,7 +29,7 @@ import { plasmaModule } from "@/store/plasma"
 import { assetsModule } from "@/store/plasma/assets"
 import { PACKS_NAME } from "@/store/plasma/assets/reactions"
 import TransferPacksModal from "@/components/modals/TransferPacksModal.vue"
-import { Modal } from "bootstrap-vue"
+import { BModal } from "bootstrap-vue"
 import { PackDetail } from "@/store/plasma/types"
 import { HasAssetsState } from "../../store/plasma/assets/types"
 
@@ -68,7 +72,7 @@ export default class Packs extends Vue {
   }
 
   modal(ref: string) {
-    return this.$refs[ref] as Modal
+    return this.$refs[ref] as BModal
   }
 
   async transferpackTo(item) {

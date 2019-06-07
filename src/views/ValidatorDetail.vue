@@ -63,7 +63,7 @@
         @onDelegate="delegateHandler"
         ref="delegateModalRef"
         :hasDelegation="hasDelegation"
-      ></faucet-delegate-modal> -->
+      ></faucet-delegate-modal>-->
       <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
       <success-modal></success-modal>
     </section>
@@ -78,7 +78,7 @@ import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 // import FaucetDelegateModal from "../components/modals/FaucetDelegateModal.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
-import { Modal } from "bootstrap-vue"
+import { BModal } from "bootstrap-vue"
 import { dposModule } from "../store/dpos"
 import { HasDPOSState } from "../store/dpos/types"
 import { Delegation } from "@/store/dpos/types"
@@ -168,8 +168,8 @@ export default class ValidatorDetail extends Vue {
     this.modal("redelegateModalRef").show(delegation)
   }
 
-  modal(ref: string): Modal {
-    return this.$refs[ref] as Modal
+  modal(ref: string): BModal {
+    return this.$refs[ref] as BModal
   }
 
 }

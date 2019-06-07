@@ -25,10 +25,10 @@ class TokenService {
    * @param coinSymbol like BNB, LOOM, ETH
    */
   getTokenAddressBySymbol(coinSymbol: string) {
-    const address = this.symbols.filter((token) => {
+    const address = this.symbols.find((token) => {
       return token.symbol === coinSymbol
     })
-    return address[0].plasma_addr
+    return address.plasma_addr
   }
 
   /**

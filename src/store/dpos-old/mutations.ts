@@ -10,9 +10,6 @@ export function setDappChainConnected(state: DposState, payload: boolean) {
 export function setConnectedToMetamask(state: DposState, payload: boolean) {
   state.connectedToMetamask = payload
 }
-export function setWeb3(state: DposState, payload: Web3) {
-  state.web3 = payload
-}
 export function setUserBalance(state: DposState, payload: UserBalance) {
   state.userBalance = payload
 }

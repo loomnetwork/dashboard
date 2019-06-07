@@ -159,7 +159,6 @@ export const DPOSTypedStore = {
   setIsLoggedIn: builder.commit(mutations.setIsLoggedIn),
   // ethereum
   setMetamaskDisabled: builder.commit(mutations.setMetamaskDisabled),
-  setWeb3: builder.commit(mutations.setWeb3),
   setConnectedToMetamask: builder.commit(mutations.setConnectedToMetamask),
   setWalletType: builder.commit(mutations.setWalletType),
   setSelectedAccount: builder.commit(mutations.setSelectedAccount),
@@ -209,7 +208,6 @@ export const DPOSTypedStore = {
   setCurrentChain: builder.commit(mutations.setCurrentChain),
 
   // actions
-  registerWeb3: builder.dispatch(registerWeb3),
   initWeb3Local: builder.dispatch(initWeb3Local),
   initWeb3: builder.dispatch(initWeb3),
   initializeDependencies: builder.dispatch(initializeDependencies),
@@ -355,7 +353,7 @@ async function initWeb3Local(ctx: Context) {
     const accounts = await web3js.eth.getAccounts()
     const metamaskAccount = accounts[0]
     // @ts-ignore
-    DPOSTypedStore.setWeb3(web3js)
+    // DPOSTypedStore.setWeb3(web3js)
     DPOSTypedStore.setCurrentMetamaskAddress(metamaskAccount)
   } else if (ctx.state.walletType === "ledger") {
     if (ctx.state.selectedLedgerPath) {
@@ -368,7 +366,7 @@ async function initWeb3Local(ctx: Context) {
   }
   DPOSTypedStore.setConnectedToMetamask(true)
   await DPOSTypedStore.init()
-  await DPOSTypedStore.registerWeb3({ web3: ctx.state.web3 })
+  // await DPOSTypedStore.registerWeb3({ web3: ctx.state.web3 })
 }
 
 async function initWeb3(ctx: Context) {
@@ -402,7 +400,7 @@ async function initWeb3(ctx: Context) {
     })
   }
   // @ts-ignore
-  DPOSTypedStore.setWeb3(web3js)
+  // DPOSTypedStore.setWeb3(web3js)
 }
 
 async function checkAllDelegations(ctx: Context) {
@@ -1077,19 +1075,6 @@ async function approveAsync(ctx: Context, payload) {
     console.log(error)
   }
   DPOSTypedStore.setGatewayBusy(false)
-}
-
-export function registerWeb3(ctx: Context, payload: { web3: Web3 }) {
-  // try {
-  //   DPOSTypedStore.setWeb3(payload.web3)
-  //   // these are filled on yarn serve/build
-  //   ctx.state.GatewayInstance = new payload.web3.eth.Contract(
-  //     GatewayJSON.abi,
-  //     GW_ADDRESS || ctx.state.currentChain.gatewayAddress,
-  //   )
-  // } catch (err) {
-  //   console.error(err)
-  // }
 }
 
 function createClient(state, privateKeyString) {

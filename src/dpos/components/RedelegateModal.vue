@@ -38,7 +38,6 @@ import { Component } from "vue-property-decorator"
 import LoadingSpinner from "../../components/LoadingSpinner.vue"
 import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
 import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import { dposModule } from '../../store/dpos';
 import { Validator } from '../../store/dpos/types';

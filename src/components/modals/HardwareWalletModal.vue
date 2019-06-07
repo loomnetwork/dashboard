@@ -142,7 +142,6 @@ export default class HardwareWalletModal extends Vue {
   checkMappingAccountStatus = DPOSTypedStore.checkMappingAccountStatus
   ensureIdentityMappingExists = DPOSTypedStore.ensureIdentityMappingExists
   init = DPOSTypedStore.init
-  registerWeb3 = DPOSTypedStore.registerWeb3
 
   get state(): DashboardState {
     return this.$store.state

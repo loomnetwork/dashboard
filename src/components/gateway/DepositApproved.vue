@@ -39,7 +39,6 @@ import {ethers} from "ethers"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../../types"
-import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from '../../store/gateway';
 import { gatewayReactions } from '../../store/gateway/reactions';
 

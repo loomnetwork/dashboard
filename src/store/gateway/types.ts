@@ -29,6 +29,7 @@ export interface GatewayState {
   showWithdrawForm: boolean,
   showWithdrawProgress: boolean,
   withdrawStates: WithdrawState[],
+  withdrawStateIdx: number,
 }
 
 /**

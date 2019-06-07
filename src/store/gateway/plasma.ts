@@ -9,8 +9,7 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import BN from "bn.js"
 import { Funds } from "@/types"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
-import { gatewayModule } from "."
-
+import { gatewayModule } from "@/store/gateway"
 import { timer, of, interval } from "rxjs"
 
 import { filter, tap, switchMap, take } from "rxjs/operators"
@@ -154,10 +153,12 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
+  const next = gatewayModule.incrementWithdrawStateIdx
   const gateway = service().get(funds.symbol)
   let receipt: IWithdrawalReceipt | null
   try {
     receipt = await gateway.withdrawalReceipt()
+    next()
   } catch (error) {
     console.error(error)
     return
@@ -169,7 +170,9 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
   try {
     await gateway.withdraw(funds.weiAmount)
+    next()
     gatewayModule.pollReceipt(funds.symbol)
+    next()
   } catch (error) {
     console.error(error)
     return

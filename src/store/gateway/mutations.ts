@@ -28,3 +28,18 @@ export function setPendingTransactions(state: GatewayState, payload: object) {
 export function clearPendingTransactions(state: GatewayState) {
   state.pendingTransactions = new Array()
 }
+
+export function incrementWithdrawStateIdx(state: GatewayState) {
+  const maxLength = state.withdrawStates.length
+  if (state.withdrawStateIdx < maxLength) {
+    state.withdrawStateIdx = state.withdrawStateIdx + 1
+  }
+}
+
+export function setWithdrawStateAsCompleted(state: GatewayState) {
+  if (state.withdrawStateIdx >= 2) {
+    // -1 to select the element before, and -1 for correct index
+    const idx = (state.withdrawStateIdx - 1) - 1
+    state.withdrawStates[idx].isComplete = true
+  }
+}

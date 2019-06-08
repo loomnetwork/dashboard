@@ -150,7 +150,7 @@
 
     <b-card title="Election Cycle" class="mb-4">
       <h6>Time left</h6>
-      <ElectionTimer/>
+      <election-timer/>
     </b-card>
 
     <rewards></rewards>
@@ -209,7 +209,7 @@ import { DashboardState } from "../types"
 import { ethereumModule } from "../store/ethereum"
 import { plasmaModule } from "../store/plasma"
 import { dposModule } from "@/dpos/store"
-import ElectionTimer from "@/dpos/components/electionTimer.vue"
+import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 
 const log = debug("mobileaccount")
 

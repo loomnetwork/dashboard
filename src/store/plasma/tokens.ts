@@ -231,7 +231,6 @@ export async function transfer(
   context: PlasmaContext,
   payload: TransferRequest,
 ) {
-  console.log("transferring....");
   
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)

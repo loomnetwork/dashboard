@@ -13,7 +13,6 @@
           <option v-for="token in filteredSymbols" :value="token" :key="token">{{ token }}</option>
         </datalist>
         <b-card v-if="selectedToken">
-          <h4>{{ selectedToken }}</h4>
           <b-button type="button"
                     variant="primary"
                     @click="addToken">Add</b-button>
@@ -23,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from "vue-property-decorator"
+import { Component, Watch, Vue, Prop, Provide } from "vue-property-decorator"
 import Toptokens from "@/data/topTokensSymbol.json"
 import { PlasmaState } from "../../store/plasma/types";
 import { plasmaModule } from '../../store/plasma';
@@ -33,12 +32,13 @@ import TokenService from "@/services/TokenService";
 
 @Component
 
-export default class TransferTokensFormModal extends Vue {
+export default class AddTokenModal extends Vue {
     selectedToken: string = ""
-    tokenSymbol: string[] = []
     filteredSymbols: string[] = []
     // token= false
     tokenService = new TokenService()
+
+    @Prop(Array) tokenSymbol!: string[]
 
     get state(): DashboardState {
       return this.$store.state
@@ -49,8 +49,6 @@ export default class TransferTokensFormModal extends Vue {
     }
 
     async mounted(){
-      await this.tokenService.init()
-      this.tokenSymbol = this.tokenService.getAllTokenSymbol()
       this.filterToken()
     }
     resetModal(){

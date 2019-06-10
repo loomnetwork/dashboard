@@ -4,9 +4,6 @@
       <h1>Wallet</h1>
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
-    <add-token-modal @refreshTokenList="filterTokens"/>
-    <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc
       <br>(use $t with the key to some help text.)
@@ -42,6 +39,9 @@
       {{plasmaBalance}} -->
     </b-card>
     <DepositForm :token="selectedToken"/>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
+    <add-token-modal @refreshTokenList="filterTokens" :tokenSymbol="tokenSymbol"/>
+    <DepositForm/>
   </main>
 </template>
 
@@ -84,6 +84,8 @@ export default class DepositWithdraw extends Vue {
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
 
+  tokenSymbol: any[] = []
+
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
 
@@ -99,7 +101,9 @@ export default class DepositWithdraw extends Vue {
     return (this.state.plasma.coins["bnb"] || {}).balance
   }
 
-  mounted() {
+  async mounted() {
+    await this.tokenService.init()
+    this.tokenSymbol = this.tokenService.getAllTokenSymbol()
     this.filterTokens()
   }
 
@@ -162,9 +166,6 @@ export default class DepositWithdraw extends Vue {
     //   return {...token, balance: this.dappchainBalance[token.symbol]}
     // })
     // this.filteredToken = this.tokens
-  }
-  async created() {
-    await this.tokenService.init()
   }
 }
 </script>

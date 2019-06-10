@@ -83,7 +83,6 @@ export const plasmaModule = {
   addCoinState: builder.commit(Tokens.addCoinState),
 
   // Assets
-
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,
   ),

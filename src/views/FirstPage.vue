@@ -25,6 +25,7 @@
                 <b-card
                   id="metamask-button"
                   class="wallet-selection-card text-center"
+                  :class="{'wallet-selection-card disabled' : !isMetamaskInstalled()}"
                   @click="setWallet('metamask')"
                 >
                   <h5>Metamask</h5>
@@ -39,6 +40,7 @@
                 <b-card
                   id="trezor-button"
                   class="wallet-selection-card text-center"
+                  :class="{'wallet-selection-card disabled' : !isMetamaskInstalled()}"
                   @click="setWallet('metamask')"
                 >
                   <h5>
@@ -66,6 +68,12 @@
             </div>
           </b-card>
 
+          <b-card v-if="!isMetamaskInstalled()" class="metamask-suggest">
+            <img id="metamask-mini-icon" src="../assets/metamask_logo.png">
+            <b-card-text class="text-inline"> Looks like you don't have <font id="orange">Metamask</font> with you </b-card-text>
+            <b-button variant="outline-primary" href="https://metamask.io/" style="float: right; margin-top: 5px"> Get one here! </b-button>
+          </b-card>
+
           <b-modal v-model="addressModalShow" hide-header hide-footer>
             <div>
               <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
@@ -74,6 +82,7 @@
           </b-modal>
 
           <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"/>
+          
         </div>
       </main>
     </div>
@@ -123,6 +132,7 @@ export default class FirstPage extends Vue {
 
   address = ""
   addressModalShow = false
+  metamaskIsInstalled = false
 
   // async selectWallet(wallet) {
   //   if (wallet === "ledger") {
@@ -149,6 +159,25 @@ export default class FirstPage extends Vue {
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
+  }
+
+  isMetamaskInstalled() {
+    /* For Chrome & Firefox Browser
+       if user dont have Metamask installed, there is no web3 that inject in their browser
+       (except user install other extensions for crypto wallet (Ethereum platform))
+
+       For Opera Browser
+       Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
+    */ 
+    if (typeof window.web3 == "undefined" || window.ethereum == "undefined") { // No injected web3 in browser
+      return false
+    } else { // Already have a injected web3 in browser
+      if (window.web3.currentProvider.isMetaMask || window.ethereum.isMetaMask) { 
+        return true
+      } else {
+        return false // No Metamask installed
+      }
+    }
   }
 
 }
@@ -294,11 +323,35 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
   }
+  .wallet-selection-card.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+  }
+}
+
+.metamask-suggest {
+  position: relative;
+  margin-top: 12px;
+  .text-inline {
+      margin-left: 10px;
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.2;
+      display: inline;
+  }
 }
 
 #wallet-card-img-large {
   height: auto;
   width: 96px;
+}
+#metamask-mini-icon {
+  width: 48px;
+  height: auto;
+  display: inline;
+}
+#orange {
+  color: #f29040
 }
 </style>
 <style>

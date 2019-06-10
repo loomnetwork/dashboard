@@ -9,7 +9,6 @@ import { CommonTypedStore } from "@/store/common"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { i18n } from "../../../i18n"
 import debug from "debug"
 const log = debug("assets")
@@ -117,7 +116,7 @@ async function transferCards(
     receiver: string,
   },
 ) {
-  DPOSTypedStore.setShowLoadingSpinner(true)
+  CommonTypedStore.setShowLoadingSpinner(true)
   log("transferCards payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
@@ -135,14 +134,24 @@ async function transferCards(
       .send({ from: ethAddressString })
     log("transfer cards result", result)
     await assetsModule.checkCardBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg(i18n.t("messages.transfer_card_success_tx", { transactionHash: result.transactionHash }).toString())
+    CommonTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setSuccessMsg(
+      i18n
+        .t("messages.transfer_card_success_tx", {
+          transactionHash: result.transactionHash,
+        })
+        .toString(),
+    )
   } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
       CommonTypedStore.setErrorMsg(i18n.t("messages.user_denied_tx").toString())
     } else {
-      CommonTypedStore.setErrorMsg(i18n.t("messages.transfer_card_err_tx", { msg: error.message }).toString())
+      CommonTypedStore.setErrorMsg(
+        i18n
+          .t("messages.transfer_card_err_tx", { msg: error.message })
+          .toString(),
+      )
       throw error
     }
   }
@@ -158,7 +167,7 @@ async function transferPacks(
 ) {
   log("transferPacks payload", payload)
   try {
-    DPOSTypedStore.setShowLoadingSpinner(true)
+    CommonTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
     const ethAddressString = ethAddress.local.toString()
     const receiver = formatFromLoomAddress(payload.receiver)
@@ -167,14 +176,24 @@ async function transferPacks(
       .send({ from: ethAddressString })
     log("transfer packs result", result)
     await assetsModule.checkPackBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg(i18n.t("messages.transfer_pack_success_tx", { transactionHash: result.transactionHash }).toString())
+    CommonTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setSuccessMsg(
+      i18n
+        .t("messages.transfer_pack_success_tx", {
+          transactionHash: result.transactionHash,
+        })
+        .toString(),
+    )
   } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
       CommonTypedStore.setErrorMsg(i18n.t("messages.user_denied_tx").toString())
     } else {
-      CommonTypedStore.setErrorMsg(i18n.t("messages.transfer_pack_err_tx", { msg: error.message }).toString())
+      CommonTypedStore.setErrorMsg(
+        i18n
+          .t("messages.transfer_pack_err_tx", { msg: error.message })
+          .toString(),
+      )
       throw error
     }
   }

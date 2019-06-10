@@ -12,8 +12,8 @@
       <br>(use $t with the key to some help text.)
     </b-alert>
     <b-card class="balances" no-body>
-      <b-card-body>
-        <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
+      <b-card-body v-if="filteredSymbols.length > 7">
+        <b-form-input v-model="inputFilter" placeholder="Search" ></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
@@ -47,14 +47,14 @@
 
 <script lang="ts">
 import DepositForm from "@/components/gateway/DepositForm.vue"
-import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue";
+import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
 import { DashboardState } from "../types"
 import { PlasmaState } from "../store/plasma/types"
 import { gatewayModule } from "../store/gateway"
-import { Modal } from "bootstrap-vue";
+import { BModal } from "bootstrap-vue"
 import { plasmaModule } from "../store/plasma"
 import { formatTokenAmount } from "../filters"
 import { refreshBalance } from "../store/ethereum"
@@ -104,7 +104,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   modal(ref: string) {
-    return this.$refs[ref] as Modal
+    return this.$refs[ref] as BModal
   }
 
   @Watch("inputFilter")

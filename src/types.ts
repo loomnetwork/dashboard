@@ -3,7 +3,7 @@ import { Client, DPOSUserV3 } from "loom-js"
 import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
 import { Contract } from "web3-eth-contract"
 import { CommonState } from "./store/common/types"
-import { HasDPOSState } from "./store/dpos/types"
+import { HasDPOSState } from "@/dpos/store/types"
 import { EthereumConfig } from "./store/ethereum/types"
 import { HasGatewayState } from "./store/gateway/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
@@ -57,7 +57,6 @@ export interface DposState {
   walletType: any
   selectedAccount: any
   metamaskDisabled: boolean
-  showLoadingSpinner: boolean
   showSignWalletModal: boolean
   showAlreadyMappedModal: boolean
   mappingSuccess: boolean

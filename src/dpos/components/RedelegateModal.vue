@@ -1,20 +1,19 @@
 <template>
   <b-modal
+    lazy
     id="redelegate-modal"
     ref="modalRef"
     title="Redelegate"
     v-model="visible"
-    @hidden="clear"
     hide-footer
     no-close-on-backdrop
     no-close-on-esc
   >
     <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
     <strong>To</strong>
-    <div class="dropdown-container mb-4">
+    <div class="dropdown-container mb-4" v-if="delegation">
       <v-autocomplete
         class="mb-4"
-        v-model="target"
         placeholder="Please select a validator"
         :items="filteredTargetItems"
         :get-label="getLabel"
@@ -26,7 +25,7 @@
     <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>
     <div class="row">
       <div class="col btn-container">
-        <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="okHandler">Redelegate</b-button>
+        <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="redelegate">Redelegate</b-button>
       </div>
     </div>
   </b-modal>
@@ -38,10 +37,10 @@ import { Component } from "vue-property-decorator"
 import LoadingSpinner from "../../components/LoadingSpinner.vue"
 import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
 import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
-import { dposModule } from '../../store/dpos';
-import { Validator } from '../../store/dpos/types';
+import { dposModule } from "@/dpos/store"
+import { Validator } from "@/dpos/store/types"
+import { CommonTypedStore } from "@/store/common"
 
 @Component({
   components: {
@@ -72,7 +71,7 @@ export default class RedelegateModal extends Vue {
     return this.state.dpos.delegation
   }
 
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   get state(): DashboardState {
     return this.$store.state
@@ -81,15 +80,12 @@ export default class RedelegateModal extends Vue {
   get validators() {
     return this.state.dpos.validators
   }
-  get delegations() {
-    return this.state.dpos.delegations
-  }
 
   get delegation() {
     return this.state.dpos.delegation
   }
 
-  async okHandler() {
+  async redelegate() {
     this.errorMsg = ""
     const delegation = this.delegation!
     if (delegation.updateValidator === undefined) {
@@ -100,9 +96,9 @@ export default class RedelegateModal extends Vue {
       this.errorMsg = "Cannot redelegate to the same validator"
       return
     }
-
+    // for now redelegate all
+    delegation.updateAmount = delegation.amount
     dposModule.redelegate(delegation)
-
   }
 
   getLabel(item) {

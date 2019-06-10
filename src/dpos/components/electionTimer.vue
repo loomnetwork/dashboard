@@ -7,9 +7,8 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import { dposModule } from "@/store/dpos"
-import { DposState } from "../../types"
-import { HasDPOSState } from "../../store/dpos/types"
+import { dposModule } from "@/dpos/store"
+import { HasDPOSState } from "@/dpos/store/types"
 
 @Component
 export default class ElectionTimer extends Vue {
@@ -38,9 +37,9 @@ export default class ElectionTimer extends Vue {
 
   async decreaseTimer() {
     if (this.timeLeft > 0) {
-    this.timeLeft--
+      this.timeLeft--
     } else {
-    this.updateTimeUntilElectionCycle()
+      this.updateTimeUntilElectionCycle()
     }
   }
 

@@ -95,9 +95,12 @@ async function addDeployerAsync(
     const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
     if (!error.message.includes(userDeniedSignTx)) {
       errorMessage = userDeniedSignTx
-      console.log("Denided...............")
     }
-    CommonTypedStore.setErrorMsg(i18n.t("messages.transaction_apprv_err_tx", { msg: errorMessage }).toString())
+    CommonTypedStore.setErrorMsg(
+      i18n
+        .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
+        .toString(),
+    )
     return
   }
 
@@ -107,9 +110,14 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
-    CommonTypedStore.setSuccessMsg(i18n.t("messages.add_deployer_addr_success_tx").toString())
+    await plasmaModule.refreshBalance("loom")
+    CommonTypedStore.setSuccessMsg(
+      i18n.t("messages.add_deployer_addr_success_tx").toString(),
+    )
   } catch (error) {
-    CommonTypedStore.setErrorMsg(i18n.t("messages.add_key_err_tx", { msg: error.message }).toString())
+    CommonTypedStore.setErrorMsg(
+      i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
+    )
     return
   }
 }

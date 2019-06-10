@@ -93,7 +93,6 @@ async function addDeployerAsync(
     let errorMessage = error.message
     if (!error.message.includes("message.user_denied_sign_tx")) {
       errorMessage = "message.user_denied_sign_tx"
-      console.log("Denided...............")
     }
     CommonTypedStore.setErrorMsg(`message.transaction_apprv_err_tx ${errorMessage}`)
     return
@@ -105,6 +104,7 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
+    await plasmaModule.refreshBalance("loom")
     CommonTypedStore.setSuccessMsg("message.add_deployer_addr_success_tx")
   } catch (error) {
     CommonTypedStore.setErrorMsg(`message.add_key_err_tx ${error.message}`)

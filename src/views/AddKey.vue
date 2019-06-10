@@ -48,8 +48,8 @@
           <input type="radio" v-model="tierSelected" :value="tier">
           <b-card class="tierText">
             <b-row>Tier: {{tier.id}}</b-row>
-            <b-row>Name: {{tier.name}} tx/min</b-row>
-            <b-row>{{tier.fee}} LOOM</b-row>
+            <b-row>Name: {{tier.name}}</b-row>
+            <b-row>Fee: {{tier.fee}} LOOM</b-row>
           </b-card>
         </label>
       </div>
@@ -63,7 +63,7 @@
         <span class="text-right">Remaining Balance: {{ loomBalance }} LOOM (</span>
         <router-link
           class="text-right"
-          :to='{name :"account", query: { action: "deposit" } }'
+          :to='{name :"depositeWithdraw", query: { action: "deposit" } }'
         >deposit</router-link>
         <span class="text-right">)</span>
       </div>

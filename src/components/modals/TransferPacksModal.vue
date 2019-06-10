@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="transfer-packs-modal" ref="modalRef" title="Transfer Packs" hide-footer centered>
+  <b-modal id="transfer-packs-modal" ref="modalRef" title="Transfer Packs" hide-footer centered @show="resetModal()" >
     <b-container fluid>
       <h6>Pack type: {{packToTransfer.type}}</h6>
       <h6>Your existing pack: {{packToTransfer.amount}}</h6>
@@ -53,8 +53,7 @@ export default class TransferPacksModal extends Vue {
   confirmPack = false
   isValidAddress = false
 
-
-  mounted() {
+  resetModal(){
     this.amountToTransfer = 1
     this.receiverAddress = ""
   }
@@ -86,7 +85,6 @@ export default class TransferPacksModal extends Vue {
 
   isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
-    console.log(this.isValidAddress);
   }
 
 }

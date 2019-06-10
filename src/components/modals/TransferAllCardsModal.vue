@@ -5,6 +5,7 @@
     title="Transfer All Cards"
     hide-footer
     centered
+    @show="resetModal()"
   >
     <b-container fluid>
       <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
@@ -42,7 +43,8 @@ export default class TransferAllCardsModal extends Vue {
   confirmCards = false
   isValidAddress = false
 
-  mounted() {
+
+  resetModal() {
     this.receiverAddress = ""
   }
 

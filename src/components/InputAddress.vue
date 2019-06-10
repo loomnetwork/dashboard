@@ -4,34 +4,53 @@
                   :placeholder="placeholder"
                   v-on:input="updateAddress"
                   v-on:keyup="validateAddressFormat"
-                  class="my-2" ></b-form-input>
-    <p v-show="!isValidAddress" style="">Invalid address format!</p>
+                  class="my-2"
+                  ></b-form-input>
+    <p v-show="!isValidAddress" style="" :key="value">Invalid address format!</p>
   </div>
 </template>
 
-<script>
-export default {
-  props: ['value', 'placeholder'],
-  data() {
-    return {
-      isValidAddress: true
-    }
-  },
-  methods: {
-    updateAddress(value) {
-      this.$emit('input', value)
-    },
-    validateAddressFormat() {
-      // Address (value) must be 44 characters and have a 'loom' as prefix
-      if (this.value.length !== 44 || this.value.slice(0, 4) !== "loom") {
-        this.isValidAddress = false
-        this.$emit('isValid', false)
-      } else {
-        this.isValidAddress = true
-        this.$emit('isValid', true)
-      }
+<script lang="ts">
+import { Watch, Vue, Prop, Component } from 'vue-property-decorator';
+import { DashboardState } from "@/types"
+import { PlasmaState } from '../store/plasma/types';
+
+@Component
+export default class InputAmount extends Vue{
+
+  @Prop(String) value!: string
+  @Prop(String) placeholder!: string
+  isValidAddress = true
+
+  @Watch("plasma.selectedToken")
+  setDefaultInputAddress(newVal, oldVal) {
+    this.value = ""
+    this.isValidAddress = true
+  }
+
+  updateAddress(value) {
+    this.$emit('input', value)
+  }
+
+  validateAddressFormat() {
+    // Address (value) must be 44 characters and have a 'loom' as prefix
+    if (this.value.length !== 44 || this.value.slice(0, 4) !== "loom") {
+      this.isValidAddress = false
+      this.$emit('isValid', false)
+    } else {
+      this.isValidAddress = true
+      this.$emit('isValid', true)
     }
   }
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get plasma(): PlasmaState {
+    return this.state.plasma
+  }
+
 }
 </script>
 

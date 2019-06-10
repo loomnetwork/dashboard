@@ -47,20 +47,15 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Prop } from "vue-property-decorator"
-import LoadingSpinner from "../../components/LoadingSpinner.vue"
 import BN from "bn.js"
 import { CommonTypedStore } from "../../store/common"
-import { HasDPOSState, DPOSState } from "@/store/dpos/types"
-import { dposModule } from "@/store/dpos"
-import { ZERO } from '../../utils';
+import { dposModule } from "@/dpos/store"
+import { HasDPOSState, DPOSState } from "@/dpos/store/types"
+import { ZERO } from "../../utils"
 
 const MULTIPLIER = new BN("10").pow(new BN("18"))
 
-@Component({
-  components: {
-    LoadingSpinner,
-  },
-})
+@Component
 export default class DelegateModal extends Vue {
 
   @Prop({})

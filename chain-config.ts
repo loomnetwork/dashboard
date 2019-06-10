@@ -1,4 +1,4 @@
-import { DahboardEnvs } from "@/types"
+import { DashboardEnvs } from "@/types"
 const configs = {
   plasma: {
     dappchainEndpoint : "wss://plasma.dappchains.com",
@@ -32,6 +32,6 @@ const configs = {
     etherScan: "https://rinkeby.etherscan.io",
     blockExplorer: "https://blockexplorer.loomx.io",
   },
-} as DahboardEnvs
+} as DashboardEnvs
 
 export default configs

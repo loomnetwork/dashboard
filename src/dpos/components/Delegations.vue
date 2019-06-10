@@ -1,5 +1,5 @@
 <template>
-  <b-list-group v-if="validatorDelegations.length">
+  <b-list-group v-if="delegations.length">
     <b-list-group-item v-for="delegation in delegations" :key="delegation.unlockTime">
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
@@ -21,7 +21,7 @@
             variant="outline-primary"
             :disabled="delegation.pending"
             @click="requestRedelegation(delegation)"
-          >{{ $t('Redelegate') }}</b-button>
+          >{{ $t('views.candidate_details.redelegate') }}</b-button>
           <b-button
             variant="outline-primary"
             :disabled="delegation.pending || delegation.locked"
@@ -34,11 +34,10 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
-import { DPOSState, HasDPOSState } from "@/store/dpos/types"
+import { DPOSState, HasDPOSState, Delegation } from "@/dpos/store/types"
 import { Store } from "vuex"
-import { dposModule } from "@/store/dpos"
-import { ZERO } from '../../utils';
-import { Delegation } from 'loom-js/dist/proto/dposv3_pb';
+import { dposModule } from "@/dpos/store"
+import { ZERO } from "../../utils"
 
 @Component
 export default class DelegationsList extends Vue {

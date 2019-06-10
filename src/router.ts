@@ -4,8 +4,8 @@ import VueRouter from "vue-router"
 
 import FirstPage from "./views/FirstPage.vue"
 import History from "./views/MobileHistory.vue"
-import ValidatorList from "./views/ValidatorList.vue"
-import ValidatorDetail from "./views/ValidatorDetail.vue"
+import ValidatorList from "@/dpos/views/ValidatorList.vue"
+import ValidatorDetail from "@/dpos/views/ValidatorDetail.vue"
 import BlockExplorer from "./views/BlockExplorer.vue"
 import Analytics from "./views/Analytics.vue"
 import MobileAccount from "./views/MobileAccount.vue"
@@ -13,6 +13,7 @@ import Help from "./views/Help.vue"
 import GameAssets from "./views/GameAssets.vue"
 import AddKey from "./views/AddKey.vue"
 import DepositWithdraw from "./views/DepositWithdraw.vue"
+import FeedbackForm from "./views/FeedbackForm.vue"
 import { plasmaModule } from "./store/plasma"
 
 Vue.use(VueRouter)
@@ -88,6 +89,12 @@ const router = new VueRouter({
       path: "/analytics",
       name: "analytics",
       component: Analytics,
+    },
+    {
+      path: "/feedback",
+      name: "feedback",
+      component: FeedbackForm,
+      beforeEnter: requireAccount,
     },
     {
       path: "/",

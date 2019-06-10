@@ -29,6 +29,13 @@
         exact-active-class="router-active"
       >{{ $t('components.faucet_sidebar.history') }}</router-link>
     </b-nav-item>
+    <b-nav-item>
+      <router-link
+        to="/feedback"
+        class="router"
+        exact-active-class="router-active"
+      >{{ $t('components.faucet_sidebar.feedback_form') }}</router-link>
+    </b-nav-item>
     <hr>
     <b-nav-item>
       <router-link
@@ -121,7 +128,7 @@ export default class FaucetSidebar extends Vue {
   position: relative;
   border-right: 2px solid #f2f1f3;
   height: 100%;
-  min-width: 230px;
+  min-width: 240px;
   padding-top: 24px;
   font-size: 16px;
   font-weight: bold;
@@ -132,7 +139,7 @@ export default class FaucetSidebar extends Vue {
 }
 .router {
   font-size: 16px;
-  font-weight: normal;
+  font-weight: 600;
   color: gray;
   padding: 5px 15px;
 }

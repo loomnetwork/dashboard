@@ -168,8 +168,8 @@
           class="d-flex justify-content-between p-2"
           role="tab"
         >
-          <span>{{delegation["Name"]}}</span>
-          <strong>{{delegation["Amount"]}}</strong>
+          <span>{{delegation.validator.name}}</span>
+          <strong>{{delegation.amount | tokenAmount}}</strong>
         </b-card-header>
         <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
           <b-card-body>
@@ -208,7 +208,7 @@ import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
 import { ethereumModule } from "../store/ethereum"
 import { plasmaModule } from "../store/plasma"
-import { dposModule } from "../store/dpos"
+import { dposModule } from "@/dpos/store"
 import ElectionTimer from "@/dpos/components/electionTimer.vue"
 
 const log = debug("mobileaccount")

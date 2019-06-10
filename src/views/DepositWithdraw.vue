@@ -24,13 +24,23 @@
             <b-button
               class="button"
               variant="outline-primary"
-              @click="requestDeposit(symbol)"
+              @click="showSelectTokenModal(`deposit`)"
             >Deposit</b-button>
+            <!-- <b-button
+              class="button"
+              variant="outline-primary"
+              @click="requestDeposit(symbol)"
+            >Deposit</b-button> -->
             <b-button
               class="button"
               variant="outline-primary"
               @click="requestWithdraw(symbol)"
             >Withdraw</b-button>
+            <!-- <b-button
+              class="button"
+              variant="outline-primary"
+              @click="showSelectTokenModal(`withdraw`)"
+            >Withdraw</b-button> -->
             <b-button class="button" variant="outline-primary" @click="requestSwap(symbol)">Swap</b-button>
           </b-button-group>
         </b-list-group-item>
@@ -42,12 +52,14 @@
       {{plasmaBalance}} -->
     </b-card>
     <DepositForm :token="selectedToken"/>
+    <SelectTokenModal :type="selectTokenModalType" @selectedToken="onSelectedToken" />
   </main>
 </template>
 
 <script lang="ts">
 import DepositForm from "@/components/gateway/DepositForm.vue"
 import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
+import SelectTokenModal from "@/components/modals/SelectTokenModal.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 import { Component, Watch, Vue } from "vue-property-decorator"
 import BN from "bn.js"
@@ -67,6 +79,7 @@ import TokenService from "@/services/TokenService"
     DepositForm,
     TransferTokensFormModal,
     AddTokenModal,
+    SelectTokenModal,
   },
   methods: {
     // ...DPOSStore.mapMutations([
@@ -83,6 +96,7 @@ export default class DepositWithdraw extends Vue {
   inputFilter = ""
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
+  selectTokenModalType: string = ""
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
@@ -118,6 +132,31 @@ export default class DepositWithdraw extends Vue {
       .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
   }
 
+  onSelectedToken(payload) {
+    switch (payload.type) {
+      case "deposit":
+        if (payload.token === "ethereum") {
+          // request deposit modal
+        } else if (payload.token === "binance") {
+          // request deposit binance modal
+        }
+        break
+      case "withdraw":
+        if (payload.token === "ethereum") {
+          // request deposit modal
+        } else if (payload.token === "binance") {
+          // request deposit binance modal
+        }
+        break
+      default:
+        break
+    }
+  }
+
+  showSelectTokenModal(type) {
+    this.selectTokenModalType = type
+    this.$root.$emit("bv::show::modal", "select-token-modal")
+  }
   requestDeposit(token: string) {
     this.selectedToken = token
     this.setShowDepositForm(true)

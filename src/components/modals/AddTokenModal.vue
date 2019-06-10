@@ -14,7 +14,6 @@
         </datalist>
         <b-card v-if="selectedToken">
           <h4>{{ selectedToken }}</h4>
-          <p>{{ token.name }}</p>
           <b-button type="button"
                     variant="primary"
                     @click="addToken">Add</b-button>
@@ -30,7 +29,7 @@ import { PlasmaState } from "../../store/plasma/types";
 import { plasmaModule } from '../../store/plasma';
 import { DashboardState } from "@/types"
 import BN from "bn.js"
-import { debuglog } from 'util';
+import TokenService from "@/services/TokenService";
 
 @Component
 
@@ -39,6 +38,7 @@ export default class TransferTokensFormModal extends Vue {
     tokenSymbol: string[] = []
     filteredSymbols: string[] = []
     // token= false
+    tokenService = new TokenService()
 
     get state(): DashboardState {
       return this.$store.state
@@ -48,10 +48,9 @@ export default class TransferTokensFormModal extends Vue {
       return this.state.plasma
     }
 
-    mounted(){
-      Toptokens.tokens.forEach(token => {
-        this.tokenSymbol.push(token.symbol)
-      })
+    async mounted(){
+      await this.tokenService.init()
+      this.tokenSymbol = this.tokenService.getAllTokenSymbol()
       this.filterToken()
     }
     resetModal(){
@@ -59,7 +58,7 @@ export default class TransferTokensFormModal extends Vue {
     }
 
     get token (){
-      return Toptokens.tokens.filter(token => token.symbol === this.selectedToken)[0]
+      return this.tokenSymbol.find(token => token === this.selectedToken)
     }
 
     @Watch("selectedToken")

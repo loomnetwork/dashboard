@@ -13,7 +13,7 @@
     </b-alert>
     <b-card class="balances" no-body>
       <b-card-body v-if="filteredSymbols.length > 7">
-        <b-form-input v-model="inputFilter" placeholder="Search" ></b-form-input>
+        <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
@@ -39,7 +39,7 @@
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
       <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
-      {{plasmaBalance}} -->
+      {{plasmaBalance}}-->
     </b-card>
     <DepositForm :token="selectedToken"/>
   </main>
@@ -60,7 +60,7 @@ import { formatTokenAmount } from "../filters"
 import { refreshBalance } from "../store/ethereum"
 import { debuglog } from "util"
 
-import TokenService from "@/services/TokenService"
+import tokenService from "@/services/TokenService"
 
 @Component({
   components: {
@@ -78,7 +78,6 @@ export default class DepositWithdraw extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   selectedToken = "loom"
-  tokenService = new TokenService()
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
@@ -163,9 +162,7 @@ export default class DepositWithdraw extends Vue {
     // })
     // this.filteredToken = this.tokens
   }
-  async created() {
-    await this.tokenService.init()
-  }
+
 }
 </script>
 

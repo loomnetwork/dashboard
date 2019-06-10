@@ -85,7 +85,7 @@ import { Vue, Component, Watch } from "vue-property-decorator"
 import ChainSelector from "../components/ChainSelector.vue"
 import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
 import { setInterval } from "timers"
-import { Modal } from "bootstrap-vue"
+import { BModal } from "bootstrap-vue"
 
 import { ethereumModule } from "@/store/ethereum"
 
@@ -140,7 +140,7 @@ export default class FirstPage extends Vue {
   // }
 
   modal(ref: string) {
-    return this.$refs[ref] as Modal
+    return this.$refs[ref] as BModal
   }
 
   // async openLoginModal() {

@@ -211,3 +211,31 @@ export function getTokenSymbolFromAddress(address: string) {
     return token.address[chainPrefix].toLowerCase() === address.toLowerCase()
   })
 }
+
+/**
+ * Return list of token symbol from localStorage
+ */
+export const getWalletFromLocalStorage = (): string[] => {
+  let strWallet = localStorage.getItem("wallet") // Get wallet from localStorage
+  if (!strWallet) {
+    // if wallet is not exist in localStorage
+    strWallet = JSON.stringify(["LOOM", "ETH"]) // Create default wallet
+    localStorage.setItem("wallet", strWallet) // set wallet to localStorage
+  }
+  const wallet = JSON.parse(strWallet)
+  return wallet
+}
+
+/**
+ * To add the new token symbol into wallet, then update wallet in localStorage
+ * @param newSymbol Token symbol
+ */
+export const setNewTokenToLocalStorage = (newSymbol: string = "") => {
+  const wallet = getWalletFromLocalStorage()
+  // check symbol not exist in wallet
+  const isExist = wallet.find((symbol) => newSymbol === symbol)
+  if (!isExist) {
+    wallet.push(newSymbol.toUpperCase())
+  }
+  localStorage.setItem("wallet", JSON.stringify(wallet))
+}

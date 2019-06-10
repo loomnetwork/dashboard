@@ -63,7 +63,7 @@
         <span class="text-right">Remaining Balance: {{ loomBalance }} LOOM (</span>
         <router-link
           class="text-right"
-          :to="{name :"account", query: { action: "deposit" } }"
+          :to='{name :"account", query: { action: "deposit" } }'
         >deposit</router-link>
         <span class="text-right">)</span>
       </div>
@@ -76,7 +76,6 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { BModal } from "bootstrap-vue"
 import { CommonTypedStore } from '@/store/common';
 import { whiteListModule } from '@/store/whitelist';
@@ -101,7 +100,7 @@ export default class AddKey extends Vue {
   isShowGenPublicKeyModal = false
   newPublicAddress = ""
   tierSelected: Tier | {} = {}
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   isValidAddress = false
   loomAddress = "loom0000000000000000000000000000000000000000"
 

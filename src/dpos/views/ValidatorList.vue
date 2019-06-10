@@ -57,6 +57,7 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
+import LoadingSpinner from "../components/LoadingSpinner.vue"
 import { CryptoUtils, LocalAddress } from "loom-js"
 import { HasDPOSState } from "@/dpos/store/types"
 

@@ -57,7 +57,6 @@ export interface DposState {
   walletType: any
   selectedAccount: any
   metamaskDisabled: boolean
-  showLoadingSpinner: boolean
   showSignWalletModal: boolean
   showAlreadyMappedModal: boolean
   mappingSuccess: boolean

@@ -135,14 +135,13 @@ export default class HardwareWalletModal extends Vue {
   // @ts-ignore
   setWeb3 = ethereumModule.setWeb3
   setSelectedAccount = DPOSTypedStore.setSelectedAccount
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setStatus = DPOSTypedStore.setStatus
   setSelectedLedgerPath = DPOSTypedStore.setSelectedLedgerPath
 
   checkMappingAccountStatus = DPOSTypedStore.checkMappingAccountStatus
   ensureIdentityMappingExists = DPOSTypedStore.ensureIdentityMappingExists
   init = DPOSTypedStore.init
-  registerWeb3 = DPOSTypedStore.registerWeb3
 
   get state(): DashboardState {
     return this.$store.state

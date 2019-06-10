@@ -61,8 +61,6 @@
 import { Vue, Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 import BN from "bn.js"
-
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { formatToCrypto, parseToWei } from "@/utils"
 import { DashboardState } from "../../types"
 

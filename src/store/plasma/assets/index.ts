@@ -9,7 +9,6 @@ import { CommonTypedStore } from "@/store/common"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
-import { DPOSTypedStore } from "@/store/dpos-old"
 import debug from "debug"
 const log = debug("assets")
 
@@ -116,7 +115,7 @@ async function transferCards(
     receiver: string,
   },
 ) {
-  DPOSTypedStore.setShowLoadingSpinner(true)
+  CommonTypedStore.setShowLoadingSpinner(true)
   log("transferCards payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
@@ -134,10 +133,10 @@ async function transferCards(
       .send({ from: ethAddressString })
     log("transfer cards result", result)
     await assetsModule.checkCardBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     CommonTypedStore.setSuccessMsg("message.transfer_card_success_tx" + result.transactionHash)
   } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
       CommonTypedStore.setErrorMsg("messages.user_denied_tx")
     } else {
@@ -157,7 +156,7 @@ async function transferPacks(
 ) {
   log("transferPacks payload", payload)
   try {
-    DPOSTypedStore.setShowLoadingSpinner(true)
+    CommonTypedStore.setShowLoadingSpinner(true)
     const ethAddress = await plasmaModule.getCallerAddress()
     const ethAddressString = ethAddress.local.toString()
     const receiver = formatFromLoomAddress(payload.receiver)
@@ -166,10 +165,10 @@ async function transferPacks(
       .send({ from: ethAddressString })
     log("transfer packs result", result)
     await assetsModule.checkPackBalance()
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     CommonTypedStore.setSuccessMsg("message.transfer_pack_success_tx" + result.transactionHash)
   } catch (error) {
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
       CommonTypedStore.setErrorMsg("messages.user_denied_tx")
     } else {

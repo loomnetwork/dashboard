@@ -114,7 +114,7 @@ export default class FirstPage extends Vue {
   // setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
   // initializeDependencies = DPOSTypedStore.initializeDependencies
   // setWalletType = DPOSTypedStore.setWalletType
-  // setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  // setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   // signOut = CommonTypedStore.signOut
 
   addChainUrl = DPOSTypedStore.addChainUrl

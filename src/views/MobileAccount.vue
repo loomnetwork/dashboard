@@ -150,7 +150,7 @@
 
     <b-card title="Election Cycle" class="mb-4">
       <h6>Time left</h6>
-      <ElectionTimer/>
+      <election-timer/>
     </b-card>
 
     <rewards></rewards>
@@ -209,7 +209,7 @@ import { DashboardState } from "../types"
 import { ethereumModule } from "../store/ethereum"
 import { plasmaModule } from "../store/plasma"
 import { dposModule } from "@/dpos/store"
-import ElectionTimer from "@/dpos/components/electionTimer.vue"
+import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 
 const log = debug("mobileaccount")
 
@@ -247,33 +247,18 @@ export default class MobileAccount extends Vue {
 
   // methods
   setGatewayBusy = DPOSTypedStore.setGatewayBusy
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setShowDepositForm = DPOSTypedStore.setShowDepositForm
   setErrorMsg = CommonTypedStore.setErrorMsg
-  setWithdrewOn = DPOSTypedStore.setWithdrewOn
-  setWithdrewSignature = DPOSTypedStore.setWithdrewSignature
-  getWithdrewOn = DPOSTypedStore.getWithdrewOn
-
-  getPendingWithdrawalReceipt = DPOSTypedStore.getPendingWithdrawalReceipt
-  setWithdregetUnclaimedLoomTokenswSignature = DPOSTypedStore.getUnclaimedLoomTokens
-  getUnclaimedLoomTokens = DPOSTypedStore.getUnclaimedLoomTokens
-  reclaimDeposit = DPOSTypedStore.reclaimDeposit
-  withdrawAsync = DPOSTypedStore.withdrawAsync
-  withdrawCoinGatewayAsync = DPOSTypedStore.withdrawCoinGatewayAsync
-  switchDposUser = DPOSTypedStore.switchDposUser
 
   get web3() { return DPOSTypedStore.state.web3 }
   get dposUser() { return DPOSTypedStore.state.dposUser }
   get validators() { return DPOSTypedStore.state.validators }
   get gatewayBusy() { return DPOSTypedStore.state.gatewayBusy }
   get rewardsResults() { return DPOSTypedStore.state.rewardsResults }
-  get timeUntilElectionCycle() { return DPOSTypedStore.state.timeUntilElectionCycle }
-  get nextElectionTime() { return DPOSTypedStore.state.nextElectionTime }
   get delegations() { return DPOSTypedStore.state.delegations }
   get states() { return DPOSTypedStore.state.states }
-  get currentMetamaskAddress() { return DPOSTypedStore.state.currentMetamaskAddress }
   get pendingTx() { return DPOSTypedStore.state.pendingTx }
-  get withdrewSignature() { return DPOSTypedStore.state.withdrewSignature }
 
   get formatedDelegations() {
     const candidates = this.validators

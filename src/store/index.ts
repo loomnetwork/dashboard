@@ -9,15 +9,12 @@ import Vue from "vue"
 import Vuex, { Store } from "vuex"
 import { getStoreBuilder } from "vuex-typex"
 import "./common"
-import "./dpos"
+import "@/dpos/store"
 import "./dpos-old"
-import { dposReactions } from "./dpos/reactions"
-// import { state, getters, mutations, actions } from './applicationStore'
-import { dposStorePlugin } from "./dposPlugin"
+import { dposReactions } from "@/dpos/store/reactions"
 import "./ethereum"
 import { ethereumModule } from "./ethereum"
 import { ethereumReactions } from "./ethereum/reactions"
-import "./ethSignStore"
 import "./gateway"
 import { gatewayReactions } from "./gateway/reactions"
 import "./locale"
@@ -52,19 +49,22 @@ const store: Store<DashboardState> = builder.vuexStore({
 // set available envs
 if (window.location.host === "dashboard.dappchains.com") {
   dashboardStore.setEnvs([production])
+  dashboardStore.setEnv(production)
 } else {
   console.log("all envsxs")
   dashboardStore.setEnvs([production, stage, dev, local])
+  // default
+  dashboardStore.setEnv(stage)
 }
 
 function plugin(store_: Store<DashboardState>) {
   store_.subscribeAction({
     before(action) {
-      log("action", action)
+      log("action %s payload", action.type, action.payload)
     },
   })
 
-  dposStorePlugin(store_)
+  // dposStorePlugin(store_)
   ethereumReactions(store_)
   plasmaReactions(store_)
   gatewayReactions(store_)

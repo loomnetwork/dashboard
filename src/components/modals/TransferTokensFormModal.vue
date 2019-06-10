@@ -21,7 +21,11 @@
       </div>
       <div class="input-section">
         <span>Receiver Loom Address:</span>
-        <b-input type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+        <input-address
+          v-model="receiverAddress"
+          placeholder="'Loom Address'"
+          @isValid="isValidAddressFormat"
+        />
       </div>
       <b-button type="button" @click="transferToken()">Transfer</b-button>
     </b-card>
@@ -38,10 +42,12 @@ import AmountInput from "@/components/AmountInput.vue";
 import BN from "bn.js"
 import { toBigNumber } from "@/utils"
 import { formatTokenAmount } from "@/filters"
+import InputAddress from "../InputAddress.vue";
 
 @Component({
   components: {
     AmountInput,
+    InputAddress
   }
 })
 
@@ -51,6 +57,7 @@ export default class TransferTokensFormModal extends Vue {
   transferAmount: number = 0
   receiverAddress: string = ""
   amountError = false
+  isValidAddress = false
 
   get state(): DashboardState {
     return this.$store.state
@@ -64,15 +71,15 @@ export default class TransferTokensFormModal extends Vue {
     return formatTokenAmount(balance)
   }
 
-  transferToken() {
-    const amount = new BN("" + this.transferAmount).mul(new BN("" + 10 ** 18))
-    this.transfer({
-      symbol: this.plasma.selectedToken,
-      weiAmount: amount,
-      to: this.receiverAddress
-    })
-    this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
-  }
+    async transferToken(){
+      const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
+      this.transfer({
+        symbol: this.plasma.selectedToken,
+        weiAmount: amount,
+        to: this.receiverAddress 
+      })
+      this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
+    }
 
   onAmountError(val) {
     this.amountError = val
@@ -80,6 +87,12 @@ export default class TransferTokensFormModal extends Vue {
 
   resetModal() {
     this.receiverAddress = ""
+    this.isValidAddress = false
+  }
+
+  isValidAddressFormat(isValid) {
+    this.isValidAddress = isValid
+    console.log('isValidAddress', this.isValidAddress);
   }
 }
 </script>

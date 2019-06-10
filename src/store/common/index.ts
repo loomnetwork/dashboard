@@ -53,6 +53,7 @@ const CommonTypedStore = {
   setSuccess: builder.commit(mutations.setSuccess),
   setUserIsLoggedIn: builder.commit(mutations.setUserIsLoggedIn),
   signOut: builder.commit(mutations.signOut),
+  setShowLoadingSpinner: builder.commit(mutations.setShowLoadingSpinner),
 
   // actions
   registerWeb3: builder.dispatch(registerWeb3),

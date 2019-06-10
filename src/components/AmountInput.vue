@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col sm="4">
-        <b-button variant="outline-primary" @click="setAllAmount">All ({{ state.plasma.tokenSelected }})</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount">All ({{ this.plasma.selectedToken }})</b-button>
       </b-col>
     </b-row>
   </div>
@@ -24,6 +24,8 @@ import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
+import { PlasmaState } from '../store/plasma/types';
+import { state } from '../store/common';
 
 @Component
 export default class AmountInput extends Vue {
@@ -44,9 +46,10 @@ export default class AmountInput extends Vue {
   }
 
   // Set default amount when select another token
-  @Watch("state.plasma.tokenSelected")
+  @Watch("plasma.selectedToken")
   setDefaultAmount(newVal, oldVal) {
     this.amount = 0
+    this.validateAmount()
   }
 
   validateAmount() {
@@ -58,10 +61,10 @@ export default class AmountInput extends Vue {
       this.errorMsg = ""
       this.$emit("isError", true)
     } else if (amount > this.max) {
-      this.errorMsg = `Invalid amount. should be less than ${this.max}`
+      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: this.max }).toString()
       this.$emit("isError", true)
     } else if (amount < this.min) {
-      this.errorMsg = `Invalid amount. should be more than ${this.min}`
+      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: this.min }).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""
@@ -71,6 +74,10 @@ export default class AmountInput extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get plasma(): PlasmaState {
+    return this.state.plasma
   }
   // Button Action
   setAllAmount() {

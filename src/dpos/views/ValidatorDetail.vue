@@ -1,8 +1,5 @@
 <template>
   <main class="validator">
-    <!--
-    <loading-spinner v-if="loading" :showBackdrop="true"></loading-spinner>
-    -->
     <header>
       <h1>
         <router-link
@@ -17,7 +14,7 @@
           {{validator.name }}
           <span>{{validator.isBootstrap ? "(bootstrap)" : ''}}</span>
         </h1>
-        <small>loom{{validator.address.substring(2)}}</small>
+        <small>loom{{validator.address.local.toString().substring(2)}}</small>
         <p
           v-if="validator.description"
           style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0"
@@ -31,16 +28,16 @@
         <dt>{{ $t('views.validator_detail.state') }}</dt>
         <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
         <dt>Delegators Stake</dt>
-        <dd>{{validator.delegatedStake | tokenAmount}}</dd>
+        <dd>{{validator.stakedAmount | tokenAmount}}</dd>
         <dt>Total Staked</dt>
-        <dd>{{validator.totalStaked | tokenAmount}}</dd>
+        <dd>{{validator.delegationTotal | tokenAmount}}</dd>
         <dt>Fee</dt>
         <dd>{{validator.fee}}</dd>
       </dl>
     </section>
-    <section v-if="userIsLoggedIn" class="user-stakes">
-      <h6 v-if="!isBootstrap">{{ $t('My stakes') }}</h6>
-      <delegations-list :delegations="validator.delegations"/>
+    <section v-if="!!state.plasma.address" class="user-stakes">
+      <h6 v-if="!validator.isBootstrap">{{ $t('My stakes') }}</h6>
+      <delegations-list :delegations="delegations"/>
       <p
         class="no-stakes"
         v-if="validator.isBootstrap === false && validator.delegations.length === 0"
@@ -49,12 +46,12 @@
         <br>
       </p>
 
-      <div class="button-container" v-if="!isBootstrap">
+      <div class="button-container" v-if="!validator.isBootstrap">
         <b-button class="stake mr-3" @click="requestDelegation()">{{ $t("Stake tokens") }}</b-button>
         <b-button
           class="consolidate"
           v-if="canConsolidate"
-          @click="consolidateDelegations(validator)"
+          @click="consolidate(validator)"
         >{{ $t("views.validator_detail.consolidate") }}</b-button>
       </div>
 
@@ -63,8 +60,12 @@
         @onDelegate="delegateHandler"
         ref="delegateModalRef"
         :hasDelegation="hasDelegation"
-      ></faucet-delegate-modal> -->
-      <redelegate-modal ref="redelegateModalRef" @ok="redelegateHandler"></redelegate-modal>
+      ></faucet-delegate-modal>-->
+      <template v-if="!!state.dpos.delegation">
+        <delegate-modal></delegate-modal>
+        <redelegate-modal></redelegate-modal>
+        <undelegate-modal></undelegate-modal>
+      </template>
       <success-modal></success-modal>
     </section>
   </main>
@@ -72,38 +73,34 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import LoadingSpinner from "../components/LoadingSpinner.vue"
-import SuccessModal from "../components/modals/SuccessModal.vue"
-import RedelegateModal from "../dpos/components/RedelegateModal.vue"
-// import FaucetDelegateModal from "../dpos/components/FaucetDelegateModal.vue"
-import { DPOSTypedStore } from "../store/dpos-old"
-import { CommonTypedStore } from "../store/common"
-import { Modal } from "bootstrap-vue"
-import { dposModule } from "../store/dpos"
-import { HasDPOSState } from "../store/dpos/types"
-import { Delegation } from "@/store/dpos/types"
+import SuccessModal from "@/components/modals/SuccessModal.vue"
+import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
+import DelegateModal from "@/dpos/components/DelegateModal.vue"
+import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
+
+import { CommonTypedStore } from "@/store/common"
+import { dposModule } from "@/dpos/store"
+import { HasDPOSState } from "@/dpos/store/types"
+import { Delegation } from "@/dpos/store/types"
+import DelegationsList from "@/dpos/components/Delegations.vue"
 
 @Component({
   components: {
     SuccessModal,
+    DelegateModal,
     RedelegateModal,
-    // FaucetDelegateModal,
-    LoadingSpinner,
+    UndelegateModal,
+    DelegationsList,
   },
 })
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
-  prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
-
-  hasDelegation = false
-
-  finished = false
 
   lockDays = [14, 90, 180, 365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
-  consolidateDelegations = DPOSTypedStore.consolidateDelegations
+  consolidate = dposModule.consolidate
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -123,10 +120,9 @@ export default class ValidatorDetail extends Vue {
     return validator
   }
 
-  async delegateHandler() {
-    this.$root.$emit("refreshBalances")
-    // show success modal
-    this.$root.$emit("bv::hide::modal", "success-modal")
+  get delegations() {
+    const addr = this.validator!.addr
+    return this.state.dpos.delegations.filter((d) => d.validator.addr === addr)
   }
 
   copyAddress() {
@@ -134,42 +130,18 @@ export default class ValidatorDetail extends Vue {
     this.$refs.address.select()
     const successful = document.execCommand("copy")
     if (successful) {
-      CommonTypedStore.setSuccess("messagse.copy_addr_success_tx")
+      CommonTypedStore.setSuccess(this.$t("messages.copy_addr_success_tx").toString())
     } else {
-      CommonTypedStore.setSuccess("message.copy_addr_err_tx")
+      CommonTypedStore.setSuccess(this.$t("messages.copy_addr_err_tx").toString())
     }
   }
 
   get canConsolidate() {
-    return 0 < this.state.dpos.delegations.filter((d) => !d.locked).length
-  }
-
-  async redelegateHandler() {
-    // plugin listens to actions and refreshes accordingly
-    return false
+    return 1 < this.delegations.filter((d) => !d.locked).length
   }
 
   requestDelegation() {
     dposModule.requestDelegation(this.validator!)
-  }
-
-  openRequestDelegateModal() {
-    // @ts-ignore
-    this.$refs.delegateModalRef.show(this.validator.address, "")
-  }
-
-  openRequestUnbondModal(delegation: Delegation) {
-    // @ts-ignore
-    this.modal("delegateModalRef").show(this.validator.address, "unbond", 0, 0, delegation)
-  }
-
-  openRedelegateModal(delegation: Delegation) {
-    // @ts-ignore
-    this.modal("redelegateModalRef").show(delegation)
-  }
-
-  modal(ref: string): Modal {
-    return this.$refs[ref] as Modal
   }
 
 }

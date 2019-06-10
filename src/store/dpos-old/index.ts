@@ -29,6 +29,8 @@ import { getStoreBuilder } from "vuex-typex"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
 
+import { i18n } from "../../i18n"
+
 // debug.enable("dashboard.DPOS")
 const log = debug("dashboard.DPOS")
 const WEI_TOKEN = new BN("" + 10 ** 18)
@@ -73,7 +75,6 @@ const defaultState = () => {
     walletType: undefined,
     selectedAccount: undefined,
     metamaskDisabled: false,
-    showLoadingSpinner: false,
     showSignWalletModal: false,
     showSigningAlert: false,
     showAlreadyMappedModal: false,
@@ -154,14 +155,12 @@ export const DPOSTypedStore = {
     mutations.setCurrentMetamaskAddress,
   ),
   setStatus: builder.commit(mutations.setStatus),
-  setShowLoadingSpinner: builder.commit(mutations.setShowLoadingSpinner),
   setShowSidebar: builder.commit(mutations.setShowSidebar),
   setShowSigningAlert: builder.commit(mutations.setShowSigningAlert),
   setSignWalletModal: builder.commit(mutations.setSignWalletModal),
   setIsLoggedIn: builder.commit(mutations.setIsLoggedIn),
   // ethereum
   setMetamaskDisabled: builder.commit(mutations.setMetamaskDisabled),
-  setWeb3: builder.commit(mutations.setWeb3),
   setConnectedToMetamask: builder.commit(mutations.setConnectedToMetamask),
   setWalletType: builder.commit(mutations.setWalletType),
   setSelectedAccount: builder.commit(mutations.setSelectedAccount),
@@ -211,7 +210,6 @@ export const DPOSTypedStore = {
   setCurrentChain: builder.commit(mutations.setCurrentChain),
 
   // actions
-  registerWeb3: builder.dispatch(registerWeb3),
   initWeb3Local: builder.dispatch(initWeb3Local),
   initWeb3: builder.dispatch(initWeb3),
   initializeDependencies: builder.dispatch(initializeDependencies),
@@ -220,7 +218,6 @@ export const DPOSTypedStore = {
   createNewPlasmaUser: builder.dispatch(createNewPlasmaUser),
   checkMappingAccountStatus: builder.dispatch(checkMappingAccountStatus),
   storePrivateKeyFromSeed: builder.dispatch(storePrivateKeyFromSeed),
-  clearPrivateKey: builder.dispatch(clearPrivateKey),
   checkIfConnected: builder.dispatch(checkIfConnected),
 
   fetchDappChainEvents: builder.dispatch(fetchDappChainEvents),
@@ -272,7 +269,7 @@ import { createDefaultClient } from "loom-js/dist/helpers"
 declare type Context = BareActionContext<DposState, DashboardState>
 
 async function initializeDependencies(ctx: Context, payload) {
-  DPOSTypedStore.setShowLoadingSpinner(true)
+  CommonTypedStore.setShowLoadingSpinner(true)
   try {
     await DPOSTypedStore.initWeb3Local()
     await DPOSTypedStore.ensureIdentityMappingExists({})
@@ -288,10 +285,10 @@ async function initializeDependencies(ctx: Context, payload) {
       report: true,
       cause: err,
     })
-    DPOSTypedStore.setShowLoadingSpinner(false)
+    CommonTypedStore.setShowLoadingSpinner(false)
     throw err
   }
-  DPOSTypedStore.setShowLoadingSpinner(false)
+  CommonTypedStore.setShowLoadingSpinner(false)
 }
 
 async function checkMappingAccountStatus(ctx: Context) {
@@ -303,10 +300,10 @@ async function checkMappingAccountStatus(ctx: Context) {
   ) {
     try {
       DPOSTypedStore.setSignWalletModal(true)
-      DPOSTypedStore.setShowLoadingSpinner(true)
+      CommonTypedStore.setShowLoadingSpinner(true)
       await DPOSTypedStore.createNewPlasmaUser()
       // await DappChainTypedModule.addMappingAsync(  null )
-      DPOSTypedStore.setShowLoadingSpinner(false)
+      CommonTypedStore.setShowLoadingSpinner(false)
       DPOSTypedStore.setMappingSuccess(true)
       DPOSTypedStore.setSignWalletModal(false)
     } catch (err) {
@@ -336,7 +333,7 @@ async function checkMappingAccountStatus(ctx: Context) {
   } else if (ctx.state.status === "mapped") {
     DPOSTypedStore.setMappingSuccess(true)
   }
-  DPOSTypedStore.setShowLoadingSpinner(false)
+  CommonTypedStore.setShowLoadingSpinner(false)
 }
 async function storePrivateKeyFromSeed(ctx, payload) {
   const privateKey = CryptoUtils.generatePrivateKeyFromSeed(
@@ -346,10 +343,7 @@ async function storePrivateKeyFromSeed(ctx, payload) {
   sessionStorage.setItem("privatekey", privateKeyString)
   DPOSTypedStore.setIsLoggedIn(true)
 }
-async function clearPrivateKey(ctx: Context) {
-  sessionStorage.removeItem("privatekey")
-  DPOSTypedStore.setIsLoggedIn(false)
-}
+
 async function checkIfConnected(ctx: Context) {
   if (!ctx.state.web3) await DPOSTypedStore.initWeb3()
 }
@@ -361,7 +355,7 @@ async function initWeb3Local(ctx: Context) {
     const accounts = await web3js.eth.getAccounts()
     const metamaskAccount = accounts[0]
     // @ts-ignore
-    DPOSTypedStore.setWeb3(web3js)
+    // DPOSTypedStore.setWeb3(web3js)
     DPOSTypedStore.setCurrentMetamaskAddress(metamaskAccount)
   } else if (ctx.state.walletType === "ledger") {
     if (ctx.state.selectedLedgerPath) {
@@ -374,7 +368,7 @@ async function initWeb3Local(ctx: Context) {
   }
   DPOSTypedStore.setConnectedToMetamask(true)
   await DPOSTypedStore.init()
-  await DPOSTypedStore.registerWeb3({ web3: ctx.state.web3 })
+  // await DPOSTypedStore.registerWeb3({ web3: ctx.state.web3 })
 }
 
 async function initWeb3(ctx: Context) {
@@ -408,7 +402,7 @@ async function initWeb3(ctx: Context) {
     })
   }
   // @ts-ignore
-  DPOSTypedStore.setWeb3(web3js)
+  // DPOSTypedStore.setWeb3(web3js)
 }
 
 async function checkAllDelegations(ctx: Context) {
@@ -515,13 +509,13 @@ async function redelegateAsync(
   try {
     await user.redelegateAsync(origin, target, new BN(amount), index)
     CommonTypedStore.setSuccessMsg({
-      msg: "message.redelegate_success_tx",
+      msg: i18n.t("messages.redelegate_success_tx").toString(),
       forever: false,
     })
   } catch (err) {
     console.error(err)
     CommonTypedStore.setErrorMsg({
-      msg: "message.redelegate_err_tx",
+      msg: i18n.t("messages.redelegate_err_tx").toString(),
       forever: false,
       report: true,
       cause: err,
@@ -802,7 +796,7 @@ async function delegateAsync(
     })
   } catch (err) {
     CommonTypedStore.setErrorMsg({
-      msg: "message.delegate_err_tx",
+      msg: i18n.t("messages.delegate_err_tx").toString(),
       forever: false,
       report: true,
       cause: err,
@@ -826,7 +820,7 @@ async function undelegateAsync(
     })
   } catch (err) {
     CommonTypedStore.setErrorMsg({
-      msg: "message.undelegate_err_tx",
+      msg: i18n.t("messages.undelegate_err_tx").toString(),
       forever: false,
       report: true,
       cause: err,
@@ -980,7 +974,7 @@ async function initDposUser(ctx: Context) {
   user.catch((err) => {
     console.error(err)
     CommonTypedStore.setErrorMsg({
-      msg: "message.init_dposUser_err_tx",
+      msg: i18n.t("messages.init_dposUser_err_tx").toString(),
       forever: false,
       report: true,
       cause: err,
@@ -1019,7 +1013,7 @@ async function switchDposUser(ctx: Context, payload: { web3?: any }) {
     }
   } catch (err) {
     CommonTypedStore.setErrorMsg({
-      msg: "message.switch_dpouser_err_tx",
+      msg: i18n.t("messages.switch_dpouser_err_tx").toString(),
       forever: false,
       report: true,
       cause: err,
@@ -1083,19 +1077,6 @@ async function approveAsync(ctx: Context, payload) {
     console.log(error)
   }
   DPOSTypedStore.setGatewayBusy(false)
-}
-
-export function registerWeb3(ctx: Context, payload: { web3: Web3 }) {
-  // try {
-  //   DPOSTypedStore.setWeb3(payload.web3)
-  //   // these are filled on yarn serve/build
-  //   ctx.state.GatewayInstance = new payload.web3.eth.Contract(
-  //     GatewayJSON.abi,
-  //     GW_ADDRESS || ctx.state.currentChain.gatewayAddress,
-  //   )
-  // } catch (err) {
-  //   console.error(err)
-  // }
 }
 
 function createClient(state, privateKeyString) {

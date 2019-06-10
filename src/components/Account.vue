@@ -31,9 +31,8 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import { dposModule } from "@/store/dpos"
+import { dposModule } from "@/dpos/store"
 import { DashboardState, DposState } from "@/types"
-import { DPOSUserV3 } from "loom-js"
 // import configs from "chain-config"
 
 @Component
@@ -46,7 +45,7 @@ export default class Account extends Vue {
   }
 
   get dposState(): DposState {
-    return this.$store.state.DPOS
+    return this.$store.state.dpos
   }
 
   get ethAccount() {

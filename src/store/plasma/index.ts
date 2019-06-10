@@ -49,6 +49,10 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
     },
+    // bnb: {
+    //   balance: new BN("0"),
+    //   loading: false,
+    // },
   },
   selectedToken: "",
 }
@@ -76,6 +80,9 @@ export const plasmaModule = {
   // addTokens: builder.dispatch(Tokens.addContract),
 
   setSelectedToken: builder.commit(mutations.setSelectedToken),
+  addCoinState: builder.commit(Tokens.addCoinState),
+
+  // Assets
 
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,

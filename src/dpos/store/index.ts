@@ -1,26 +1,18 @@
 /**
- * @module dpos-dashboard.gateway
+ * @module dashboard.dpos
  */
 
-import { getStoreBuilder } from "vuex-typex"
-import { BareActionContext } from "vuex-typex"
-
-import { DPOSState, HasDPOSState, Delegation, Validator } from "./types"
-
-import * as mutations from "./mutations"
-import BN from "bn.js"
-import {
-  IDelegation,
-  ICandidate,
-  IValidator,
-} from "loom-js/dist/contracts/dpos3"
-import { plasmaModule } from "../plasma"
-
-import debug from "debug"
-import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
+import { plasmaModule } from "@/store/plasma"
 import { ZERO } from "@/utils"
-import { Address, LocalAddress } from "loom-js"
+import BN from "bn.js"
+import debug from "debug"
+import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
+import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation } from "./helpers"
+import * as mutations from "./mutations"
+import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
+import { Address } from "loom-js"
+
 const log = debug("dpos")
 
 const initialState: DPOSState = {
@@ -52,9 +44,10 @@ const dposModule = {
   setElectionTime: builder.commit(mutations.setElectionTime),
   setRewards: builder.commit(mutations.setRewards),
 
-  requestDelegation: builder.dispatch(requestDelegation),
-  requestRedelegation: builder.dispatch(requestRedelegation),
-  requestUndelegation: builder.dispatch(requestUndelegation),
+  requestDelegation: builder.commit(requestDelegation),
+  requestRedelegation: builder.commit(requestRedelegation),
+  requestUndelegation: builder.commit(requestUndelegation),
+  cancelRequest: builder.commit(cancelRequest),
 
   delegate: builder.dispatch(delegate),
   redelegate: builder.dispatch(redelegate),
@@ -82,6 +75,10 @@ declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
  * @see {dpos.reactions}
  */
 async function refreshElectionTime(context: ActionContext) {
+  if (context.state.contract === null) {
+    console.warn("DPoS contract not initialized yet")
+    return
+  }
   log("refreshElectionTime")
   const contract = context.state.contract!
   const time: BN = await contract.getTimeUntilElectionAsync()
@@ -161,12 +158,14 @@ async function refreshDelegations(context: ActionContext) {
     plasmaModule.getAddress(),
   )
 
-  state.delegations = response!.delegationsArray.map((item: IDelegation) => {
-    const d: Delegation = fromIDelegation(item, state.validators)
-    // add it to the corresponding validator so we avoid filtering downstream
-    d.validator.delegations.push(d)
-    return d
-  })
+  state.delegations = response!.delegationsArray
+    .filter((d) => d.index > 0)
+    .map((item: IDelegation) => {
+      const d: Delegation = fromIDelegation(item, state.validators)
+      // add it to the corresponding validator so we avoid filtering later
+      d.validator.delegations.push(d)
+      return d
+    })
 
   log("delegations", plasmaModule.getAddress().toString(), response)
   const rewards = response.delegationsArray
@@ -178,8 +177,7 @@ async function refreshDelegations(context: ActionContext) {
   state.loading.delegations = false
 }
 
-function requestDelegation(context: ActionContext, validator: ICandidate) {
-  const { state } = context
+function requestDelegation(state: DPOSState, validator: ICandidate) {
   state.intent = "delegate"
   state.delegation = fromIDelegation(
     {
@@ -198,26 +196,27 @@ function requestDelegation(context: ActionContext, validator: ICandidate) {
   // set state thqt triggers pop
 }
 
+function cancelRequest(state: DPOSState) {
+  state.intent = ""
+  state.delegation = null
+}
+
 /**
  * this should have been just a mutation but mutations
  * cannot access rootState...
  * @param state
  * @param d
  */
-function requestRedelegation(context: ActionContext, d: Delegation) {
-  const { state } = context
+function requestRedelegation(state: DPOSState, d: Delegation) {
   state.intent = "redelegate"
   // copy
   state.delegation = { ...d }
 }
-function requestUndelegation(context: ActionContext, d: Delegation) {
-  const { state } = context
+function requestUndelegation(state: DPOSState, d: Delegation) {
   state.intent = "undelegate"
   // copy
   state.delegation = { ...d }
 }
-
-// write/[the bc word for it]
 
 async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
@@ -234,7 +233,7 @@ async function delegate(context: ActionContext, delegation: Delegation) {
     delegation.validator.address,
     delegation.amount,
     delegation.lockTimeTier,
-    // referer
+    delegation.referrer,
   )
   // feedback.endTask()
 }
@@ -244,7 +243,7 @@ async function delegate(context: ActionContext, delegation: Delegation) {
  * @param context
  * @param delegation  where:
  *  - validator is the source validator
- *  - index is the delegation index in the source validator
+ *  - index is the source delegation index
  *  - updateValidator is the target validator
  *  - updateAmount is the amount to redelegate
  */
@@ -258,6 +257,9 @@ async function redelegate(context: ActionContext, delegation: Delegation) {
     delegation.index,
     // referer
   )
+  context.state.intent = ""
+  context.state.delegation = null
+
   // feedback.endTask()
 }
 
@@ -265,7 +267,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
   // feedback.setTask("consolidating")
   // feedback.setStep("consolidate delegations on <validator>")
   await context.state.contract!.consolidateDelegations(validator.address)
-  // feedback.done()
+  // feedback.endTask()
 }
 
 /**
@@ -283,8 +285,8 @@ async function undelegate(context: ActionContext, delegation: Delegation) {
     delegation.updateAmount,
     delegation.index,
   )
-  // feedback.inform("Funds successfuly undelegated, your account will be credited after the next election")
-  // feedback.inform("dpos.undelegate.success_credit_next")
+  // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
+  // feedback.alert("dpos.undelegate.success_credit_next")
 }
 
 /**
@@ -292,6 +294,20 @@ async function undelegate(context: ActionContext, delegation: Delegation) {
  * @param symbol
  */
 async function claimRewards(context: ActionContext) {
+  const contract = context.state.contract!
+  // limbo
+  const limboValidator = Address.fromString(
+    context.rootState.plasma.chainId + ":0x00000000000000000000000000000000",
+  )
+  const limboDelegations = await contract.checkDelegationAsync(
+    limboValidator,
+    contract.caller,
+  )
+  if (limboDelegations!.delegationsArray.length > 0) {
+    // feedback.setTask("claiming dpos 2 rewards")
+    await contract.unbondAsync(limboValidator, 0, 0)
+  }
+
   // feedback.setTask("dpos.claiming_rewards")
   return context.state.contract!.claimDelegatorRewardsAsync()
   // .then(() => feedback.endTask(), () => feedback.endTask())

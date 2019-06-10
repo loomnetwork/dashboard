@@ -117,7 +117,7 @@ export default class Layout extends Vue {
   get walletType() { return this.s.DPOS.walletType }
   get showSidebar() { return this.s.DPOS.showSidebar }
   get currentMetamaskAddress() { return this.s.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.s.DPOS.showLoadingSpinner }
+  get showLoadingSpinner() { return this.s.common.showLoadingSpinner }
   get showAlreadyMappedModal() { return this.s.DPOS.showAlreadyMappedModal }
   get showSignWalletModal() { return this.s.DPOS.showSignWalletModal }
   get mappingSuccess() { return this.s.DPOS.mappingSuccess }

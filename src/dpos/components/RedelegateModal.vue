@@ -39,10 +39,10 @@ import { Component } from "vue-property-decorator"
 import LoadingSpinner from "../../components/LoadingSpinner.vue"
 import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
 import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import { dposModule } from "@/dpos/store"
 import { Validator } from "@/dpos/store/types"
+import { CommonTypedStore } from "@/store/common"
 
 @Component({
   components: {
@@ -73,7 +73,7 @@ export default class RedelegateModal extends Vue {
     return this.state.dpos.delegation
   }
 
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   get state(): DashboardState {
     return this.$store.state

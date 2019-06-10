@@ -16,6 +16,7 @@ export interface EthereumConfig {
    * (ie. etherscan)
    */
   blockExplorer: string
+  etherScan: string
 }
 
 // Interface for application stores than include EthereumState

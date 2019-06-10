@@ -37,8 +37,8 @@ import { DashboardState, DposState } from "@/types"
 
 @Component
 export default class Account extends Vue {
-  etherScanUrl = `${this.dposState.currentChain.etherScan}/address/${this.ethAccount}`
-  blockExplorerUrl = `${this.dposState.currentChain.blockExplorer}`
+  etherScanUrl = `${this.state.ethereum.etherScan}/address/${this.ethAccount}`
+  blockExplorerUrl = `${this.state.ethereum.blockExplorer}/address/${this.dappchainAddress}/transactions`
 
   get state(): DashboardState {
     return this.$store.state
@@ -55,7 +55,6 @@ export default class Account extends Vue {
   get dappchainAddress() {
     return this.state.plasma.address
   }
-
 
 }
 </script>

@@ -56,7 +56,7 @@ export default class TransferAllCardsModal extends Vue {
 
   transferAllCardsHandler() {
     if (this.receiverAddress === "") {
-      this.setErrorMsg("message.receiver_addr_err_tx")
+      this.setErrorMsg(this.$t("messages.receiver_addr_err_tx").toString())
       return
     }
     const cardsToTransfer = this.cardsToTransfer.cards

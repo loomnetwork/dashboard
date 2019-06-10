@@ -209,7 +209,7 @@ import { DashboardState } from "../types"
 import { ethereumModule } from "../store/ethereum"
 import { plasmaModule } from "../store/plasma"
 import { dposModule } from "@/dpos/store"
-import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
+import ElectionTimer from "@/dpos/components/electionTimer.vue"
 
 const log = debug("mobileaccount")
 

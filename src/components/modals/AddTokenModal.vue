@@ -35,10 +35,7 @@ import TokenService from "@/services/TokenService";
 export default class AddTokenModal extends Vue {
     selectedToken: string = ""
     filteredSymbols: string[] = []
-    // token= false
-    tokenService = new TokenService()
-
-    @Prop(Array) tokenSymbol!: string[]
+    tokenSymbol: string[] = this.state.plasma.tokenService!.getAllTokenSymbol()
 
     get state(): DashboardState {
       return this.$store.state

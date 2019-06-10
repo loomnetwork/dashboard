@@ -46,6 +46,13 @@ class TokenService {
     const symbolList = this.symbols.map((token) => token.symbol)
     return symbolList
   }
+  /**
+   * Return token object
+   * @param coinSymbol 
+   */
+  getTokenbySymbol(coinSymbol: string) {
+    return this.symbols.find((token) => coinSymbol === token.symbol)
+  }
 }
 
 export default TokenService

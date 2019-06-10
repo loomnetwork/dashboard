@@ -19,9 +19,7 @@ import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
 const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
-
-import TOKENS from "@/data/topTokensSymbol.json"
-import { type } from 'os';
+import TokenService from "@/services/TokenService";
 
 import debug from "debug"
 const log = debug("dash.plasma")
@@ -54,10 +52,20 @@ export function plasmaReactions(store: Store<DashboardState>) {
       await resetERC20Contracts(store)
     },
   )
+  store.watch(
+    (s) => s.plasma.web3,
+    () => {
+      if (store.state.plasma.tokenService !== null) {
+        return
+      }
+      store.state.plasma.tokenService = new TokenService()
+      store.state.plasma.tokenService.init()
+    }
+  )
   store.subscribeAction(
     {async after(action){
       if(action.type === "plasma/transfer" || action.type === "plasma/addToken"){
-        console.log("in subscription",action);
+        console.log("in subscription ",action);
         await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
       }
     }}
@@ -72,24 +80,24 @@ async function resetLoomContract(store: Store<DashboardState>) {
   }
   const caller = await plasmaModule.getCallerAddress()
   const contract = await Coin.createAsync(state.client!, caller)
-  await Tokens.addContract("loom", PlasmaTokenKind.LOOMCOIN, contract)
-  state.coins.loom = {
+  await Tokens.addContract("LOOM", PlasmaTokenKind.LOOMCOIN, contract)
+  state.coins.LOOM = {
     balance: new BN("0"),
     loading: true,
   }
-  plasmaModule.refreshBalance("loom")
+  plasmaModule.refreshBalance("LOOM")
 }
 
 async function resetEthContract(store: Store<DashboardState>) {
   const state = store.state.plasma
   const caller = await plasmaModule.getCallerAddress()
   const contract = await EthCoin.createAsync(state.client!, caller)
-  await Tokens.addContract("eth", PlasmaTokenKind.ETH, contract)
-  state.coins.eth = {
+  await Tokens.addContract("ETH", PlasmaTokenKind.ETH, contract)
+  state.coins.ETH = {
     balance: new BN("0"),
     loading: true,
   }
-  plasmaModule.refreshBalance("eth")
+  plasmaModule.refreshBalance("ETH")
 }
 
 async function resetERC20Contracts(store: Store<DashboardState>) {}

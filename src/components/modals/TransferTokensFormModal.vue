@@ -92,7 +92,7 @@ export default class TransferTokensFormModal extends Vue {
 
   isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
-    console.log('isValidAddress', this.isValidAddress);
+
   }
 }
 </script>

@@ -9,7 +9,8 @@ import TOKENS from "@/data/topTokensSymbol.json"
 import BoosterPackJson from "@/contracts/BoosterPack.json"
 const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
 import debug from "debug"
-import { async } from 'rxjs/internal/scheduler/async';
+import { setNewTokenToLocalStorage } from "@/utils";
+import TokenService from "@/services/TokenService";
 
 import * as Mutations from "@/store/plasma/mutations"
 
@@ -129,9 +130,8 @@ class ERC20Adapter implements ContractAdapter {
   async transfer(to: string, amount: BN) {
     const caller = await plasmaModule.getCallerAddress() 
     let result = await this.contract.methods.transfer(to, amount.toString()).send({from: caller.local.toString()})
-    console.log("transferred.");
-    console.log("transferred result", result);
-    
+    console.log("transferred.")
+    console.log("transferred result", result)
     return result
   }
 }
@@ -147,28 +147,33 @@ export function addCoinState(state:PlasmaState, symbol:string) {
 
 export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   const state = context.state
-  const tokens = TOKENS.tokens.find(token => token.symbol === tokenSymbol)
+  const tokenService = state.tokenService!
+  const symbol = tokenSymbol.toUpperCase()
+  const tokens = tokenService.getTokenbySymbol(symbol)
   const web3 = state.web3!
-  const network = state.networkId
+  // const network = state.networkId // 'us1'
+  const network = 'plasma'
   if (tokens === undefined){
     throw new Error("Could not find token symbol "+ tokenSymbol)
   }
-  const address = tokens.address['stage']
-  const symbol = tokens.symbol
-  // plasmaModule.addCoinState(symbol)
-  state.coins[tokens.symbol] = {
-    decimals: tokens.decimal,
-    balance: new BN("0"),
-    loading: true,
-  }
-  state.coins = Object.assign({},state.coins)
-
-  let contract
-  try {
-    contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
-    await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
-  } catch (error) {
-    console.log("error ",error);
+  const address = tokenService.getTokenAddressBySymbol(symbol, network)
+  const isExist = Object.keys(state.coins).find((token) => token === symbol.toLowerCase())
+  if (!isExist) {
+    state.coins[tokens.symbol] = {
+      decimals: tokens.decimal,
+      balance: new BN("0"),
+      loading: true,
+    }
+    state.coins = Object.assign({},state.coins)
+    let contract
+    try {
+      contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
+      await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
+    } catch (error) {
+      console.log("error ",error)
+    }
+    setNewTokenToLocalStorage(symbol)
+    console.log("statecoins: ", state.coins);
   }
 }
 
@@ -182,15 +187,14 @@ export async function refreshBalance(
   tokenSymbol: string,
 ) {
   const adapter = getAdapter(tokenSymbol)
-  const caller = await plasmaModule.getCallerAddress()
   // caution make sure balanceState is always set befor calling refreshBalance
-  let balanceState = context.state.coins[tokenSymbol]
+  let balanceState = context.state.coins[tokenSymbol.toUpperCase()]
   try {
     const balance = await adapter.balanceOf(context.state.address)
     balanceState.balance = balance
   } catch (e){
     console.error("Could not refresh balance of " + tokenSymbol)
-    console.error(e);
+    console.error(e)
   }
 }
 

@@ -4,6 +4,7 @@ import { Client, LoomProvider } from "loom-js"
 import Web3 from "web3"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
+import TokenService from '@/services/TokenService';
 
 export interface PlasmaConfig {
   networkId: string
@@ -32,18 +33,19 @@ export interface PlasmaState extends PlasmaConfig {
   }
 
   coins: {
-    loom: BalanceInfo
+    LOOM: BalanceInfo
     [tokenSymbol: string]: BalanceInfo,
   }
-  selectedToken: string
+  selectedToken: string,
+  tokenService: TokenService | null,
 }
 
 export enum PlasmaTokenKind {
-  ETH = "eth",
+  ETH = "ETH",
   ERC20 = "erc20",
   ERC721 = "erc721",
   ERC721X = "erc721x",
-  LOOMCOIN = "loom",
+  LOOMCOIN = "LOOM",
 }
 
 export interface BalanceInfo {

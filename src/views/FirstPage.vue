@@ -70,8 +70,15 @@
 
           <b-card v-if="!isMetamaskInstalled()" class="metamask-suggest">
             <img id="metamask-mini-icon" src="../assets/metamask_logo.png">
-            <b-card-text class="text-inline"> Looks like you don't have <font id="orange">Metamask</font> with you </b-card-text>
-            <b-button variant="outline-primary" href="https://metamask.io/" style="float: right; margin-top: 5px"> Get one here! </b-button>
+            <b-card-text class="text-inline">
+              Looks like you don't have
+              <font id="orange">Metamask</font> with you
+            </b-card-text>
+            <b-button
+              variant="outline-primary"
+              href="https://metamask.io/"
+              style="float: right; margin-top: 5px"
+            >Get one here!</b-button>
           </b-card>
 
           <b-modal v-model="addressModalShow" hide-header hide-footer>
@@ -82,7 +89,6 @@
           </b-modal>
 
           <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"/>
-          
         </div>
       </main>
     </div>
@@ -168,11 +174,13 @@ export default class FirstPage extends Vue {
 
        For Opera Browser
        Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
-    */ 
+    */
+    // @ts-ignore
     if (typeof window.web3 == "undefined" || window.ethereum == "undefined") { // No injected web3 in browser
       return false
     } else { // Already have a injected web3 in browser
-      if (window.web3.currentProvider.isMetaMask || window.ethereum.isMetaMask) { 
+      // @ts-ignore
+      if (window.web3.currentProvider.isMetaMask || window.ethereum.isMetaMask) {
         return true
       } else {
         return false // No Metamask installed
@@ -333,11 +341,11 @@ export default class FirstPage extends Vue {
   position: relative;
   margin-top: 12px;
   .text-inline {
-      margin-left: 10px;
-      font-size: 1.25rem;
-      font-weight: 500;
-      line-height: 1.2;
-      display: inline;
+    margin-left: 10px;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    display: inline;
   }
 }
 
@@ -351,7 +359,7 @@ export default class FirstPage extends Vue {
   display: inline;
 }
 #orange {
-  color: #f29040
+  color: #f29040;
 }
 </style>
 <style>

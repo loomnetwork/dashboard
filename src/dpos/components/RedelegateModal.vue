@@ -42,6 +42,7 @@ import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdown
 import { DashboardState } from "@/types"
 import { dposModule } from "@/dpos/store"
 import { Validator } from "@/dpos/store/types"
+import { CommonTypedStore } from "@/store/common"
 
 @Component({
   components: {

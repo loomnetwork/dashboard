@@ -27,7 +27,7 @@ import { gatewayReactions } from "../../store/gateway/reactions"
 
 import AmountInput from "@/components/AmountInput.vue"
 import { plasmaWithdraw } from "../../store/gateway/plasma"
-import { setShowWithdrawProgress } from '../../store/gateway/mutations';
+import { setShowWithdrawProgress } from "../../store/gateway/mutations"
 
 @Component({
   components: {

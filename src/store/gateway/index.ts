@@ -17,10 +17,7 @@ const log = debug("dash.gateway")
 function initialState(): GatewayState {
   return {
     mapping: null,
-    withdrawalReceipts: {
-      eth: null,
-      loom: null,
-    },
+    withdrawalReceipts: null,
     pendingTransactions: [],
     showDepositForm: false,
     showDepositApproved: false,
@@ -53,7 +50,6 @@ export const gatewayModule = {
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
-  refreshPendingReceipt: builder.dispatch(PlasmaGateways.refreshPendingReceipt),
   pollReceipt: builder.dispatch(PlasmaGateways.pollReceipt),
 
   // mapper
@@ -68,6 +64,7 @@ export const gatewayModule = {
   setShowWithdrawProgress: builder.commit(mutations.setShowWithdrawProgress),
   setPendingTransactions: builder.commit(mutations.setPendingTransactions),
   clearPendingTransactions: builder.commit(mutations.clearPendingTransactions),
+  setWithdrawalReceipts: builder.commit(mutations.setWithdrawalReceipts),
   incrementWithdrawStateIdx: builder.commit(mutations.incrementWithdrawStateIdx),
   setWithdrawStateAsCompleted: builder.commit(mutations.setWithdrawStateAsCompleted),
 }

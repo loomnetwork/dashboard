@@ -18,8 +18,8 @@
             <b-col>
               <b-form-input
                 type="number"
-                :placeholder="'Max. ' + userBalance.mainnetBalance"
-                :max="userBalance.mainnetBalance"
+                :placeholder="'Max. ' + userBalance"
+                :max="userBalance"
                 :min="1"
                 v-model="transferAmount"
                 pattern="[1-9]\d*"
@@ -31,9 +31,10 @@
               <b-btn
                 variant="outline-primary"
                 @click="depositAll"
-              >{{ $t("transfer_all", {amount: userBalance.mainnetBalance}) }}</b-btn>
+              >{{ $t("transfer_all", {amount: userBalance}) }}</b-btn>
             </b-col>
           </b-row>
+          <amount-input :min="1" :max="100" v-model="depositAmount" />
         </b-container>
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
         <footer style="display:flex">
@@ -57,18 +58,26 @@
   </b-modal>
 </template>
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator"
+import { Vue, Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
-
-import { DPOSTypedStore } from "@/store/dpos-old"
-import { formatToCrypto } from "@/utils"
+import BN from "bn.js"
+import { formatToCrypto, parseToWei } from "@/utils"
 import { DashboardState } from "../../types"
 
-@Component
+import { gatewayModule } from "../../store/gateway"
+import AmountInput from "@/components/AmountInput.vue"
+
+@Component({
+  components: {
+    AmountInput,
+  },
+})
 export default class DepositForm extends Vue {
 
+  @Prop({required: true}) token!: string // prettier-ignore
+
   get userBalance() {
-    return DPOSTypedStore.state.userBalance
+    return parseInt(formatToCrypto(this.state.ethereum.coins[this.token].balance), 10)
   }
 
   get state(): DashboardState {
@@ -76,18 +85,19 @@ export default class DepositForm extends Vue {
   }
 
   get showDepositForm() {
-    return this.state.DPOS.showDepositForm
+    return this.state.gateway.showDepositForm
   }
 
-  setShowDepositForm = DPOSTypedStore.setShowDepositForm
-
-  approveDeposit = DPOSTypedStore.approveDeposit
+  setShowDepositForm = gatewayModule.setShowDepositForm
+  approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
   transferAmount: number | "" = ""
   amountErrors: string[] = []
 
   status: string = ""
+
+  depositAmount: number = 0
 
   get visible() {
     console.log("showDepositForm", this.showDepositForm)
@@ -108,7 +118,7 @@ export default class DepositForm extends Vue {
   }
 
   depositAll() {
-    this.transferAmount = Number.parseInt("" + this.userBalance.mainnetBalance, 10)
+    this.transferAmount = Number.parseInt("" + this.userBalance, 10)
   }
 
   validateAmount() {
@@ -118,9 +128,10 @@ export default class DepositForm extends Vue {
       return errors.push("Invalid amount")
     }
     const int = Number.parseInt("" + input, 10)
-    if (int !== input) errors.push("Only round amounts allowed")
+    // TODO: Add validation for decimal values
+    // if (int !== input) errors.push("Only round amounts allowed")
     if (int < 1) errors.push("At least 1 loom")
-    if (int > this.userBalance.mainnetBalance) errors.push("Not enough funds in your account")
+    if (int > this.userBalance) errors.push("Not enough funds in your account")
     this.amountErrors = errors
   }
 
@@ -131,7 +142,15 @@ export default class DepositForm extends Vue {
     bvModalEvt.preventDefault()
     this.status = "sending"
     try {
-      await this.approveDeposit("" + this.transferAmount)
+      const stringAmount = this.transferAmount.toString()
+      const weiAmount = parseToWei(stringAmount)
+      const payload = {
+        symbol: this.token,
+        weiAmount,
+      }
+      this.approveDeposit(payload).catch((err) => {
+        throw new Error(err)
+      })
       this.status = "sent"
     } catch (e) {
       this.status = "failed"

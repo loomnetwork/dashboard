@@ -1,20 +1,17 @@
-import BN from "bn.js"
-import { Provider } from "ethers/providers"
-import { HasPlasmaState } from "../plasma/types"
-import {
-  IDelegation,
-  IValidator,
-  ICandidate,
-  DPOS3,
-} from "loom-js/dist/contracts/dpos3"
-import { Address, LocalAddress } from "loom-js"
-import {
-  LocktimeTier,
-  DelegationState,
-  CandidateState,
-} from "loom-js/dist/proto/dposv3_pb"
+/**
+ * @module dashboard.dpos
+ */
+
+import { HasPlasmaState } from "@/store/plasma/types"
 import { ZERO } from "@/utils"
-import { setValidators } from "../dpos-old/mutations"
+import BN from "bn.js"
+import { Address, LocalAddress } from "loom-js"
+import { DPOS3, ICandidate, IValidator } from "loom-js/dist/contracts/dpos3"
+import {
+  CandidateState,
+  DelegationState,
+  LocktimeTier,
+} from "loom-js/dist/proto/dposv3_pb"
 
 // Interface for root stores that support EthereumState
 export interface HasDPOSState extends HasPlasmaState {

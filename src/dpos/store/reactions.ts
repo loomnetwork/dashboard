@@ -1,3 +1,7 @@
+/**
+ * @module dashboard.dpos
+ */
+
 import { HasDPOSState } from "./types"
 import { Store } from "vuex"
 import { dposModule } from "."
@@ -6,7 +10,7 @@ import { plasmaModule } from "@/store/plasma"
 import debug from "debug"
 import { DPOS3 } from "loom-js/dist/contracts"
 import { DashboardState } from "@/types"
-const log = debug("dpos")
+const log = debug("dash.dpos")
 //
 // After user dpos actions, refresh plasma balance and stakes:
 const DPOS_ACTIONS = [
@@ -43,8 +47,6 @@ export function dposReactions(store: Store<DashboardState>) {
     },
   })
 
-  setTimeout(() => dposModule.refreshElectionTime(), 1000)
-
   // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
   window.addEventListener("visibilitychange", () => {
     if (document.hidden) return
@@ -55,11 +57,16 @@ export function dposReactions(store: Store<DashboardState>) {
   })
 
   async function onClientReady() {
+    log("onClientReady")
+    if (scheduledElectionCall > 0) {
+      window.clearTimeout(scheduledElectionCall)
+    }
     await createContract(store)
-    dposModule.refreshElectionTime()
+    await dposModule.refreshElectionTime()
   }
 
   async function onAccountChange() {
+    log("onAccountChange")
     // recreate the contract with the right caller
     await createContract(store)
     refreshDPoSUserState()
@@ -92,6 +99,7 @@ export function dposReactions(store: Store<DashboardState>) {
 
 async function createContract(store: Store<DashboardState>) {
   const caller = await plasmaModule.getCallerAddress()
-  const client = store.state.plasma.client
+  const client = store.state.plasma.client!
   store.state.dpos.contract = await DPOS3.createAsync(client, caller)
+  log("dpos3 created")
 }

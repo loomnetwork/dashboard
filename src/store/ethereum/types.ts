@@ -1,27 +1,32 @@
 import BN from "bn.js"
-import { Provider, IpcProvider } from "ethers/providers"
 import { ethers } from "ethers"
 import { Observable } from "rxjs"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { GatewayState } from "../gateway/types"
-import {
-  provider,
-  HttpProvider,
-  WebsocketProvider,
-  Web3EthereumProvider,
-  CustomProvider,
-} from "web3-providers"
+import { provider } from "web3-providers"
+
+export interface EthereumConfig {
+  networkId: string
+  networkName: string
+  chainId: string
+  endpoint: string
+
+  /**
+   * url template for links to transactions in a blockexplorer
+   * (ie. etherscan)
+   */
+  blockExplorer: string
+}
 
 // Interface for application stores than include EthereumState
 export interface HasEthereumState {
   ethereum: EthereumState
-  gateway: GatewayState
 }
 
-export interface EthereumState {
+export interface EthereumState extends EthereumConfig {
   // not really state but...
   // see type provider in web3-provider
-  provider: provider
+  provider: provider | null
   address: string
   signer: ethers.Signer | null
   walletType: string
@@ -48,12 +53,6 @@ export interface EthereumState {
       loading: boolean,
     },
   }
-}
-
-export enum TokenSymbol {
-  ETH = "eth",
-  LOOM = "loom",
-  BNB = "bnb",
 }
 
 export interface WalletType {

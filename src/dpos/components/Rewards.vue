@@ -41,8 +41,8 @@ import { Component, Watch, Vue } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 
 import BN from "bn.js"
-import { dposModule } from "@/store/dpos"
-import { HasDPOSState } from "../../store/dpos/types"
+import { dposModule } from "@/dpos/store"
+import { HasDPOSState } from "@/dpos/store/types"
 
 @Component
 export default class Rewards extends Vue {
@@ -74,4 +74,3 @@ export default class Rewards extends Vue {
   }
 }
 </style>
-

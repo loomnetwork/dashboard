@@ -39,7 +39,8 @@ import {ethers} from "ethers"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../../types"
-import { DPOSTypedStore } from "../../store/dpos-old"
+import { gatewayModule } from '../../store/gateway';
+import { gatewayReactions } from '../../store/gateway/reactions';
 
 @Component
 export default class DepositApproved extends Vue {
@@ -51,14 +52,14 @@ export default class DepositApproved extends Vue {
   }
 
   get transaction() {
-    return this.state.DPOS.pendingTx
+    return this.state.gateway.pendingTransactions[0]
   }
   get showDepositApproved() {
-    return this.state.DPOS.showDepositApproved
+    return this.state.gateway.showDepositApproved
   }
 
-  setShowDepositApproved = DPOSTypedStore.setShowDepositApproved
-  executeDeposit = DPOSTypedStore.executeDeposit
+  setShowDepositApproved = gatewayModule.setShowDepositApproved
+  executeDeposit = gatewayModule.ethereumDeposit
 
   get visible() {
     console.log("showDepositApproved", this.showDepositApproved)
@@ -80,7 +81,10 @@ export default class DepositApproved extends Vue {
     this.status = "sending"
     e.preventDefault()
     try {
-      await this.executeDeposit()
+      const txObj = this.state.gateway.pendingTransactions[0]
+      this.executeDeposit(txObj.funds).catch((err) => {
+        throw Error(err)
+      })
       this.status = "sent"
     } catch (error) {
       console.log(error)

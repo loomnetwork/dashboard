@@ -10,7 +10,7 @@
       <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
       <h6>Amount: {{cardsToTransfer.amount}}</h6>
       Receiver Loom Address:
-      <b-input class="my-2" type="text" v-model="receiverAddress" placeholder="Loom Address"></b-input>
+      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
       <b-form-checkbox class="my-2"
         id="confirmCards"
         v-model="confirmCards"
@@ -18,7 +18,7 @@
         v-show="receiverAddress">        
         I confirm to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}} address.
       </b-form-checkbox>
-      <b-button class="my-2" type="button" @click="transferAllCardsHandler()" :disabled="!receiverAddress || !confirmCards" >Transfer All</b-button>
+      <b-button class="my-2" type="button" @click="transferAllCardsHandler()" :disabled="!receiverAddress || !confirmCards || !isValidAddress" >Transfer All</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -28,13 +28,19 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
+import InputAddress from "../InputAddress.vue"
 
-@Component
+@Component ({
+  components : {
+    InputAddress
+  }
+})
 export default class TransferAllCardsModal extends Vue {
   receiverAddress: string = ""
   transferCards = assetsModule.transferCards
   setErrorMsg = CommonTypedStore.setErrorMsg
   confirmCards = false
+  isValidAddress = false
 
   mounted() {
     this.receiverAddress = ""
@@ -50,7 +56,7 @@ export default class TransferAllCardsModal extends Vue {
 
   transferAllCardsHandler() {
     if (this.receiverAddress === "") {
-      this.setErrorMsg("Invalid receiver address")
+      this.setErrorMsg(this.$t("messages.receiver_addr_err_tx").toString())
       return
     }
     const cardsToTransfer = this.cardsToTransfer.cards
@@ -66,6 +72,11 @@ export default class TransferAllCardsModal extends Vue {
       receiver: this.receiverAddress,
     })
     this.$root.$emit("bv::hide::modal", "transfer-all-cards-modal")
+  }
+
+  isValidAddressFormat(isValid) {
+    this.isValidAddress = isValid
+    console.log(this.isValidAddress);
   }
 }
 </script>

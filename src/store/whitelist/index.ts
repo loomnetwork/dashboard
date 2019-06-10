@@ -1,6 +1,11 @@
-
 import { getStoreBuilder } from "vuex-typex"
-import { WhiteListState, HasWhiteListState, Tier, DeployerAddress, DeployerAddressResponse } from "@/store/whitelist/types"
+import {
+  WhiteListState,
+  HasWhiteListState,
+  Tier,
+  DeployerAddress,
+  DeployerAddressResponse,
+} from "@/store/whitelist/types"
 import * as mutations from "./mutations"
 import { WhiteListContext } from "./types"
 import { Address, LocalAddress } from "loom-js"
@@ -11,6 +16,7 @@ import { plasmaModule } from "../plasma"
 const log = debug("whitelist")
 import BN from "bn.js"
 import { CommonTypedStore } from "../common"
+import { i18n } from "../../i18n"
 
 const initialState: WhiteListState = {
   userDeployerWhitelist: null,
@@ -25,7 +31,10 @@ const initialState: WhiteListState = {
     },
   ],
 }
-const builder = getStoreBuilder<HasWhiteListState>().module("whiteList", initialState)
+const builder = getStoreBuilder<HasWhiteListState>().module(
+  "whiteList",
+  initialState,
+)
 const stateGetter = builder.state()
 
 export const whiteListModule = {
@@ -35,7 +44,9 @@ export const whiteListModule = {
 
   setUserDeployerWhitelist: builder.commit(mutations.setUserDeployerWhitelist),
   setUserDeployersAddress: builder.commit(mutations.setUserDeployersAddress),
-  setWhiteListContractAddress: builder.commit(mutations.setWhiteListContractAddress ),
+  setWhiteListContractAddress: builder.commit(
+    mutations.setWhiteListContractAddress,
+  ),
   createUserDeployerWhitelistAsync: builder.dispatch(
     createUserDeployerWhitelistAsync,
   ),
@@ -46,17 +57,19 @@ export const whiteListModule = {
 
 async function createUserDeployerWhitelistAsync(context: WhiteListContext) {
   const userDeployerWhitelist = await UserDeployerWhitelist.createAsync(
-    context.rootState.plasma.client,
+    context.rootState.plasma.client!,
     await plasmaModule.getCallerAddress(),
   )
   whiteListModule.setUserDeployerWhitelist(userDeployerWhitelist)
-  const contractAddress = await context.rootState.plasma.client.getContractAddressAsync("user-deployer-whitelist")
+  const contractAddress = await context.rootState.plasma.client!.getContractAddressAsync(
+    "user-deployer-whitelist",
+  )
   whiteListModule.setWhiteListContractAddress(contractAddress!)
 }
 
 async function addDeployerAsync(
   context: WhiteListContext,
-  payload: { deployer: string, tier: Tier },
+  payload: { deployer: string; tier: Tier },
 ) {
   const userDeployerWhitelist = context.state.userDeployerWhitelist
   const deployAddress = new Address(
@@ -67,17 +80,27 @@ async function addDeployerAsync(
     const contractAddress = context.state.whiteListContractAddress!.local.toString()
     const approvedResult = await plasmaModule.approve({
       symbol: "loom",
-      weiAmount: new BN(context.rootState.plasma.web3!.utils.toWei(payload.tier.fee.toString(), "ether"), 10),
-      to: contractAddress})
+      weiAmount: new BN(
+        context.rootState.plasma.web3!.utils.toWei(
+          payload.tier.fee.toString(),
+          "ether",
+        ),
+        10,
+      ),
+      to: contractAddress,
+    })
     log("approved", approvedResult)
   } catch (error) {
     let errorMessage = error.message
-    if (!error.message.includes("User denied message signature")) {
-      errorMessage = "User denied message signature"
-      console.log("Denided...............")
-
+    const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
+    if (!error.message.includes(userDeniedSignTx)) {
+      errorMessage = userDeniedSignTx
     }
-    CommonTypedStore.setErrorMsg(`Error Approving Transaction: ${errorMessage}`)
+    CommonTypedStore.setErrorMsg(
+      i18n
+        .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
+        .toString(),
+    )
     return
   }
 
@@ -87,9 +110,14 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
-    CommonTypedStore.setSuccessMsg("Add deployer address successful.")
+    await plasmaModule.refreshBalance("loom")
+    CommonTypedStore.setSuccessMsg(
+      i18n.t("messages.add_deployer_addr_success_tx").toString(),
+    )
   } catch (error) {
-    CommonTypedStore.setErrorMsg(`Error Adding a key: ${error.message}`)
+    CommonTypedStore.setErrorMsg(
+      i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
+    )
     return
   }
 }
@@ -102,18 +130,19 @@ async function getDeployersAsync(context: WhiteListContext) {
   let result
   let deployerAddresses
   try {
-    result = await userDeployerWhitelist!.getDeployersAsync(
-      loomAddress,
-    )
+    result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
     deployerAddresses = await whiteListModule.formatDeployersAddress(result)
   } catch (error) {
-      console.error(error)
-      deployerAddresses = []
+    console.error(error)
+    deployerAddresses = []
   }
   whiteListModule.setUserDeployersAddress(deployerAddresses)
 }
 
-function formatDeployersAddress(context: WhiteListContext, deployers: DeployerAddressResponse[]) {
+function formatDeployersAddress(
+  context: WhiteListContext,
+  deployers: DeployerAddressResponse[],
+) {
   const formattedDeployersAddress: DeployerAddress[] = []
   deployers.forEach((deployer) => {
     const deployerAddress = deployer.address
@@ -121,7 +150,10 @@ function formatDeployersAddress(context: WhiteListContext, deployers: DeployerAd
       address: deployerAddress,
       hex: deployerAddress.local.toString(),
       tier: deployer.tierId,
-      base64: Buffer.from(deployerAddress.local.toString().split("x")[1], "hex").toString("base64"),
+      base64: Buffer.from(
+        deployerAddress.local.toString().split("x")[1],
+        "hex",
+      ).toString("base64"),
       defaultFormat: "hex",
     })
   })

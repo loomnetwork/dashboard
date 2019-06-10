@@ -7,7 +7,6 @@ import Raven from "raven-js"
 import RavenVue from "raven-js/plugins/vue"
 import Vue from "vue"
 import { sync } from "vuex-router-sync"
-import * as Sentry from "@sentry/browser"
 import Progress from "vue-multiple-progress"
 
 import moment from "moment"
@@ -29,7 +28,11 @@ import "animate.css/animate.css"
 import { i18n } from "./i18n"
 import App from "./App.vue"
 import router from "./router"
-import store from "./store"
+import { store, dashboardStore } from "./store"
+
+import debug from "debug"
+
+debug.enable("dash*")
 
 durationFormatSetup(moment)
 
@@ -57,11 +60,7 @@ Vue.use(BootstrapVue)
 Vue.use(VueAwesomeSwiper, {})
 Vue.use(Autocomplete)
 Vue.use(Progress)
-FontAwesome.library.add(
-  BrandsFontAwesome,
-  SolidFontAwesome,
-  RegularFontAwesome,
-)
+FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)
 Vue.component("fa", FontAwesomeIcon)
 Vue.config.productionTip = false
 
@@ -85,24 +84,12 @@ export default new Vue({
   },
 }).$mount("#app")
 
-if (!debugMode) {
+// set available envs
+if (window.location.host === "dashboard.dappchains.com") {
   Raven.config("https://46e40f8393dc4d63833d13c06c9fe267@sentry.io/1279387")
     .addPlugin(RavenVue, Vue)
     .install()
 }
-
-// when an address is plasma
-// take the user to the account page
-store.watch(
-  (s) => s.plasma.address,
-  (address) => {
-    if (address !== "") {
-      router.push("account")
-    } else {
-      router.push("/")
-    }
-  },
-)
 // todo should store key/project elsewhere (vault?)
 // Sentry.init({
 //   dsn: debugMode ? null : 'https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913"',

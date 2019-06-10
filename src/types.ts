@@ -1,20 +1,30 @@
-import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
-import { Client, DPOSUserV3 } from "loom-js"
-import { HasGatewayState } from "./store/gateway/types"
-import { CommonState } from "./store/common/types"
-import { Contract } from "web3-eth-contract"
 import BN from "bn.js"
-import { HasDPOSState } from "./store/dpos/types"
-import { HasEthereumState } from "./store/ethereum/types"
-import { HasPlasmaState } from "./store/plasma/types"
+import { Client, DPOSUserV3 } from "loom-js"
+import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
+import { Contract } from "web3-eth-contract"
+import { CommonState } from "./store/common/types"
+import { HasDPOSState } from "@/dpos/store/types"
+import { EthereumConfig } from "./store/ethereum/types"
+import { HasGatewayState } from "./store/gateway/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
-import { HasWhiteListState } from "./store/whitelist/types";
+import { PlasmaConfig } from "./store/plasma/types"
+import { HasWhiteListState } from "./store/whitelist/types"
+
+export interface DashboardConfig {
+  name: string
+  coinDataUrl: string
+  plasma: PlasmaConfig
+  ethereum: EthereumConfig
+}
 
 export interface DashboardState
   extends HasGatewayState,
     HasDPOSState,
     HasWhiteListState,
     HasAssetsState {
+  env: string
+  envs: DashboardConfig[]
+
   // remove
   DPOS: DposState
   // DappChain: DappchainState
@@ -47,7 +57,6 @@ export interface DposState {
   walletType: any
   selectedAccount: any
   metamaskDisabled: boolean
-  showLoadingSpinner: boolean
   showSignWalletModal: boolean
   showAlreadyMappedModal: boolean
   mappingSuccess: boolean
@@ -106,7 +115,7 @@ export interface DposState {
 //   validators: any[]
 // }
 
-export interface DahboardEnvs {
+export interface DashboardEnvs {
   [netwotkId: string]: {
     dappchainEndpoint: string
     mainnetEndpoint: string

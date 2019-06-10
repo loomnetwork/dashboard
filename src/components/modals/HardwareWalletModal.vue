@@ -96,6 +96,7 @@ import { CommonTypedStore } from "@/store/common"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import Web3 from "web3"
+import { ethereumModule } from '../../store/ethereum';
 
 @Component({
   components: {
@@ -131,18 +132,16 @@ export default class HardwareWalletModal extends Vue {
   setErrorMsg = CommonTypedStore.setErrorMsg
   setSuccessMsg = CommonTypedStore.setSuccessMsg
 
-  setCurrentMetamaskAddress = DPOSTypedStore.setCurrentMetamaskAddress
-  setConnectedToMetamask = DPOSTypedStore.setConnectedToMetamask
-  setWeb3 = DPOSTypedStore.setWeb3
+  // @ts-ignore
+  setWeb3 = ethereumModule.setWeb3
   setSelectedAccount = DPOSTypedStore.setSelectedAccount
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setStatus = DPOSTypedStore.setStatus
   setSelectedLedgerPath = DPOSTypedStore.setSelectedLedgerPath
 
   checkMappingAccountStatus = DPOSTypedStore.checkMappingAccountStatus
   ensureIdentityMappingExists = DPOSTypedStore.ensureIdentityMappingExists
   init = DPOSTypedStore.init
-  registerWeb3 = DPOSTypedStore.registerWeb3
 
   get state(): DashboardState {
     return this.$store.state
@@ -206,7 +205,6 @@ export default class HardwareWalletModal extends Vue {
   async okHandler() {
     this.disableProgressBtn = true
     const selectedAddress = this.selectedAccount.account
-    this.setCurrentMetamaskAddress(selectedAddress)
 
     this.setSelectedLedgerPath(this.path)
     // @ts-ignore
@@ -216,9 +214,8 @@ export default class HardwareWalletModal extends Vue {
     const web3account = (await this.web3js!.eth.getAccounts())[0]
     console.assert(web3account === selectedAddress,
       `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
+    // @ts-ignore
     this.setWeb3(this.web3js!)
-    this.registerWeb3({ web3: this.web3js! })
-    this.setConnectedToMetamask(true)
     // @ts-ignore
     this.$refs.modalRef.hide()
     await this.checkMapping(selectedAddress)
@@ -275,7 +272,7 @@ export default class HardwareWalletModal extends Vue {
         this.hdWallet = await LedgerWallet()
       } catch (err) {
         this.setErrorMsg({
-          msg: "Can't connect to your wallet. Please try again.",
+          msg: this.$t("messages.select_path_err_tx").toString(),
           forever: false, report: true, cause: err,
         })
         console.error("Error in LedgerWallet:", err)
@@ -289,7 +286,7 @@ export default class HardwareWalletModal extends Vue {
       await this.hdWallet.init(path)
     } catch (err) {
       this.setErrorMsg({
-        msg: "Can't connect to your wallet. Please try again.", forever: false, report: true, cause: err,
+        msg: this.$t("messages.select_path_err_tx").toString(), forever: false, report: true, cause: err,
       })
       console.log("Error when trying to init hd wallet:", err)
       this.showLoadingSpinner = false
@@ -317,7 +314,7 @@ export default class HardwareWalletModal extends Vue {
 
     }).catch((err) => {
       this.setErrorMsg({
-        msg: "Error loading your wallet accounts. Please try again.", forever: false, report: true, cause: err,
+        msg: this.$t("messages.load_wallet_err_tx").toString(), forever: false, report: true, cause: err,
       })
       console.log("Error when trying to get accounts:", err)
       this.showLoadingSpinner = false
@@ -342,6 +339,7 @@ export default class HardwareWalletModal extends Vue {
       // @ts-ignore
       window.ledgerweb3 = web3js
       this.web3js = web3js
+      // @ts-ignore
       this.setWeb3(web3js)
     }
   }

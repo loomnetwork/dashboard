@@ -8,43 +8,49 @@
         <div class="content">
           <template v-if="isSmallDevice">
             <b-list-group>
-              <b-list-group-item 
-                v-for="validator in validators" :key="validator.address"
+              <b-list-group-item
+                v-for="validator in validators"
+                :key="validator.name"
                 :disabled="!!validator.isBootstrap"
                 @click="showValidatorDetail(validator)"
-                >
-                  <h6>{{validator.name}}</h6>
-                  <div class="fee"><label>Fee</label>{{validator.fee}}</div>
-                  <div class="stakes"><label>Stake</label><span>{{validator.totalStaked | tokenAmount}}</span></div>
-                  <div v-if="!isSmallDevice" class="status" :class="{'active': validator.Status === 'Active'}">{{validator.status}}</div>
-              </b-list-group-item>  
+              >
+                <h6>{{validator.name}}</h6>
+                <div class="fee">
+                  <label>Fee</label>
+                  {{validator.fees}}
+                </div>
+                <div class="stakes">
+                  <label>Stake</label>
+                  <span>{{validator.totalStaked | tokenAmount}}</span>
+                </div>
+                <div
+                  v-if="!isSmallDevice"
+                  class="status"
+                  :class="{'active': validator.Status === 'Active'}"
+                >{{validator.status}}</div>
+              </b-list-group-item>
             </b-list-group>
           </template>
           <template v-else>
-              <b-table
-                responsive
-                table-active="table-active"
-                tr-class="spacer"
-                :items="validators"
-                :fields="validatorFields"
-                :sort-desc="sortDesc"
-                @row-clicked="showValidatorDetail">
-                <template slot="delegationsTotal" slot-scope="data">
-                  {{data.item.totalStaked | tokenAmount}}
-                </template>
-                <template slot="active" slot-scope="data">
-                  {{data.item.active ? "Active" : ""}}
-                </template>
-              </b-table>
+            <b-table
+              responsive
+              table-active="table-active"
+              tr-class="spacer"
+              :items="validators"
+              :fields="validatorFields"
+              :sort-desc="false"
+              @row-clicked="showValidatorDetail"
+            >
+              <template
+                slot="delegationsTotal"
+                slot-scope="data"
+              >{{data.item.totalStaked | tokenAmount}}</template>
+              <template slot="active" slot-scope="data">{{data.item.active ? "Active" : ""}}</template>
+            </b-table>
           </template>
         </div>
       </div>
     </div>
-
-    <div class="container mb-5 column py-3 p-3 d-flex" v-else>            
-      <loading-spinner :showBackdrop="true"></loading-spinner>
-    </div>
-
   </main>
 </template>
 
@@ -52,11 +58,8 @@
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
-
-import { DPOSUser, CryptoUtils, LocalAddress } from "loom-js"
-import { DPOSTypedStore } from "../store/dpos-old"
-import { CommonTypedStore } from "../store/common"
-import { HasDPOSState } from "../store/dpos/types"
+import { CryptoUtils, LocalAddress } from "loom-js"
+import { HasDPOSState } from "@/dpos/store/types"
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -66,22 +69,18 @@ let seed = parseInt(localStorage.getItem("validatorListSeed") || "0", 10) || get
 localStorage.setItem("validatorListSeed", "" + seed)
 
 function random() {
-    const x = Math.sin(seed++) * 10000
-    return x - Math.floor(x)
+  const x = Math.sin(seed++) * 10000
+  return x - Math.floor(x)
 }
 
-@Component({
-  components: {
-    LoadingSpinner,
-  },
-})
+@Component
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
-      { key: "active", sortable: true, label: "Active" },
-      { key: "delegationsTotal", sortable: true, label: "Total Staked" },
-      { key: "fee", sortable: true, label: "Fee"  },
+  { key: "active", sortable: true, label: "Active" },
+  { key: "delegationsTotal", sortable: true, label: "Total Staked" },
+  { key: "fees", sortable: true, label: "Fee" },
   ]
 
   get state(): HasDPOSState {
@@ -96,12 +95,10 @@ export default class ValidatorList extends Vue {
     }).reverse()
   }
 
-  setErrorMsg = CommonTypedStore.setErrorMsg
-
   /**
    * adds class bootstrap node if is bootstrap
    */
-  validatorCssClass( item, type) {
+  validatorCssClass(item, type) {
     return item.isBoostrap ? ["boostrap-validator"] : []
   }
 
@@ -112,7 +109,6 @@ export default class ValidatorList extends Vue {
 </script>
 
 <style lang="scss">
-
 main.validators {
   // ther should be global class for page titles
   header > h1 {
@@ -131,7 +127,7 @@ main.validators {
     flex-wrap: wrap;
     align-items: baseline;
     > h6 {
-      flex: 1
+      flex: 1;
     }
     &.disabled {
       opacity: 0.5;
@@ -168,10 +164,9 @@ main.validators {
       flex: 50%;
       font-size: 0.8em;
       &.active {
-        color: green
+        color: green;
       }
     }
   }
 }
-
 </style>

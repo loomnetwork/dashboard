@@ -58,6 +58,8 @@ export async function loadMapping(context: ActionContext, address: string) {
       console.error("Failed to load mapping, response was " + e.message)
       // todo feedback.showError("mapper.errors.load")
     }
+  } finally {
+    mapper.removeAllListeners()
   }
 }
 
@@ -93,13 +95,11 @@ export async function createMapping(context: ActionContext) {
     )
     // feedback.showError("mapper.errors.create", e.message,{ethereum:ethAddress, plasma:plasmaId.address})
   } finally {
-    client.disconnect()
   }
 }
 
 function generateNewId(chainId = "default") {
   const privateKey = CryptoUtils.generatePrivateKey()
-  const privateKeyString = CryptoUtils.Uint8ArrayToB64(privateKey)
   const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
   const address = new Address(chainId, LocalAddress.fromPublicKey(publicKey))
   return { address, privateKey, publicKey }

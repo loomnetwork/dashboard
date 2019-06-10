@@ -83,6 +83,7 @@ import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"
+import { store } from "../store"
 
 @Component({
   components: {
@@ -108,7 +109,7 @@ export default class Layout extends Vue {
   get walletType() { return this.s.DPOS.walletType }
   get showSidebar() { return this.s.DPOS.showSidebar }
   get currentMetamaskAddress() { return this.s.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.s.DPOS.showLoadingSpinner }
+  get showLoadingSpinner() { return this.s.common.showLoadingSpinner }
   get showAlreadyMappedModal() { return this.s.DPOS.showAlreadyMappedModal }
   get showSignWalletModal() { return this.s.DPOS.showSignWalletModal }
   get mappingSuccess() { return this.s.DPOS.mappingSuccess }
@@ -195,8 +196,8 @@ export default class Layout extends Vue {
           return
         }
 
-        if (this.currentMetamaskAddress &&
-          this.currentMetamaskAddress !== accounts[0]) {
+        if (store.state.ethereum.address &&
+          store.state.ethereum.address !== accounts[0]) {
           localStorage.removeItem("lastWithdrawTime")
           this.metamaskChangeAlert = true
           // @ts-ignore

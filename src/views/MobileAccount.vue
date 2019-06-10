@@ -150,7 +150,7 @@
 
     <b-card title="Election Cycle" class="mb-4">
       <h6>Time left</h6>
-      <ElectionTimer/>
+      <election-timer/>
     </b-card>
 
     <rewards></rewards>

@@ -93,7 +93,6 @@ import { Delegation } from "@/store/dpos/types"
 })
 export default class ValidatorDetail extends Vue {
   isSmallDevice = window.innerWidth < 600
-  prohibitedNodes = DPOSTypedStore.state.prohibitedNodes
 
   hasDelegation = false
 

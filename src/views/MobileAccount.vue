@@ -250,30 +250,15 @@ export default class MobileAccount extends Vue {
   setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setShowDepositForm = DPOSTypedStore.setShowDepositForm
   setErrorMsg = CommonTypedStore.setErrorMsg
-  setWithdrewOn = DPOSTypedStore.setWithdrewOn
-  setWithdrewSignature = DPOSTypedStore.setWithdrewSignature
-  getWithdrewOn = DPOSTypedStore.getWithdrewOn
-
-  getPendingWithdrawalReceipt = DPOSTypedStore.getPendingWithdrawalReceipt
-  setWithdregetUnclaimedLoomTokenswSignature = DPOSTypedStore.getUnclaimedLoomTokens
-  getUnclaimedLoomTokens = DPOSTypedStore.getUnclaimedLoomTokens
-  reclaimDeposit = DPOSTypedStore.reclaimDeposit
-  withdrawAsync = DPOSTypedStore.withdrawAsync
-  withdrawCoinGatewayAsync = DPOSTypedStore.withdrawCoinGatewayAsync
-  switchDposUser = DPOSTypedStore.switchDposUser
 
   get web3() { return DPOSTypedStore.state.web3 }
   get dposUser() { return DPOSTypedStore.state.dposUser }
   get validators() { return DPOSTypedStore.state.validators }
   get gatewayBusy() { return DPOSTypedStore.state.gatewayBusy }
   get rewardsResults() { return DPOSTypedStore.state.rewardsResults }
-  get timeUntilElectionCycle() { return DPOSTypedStore.state.timeUntilElectionCycle }
-  get nextElectionTime() { return DPOSTypedStore.state.nextElectionTime }
   get delegations() { return DPOSTypedStore.state.delegations }
   get states() { return DPOSTypedStore.state.states }
-  get currentMetamaskAddress() { return DPOSTypedStore.state.currentMetamaskAddress }
   get pendingTx() { return DPOSTypedStore.state.pendingTx }
-  get withdrewSignature() { return DPOSTypedStore.state.withdrewSignature }
 
   get formatedDelegations() {
     const candidates = this.validators

@@ -19,7 +19,7 @@
         <h6 class="highlight">{{dappchainAddress | loomAddress}}</h6>
       </b-col>
       <b-col cols="3">
-        <a :href="blockExplorerUrl" target="_blank">
+        <a :href="loomScanUrl" target="_blank">
           Show in Block Explorer
           <fa icon="external-link-alt"/>
         </a>
@@ -37,8 +37,8 @@ import { DashboardState, DposState } from "@/types"
 
 @Component
 export default class Account extends Vue {
-  etherScanUrl = `${this.state.ethereum.etherScan}/address/${this.ethAccount}`
-  blockExplorerUrl = `${this.state.ethereum.blockExplorer}/address/${this.dappchainAddress}/transactions`
+  etherScanUrl = `${this.state.ethereum.blockExplorer}/address/${this.ethAccount}`
+  loomScanUrl = `${this.state.plasma.blockExplorer}/address/${this.dappchainAddress}/transactions`
 
   get state(): DashboardState {
     return this.$store.state

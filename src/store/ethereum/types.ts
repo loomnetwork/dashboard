@@ -10,13 +10,7 @@ export interface EthereumConfig {
   networkName: string
   chainId: string
   endpoint: string
-
-  /**
-   * url template for links to transactions in a blockexplorer
-   * (ie. etherscan)
-   */
   blockExplorer: string
-  etherScan: string
 }
 
 // Interface for application stores than include EthereumState

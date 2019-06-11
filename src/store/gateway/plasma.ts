@@ -169,12 +169,12 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     receipt = await gateway.withdrawalReceipt()
     next()
   } catch (error) {
-    console.error("Elvis has left the building", error)
+    console.error(error)
     return
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
-    gatewayModule.set(receipt)
+    gatewayModule.setWithdrawalReceipts(receipt)
     // tell user ongoing withdraw
     // CommonTypedStore.setErrorMsg("gateway.error.existing_receipt")
     return
@@ -183,7 +183,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     await gateway.withdraw(funds.weiAmount)
     next()
     receipt = await gatewayModule.pollReceipt(funds.symbol)
-    gatewayModule.set(receipt)
+    gatewayModule.setWithdrawalReceipts(receipt)
     next()
   } catch (error) {
     console.error(error)

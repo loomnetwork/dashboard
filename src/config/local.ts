@@ -4,6 +4,7 @@ export default {
     networkId: "default",
     chainId: "default",
     endpoint: "ws://localhost:46658",
+    blockExplorer: "",
   },
   ethereum: {
     networkId: "default",

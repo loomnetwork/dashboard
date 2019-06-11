@@ -6,13 +6,13 @@
         <b-form-radio v-model="selected" name="eth-button" value="ethereum">
           <div class="token-option">
             <p>Ethereum</p>
-            <p>IMG</p>
+            <img src="../../assets/ethereum_logo.png" class="logo" alt="">
           </div>
         </b-form-radio>
         <b-form-radio v-model="selected" name="bnb-button" value="binance">
           <div class="token-option">
             <p>Binance</p>
-            <p>IMG</p>
+            <img src="../../assets/binance_logo.png" class="logo" alt="">
           </div>
         </b-form-radio>
       </div>
@@ -35,7 +35,7 @@ export default class SelectTokenModal extends Vue {
   selected: string = "ethereum"
 
   get title() {
-    return capitalize(this.type)
+    return capitalize(this.type.toLowerCase())
   }
   onNext() {
     this.$emit("selectedToken", {
@@ -48,6 +48,9 @@ export default class SelectTokenModal extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  width: 50px;
+}
 .button-group {
   display: flex;
   flex-direction: row;

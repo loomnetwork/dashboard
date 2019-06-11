@@ -3,7 +3,7 @@
     <!-- <template slot="modal-title">Deposit</template> -->
     <div class="deposit-container">
       <h3>Deposit to Plasmachain from Binance</h3>
-      <span class="step">Step {{ step }} of 2</span>
+      <span class="step" v-if="!isProcessTransaction">Step {{ step }} of 2</span>
       <div class="content" v-if="step === 1">
         <div class="description">Please go to <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form</div>
         <div class="deposit-form">
@@ -19,21 +19,28 @@
           <b-form-input placeholder="Amount"></b-form-input>
           <p>Memo</p>
           <b-form-textarea rows="3" placeholder="Memo text"></b-form-textarea>
+          <div class="space-between">
+            <p>Fee: 0.00000 BNB</p>
+            <p>Available: 0.0000000</p>
+          </div>
         </div>
       </div>
-      <div class="content" v-else-if="step === 2">
+      <div class="content to-left mb-3" v-else-if="step === 2">
         <p>Transaction hash from</p>
-        <p>Link</p>
+        <a href="https://testnet.binance.org/en/transactionHistory">https://testnet.binance.org/en/transactionHistory</a>
         <b-form-input v-model="txHash" placeholder="txHash"></b-form-input>
       </div>
       <div class="content" v-else-if="step === 3">
-        <p>While fetching event from transaction hash</p>
+        <img src="../../assets/loomy-running.gif" class="loomy_running" alt="">
+        <h4>Please be patient, Loomy is on it!</h4>
+        <h4 style="color: #919598;">This may take several minutes.</h4>
+        <h4 style="color: #e11f61;">Please don't close or refresh your browser!</h4>
       </div>
       <div class="content" v-else-if="step === 4">
         <p>transaction Complete</p>
       </div>
     </div>
-    <div slot="modal-footer" class="w-100 footer-button" :class="{ hide: isProcessTransaction }">
+    <div slot="modal-footer" class="w-100 space-between" :class="{ hide: isProcessTransaction }">
       <b-button @click="onBack">{{ backButtonText }}</b-button>
       <b-button variant="primary" @click="onNext">Next</b-button>
     </div>
@@ -68,7 +75,7 @@ export default class DepositBinance extends Vue {
       this.isProcessTransaction = true
       setTimeout(() => {
         this.step += 1
-      }, 2000)
+      }, 5000)
     }
   }
 }
@@ -82,9 +89,26 @@ h3 {
   text-align: center;
 }
 
+h4 {
+  color: #4d4ccd;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
 p {
   color: gray;
   margin: 16px 0 4px 4px;
+}
+
+.to-left {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.loomy_running {
+  width: 30%;
+  margin: 18px;
 }
 
 .deposit-form {
@@ -121,7 +145,7 @@ p {
   flex-direction: column;
   align-items: center;
 }
-.footer-button {
+.space-between {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

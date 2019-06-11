@@ -117,7 +117,7 @@ export default class AddKey extends Vue {
   }
 
   get loomBalance() {
-    const loomBalanceBN = plasmaModule.state.coins.loom.balance
+    const loomBalanceBN = plasmaModule.state.coins.LOOM.balance
     return formatTokenAmount(loomBalanceBN)
   }
 

@@ -92,7 +92,7 @@ export function dposReactions(store: Store<DashboardState>) {
 
   function refreshDPoSUserState() {
     log("refreshDPoSUserState")
-    plasmaModule.refreshBalance("loom")
+    plasmaModule.refreshBalance("LOOM")
     dposModule.refreshDelegations()
   }
 }

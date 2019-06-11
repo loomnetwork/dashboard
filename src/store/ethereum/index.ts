@@ -41,21 +41,21 @@ const initialState: EthereumState = {
   walletType: "",
   erc20Addresses: {
     // us1
-    loom: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
+    LOOM: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
     bnb: "",
     usdc: "",
   },
   balances: {
-    eth: ZERO,
-    loom: ZERO,
+    ETH: ZERO,
+    LOOM: ZERO,
   },
-  loom: {
+  LOOM: {
     contract: null,
     balance: ZERO,
     address: "",
   },
   coins: {
-    loom: {
+    LOOM: {
       balance: ZERO,
       loading: true,
     },

@@ -18,8 +18,8 @@ function initialState(): GatewayState {
   return {
     mapping: null,
     withdrawalReceipts: {
-      eth: null,
-      loom: null,
+      ETH: null,
+      LOOM: null,
     },
     pendingTransactions: [],
     showDepositForm: false,

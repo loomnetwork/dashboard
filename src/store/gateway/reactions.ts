@@ -46,8 +46,8 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // Initialize Ethereum gateways & coin contracts
       await EthereumGateways.init(ethereumModule.web3)
       const ethGateway = EthereumGateways.service()
-      ethGateway.add("loom", store.state.ethereum.erc20Addresses.loom)
-      ethGateway.add("eth", "") // Ether does not have a contract address
+      ethGateway.add("LOOM", store.state.ethereum.erc20Addresses.loom)
+      ethGateway.add("ETH", "") // Ether does not have a contract address
       EthereumGateways.init(ethereumModule.web3)
       PlasmaGateways.init(
         plasmaModule.state.client!,
@@ -65,21 +65,21 @@ export function gatewayReactions(store: Store<DashboardState>) {
         `${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`,
       )
       const plasmaGateway = PlasmaGateways.service()
-      plasmaGateway.add("loom", loomGatewayAddr)
-      plasmaGateway.add("eth", ethGatewayAddr)
+      plasmaGateway.add("LOOM", loomGatewayAddr)
+      plasmaGateway.add("ETH", ethGatewayAddr)
 
       // Listen to approval & deposit events
       listenToDepositApproval(
         ethereumModule.state.address,
         ethGateway.loomGateway,
-        ethereumModule.getERC20("loom")!,
+        ethereumModule.getERC20("LOOM")!,
         store,
       )
 
       listenToDeposit(
         ethereumModule.state.address,
         ethGateway.loomGateway,
-        ethereumModule.getERC20("loom")!,
+        ethereumModule.getERC20("LOOM")!,
         store,
       )
     },

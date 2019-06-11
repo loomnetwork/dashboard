@@ -32,19 +32,19 @@ export interface EthereumState extends EthereumConfig {
   walletType: string
   // config: erc20 contracts addresses
   erc20Addresses: {
-    loom: string
+    LOOM: string
     [erc20Symbol: string]: string,
   }
   balances: {
     [erc20Symbol: string]: BN,
   }
-  loom: {
+  LOOM: {
     contract: ERC20 | null
     balance: BN
     address: string,
   }
   coins: {
-    loom: {
+    LOOM: {
       balance: BN
       loading: boolean,
     }
@@ -80,6 +80,6 @@ export interface MultiAccountWallet {
 export interface AccountInfo {
   address: string
   identicon: any
-  eth?: number
-  loom?: number
+  ETH?: number
+  LOOM?: number
 }

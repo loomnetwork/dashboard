@@ -169,8 +169,3 @@ async function getPublicAddressFromPrivateKeyUint8Array(
   ).toString()
   return publicAddress
 }
-
-
-function getTokenService(){
-  TokenService.init()
-}

@@ -77,7 +77,6 @@ export default class DepositWithdraw extends Vue {
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   selectedToken = "loom"
-  tokenService = new TokenService()
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
@@ -134,39 +133,6 @@ export default class DepositWithdraw extends Vue {
 
   requestAddToken() {
     this.$root.$emit("bv::show::modal", "add-token-modal")
-  }
-
-  async created() {
-    await this.tokenService.init()
-  }
-
-  async ready() {
-    // const tokenDetail = await Promise.all([this.getTokensDetails()])
-    // const [allToken] = tokenDetail
-    // const ethBalance = parseFloat(this.dappchainBalance.ETH * Math.pow(10, 18)).toFixed(2) // Eth plasma
-    // const ethToken = {
-    //   filename: "Ethereum",
-    //   name: "ETH",
-    //   decimal: 18,
-    //   symbol: "ETH",
-    //   address: user.ethAddress, // set ethAddress to wallet
-    //   balance: ethBalance,
-    // }
-    // this.tokens = [...allToken]
-    // const tokensSymbol = this.tokens
-    //   .map((token) => this.updateCurrentToken({symbol: token.symbol}))
-
-    // this.balance = await this.getBalance("ETH")
-    // await Promise.all(tokensSymbol.slice(0, 20))
-    // await Promise.all(tokensSymbol.slice(20, 40))
-    // await Promise.all(tokensSymbol.slice(40, 60))
-    // await Promise.all(tokensSymbol.slice(60, 80))
-    // await Promise.all(tokensSymbol.slice(80))
-    // this.tokens = this.tokens.map((token) => {
-    //   if (!this.dappchainBalance[token.symbol]) return
-    //   return {...token, balance: this.dappchainBalance[token.symbol]}
-    // })
-    // this.filteredToken = this.tokens
   }
 
 }

@@ -133,10 +133,10 @@ class PlasmaGateways {
     let adapter: PlasmaGatewayAdapter
     switch (token) {
       case "LOOM":
-        adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway)
+        adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway, this.mapping)
         break
       case "ETH":
-        adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway)
+        adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway, this.mapping)
         break
       // case "tron":
 

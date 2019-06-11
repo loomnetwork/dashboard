@@ -19,8 +19,8 @@ import { getTokenSymbolFromAddress } from "@/utils"
 import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { EventLog } from "web3-core"
 import { from } from "rxjs"
-import { state } from '../common';
-import { setWithdrawalReceipts } from './mutations';
+import { state } from "../common"
+import { setWithdrawalReceipts } from "./mutations"
 
 const log = debug("dash.gateway")
 
@@ -47,11 +47,11 @@ export function gatewayReactions(store: Store<DashboardState>) {
       await setPlasmaAccount(mapping)
       // Initialize Ethereum gateways & coin contracts
       await EthereumGateways.init(ethereumModule.web3)
-      const ethereumGatewayService = EthereumGateways.service()
-      ethereumGatewayService.add("loom", store.state.ethereum.erc20Addresses.loom)
-      ethereumGatewayService.add("eth", "") // Ether does not have a contract address
-
-      await PlasmaGateways.init(
+      const ethGateway = EthereumGateways.service()
+      ethGateway.add("LOOM", store.state.ethereum.erc20Addresses.loom)
+      ethGateway.add("ETH", "") // Ether does not have a contract address
+      EthereumGateways.init(ethereumModule.web3)
+      PlasmaGateways.init(
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
@@ -67,21 +67,21 @@ export function gatewayReactions(store: Store<DashboardState>) {
         `eth:${ethereumGatewayService.mainGateway._address}`,
       )
       const plasmaGatewayService = PlasmaGateways.service()
-      plasmaGatewayService.add("loom", loomGatewayAddr)
-      plasmaGatewayService.add("eth", ethGatewayAddr)
+      plasmaGatewayService.add("LOOM", loomGatewayAddr)
+      plasmaGatewayService.add("ETH", ethGatewayAddr)
 
       // Listen to approval & deposit events
       listenToDepositApproval(
         ethereumModule.state.address,
-        ethereumGatewayService.loomGateway,
-        ethereumModule.getERC20("loom")!,
+        ethGateway.loomGateway,
+        ethereumModule.getERC20("LOOM")!,
         store,
       )
 
       listenToDeposit(
         ethereumModule.state.address,
-        ethereumGatewayService.loomGateway,
-        ethereumModule.getERC20("loom")!,
+        ethGateway.loomGateway,
+        ethereumModule.getERC20("LOOM")!,
         store,
       )
 

@@ -33,18 +33,19 @@ export interface PlasmaState extends PlasmaConfig {
   }
 
   coins: {
-    loom: BalanceInfo
+    LOOM: BalanceInfo
     [tokenSymbol: string]: BalanceInfo,
   }
-  selectedToken: string
+  selectedToken: string,
+
 }
 
 export enum PlasmaTokenKind {
-  ETH = "eth",
+  ETH = "ETH",
   ERC20 = "erc20",
   ERC721 = "erc721",
   ERC721X = "erc721x",
-  LOOMCOIN = "loom",
+  LOOMCOIN = "LOOM",
 }
 
 export interface BalanceInfo {

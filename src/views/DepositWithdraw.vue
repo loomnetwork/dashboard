@@ -4,21 +4,17 @@
       <h1>Wallet</h1>
       <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
-    <add-token-modal @refreshTokenList="filterTokens"/>
-    <DepositForm/>
     <b-alert :show="showHelp">
       These are your token balances on plasma chain...etc
       <br>(use $t with the key to some help text.)
     </b-alert>
     <b-card class="balances" no-body>
-      <b-card-body v-if="filteredSymbols.length > 7">
+      <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
         <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
           <label class="symbol">{{symbol}}</label>
-          <!-- BNB: {{plasmaBalance}} -->
           <span class="balance">{{plasma.coins[symbol].balance | tokenAmount}}</span>
           <b-button-group class="actions">
             <b-button
@@ -41,6 +37,8 @@
       <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
       {{plasmaBalance}}-->
     </b-card>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
+    <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
   </main>
@@ -63,6 +61,7 @@ import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 
 import tokenService from "@/services/TokenService"
+import { getWalletFromLocalStorage } from '../utils';
 
 @Component({
   components: {
@@ -76,11 +75,13 @@ export default class DepositWithdraw extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
-  selectedToken = "loom"
+
+  selectedToken = "LOOM"
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
+  coins = this.plasma.coins
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
@@ -93,11 +94,11 @@ export default class DepositWithdraw extends Vue {
     return this.state.plasma
   }
 
-  get plasmaBalance(): BN {
-    return (this.state.plasma.coins["bnb"] || {}).balance
-  }
-
-  mounted() {
+  async mounted() {
+    const tokenSymbols = getWalletFromLocalStorage().map(symbol => symbol)
+    tokenSymbols.forEach((symbol) => {
+      plasmaModule.addToken(symbol)
+    })
     this.filterTokens()
   }
 
@@ -107,13 +108,13 @@ export default class DepositWithdraw extends Vue {
 
   @Watch("inputFilter")
   filterTokens() {
-    const filter = this.inputFilter.toLowerCase()
-    const coins = this.state.plasma.coins
+    const filter = this.inputFilter.toUpperCase()
+    const tokenSymbols = Object.keys(this.plasma.coins)
     // return token if :
     // - no filter and symbol is in the state,
     // - symbol matches filter  and symbol is in the state,
-    this.filteredSymbols = Object.keys(coins)
-      .filter((symbol) => (filter === "" || symbol.includes(filter)) && symbol in coins)
+    this.filteredSymbols = tokenSymbols
+      .filter((symbol) => (filter === "" || symbol.includes(filter)))
   }
 
   requestDeposit(token: string) {

@@ -224,7 +224,7 @@ async function delegate(context: ActionContext, delegation: Delegation) {
 
   // feedback.setTask("delegating x loom to {validatror.name}")
   await plasmaModule.approve({
-    symbol: "loom",
+    symbol: "LOOM",
     weiAmount: delegation.amount,
     to: contract.address.local.toString(),
   })

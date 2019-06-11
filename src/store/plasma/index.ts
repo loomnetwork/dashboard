@@ -10,6 +10,7 @@ import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 
 import * as mutations from "./mutations"
+import TokenService from "@/services/TokenService";
 
 import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
 
@@ -41,11 +42,11 @@ const initialState: PlasmaState = {
     address: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
   },
   coins: {
-    loom: {
+    LOOM: {
       balance: new BN("0"),
       loading: false,
     },
-    eth: {
+    ETH: {
       balance: new BN("0"),
       loading: false,
     },
@@ -84,10 +85,10 @@ export const plasmaModule = {
   addCoinState: builder.commit(Tokens.addCoinState),
 
   // Assets
-
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,
   ),
+
 }
 
 function setConfig(state: PlasmaState, config: PlasmaConfig) {

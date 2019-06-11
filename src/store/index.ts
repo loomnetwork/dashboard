@@ -37,6 +37,7 @@ const dashboardStore = {
     state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
+    log("tokensService",env.coinDataUrl)
     tokensService.setBaseURL(env.coinDataUrl)
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {

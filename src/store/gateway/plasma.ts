@@ -25,7 +25,7 @@ interface PlasmaGatewayAdapter {
 }
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
-  token = "loom"
+  token = "LOOM"
 
   constructor(
     private contract: LoomCoinTransferGateway,
@@ -47,7 +47,7 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
 }
 
 class EthGatewayAdapter implements PlasmaGatewayAdapter {
-  token = "eth"
+  token = "ETH"
 
   constructor(
     public contract: TransferGateway,
@@ -132,10 +132,10 @@ class PlasmaGateways {
   add(token: string, srcChainGateway: Address) {
     let adapter: PlasmaGatewayAdapter
     switch (token) {
-      case "loom":
+      case "LOOM":
         adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway, this.mapping)
         break
-      case "eth":
+      case "ETH":
         adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway, this.mapping)
         break
       // case "tron":

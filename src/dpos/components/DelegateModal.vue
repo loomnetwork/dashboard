@@ -144,7 +144,7 @@ export default class DelegateModal extends Vue {
    * @returns LOOM balance (not wei)
    */
   get balance(): number {
-    const wei = this.state.plasma.coins.loom.balance
+    const wei = this.state.plasma.coins.LOOM.balance
     return wei.div(MULTIPLIER).toNumber()
   }
 
@@ -163,7 +163,7 @@ export default class DelegateModal extends Vue {
   get isAmountValid() {
     const d = this.delegation!
 
-    return d.amount.gt(ZERO) && d.amount.lte(this.state.plasma.coins.loom.balance)
+    return d.amount.gt(ZERO) && d.amount.lte(this.state.plasma.coins.LOOM.balance)
   }
 
   cancel() {

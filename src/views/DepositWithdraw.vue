@@ -21,26 +21,26 @@
           <!-- BNB: {{plasmaBalance}} -->
           <span class="balance">{{plasma.coins[symbol].balance | tokenAmount}}</span>
           <b-button-group class="actions">
-            <b-button
-              class="button"
-              variant="outline-primary"
-              @click="showSelectTokenModal(`deposit`)"
-            >Deposit</b-button>
             <!-- <b-button
               class="button"
               variant="outline-primary"
-              @click="requestDeposit(symbol)"
+              @click="showSelectTokenModal(DEPOSIT, symbol)"
             >Deposit</b-button> -->
+            <!-- <b-button
+              class="button"
+              variant="outline-primary"
+              @click="showSelectTokenModal(WITHDRAW, symbol)"
+            >Withdraw</b-button> -->
+            <b-button
+              class="button"
+              variant="outline-primary"
+              @click="requestDeposit(symbol)"
+            >Deposit</b-button>
             <b-button
               class="button"
               variant="outline-primary"
               @click="requestWithdraw(symbol)"
             >Withdraw</b-button>
-            <!-- <b-button
-              class="button"
-              variant="outline-primary"
-              @click="showSelectTokenModal(`withdraw`)"
-            >Withdraw</b-button> -->
             <b-button class="button" variant="outline-primary" @click="requestSwap(symbol)">Swap</b-button>
           </b-button-group>
         </b-list-group-item>
@@ -86,11 +86,11 @@ import tokenService from "@/services/TokenService"
   },
 })
 export default class DepositWithdraw extends Vue {
-
+  DEPOSIT = "DEPOSIT"
+  WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   selectedToken = "loom"
-  tokenService = new TokenService()
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
@@ -133,14 +133,14 @@ export default class DepositWithdraw extends Vue {
 
   onSelectedToken(payload) {
     switch (payload.type) {
-      case "deposit":
+      case this.DEPOSIT:
         if (payload.token === "ethereum") {
           // request deposit modal
         } else if (payload.token === "binance") {
           // request deposit binance modal
         }
         break
-      case "withdraw":
+      case this.WITHDRAW:
         if (payload.token === "ethereum") {
           // request deposit modal
         } else if (payload.token === "binance") {
@@ -173,10 +173,6 @@ export default class DepositWithdraw extends Vue {
 
   requestAddToken() {
     this.$root.$emit("bv::show::modal", "add-token-modal")
-  }
-
-  async created() {
-    await this.tokenService.init()
   }
 
   async ready() {

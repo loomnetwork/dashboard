@@ -12,7 +12,7 @@ const log = debug("feedback")
 const initialState: FeedbackState = {
   notification: {
     type: "info",
-    message: "aaa",
+    message: "",
   },
   task: "",
   steps: [],

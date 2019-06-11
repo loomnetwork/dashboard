@@ -3,8 +3,10 @@
 </template>
 <script lang="ts">
 import Vue from "vue"
+import { Component } from "vue-property-decorator"
 import { feedbackModule } from "@/feedback/store"
 
+@Component
 export default class FeedbackNotification extends Vue {
   get message() {
     return this.$store.state.feedback.notification.message

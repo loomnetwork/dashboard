@@ -19,6 +19,8 @@ import { getTokenSymbolFromAddress } from "@/utils"
 import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { EventLog } from "web3-core"
 import { from } from "rxjs"
+import { state } from '../common';
+import { setWithdrawalReceipts } from './mutations';
 
 const log = debug("dash.gateway")
 
@@ -57,12 +59,12 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
       const loomGatewayAddr = Address.fromString(
         // @ts-ignore
-        `${store.state.plasma.chainId}:${ethGateway.loomGateway.address}`,
+        `eth:${ethereumGatewayService.loomGateway._address}`,
       )
       // @ts-ignore
       const ethGatewayAddr = Address.fromString(
         // @ts-ignore
-        `${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`,
+        `eth:${ethereumGatewayService.mainGateway._address}`,
       )
       const plasmaGateway = PlasmaGateways.service()
       plasmaGateway.add("LOOM", loomGatewayAddr)
@@ -82,10 +84,17 @@ export function gatewayReactions(store: Store<DashboardState>) {
         ethereumModule.getERC20("LOOM")!,
         store,
       )
+
+      // ==================================
+      // ====== Check for receipt
+      // ==================================
+      const receipt = await plasmaGatewayService.get("loom").withdrawalReceipt()
+      // TODO: Add support for multiple tokens
+      gatewayModule.setWithdrawalReceipts(receipt)
     },
   )
 
-  function setPlasmaAccount(mapping: IAddressMapping | null) {
+  async function setPlasmaAccount(mapping: IAddressMapping | null) {
     console.log("setPlasmaIdy", mapping)
     const plasmaAddress =
       mapping === null || mapping.to.isEmpty()
@@ -100,7 +109,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         ? new EthPlasmSigner(state.ethereum.signer!)
         : null
 
-    plasmaModule.changeIdentity({ signer, address: plasmaAddress })
+    await plasmaModule.changeIdentity({ signer, address: plasmaAddress })
   }
 }
 

@@ -66,6 +66,9 @@
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
+    <WithdrawProgress/>
+    <WithdrawConfirmed/>
+    
   </div>
 </template>
 
@@ -80,6 +83,9 @@ import WarningOverlay from "../components/WarningOverlay.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
+import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
+import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
+
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"
@@ -94,6 +100,8 @@ import { store } from "../store"
     WarningOverlay,
     DepositApproved,
     DepositConfirmed,
+    WithdrawProgress,
+    WithdrawConfirmed,
   },
   props: {
     data: Object,

@@ -56,8 +56,7 @@ const initialState: PlasmaState = {
     // },
   },
   selectedToken: "",
-  tokenService: null,
-
+  blockExplorer: "",
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()

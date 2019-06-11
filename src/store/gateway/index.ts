@@ -17,14 +17,20 @@ const log = debug("dash.gateway")
 function initialState(): GatewayState {
   return {
     mapping: null,
-    withdrawalReceipts: {
-      ETH: null,
-      LOOM: null,
-    },
+    withdrawalReceipts: null,
     pendingTransactions: [],
     showDepositForm: false,
     showDepositApproved: false,
     showDepositConfirmed: false,
+    showWithdrawForm: false,
+    showWithdrawProgress: false,
+    withdrawStates: [
+      {text: "Checking for pre-existing receipts...", isComplete: false},
+      {text: "Depositing to Plasmachain Gateway...", isComplete: false},
+      {text: "Awaiting Oracle signature...", isComplete: false},
+      {text: "Withdrawing to your Ethereum account...", isComplete: false},
+    ],
+    withdrawStateIdx: 0,
   }
 }
 
@@ -44,7 +50,6 @@ export const gatewayModule = {
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
-  refreshPendingReceipt: builder.dispatch(PlasmaGateways.refreshPendingReceipt),
   pollReceipt: builder.dispatch(PlasmaGateways.pollReceipt),
 
   // mapper
@@ -55,6 +60,11 @@ export const gatewayModule = {
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
+  setShowWithdrawForm: builder.commit(mutations.setShowWithdrawForm),
+  setShowWithdrawProgress: builder.commit(mutations.setShowWithdrawProgress),
   setPendingTransactions: builder.commit(mutations.setPendingTransactions),
   clearPendingTransactions: builder.commit(mutations.clearPendingTransactions),
+  setWithdrawalReceipts: builder.commit(mutations.setWithdrawalReceipts),
+  incrementWithdrawStateIdx: builder.commit(mutations.incrementWithdrawStateIdx),
+  setWithdrawStateAsCompleted: builder.commit(mutations.setWithdrawStateAsCompleted),
 }

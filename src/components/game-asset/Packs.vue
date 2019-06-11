@@ -10,6 +10,9 @@
       :items="packs"
       :fields="packTableFields"
     >
+      <template slot="type" slot-scope="row">
+        <span>{{ row.item.type | capitalizeWord}}</span>
+      </template>
       <template slot="transfer" slot-scope="row">
         <b-button
           type="button"

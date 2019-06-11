@@ -7,6 +7,7 @@
       class="custom-alert text-center"
       ref="errorMsg"
     >{{state.common.errorMsg}}</b-alert>
+
     <b-alert
       variant="success"
       class="custom-alert text-center"
@@ -95,6 +96,7 @@ import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
+import { setTimeout } from 'timers';
 
 @Component({
   components: {
@@ -219,11 +221,13 @@ export default class FaucetHeader extends Vue {
   hideAlert(alertOpt) {
     const stay = alertOpt.opt ? alertOpt.opt.stay : false
     const waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
+
     if (!stay) {
       setTimeout(() => {
         if (alertOpt.ref) {
           try {
-            alertOpt.ref.dismiss()
+            alertOpt.ref.dismiss() // set dismissed to true
+            this.state.common.errorMsg = ""
           } catch (e) {
             console.error(e)
           }
@@ -231,6 +235,8 @@ export default class FaucetHeader extends Vue {
       }, waitTime * 1000)
     }
   }
+
+
 }
 </script>
 <style lang="scss">

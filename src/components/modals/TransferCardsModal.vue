@@ -69,11 +69,11 @@ export default class TransferCardsModal extends Vue {
 
   transferCardsHandler() {
     if (this.amountToTransfer > this.cardToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
-      this.setErrorMsg("message.invalid_amount")
+      this.setErrorMsg(this.$t("messages.invalid_amount").toString())
       return
     }
     if (this.receiverAddress === "") {
-      this.setErrorMsg("message.invalid_addr")
+      this.setErrorMsg(this.$t("messages.invalid_addr").toString())
       return
     }
     this.transferCards({

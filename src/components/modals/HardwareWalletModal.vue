@@ -272,7 +272,7 @@ export default class HardwareWalletModal extends Vue {
         this.hdWallet = await LedgerWallet()
       } catch (err) {
         this.setErrorMsg({
-          msg: "message.select_path_err_tx",
+          msg: this.$t("messages.select_path_err_tx").toString(),
           forever: false, report: true, cause: err,
         })
         console.error("Error in LedgerWallet:", err)
@@ -286,7 +286,7 @@ export default class HardwareWalletModal extends Vue {
       await this.hdWallet.init(path)
     } catch (err) {
       this.setErrorMsg({
-        msg: "message.select_path_err_tx", forever: false, report: true, cause: err,
+        msg: this.$t("messages.select_path_err_tx").toString(), forever: false, report: true, cause: err,
       })
       console.log("Error when trying to init hd wallet:", err)
       this.showLoadingSpinner = false
@@ -314,7 +314,7 @@ export default class HardwareWalletModal extends Vue {
 
     }).catch((err) => {
       this.setErrorMsg({
-        msg: "message.load_wallet_err_tx", forever: false, report: true, cause: err,
+        msg: this.$t("messages.load_wallet_err_tx").toString(), forever: false, report: true, cause: err,
       })
       console.log("Error when trying to get accounts:", err)
       this.showLoadingSpinner = false

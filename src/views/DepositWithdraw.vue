@@ -13,7 +13,7 @@
     </b-alert>
     <b-card class="balances" no-body>
       <b-card-body v-if="filteredSymbols.length > 7">
-        <b-form-input v-model="inputFilter" placeholder="Search" ></b-form-input>
+        <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
@@ -49,47 +49,46 @@
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
       <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
-      {{plasmaBalance}} -->
+      {{plasmaBalance}}-->
     </b-card>
     <DepositForm :token="selectedToken"/>
+    <WithdrawForm :token="selectedToken"/>
     <SelectTokenModal :type="selectTokenModalType" @selectedToken="onSelectedToken" />
   </main>
 </template>
 
 <script lang="ts">
+import { Component, Watch, Vue } from "vue-property-decorator"
+import BN from "bn.js"
+
 import DepositForm from "@/components/gateway/DepositForm.vue"
+import WithdrawForm from "@/components/gateway/WithdrawForm.vue"
 import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
 import SelectTokenModal from "@/components/modals/SelectTokenModal.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
-import { Component, Watch, Vue } from "vue-property-decorator"
-import BN from "bn.js"
-import { DashboardState } from "../types"
-import { PlasmaState } from "../store/plasma/types"
-import { gatewayModule } from "../store/gateway"
-import { BModal } from "bootstrap-vue"
-import { plasmaModule } from "../store/plasma"
-import { formatTokenAmount } from "../filters"
-import { refreshBalance } from "../store/ethereum"
-import { debuglog } from "util"
 
-import TokenService from "@/services/TokenService"
+import { DashboardState } from "@//types"
+import { PlasmaState } from "@/store/plasma/types"
+import { gatewayModule } from "@/store/gateway"
+import { plasmaModule } from "@/store/plasma"
+
+import { BModal } from "bootstrap-vue"
+
+import tokenService from "@/services/TokenService"
 
 @Component({
   components: {
     DepositForm,
+    WithdrawForm,
     TransferTokensFormModal,
     AddTokenModal,
     SelectTokenModal,
-  },
-  methods: {
-    // ...DPOSStore.mapMutations([
-    //   "setShowDepositForm",
-    // ]),
   },
 })
 export default class DepositWithdraw extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
+  setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   selectedToken = "loom"
   tokenService = new TokenService()
   fields = ["symbol", "balance", "actions"]
@@ -163,6 +162,8 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestWithdraw(token: string) {
+    this.selectedToken = token
+    this.setShowWithdrawForm(true)
   }
 
   requestSwap(token: string) {
@@ -172,6 +173,10 @@ export default class DepositWithdraw extends Vue {
 
   requestAddToken() {
     this.$root.$emit("bv::show::modal", "add-token-modal")
+  }
+
+  async created() {
+    await this.tokenService.init()
   }
 
   async ready() {
@@ -202,9 +207,7 @@ export default class DepositWithdraw extends Vue {
     // })
     // this.filteredToken = this.tokens
   }
-  async created() {
-    await this.tokenService.init()
-  }
+
 }
 </script>
 

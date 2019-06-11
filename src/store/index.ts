@@ -24,6 +24,8 @@ import "./plasma/assets"
 import { plasmaReactions } from "./plasma/reactions"
 import { whiteListReaction } from "./whitelist/reactions"
 
+import tokensService from "@/services/TokenService"
+
 const log = debug("dash")
 
 Vue.use(Vuex)
@@ -35,9 +37,9 @@ const dashboardStore = {
     state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
+    tokensService.setBaseURL(env.coinDataUrl)
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
-    console.log(envs)
     state.envs = envs
   }),
 }

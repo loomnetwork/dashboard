@@ -19,8 +19,8 @@ import { getTokenSymbolFromAddress } from "@/utils"
 import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { EventLog } from "web3-core"
 import { from } from "rxjs"
-import { state } from '../common';
-import { setWithdrawalReceipts } from './mutations';
+import { state } from "../common"
+import { setWithdrawalReceipts } from "./mutations"
 
 const log = debug("dash.gateway")
 
@@ -66,9 +66,9 @@ export function gatewayReactions(store: Store<DashboardState>) {
         // @ts-ignore
         `eth:${ethereumGatewayService.mainGateway._address}`,
       )
-      const plasmaGateway = PlasmaGateways.service()
-      plasmaGateway.add("LOOM", loomGatewayAddr)
-      plasmaGateway.add("ETH", ethGatewayAddr)
+      const plasmaGatewayService = PlasmaGateways.service()
+      plasmaGatewayService.add("LOOM", loomGatewayAddr)
+      plasmaGatewayService.add("ETH", ethGatewayAddr)
 
       // Listen to approval & deposit events
       listenToDepositApproval(

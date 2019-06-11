@@ -69,7 +69,8 @@ export default class TransferCardsModal extends Vue {
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > this.cardToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
+    // @ts-ignore
+    if (parseInt(this.amountToTransfer, 10) > parseInt(this.cardToTransfer!.amount, 10) || parseInt(this.amountToTransfer, 10) % 1 !== 0) {
       this.setErrorMsg(this.$t("messages.invalid_amount").toString())
       return
     }

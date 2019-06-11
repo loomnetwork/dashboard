@@ -14,4 +14,5 @@ export interface FeedbackState {
   },
   task: string,
   steps: string[],
+  currentStep: number,
 }

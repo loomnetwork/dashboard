@@ -6,11 +6,16 @@ export function setTask(state: FeedbackState, task: string) {
 
 export function setStep(state: FeedbackState, step: string) {
     state.steps.push(step)
+    state.currentStep++
 }
 
 export function endTask(state: FeedbackState) {
-    state.task = ""
-    state.steps = []
+    state.currentStep++
+    setTimeout(() => {
+        state.task = ""
+        state.steps = []
+        state.currentStep = -1
+    }, 1500)
 }
 
 export function showInfo(state: FeedbackState, message: string) {

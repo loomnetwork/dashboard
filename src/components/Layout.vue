@@ -67,6 +67,7 @@
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
+    <progress-modal/>
   </div>
 </template>
 
@@ -79,6 +80,7 @@ import FaucetFooter from "@/components/FaucetFooter.vue"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 import WarningOverlay from "../components/WarningOverlay.vue"
 import FeedbackNotification from "../feedback/components/FeedbackNotification.vue"
+import ProgressModal from "../feedback/components/ProgressModal.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
@@ -97,6 +99,7 @@ import { store } from "../store"
     DepositApproved,
     DepositConfirmed,
     FeedbackNotification,
+    ProgressModal,
   },
   props: {
     data: Object,

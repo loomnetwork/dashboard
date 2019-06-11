@@ -16,6 +16,7 @@ const initialState: FeedbackState = {
   },
   task: "",
   steps: [],
+  currentStep: -1,
 }
 
 const builder = getStoreBuilder<HasFeedbackState>().module("feedback", initialState)

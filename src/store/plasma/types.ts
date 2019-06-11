@@ -9,6 +9,7 @@ export interface PlasmaConfig {
   networkId: string
   chainId: string
   endpoint: string
+  blockExplorer: string
 }
 
 export interface HasPlasmaState {

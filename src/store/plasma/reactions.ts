@@ -1,16 +1,9 @@
-import {
-  HasPlasmaState,
-  PlasmaSigner,
-  PlasmaTokenKind,
-  PlasmaState,
-} from "./types"
+import { PlasmaSigner, PlasmaTokenKind } from "./types"
 import { Store } from "vuex"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import { ERC20 } from "./web3-contracts/ERC20"
-import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import Web3 from "web3"
 
 import * as Tokens from "./tokens"
@@ -18,8 +11,6 @@ import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
-const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
-import TokenService from "@/services/TokenService";
 
 import debug from "debug"
 const log = debug("dash.plasma")
@@ -52,24 +43,20 @@ export function plasmaReactions(store: Store<DashboardState>) {
       await resetERC20Contracts(store)
     },
   )
-  store.watch(
-    (s) => s.plasma.web3,
-    () => {
-      if (store.state.plasma.tokenService !== null) {
-        return
+
+  store.subscribeAction({
+    async after(action) {
+      if (
+        action.type === "plasma/transfer" ||
+        action.type === "plasma/addToken"
+      ) {
+        console.log("in subscription ", action)
+        await plasmaModule.refreshBalance(
+          action.payload.symbol || action.payload,
+        )
       }
-      store.state.plasma.tokenService = new TokenService()
-      store.state.plasma.tokenService.init()
-    }
-  )
-  store.subscribeAction(
-    {async after(action){
-      if(action.type === "plasma/transfer" || action.type === "plasma/addToken"){
-        console.log("in subscription ",action);
-        await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
-      }
-    }}
-  )
+    },
+  })
 }
 
 async function resetLoomContract(store: Store<DashboardState>) {

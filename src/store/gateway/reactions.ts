@@ -19,6 +19,8 @@ import { getTokenSymbolFromAddress } from "@/utils"
 import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { EventLog } from "web3-core"
 import { from } from "rxjs"
+import { state } from '../common';
+import { setWithdrawalReceipts } from './mutations';
 
 const log = debug("dash.gateway")
 
@@ -45,11 +47,11 @@ export function gatewayReactions(store: Store<DashboardState>) {
       await setPlasmaAccount(mapping)
       // Initialize Ethereum gateways & coin contracts
       await EthereumGateways.init(ethereumModule.web3)
-      const ethGateway = EthereumGateways.service()
-      ethGateway.add("loom", store.state.ethereum.erc20Addresses.loom)
-      ethGateway.add("eth", "") // Ether does not have a contract address
-      EthereumGateways.init(ethereumModule.web3)
-      PlasmaGateways.init(
+      const ethereumGatewayService = EthereumGateways.service()
+      ethereumGatewayService.add("loom", store.state.ethereum.erc20Addresses.loom)
+      ethereumGatewayService.add("eth", "") // Ether does not have a contract address
+
+      await PlasmaGateways.init(
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
@@ -57,35 +59,42 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
       const loomGatewayAddr = Address.fromString(
         // @ts-ignore
-        `${store.state.plasma.chainId}:${ethGateway.loomGateway.address}`,
+        `eth:${ethereumGatewayService.loomGateway._address}`,
       )
       // @ts-ignore
       const ethGatewayAddr = Address.fromString(
         // @ts-ignore
-        `${store.state.plasma.chainId}:${ethGateway.mainGateway.address}`,
+        `eth:${ethereumGatewayService.mainGateway._address}`,
       )
-      const plasmaGateway = PlasmaGateways.service()
-      plasmaGateway.add("loom", loomGatewayAddr)
-      plasmaGateway.add("eth", ethGatewayAddr)
+      const plasmaGatewayService = PlasmaGateways.service()
+      plasmaGatewayService.add("loom", loomGatewayAddr)
+      plasmaGatewayService.add("eth", ethGatewayAddr)
 
       // Listen to approval & deposit events
       listenToDepositApproval(
         ethereumModule.state.address,
-        ethGateway.loomGateway,
+        ethereumGatewayService.loomGateway,
         ethereumModule.getERC20("loom")!,
         store,
       )
 
       listenToDeposit(
         ethereumModule.state.address,
-        ethGateway.loomGateway,
+        ethereumGatewayService.loomGateway,
         ethereumModule.getERC20("loom")!,
         store,
       )
+
+      // ==================================
+      // ====== Check for receipt
+      // ==================================
+      const receipt = await plasmaGatewayService.get("loom").withdrawalReceipt()
+      // TODO: Add support for multiple tokens
+      gatewayModule.setWithdrawalReceipts(receipt)
     },
   )
 
-  function setPlasmaAccount(mapping: IAddressMapping | null) {
+  async function setPlasmaAccount(mapping: IAddressMapping | null) {
     console.log("setPlasmaIdy", mapping)
     const plasmaAddress =
       mapping === null || mapping.to.isEmpty()
@@ -100,7 +109,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         ? new EthPlasmSigner(state.ethereum.signer!)
         : null
 
-    plasmaModule.changeIdentity({ signer, address: plasmaAddress })
+    await plasmaModule.changeIdentity({ signer, address: plasmaAddress })
   }
 }
 

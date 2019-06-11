@@ -9,13 +9,13 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import BN from "bn.js"
 import { Funds } from "@/types"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
-import { gatewayModule } from "."
-
+import { gatewayModule } from "@/store/gateway"
 import { timer, of, interval } from "rxjs"
 
 import { filter, tap, switchMap, take } from "rxjs/operators"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
+import { ethereumModule } from "../ethereum"
 
 interface PlasmaGatewayAdapter {
   token: string
@@ -30,14 +30,19 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   constructor(
     private contract: LoomCoinTransferGateway,
     readonly ethereumGateway: Address,
+    readonly mapping: IAddressMapping,
   ) {}
 
   withdraw(amount: BN) {
-    this.contract.withdrawLoomCoinAsync(amount, this.ethereumGateway)
+    // Address of Loom on Ethereum
+    const loomCoinAddress = Address.fromString(
+      // @ts-ignore
+      `eth:${ethereumModule.state.erc20Addresses.loom}`,
+    )
+    this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
   }
-  withdrawalReceipt() {
-    const owner = this.contract.caller
-    return this.contract.withdrawalReceiptAsync(owner)
+  async withdrawalReceipt() {
+    return await this.contract.withdrawalReceiptAsync(this.mapping.to)
   }
 }
 
@@ -47,6 +52,7 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
   constructor(
     public contract: TransferGateway,
     readonly ethereumGateway: Address,
+    readonly mapping: IAddressMapping,
   ) {}
 
   withdraw(amount: BN) {
@@ -65,8 +71,9 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
     contract: TransferGateway,
     ethereumGateway: Address,
     token: string,
+    mapping: IAddressMapping,
   ) {
-    super(contract, ethereumGateway)
+    super(contract, ethereumGateway, mapping)
     this.token = token
   }
 
@@ -88,13 +95,12 @@ export async function init(
 
   // return new EthereumGateways()
   // create gateways and vmc (maybe vmc does not care...)
-  const mainGateway = await TransferGateway.createAsync(client, mapping.to)
+  const mainGateway = await TransferGateway.createAsync(client, mapping.from)
   const loomGateway = await LoomCoinTransferGateway.createAsync(
     client,
-    mapping.to,
+    mapping.from,
   )
-
-  instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3)
+  instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3, mapping)
 }
 
 export function service() {
@@ -108,6 +114,7 @@ class PlasmaGateways {
     readonly mainGateway: TransferGateway,
     readonly loomGateway: LoomCoinTransferGateway,
     readonly web3: Web3,
+    readonly mapping: IAddressMapping,
   ) {}
 
   destroy() {
@@ -126,10 +133,10 @@ class PlasmaGateways {
     let adapter: PlasmaGatewayAdapter
     switch (token) {
       case "loom":
-        adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway)
+        adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway, this.mapping)
         break
       case "eth":
-        adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway)
+        adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway, this.mapping)
         break
       // case "tron":
 
@@ -140,6 +147,7 @@ class PlasmaGateways {
           this.mainGateway,
           srcChainGateway,
           token,
+          this.mapping,
         )
         break
     }
@@ -155,59 +163,71 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
-
   const gateway = service().get(funds.symbol)
   let receipt: IWithdrawalReceipt | null
   try {
     receipt = await gateway.withdrawalReceipt()
+    next()
   } catch (error) {
-    console.error(error)
+    console.error("Elvis has left the building", error)
     return
   }
   if (receipt) {
+    console.log("Setting pre-existing receipt")
+    gatewayModule.set(receipt)
     // tell user ongoing withdraw
     // CommonTypedStore.setErrorMsg("gateway.error.existing_receipt")
     return
   }
   try {
     await gateway.withdraw(funds.weiAmount)
-    gatewayModule.pollReceipt(funds.symbol)
+    next()
+    receipt = await gatewayModule.pollReceipt(funds.symbol)
+    gatewayModule.set(receipt)
+    next()
   } catch (error) {
     console.error(error)
     return
   }
+
   // or rx style :)
   // of(gateway.withdrawalReceipt())
   //   .pipe(
   //     tap((x) => {if (x !== null) console.log("tell user withdraw on going")}),
   //     filter((x) => x === null),
   //     switchMap(() => gateway.withdraw(funds.weiAmount)),
-  //     switchMap(() => pollForReceipt())
+  //     switchMap(() => gatewayModule.pollReceipt(funds.symbol)),
   //   )
   //   .subscribe(
   //     () => console.log("tell user to intiate ethereum withdraw"),
-  //     (e) => console.error(e)
+  //     (e) => console.error(e),
   //   )
+
 }
 
 export function pollReceipt(context: ActionContext, symbol: string) {
-  interval(2000)
+  return interval(2000)
     .pipe(
-      switchMap(() => gatewayModule.refreshPendingReceipt(symbol)),
+      switchMap(() => refreshPendingReceipt(context, symbol)),
       filter((receipt) => receipt !== null),
       take(1),
     )
-    .subscribe()
+    .toPromise()
 }
 
-export async function refreshPendingReceipt(
+async function refreshPendingReceipt(
   context: ActionContext,
   symbol: string,
 ) {
   const gateway = service().get(symbol)
   const receipt = await gateway.withdrawalReceipt()
-  context.state.withdrawalReceipts[symbol] = receipt
+  context.state.withdrawalReceipts = receipt
   return receipt
+}
+
+async function next() {
+  gatewayModule.incrementWithdrawStateIdx()
+  gatewayModule.setWithdrawStateAsCompleted()
 }
 
 /* #endregion */

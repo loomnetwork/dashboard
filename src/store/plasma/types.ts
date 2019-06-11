@@ -4,7 +4,6 @@ import { Client, LoomProvider } from "loom-js"
 import Web3 from "web3"
 import { BareActionContext } from "vuex-typex"
 import { Provider } from "ethers/providers"
-import TokenService from '@/services/TokenService';
 
 export interface PlasmaConfig {
   networkId: string
@@ -38,7 +37,7 @@ export interface PlasmaState extends PlasmaConfig {
     [tokenSymbol: string]: BalanceInfo,
   }
   selectedToken: string,
-  tokenService: TokenService | null,
+
 }
 
 export enum PlasmaTokenKind {

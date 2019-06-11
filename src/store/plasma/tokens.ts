@@ -12,8 +12,6 @@ import debug from "debug"
 import { setNewTokenToLocalStorage } from "@/utils";
 import TokenService from "@/services/TokenService";
 
-import * as Mutations from "@/store/plasma/mutations"
-
 const log = debug("plasma")
 
 const contracts = new Map<string, ContractAdapter>()
@@ -147,17 +145,16 @@ export function addCoinState(state:PlasmaState, symbol:string) {
 
 export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   const state = context.state
-  const tokenService = state.tokenService!
   const symbol = tokenSymbol.toUpperCase()
-  const tokens = tokenService.getTokenbySymbol(symbol)
+  const tokens = TokenService.getTokenbySymbol(symbol)
   const web3 = state.web3!
   // const network = state.networkId // 'us1'
   const network = 'plasma'
   if (tokens === undefined){
     throw new Error("Could not find token symbol "+ tokenSymbol)
   }
-  const address = tokenService.getTokenAddressBySymbol(symbol, network)
-  const isExist = Object.keys(state.coins).find((token) => token === symbol.toLowerCase())
+  const address = TokenService.getTokenAddressBySymbol(symbol, network)
+  const isExist = Object.keys(state.coins).find((token) => token === symbol)
   if (!isExist) {
     state.coins[tokens.symbol] = {
       decimals: tokens.decimal,
@@ -165,6 +162,7 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
       loading: true,
     }
     state.coins = Object.assign({},state.coins)
+    console.log('addToken: ', state.coins);
     let contract
     try {
       contract = new web3.eth.Contract(ERC20ABI, address) as ERC20

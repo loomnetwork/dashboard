@@ -9,7 +9,7 @@
       <br>(use $t with the key to some help text.)
     </b-alert>
     <b-card class="balances" no-body>
-      <b-card-body v-if="filteredSymbols.length > 7">
+      <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
         <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
       </b-card-body>
       <b-list-group flush>
@@ -37,6 +37,8 @@
       <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
       {{plasmaBalance}}-->
     </b-card>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
+    <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
   </main>
@@ -59,6 +61,7 @@ import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 
 import tokenService from "@/services/TokenService"
+import { getWalletFromLocalStorage } from '../utils';
 
 @Component({
   components: {
@@ -71,13 +74,14 @@ import tokenService from "@/services/TokenService"
 export default class DepositWithdraw extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
-  selectedToken = "LOOM"
-
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
+
+  selectedToken = "LOOM"
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
+  coins = this.plasma.coins
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
@@ -92,12 +96,10 @@ export default class DepositWithdraw extends Vue {
 
   async mounted() {
     const tokenSymbols = getWalletFromLocalStorage().map(symbol => symbol)
-    this.filterTokens(tokenSymbols)
-
     tokenSymbols.forEach((symbol) => {
       plasmaModule.addToken(symbol)
     })
-
+    this.filterTokens()
   }
 
   modal(ref: string) {
@@ -105,9 +107,9 @@ export default class DepositWithdraw extends Vue {
   }
 
   @Watch("inputFilter")
-  filterTokens(tokenSymbols: string[]) {
+  filterTokens() {
     const filter = this.inputFilter.toUpperCase()
-
+    const tokenSymbols = Object.keys(this.plasma.coins)
     // return token if :
     // - no filter and symbol is in the state,
     // - symbol matches filter  and symbol is in the state,

@@ -33,9 +33,9 @@ import TokenService from "@/services/TokenService";
 @Component
 
 export default class AddTokenModal extends Vue {
-    selectedToken: string = ""
+    selectedToken: string = "LOOM"
     filteredSymbols: string[] = []
-    tokenSymbol: string[] = this.state.plasma.tokenService!.getAllTokenSymbol()
+    tokenSymbol: string[] = TokenService.getAllTokenSymbol()
 
     get state(): DashboardState {
       return this.$store.state
@@ -58,7 +58,7 @@ export default class AddTokenModal extends Vue {
 
     @Watch("selectedToken")
     filterToken(){
-    const filter = this.selectedToken.toUpperCase()
+    const filter = this.selectedToken
     this.filteredSymbols = this.tokenSymbol
       .filter((token) => (token.includes(filter) || filter === ""))
     }

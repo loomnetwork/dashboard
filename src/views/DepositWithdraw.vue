@@ -21,21 +21,21 @@
           <!-- BNB: {{plasmaBalance}} -->
           <span class="balance">{{plasma.coins[symbol].balance | tokenAmount}}</span>
           <b-button-group class="actions">
-            <!-- <b-button
+            <b-button
               class="button"
               variant="outline-primary"
               @click="showSelectTokenModal(DEPOSIT, symbol)"
-            >Deposit</b-button> -->
+            >Deposit</b-button>
             <!-- <b-button
               class="button"
               variant="outline-primary"
               @click="showSelectTokenModal(WITHDRAW, symbol)"
             >Withdraw</b-button> -->
-            <b-button
+            <!-- <b-button
               class="button"
               variant="outline-primary"
               @click="requestDeposit(symbol)"
-            >Deposit</b-button>
+            >Deposit</b-button> -->
             <b-button
               class="button"
               variant="outline-primary"
@@ -54,6 +54,7 @@
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
     <SelectTokenModal :type="selectTokenModalType" @selectedToken="onSelectedToken" />
+    <DepositBinance />
   </main>
 </template>
 
@@ -65,6 +66,7 @@ import DepositForm from "@/components/gateway/DepositForm.vue"
 import WithdrawForm from "@/components/gateway/WithdrawForm.vue"
 import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
 import SelectTokenModal from "@/components/modals/SelectTokenModal.vue"
+import DepositBinance from "@/components/gateway/DepositBinance.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 
 import { DashboardState } from "@//types"
@@ -83,6 +85,7 @@ import tokenService from "@/services/TokenService"
     TransferTokensFormModal,
     AddTokenModal,
     SelectTokenModal,
+    DepositBinance,
   },
 })
 export default class DepositWithdraw extends Vue {
@@ -138,6 +141,7 @@ export default class DepositWithdraw extends Vue {
           // request deposit modal
         } else if (payload.token === "binance") {
           // request deposit binance modal
+          this.$root.$emit("bv::show::modal", "deposit-binance")
         }
         break
       case this.WITHDRAW:

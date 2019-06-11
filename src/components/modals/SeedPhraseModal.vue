@@ -133,7 +133,7 @@ export default class SeedPhraseModal extends Vue {
     // @ts-ignore
     copyText!.select()
     document.execCommand("copy")
-    this.setSuccessMsg("message.copied_tx")
+    this.setSuccessMsg(this.$t("messages.copied_tx").toString())
   }
 
   modal(ref: string): BModal {

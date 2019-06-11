@@ -9,6 +9,7 @@ import { CommonTypedStore } from "@/store/common"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
+import { i18n } from "../../../i18n"
 import debug from "debug"
 const log = debug("assets")
 
@@ -134,13 +135,23 @@ async function transferCards(
     log("transfer cards result", result)
     await assetsModule.checkCardBalance()
     CommonTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg("message.transfer_card_success_tx" + result.transactionHash)
+    CommonTypedStore.setSuccessMsg(
+      i18n
+        .t("messages.transfer_card_success_tx", {
+          transactionHash: result.transactionHash,
+        })
+        .toString(),
+    )
   } catch (error) {
     CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
-      CommonTypedStore.setErrorMsg("messages.user_denied_tx")
+      CommonTypedStore.setErrorMsg(i18n.t("messages.user_denied_tx").toString())
     } else {
-      CommonTypedStore.setErrorMsg(`message.transfer_card_err_tx ${error.message}`)
+      CommonTypedStore.setErrorMsg(
+        i18n
+          .t("messages.transfer_card_err_tx", { msg: error.message })
+          .toString(),
+      )
       throw error
     }
   }
@@ -166,13 +177,23 @@ async function transferPacks(
     log("transfer packs result", result)
     await assetsModule.checkPackBalance()
     CommonTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg("message.transfer_pack_success_tx" + result.transactionHash)
+    CommonTypedStore.setSuccessMsg(
+      i18n
+        .t("messages.transfer_pack_success_tx", {
+          transactionHash: result.transactionHash,
+        })
+        .toString(),
+    )
   } catch (error) {
     CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
-      CommonTypedStore.setErrorMsg("messages.user_denied_tx")
+      CommonTypedStore.setErrorMsg(i18n.t("messages.user_denied_tx").toString())
     } else {
-      CommonTypedStore.setErrorMsg(`message.transfer_pack_err_tx ${error.message}`)
+      CommonTypedStore.setErrorMsg(
+        i18n
+          .t("messages.transfer_pack_err_tx", { msg: error.message })
+          .toString(),
+      )
       throw error
     }
   }

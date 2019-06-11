@@ -4,10 +4,10 @@
     <transfer-all-cards-modal ref="transferAllCardsModalConfig"></transfer-all-cards-modal>
     <b-card-title>My Cards</b-card-title>
     <b-tabs card>
-      <b-tab title="Standard-Edition">
+      <b-tab title="Standard Edition">
         <b-row class="mb-2">
           <b-col>
-            <b-card-text>standard-edition amount: {{ standardEditionAmount }}</b-card-text>
+            <b-card-text>Standard Edition Amount: {{ standardEditionAmount }}</b-card-text>
           </b-col>
           <b-col>
             <b-row>
@@ -29,15 +29,18 @@
           :items="seCards"
           :fields="cardTableFields"
         >
+          <template slot="variation" slot-scope="row">
+            <span>{{ row.item.variation | capitalizeWord}}</span>
+          </template>
           <template slot="transfer" slot-scope="row">
             <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
           </template>
         </b-table>
       </b-tab>
-      <b-tab title="Backer-Edition">
+      <b-tab title="Backer Edition">
         <b-row class="mb-2">
           <b-col>
-            <b-card-text>backer-edition amount: {{ backerEditionAmount }}</b-card-text>
+            <b-card-text>Backer Edition Amount: {{ backerEditionAmount }}</b-card-text>
           </b-col>
           <b-col>
             <b-row>
@@ -59,15 +62,18 @@
           :items="beCards"
           :fields="cardTableFields"
         >
+          <template slot="variation" slot-scope="row">
+            <span>{{ row.item.variation | capitalizeWord}}</span>
+          </template>
           <template slot="transfer" slot-scope="row">
             <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
           </template>
         </b-table>
       </b-tab>
-      <b-tab title="Limited-Edition">
+      <b-tab title="Limited Edition">
         <b-row class="mb-2">
           <b-col>
-            <b-card-text>limited-edition amount: {{ limitedEditionAmount }}</b-card-text>
+            <b-card-text>Limited Edition Amount: {{ limitedEditionAmount }}</b-card-text>
           </b-col>
           <b-col>
             <b-row>
@@ -89,15 +95,18 @@
           :items="leCards"
           :fields="cardTableFields"
         >
+          <template slot="variation" slot-scope="row">
+            <span>{{ row.item.variation | capitalizeWord}}</span>
+          </template>
           <template slot="transfer" slot-scope="row">
             <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
           </template>
         </b-table>
       </b-tab>
-      <b-tab title="Binance-Edition">
+      <b-tab title="Binance Edition">
         <b-row class="mb-2">
           <b-col>
-            <b-card-text>binance-edition amount: {{ binanceEditionAmount }}</b-card-text>
+            <b-card-text>Binance Edition Amount: {{ binanceEditionAmount }}</b-card-text>
           </b-col>
           <b-col>
             <b-row>
@@ -119,15 +128,18 @@
           :items="bneCards"
           :fields="cardTableFields"
         >
+          <template slot="variation" slot-scope="row">
+            <span>{{ row.item.variation | capitalizeWord}}</span>
+          </template>
           <template slot="transfer" slot-scope="row">
             <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
           </template>
         </b-table>
       </b-tab>
-      <b-tab title="Tron-Edition">
+      <b-tab title="Tron Edition">
         <b-row class="mb-2">
           <b-col>
-            <b-card-text>tron-edition amount: {{ tronEditionAmount }}</b-card-text>
+            <b-card-text>Tron Edition Amount: {{ tronEditionAmount }}</b-card-text>
           </b-col>
           <b-col>
             <b-row>
@@ -149,6 +161,9 @@
           :items="teCards"
           :fields="cardTableFields"
         >
+          <template slot="variation" slot-scope="row">
+            <span>{{ row.item.variation | capitalizeWord}}</span>
+          </template>
           <template slot="transfer" slot-scope="row">
             <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
           </template>
@@ -157,13 +172,13 @@
       <b-tab title="Summary">
         <b-row class="mb-2">
           <b-col>
-            <b-card-text>standard-edition amount: {{ standardEditionAmount }}</b-card-text>
-            <b-card-text>backer-edition amount: {{ backerEditionAmount }}</b-card-text>
-            <b-card-text>limited-edition amount: {{ limitedEditionAmount }}</b-card-text>
+            <b-card-text>Standard Edition Amount: {{ standardEditionAmount }}</b-card-text>
+            <b-card-text>Backer Edition Amount: {{ backerEditionAmount }}</b-card-text>
+            <b-card-text>Limited Edition Amount: {{ limitedEditionAmount }}</b-card-text>
           </b-col>
           <b-col>
-            <b-card-text>binance-edition amount: {{ binanceEditionAmount }}</b-card-text>
-            <b-card-text>tron-edition amount: {{ tronEditionAmount }}</b-card-text>
+            <b-card-text>Binance Edition Amount: {{ binanceEditionAmount }}</b-card-text>
+            <b-card-text>Tron Edition Amount: {{ tronEditionAmount }}</b-card-text>
             <b-card-text class="font-weight-bold">total amount: {{ userCardsAmount }}</b-card-text>
           </b-col>
           <b-col>
@@ -183,6 +198,9 @@
           :items="cards"
           :fields="cardTableFields"
         >
+          <template slot="variation" slot-scope="row">
+            <span>{{ row.item.variation | capitalizeWord}}</span>
+          </template>
           <template slot="transfer" slot-scope="row">
             <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
           </template>

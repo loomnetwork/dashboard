@@ -60,21 +60,26 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
-    return this.contract.methods.withdrawERC20(
+    const result = this.contract.methods.withdrawERC20(
       amount,
       this.tokenAddress,
       valIndexes,
       vs,
       rs,
       ss,
-    ).send({from: localAddress}).on("transactionHash", async (hash) => {
-      if (hash) {
-        const tx = ethereumModule.web3.eth.getTransaction(hash, (tx) => {
-          debugger
-          localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
-        })
-      }
+    ).send({from: localAddress})
+    result.then((tx) => {
+      localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
     })
+    return result
+    // .on("transactionHash", async (hash) => {
+    //   if (hash) {
+    //     const tx = ethereumModule.web3.eth.getTransaction(hash, (tx) => {
+    //       console.log("the tx", tx)
+    //       localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
+    //     })
+    //   }
+    // })
   }
 }
 

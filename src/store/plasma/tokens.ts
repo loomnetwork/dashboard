@@ -59,7 +59,6 @@ export async function addContract(
 export function getAdapter(tokenSymbol: string): ContractAdapter {
   const adapter = contracts.get(tokenSymbol)
   if (adapter === undefined) {
-    debugger
     throw new Error("Unknow token " + tokenSymbol)
   }
   return adapter

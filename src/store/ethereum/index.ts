@@ -254,7 +254,6 @@ export function initERC20(context: ActionContext, symbol: string) {
   log("initERC20", symbol, tokenService)
   const contractAddr = tokenService.getTokenAddressBySymbol(symbol, "ethereum")
   log("initERC20", symbol, contractAddr)
-  debugger
   if (contractAddr === undefined) {
     throw new Error("Could not find contract address for " + symbol)
   }

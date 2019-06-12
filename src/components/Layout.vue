@@ -68,6 +68,7 @@
     <DepositApproved/>
     <DepositConfirmed/>
     <progress-modal/>
+    <feedback-alert/>
   </div>
 </template>
 
@@ -81,6 +82,7 @@ import LoadingSpinner from "../components/LoadingSpinner.vue"
 import WarningOverlay from "../components/WarningOverlay.vue"
 import FeedbackNotification from "../feedback/components/FeedbackNotification.vue"
 import ProgressModal from "../feedback/components/ProgressModal.vue"
+import FeedbackAlert from "../feedback/components/FeedbackAlert.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
@@ -100,6 +102,7 @@ import { store } from "../store"
     DepositConfirmed,
     FeedbackNotification,
     ProgressModal,
+    FeedbackAlert,
   },
   props: {
     data: Object,

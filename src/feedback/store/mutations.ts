@@ -1,20 +1,20 @@
 import { FeedbackState } from "./types"
 
 export function setTask(state: FeedbackState, task: string) {
-    state.task = task
+    state.progress.task = task
 }
 
 export function setStep(state: FeedbackState, step: string) {
-    state.steps.push(step)
-    state.currentStep++
+    state.progress.steps.push(step)
+    state.progress.currentStep++
 }
 
 export function endTask(state: FeedbackState) {
-    state.currentStep++
+    state.progress.currentStep++
     setTimeout(() => {
-        state.task = ""
-        state.steps = []
-        state.currentStep = -1
+        state.progress.task = ""
+        state.progress.steps = []
+        state.progress.currentStep = -1
     }, 1500)
 }
 
@@ -31,4 +31,17 @@ export function showSuccess(state: FeedbackState, message: string) {
 export function showError(state: FeedbackState, message: string) {
     state.notification.type = "danger"
     state.notification.message = message
+}
+
+export function showAlert(state: FeedbackState, { title, message }) {
+    state.alert.type = "alert"
+    state.alert.title = title
+    state.alert.message = message
+}
+
+export function requireConfirmation(state: FeedbackState, { title, message, onConfirm}) {
+    state.alert.type = "confirmation"
+    state.alert.title = title
+    state.alert.message = message
+    state.alert.onConfirm = onConfirm
 }

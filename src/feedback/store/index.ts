@@ -14,9 +14,17 @@ const initialState: FeedbackState = {
     type: "info",
     message: "",
   },
-  task: "",
-  steps: [],
-  currentStep: -1,
+  progress: {
+    task: "",
+    steps: [],
+    currentStep: -1,
+  },
+  alert: {
+    type: "alert",
+    title: "",
+    message: "s",
+    onConfirm() { return },
+  },
 }
 
 const builder = getStoreBuilder<HasFeedbackState>().module("feedback", initialState)
@@ -33,6 +41,8 @@ const feedbackModule = {
   showInfo: builder.commit(mutations.showInfo),
   showSuccess: builder.commit(mutations.showSuccess),
   showError: builder.commit(mutations.showError),
+  showAlert: builder.commit(mutations.showAlert),
+  requireConfirmation: builder.commit(mutations.requireConfirmation)
 }
 
 // vuex module as a service

@@ -12,7 +12,15 @@ export interface FeedbackState {
     type: "info" | "success" | "danger",
     message: string,
   },
-  task: string,
-  steps: string[],
-  currentStep: number,
+  progress: {
+    task: string,
+    steps: string[],
+    currentStep: number,
+  },
+  alert: {
+    type: "alert" | "confirmation"
+    title: string,
+    message: string,
+    onConfirm(): any,
+  },
 }

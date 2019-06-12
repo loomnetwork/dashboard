@@ -43,19 +43,19 @@ export default class ProgressModal extends Vue {
   status = "default"
 
   get task() {
-    return this.$store.state.feedback.task
+    return this.$store.state.feedback.progress.task
   }
 
   get steps() {
-    return this.$store.state.feedback.steps
+    return this.$store.state.feedback.progress.steps
   }
 
   get currentStep() {
-    return this.$store.state.feedback.currentStep
+    return this.$store.state.feedback.progress.currentStep
   }
 
   get visible() {
-    return !!this.$store.state.feedback.task
+    return !!this.$store.state.feedback.progress.task
   }
 
   set visible(value) {

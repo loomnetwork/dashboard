@@ -20,7 +20,7 @@
     "switch_dpouser_err_tx": "Error initDposUser",
     "select_path_err_tx": "Can't connect to your wallet. Please try again.",
     "load_wallet_err_tx": "Error loading your wallet accounts. Please try again.",
-    "copied_tx": "copied to clipboard",
+    "copied_tx": "Copied to clipboard",
     "receiver_addr_err_tx": "Invalid receiver address",
     "invalid_amount": "Invalid amount",
     "invalid_addr": "Invalid receiver address",

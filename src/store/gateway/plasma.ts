@@ -92,7 +92,6 @@ export async function init(
   plasmaWeb3: Web3,
   mapping: IAddressMapping,
 ) {
-
   // return new EthereumGateways()
   // create gateways and vmc (maybe vmc does not care...)
   const mainGateway = await TransferGateway.createAsync(client, mapping.from)
@@ -124,6 +123,7 @@ class PlasmaGateways {
   get(symbol: string): PlasmaGatewayAdapter {
     const adapter = this.adapters.get(symbol)
     if (adapter === undefined) {
+      debugger
       throw new Error("No gateway for " + symbol)
     }
     return adapter
@@ -133,10 +133,18 @@ class PlasmaGateways {
     let adapter: PlasmaGatewayAdapter
     switch (token) {
       case "LOOM":
-        adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway, this.mapping)
+        adapter = new LoomGatewayAdapter(
+          this.loomGateway,
+          srcChainGateway,
+          this.mapping,
+        )
         break
       case "ETH":
-        adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway, this.mapping)
+        adapter = new EthGatewayAdapter(
+          this.mainGateway,
+          srcChainGateway,
+          this.mapping,
+        )
         break
       // case "tron":
 
@@ -189,20 +197,6 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     console.error(error)
     return
   }
-
-  // or rx style :)
-  // of(gateway.withdrawalReceipt())
-  //   .pipe(
-  //     tap((x) => {if (x !== null) console.log("tell user withdraw on going")}),
-  //     filter((x) => x === null),
-  //     switchMap(() => gateway.withdraw(funds.weiAmount)),
-  //     switchMap(() => gatewayModule.pollReceipt(funds.symbol)),
-  //   )
-  //   .subscribe(
-  //     () => console.log("tell user to intiate ethereum withdraw"),
-  //     (e) => console.error(e),
-  //   )
-
 }
 
 export function pollReceipt(context: ActionContext, symbol: string) {
@@ -215,10 +209,7 @@ export function pollReceipt(context: ActionContext, symbol: string) {
     .toPromise()
 }
 
-async function refreshPendingReceipt(
-  context: ActionContext,
-  symbol: string,
-) {
+async function refreshPendingReceipt(context: ActionContext, symbol: string) {
   const gateway = service().get(symbol)
   const receipt = await gateway.withdrawalReceipt()
   context.state.withdrawalReceipts = receipt

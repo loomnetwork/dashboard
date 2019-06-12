@@ -10,9 +10,12 @@ import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 
 import * as mutations from "./mutations"
-import TokenService from "@/services/TokenService";
+import TokenService from "@/services/TokenService"
 
-import { setupProtocolsFromEndpoint } from "loom-js/dist/helpers"
+import {
+  setupProtocolsFromEndpoint,
+  createDefaultTxMiddleware,
+} from "loom-js/dist/helpers"
 
 // assets (make this a sepoerate module)
 
@@ -88,7 +91,6 @@ export const plasmaModule = {
   getPublicAddrePriaKeyUint8Array: builder.dispatch(
     getPublicAddressFromPrivateKeyUint8Array,
   ),
-
 }
 
 function setConfig(state: PlasmaState, config: PlasmaConfig) {
@@ -98,6 +100,10 @@ function setConfig(state: PlasmaState, config: PlasmaConfig) {
     chainId: state.chainId,
     endpoint: state.endpoint,
   })
+  state.client.txMiddleware = createDefaultTxMiddleware(
+    state.client,
+    CryptoUtils.B64ToUint8Array(state.appId.private),
+  )
 }
 
 // getter
@@ -122,12 +128,17 @@ async function changeIdentity(
   id: { signer: PlasmaSigner | null; address: string },
 ) {
   const { signer, address } = id
+  const client = ctx.state.client!
   ctx.state.address = address
   ctx.state.signer = signer
   // add the conresponding middleware
   if (signer === null) {
     // reset client middleware
     ctx.state.client!.txMiddleware = []
+    createDefaultTxMiddleware(
+      client,
+      CryptoUtils.B64ToUint8Array(ctx.state.appId.private),
+    )
     // destroy loomProvider and old web3
   } else {
     await signer.configureClient(ctx.state.client!)

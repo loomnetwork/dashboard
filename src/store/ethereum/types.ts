@@ -11,6 +11,7 @@ export interface EthereumConfig {
   chainId: string
   endpoint: string
   blockExplorer: string
+  contracts: { [name: string]: string }
 }
 
 // Interface for application stores than include EthereumState

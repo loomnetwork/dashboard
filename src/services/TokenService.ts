@@ -29,25 +29,14 @@ import axios from "axios"
 
 interface TokenData {
   symbol: string
-  address: string
-  plasma_addr: string
-  decimal: number
+  ethereumAddr: string
+  plasmaAddr: string
+  decimals: number
 }
 
 class TokenService {
   baseURL: string = ""
   symbols: TokenData[] = []
-
-  constructor() {
-    // this.baseURL = "https://stage-auth.loom.games/wallet/tokens" // need to set base url for different env
-    // this.symbols = []
-    // this.init()
-  }
-
-  // async init() {
-  //   const result = await axios.get(this.baseURL)
-  //   this.symbols = result.data.tokens
-  // }
 
   /**
    * should call this method after service class created
@@ -55,7 +44,14 @@ class TokenService {
   async setBaseURL(url: string) {
     this.baseURL = url
     const result = await axios.get(this.baseURL)
-    this.symbols = result.data.tokens as TokenData[]
+    this.symbols = result.data.tokens.map(
+      (data): TokenData => ({
+        symbol: data.symbol,
+        ethereumAddr: data.address,
+        plasmaAddr: data.plasma_addr,
+        decimals: data.decimal,
+      }),
+    )
     console.log("set BaseURL: success!!")
   }
   /**
@@ -63,22 +59,9 @@ class TokenService {
    * @param coinSymbol like BNB ETH LOOM... etc
    * @param chain address from plasma | ethereum
    */
-  getTokenAddressBySymbol(coinSymbol: string, chain: string) {
-    const data = this.symbols.find((token) => {
-      return token.symbol === coinSymbol
-    })
-    if (data === undefined) {
-      throw new Error("Unknown token " + coinSymbol)
-    }
-    console.log("getting TokenAddressBySymbol...")
-    switch (chain.toLowerCase()) {
-      case "plasma":
-        return data.plasma_addr
-      case "ethereum":
-        return data.address
-      default:
-        throw new Error("Unknown chain " + chain)
-    }
+  getTokenAddressBySymbol(coinSymbol: string, chain: "ethereum" | "plasma") {
+    const data = this.getTokenbySymbol(coinSymbol)
+    return data[chain.toLowerCase()]
   }
 
   /**
@@ -91,12 +74,29 @@ class TokenService {
   }
   /**
    * Return token object
-   * @param coinSymbol 
+   * @param coinSymbol
    */
-  getTokenbySymbol(coinSymbol: string) {
-    const tokenDetial = this.symbols.find((token) => coinSymbol === token.symbol)
-    console.log("getting token by symbol... : ", tokenDetial)
-    return tokenDetial
+  getTokenbySymbol(coinSymbol: string): TokenData {
+    const data = this.symbols.find((token) => token.symbol === coinSymbol)
+    if (data === undefined) {
+      throw new Error("Unknown token " + coinSymbol)
+    }
+    return data
+  }
+
+  tokenFromAddress(
+    address: string,
+    chain: "plasma" | "ethereum",
+  ): TokenData | null {
+    const info = this.symbols.find((token) => token[chain] === address)
+    if (info === undefined) {
+      console.warn(
+        "No knwon token contract matches address ${address} on ${chain}",
+      )
+      return null
+    } else {
+      return info[chain]
+    }
   }
 }
 

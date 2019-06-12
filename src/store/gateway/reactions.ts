@@ -48,7 +48,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // Initialize Ethereum gateways & coin contracts
       await EthereumGateways.init(ethereumModule.web3)
       const ethereumGatewayService = EthereumGateways.service()
-      ethereumGatewayService.add("LOOM", store.state.ethereum.erc20Addresses.loom)
+      ethereumGatewayService.add("LOOM", store.state.ethereum.erc20Addresses.LOOM)
       ethereumGatewayService.add("ETH", "") // Ether does not have a contract address
       await PlasmaGateways.init(
         plasmaModule.state.client!,

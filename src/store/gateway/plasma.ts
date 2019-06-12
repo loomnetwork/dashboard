@@ -34,10 +34,10 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   ) {}
 
   withdraw(amount: BN) {
-    // Address of Loom on Ethereum
+    // Address of Loom on Ethereum]
     const loomCoinAddress = Address.fromString(
       // @ts-ignore
-      `eth:${ethereumModule.state.erc20Addresses.loom}`,
+      `eth:${ethereumModule.state.erc20Addresses.LOOM}`,
     )
     this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
   }

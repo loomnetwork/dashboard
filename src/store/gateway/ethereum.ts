@@ -69,6 +69,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       ss,
     ).send({from: localAddress})
     result.then((tx) => {
+      localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
       localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
     })
     return result

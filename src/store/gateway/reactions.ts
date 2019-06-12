@@ -87,7 +87,8 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // TODO: Add support for multiple tokens
       const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
       // @ts-ignore
-      if (receipt && (JSON.parse(localStorage.getItem("latestWithdrawalBlock")))) {
+      const withdrawalIsPending = JSON.parse(localStorage.getItem("pendingWithdrawal"))
+      if (receipt && (withdrawalIsPending)) {
         gatewayModule.setWithdrawalReceipts(receipt)
       }
 

@@ -194,6 +194,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     next()
     receipt = await gatewayModule.pollReceipt(funds.symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     next()
   } catch (error) {
     console.error(error)

@@ -2,35 +2,11 @@
  * @module dpos-dashboard.gateway
  */
 
-import debug from "debug"
-import BN from "bn.js"
-
-import { getStoreBuilder } from "vuex-typex"
-import { Provider } from "ethers/providers"
-import {
-  Address,
-  LocalAddress,
-  Client,
-  IEthereumSigner,
-  EthersSigner,
-  CryptoUtils,
-} from "loom-js"
-import {
-  IAddressMapping,
-  AddressMapper,
-} from "loom-js/dist/contracts/address-mapper"
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { Funds } from "@/types"
-import { ethers, Contract } from "ethers"
-
-import { GatewayState, HasGatewayState } from "./types"
-
-import { timer } from "rxjs"
-import { BareActionContext } from "vuex-typex"
-
-import { ActionContext } from "./types"
-import { ParamType } from "ethers/utils"
 import { getRequired } from "@/utils"
+import debug from "debug"
+import { Address, CryptoUtils, EthersSigner, LocalAddress } from "loom-js"
+import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
+import { ActionContext } from "./types"
 
 const log = debug("dash.mapper")
 
@@ -43,6 +19,7 @@ export async function loadMapping(context: ActionContext, address: string) {
     Address.fromString([chainId, caller].join(":")),
   )
   try {
+    log("getMappingAsync", `eth:${address}`)
     const mapping = await mapper.getMappingAsync(
       Address.fromString(`eth:${address}`),
     )
@@ -52,11 +29,15 @@ export async function loadMapping(context: ActionContext, address: string) {
     if (e.message.includes("failed to map address")) {
       context.state.mapping = {
         from: Address.fromString(`eth:${address}`),
-        to: Address.fromString(":0x0000000000000000"),
+        to: new Address("", new LocalAddress(new Uint8Array())),
       }
     } else {
       console.error("Failed to load mapping, response was " + e.message)
       // todo feedback.showError("mapper.errors.load")
+      context.state.mapping = {
+        from: Address.fromString(`eth:${address}`),
+        to: new Address("", new LocalAddress(new Uint8Array())),
+      }
     }
   } finally {
     mapper.removeAllListeners()
@@ -73,21 +54,25 @@ export async function createMapping(context: ActionContext) {
   // @ts-ignore, bignumber changed between version
   const ethSigner = new EthersSigner(signer)
   const plasmaId = generateNewId()
+  console.log("caller", caller)
   const mapper = await AddressMapper.createAsync(
     client,
-    Address.fromString([client.chainId, caller].join()),
+    Address.fromString([client.chainId, caller].join(":")),
   )
 
   try {
     await mapper.addIdentityMappingAsync(
-      Address.fromString(`eth:${ethAddress}`),
+      ethAddress,
       plasmaId.address,
       ethSigner,
     )
+    console.error("addIdentityMappingAsync ok  ")
+
     state.mapping = await mapper.getMappingAsync(
       Address.fromString(`eth:${ethAddress}`),
     )
   } catch (e) {
+    console.error(e)
     console.error(
       "could not get mapping after creating a new identity" +
         ethAddress +

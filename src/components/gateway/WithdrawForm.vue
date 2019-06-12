@@ -4,8 +4,13 @@
            no-close-on-esc
            hide-header-close
            id="deposit-approval-success"  title="Withdraw">
-    <div>
+    <div v-if="status === 'default'">
       <amount-input :min="1" :max="100" @input="inputHandler" @isError="errorHandler"/>
+    </div>
+    <div v-if="status === 'error'">
+      <h2>
+        An error occurred, please try again!
+      </h2>
     </div>
     <template slot="modal-footer">
       <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
@@ -38,6 +43,7 @@ export default class WithdrawForm extends Vue {
 
   @Prop({required: true}) token!: string // prettier-ignore
 
+  status: string = "default"
   amount: any = 0
   amountIsValid: boolean = false
 
@@ -84,6 +90,11 @@ export default class WithdrawForm extends Vue {
 
       this.beginWithdrawal(payload).then(() => {
         this.setShowWithdrawProgress(false)
+      }).then((err) => {
+        console.log(err)
+        this.setShowWithdrawProgress(false)
+        this.setShowWithdrawForm(true)
+        this.status = "error"
       })
       this.close()
       this.setShowWithdrawProgress(true)

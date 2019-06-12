@@ -177,9 +177,9 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   try {
     receipt = await gateway.withdrawalReceipt()
     next()
-  } catch (error) {
-    console.error(error)
-    return
+  } catch (err) {
+    console.error(err)
+    throw new Error(err)
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
@@ -196,7 +196,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     next()
   } catch (error) {
     console.error(error)
-    return
+    throw new Error(error)
   }
 }
 

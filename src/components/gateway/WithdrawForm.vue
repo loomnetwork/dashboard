@@ -90,7 +90,7 @@ export default class WithdrawForm extends Vue {
 
       this.beginWithdrawal(payload).then(() => {
         this.setShowWithdrawProgress(false)
-      }).then((err) => {
+      }).catch((err) => {
         console.log(err)
         this.setShowWithdrawProgress(false)
         this.setShowWithdrawForm(true)
@@ -98,7 +98,6 @@ export default class WithdrawForm extends Vue {
       })
       this.close()
       this.setShowWithdrawProgress(true)
-
     } catch (error) {
       console.log(error)
     }

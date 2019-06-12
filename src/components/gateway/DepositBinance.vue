@@ -1,31 +1,35 @@
 <template>
-  <b-modal id="deposit-binance">
+  <b-modal id="deposit-binance" lazy @hidden="resetModal"
+  no-close-on-esc
+  no-close-on-backdrop
+  :hide-header-close="step === 3">
     <!-- <template slot="modal-title">Deposit</template> -->
     <div class="deposit-container">
-      <h3>Deposit to Plasmachain from Binance</h3>
-      <span class="step" v-if="!isProcessTransaction">Step {{ step }} of 2</span>
+      <h3>{{ title }}</h3>
+      <span class="step" v-if="step <= 2">Step {{ step }} of 2</span>
       <div class="content" v-if="step === 1">
         <div class="description">Please go to <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form</div>
         <div class="deposit-form">
-          <p>Select token</p>
-          <b-form-select v-model="selected">
-            <option :value="null">Please select an option</option>
-            <option value="a">Option A</option>
-            <option value="b" disabled>Option B (disabled)</option>
-          </b-form-select>
+          <p>Send Asset</p>
+          <div class="flex-row my-4">
+            <div class="yellow-line"></div>
+            <div class="gray-line"></div>
+          </div>
+          <p>Select Asset</p>
+          <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
           <p>Gateway Address</p>
-          <b-form-input placeholder="Gateway Address"></b-form-input>
+          <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled ></b-form-input>
           <p>Amount to send</p>
-          <b-form-input placeholder="Amount"></b-form-input>
+          <b-form-input placeholder="Amount" :value="0" disabled></b-form-input>
           <p>Memo</p>
-          <b-form-textarea rows="3" placeholder="Memo text"></b-form-textarea>
+          <b-form-textarea rows="3" placeholder="Memo text" disabled v-model="form.memo"></b-form-textarea>
           <div class="space-between">
             <p>Fee: 0.00000 BNB</p>
             <p>Available: 0.0000000</p>
           </div>
         </div>
       </div>
-      <div class="content to-left mb-3" v-else-if="step === 2">
+      <div class="content mb-3" v-else-if="step === 2">
         <p>Transaction hash from</p>
         <a href="https://testnet.binance.org/en/transactionHistory">https://testnet.binance.org/en/transactionHistory</a>
         <b-form-input v-model="txHash" placeholder="txHash"></b-form-input>
@@ -37,10 +41,11 @@
         <h4 style="color: #e11f61;">Please don't close or refresh your browser!</h4>
       </div>
       <div class="content" v-else-if="step === 4">
-        <p>transaction Complete</p>
+        <p>You successfully deposit xxx Eth/Binance to Plasmachain</p>
+        <a href="#">Check on history page</a>
       </div>
     </div>
-    <div slot="modal-footer" class="w-100 space-between" :class="{ hide: isProcessTransaction }">
+    <div slot="modal-footer" class="w-100 space-between" :class="{ hide: step >= 3 }">
       <b-button @click="onBack">{{ backButtonText }}</b-button>
       <b-button variant="primary" @click="onNext">Next</b-button>
     </div>
@@ -55,8 +60,18 @@ import { capitalize } from "@/utils"
 export default class DepositBinance extends Vue {
   step: number = 1
   txHash: string = ""
+  form = {
+    selected: "loom",
+    options: [
+      { value: "loom", text: "LOOM LOOM-Token", disabled: true },
+    ],
+    gateway: "something",
+    memo: "loom00000"
+  }
 
-  isProcessTransaction = false
+  get title() {
+    return this.step === 4 ? "Success" : "Deposit to Plasmachain from Binance"
+  }
 
   get backButtonText() {
     return this.step === 1 ? "Cancel" : "Back"
@@ -72,11 +87,13 @@ export default class DepositBinance extends Vue {
     this.step += 1 // Increment step
     if (this.step === 3) {
       // Making transaction
-      this.isProcessTransaction = true
       setTimeout(() => {
         this.step += 1
       }, 5000)
     }
+  }
+  resetModal() {
+    this.step = 1
   }
 }
 </script>
@@ -96,9 +113,28 @@ h4 {
   margin-bottom: 1rem;
 }
 
+a {
+  color: #4d4ccd;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
 p {
   color: gray;
   margin: 16px 0 4px 4px;
+}
+
+.yellow-line {
+  width: 60px;
+  height: 3px;
+  margin-right: 10px;
+  background-color: #f0b90a;
+}
+.gray-line {
+  width: 60px;
+  height: 3px;
+  background-color: #dfe2e7;
 }
 
 .to-left {
@@ -112,8 +148,12 @@ p {
 }
 
 .deposit-form {
-  margin: 1em 0;
+  margin: 1.5em 0;
   width: 100%;
+  padding: 0 1em 1em 1em;
+  background-color: rgba(240,185,11,0.08);
+  border-radius: 8px;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0;
 }
 
 .description {
@@ -136,32 +176,31 @@ p {
   margin: 1em;
 }
 .button-group {
-  display: flex;
-  flex-direction: row;
+  @extend .flex-column;
   justify-content: space-around;
 }
 .token-option {
-  display: flex;
-  flex-direction: column;
+  @extend .flex-column;
   align-items: center;
 }
 .space-between {
-  display: flex;
-  flex-direction: row;
+  @extend .flex-row;
   justify-content: space-between;
 }
 .content {
-  display: flex;
-  flex-direction: column;
+  @extend .flex-column;
   justify-content: center;
   align-items: center;
 }
 .deposit-container {
+  @extend .flex-column;
   width: 100%;
-  display: flex;
-  flex-direction: column;
 }
 .hide {
   display: none;
+}
+.form-control:disabled {
+  background-color: white;
+  cursor: text;
 }
 </style>

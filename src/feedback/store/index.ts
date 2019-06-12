@@ -22,7 +22,7 @@ const initialState: FeedbackState = {
   alert: {
     type: "alert",
     title: "",
-    message: "s",
+    message: "",
     onConfirm() { return },
   },
 }

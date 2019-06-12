@@ -40,7 +40,7 @@ export default class WithdrawConfirmed extends Vue {
 
   completeWithdrawalHandler() {
     try {
-      const symbol = "loom" // TODO: Load symbol from receipt
+      const symbol = "LOOM" // TODO: Load symbol from receipt
       // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
       // const symbol = getTokenSymbolFromAddress(tokenAddress)
       this.completeWithdrawal(symbol)

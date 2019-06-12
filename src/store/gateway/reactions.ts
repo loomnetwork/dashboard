@@ -47,11 +47,10 @@ export function gatewayReactions(store: Store<DashboardState>) {
       await setPlasmaAccount(mapping)
       // Initialize Ethereum gateways & coin contracts
       await EthereumGateways.init(ethereumModule.web3)
-      const ethGateway = EthereumGateways.service()
-      ethGateway.add("LOOM", store.state.ethereum.erc20Addresses.loom)
-      ethGateway.add("ETH", "") // Ether does not have a contract address
-      EthereumGateways.init(ethereumModule.web3)
-      PlasmaGateways.init(
+      const ethereumGatewayService = EthereumGateways.service()
+      ethereumGatewayService.add("LOOM", store.state.ethereum.erc20Addresses.loom)
+      ethereumGatewayService.add("ETH", "") // Ether does not have a contract address
+      await PlasmaGateways.init(
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
@@ -73,14 +72,14 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // Listen to approval & deposit events
       listenToDepositApproval(
         ethereumModule.state.address,
-        ethGateway.loomGateway,
+        ethereumGatewayService.loomGateway,
         ethereumModule.getERC20("LOOM")!,
         store,
       )
 
       listenToDeposit(
         ethereumModule.state.address,
-        ethGateway.loomGateway,
+        ethereumGatewayService.loomGateway,
         ethereumModule.getERC20("LOOM")!,
         store,
       )
@@ -88,7 +87,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // ==================================
       // ====== Check for receipt
       // ==================================
-      const receipt = await plasmaGatewayService.get("loom").withdrawalReceipt()
+      const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
       // TODO: Add support for multiple tokens
       gatewayModule.setWithdrawalReceipts(receipt)
     },

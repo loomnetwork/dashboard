@@ -28,31 +28,31 @@
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
           <div>
             <h5 class="highlight">
-              {{state.ethereum.coins.loom.balance | tokenAmount}} LOOM
+              {{state.ethereum.coins.LOOM.balance | tokenAmount}} LOOM
               <loom-icon
-                v-if="!state.ethereum.coins.loom.loading"
+                v-if="!state.ethereum.coins.LOOM.loading"
                 :color="'#f0ad4e'"
                 width="20px"
                 height="20px"
               />
             </h5>
           </div>
-          <div v-if="state.ethereum.coins.loom.loading">
+          <div v-if="state.ethereum.coins.LOOM.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>
           <div>
             <h5 class="highlight">
-              {{state.plasma.coins.loom.balance | tokenAmount}} LOOM
+              {{state.plasma.coins.LOOM.balance | tokenAmount}} LOOM
               <loom-icon
-                v-if="!state.plasma.coins.loom.loading"
+                v-if="!state.plasma.coins.LOOM.loading"
                 :color="'#f0ad4e'"
                 width="20px"
                 height="20px"
               />
             </h5>
           </div>
-          <div v-if="state.plasma.coins.loom.loading">
+          <div v-if="state.plasma.coins.LOOM.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
           <!-- unclaimed 
@@ -303,8 +303,8 @@ export default class MobileAccount extends Vue {
   }
 
   refresh() {
-    ethereumModule.refreshBalance("loom")
-    plasmaModule.refreshBalance("loom")
+    ethereumModule.refreshBalance("LOOM")
+    plasmaModule.refreshBalance("LOOM")
   }
 
   get rewardsValue() {

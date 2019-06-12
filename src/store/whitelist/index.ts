@@ -79,7 +79,7 @@ async function addDeployerAsync(
   try {
     const contractAddress = context.state.whiteListContractAddress!.local.toString()
     const approvedResult = await plasmaModule.approve({
-      symbol: "loom",
+      symbol: "LOOM",
       weiAmount: new BN(
         context.rootState.plasma.web3!.utils.toWei(
           payload.tier.fee.toString(),
@@ -110,7 +110,7 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
-    await plasmaModule.refreshBalance("loom")
+    await plasmaModule.refreshBalance("LOOM")
     CommonTypedStore.setSuccessMsg(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )

@@ -56,6 +56,7 @@ class TokenService {
     this.baseURL = url
     const result = await axios.get(this.baseURL)
     this.symbols = result.data.tokens as TokenData[]
+    console.log("set BaseURL: success!!")
   }
   /**
    *
@@ -69,6 +70,7 @@ class TokenService {
     if (data === undefined) {
       throw new Error("Unknown token " + coinSymbol)
     }
+    console.log("getting TokenAddressBySymbol...")
     switch (chain.toLowerCase()) {
       case "plasma":
         return data.plasma_addr
@@ -84,7 +86,17 @@ class TokenService {
    */
   getAllTokenSymbol() {
     const symbolList = this.symbols.map((token) => token.symbol)
+    console.log("getting all token symbol... : ", symbolList)
     return symbolList
+  }
+  /**
+   * Return token object
+   * @param coinSymbol 
+   */
+  getTokenbySymbol(coinSymbol: string) {
+    const tokenDetial = this.symbols.find((token) => coinSymbol === token.symbol)
+    console.log("getting token by symbol... : ", tokenDetial)
+    return tokenDetial
   }
 }
 

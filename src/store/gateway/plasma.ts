@@ -25,7 +25,7 @@ interface PlasmaGatewayAdapter {
 }
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
-  token = "loom"
+  token = "LOOM"
 
   constructor(
     private contract: LoomCoinTransferGateway,
@@ -34,10 +34,10 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   ) {}
 
   withdraw(amount: BN) {
-    // Address of Loom on Ethereum
+    // Address of Loom on Ethereum]
     const loomCoinAddress = Address.fromString(
       // @ts-ignore
-      `eth:${ethereumModule.state.erc20Addresses.loom}`,
+      `eth:${ethereumModule.state.erc20Addresses.LOOM}`,
     )
     this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
   }
@@ -47,7 +47,7 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
 }
 
 class EthGatewayAdapter implements PlasmaGatewayAdapter {
-  token = "eth"
+  token = "ETH"
 
   constructor(
     public contract: TransferGateway,
@@ -132,10 +132,10 @@ class PlasmaGateways {
   add(token: string, srcChainGateway: Address) {
     let adapter: PlasmaGatewayAdapter
     switch (token) {
-      case "loom":
+      case "LOOM":
         adapter = new LoomGatewayAdapter(this.loomGateway, srcChainGateway, this.mapping)
         break
-      case "eth":
+      case "ETH":
         adapter = new EthGatewayAdapter(this.mainGateway, srcChainGateway, this.mapping)
         break
       // case "tron":
@@ -169,12 +169,12 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     receipt = await gateway.withdrawalReceipt()
     next()
   } catch (error) {
-    console.error("Elvis has left the building", error)
+    console.error(error)
     return
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
-    gatewayModule.set(receipt)
+    gatewayModule.setWithdrawalReceipts(receipt)
     // tell user ongoing withdraw
     // CommonTypedStore.setErrorMsg("gateway.error.existing_receipt")
     return
@@ -183,7 +183,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     await gateway.withdraw(funds.weiAmount)
     next()
     receipt = await gatewayModule.pollReceipt(funds.symbol)
-    gatewayModule.set(receipt)
+    gatewayModule.setWithdrawalReceipts(receipt)
     next()
   } catch (error) {
     console.error(error)

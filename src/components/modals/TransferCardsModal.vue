@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="transfer-cards-modal" ref="modalRef" title="Transfer Cards" hide-footer centered>
+  <b-modal id="transfer-cards-modal" ref="modalRef" title="Transfer Cards" hide-footer centered @show="resetModal()">
     <b-container fluid>
       <h6>Card ID: {{cardToTransfer.id}}</h6>
       <h6>Name: {{cardToTransfer.display_name}}</h6>
@@ -54,7 +54,8 @@ export default class TransferCardsModal extends Vue {
   confirmCard = false
   isValidAddress = false
 
-  mounted() {
+
+  resetModal(){
     this.amountToTransfer = 1
     this.receiverAddress = ""
   }
@@ -68,7 +69,8 @@ export default class TransferCardsModal extends Vue {
   }
 
   transferCardsHandler() {
-    if (this.amountToTransfer > this.cardToTransfer!.amount || this.amountToTransfer % 1 !== 0) {
+    // @ts-ignore
+    if (parseInt(this.amountToTransfer, 10) > parseInt(this.cardToTransfer!.amount, 10) || parseInt(this.amountToTransfer, 10) % 1 !== 0) {
       this.setErrorMsg(this.$t("messages.invalid_amount").toString())
       return
     }

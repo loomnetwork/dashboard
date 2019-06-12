@@ -60,7 +60,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
-    debugger
     return this.contract.methods.withdrawERC20(
       amount,
       this.tokenAddress,
@@ -76,7 +75,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
  * adapts eth deposit/withdraw calls to EthereumGatewayAdapter
  */
 class EthGatewayAdapter implements EthereumGatewayAdapter {
-  token = "eth"
+  token = "ETH"
 
   constructor(
     private vmc: ValidatorManagerContract,
@@ -160,10 +159,10 @@ class EthereumGateways {
     const { vmc, mainGateway, loomGateway, web3 } = this
     let adapter: EthereumGatewayAdapter
     switch (token) {
-      case "eth":
+      case "ETH":
         adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
-      case "loom":
+      case "LOOM":
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
         break
       default:

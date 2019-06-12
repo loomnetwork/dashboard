@@ -1,16 +1,9 @@
-import {
-  HasPlasmaState,
-  PlasmaSigner,
-  PlasmaTokenKind,
-  PlasmaState,
-} from "./types"
+import { PlasmaSigner, PlasmaTokenKind } from "./types"
 import { Store } from "vuex"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { CryptoUtils, LoomProvider, Client, LocalAddress } from "loom-js"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import { ERC20 } from "./web3-contracts/ERC20"
-import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import Web3 from "web3"
 
 import * as Tokens from "./tokens"
@@ -18,10 +11,6 @@ import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
-const ERC20ABI = require ("loom-js/dist/mainnet-contracts/ERC20.json") 
-
-import TOKENS from "@/data/topTokensSymbol.json"
-import { type } from 'os';
 
 import debug from "debug"
 const log = debug("dash.plasma")
@@ -54,14 +43,20 @@ export function plasmaReactions(store: Store<DashboardState>) {
       await resetERC20Contracts(store)
     },
   )
-  store.subscribeAction(
-    {async after(action){
-      if(action.type === "plasma/transfer" || action.type === "plasma/addToken"){
-        console.log("in subscription",action);
-        await plasmaModule.refreshBalance(action.payload.symbol || action.payload)
+
+  store.subscribeAction({
+    async after(action) {
+      if (
+        action.type === "plasma/transfer" ||
+        action.type === "plasma/addToken"
+      ) {
+        console.log("in subscription ", action)
+        await plasmaModule.refreshBalance(
+          action.payload.symbol || action.payload,
+        )
       }
-    }}
-  )
+    },
+  })
 }
 
 async function resetLoomContract(store: Store<DashboardState>) {
@@ -72,24 +67,24 @@ async function resetLoomContract(store: Store<DashboardState>) {
   }
   const caller = await plasmaModule.getCallerAddress()
   const contract = await Coin.createAsync(state.client!, caller)
-  await Tokens.addContract("loom", PlasmaTokenKind.LOOMCOIN, contract)
-  state.coins.loom = {
+  await Tokens.addContract("LOOM", PlasmaTokenKind.LOOMCOIN, contract)
+  state.coins.LOOM = {
     balance: new BN("0"),
     loading: true,
   }
-  plasmaModule.refreshBalance("loom")
+  plasmaModule.refreshBalance("LOOM")
 }
 
 async function resetEthContract(store: Store<DashboardState>) {
   const state = store.state.plasma
   const caller = await plasmaModule.getCallerAddress()
   const contract = await EthCoin.createAsync(state.client!, caller)
-  await Tokens.addContract("eth", PlasmaTokenKind.ETH, contract)
-  state.coins.eth = {
+  await Tokens.addContract("ETH", PlasmaTokenKind.ETH, contract)
+  state.coins.ETH = {
     balance: new BN("0"),
     loading: true,
   }
-  plasmaModule.refreshBalance("eth")
+  plasmaModule.refreshBalance("ETH")
 }
 
 async function resetERC20Contracts(store: Store<DashboardState>) {}

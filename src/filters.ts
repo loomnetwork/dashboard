@@ -28,6 +28,7 @@ export function initFilters() {
   // Vue.filter('timeFromNow', formatDurationFromNow)
   Vue.filter("loomAddress", formatToLoomAddress)
   Vue.filter("swapTextBase64AndHexLabel", swapTextBase64AndHexLabel)
+  Vue.filter("capitalizeWord", capitalizeWord)
 }
 
 export function formatValidatorWebsite(validator: { Website: string }) {
@@ -103,4 +104,8 @@ export function formatTokenAmount(wei: BN) {
 
 export function swapTextBase64AndHexLabel(input) {
   return input === "base64" ? "hex" : "base64"
+}
+
+export function capitalizeWord(text: string) {
+  return text.charAt(0).toUpperCase() + text.substring(1)
 }

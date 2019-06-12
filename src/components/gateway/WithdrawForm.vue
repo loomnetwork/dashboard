@@ -78,6 +78,7 @@ export default class WithdrawForm extends Vue {
       // TODO: Cache transactions
       // const txObj = this.state.gateway.pendingTransactions[0]
       const payload: Funds = {
+        chain: "ethereum",
         symbol: this.token,
         weiAmount: this.amount,
       }

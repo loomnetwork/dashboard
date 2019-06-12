@@ -93,8 +93,12 @@ async function addDeployerAsync(
   } catch (error) {
     let errorMessage = error.message
     const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
-    if (!error.message.includes(userDeniedSignTx)) {
+    const alreadyExist = i18n.t("messages.deployer_already_exists").toString()
+    if (error.message.includes("User denied message")) {
       errorMessage = userDeniedSignTx
+    }
+    if (error.message.includes("deployer already exists")) {
+      errorMessage = alreadyExist
     }
     CommonTypedStore.setErrorMsg(
       i18n
@@ -133,7 +137,7 @@ async function getDeployersAsync(context: WhiteListContext) {
     result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
     deployerAddresses = await whiteListModule.formatDeployersAddress(result)
   } catch (error) {
-    console.error(error)
+    log("getDeployersAsync", error)
     deployerAddresses = []
   }
   whiteListModule.setUserDeployersAddress(deployerAddresses)

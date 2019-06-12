@@ -134,7 +134,13 @@ export default class AddKey extends Vue {
       this.setErrorMsg("Your balance isn't enough. Please deposit first.")
       return
     }
+
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
+    if (this.publicKeys.filter((address) => address.hex === loomAddress).length > 0) {
+      this.setErrorMsg("This address is already exists in your deployer list.")
+      return
+    }
+
     this.setShowLoadingSpinner(true)
     let result = await this.addDeployerAsync({ deployer: loomAddress, tier })
     this.setShowLoadingSpinner(false)

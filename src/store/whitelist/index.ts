@@ -137,7 +137,7 @@ async function getDeployersAsync(context: WhiteListContext) {
     result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
     deployerAddresses = await whiteListModule.formatDeployersAddress(result)
   } catch (error) {
-    console.error(error)
+    log("getDeployersAsync", error)
     deployerAddresses = []
   }
   whiteListModule.setUserDeployersAddress(deployerAddresses)

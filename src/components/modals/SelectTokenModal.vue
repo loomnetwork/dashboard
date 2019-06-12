@@ -1,26 +1,18 @@
 <template>
-  <b-modal id="select-token-modal">
+  <b-modal id="select-token-modal" hide-footer>
     <template slot="modal-title">{{ title }}</template>
     <b-form-group label="From">
       <div class="button-group">
-        <b-form-radio v-model="selected" name="eth-button" value="ethereum">
-          <div class="token-option">
-            <p>Ethereum</p>
-            <img src="../../assets/ethereum_logo.png" class="logo" alt="">
-          </div>
-        </b-form-radio>
-        <b-form-radio v-model="selected" name="bnb-button" value="binance">
-          <div class="token-option">
-            <p>Binance</p>
-            <img src="../../assets/binance_logo.png" class="logo" alt="">
-          </div>
-        </b-form-radio>
+        <div class="token-option" @click="onNext(`ethereum`)">
+          <p>Ethereum</p>
+          <img src="../../assets/ethereum_logo.png" class="logo" alt="">
+        </div>
+        <div class="token-option" @click="onNext(`binance`)">
+          <p>Binance</p>
+          <img src="../../assets/binance_logo.png" class="logo" alt="">
+        </div>
       </div>
     </b-form-group>
-    <div slot="modal-footer" class="w-100 footer-button">
-      <b-button @click="$bvModal.hide('select-token-modal')">Cancel</b-button>
-      <b-button variant="primary" @click="onNext">Next</b-button>
-    </div>
   </b-modal>
 </template>
 
@@ -32,15 +24,13 @@ import { capitalize } from "@/utils"
 export default class SelectTokenModal extends Vue {
   @Prop(String) type: string = ""
 
-  selected: string = "ethereum"
-
   get title() {
     return capitalize(this.type.toLowerCase())
   }
-  onNext() {
+  onNext(tokenSymbol: string) {
     this.$emit("selectedToken", {
       type: this.type,
-      token: this.selected,
+      token: tokenSymbol,
     })
     this.$root.$emit("bv::hide::modal", "select-token-modal")
   }
@@ -49,7 +39,7 @@ export default class SelectTokenModal extends Vue {
 
 <style lang="scss" scoped>
 .logo {
-  width: 50px;
+  height: 80px;
 }
 .button-group {
   display: flex;
@@ -60,6 +50,16 @@ export default class SelectTokenModal extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 50%;
+  padding: 1em;
+  padding-bottom: 1.5em;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0;
+  margin: 1em;
+  &:hover {
+    cursor: pointer;
+    box-shadow: rgba(219, 219, 219, 0.56) 0px 6px 8px 0;
+    background-color: rgba(0, 0, 0, 0.01);
+  }
 }
 .footer-button {
   display: flex;

@@ -82,7 +82,9 @@ export default class WithdrawForm extends Vue {
         weiAmount: this.amount,
       }
 
-      this.beginWithdrawal(payload)
+      this.beginWithdrawal(payload).then(() => {
+        this.setShowWithdrawProgress(false)
+      })
       this.close()
       this.setShowWithdrawProgress(true)
 

@@ -10,6 +10,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.provider, onProviderChange)
   store.watch((s) => s.ethereum.address, onAddressChange)
 
+
   /**
    * create erc contracts, watch balances etc
    */
@@ -27,6 +28,13 @@ export function ethereumReactions(store: Store<DashboardState>) {
       return
     }
     ethereumModule.initERC20("LOOM")
+
+    // Set latest block number every 15 seconds
+    setInterval(async () => {
+      const result = await ethereumModule.web3.eth.getBlockNumber() || 0
+      ethereumModule.setBlockNumber(result)
+    }, 15 * 1000)
+
   }
 
   // TODO: Add a guard to check dependencies

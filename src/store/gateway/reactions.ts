@@ -84,9 +84,13 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // ==================================
       // ====== Check for receipt
       // ==================================
-      const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
       // TODO: Add support for multiple tokens
-      gatewayModule.setWithdrawalReceipts(receipt)
+      const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
+      // @ts-ignore
+      if (receipt && (JSON.parse(localStorage.getItem("latestWithdrawalBlock")))) {
+        gatewayModule.setWithdrawalReceipts(receipt)
+      }
+
     },
   )
 
@@ -182,4 +186,17 @@ function formatTxFromEvent(event: EventLog) {
     weiAmount: new BN(event.returnValues.value.toString()),
   }
   return { ...event, funds }
+}
+
+function checkForPastWithdrawals(adapter, callback) {
+
+  // Fallback
+  // check if latest withdrawal block > latest block number
+  // pastBlocks ? indexBlock = JSON.parse(pastBlocks) : indexBlock = (latestBlockNumber - 20)
+  // adapter.contract.events.TokenWithdrawn({ fromBlock: indexBlock}).on(
+  //   "data", (event) => {
+  //   console.log("Past event exists", event)
+  //   gatewayModule.setWithdrawalInProgress(true)
+  // }).on("error", console.error)
+
 }

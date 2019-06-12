@@ -48,7 +48,8 @@ export interface EthereumState extends EthereumConfig {
       balance: BN
       loading: boolean,
     },
-  }
+  },
+  blockNumber: number,
 }
 
 export interface WalletType {

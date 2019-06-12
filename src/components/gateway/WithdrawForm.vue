@@ -13,6 +13,8 @@
       </h2>
     </div>
     <template slot="modal-footer">
+      <b-btn @click="close()">Cancel</b-btn>
+      <span style="flex:1"></span>      
       <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
     </template>
   </b-modal>

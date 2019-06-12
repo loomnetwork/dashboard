@@ -172,6 +172,7 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
+
   const gateway = service().get(funds.symbol)
   let receipt: IWithdrawalReceipt | null
   try {

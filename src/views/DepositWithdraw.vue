@@ -100,6 +100,7 @@ export default class DepositWithdraw extends Vue {
   get withdrawalInProgress(): boolean {
     // @ts-ignore
     const withdrawalBlock = JSON.parse(localStorage.getItem("latestWithdrawalBlock"))
+    if (!withdrawalBlock) return false
     return (ethereumModule.state.blockNumber - 10) > withdrawalBlock ? false : true
   }
 

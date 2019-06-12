@@ -93,7 +93,7 @@ async function addDeployerAsync(
   } catch (error) {
     let errorMessage = error.message
     const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
-    if (!error.message.includes(userDeniedSignTx)) {
+    if (error.message.includes("User denied message")) {
       errorMessage = userDeniedSignTx
     }
     CommonTypedStore.setErrorMsg(

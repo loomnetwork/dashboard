@@ -2,12 +2,9 @@ import BN from "bn.js"
 import Web3 from "web3"
 import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
 import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
+import { timer } from "rxjs"
 
-interface BinanceGatewayAdapter {
-    token: string
-}
-
-class ERC20GatewayAdapter implements BinanceGatewayAdapter {
+class ERC20GatewayAdapter {
     constructor(
         private vmc: ValidatorManagerContract,
         readonly contract: ERC20Gateway_v2,
@@ -15,13 +12,13 @@ class ERC20GatewayAdapter implements BinanceGatewayAdapter {
         readonly token: string,
     ) {}
     deposit(amount: BN, address: string) {
-        console.warn("ERC20GatewayAdapter-deposit !!")
+        return timer(2000).toPromise()
     }
     withdraw() {
-        console.warn("ERC20GatewayAdapter-withdraw !!")
+        return timer(2000).toPromise()
     }
 }
 
 export function init() {
-    console.warn("init binance!!")
+    return timer(2000).toPromise()
 }

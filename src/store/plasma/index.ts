@@ -10,7 +10,6 @@ import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 
 import * as mutations from "./mutations"
-import TokenService from "@/services/TokenService"
 
 import {
   setupProtocolsFromEndpoint,

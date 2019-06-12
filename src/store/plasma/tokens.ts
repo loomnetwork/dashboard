@@ -10,12 +10,10 @@ import {
 } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import TOKENS from "@/data/topTokensSymbol.json"
-import BoosterPackJson from "@/contracts/BoosterPack.json"
 const ERC20ABI = require("loom-js/dist/mainnet-contracts/ERC20.json")
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
-import TokenService from "@/services/TokenService"
+import { tokenService } from "@/services/TokenService"
 
 const log = debug("plasma")
 
@@ -155,14 +153,14 @@ export function addCoinState(state: PlasmaState, symbol: string) {
 export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   const state = context.state
   const symbol = tokenSymbol.toUpperCase()
-  const token = TokenService.getTokenbySymbol(symbol)
+  const token = tokenService.getTokenbySymbol(symbol)
   const web3 = state.web3!
   // const network = state.networkId // 'us1'
   const chain = "plasma"
   if (token === undefined) {
     throw new Error("Could not find token symbol " + tokenSymbol)
   }
-  const address = TokenService.getTokenAddressBySymbol(symbol, chain)
+  const address = tokenService.getTokenAddressBySymbol(symbol, chain)
   if (!(symbol in state.coins)) {
     state.coins[token.symbol] = {
       decimals: token.decimals,

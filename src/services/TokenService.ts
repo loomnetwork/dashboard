@@ -29,8 +29,8 @@ import axios from "axios"
 
 interface TokenData {
   symbol: string
-  ethereumAddr: string
-  plasmaAddr: string
+  ethereum: string
+  plasma: string
   decimals: number
 }
 
@@ -47,19 +47,22 @@ class TokenService {
     this.symbols = result.data.tokens.map(
       (data): TokenData => ({
         symbol: data.symbol,
-        ethereumAddr: data.address,
-        plasmaAddr: data.plasma_addr,
+        ethereum: data.address,
+        plasma: data.plasma_addr,
         decimals: data.decimal,
       }),
     )
-    console.log("set BaseURL: success!!")
+    console.log("tokens registery loaded")
   }
   /**
    *
    * @param coinSymbol like BNB ETH LOOM... etc
    * @param chain address from plasma | ethereum
    */
-  getTokenAddressBySymbol(coinSymbol: string, chain: "ethereum" | "plasma") {
+  getTokenAddressBySymbol(
+    coinSymbol: string,
+    chain: "ethereum" | "plasma",
+  ): string {
     const data = this.getTokenbySymbol(coinSymbol)
     return data[chain.toLowerCase()]
   }
@@ -95,9 +98,9 @@ class TokenService {
       )
       return null
     } else {
-      return info[chain]
+      return info
     }
   }
 }
 
-export default new TokenService()
+export const tokenService = new TokenService()

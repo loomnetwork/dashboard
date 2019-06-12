@@ -18,7 +18,7 @@ import {
 } from "./types"
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
-import tokenService from "@/services/TokenService"
+import { tokenService } from "@/services/TokenService"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -251,8 +251,10 @@ export async function allowance(
 }
 
 export function initERC20(context: ActionContext, symbol: string) {
-  log("initERC20", symbol)
+  log("initERC20", symbol, tokenService)
   const contractAddr = tokenService.getTokenAddressBySymbol(symbol, "ethereum")
+  log("initERC20", symbol, contractAddr)
+  debugger
   if (contractAddr === undefined) {
     throw new Error("Could not find contract address for " + symbol)
   }

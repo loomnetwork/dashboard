@@ -2,35 +2,11 @@
  * @module dpos-dashboard.gateway
  */
 
-import debug from "debug"
-import BN from "bn.js"
-
-import { getStoreBuilder } from "vuex-typex"
-import { Provider } from "ethers/providers"
-import {
-  Address,
-  LocalAddress,
-  Client,
-  IEthereumSigner,
-  EthersSigner,
-  CryptoUtils,
-} from "loom-js"
-import {
-  IAddressMapping,
-  AddressMapper,
-} from "loom-js/dist/contracts/address-mapper"
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { Funds } from "@/types"
-import { ethers, Contract } from "ethers"
-
-import { GatewayState, HasGatewayState } from "./types"
-
-import { timer } from "rxjs"
-import { BareActionContext } from "vuex-typex"
-
-import { ActionContext } from "./types"
-import { ParamType } from "ethers/utils"
 import { getRequired } from "@/utils"
+import debug from "debug"
+import { Address, CryptoUtils, EthersSigner, LocalAddress } from "loom-js"
+import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
+import { ActionContext } from "./types"
 
 const log = debug("dash.mapper")
 

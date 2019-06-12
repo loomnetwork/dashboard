@@ -60,7 +60,7 @@ import { plasmaModule } from "@/store/plasma"
 
 import { BModal } from "bootstrap-vue"
 
-import tokenService from "@/services/TokenService"
+import { tokenService } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from '../utils';
 
 @Component({

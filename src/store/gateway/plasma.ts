@@ -100,6 +100,8 @@ export async function init(
     mapping.from,
   )
   instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3, mapping)
+
+  return instance
 }
 
 export function service() {
@@ -123,7 +125,6 @@ class PlasmaGateways {
   get(symbol: string): PlasmaGatewayAdapter {
     const adapter = this.adapters.get(symbol)
     if (adapter === undefined) {
-      debugger
       throw new Error("No gateway for " + symbol)
     }
     return adapter

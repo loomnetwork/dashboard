@@ -204,14 +204,6 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
   return value
 }
 
-export function getTokenSymbolFromAddress(address: string) {
-  // TODO: Change to US-1
-  const chainPrefix = "rinkeby-us1"
-  return tokenMetaData.tokens.find((token) => {
-    return token.address[chainPrefix].toLowerCase() === address.toLowerCase()
-  })
-}
-
 /**
  * Return list of token symbol from localStorage
  */

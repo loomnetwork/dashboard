@@ -1,20 +1,17 @@
 <template>
-  <b-modal lazy
-           id="withdraw-confirmed"
-           v-model="visible"
-           title="Withdraw to gateway confirmed">
+  <b-modal lazy id="withdraw-confirmed" v-model="visible" title="Withdraw to gateway confirmed">
     <section v-if="status === 'default'">
       <b-container fluid>
-          <div class="lead">
-            <p>You have a pending withdrawal receipt, please click below to finish your withdrawal.</p>
-          </div>
+        <div class="lead">
+          <p>You have a pending withdrawal receipt, please click below to finish your withdrawal.</p>
+        </div>
       </b-container>
     </section>
     <section v-if="status === 'error'">
       <b-container fluid>
-          <div class="lead">
-            <p>An error occurred, please try again.</p>
-          </div>
+        <div class="lead">
+          <p>An error occurred, please try again.</p>
+        </div>
       </b-container>
     </section>
     <template slot="modal-footer" v-if="status === 'default'">
@@ -29,7 +26,6 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "@/store/gateway"
-import { getTokenSymbolFromAddress } from "@/utils"
 
 @Component
 export default class WithdrawConfirmed extends Vue {

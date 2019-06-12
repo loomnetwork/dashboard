@@ -3,7 +3,6 @@ import { Store } from "vuex"
 import { gatewayModule } from "."
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { plasmaModule } from "../plasma"
-import { Provider } from "ethers/providers"
 import { Address } from "loom-js"
 import BN from "bn.js"
 
@@ -15,12 +14,8 @@ import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { Funds } from "@/types"
 import debug from "debug"
-import { getTokenSymbolFromAddress } from "@/utils"
-import { LoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { EventLog } from "web3-core"
-import { from } from "rxjs"
-import { state } from "../common"
-import { setWithdrawalReceipts } from "./mutations"
+import { tokenService } from "@/services/TokenService"
 
 const log = debug("dash.gateway")
 
@@ -45,27 +40,29 @@ export function gatewayReactions(store: Store<DashboardState>) {
         return
       }
       await setPlasmaAccount(mapping)
+      const addresses = {
+        mainGateway: store.state.ethereum.contracts.mainGateway,
+        loomGateway: store.state.ethereum.contracts.loomGateway,
+      }
       // Initialize Ethereum gateways & coin contracts
-      await EthereumGateways.init(ethereumModule.web3)
-      const ethereumGatewayService = EthereumGateways.service()
-      ethereumGatewayService.add("LOOM", store.state.ethereum.erc20Addresses.LOOM)
+      const ethereumGatewayService = await EthereumGateways.init(
+        ethereumModule.web3,
+        addresses,
+      )
+      const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
+      ethereumGatewayService.add("LOOM", loomAddr)
       ethereumGatewayService.add("ETH", "") // Ether does not have a contract address
-      await PlasmaGateways.init(
+
+      // Init plasma side
+      const plasmaGatewayService = await PlasmaGateways.init(
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
       )
 
-      const loomGatewayAddr = Address.fromString(
-        // @ts-ignore
-        `eth:${ethereumGatewayService.loomGateway._address}`,
-      )
-      // @ts-ignore
-      const ethGatewayAddr = Address.fromString(
-        // @ts-ignore
-        `eth:${ethereumGatewayService.mainGateway._address}`,
-      )
-      const plasmaGatewayService = PlasmaGateways.service()
+      const loomGatewayAddr = Address.fromString(`eth:${addresses.loomGateway}`)
+      const ethGatewayAddr = Address.fromString(`eth:${addresses.mainGateway}`)
+
       plasmaGatewayService.add("LOOM", loomGatewayAddr)
       plasmaGatewayService.add("ETH", ethGatewayAddr)
 
@@ -179,7 +176,7 @@ function listenToDeposit(
 
 function formatTxFromEvent(event: EventLog) {
   const contractAddr = event.address
-  const symbol = getTokenSymbolFromAddress(contractAddr)!.symbol.toLowerCase()
+  const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!.symbol
   const funds: Funds = {
     symbol,
     weiAmount: new BN(event.returnValues.value.toString()),

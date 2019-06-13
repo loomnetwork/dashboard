@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col sm="4">
-        <b-button variant="outline-primary" @click="setAllAmount">All ({{ this.plasma.selectedToken }})</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount">All ({{ `${max} ${this.plasma.selectedToken}` }})</b-button>
       </b-col>
     </b-row>
   </div>

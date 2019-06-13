@@ -7,41 +7,12 @@
     :busy="true"
     no-close-on-esc
     no-close-on-backdrop
-    hide-header-close
-    hide-footer
-  >
+    hide-header-close>
     <template slot="modal-title">Approve deposit</template>
     <div v-if="!status">
       <form>
-        <b-container style="margin: 16px 0;padding: 0;">
-          <b-row>
-            <b-col>
-              <b-form-input
-                type="number"
-                :placeholder="'Max. ' + userBalance"
-                :max="userBalance"
-                :min="1"
-                v-model="transferAmount"
-                pattern="[1-9]\d*"
-                step="1"
-                @keyup="validateAmount"
-              />
-            </b-col>
-            <b-col>
-              <b-btn
-                variant="outline-primary"
-                @click="depositAll"
-              >{{ $t("transfer_all", {amount: userBalance}) }}</b-btn>
-            </b-col>
-          </b-row>
-          <amount-input :min="1" :max="100" v-model="depositAmount" />
-        </b-container>
+        <amount-input :min="1" :max="userBalance" v-model="depositAmount" @isError="errorHandler" />
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
-        <footer style="display:flex">
-          <b-btn @click="close()">Cancel</b-btn>
-          <span style="flex:1"></span>
-          <b-btn @click="sendApproval" variant="primary" :disabled="amountErrors.length > 0">Confirm</b-btn>
-        </footer>
       </form>
     </div>
     <div v-else-if="status === 'sending'">
@@ -55,6 +26,11 @@
       <p class="lead">{{ $t("components.gateway.approval.sent") }}</p>
       <b-btn @click="close" variant="primary">Close</b-btn>
     </div>
+    <template slot="modal-footer">
+      <b-btn @click="close()">Cancel</b-btn>
+      <span style="flex:1"></span>
+      <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">Confirm</b-btn>
+    </template>    
   </b-modal>
 </template>
 <script lang="ts">
@@ -62,6 +38,7 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 import BN from "bn.js"
 import { formatToCrypto, parseToWei } from "@/utils"
+import { formatTokenAmount } from "@/filters"
 import { DashboardState } from "../../types"
 
 import { gatewayModule } from "../../store/gateway"
@@ -76,8 +53,31 @@ export default class DepositForm extends Vue {
 
   @Prop({required: true}) token!: string // prettier-ignore
 
+  setShowDepositForm = gatewayModule.setShowDepositForm
+  approveDeposit = gatewayModule.ethereumDeposit
+
+  // vue returns either number or empty string for input number
+  transferAmount: number | "" = ""
+  amountErrors: string[] = []
+  hasErrors: boolean = false
+  status: string = ""
+  depositAmount: number = 0
+
+  set visible(val) {
+    if (val === false) {
+      this.setShowDepositForm(false)
+      this.status = ""
+      this.transferAmount = ""
+      this.amountErrors.length = 0
+    }
+  }
+
+  get visible() {
+    return this.showDepositForm
+  }
+
   get userBalance() {
-    return parseInt(formatToCrypto(this.state.ethereum.coins[this.token].balance), 10)
+    return formatTokenAmount(this.state.ethereum.coins[this.token].balance)
   }
 
   get state(): DashboardState {
@@ -88,29 +88,8 @@ export default class DepositForm extends Vue {
     return this.state.gateway.showDepositForm
   }
 
-  setShowDepositForm = gatewayModule.setShowDepositForm
-  approveDeposit = gatewayModule.ethereumDeposit
-
-  // vue returns either number or empty string for input number
-  transferAmount: number | "" = ""
-  amountErrors: string[] = []
-
-  status: string = ""
-
-  depositAmount: number = 0
-
-  get visible() {
-    console.log("showDepositForm", this.showDepositForm)
-    return this.showDepositForm
-  }
-
-  set visible(val) {
-    if (val === false) {
-      this.setShowDepositForm(false)
-      this.status = ""
-      this.transferAmount = ""
-      this.amountErrors.length = 0
-    }
+  errorHandler(val) {
+    this.hasErrors = val
   }
 
   close() {

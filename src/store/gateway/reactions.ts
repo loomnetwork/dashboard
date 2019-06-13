@@ -81,12 +81,14 @@ export function gatewayReactions(store: Store<DashboardState>) {
         store,
       )
 
-      // ==================================
-      // ====== Check for receipt
-      // ==================================
-      const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
       // TODO: Add support for multiple tokens
-      gatewayModule.setWithdrawalReceipts(receipt)
+      const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
+      // @ts-ignore
+      const withdrawalIsPending = JSON.parse(localStorage.getItem("pendingWithdrawal"))
+      if (receipt && (withdrawalIsPending)) {
+        gatewayModule.setWithdrawalReceipts(receipt)
+      }
+
     },
   )
 

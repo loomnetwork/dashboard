@@ -60,9 +60,19 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
-    return this.contract.methods
-      .withdrawERC20(amount, this.tokenAddress, valIndexes, vs, rs, ss)
-      .send({ from: localAddress })
+    const result = this.contract.methods.withdrawERC20(
+      amount,
+      this.tokenAddress,
+      valIndexes,
+      vs,
+      rs,
+      ss,
+    ).send({from: localAddress})
+    result.then((tx) => {
+      localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+      localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
+    })
+    return result
   }
 }
 

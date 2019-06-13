@@ -17,7 +17,7 @@ import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
 
-interface PlasmaGatewayAdapter {
+export interface PlasmaGatewayAdapter {
   token: string
 
   withdraw(amount: BN)

@@ -72,4 +72,5 @@ module.exports = {
     config.module.rules.delete("eslint")
     config.resolve.set("symlinks", false) // makes yarn link loom-js work
     config.module.rules.delete("uglify")
+  }
 }

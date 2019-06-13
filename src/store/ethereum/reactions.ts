@@ -10,7 +10,6 @@ export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.provider, onProviderChange)
   store.watch((s) => s.ethereum.address, onAddressChange)
 
-
   /**
    * create erc contracts, watch balances etc
    */
@@ -30,10 +29,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
     ethereumModule.initERC20("LOOM")
 
     // Set latest block number every 15 seconds
-    setInterval(async () => {
-      const result = await ethereumModule.web3.eth.getBlockNumber() || 0
-      ethereumModule.setBlockNumber(result)
-    }, 15 * 1000)
+    pollBlockNumber()
 
   }
 
@@ -43,4 +39,12 @@ export function ethereumReactions(store: Store<DashboardState>) {
 
   //     },
   // })
+}
+
+function pollBlockNumber() {
+  setInterval(async () => {
+    const result = await ethereumModule.web3.eth.getBlockNumber() || 0
+    console.log("Latest block #", result)
+    ethereumModule.setBlockNumber(result)
+  }, 15 * 1000)
 }

@@ -41,6 +41,7 @@ import { setShowWithdrawProgress } from "../../store/gateway/mutations"
     AmountInput,
   },
 })
+
 export default class WithdrawForm extends Vue {
 
   @Prop({required: true}) token!: string // prettier-ignore

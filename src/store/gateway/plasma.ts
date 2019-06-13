@@ -42,7 +42,8 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
     this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
   }
   async withdrawalReceipt() {
-    return await this.contract.withdrawalReceiptAsync(this.mapping.to)
+    const receipt = await this.contract.withdrawalReceiptAsync(this.mapping.to)
+    return receipt
   }
 }
 
@@ -206,7 +207,7 @@ export function pollReceipt(context: ActionContext, symbol: string) {
   return interval(2000)
     .pipe(
       switchMap(() => refreshPendingReceipt(context, symbol)),
-      filter((receipt) => receipt !== null),
+      filter((receipt) => receipt !== null && receipt.oracleSignature.length !== 0),
       take(1),
     )
     .toPromise()

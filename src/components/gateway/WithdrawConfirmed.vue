@@ -26,13 +26,14 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "@/store/gateway"
-import { CommonTypedStore } from '../../store/common';
+import { CommonTypedStore } from "../../store/common"
 
 @Component
 export default class WithdrawConfirmed extends Vue {
 
   status = "default"
   setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
+  setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
   completeWithdrawal = gatewayModule.ethereumWithdraw
   setSuccessMsg = CommonTypedStore.setSuccessMsg
 
@@ -43,6 +44,7 @@ export default class WithdrawConfirmed extends Vue {
     this.completeWithdrawal(symbol).then(() => {
       this.close()
       this.setSuccessMsg("Withdrawal complete!")
+      this.setWithdrawalReceipts(null)
     }).catch((err) => {
       console.log(err)
       this.status = "error"

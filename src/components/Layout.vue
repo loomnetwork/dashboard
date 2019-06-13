@@ -69,6 +69,8 @@
     <DepositConfirmed/>
     <progress-modal/>
     <feedback-alert/>
+    <WithdrawProgress/>
+    <WithdrawConfirmed/>
   </div>
 </template>
 
@@ -86,6 +88,9 @@ import FeedbackAlert from "../feedback/components/FeedbackAlert.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
+import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
+import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
+
 import { DashboardState } from "../types"
 import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"
@@ -103,6 +108,8 @@ import { store } from "../store"
     FeedbackNotification,
     ProgressModal,
     FeedbackAlert,
+    WithdrawProgress,
+    WithdrawConfirmed,
   },
   props: {
     data: Object,
@@ -118,7 +125,7 @@ export default class Layout extends Vue {
   get walletType() { return this.s.DPOS.walletType }
   get showSidebar() { return this.s.DPOS.showSidebar }
   get currentMetamaskAddress() { return this.s.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.s.DPOS.showLoadingSpinner }
+  get showLoadingSpinner() { return this.s.common.showLoadingSpinner }
   get showAlreadyMappedModal() { return this.s.DPOS.showAlreadyMappedModal }
   get showSignWalletModal() { return this.s.DPOS.showSignWalletModal }
   get mappingSuccess() { return this.s.DPOS.mappingSuccess }

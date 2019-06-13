@@ -22,6 +22,7 @@ import { ethers } from "ethers"
 import { plasmaModule } from "../plasma"
 import { AbiItem } from "web3-utils"
 import { state } from "../common"
+import BigNumber from "bignumber.js"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -58,14 +59,10 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
     const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
-    return this.contract.methods.withdrawERC20(
-      amount,
-      this.tokenAddress,
-      valIndexes,
-      vs,
-      ss,
-      rs,
-    )
+    const localAddress = receipt.tokenOwner.local.toString()
+    return this.contract.methods
+      .withdrawERC20(amount, this.tokenAddress, valIndexes, vs, rs, ss)
+      .send({ from: localAddress })
   }
 }
 
@@ -73,7 +70,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
  * adapts eth deposit/withdraw calls to EthereumGatewayAdapter
  */
 class EthGatewayAdapter implements EthereumGatewayAdapter {
-  token = "eth"
+  token = "ETH"
 
   constructor(
     private vmc: ValidatorManagerContract,
@@ -105,19 +102,32 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 }
 
 let instance: EthereumGateways | null = null
-export function init(web3: Web3) {
+export async function init(
+  web3: Web3,
+  addresses: { mainGateway: string; loomGateway: string },
+) {
   // return new EthereumGateways()
   const account = web3.eth.defaultAccount
   // create gateways and vmc (maybe vmc does not care...)
 
   const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
-  const loomGateway = new web3.eth.Contract((ERC20GatewayABI_v2 as AbiItem[]), gwAddress)
+  const loomGateway = new web3.eth.Contract(
+    ERC20GatewayABI_v2 as AbiItem[],
+    addresses.loomGateway,
+  )
   // TODO: Move to config
-  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3")
-  const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, "", {})
+  const mainGateway = new web3.eth.Contract(
+    GatewayABI as AbiItem[],
+    addresses.mainGateway, // "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+  )
+  const vmcAddress = await loomGateway.methods.vmc().call()
+  const vmcContract = new web3.eth.Contract(
+    ValidatorManagerContractABI,
+    vmcAddress,
+  )
 
   instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
-
+  return instance
 }
 
 export function service() {
@@ -156,16 +166,17 @@ class EthereumGateways {
     const { vmc, mainGateway, loomGateway, web3 } = this
     let adapter: EthereumGatewayAdapter
     switch (token) {
-      case "eth":
+      case "ETH":
         adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
-      case "loom":
+      case "LOOM":
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
         break
       default:
         adapter = new ERC20GatewayAdapter(vmc, mainGateway, tokenAddress, token)
         break
     }
+
     // todo cleanup if already set
     this.adapters.set(token, adapter)
   }
@@ -200,12 +211,11 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
  * @param symbol
  */
 export async function ethereumWithdraw(context: ActionContext, token: string) {
-  const receipt = context.state.withdrawalReceipts[token]
+  const receipt = context.state.withdrawalReceipts
   const gateway = service().get(token)
   if (receipt === null || receipt === undefined) {
     throw new Error("no withdraw receipt in state for " + token)
   }
-
   await gateway.withdraw(receipt)
 }
 
@@ -217,6 +227,7 @@ const WithdrawalPrefixes = [
   "\x10Withdraw ERC20:\n",
   "\x11Withdraw ERC721:\n",
   "\x12Withdraw ERC721X:\n",
+  "\x10Withdraw ERC20:\n",
 ]
 
 async function decodeSig(
@@ -225,13 +236,12 @@ async function decodeSig(
   ethereumVMC: ValidatorManagerContract,
 ) {
   const hash = await createWithdrawalHash(receipt, gatewayContract)
-  const validators = await ethereumVMC!.functions.getValidators()
+  const validators = await ethereumVMC!.methods.getValidators().call()
   const { vs, rs, ss, valIndexes } = parseSigs(
     CryptoUtils.bytesToHexAddr(receipt.oracleSignature),
     hash,
     validators,
   )
-
   return {
     ...receipt,
     decodedSig: { vs, rs, ss, valIndexes },
@@ -250,19 +260,19 @@ async function createWithdrawalHash(
   const ethAddress = receipt.tokenOwner.local.toString()
   const tokenAddress = receipt.tokenContract.local.toString()
   // @ts-ignore
-  const gatewayAddress = gatewayContract.address
+  const gatewayAddress = gatewayContract._address
   const amount = receipt.tokenAmount!.toString()
   const amountHashed = ethers.utils.solidityKeccak256(
     ["uint256", "address"],
     [amount, tokenAddress],
   )
+
   const prefix = WithdrawalPrefixes[receipt.tokenKind]
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)
   }
 
-  const nonce = await gatewayContract.methods.nonces(ethAddress)
-
+  const nonce = await gatewayContract.methods.nonces(ethAddress).call()
   return ethers.utils.solidityKeccak256(
     ["string", "address", "uint256", "address", "bytes32"],
     [prefix, ethAddress, nonce, gatewayAddress, amountHashed],

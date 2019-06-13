@@ -55,8 +55,8 @@ export const LedgerAdapter: any & WalletType & MultiAccountWallet = {
           ({
             address,
             // identicon: blockies.create({ seed: address }).toDataURL(),
-            loom: 0,
-            eth: 0,
+            LOOM: 0,
+            ETH: 0,
           } as AccountInfo),
       ),
     )

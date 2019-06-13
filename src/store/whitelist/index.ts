@@ -16,6 +16,7 @@ import { plasmaModule } from "../plasma"
 const log = debug("whitelist")
 import BN from "bn.js"
 import { CommonTypedStore } from "../common"
+import { i18n } from "../../i18n"
 
 const initialState: WhiteListState = {
   userDeployerWhitelist: null,
@@ -78,7 +79,7 @@ async function addDeployerAsync(
   try {
     const contractAddress = context.state.whiteListContractAddress!.local.toString()
     const approvedResult = await plasmaModule.approve({
-      symbol: "loom",
+      symbol: "LOOM",
       weiAmount: new BN(
         context.rootState.plasma.web3!.utils.toWei(
           payload.tier.fee.toString(),
@@ -91,11 +92,19 @@ async function addDeployerAsync(
     log("approved", approvedResult)
   } catch (error) {
     let errorMessage = error.message
-    if (!error.message.includes("message.user_denied_sign_tx")) {
-      errorMessage = "message.user_denied_sign_tx"
-      console.log("Denided...............")
+    const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
+    const alreadyExist = i18n.t("messages.deployer_already_exists").toString()
+    if (error.message.includes("User denied message")) {
+      errorMessage = userDeniedSignTx
     }
-    CommonTypedStore.setErrorMsg(`message.transaction_apprv_err_tx ${errorMessage}`)
+    if (error.message.includes("deployer already exists")) {
+      errorMessage = alreadyExist
+    }
+    CommonTypedStore.setErrorMsg(
+      i18n
+        .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
+        .toString(),
+    )
     return
   }
 
@@ -105,9 +114,14 @@ async function addDeployerAsync(
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
-    CommonTypedStore.setSuccessMsg("message.add_deployer_addr_success_tx")
+    await plasmaModule.refreshBalance("LOOM")
+    CommonTypedStore.setSuccessMsg(
+      i18n.t("messages.add_deployer_addr_success_tx").toString(),
+    )
   } catch (error) {
-    CommonTypedStore.setErrorMsg(`message.add_key_err_tx ${error.message}`)
+    CommonTypedStore.setErrorMsg(
+      i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
+    )
     return
   }
 }
@@ -123,7 +137,7 @@ async function getDeployersAsync(context: WhiteListContext) {
     result = await userDeployerWhitelist!.getDeployersAsync(loomAddress)
     deployerAddresses = await whiteListModule.formatDeployersAddress(result)
   } catch (error) {
-    console.error(error)
+    log("getDeployersAsync", error)
     deployerAddresses = []
   }
   whiteListModule.setUserDeployersAddress(deployerAddresses)

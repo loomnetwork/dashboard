@@ -6,7 +6,7 @@ import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb
 import BN from "bn.js";
 export function setSelectedToken(
     state: PlasmaState,
-    payload: string
+    payload: string,
 ){
     state.selectedToken = payload
 }

@@ -96,27 +96,27 @@ import { mapActions, createNamespacedHelpers } from "vuex"
 import { CommonTypedStore } from "@/store/common"
 import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
-import { DPOSTypedStore } from "@/store/dpos-old"
-
-const bip39 = require("bip39")
+import { CryptoUtils } from 'loom-js';
+import { generateMnemonic, mnemonicToSeedSync } from "bip39";
 @Component({
 })
 
 export default class SeedPhraseModal extends Vue {
-  seeds = []
+  seeds: string[] = []
   seedsLine = ""
   publicAddress = ""
   confirmMnemonic = false
   setSuccessMsg = CommonTypedStore.setSuccessMsg
   getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
-  setShowLoadingSpinner = DPOSTypedStore.setShowLoadingSpinner
+  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   async generateSeeds() {
-    const mnemonic = bip39.generateMnemonic()
+    const mnemonic = generateMnemonic()
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
-    const privateKey = bip39.mnemonicToSeedSync(mnemonic)
-    const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({ privateKey })
+    const privateKeyBuffer = mnemonicToSeedSync(mnemonic)
+    const privateKeyUint8ArrayFromSeed = await CryptoUtils.generatePrivateKeyFromSeed(privateKeyBuffer.slice(0, 32))
+    const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({ privateKey: privateKeyUint8ArrayFromSeed })
     this.publicAddress = publicKey
     this.confirmMnemonic = false
     this.setShowLoadingSpinner(false)
@@ -134,7 +134,7 @@ export default class SeedPhraseModal extends Vue {
     // @ts-ignore
     copyText!.select()
     document.execCommand("copy")
-    this.setSuccessMsg("message.copied_tx")
+    this.setSuccessMsg(this.$t("messages.copied_tx").toString())
   }
 
   modal(ref: string): BModal {

@@ -26,7 +26,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
       // should reset contracts
       return
     }
-    ethereumModule.initERC20("loom")
+    ethereumModule.initERC20("LOOM")
   }
 
   // TODO: Add a guard to check dependencies

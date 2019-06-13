@@ -84,11 +84,12 @@ export function gatewayReactions(store: Store<DashboardState>) {
       // TODO: Add support for multiple tokens
       const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
       // @ts-ignore
-      const withdrawalIsPending = JSON.parse(localStorage.getItem("pendingWithdrawal"))
-      if (receipt && (withdrawalIsPending)) {
+      const withdrawalIsPending = JSON.parse(
+        localStorage.getItem("pendingWithdrawal") || "false",
+      )
+      if (receipt && withdrawalIsPending) {
         gatewayModule.setWithdrawalReceipts(receipt)
       }
-
     },
   )
 
@@ -180,7 +181,7 @@ function formatTxFromEvent(event: EventLog) {
   const contractAddr = event.address
   const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!.symbol
   const funds: Funds = {
-    chain,
+    chain: "ethereum",
     symbol,
     weiAmount: new BN(event.returnValues.value.toString()),
   }

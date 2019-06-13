@@ -188,16 +188,3 @@ function formatTxFromEvent(event: EventLog) {
   }
   return { ...event, funds }
 }
-
-function checkForPastWithdrawals(adapter, callback) {
-
-  // Fallback
-  // check if latest withdrawal block > latest block number
-  // pastBlocks ? indexBlock = JSON.parse(pastBlocks) : indexBlock = (latestBlockNumber - 20)
-  // adapter.contract.events.TokenWithdrawn({ fromBlock: indexBlock}).on(
-  //   "data", (event) => {
-  //   console.log("Past event exists", event)
-  //   gatewayModule.setWithdrawalInProgress(true)
-  // }).on("error", console.error)
-
-}

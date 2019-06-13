@@ -61,9 +61,9 @@ import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 
 import { tokenService } from "@/services/TokenService"
-import { getWalletFromLocalStorage } from '../utils';
-import { ethereumModule } from '../store/ethereum';
-import { CommonTypedStore } from '../store/common';
+import { getWalletFromLocalStorage } from "../utils"
+import { ethereumModule } from "../store/ethereum"
+import { CommonTypedStore } from "../store/common"
 
 @Component({
   components: {
@@ -105,7 +105,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   async mounted() {
-    const tokenSymbols = getWalletFromLocalStorage().map(symbol => symbol)
+    const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
     tokenSymbols.forEach((symbol) => {
       plasmaModule.addToken(symbol)
     })

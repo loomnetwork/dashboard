@@ -181,8 +181,10 @@ export const defaultCardData = {
   tradeable: false,
 }
 
+const isStartWith0x = (address: string) => address.slice(0, 2) === "0x"
+
 export function formatToLoomAddress(address: string) {
-  if (address.slice(0, 2) === "0x") {
+  if (isStartWith0x(address)) {
     return address.replace("0x", "loom")
   } else {
     return address
@@ -196,6 +198,12 @@ export function formatFromLoomAddress(address: string) {
     return address
   }
 }
+
+export const formatToBNBAddress = (address: string) =>
+  isStartWith0x(address) ? address.replace("0x", "bnb") : address
+
+export const formatFromBNBAddress = (address: string) =>
+  address.slice(0, 3) === "bnb" ? address.replace("bnb", "0x") : address
 
 export function getRequired<T>(value: T | null | undefined, name: string): T {
   if (value === null || value === undefined) {

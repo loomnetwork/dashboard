@@ -101,8 +101,8 @@ export default class DepositWithdraw extends Vue {
     // @ts-ignore
     const withdrawalBlock = JSON.parse(localStorage.getItem("latestWithdrawalBlock"))
     if (!withdrawalBlock) return false
-    // 10 block confirmations + 2 for processing
-    const result = (ethereumModule.state.blockNumber - 12) > withdrawalBlock ? false : true
+    // 10 block confirmations + 5 for processing
+    const result = (ethereumModule.state.blockNumber - 15) > withdrawalBlock ? false : true
     return result
   }
 

@@ -125,6 +125,7 @@ export interface DashboardEnvs {
 }
 
 export interface Funds {
+  chain: string
   symbol: string
   weiAmount: BN
 }

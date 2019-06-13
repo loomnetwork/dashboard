@@ -8,7 +8,7 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import BN from "bn.js"
 import { Funds } from "@/types"
-import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+import { ActionContext, PlasmaGatewayAdapter } from "./types"
 import { gatewayModule } from "@/store/gateway"
 import { timer, of, interval } from "rxjs"
 
@@ -17,13 +17,6 @@ import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
 import { CommonTypedStore } from '../common';
-
-interface PlasmaGatewayAdapter {
-  token: string
-
-  withdraw(amount: BN)
-  withdrawalReceipt(): Promise<IWithdrawalReceipt | null>
-}
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
@@ -101,6 +94,7 @@ export async function init(
     client,
     mapping.from,
   )
+  // todo: add binance loom adapter
   instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3, mapping)
 
   return instance
@@ -206,9 +200,7 @@ export function pollReceipt(context: ActionContext, symbol: string) {
   return interval(2000)
     .pipe(
       switchMap(() => refreshPendingReceipt(context, symbol)),
-      tap(console.log),
-      filter((receipt) => receipt !== null && receipt.oracleSignature.length !== 0),
-      tap(console.log),
+      filter((receipt) => receipt !== null && receipt.oracleSignature.length > 0),
       take(1),
     )
     .toPromise()

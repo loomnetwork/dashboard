@@ -128,7 +128,7 @@ export default class FaucetSidebar extends Vue {
   position: relative;
   border-right: 2px solid #f2f1f3;
   height: 100%;
-  min-width: 240px;
+  min-width: 245px;
   padding-top: 24px;
   font-size: 16px;
   font-weight: bold;

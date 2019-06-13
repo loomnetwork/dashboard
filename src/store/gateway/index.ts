@@ -6,7 +6,7 @@ import debug from "debug"
 import BN from "bn.js"
 
 import { getStoreBuilder } from "vuex-typex"
-import { GatewayState, HasGatewayState, ActionContext } from "./types"
+import { GatewayState, HasGatewayState } from "./types"
 import * as Mapper from "./mapper"
 import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
@@ -25,10 +25,10 @@ function initialState(): GatewayState {
     showWithdrawForm: false,
     showWithdrawProgress: false,
     withdrawStates: [
-      {text: "Checking for pre-existing receipts...", isComplete: false},
-      {text: "Depositing to Plasmachain Gateway...", isComplete: false},
-      {text: "Awaiting Oracle signature...", isComplete: false},
-      {text: "Withdrawing to your Ethereum account...", isComplete: false},
+      { text: "Checking for pre-existing receipts...", isComplete: false },
+      { text: "Depositing to Plasmachain Gateway...", isComplete: false },
+      { text: "Awaiting Oracle signature...", isComplete: false },
+      { text: "Withdrawing to your Ethereum account...", isComplete: false },
     ],
     withdrawStateIdx: 0,
   }
@@ -65,6 +65,10 @@ export const gatewayModule = {
   setPendingTransactions: builder.commit(mutations.setPendingTransactions),
   clearPendingTransactions: builder.commit(mutations.clearPendingTransactions),
   setWithdrawalReceipts: builder.commit(mutations.setWithdrawalReceipts),
-  incrementWithdrawStateIdx: builder.commit(mutations.incrementWithdrawStateIdx),
-  setWithdrawStateAsCompleted: builder.commit(mutations.setWithdrawStateAsCompleted),
+  incrementWithdrawStateIdx: builder.commit(
+    mutations.incrementWithdrawStateIdx,
+  ),
+  setWithdrawStateAsCompleted: builder.commit(
+    mutations.setWithdrawStateAsCompleted,
+  ),
 }

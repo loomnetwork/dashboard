@@ -22,7 +22,7 @@ import { ethers } from "ethers"
 import { plasmaModule } from "../plasma"
 import { AbiItem } from "web3-utils"
 import { state } from "../common"
-import BigNumber from 'bignumber.js';
+import BigNumber from "bignumber.js"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -60,7 +60,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
-    return this.contract.methods.withdrawERC20(
+    const result = this.contract.methods.withdrawERC20(
       amount,
       this.tokenAddress,
       valIndexes,
@@ -68,6 +68,11 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       rs,
       ss,
     ).send({from: localAddress})
+    result.then((tx) => {
+      localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+      localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
+    })
+    return result
   }
 }
 
@@ -107,20 +112,32 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 }
 
 let instance: EthereumGateways | null = null
-export async function init(web3: Web3) {
+export async function init(
+  web3: Web3,
+  addresses: { mainGateway: string; loomGateway: string },
+) {
   // return new EthereumGateways()
   const account = web3.eth.defaultAccount
   // create gateways and vmc (maybe vmc does not care...)
 
   const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
-  const loomGateway = new web3.eth.Contract((ERC20GatewayABI_v2 as AbiItem[]), gwAddress)
+  const loomGateway = new web3.eth.Contract(
+    ERC20GatewayABI_v2 as AbiItem[],
+    addresses.loomGateway,
+  )
   // TODO: Move to config
-  const mainGateway = new web3.eth.Contract((GatewayABI as AbiItem[]), "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3")
+  const mainGateway = new web3.eth.Contract(
+    GatewayABI as AbiItem[],
+    addresses.mainGateway, // "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+  )
   const vmcAddress = await loomGateway.methods.vmc().call()
-  const vmcContract = new web3.eth.Contract(ValidatorManagerContractABI, vmcAddress)
+  const vmcContract = new web3.eth.Contract(
+    ValidatorManagerContractABI,
+    vmcAddress,
+  )
 
   instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
-
+  return instance
 }
 
 export function service() {
@@ -209,7 +226,6 @@ export async function ethereumWithdraw(context: ActionContext, token: string) {
   if (receipt === null || receipt === undefined) {
     throw new Error("no withdraw receipt in state for " + token)
   }
-
   await gateway.withdraw(receipt)
 }
 

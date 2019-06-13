@@ -10,6 +10,7 @@ import Vuex, { Store } from "vuex"
 import { getStoreBuilder } from "vuex-typex"
 import "./common"
 import "@/dpos/store"
+import "@/feedback/store"
 import "./dpos-old"
 import { dposReactions } from "@/dpos/store/reactions"
 import "./ethereum"
@@ -24,7 +25,7 @@ import "./plasma/assets"
 import { plasmaReactions } from "./plasma/reactions"
 import { whiteListReaction } from "./whitelist/reactions"
 
-import tokensService from "@/services/TokenService"
+import { tokenService } from "@/services/TokenService"
 
 const log = debug("dash")
 
@@ -37,8 +38,8 @@ const dashboardStore = {
     state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
-    log("tokensService",env.coinDataUrl)
-    tokensService.setBaseURL(env.coinDataUrl)
+    log("tokensService", env.coinDataUrl)
+    tokenService.setBaseURL(env.coinDataUrl)
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     state.envs = envs

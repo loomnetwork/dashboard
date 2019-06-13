@@ -4,9 +4,10 @@
       :placeholder="placeholder"
       v-on:input="updateAddress"
       v-on:keyup="validateAddressFormat"
+      :state="this.value.length === 0 ? null : isValidAddress"
       class="my-2"
       ></b-form-input>
-    <p v-show="!isValidAddress" style="" :key="value">Invalid address format!</p>
+    <p v-show="!isValidAddress" style="" :key="value">Invalid {{ token }} address format!</p>
   </div>
 </template>
 
@@ -20,9 +21,8 @@ export default class InputAmount extends Vue {
 
   @Prop(String) value!: string
   @Prop(String) placeholder!: string
-  @Prop({ default: "loom"}) type!: string
-
-  isValidAddress = true
+  @Prop({ default: "loom"}) token!: string
+  isValidAddress: boolean = true
 
   @Watch("plasma.selectedToken")
   setDefaultInputAddress(newVal, oldVal) {
@@ -35,22 +35,28 @@ export default class InputAmount extends Vue {
   }
 
   validateAddressFormat() {
-    switch (this.type) {
+    switch (this.token.toLowerCase()) {
       case "loom":
-        // Address (value) must be 44 characters and have a 'loom' as prefix
-        if (this.value.length !== 44 || this.value.slice(0, 4) !== "loom") {
-          this.isValidAddress = false
-          this.$emit("isValid", false)
+        // Address (value) must be 44 characters and have a "loom" as prefix
+        if (this.value.length !== 44 || this.value.slice(0, 4) !== "loom" && this.value !== "") {
+          this.emitValidAddress(false)
         } else {
-          this.isValidAddress = true
-          this.$emit("isValid", true)
+          this.emitValidAddress(true)
         }
         break
       case "bnb":
+        const regex = /^0x[a-fA-F0-9]{40}$/g
+        const isValid = regex.test(this.value)
+        this.emitValidAddress(isValid)
         break
       default:
         break
     }
+  }
+
+  emitValidAddress(isValid: boolean) {
+    this.isValidAddress = isValid
+    this.$emit("isValid", isValid)
   }
 
   get state(): DashboardState {
@@ -67,5 +73,9 @@ export default class InputAmount extends Vue {
 <style scoped>
   p {
     color: red
+  }
+
+  ::placeholder {
+    color: lightgrey;
   }
 </style>

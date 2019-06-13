@@ -11,6 +11,7 @@ export interface EthereumConfig {
   chainId: string
   endpoint: string
   blockExplorer: string
+  contracts: { [name: string]: string }
 }
 
 // Interface for application stores than include EthereumState
@@ -47,7 +48,8 @@ export interface EthereumState extends EthereumConfig {
       balance: BN
       loading: boolean,
     },
-  }
+  },
+  blockNumber: number,
 }
 
 export interface WalletType {

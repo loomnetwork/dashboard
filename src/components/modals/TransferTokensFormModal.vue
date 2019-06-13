@@ -40,21 +40,21 @@ import { DashboardState } from "@/types";
 import { plasmaModule } from "../../store/plasma";
 import AmountInput from "@/components/AmountInput.vue";
 import BN from "bn.js"
-import { toBigNumber } from "@/utils"
+import { toBigNumber, ZERO } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import InputAddress from "../InputAddress.vue";
 
 @Component({
   components: {
     AmountInput,
-    InputAddress
-  }
+    InputAddress,
+  },
 })
 
 export default class TransferTokensFormModal extends Vue {
 
   transfer = plasmaModule.transfer
-  transferAmount: number = 0
+  transferAmount: BN = ZERO
   receiverAddress: string = ""
   amountError = false
   isValidAddress = false
@@ -71,15 +71,15 @@ export default class TransferTokensFormModal extends Vue {
     return formatTokenAmount(balance)
   }
 
-    async transferToken(){
-      const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
-      this.transfer({
-        symbol: this.plasma.selectedToken,
-        weiAmount: amount,
-        to: this.receiverAddress 
-      })
-      this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
-    }
+  async transferToken() {
+    // const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
+    this.transfer({
+      symbol: this.plasma.selectedToken,
+      weiAmount: this.transferAmount,
+      to: this.receiverAddress.replace("loom", "0x"),
+    })
+    this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")
+  }
 
   onAmountError(val) {
     this.amountError = val

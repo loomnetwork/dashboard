@@ -18,6 +18,8 @@ import {
 } from "./types"
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
+import { tokenService } from "@/services/TokenService"
+import { setBlockNumber } from './mutations';
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -42,8 +44,6 @@ const initialState: EthereumState = {
   erc20Addresses: {
     // us1
     LOOM: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
-    bnb: "",
-    usdc: "",
   },
   balances: {
     ETH: ZERO,
@@ -60,6 +60,8 @@ const initialState: EthereumState = {
       loading: true,
     },
   },
+  contracts: {},
+  blockNumber: 0,
 }
 
 // web3 instance
@@ -103,6 +105,10 @@ export const ethereumModule = {
 
   initERC20: builder.dispatch(initERC20),
   clearERC20: builder.dispatch(clearERC20),
+
+  // Mutations
+  setBlockNumber: builder.commit(setBlockNumber),
+
 }
 
 // holds the contracts. We don't need to exposed these on the state
@@ -250,57 +256,41 @@ export async function allowance(
   return new BN(amount.toString())
 }
 
-// async depositAsync(amount: BN): Promise<ethers.ContractTransaction> {
-//   let currentApproval = await this._ethereumLoom.functions.allowance(
-//     await this.ethAddress,
-//     this._ethereumGateway.address
-//   )
-
-//   let currentApprovalBN = new BN(currentApproval.toString())
-
-//   log('Current approval:', currentApproval)
-//   if (amount.gt(currentApprovalBN)) {
-//     let tx = await this._ethereumLoom.functions.approve(
-//       this._ethereumGateway.address,
-//       amount.sub(currentApprovalBN).toString()
-//     )
-//     await tx.wait()
-//     log('Approved an extra', amount.sub(currentApprovalBN))
-//   }
-//   return this._ethereumGateway.functions.depositERC20(
-//     amount.toString(),
-//     this._ethereumLoom.address
-//   )
-// }
-
 export function initERC20(context: ActionContext, symbol: string) {
-  log("initERC20")
-  const contractAddr = context.state.erc20Addresses[symbol]
+  log("initERC20", symbol, tokenService)
+  const contractAddr = tokenService.getTokenAddressBySymbol(symbol, "ethereum")
+  log("initERC20", symbol, contractAddr)
+  if (contractAddr === undefined) {
+    throw new Error("Could not find contract address for " + symbol)
+  }
   const web3: Web3 = ethereumModule.web3!
   // @ts-ignore
   const contract = new web3.eth.Contract(ERC20ABI, contractAddr) as ERC20
   erc20Contracts.set(symbol, contract)
 
   const account = context.state.address
-  // out out filters
-  const send = contract.events.Transfer({
-    fromBlock: "latest",
-    filter: {
-      from: account,
-    },
-  })
-  const receive = contract.events.Transfer({
-    fromBlock: "latest",
-    filter: {
-      to: account,
-    },
-  })
-
-  // const receive = contract.filters.Transfer(null, account, null)
-  // contract.contract.on(send, refresh)
-  // contract.on(receive, refresh)
-
   const refresh = () => ethereumModule.refreshBalance(symbol)
+
+  // out out filters
+  const send = contract.events.Transfer(
+    {
+      fromBlock: "latest",
+      filter: {
+        from: account,
+      },
+    },
+    refresh,
+  )
+  const receive = contract.events.Transfer(
+    {
+      fromBlock: "latest",
+      filter: {
+        to: account,
+      },
+    },
+    refresh,
+  )
+
   send.on("data", refresh)
   receive.on("data", refresh)
 

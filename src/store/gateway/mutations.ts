@@ -1,6 +1,5 @@
 import { GatewayState } from "./types"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { state } from "../common"
 
 export function setShowDepositForm(state: GatewayState, payload: boolean) {
   state.showDepositForm = payload
@@ -30,7 +29,10 @@ export function clearPendingTransactions(state: GatewayState) {
   state.pendingTransactions = new Array()
 }
 
-export function setWithdrawalReceipts(state: GatewayState, payload: IWithdrawalReceipt | null) {
+export function setWithdrawalReceipts(
+  state: GatewayState,
+  payload: IWithdrawalReceipt | null,
+) {
   state.withdrawalReceipts = payload
 }
 
@@ -44,7 +46,7 @@ export function incrementWithdrawStateIdx(state: GatewayState) {
 export function setWithdrawStateAsCompleted(state: GatewayState) {
   if (state.withdrawStateIdx >= 2) {
     // -1 to select the element before, and -1 for correct index
-    const idx = (state.withdrawStateIdx - 1) - 1
+    const idx = state.withdrawStateIdx - 1 - 1
     state.withdrawStates[idx].isComplete = true
   }
 }

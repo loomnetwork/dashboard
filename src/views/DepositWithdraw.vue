@@ -74,8 +74,10 @@ import { plasmaModule } from "@/store/plasma"
 
 import { BModal } from "bootstrap-vue"
 
-import tokenService from "@/services/TokenService"
-import { getWalletFromLocalStorage } from '../utils';
+import { tokenService } from "@/services/TokenService"
+import { getWalletFromLocalStorage } from "../utils"
+import { ethereumModule } from "../store/ethereum"
+import { CommonTypedStore } from "../store/common"
 
 @Component({
   components: {
@@ -92,6 +94,8 @@ export default class DepositWithdraw extends Vue {
   WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
+  setShowErrorMsg = CommonTypedStore.setErrorMsg
+
   selectedToken = "LOOM"
   fields = ["symbol", "balance", "actions"]
   inputFilter = ""
@@ -111,8 +115,15 @@ export default class DepositWithdraw extends Vue {
     return this.state.plasma
   }
 
+  get withdrawalInProgress(): boolean {
+    // @ts-ignore
+    const withdrawalBlock = JSON.parse(localStorage.getItem("latestWithdrawalBlock"))
+    if (!withdrawalBlock) return false
+    return (ethereumModule.state.blockNumber - 10) > withdrawalBlock ? false : true
+  }
+
   async mounted() {
-    const tokenSymbols = getWalletFromLocalStorage().map(symbol => symbol)
+    const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
     tokenSymbols.forEach((symbol) => {
       plasmaModule.addToken(symbol)
     })
@@ -166,6 +177,11 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestWithdraw(token: string) {
+
+    if (this.withdrawalInProgress) {
+      this.setShowErrorMsg("There is a processing withdrawal, please try again later.")
+      return
+    }
     this.selectedToken = token
     this.setShowWithdrawForm(true)
   }

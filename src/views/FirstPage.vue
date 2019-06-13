@@ -75,6 +75,7 @@
               <font id="orange">Metamask</font> with you
             </b-card-text>
             <b-button
+              target="_blank" 
               variant="outline-primary"
               href="https://metamask.io/"
               style="float: right; margin-top: 5px"

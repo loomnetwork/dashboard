@@ -4,10 +4,17 @@
            no-close-on-esc
            hide-header-close
            id="deposit-approval-success"  title="Withdraw">
-    <div>
+    <div v-if="status === 'default'">
       <amount-input :min="1" :max="100" @input="inputHandler" @isError="errorHandler"/>
     </div>
+    <div v-if="status === 'error'">
+      <h2>
+        An error occurred, please try again!
+      </h2>
+    </div>
     <template slot="modal-footer">
+      <b-btn @click="close()">Cancel</b-btn>
+      <span style="flex:1"></span>      
       <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
     </template>
   </b-modal>
@@ -34,10 +41,12 @@ import { setShowWithdrawProgress } from "../../store/gateway/mutations"
     AmountInput,
   },
 })
+
 export default class WithdrawForm extends Vue {
 
   @Prop({required: true}) token!: string // prettier-ignore
 
+  status: string = "default"
   amount: any = 0
   amountIsValid: boolean = false
 
@@ -83,10 +92,16 @@ export default class WithdrawForm extends Vue {
         weiAmount: this.amount,
       }
 
-      this.beginWithdrawal(payload)
+      this.beginWithdrawal(payload).then(() => {
+        this.setShowWithdrawProgress(false)
+      }).catch((err) => {
+        console.log(err)
+        this.setShowWithdrawProgress(false)
+        this.setShowWithdrawForm(true)
+        this.status = "error"
+      })
       this.close()
       this.setShowWithdrawProgress(true)
-
     } catch (error) {
       console.log(error)
     }

@@ -27,6 +27,10 @@ export function ethereumReactions(store: Store<DashboardState>) {
       return
     }
     ethereumModule.initERC20("LOOM")
+
+    // Set latest block number every 15 seconds
+    pollBlockNumber()
+
   }
 
   // TODO: Add a guard to check dependencies
@@ -35,4 +39,12 @@ export function ethereumReactions(store: Store<DashboardState>) {
 
   //     },
   // })
+}
+
+function pollBlockNumber() {
+  setInterval(async () => {
+    const result = await ethereumModule.web3.eth.getBlockNumber() || 0
+    console.log("Latest block #", result)
+    ethereumModule.setBlockNumber(result)
+  }, 15 * 1000)
 }

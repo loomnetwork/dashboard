@@ -58,4 +58,8 @@ export default class InputAmount extends Vue{
   p {
     color: red
   }
+
+  ::placeholder {
+    color: lightgrey;
+  }
 </style>

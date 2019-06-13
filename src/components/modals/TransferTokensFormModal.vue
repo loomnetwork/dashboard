@@ -47,8 +47,8 @@ import InputAddress from "../InputAddress.vue";
 @Component({
   components: {
     AmountInput,
-    InputAddress
-  }
+    InputAddress,
+  },
 })
 
 export default class TransferTokensFormModal extends Vue {

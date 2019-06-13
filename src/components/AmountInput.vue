@@ -24,8 +24,8 @@ import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
-import { PlasmaState } from '../store/plasma/types';
-import { state } from '../store/common';
+import { PlasmaState } from "../store/plasma/types"
+import { state } from "../store/common"
 
 @Component
 export default class AmountInput extends Vue {

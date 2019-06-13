@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts">
-import { Watch, Vue, Prop, Component } from 'vue-property-decorator';
+import { Watch, Vue, Prop, Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
-import { PlasmaState } from '../store/plasma/types';
+import { PlasmaState } from "../store/plasma/types"
 
 @Component
 export default class InputAmount extends Vue{
@@ -29,17 +29,17 @@ export default class InputAmount extends Vue{
   }
 
   updateAddress(value) {
-    this.$emit('input', value)
+    this.$emit("input", value)
   }
 
   validateAddressFormat() {
-    // Address (value) must be 44 characters and have a 'loom' as prefix
-    if (this.value.length !== 44 || this.value.slice(0, 4) !== "loom") {
+    // Address (value) must be 44 characters and have a "loom" as prefix
+    if ((this.value.length !== 44 || this.value.slice(0, 4) !== "loom") && this.value !== "") {
       this.isValidAddress = false
-      this.$emit('isValid', false)
+      this.$emit("isValid", false)
     } else {
       this.isValidAddress = true
-      this.$emit('isValid', true)
+      this.$emit("isValid", true)
     }
   }
 

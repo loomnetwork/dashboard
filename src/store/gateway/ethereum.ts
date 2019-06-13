@@ -198,7 +198,7 @@ class EthereumGateways {
  * @param tokenAmount
  */
 export async function ethereumDeposit(context: ActionContext, funds: Funds) {
-  const { symbol, weiAmount } = funds
+  const { chain, symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
   const approvalAmount = await ethereumModule.allowance({
     symbol,

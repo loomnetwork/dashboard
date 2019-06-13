@@ -145,6 +145,7 @@ export default class DepositForm extends Vue {
       const stringAmount = this.transferAmount.toString()
       const weiAmount = parseToWei(stringAmount)
       const payload = {
+        chain: "ethereum",
         symbol: this.token,
         weiAmount,
       }

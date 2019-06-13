@@ -8,7 +8,7 @@
     "user_denied_sign_tx": "User denied message signature",
     "deployer_already_exists": "Deployer alrready exists.",
     "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
-    "add_deployer_addr_succ_tx": "Add deployer address successful.",
+    "add_deployer_addr_success_tx": "Add deployer address successful.",
     "add_key_err_tx": "Error Adding a key: {msg}",
     "copy_addr_success_tx": "Address copied to clipboard",
     "copy_addr_err_tx": "Somehow copy didn't work...sorry",

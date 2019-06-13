@@ -73,14 +73,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
     })
     return result
-    // .on("transactionHash", async (hash) => {
-    //   if (hash) {
-    //     const tx = ethereumModule.web3.eth.getTransaction(hash, (tx) => {
-    //       console.log("the tx", tx)
-    //       localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
-    //     })
-    //   }
-    // })
   }
 }
 

@@ -170,9 +170,11 @@ export default class AddKey extends Vue {
 .text-link {
   font-style: italic;
   color: #007bff;
-}
-.text-link:hover {
-  color: #0651a2;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0651a2;
+  }
 }
 .remaining {
   align-self: flex-end;

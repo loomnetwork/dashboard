@@ -20,7 +20,6 @@
         <faucet-sidebar></faucet-sidebar>
       </div>
       <div class="main-container">
-        <feedback-notification></feedback-notification>
         <div class="inner-container container">
           <b-modal
             id="sign-wallet-modal"

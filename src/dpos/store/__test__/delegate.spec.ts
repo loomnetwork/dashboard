@@ -8,6 +8,9 @@ import { ZERO } from "@/utils"
 
 import { expect } from "chai"
 import { DPOSState } from "../types"
+import { plasmaModule } from "@/store/plasma"
+
+import sinon from "sinon"
 
 describe("Delegating", () => {
   describe("requestDelegation", () => {
@@ -17,7 +20,7 @@ describe("Delegating", () => {
     beforeEach(() => {
       state = defaultState()
       validator = {
-        address: Address.fromString(":0x".padEnd(40, "0")),
+        address: Address.fromString(":0x".padEnd(44, "0")),
         pubKey: new Uint8Array(),
         delegationTotal: ZERO,
         slashPercentage: ZERO,
@@ -33,6 +36,9 @@ describe("Delegating", () => {
     })
 
     it("sets correct intent to delegate", () => {
+      const plasmaMock = sinon.mock(plasmaModule)
+      plasmaMock.expects("getAddress").returns("xxx")
+
       requestDelegation(state, validator)
       expect(state.intent).to.equal("delegation")
     })

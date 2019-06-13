@@ -56,14 +56,15 @@ module.exports = {
       plugins.push(
         new CopyPlugin([
           {
-            from: "node_modules/scrypt/build/Release/scrypt.node",
-            to: "build/Release"
+            from: "node_modules/scrypt/build",
+            to: "dist"
           }
         ])
       )
       config.externals = {
-        scrypt: "./build/Release/scrypt"
+        scrypt: "require('scrypt')"
       }
+      config.target = "node"
     }
 
     return {

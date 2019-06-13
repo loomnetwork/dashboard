@@ -16,6 +16,7 @@ import { filter, tap, switchMap, take } from "rxjs/operators"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
+import { CommonTypedStore } from '../common';
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
@@ -179,8 +180,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   if (receipt) {
     console.log("Setting pre-existing receipt")
     gatewayModule.setWithdrawalReceipts(receipt)
-    // tell user ongoing withdraw
-    // CommonTypedStore.setErrorMsg("gateway.error.existing_receipt")
+    CommonTypedStore.setErrorMsg("Withdrawal already in progress, please try again later.")
     return
   }
   try {
@@ -200,9 +200,7 @@ export function pollReceipt(context: ActionContext, symbol: string) {
   return interval(2000)
     .pipe(
       switchMap(() => refreshPendingReceipt(context, symbol)),
-      filter(
-        (receipt) => receipt !== null && receipt.oracleSignature.length !== 0,
-      ),
+      filter((receipt) => receipt !== null && receipt.oracleSignature.length > 0),
       take(1),
     )
     .toPromise()
@@ -210,9 +208,7 @@ export function pollReceipt(context: ActionContext, symbol: string) {
 
 async function refreshPendingReceipt(context: ActionContext, symbol: string) {
   const gateway = service().get(symbol)
-  const receipt = await gateway.withdrawalReceipt()
-  context.state.withdrawalReceipts = receipt
-  return receipt
+  return await gateway.withdrawalReceipt()
 }
 
 async function next() {

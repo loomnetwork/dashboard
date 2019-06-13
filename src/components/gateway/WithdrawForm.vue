@@ -5,7 +5,7 @@
            hide-header-close
            id="deposit-approval-success"  title="Withdraw">
     <div v-if="status === 'default'">
-      <amount-input :min="1" :max="100" @input="inputHandler" @isError="errorHandler"/>
+      <amount-input :min="1" :max="100" :symbol="token" v-model="amount" @isError="errorHandler"/>
     </div>
     <div v-if="status === 'error'">
       <h2>
@@ -74,10 +74,6 @@ export default class WithdrawForm extends Vue {
 
   errorHandler(isValid: boolean) {
     this.amountIsValid = isValid
-  }
-
-  inputHandler(amount: BN) {
-    this.amount = amount
   }
 
   async requestWithdrawHandler(e) {

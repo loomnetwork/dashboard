@@ -36,19 +36,20 @@ export default class WithdrawConfirmed extends Vue {
   setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
   completeWithdrawal = gatewayModule.ethereumWithdraw
   setSuccessMsg = CommonTypedStore.setSuccessMsg
+  setErrorMsg = CommonTypedStore.setErrorMsg
 
   completeWithdrawalHandler() {
     const symbol = "LOOM" // TODO: Load symbol from receipt
     // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
     // const symbol = getTokenSymbolFromAddress(tokenAddress)
     this.completeWithdrawal(symbol).then(() => {
-      this.close()
       this.setSuccessMsg("Withdrawal complete!")
-      this.setWithdrawalReceipts(null)
     }).catch((err) => {
       console.log(err)
+      this.setErrorMsg("Withdrawal failed, please try again")
       this.status = "error"
     })
+    this.close()
   }
 
   get state(): DashboardState {
@@ -56,7 +57,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get visible() {
-    return this.state.gateway.withdrawalReceipts ? true : false
+    return this.state.gateway.withdrawalReceipts !== null
   }
 
   set visible(value) {
@@ -67,7 +68,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   close() {
-    this.visible = false
+    this.setWithdrawalReceipts(null)
   }
 
 }

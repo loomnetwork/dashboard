@@ -11,7 +11,7 @@
     <template slot="modal-title">Approve deposit</template>
     <div v-if="!status">
       <form>
-        <amount-input :min="1" :max="userBalance" v-model="depositAmount" @isError="errorHandler" />
+        <amount-input :min="1" :max="userBalance" v-model="depositAmount" :symbol="token" @isError="errorHandler" />
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
       </form>
     </div>
@@ -77,7 +77,7 @@ export default class DepositForm extends Vue {
   }
 
   get userBalance() {
-    return formatTokenAmount(this.state.ethereum.coins[this.token].balance)
+    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10)
   }
 
   get state(): DashboardState {

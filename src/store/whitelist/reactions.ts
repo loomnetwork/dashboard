@@ -21,6 +21,17 @@ export const PACKS_NAME = [
 
 export function whiteListReaction(store: Store<DashboardState>) {
   store.watch(
+    (s) => s.disabled,
+    (v) => {
+      if (v && v.includes("dev-deploy")) {
+        console.log("disable dev deploy (unwatch plasama.address etc)")
+      }
+    },
+    {
+      immediate: true,
+    },
+  )
+  store.watch(
     (state) => state.plasma.address,
     async () => {
       await whiteListModule.createUserDeployerWhitelistAsync()

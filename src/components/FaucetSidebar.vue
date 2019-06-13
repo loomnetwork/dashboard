@@ -104,7 +104,7 @@ import { DashboardState } from "../types"
 @Component
 export default class FaucetSidebar extends Vue {
 
-
+  // we coud bind menu to this
   menu = [
     {},
     {},

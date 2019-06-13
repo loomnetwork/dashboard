@@ -20,6 +20,7 @@
         <faucet-sidebar></faucet-sidebar>
       </div>
       <div class="main-container">
+        <feedback-notification></feedback-notification>
         <div class="inner-container container">
           <b-modal
             id="sign-wallet-modal"
@@ -66,9 +67,10 @@
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
+    <progress-modal/>
+    <feedback-alert/>
     <WithdrawProgress/>
     <WithdrawConfirmed/>
-    
   </div>
 </template>
 
@@ -80,6 +82,9 @@ import FaucetSidebar from "../components/FaucetSidebar.vue"
 import FaucetFooter from "@/components/FaucetFooter.vue"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 import WarningOverlay from "../components/WarningOverlay.vue"
+import FeedbackNotification from "../feedback/components/FeedbackNotification.vue"
+import ProgressModal from "../feedback/components/ProgressModal.vue"
+import FeedbackAlert from "../feedback/components/FeedbackAlert.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
@@ -100,6 +105,9 @@ import { store } from "../store"
     WarningOverlay,
     DepositApproved,
     DepositConfirmed,
+    FeedbackNotification,
+    ProgressModal,
+    FeedbackAlert,
     WithdrawProgress,
     WithdrawConfirmed,
   },

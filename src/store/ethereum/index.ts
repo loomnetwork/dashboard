@@ -19,6 +19,7 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
+import { setBlockNumber } from './mutations';
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -60,6 +61,7 @@ const initialState: EthereumState = {
     },
   },
   contracts: {},
+  blockNumber: 0,
 }
 
 // web3 instance
@@ -103,6 +105,10 @@ export const ethereumModule = {
 
   initERC20: builder.dispatch(initERC20),
   clearERC20: builder.dispatch(clearERC20),
+
+  // Mutations
+  setBlockNumber: builder.commit(setBlockNumber),
+
 }
 
 // holds the contracts. We don't need to exposed these on the state

@@ -61,7 +61,9 @@ module.exports = {
           }
         ])
       )
-      config.externals = "./build/Release/scrypt"
+      config.externals = {
+        scrypt: "./build/Release/scrypt"
+      }
     }
 
     return {

@@ -44,7 +44,6 @@ export default class WithdrawConfirmed extends Vue {
     // const symbol = getTokenSymbolFromAddress(tokenAddress)
     this.completeWithdrawal(symbol).then(() => {
       this.setSuccessMsg("Withdrawal complete!")
-      this.setWithdrawalReceipts(null)
     }).catch((err) => {
       console.log(err)
       this.setErrorMsg("Withdrawal failed, please try again")
@@ -69,7 +68,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   close() {
-    this.visible = false
+    this.setWithdrawalReceipts(null)
   }
 
 }

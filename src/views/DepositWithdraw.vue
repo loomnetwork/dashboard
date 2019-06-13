@@ -136,6 +136,11 @@ export default class DepositWithdraw extends Vue {
 
   requestWithdraw(token: string) {
 
+    if (!ethereumModule.state.blockNumber) {
+      this.setShowErrorMsg("Synching with Ethereum, please wait a moment and try again.")
+      return
+    }
+
     if (this.withdrawalInProgress) {
       this.setShowErrorMsg("There is a processing withdrawal, please try again later.")
       return

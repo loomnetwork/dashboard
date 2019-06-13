@@ -37,7 +37,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
           const value = localStorage.getItem("latestWithdrawalBlock")
           // @ts-ignore
           const block = JSON.parse(value)
-          console.log("Remaining blocks: ",  event.number - (block + 12))
+          console.log("Remaining blocks: ",  event.number - (block + 15))
         }
         return
       }

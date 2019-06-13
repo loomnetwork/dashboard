@@ -180,6 +180,7 @@ function formatTxFromEvent(event: EventLog) {
   const contractAddr = event.address
   const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!.symbol
   const funds: Funds = {
+    chain,
     symbol,
     weiAmount: new BN(event.returnValues.value.toString()),
   }

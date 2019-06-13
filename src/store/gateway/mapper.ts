@@ -4,9 +4,16 @@
 
 import { getRequired } from "@/utils"
 import debug from "debug"
-import { Address, CryptoUtils, EthersSigner, LocalAddress } from "loom-js"
+import {
+  Address,
+  CryptoUtils,
+  EthersSigner,
+  LocalAddress,
+  createDefaultTxMiddleware,
+} from "loom-js"
 import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
 import { ActionContext } from "./types"
+import { createDefaultClient } from "loom-js/dist/helpers"
 
 const log = debug("dash.mapper")
 
@@ -47,7 +54,7 @@ export async function loadMapping(context: ActionContext, address: string) {
 export async function createMapping(context: ActionContext) {
   const { rootState, state } = context
   // create a temporary client for new napping
-  const client = getRequired(rootState.plasma.client, "plasma client")
+  // const client = getRequired(rootState.plasma.client, "plasma client")
   const signer = getRequired(rootState.ethereum.signer, "signer")
   const caller = rootState.plasma.appId.address
   const ethAddress = getRequired(state.mapping, "mapping").from
@@ -55,11 +62,14 @@ export async function createMapping(context: ActionContext) {
   const ethSigner = new EthersSigner(signer)
   const plasmaId = generateNewId()
   console.log("caller", caller)
-  const mapper = await AddressMapper.createAsync(
-    client,
-    Address.fromString([client.chainId, caller].join(":")),
+
+  const { address, client } = createDefaultClient(
+    CryptoUtils.Uint8ArrayToB64(plasmaId.privateKey),
+    rootState.plasma.endpoint,
+    rootState.plasma.chainId,
   )
 
+  const mapper = await AddressMapper.createAsync(client, address)
   try {
     await mapper.addIdentityMappingAsync(
       ethAddress,
@@ -68,9 +78,7 @@ export async function createMapping(context: ActionContext) {
     )
     console.error("addIdentityMappingAsync ok  ")
 
-    state.mapping = await mapper.getMappingAsync(
-      Address.fromString(`eth:${ethAddress}`),
-    )
+    loadMapping(context, rootState.ethereum.address)
   } catch (e) {
     console.error(e)
     console.error(
@@ -80,6 +88,7 @@ export async function createMapping(context: ActionContext) {
     )
     // feedback.showError("mapper.errors.create", e.message,{ethereum:ethAddress, plasma:plasmaId.address})
   } finally {
+    client.disconnect()
   }
 }
 

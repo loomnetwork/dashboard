@@ -129,6 +129,7 @@ const defaultState = () => {
     showDepositConfirmed: false,
     pendingTx: null,
     withdrewSignature: "",
+    notMapped: false,
   } as DposState
 }
 

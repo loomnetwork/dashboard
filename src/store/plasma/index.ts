@@ -59,6 +59,7 @@ const initialState: PlasmaState = {
   },
   selectedToken: "",
   blockExplorer: "",
+  loomGamesEndpoint: "",
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()

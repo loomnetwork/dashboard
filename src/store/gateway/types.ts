@@ -27,10 +27,12 @@ export interface GatewayState {
   showDepositForm: boolean
   showDepositApproved: boolean
   showDepositConfirmed: boolean
-  showWithdrawForm: boolean
-  showWithdrawProgress: boolean
-  withdrawStates: WithdrawState[]
-  withdrawStateIdx: number
+  showWithdrawForm: boolean,
+  showWithdrawProgress: boolean,
+  withdrawStates: WithdrawState[],
+  withdrawStateIdx: number,
+  notMapped: boolean,
+  newMappingAgree: boolean,
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

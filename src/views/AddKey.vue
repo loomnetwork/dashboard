@@ -85,8 +85,12 @@ import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
+<<<<<<< HEAD
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 import BN from "bn.js"
+=======
+import { feedbackModule } from "../feedback/store"
+>>>>>>> develop
 
 @Component({
   components: {
@@ -96,7 +100,7 @@ import BN from "bn.js"
 })
 
 export default class AddKey extends Vue {
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
   addDeployerAsync = whiteListModule.addDeployerAsync
   getDeployersAsync = whiteListModule.getDeployersAsync
   isShowGenPublicKeyModal = false
@@ -133,19 +137,20 @@ export default class AddKey extends Vue {
 
   async addKey(tier: ITier) {
     if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance )) {
-      this.setErrorMsg("Your balance isn't enough. Please deposit first.")
+      this.showError("Your balance isn't enough. Please deposit first.")
       return
     }
 
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     if (this.publicKeys.filter((address) => address.hex === loomAddress).length > 0) {
-      this.setErrorMsg("This address is already exists in your deployer list.")
+      this.showError("This address is already exists in your deployer list.")
       return
     }
 
     this.setShowLoadingSpinner(true)
-    let result = await this.addDeployerAsync({ deployer: loomAddress, tier })
+    const result = await this.addDeployerAsync({ deployer: loomAddress, tier })
     this.setShowLoadingSpinner(false)
+    this.newPublicAddress = ""
   }
 
   isValidAddressFormat(isValid) {

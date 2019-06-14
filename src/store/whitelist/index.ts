@@ -17,6 +17,7 @@ import BN from "bn.js"
 import { CommonTypedStore } from "../common"
 import { i18n } from "../../i18n"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
+import { feedbackModule } from "@/feedback/store"
 
 const initialState: WhiteListState = {
   userDeployerWhitelist: null,
@@ -101,7 +102,14 @@ async function addDeployerAsync(
     if (error.message.includes("User denied message")) {
       errorMessage = userDeniedSignTx
     }
+<<<<<<< HEAD
     CommonTypedStore.setErrorMsg(
+=======
+    if (error.message.includes("deployer already exists")) {
+      errorMessage = alreadyExist
+    }
+    feedbackModule.showError(
+>>>>>>> develop
       i18n
         .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
         .toString(),
@@ -116,10 +124,11 @@ async function addDeployerAsync(
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
     await plasmaModule.refreshBalance("LOOM")
-    CommonTypedStore.setSuccessMsg(
+    feedbackModule.showSuccess(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )
   } catch (error) {
+<<<<<<< HEAD
     log("addDeployerAsync error", error)
     let errorMessage = error.message
     const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
@@ -132,6 +141,10 @@ async function addDeployerAsync(
     }
     CommonTypedStore.setErrorMsg(
       i18n.t("messages.add_key_err_tx", { msg: errorMessage }).toString(),
+=======
+    feedbackModule.showError(
+      i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
+>>>>>>> develop
     )
     return
   }

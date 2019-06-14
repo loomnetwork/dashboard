@@ -102,14 +102,7 @@ async function addDeployerAsync(
     if (error.message.includes("User denied message")) {
       errorMessage = userDeniedSignTx
     }
-<<<<<<< HEAD
-    CommonTypedStore.setErrorMsg(
-=======
-    if (error.message.includes("deployer already exists")) {
-      errorMessage = alreadyExist
-    }
     feedbackModule.showError(
->>>>>>> develop
       i18n
         .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
         .toString(),
@@ -128,7 +121,6 @@ async function addDeployerAsync(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )
   } catch (error) {
-<<<<<<< HEAD
     log("addDeployerAsync error", error)
     let errorMessage = error.message
     const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
@@ -139,12 +131,8 @@ async function addDeployerAsync(
     if (error.message.includes("deployer already exists")) {
       errorMessage = alreadyExist
     }
-    CommonTypedStore.setErrorMsg(
-      i18n.t("messages.add_key_err_tx", { msg: errorMessage }).toString(),
-=======
     feedbackModule.showError(
-      i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
->>>>>>> develop
+      i18n.t("messages.add_key_err_tx", { msg: errorMessage }).toString(),
     )
     return
   }

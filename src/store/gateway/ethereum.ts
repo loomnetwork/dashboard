@@ -14,6 +14,7 @@ import { ethereumModule } from "../ethereum"
 import networks from "@/../chain-config"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+// XXX
 import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
 import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
 import { CryptoUtils } from "loom-js"

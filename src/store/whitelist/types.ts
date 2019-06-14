@@ -3,6 +3,7 @@ import { UserDeployerState } from "loom-js/dist/proto/user_deployer_whitelist_pb
 import { BareActionContext } from "vuex-typex"
 import { HasPlasmaState } from "../plasma/types"
 import { Address } from "loom-js"
+import { ITier } from 'loom-js/dist/contracts/user-deployer-whitelist';
 
 export interface HasWhiteListState extends HasPlasmaState {
   whiteList: WhiteListState
@@ -12,14 +13,8 @@ export interface WhiteListState {
   userDeployerWhitelist: UserDeployerWhitelist | null
   userDeployersAddress: DeployerAddress[] | [],
   whiteListContractAddress: Address | null,
-  tiers: Tier[]
-}
-
-export interface Tier {
-    id: number,
-    fee: number,
-    name: string,
-    enabled: boolean,
+  tierIDs: number[],
+  tiers: ITier[]
 }
 
 export interface DeployerAddress {

@@ -1,21 +1,19 @@
-import { HasGatewayState, EthPlasmSigner } from "./types"
-import { Store } from "vuex"
-import { gatewayModule } from "."
-import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
-import { plasmaModule } from "../plasma"
-import { Address } from "loom-js"
+import { tokenService } from "@/services/TokenService"
+import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
+import { DashboardState, Funds } from "@/types"
 import BN from "bn.js"
-
+import debug from "debug"
+import { Address } from "loom-js"
+import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
+import { Store } from "vuex"
+import { EventLog } from "web3-core"
+import { gatewayModule } from "."
+import { ethereumModule } from "../ethereum"
+import { plasmaModule } from "../plasma"
+import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
-import { ethereumModule } from "../ethereum"
-import { DashboardState } from "@/types"
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
-import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import { Funds } from "@/types"
-import debug from "debug"
-import { EventLog } from "web3-core"
-import { tokenService } from "@/services/TokenService"
+import { EthPlasmSigner } from "./signer"
 
 const log = debug("dash.gateway")
 
@@ -60,7 +58,9 @@ export function gatewayReactions(store: Store<DashboardState>) {
         mapping,
       )
 
-      const loomGatewayAddr = Address.fromString(`eth:${addresses.loomGateway}`)
+      const loomGatewayAddr = Address.fromString(
+        `eth:${addresses.loomGateway}`,
+      )
       const ethGatewayAddr = Address.fromString(`eth:${addresses.mainGateway}`)
 
       plasmaGatewayService.add("LOOM", loomGatewayAddr)
@@ -82,7 +82,9 @@ export function gatewayReactions(store: Store<DashboardState>) {
       )
 
       // TODO: Add support for multiple tokens
-      const receipt = await plasmaGatewayService.get("LOOM").withdrawalReceipt()
+      const receipt = await plasmaGatewayService
+        .get("LOOM")
+        .withdrawalReceipt()
       // @ts-ignore
       const withdrawalIsPending = JSON.parse(
         localStorage.getItem("pendingWithdrawal") || "false",
@@ -133,11 +135,9 @@ function listenToDepositApproval(
         `transfer ${event.returnValues.value.toString()}
        tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
       )
-
       const payload = formatTxFromEvent(event)
-      gatewayModule.setShowDepositForm(false)
-      gatewayModule.setShowDepositApproved(true)
-      gatewayModule.setShowDepositConfirmed(false)
+      // TODO: Uncomments if using Ethers
+      // gatewayModule.setShowDepositApproved(true)
       gatewayModule.setPendingTransactions(payload)
       // TODO: Clear specific hash
       // gatewayModule.clearPendingTransactions()
@@ -165,11 +165,10 @@ function listenToDeposit(
         `transfer ${event.returnValues.value.toString()}
        tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
       )
-
       const payload = formatTxFromEvent(event)
-      gatewayModule.setShowDepositForm(false)
-      gatewayModule.setShowDepositApproved(false)
-      gatewayModule.setShowDepositConfirmed(true)
+      // TODO: Uncomments if using Ethers
+      // gatewayModule.setShowDepositApproved(false)
+      // gatewayModule.setShowDepositConfirmed(true)
       gatewayModule.setPendingTransactions(payload)
       // TODO: Clear specific hash
       // gatewayModule.clearPendingTransactions()
@@ -180,7 +179,8 @@ function listenToDeposit(
 function formatTxFromEvent(event: EventLog) {
   const contractAddr = (event.address as string).toLowerCase()
   const chain = "ethereum"
-  const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!.symbol
+  const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!
+    .symbol
   const funds: Funds = {
     chain: "ethereum",
     symbol,

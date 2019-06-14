@@ -20,6 +20,7 @@ import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
 import { setBlockNumber } from './mutations';
+import { modifyRPCSigner } from '../gateway/signer';
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 

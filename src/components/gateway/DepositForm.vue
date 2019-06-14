@@ -32,7 +32,7 @@
       </div>
       <div v-else>
         <span style="flex:1"></span>
-        <b-btn @click="close" variant="primary">Close</b-btn>
+        <b-btn @click="close">Close</b-btn>
       </div>
     </template>
   </b-modal>
@@ -47,6 +47,8 @@ import { DashboardState } from "../../types"
 
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
+import { setShowDepositForm, setShowDepositApproved } from '../../store/dpos-old/mutations';
+import { gatewayReactions } from '../../store/gateway/reactions';
 
 @Component({
   components: {
@@ -58,6 +60,7 @@ export default class DepositForm extends Vue {
   @Prop({required: true}) token!: string // prettier-ignore
 
   setShowDepositForm = gatewayModule.setShowDepositForm
+  setShowDepositApproved = gatewayModule.setShowDepositApproved
   approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
@@ -132,7 +135,11 @@ export default class DepositForm extends Vue {
         symbol: this.token,
         weiAmount,
       }
-      await this.approveDeposit(payload)
+      this.approveDeposit(payload).then(() => {
+        this.setShowDepositApproved(true)
+      }).catch((err) => {
+        throw new Error(err)
+      })
       this.status = "sent"
     } catch (e) {
       this.status = "failed"

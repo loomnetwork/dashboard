@@ -12,8 +12,8 @@ import { plasmaModule } from "@/store/plasma"
 
 import sinon from "sinon"
 
-describe("Delegating", () => {
-  describe("requestDelegation", () => {
+describe("Undelegate", () => {
+  describe("requestUndelegation", () => {
     let state: DPOSState
     let validator: ICandidate
 
@@ -31,16 +31,13 @@ describe("Delegating", () => {
         candidateState: CandidateState.REGISTERED,
         name: "",
         description: "",
-        website: "",
+        website: ""
       }
     })
 
     it("sets correct intent to delegate", () => {
-      const plasmaMock = sinon.mock(plasmaModule)
-      plasmaMock.expects("getAddress").returns("xxx")
-
       requestDelegation(state, validator)
-      expect(state.intent).to.equal("delegate")
+      expect(state.intent).to.equal("undelegate")
     })
   })
 

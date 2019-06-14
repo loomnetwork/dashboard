@@ -5,6 +5,28 @@
       <main>
         <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
         <div class="container-fluid mb-5 rmv-padding">
+          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" v-model="notMapped">
+            <div class="confirm-link text-center">
+              <h3>Are you from Relentless Marketplace ?</h3>
+              <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
+               <div class="linking-div">
+                <img src="../assets/images/relentless.png">
+                <i style="font-size:56px;" class="fa">&#8651;</i>
+                <loom-icon width="56px" height="56px" :color="'#6eccd8'"/>
+              </div>
+              <div class="linking-div-choice">
+                <b-button block variant="outline-primary" :href="loomGamesUrl">Link my account</b-button>
+              </div>
+            </div>
+            <div slot="modal-footer" class="w-100" style="text-align: center;">
+               <b-button v-show="!reconsider" variant="link" style="color: gray;" @click="reconsider = true">Nope, I'm not from Relentless Marketplace</b-button>
+               <div class="reconsider" v-show="reconsider">
+                 <h5> Are you sure ? </h5>
+                 <p style="color: red;"> We will create a new fresh account for you, But account linking is unable anymore</p>
+                 <b-button variant="outline-dark" @click="setNewMappingAgree(true)"> Create a new account </b-button>
+               </div>
+            </div>
+          </b-modal>
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">
@@ -109,10 +131,15 @@ import { DPOSTypedStore } from "@/store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
 
+import LoomIcon from "@/components/LoomIcon.vue"
+import { Gateway } from '../store/gateway/contracts/Gateway';
+import { gatewayModule } from '../store/gateway';
+
 @Component({
   components: {
     ChainSelector,
     HardwareWalletModal,
+    LoomIcon,
   },
 })
 export default class FirstPage extends Vue {
@@ -123,6 +150,11 @@ export default class FirstPage extends Vue {
   get walletType() { return this.$state.DPOS.walletType }
   get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
   get $state() { return (this.$store.state as DashboardState) }
+
+  get notMapped() { return (this.$state.gateway.mapping !== null) && (this.$state.gateway.mapping.to!.isEmpty()) && (this.$state.ethereum.signer) }
+  get newMappingAgree() { return this.$state.gateway.newMappingAgree }
+
+  loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
@@ -136,10 +168,12 @@ export default class FirstPage extends Vue {
   addChainUrl = DPOSTypedStore.addChainUrl
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus
+  setNewMappingAgree = gatewayModule.setNewMappingAgree
 
   address = ""
   addressModalShow = false
-  metamaskIsInstalled = false
+  mappedModalShow = false
+  reconsider = false
 
   // async selectWallet(wallet) {
   //   if (wallet === "ledger") {
@@ -166,6 +200,11 @@ export default class FirstPage extends Vue {
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
+  }
+
+  set notMapped(val) {
+  }
+  set newMappingAgree(val) {
   }
 
   isMetamaskInstalled() {
@@ -348,6 +387,33 @@ export default class FirstPage extends Vue {
     line-height: 1.2;
     display: inline;
   }
+}
+
+.confirm-link {
+  display: flex;
+  flex-direction: column;
+  h3 {
+    color: black;
+  }
+}
+
+.reconsider {
+    margin-bottom: 10px;
+}
+
+.linking-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 35%;
+  align-self: center;
+  margin: 0em 0.5em;
+}
+
+.linking-div-choice {
+  margin-top: 20px;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 #wallet-card-img-large {

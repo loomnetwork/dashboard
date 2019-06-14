@@ -7,6 +7,7 @@ export default {
     chainId: "asia1",
     endpoint: "wss://test-z-asia1.dappchains.com",
     blockExplorer: "http://asia1-blockexplorer.devdc.io",
+    loomGamesEndpoint: "https://stage.loom.games/en/dpos-link",
   },
   ethereum: {
     networkId: "4",

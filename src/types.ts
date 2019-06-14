@@ -101,6 +101,7 @@ export interface DposState {
   metamaskStatus?: any
   metamaskError?: any
   withdrewSignature: string
+  notMapped: boolean
 }
 
 // export interface DappchainState {

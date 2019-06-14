@@ -29,6 +29,10 @@ export function clearPendingTransactions(state: GatewayState) {
   state.pendingTransactions = new Array()
 }
 
+export function setNewMappingAgree(state: GatewayState, payload: boolean) {
+  state.newMappingAgree = payload
+}
+
 export function setWithdrawalReceipts(
   state: GatewayState,
   payload: IWithdrawalReceipt | null,

@@ -179,7 +179,7 @@
           <b-col>
             <b-card-text>Binance Edition Amount: {{ binanceEditionAmount }}</b-card-text>
             <b-card-text>Tron Edition Amount: {{ tronEditionAmount }}</b-card-text>
-            <b-card-text class="font-weight-bold">total amount: {{ userCardsAmount }}</b-card-text>
+            <b-card-text class="font-weight-bold">Total Amount: {{ userCardsAmount }}</b-card-text>
           </b-col>
           <b-col>
             <b-card-text>Transfer all cards</b-card-text>

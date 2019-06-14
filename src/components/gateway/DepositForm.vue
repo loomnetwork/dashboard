@@ -20,21 +20,17 @@
     </div>
     <div v-else-if="status === 'failed'">
       <p class="lead">{{ $t("components.gateway.approval.failure") }}</p>
+      <b-btn @click="close" variant="primary">Close</b-btn>
     </div>
     <div v-else-if="status === 'sent'">
       <p class="lead">{{ $t("components.gateway.approval.sent") }}</p>
+      <b-btn @click="close" variant="primary">Close</b-btn>
     </div>
     <template slot="modal-footer">
-      <div v-if="!status">
-        <b-btn @click="close()" class="mr-2">Cancel</b-btn>
-        <span style="flex:1"></span>
-        <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">Confirm</b-btn>
-      </div>
-      <div v-else>
-        <span style="flex:1"></span>
-        <b-btn @click="close" variant="primary">Close</b-btn>
-      </div>
-    </template>
+      <b-btn @click="close()">Cancel</b-btn>
+      <span style="flex:1"></span>
+      <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">Confirm</b-btn>
+    </template>    
   </b-modal>
 </template>
 <script lang="ts">
@@ -132,7 +128,9 @@ export default class DepositForm extends Vue {
         symbol: this.token,
         weiAmount,
       }
-      await this.approveDeposit(payload)
+      this.approveDeposit(payload).catch((err) => {
+        throw new Error(err)
+      })
       this.status = "sent"
     } catch (e) {
       this.status = "failed"

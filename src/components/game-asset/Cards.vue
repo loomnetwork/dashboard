@@ -1,212 +1,46 @@
 <template>
-  <b-card class="mb-5">
+  <b-card class="cards-view" no-body>
     <transfer-cards-modal ref="transferModalConfig"></transfer-cards-modal>
     <transfer-all-cards-modal ref="transferAllCardsModalConfig"></transfer-all-cards-modal>
-    <b-card-title>My Cards</b-card-title>
-    <b-tabs card>
-      <b-tab title="Standard Edition">
-        <b-row class="mb-2">
-          <b-col>
-            <b-card-text>Standard Edition Amount: {{ standardEditionAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-row>
-              <b-card-text>Transfer all Standard edition cards</b-card-text>
-              <b-button
-                :disabled="standardEditionAmount <= 0"
-                class="ml-2"
-                type="button"
-                @click="openBatchTransferCardsModal('Standard', seCards, standardEditionAmount)"
-              >Transfer All</b-button>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-table
-          v-show="standardEditionAmount > 0"
-          striped
-          bordered
-          hover
-          :items="seCards"
-          :fields="cardTableFields"
-        >
-          <template slot="variation" slot-scope="row">
-            <span>{{ row.item.variation | capitalizeWord}}</span>
-          </template>
-          <template slot="transfer" slot-scope="row">
-            <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
-          </template>
-        </b-table>
-      </b-tab>
-      <b-tab title="Backer Edition">
-        <b-row class="mb-2">
-          <b-col>
-            <b-card-text>Backer Edition Amount: {{ backerEditionAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-row>
-              <b-card-text>Transfer all Backer edition cards</b-card-text>
-              <b-button
-                :disabled="backerEditionAmount <= 0"
-                class="ml-2"
-                type="button"
-                @click="openBatchTransferCardsModal('Backer', beCards, backerEditionAmount)"
-              >Transfer All</b-button>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-table
-          v-show="backerEditionAmount > 0"
-          striped
-          bordered
-          hover
-          :items="beCards"
-          :fields="cardTableFields"
-        >
-          <template slot="variation" slot-scope="row">
-            <span>{{ row.item.variation | capitalizeWord}}</span>
-          </template>
-          <template slot="transfer" slot-scope="row">
-            <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
-          </template>
-        </b-table>
-      </b-tab>
-      <b-tab title="Limited Edition">
-        <b-row class="mb-2">
-          <b-col>
-            <b-card-text>Limited Edition Amount: {{ limitedEditionAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-row>
-              <b-card-text>Transfer all Limited edition cards</b-card-text>
-              <b-button
-                :disabled="limitedEditionAmount <= 0"
-                class="ml-2"
-                type="button"
-                @click="openBatchTransferCardsModal('Limited', leCards, limitedEditionAmount)"
-              >Transfer All</b-button>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-table
-          v-show="limitedEditionAmount > 0"
-          striped
-          bordered
-          hover
-          :items="leCards"
-          :fields="cardTableFields"
-        >
-          <template slot="variation" slot-scope="row">
-            <span>{{ row.item.variation | capitalizeWord}}</span>
-          </template>
-          <template slot="transfer" slot-scope="row">
-            <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
-          </template>
-        </b-table>
-      </b-tab>
-      <b-tab title="Binance Edition">
-        <b-row class="mb-2">
-          <b-col>
-            <b-card-text>Binance Edition Amount: {{ binanceEditionAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-row>
-              <b-card-text>Transfer all Binance edition cards</b-card-text>
-              <b-button
-                :disabled="binanceEditionAmount <= 0"
-                class="ml-2"
-                type="button"
-                @click="openBatchTransferCardsModal('Binance', bneCards, binanceEditionAmount)"
-              >Transfer All</b-button>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-table
-          v-show="binanceEditionAmount > 0"
-          striped
-          bordered
-          hover
-          :items="bneCards"
-          :fields="cardTableFields"
-        >
-          <template slot="variation" slot-scope="row">
-            <span>{{ row.item.variation | capitalizeWord}}</span>
-          </template>
-          <template slot="transfer" slot-scope="row">
-            <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
-          </template>
-        </b-table>
-      </b-tab>
-      <b-tab title="Tron Edition">
-        <b-row class="mb-2">
-          <b-col>
-            <b-card-text>Tron Edition Amount: {{ tronEditionAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-row>
-              <b-card-text>Transfer all Tron edition cards</b-card-text>
-              <b-button
-                :disabled="tronEditionAmount <= 0"
-                class="ml-2"
-                type="button"
-                @click="openBatchTransferCardsModal('Tron', teCards, tronEditionAmount)"
-              >Transfer All</b-button>
-            </b-row>
-          </b-col>
-        </b-row>
-        <b-table
-          v-show="tronEditionAmount > 0"
-          striped
-          bordered
-          hover
-          :items="teCards"
-          :fields="cardTableFields"
-        >
-          <template slot="variation" slot-scope="row">
-            <span>{{ row.item.variation | capitalizeWord}}</span>
-          </template>
-          <template slot="transfer" slot-scope="row">
-            <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
-          </template>
-        </b-table>
-      </b-tab>
-      <b-tab title="Summary">
-        <b-row class="mb-2">
-          <b-col>
-            <b-card-text>Standard Edition Amount: {{ standardEditionAmount }}</b-card-text>
-            <b-card-text>Backer Edition Amount: {{ backerEditionAmount }}</b-card-text>
-            <b-card-text>Limited Edition Amount: {{ limitedEditionAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-card-text>Binance Edition Amount: {{ binanceEditionAmount }}</b-card-text>
-            <b-card-text>Tron Edition Amount: {{ tronEditionAmount }}</b-card-text>
-            <b-card-text class="font-weight-bold">total amount: {{ userCardsAmount }}</b-card-text>
-          </b-col>
-          <b-col>
-            <b-card-text>Transfer all cards</b-card-text>
-            <b-button
-              :disabled="userCardsAmount <= 0"
-              type="button"
-              @click="openBatchTransferCardsModal('All', cards, userCardsAmount)"
-            >Transfer All</b-button>
-          </b-col>
-        </b-row>
-        <b-table
-          v-show="cards && cards.length > 0"
-          striped
-          bordered
-          hover
-          :items="cards"
-          :fields="cardTableFields"
-        >
-          <template slot="variation" slot-scope="row">
-            <span>{{ row.item.variation | capitalizeWord}}</span>
-          </template>
-          <template slot="transfer" slot-scope="row">
-            <b-button type="button" @click="openTransferCardsModal(row.item)">Transfer</b-button>
-          </template>
-        </b-table>
-      </b-tab>
-    </b-tabs>
+    <b-card-header>
+      <h4 class="card-title">{{$t('My Cards')}}</h4>
+      <b-dropdown :text="editionFilterText" variant="outline-info">
+        <b-dropdown-item-button @click="edition = null">All editions</b-dropdown-item-button>
+        <b-dropdown-item-button
+          v-for="option in editions"
+          :key="option.name"
+          @click="edition = option"
+        >{{option.name}} Edition ({{option.amount}})</b-dropdown-item-button>
+      </b-dropdown>
+    </b-card-header>
+    <b-card-body v-if="filteredCards.length > 7 || inputFilter !== ''">
+      <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
+    </b-card-body>
+    <b-card-body v-if="filteredCards.length === 0">No cards to show</b-card-body>
+    <b-list-group flush>
+      <b-list-group-item v-for="card in filteredCards" :key="card.id">
+        <label class="name">#{{card.id}} - {{card.display_name}}</label>
+        <span class="balance">
+          x {{card.amount}}
+          <small>card(s)</small>
+        </span>
+        <b-button-group class="actions">
+          <b-button
+            class="button"
+            size="sm"
+            variant="outline-primary"
+            @click="openTransferCardsModal(card)"
+          >Transfer</b-button>
+        </b-button-group>
+      </b-list-group-item>
+    </b-list-group>
+    <b-card-footer>
+      <b-button
+        type="button"
+        variant="outline-danger"
+        @click="openBatchTransferCardsModal"
+      >Transfer all cards in {{editionFilterText}}</b-button>
+    </b-card-footer>
   </b-card>
 </template>
 
@@ -221,6 +55,12 @@ import TransferCardsModal from "@/components/modals/TransferCardsModal.vue"
 import { BModal } from "bootstrap-vue"
 import { assetsModule } from "../../store/plasma/assets"
 
+interface Edition {
+  name: string,
+  cards: CardDetail[],
+  amount: number
+}
+
 @Component({
   components: {
     TransferCardsModal,
@@ -228,43 +68,29 @@ import { assetsModule } from "../../store/plasma/assets"
   },
 })
 export default class Cards extends Vue {
+  editionNames = ["Standard", "Limited", "Backer", "Binance", "Tron"]
+  editions: Edition[] = []
+  edition: Edition | null = null
+  inputFilter: string = ""
+
+  get editionFilterText() {
+    console.log(this.edition)
+    return this.edition ?
+      `${this.edition.name} edition (${this.edition.amount})` :
+      `All editions (${this.userCardsAmount})`
+  }
+
+  get filteredCards() {
+    const cards = this.edition === null ? this.cards : this.edition.cards
+    const filter = this.inputFilter.toLowerCase()
+    return cards.filter((cd) => cd.display_name.toLowerCase().includes(filter))
+  }
+
   checkCardBalance = assetsModule.checkCardBalance
   setCardToTransferSelected = assetsModule.setCardToTransferSelected
   setAllCardsToTransferSelected = assetsModule.setAllCardsToTransferSelected
   cards: CardDetail[] = []
-  seCards: CardDetail[] = []
-  leCards: CardDetail[] = []
-  beCards: CardDetail[] = []
-  bneCards: CardDetail[] = []
-  teCards: CardDetail[] = []
   userCardsAmount: number = 0
-  standardEditionAmount: number = 0
-  limitedEditionAmount: number = 0
-  backerEditionAmount: number = 0
-  binanceEditionAmount: number = 0
-  tronEditionAmount: number = 0
-  cardTableFields = [
-    {
-      key: "id",
-      sortable: true,
-    },
-    {
-      key: "display_name",
-      sortable: true,
-    },
-    {
-      key: "variation",
-      sortable: true,
-    },
-    {
-      key: "amount",
-      sortable: true,
-    },
-    {
-      key: "transfer",
-      label: "Transfer",
-    },
-  ]
 
   get state(): DashboardState {
     return this.$store.state
@@ -275,6 +101,15 @@ export default class Cards extends Vue {
   }
 
   async mounted() {
+    this.edition = null
+    this.editions = this.editionNames.map((name) => (
+      {
+        id: name,
+        name,
+        cards: [],
+        amount: 0,
+      }
+    ))
     await this.checkCardBalance()
     this.cards = await this.cardBalance
   }
@@ -288,24 +123,25 @@ export default class Cards extends Vue {
     this.$root.$emit("bv::show::modal", "transfer-cards-modal")
   }
 
-  openBatchTransferCardsModal(edition, cards, amount) {
-    this.setAllCardsToTransferSelected({ edition, cards, amount })
+  openBatchTransferCardsModal() {
+    if (this.edition !== null) {
+      this.setAllCardsToTransferSelected({
+        edition: this.edition.name,
+        cards: this.edition.cards,
+        amount: this.edition.amount,
+      })
+    } else {
+      this.setAllCardsToTransferSelected({ edition: "All", cards: this.cards, amount: this.userCardsAmount })
+    }
     this.$root.$emit("bv::show::modal", "transfer-all-cards-modal")
   }
 
   resetCardAmount() {
-    (this.userCardsAmount = 0),
-      (this.standardEditionAmount = 0),
-      (this.limitedEditionAmount = 0),
-      (this.backerEditionAmount = 0),
-      (this.binanceEditionAmount = 0),
-      (this.tronEditionAmount = 0);
-    (this.seCards = []),
-      (this.leCards = []),
-      (this.beCards = []),
-      (this.bneCards = []),
-      (this.teCards = []),
-      (this.cards = [])
+    this.editions.forEach((edition) => {
+      edition.cards = []
+      edition.amount = 0
+    })
+    this.userCardsAmount = 0
   }
 
   @Watch("cardBalance")
@@ -316,29 +152,84 @@ export default class Cards extends Vue {
     this.resetCardAmount()
     if (newUserCards.length > 0) {
       this.cards = newUserCards
+      const editionsMap = ["0", "1", "2", "3", "4"]
       this.cards.forEach((cd) => {
-        if (cd.id.endsWith("0")) {
-          this.standardEditionAmount += cd.amount
-          this.seCards.push(cd)
-        } else if (cd.id.endsWith("1")) {
-          this.backerEditionAmount += cd.amount
-          this.beCards.push(cd)
-        } else if (cd.id.endsWith("2")) {
-          this.limitedEditionAmount += cd.amount
-          this.leCards.push(cd)
-        } else if (cd.id.endsWith("3")) {
-          this.binanceEditionAmount += cd.amount
-          this.bneCards.push(cd)
-        } else if (cd.id.endsWith("4")) {
-          this.tronEditionAmount += cd.amount
-          this.teCards.push(cd)
-        } else {
-          console.error("wrong card id " + cd)
-        }
+        const index = editionsMap.indexOf(cd.id.slice(-1))
+        if (index === -1) throw new Error("Unknown edition for card " + cd.id)
+        const edition = this.editions[index]
+        edition.amount += cd.amount
         this.userCardsAmount += cd.amount
+        edition.cards.push(cd)
       })
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.cards-view {
+  max-width: 600px;
+
+  .card-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background: none;
+    > h4 {
+      width: 100%;
+      margin: 0 0 16px;
+    }
+  }
+}
+
+.list-group {
+  height: calc(100vh - 229px);
+  overflow-y: scroll;
+}
+
+.list-group-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background: transparent;
+  border: 1px 0 solid rgba(0, 0, 0, 0.125);
+  .name {
+    flex: 1;
+    white-space: nowrap;
+  }
+  .name,
+  .balance {
+    line-height: 36px;
+    margin: 0;
+  }
+  .balance {
+    flex: 1;
+    text-align: right;
+    > small {
+      opacity: 0.8;
+    }
+  }
+  .actions {
+    width: 100%;
+  }
+}
+
+/* bigger than mobile ----------- */
+@media only screen and (min-width: 520px) {
+  .card-header {
+    flex-wrap: nowrap;
+    > h4 {
+      margin: 0 20px 0 0;
+    }
+  }
+  .list-group-item {
+    flex-wrap: nowrap;
+    .balance {
+      padding: 0 16px;
+    }
+    .actions {
+      width: 120px;
+    }
+  }
+}
+</style>
 

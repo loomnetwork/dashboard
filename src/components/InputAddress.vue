@@ -38,7 +38,7 @@ export default class InputAmount extends Vue {
     switch (this.token.toLowerCase()) {
       case "loom":
         // Address (value) must be 44 characters and have a "loom" as prefix
-        if (this.value.length !== 44 || this.value.slice(0, 4) !== "loom" && this.value !== "") {
+        if ((this.value.length !== 44 || this.value.slice(0, 4) !== "loom") && this.value !== "") {
           this.emitValidAddress(false)
         } else {
           this.emitValidAddress(true)

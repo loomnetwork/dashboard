@@ -1,3 +1,5 @@
+import { DashboardConfig } from "@/types"
+
 export default {
   name: "stage",
   plasma: {
@@ -18,4 +20,6 @@ export default {
     },
   },
   coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
-}
+  disabled: ["binance"],
+  chains: ["ethereum", "binance"],
+} as DashboardConfig

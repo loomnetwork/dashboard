@@ -24,7 +24,11 @@ export function whiteListReaction(store: Store<DashboardState>) {
   store.watch(
     (state) => state.plasma.address,
     async () => {
-      await whiteListModule.createUserDeployerWhitelistAsync()
+      if (store.state.disabled && store.state.disabled.includes("dev-deploy")) {
+        return
+      } else {
+        await whiteListModule.createUserDeployerWhitelistAsync()
+      }
     },
   )
 

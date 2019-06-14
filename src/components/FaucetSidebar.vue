@@ -8,84 +8,20 @@
         exact-active-class="router-active"
       >{{ $t('components.faucet_sidebar.analytics') }}</router-link>
     </b-nav-item>
-    <b-nav-item>
+    <b-nav-item v-for="(menu, index) in normalMenu" :key="index">
       <router-link
-        to="/validators"
+        :to="menu.to"
         class="router"
         exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.validators') }}</router-link>
-    </b-nav-item>
-    <b-nav-item>
-      <router-link
-        to="/account"
-        class="router"
-        exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.my_account') }}</router-link>
-    </b-nav-item>
-    <b-nav-item>
-      <router-link
-        to="/history"
-        class="router"
-        exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.history') }}</router-link>
-    </b-nav-item>
-    <b-nav-item>
-      <router-link
-        to="/feedback"
-        class="router"
-        exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.feedback_form') }}</router-link>
-    </b-nav-item>
-    <hr>
-    <b-nav-item>
-      <router-link
-        to="/wallet"
-        class="router"
-        exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.deposit_withdraw') }}</router-link>
-    </b-nav-item>
-    <b-nav-item>
-      <router-link
-        to="/game-assets"
-        class="router"
-        exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.game_assets') }}</router-link>
-    </b-nav-item>
-    <b-nav-item>
-      <router-link
-        to="/faq"
-        class="router"
-        exact-active-class="router-active"
-      >{{ $t('components.faucet_sidebar.faq') }}</router-link>
+      >{{ $t(menu.text) }}</router-link>
     </b-nav-item>
     <div class="developer-menu">
-      <b-nav-item>
+      <b-nav-item v-for="(menu, index) in devMenu" :key="index" >
         <router-link
-          to="/"
+          :to="menu.to"
           class="router"
           exact-active-class="router-active"
-        >{{ $t('components.faucet_sidebar.block_explorer') }}</router-link>
-      </b-nav-item>
-      <b-nav-item>
-        <router-link
-          to="/add-key"
-          class="router"
-          exact-active-class="router-active"
-        >{{ $t('components.faucet_sidebar.deploy_to_plasmachain') }}</router-link>
-      </b-nav-item>
-      <b-nav-item>
-        <router-link
-          to="/"
-          class="router"
-          exact-active-class="router-active"
-        >{{ $t('components.faucet_sidebar.transfer_gateway') }}</router-link>
-      </b-nav-item>
-      <b-nav-item>
-        <router-link
-          to="/"
-          class="router"
-          exact-active-class="router-active"
-        >{{ $t('components.faucet_sidebar.validator_management') }}</router-link>
+        >{{ $t(menu.text) }}</router-link>
       </b-nav-item>
     </div>
     <b-nav-item v-if="!!state.plasma.address">
@@ -101,15 +37,69 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "../types"
 
+
 @Component
 export default class FaucetSidebar extends Vue {
 
   // we coud bind menu to this
-  menu = [
-    {},
-    {},
-    {},
-  ]
+  menu = {
+    normal: [
+      {
+        to: "/validators",
+        text: "components.faucet_sidebar.validators",
+        },
+      {
+        to: "/account",
+        text: "components.faucet_sidebar.my_account",
+        },
+      {
+        to: "/history",
+        text: "components.faucet_sidebar.history",
+        },
+      {
+        to: "/feedback",
+        text: "components.faucet_sidebar.feedback_form",
+      },
+      {
+        to: "/wallet",
+        text: "components.faucet_sidebar.deposit_withdraw",
+      },
+      {
+        to: "/game-assets",
+        text: "components.faucet_sidebar.game_assets",
+      },
+      {
+        to: "/faq",
+        text: "components.faucet_sidebar.faq",
+      },
+    ],
+    devMenu: [
+      {
+        to: "/",
+        text: "components.faucet_sidebar.block_explorer",
+      },
+      {
+        to: "/add-key",
+        text: "components.faucet_sidebar.deploy_to_plasmachain",
+      },
+      {
+        to: "/",
+        text: "components.faucet_sidebar.transfer_gateway",
+      },
+      {
+        to: "/",
+        text: "components.faucet_sidebar.validator_management",
+      },
+    ],
+  }
+
+  get normalMenu() {
+    return this.menu.normal
+  }
+
+  get devMenu() {
+    return this.menu.devMenu
+  }
 
   get state(): DashboardState {
     return this.$store.state

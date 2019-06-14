@@ -63,14 +63,13 @@ export default class DepositApproved extends Vue {
   executeDeposit = gatewayModule.ethereumDeposit
 
   get visible() {
-    console.log("showDepositApproved", this.showDepositApproved)
     return this.showDepositApproved
   }
 
   set visible(value) {
     if (value === false) {
-      this.setShowDepositApproved(false)
       this.status = "notify"
+      this.setShowDepositApproved(false)
     }
   }
 
@@ -83,9 +82,7 @@ export default class DepositApproved extends Vue {
     e.preventDefault()
     try {
       const txObj = this.state.gateway.pendingTransactions[0]
-      this.executeDeposit(txObj.funds).catch((err) => {
-        throw Error(err)
-      })
+      await this.executeDeposit(txObj.funds)
       this.status = "sent"
     } catch (error) {
       console.log(error)

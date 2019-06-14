@@ -178,7 +178,8 @@ function listenToDeposit(
 }
 
 function formatTxFromEvent(event: EventLog) {
-  const contractAddr = event.address
+  const contractAddr = (event.address as string).toLowerCase()
+  const chain = "ethereum"
   const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!.symbol
   const funds: Funds = {
     chain: "ethereum",

@@ -2,7 +2,6 @@ import { getStoreBuilder } from "vuex-typex"
 import {
   WhiteListState,
   HasWhiteListState,
-  Tier,
   DeployerAddress,
   DeployerAddressResponse,
 } from "@/store/whitelist/types"
@@ -17,19 +16,14 @@ const log = debug("whitelist")
 import BN from "bn.js"
 import { CommonTypedStore } from "../common"
 import { i18n } from "../../i18n"
+import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 
 const initialState: WhiteListState = {
   userDeployerWhitelist: null,
   userDeployersAddress: [],
   whiteListContractAddress: null,
-  tiers: [
-    {
-      id: 0,
-      fee: 10,
-      name: "Tier1",
-      enabled: true,
-    },
-  ],
+  tierIDs: [0],
+  tiers: [],
 }
 const builder = getStoreBuilder<HasWhiteListState>().module(
   "whiteList",
@@ -47,12 +41,15 @@ export const whiteListModule = {
   setWhiteListContractAddress: builder.commit(
     mutations.setWhiteListContractAddress,
   ),
+  setDefaultTiers: builder.commit(mutations.setDefaultTiers),
+
   createUserDeployerWhitelistAsync: builder.dispatch(
     createUserDeployerWhitelistAsync,
   ),
   addDeployerAsync: builder.dispatch(addDeployerAsync),
   getDeployersAsync: builder.dispatch(getDeployersAsync),
   formatDeployersAddress: builder.dispatch(formatDeployersAddress),
+  getTierInfoAsync: builder.dispatch(getTierInfoAsync),
 }
 
 async function createUserDeployerWhitelistAsync(context: WhiteListContext) {
@@ -67,9 +64,22 @@ async function createUserDeployerWhitelistAsync(context: WhiteListContext) {
   whiteListModule.setWhiteListContractAddress(contractAddress!)
 }
 
+async function getTierInfoAsync(context: WhiteListContext,
+                                payload: { tierID: number}) {
+  const userDeployerWhitelist = context.state.userDeployerWhitelist
+  let tierDetail
+  try {
+    tierDetail = await userDeployerWhitelist!.getTierInfoAsync(payload.tierID)
+  } catch (error) {
+    log("getTierInfoAsync error", error)
+  }
+  return tierDetail
+
+}
+
 async function addDeployerAsync(
   context: WhiteListContext,
-  payload: { deployer: string; tier: Tier },
+  payload: { deployer: string; tier: ITier },
 ) {
   const userDeployerWhitelist = context.state.userDeployerWhitelist
   const deployAddress = new Address(
@@ -80,25 +90,16 @@ async function addDeployerAsync(
     const contractAddress = context.state.whiteListContractAddress!.local.toString()
     const approvedResult = await plasmaModule.approve({
       symbol: "LOOM",
-      weiAmount: new BN(
-        context.rootState.plasma.web3!.utils.toWei(
-          payload.tier.fee.toString(),
-          "ether",
-        ),
-        10,
-      ),
+      weiAmount: payload.tier.fee,
       to: contractAddress,
     })
     log("approved", approvedResult)
   } catch (error) {
+    log("approve error", error)
     let errorMessage = error.message
     const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
-    const alreadyExist = i18n.t("messages.deployer_already_exists").toString()
     if (error.message.includes("User denied message")) {
       errorMessage = userDeniedSignTx
-    }
-    if (error.message.includes("deployer already exists")) {
-      errorMessage = alreadyExist
     }
     CommonTypedStore.setErrorMsg(
       i18n
@@ -119,8 +120,18 @@ async function addDeployerAsync(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )
   } catch (error) {
+    log("addDeployerAsync error", error)
+    let errorMessage = error.message
+    const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
+    const alreadyExist = i18n.t("messages.deployer_already_exists").toString()
+    if (error.message.includes("User denied message")) {
+      errorMessage = userDeniedSignTx
+    }
+    if (error.message.includes("deployer already exists")) {
+      errorMessage = alreadyExist
+    }
     CommonTypedStore.setErrorMsg(
-      i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
+      i18n.t("messages.add_key_err_tx", { msg: errorMessage }).toString(),
     )
     return
   }

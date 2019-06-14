@@ -224,6 +224,7 @@ export function approve(context: PlasmaContext, payload: TransferRequest) {
   const balance = context.state.coins[symbol].balance
 
   if (weiAmount.gt(balance)) {
+    // TODO: fix error message
     throw new Error("plasma.approval.balance.low")
   }
   return adapter.approve(to, weiAmount)

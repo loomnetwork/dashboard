@@ -85,12 +85,9 @@ import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
-<<<<<<< HEAD
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 import BN from "bn.js"
-=======
 import { feedbackModule } from "../feedback/store"
->>>>>>> develop
 
 @Component({
   components: {

@@ -72,7 +72,7 @@ export default class TransferTokensFormModal extends Vue {
   }
 
   async transferToken() {
-    //const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
+    // const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
     this.transfer({
       symbol: this.plasma.selectedToken,
       weiAmount: this.transferAmount,

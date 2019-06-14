@@ -77,13 +77,13 @@ import { Component } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
-import { CommonTypedStore } from '@/store/common';
-import { whiteListModule } from '@/store/whitelist';
-import { WhiteListState, Tier, DeployerAddress } from '@/store/whitelist/types';
-import { plasmaModule } from '@/store/plasma';
+import { CommonTypedStore } from "@/store/common"
+import { whiteListModule } from "@/store/whitelist"
+import { WhiteListState, Tier, DeployerAddress } from "@/store/whitelist/types"
+import { plasmaModule } from "@/store/plasma"
 import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
-import { Address } from "loom-js";
+import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
 
 @Component({
@@ -170,9 +170,11 @@ export default class AddKey extends Vue {
 .text-link {
   font-style: italic;
   color: #007bff;
-}
-.text-link:hover {
-  color: #0651a2;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0651a2;
+  }
 }
 .remaining {
   align-self: flex-end;

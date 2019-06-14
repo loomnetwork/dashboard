@@ -18,6 +18,8 @@
       <span class="text-dark" v-html="state.common.successMsg"></span>
     </b-alert>
 
+    <feedback-notification class="custom-alert text-center"/>
+    
     <div class="d-none d-md-block">
       <nav class="navbar">
         <div class="container-fluid">
@@ -97,12 +99,14 @@ import { DashboardState } from "../types"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { setTimeout } from 'timers';
+import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
 @Component({
   components: {
     ChainSelector,
     LangSwitcher,
     LoomIcon,
+    FeedbackNotification,
   },
   props: {
     hideDashboard: {

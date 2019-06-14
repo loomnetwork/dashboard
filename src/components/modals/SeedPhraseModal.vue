@@ -98,6 +98,7 @@ import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 import { CryptoUtils } from 'loom-js';
 import { generateMnemonic, mnemonicToSeedSync } from "bip39";
+import { feedbackModule } from "@/feedback/store"
 @Component({
 })
 
@@ -134,7 +135,7 @@ export default class SeedPhraseModal extends Vue {
     // @ts-ignore
     copyText!.select()
     document.execCommand("copy")
-    this.setSuccessMsg(this.$t("messages.copied_tx").toString())
+    feedbackModule.showSuccess(this.$t("messages.copied_tx").toString())
   }
 
   modal(ref: string): BModal {

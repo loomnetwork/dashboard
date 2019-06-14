@@ -61,9 +61,9 @@ import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 
 import { tokenService } from "@/services/TokenService"
-import { getWalletFromLocalStorage } from '../utils';
-import { ethereumModule } from '../store/ethereum';
-import { CommonTypedStore } from '../store/common';
+import { getWalletFromLocalStorage } from "../utils"
+import { ethereumModule } from "../store/ethereum"
+import { CommonTypedStore } from "../store/common"
 
 @Component({
   components: {
@@ -101,11 +101,13 @@ export default class DepositWithdraw extends Vue {
     // @ts-ignore
     const withdrawalBlock = JSON.parse(localStorage.getItem("latestWithdrawalBlock"))
     if (!withdrawalBlock) return false
-    return (ethereumModule.state.blockNumber - 10) > withdrawalBlock ? false : true
+    // 10 block confirmations + 5 for processing
+    const result = (ethereumModule.state.blockNumber - 15) > withdrawalBlock ? false : true
+    return result
   }
 
   async mounted() {
-    const tokenSymbols = getWalletFromLocalStorage().map(symbol => symbol)
+    const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
     tokenSymbols.forEach((symbol) => {
       plasmaModule.addToken(symbol)
     })
@@ -133,6 +135,11 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestWithdraw(token: string) {
+
+    if (!ethereumModule.state.blockNumber) {
+      this.setShowErrorMsg("Synching with Ethereum, please wait a moment and try again.")
+      return
+    }
 
     if (this.withdrawalInProgress) {
       this.setShowErrorMsg("There is a processing withdrawal, please try again later.")

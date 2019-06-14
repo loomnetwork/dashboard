@@ -14,6 +14,7 @@ import { ethereumModule } from "../ethereum"
 import networks from "@/../chain-config"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+// XXX
 import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
 import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
 import { CryptoUtils } from "loom-js"
@@ -198,7 +199,7 @@ class EthereumGateways {
  * @param tokenAmount
  */
 export async function ethereumDeposit(context: ActionContext, funds: Funds) {
-  const { symbol, weiAmount } = funds
+  const { chain, symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
   const approvalAmount = await ethereumModule.allowance({
     symbol,

@@ -1,13 +1,13 @@
 <template>
-  <b-modal id="select-token-modal" hide-footer>
+  <b-modal id="select-chain-modal" hide-footer>
     <template slot="modal-title">{{ title }}</template>
     <b-form-group label="From">
       <div class="button-group">
-        <div class="token-option" @click="onNext(`ethereum`)">
+        <div class="chain-option" @click="onSelect(`ethereum`)" v-if="showButton(`ethereum`)">
           <p>Ethereum</p>
           <img src="../../assets/ethereum_logo.png" class="logo" alt="">
         </div>
-        <div class="token-option" @click="onNext(`binance`)">
+        <div class="chain-option" @click="onSelect(`binance`)" v-if="showButton(`binance`)">
           <p>Binance</p>
           <img src="../../assets/binance_logo.png" class="logo" alt="">
         </div>
@@ -19,20 +19,32 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { capitalize } from "@/utils"
+import { DashboardState } from "../../types"
 
 @Component
-export default class SelectTokenModal extends Vue {
+export default class SelectChainModal extends Vue {
   @Prop(String) type: string = ""
 
   get title() {
     return capitalize(this.type.toLowerCase())
   }
-  onNext(tokenSymbol: string) {
-    this.$emit("selectedToken", {
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  showButton(chain: string) {
+    const chains = this.state.chains
+    const disabled = this.state.disabled
+    return chains.includes(chain) && !disabled.includes(chain)
+  }
+
+  onSelect(chain: string) {
+    this.$emit("selectedChain", {
       type: this.type,
-      token: tokenSymbol,
+      chain,
     })
-    this.$root.$emit("bv::hide::modal", "select-token-modal")
+    this.$root.$emit("bv::hide::modal", "select-chain-modal")
   }
 }
 </script>
@@ -46,7 +58,7 @@ export default class SelectTokenModal extends Vue {
   flex-direction: row;
   justify-content: space-around;
 }
-.token-option {
+.chain-option {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -20,12 +20,12 @@
             <b-button
               class="button"
               variant="outline-primary"
-              @click="showSelectTokenModal(DEPOSIT, symbol)"
+              @click="showSelectChainModal(DEPOSIT, symbol)"
             >Deposit</b-button>
             <!-- <b-button
               class="button"
               variant="outline-primary"
-              @click="showSelectTokenModal(WITHDRAW, symbol)"
+              @click="showSelectChainModal(WITHDRAW, symbol)"
             >Withdraw</b-button> -->
             <!-- <b-button
               class="button"
@@ -51,7 +51,7 @@
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
-    <SelectTokenModal :type="selectTokenModalType" @selectedToken="onSelectedToken" />
+    <SelectChainModal :type="selectChainModalType" @selectedChain="onSelectedChain" />
     <DepositBinance />
   </main>
 </template>
@@ -63,7 +63,7 @@ import BN from "bn.js"
 import DepositForm from "@/components/gateway/DepositForm.vue"
 import WithdrawForm from "@/components/gateway/WithdrawForm.vue"
 import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
-import SelectTokenModal from "@/components/modals/SelectTokenModal.vue"
+import SelectChainModal from "@/components/modals/SelectChainModal.vue"
 import DepositBinance from "@/components/gateway/DepositBinance.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 
@@ -85,7 +85,7 @@ import { feedbackModule } from "../feedback/store"
     WithdrawForm,
     TransferTokensFormModal,
     AddTokenModal,
-    SelectTokenModal,
+    SelectChainModal,
     DepositBinance,
   },
 })
@@ -101,7 +101,7 @@ export default class DepositWithdraw extends Vue {
   inputFilter = ""
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
-  selectTokenModalType: string = ""
+  selectChainModalType: string = ""
   coins = this.plasma.coins
 
   // get the full list from state or somewhere else
@@ -147,20 +147,20 @@ export default class DepositWithdraw extends Vue {
       .filter((symbol) => (filter === "" || symbol.includes(filter)))
   }
 
-  onSelectedToken(payload) {
+  onSelectedChain(payload) {
     switch (payload.type) {
       case this.DEPOSIT:
-        if (payload.token === "ethereum") {
+        if (payload.chain === "ethereum") {
           // request deposit modal
-        } else if (payload.token === "binance") {
+        } else if (payload.chain === "binance") {
           // request deposit binance modal
           this.$root.$emit("bv::show::modal", "deposit-binance")
         }
         break
       case this.WITHDRAW:
-        if (payload.token === "ethereum") {
+        if (payload.chain === "ethereum") {
           // request deposit modal
-        } else if (payload.token === "binance") {
+        } else if (payload.chain === "binance") {
           // request deposit binance modal
         }
         break
@@ -169,9 +169,9 @@ export default class DepositWithdraw extends Vue {
     }
   }
 
-  showSelectTokenModal(type) {
-    this.selectTokenModalType = type
-    this.$root.$emit("bv::show::modal", "select-token-modal")
+  showSelectChainModal(type) {
+    this.selectChainModalType = type
+    this.$root.$emit("bv::show::modal", "select-chain-modal")
   }
   requestDeposit(token: string) {
     this.selectedToken = token

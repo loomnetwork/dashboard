@@ -28,6 +28,7 @@ export interface DashboardState
   env: string
   envs: DashboardConfig[]
   disabled: string[]
+  chains: string[]
   // remove
   DPOS: DposState
   // DappChain: DappchainState

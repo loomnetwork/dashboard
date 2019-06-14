@@ -20,6 +20,6 @@ export default {
     },
   },
   coinDataUrl: "",
-  disabled: ["dev-deploy"],
+  disabled: ["transfer-asset", "binance", "dev-deploy"],
   chains: ["ethereum"],
 } as DashboardConfig

@@ -17,6 +17,7 @@ const log = debug("whitelist")
 import BN from "bn.js"
 import { CommonTypedStore } from "../common"
 import { i18n } from "../../i18n"
+import { feedbackModule } from "@/feedback/store"
 
 const initialState: WhiteListState = {
   userDeployerWhitelist: null,
@@ -100,7 +101,7 @@ async function addDeployerAsync(
     if (error.message.includes("deployer already exists")) {
       errorMessage = alreadyExist
     }
-    CommonTypedStore.setErrorMsg(
+    feedbackModule.showError(
       i18n
         .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
         .toString(),
@@ -115,11 +116,11 @@ async function addDeployerAsync(
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()
     await plasmaModule.refreshBalance("LOOM")
-    CommonTypedStore.setSuccessMsg(
+    feedbackModule.showSuccess(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )
   } catch (error) {
-    CommonTypedStore.setErrorMsg(
+    feedbackModule.showError(
       i18n.t("messages.add_key_err_tx", { msg: error.message }).toString(),
     )
     return

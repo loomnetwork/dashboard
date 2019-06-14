@@ -85,6 +85,7 @@ import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
+import { feedbackModule } from "../feedback/store"
 
 @Component({
   components: {
@@ -94,7 +95,7 @@ import InputAddress from "@/components/InputAddress.vue"
 })
 
 export default class AddKey extends Vue {
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
   addDeployerAsync = whiteListModule.addDeployerAsync
   getDeployersAsync = whiteListModule.getDeployersAsync
   isShowGenPublicKeyModal = false
@@ -131,13 +132,13 @@ export default class AddKey extends Vue {
 
   async addKey(tier: Tier) {
     if (parseFloat(this.loomBalance!) < tier.fee) {
-      this.setErrorMsg("Your balance isn't enough. Please deposit first.")
+      this.showError("Your balance isn't enough. Please deposit first.")
       return
     }
 
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     if (this.publicKeys.filter((address) => address.hex === loomAddress).length > 0) {
-      this.setErrorMsg("This address is already exists in your deployer list.")
+      this.showError("This address is already exists in your deployer list.")
       return
     }
 

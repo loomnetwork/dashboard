@@ -13,9 +13,16 @@
       </h2>
     </div>
     <template slot="modal-footer">
-      <b-btn @click="close()">Cancel</b-btn>
-      <span style="flex:1"></span>      
-      <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
+      <div v-if="status === 'default'">
+        <b-btn @click="close()">Cancel</b-btn>
+        <span style="flex:1"></span>
+        <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
+      </div>
+      <div v-else>
+        <span style="flex:1"></span>
+        <b-btn @click="close()">Close</b-btn>
+      </div>
+
     </template>
   </b-modal>
 </template>
@@ -78,30 +85,25 @@ export default class WithdrawForm extends Vue {
 
   async requestWithdrawHandler(e) {
     e.preventDefault()
-    try {
 
-      // TODO: Cache transactions
-      // const txObj = this.state.gateway.pendingTransactions[0]
-      const payload: Funds = {
-        chain: "ethereum",
-        symbol: this.token,
-        weiAmount: this.amount,
-      }
-
-      this.beginWithdrawal(payload).then(() => {
-        this.setShowWithdrawProgress(false)
-      }).catch((err) => {
-        console.log(err)
-        this.setShowWithdrawProgress(false)
-        this.setShowWithdrawForm(true)
-        this.status = "error"
-      })
-      this.close()
-      this.setShowWithdrawProgress(true)
-    } catch (error) {
-      console.log(error)
+    // TODO: Cache transactions
+    // const txObj = this.state.gateway.pendingTransactions[0]
+    const payload: Funds = {
+      chain: "ethereum",
+      symbol: this.token,
+      weiAmount: this.amount,
     }
-  }
+
+    this.beginWithdrawal(payload).then(() => {
+      this.setShowWithdrawProgress(false)
+    }).catch((err) => {
+      console.log(err)
+      this.setShowWithdrawProgress(false)
+      this.setShowWithdrawForm(true)
+      this.status = "error"
+    })
+    this.close()
+    this.setShowWithdrawProgress(true)}
 
 }
 </script>

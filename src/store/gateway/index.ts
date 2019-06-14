@@ -11,6 +11,7 @@ import * as Mapper from "./mapper"
 import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
 import * as mutations from "./mutations"
+import { ethereumModule } from "../ethereum"
 
 const log = debug("dash.gateway")
 
@@ -47,6 +48,8 @@ export const gatewayModule = {
     return stateGetter()
   },
 
+  withdrawalInProgress: builder.read(withdrawalInProgress),
+
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
@@ -74,4 +77,15 @@ export const gatewayModule = {
     mutations.setWithdrawStateAsCompleted,
   ),
   setNewMappingAgree: builder.commit(mutations.setNewMappingAgree),
+}
+
+function withdrawalInProgress() {
+  const withdrawalBlock = JSON.parse(
+    localStorage.getItem("latestWithdrawalBlock") || "null",
+  )
+  if (!withdrawalBlock) return false
+  // 10 block confirmations + 5 for processing
+  const result =
+    ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
+  return result
 }

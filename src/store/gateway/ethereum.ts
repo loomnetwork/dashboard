@@ -204,12 +204,12 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const approvalAmount = await ethereumModule.allowance({
     symbol,
     // @ts-ignore
-    spender: gateway.contract.address,
+    spender: gateway.contract._address,
   })
   if (weiAmount.gt(approvalAmount)) {
     await ethereumModule.approve({
       // @ts-ignore
-      to: gateway.contract.address,
+      to: gateway.contract._address,
       ...funds,
     })
   } else {

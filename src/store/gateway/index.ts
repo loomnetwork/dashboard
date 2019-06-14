@@ -31,6 +31,8 @@ function initialState(): GatewayState {
       { text: "Withdrawing to your Ethereum account...", isComplete: false },
     ],
     withdrawStateIdx: 0,
+    notMapped: false,
+    newMappingAgree: false,
   }
 }
 
@@ -71,4 +73,5 @@ export const gatewayModule = {
   setWithdrawStateAsCompleted: builder.commit(
     mutations.setWithdrawStateAsCompleted,
   ),
+  setNewMappingAgree: builder.commit(mutations.setNewMappingAgree),
 }

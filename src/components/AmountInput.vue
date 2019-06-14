@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col sm="4">
-        <b-button variant="outline-primary" @click="setAllAmount">All ({{ this.plasma.selectedToken }})</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount">All ({{ `${max} ${symbol}` }})</b-button>
       </b-col>
     </b-row>
   </div>
@@ -29,9 +29,10 @@ import { state } from '../store/common';
 
 @Component
 export default class AmountInput extends Vue {
-  @Prop(Number) value!: any // v-model is it accepts a value prop and emit an input event.
+  @Prop() value!: any // v-model is it accepts a value prop and emit an input event.
   @Prop(Number) min!: number
   @Prop(Number) max!: number
+  @Prop(String) symbol!: string
   @Prop({default: true}) round!: boolean
 
   // State declaration
@@ -54,13 +55,14 @@ export default class AmountInput extends Vue {
 
   validateAmount() {
     let amount = this.amount
+    const max = new BN(this.max).mul(new BN("" + 10 ** 18))
     if (this.round) {
       amount = Math.floor(this.value)
     }
     if (!this.amount) {
       this.errorMsg = ""
       this.$emit("isError", true)
-    } else if (amount > this.max) {
+    } else if (amount > max) {
       this.errorMsg = this.$t("messages.amount_input_should_less", { amount: this.max }).toString()
       this.$emit("isError", true)
     } else if (amount < this.min) {

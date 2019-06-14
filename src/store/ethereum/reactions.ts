@@ -29,8 +29,20 @@ export function ethereumReactions(store: Store<DashboardState>) {
     ethereumModule.initERC20("LOOM")
 
     // Set latest block number every 15 seconds
-    pollBlockNumber()
-
+    ethereumModule.web3.eth.subscribe("newBlockHeaders", (error, event) => {
+      if (!error) {
+        console.log("New block header received: ", event.number)
+        ethereumModule.setBlockNumber(event.number)
+        if (localStorage.getItem("latestWithdrawalBlock")) {
+          const value = localStorage.getItem("latestWithdrawalBlock")
+          // @ts-ignore
+          const block = JSON.parse(value)
+          console.log("Remaining blocks: ",  event.number - (block + 15))
+        }
+        return
+      }
+      console.log("Error parsing blocks: ", error)
+    })
   }
 
   // TODO: Add a guard to check dependencies
@@ -39,12 +51,4 @@ export function ethereumReactions(store: Store<DashboardState>) {
 
   //     },
   // })
-}
-
-function pollBlockNumber() {
-  setInterval(async () => {
-    const result = await ethereumModule.web3.eth.getBlockNumber() || 0
-    console.log("Latest block #", result)
-    ethereumModule.setBlockNumber(result)
-  }, 15 * 1000)
 }

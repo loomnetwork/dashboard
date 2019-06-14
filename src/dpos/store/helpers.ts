@@ -1,6 +1,27 @@
 import { IDelegation } from "loom-js/dist/contracts/dpos3"
 import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
-import { Validator, Delegation } from "./types"
+import { Validator, Delegation, DPOSState } from "./types"
+import { ZERO } from "@/utils"
+
+export function defaultState(): DPOSState {
+  return {
+    bootstrapNodes: [],
+    contract: null,
+    loading: {
+      electionTime: false,
+      validators: false,
+      delegations: false,
+      rewards: false,
+    },
+    electionTime: new Date(),
+    validators: [],
+    delegations: [],
+    rewards: ZERO,
+
+    intent: "",
+    delegation: null,
+  }
+}
 
 export function fromIDelegation(d: IDelegation, validators: Validator[]) {
   const addr = d.validator.local.toString()
@@ -13,9 +34,7 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
   let updateValidator: Validator | undefined
   if (updateValidatorAddr !== undefined) {
     const addr = updateValidatorAddr.local.toString()
-    updateValidator = validators.find((v) =>
-      v.address.local.toString() === addr,
-    )!
+    updateValidator = validators.find((v) => v.address.local.toString() === addr)!
   }
   const locked = d.lockTime * 1000 > Date.now()
   const pending = d.state !== DelegationState.BONDED

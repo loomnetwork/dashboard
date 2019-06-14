@@ -91,7 +91,6 @@ import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
 
 import { DashboardState } from "../types"
-import { CommonTypedStore } from "../store/common"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { store } from "../store"
 
@@ -136,7 +135,6 @@ export default class Layout extends Vue {
   get mappingError() { return this.s.DPOS.mappingError }
   get networkId() { return this.s.plasma.networkId }
 
-  setErrorMsg = CommonTypedStore.setErrorMsg
   initializeDependencies = DPOSTypedStore.initializeDependencies
   setMappingError = DPOSTypedStore.setMappingError
   setMappingStatus = DPOSTypedStore.setMappingStatus

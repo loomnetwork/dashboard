@@ -39,6 +39,7 @@ import { DashboardState } from "@/types"
 import { assetsModule } from "@/store/plasma/assets"
 import { CommonTypedStore } from "@/store/common"
 import InputAddress from "../InputAddress.vue"
+import { feedbackModule } from "../../feedback/store";
 
 @Component({
   components: {
@@ -49,7 +50,7 @@ export default class TransferPacksModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
   transferPacks = assetsModule.transferPacks
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
   confirmPack = false
   isValidAddress = false
 
@@ -69,11 +70,11 @@ export default class TransferPacksModal extends Vue {
   transferPacksHandler() {
     // @ts-ignore
     if (parseInt(this.amountToTransfer, 10) > parseInt(this.packToTransfer!.amount, 10) || parseInt(this.amountToTransfer, 10) % 1 !== 0) {
-      this.setErrorMsg(this.$t("messages.invalid_amount").toString())
+      this.showError(this.$t("messages.invalid_amount").toString())
       return
     }
     if (this.receiverAddress === "") {
-      this.setErrorMsg(this.$t("messages.invalid_addr").toString())
+      this.showError(this.$t("messages.invalid_addr").toString())
       return
     }
     this.transferPacks({

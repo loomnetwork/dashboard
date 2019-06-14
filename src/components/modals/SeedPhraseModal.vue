@@ -107,7 +107,7 @@ export default class SeedPhraseModal extends Vue {
   seedsLine = ""
   publicAddress = ""
   confirmMnemonic = false
-  setSuccessMsg = CommonTypedStore.setSuccessMsg
+  showSuccess = feedbackModule.showSuccess
   getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
   setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
@@ -135,7 +135,7 @@ export default class SeedPhraseModal extends Vue {
     // @ts-ignore
     copyText!.select()
     document.execCommand("copy")
-    feedbackModule.showSuccess(this.$t("messages.copied_tx").toString())
+    this.showSuccess(this.$t("messages.copied_tx").toString())
   }
 
   modal(ref: string): BModal {

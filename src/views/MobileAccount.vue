@@ -373,9 +373,6 @@ h3 {
   border-bottom-left-radius: 0;
   margin-left: -1px;
 }
-</style>
-
-<style lang="scss">
 #delegations-container {
   .card-header {
     background-color: #fff;

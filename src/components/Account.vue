@@ -1,30 +1,28 @@
 <template>
-  <b-card class="mb-5">
+  <b-card class="mb-1">
     <b-card-title>My Account</b-card-title>
-    <b-row>
-      <b-col cols="3">Ethereum:</b-col>
-      <b-col cols="6">
-        <h6 class="highlight">{{ethAccount}}</h6>
-      </b-col>
-      <b-col cols="3">
-        <a :href="etherScanUrl" target="_blank">
-          Show in EtherScan
-          <fa icon="external-link-alt"/>
-        </a>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col cols="3">Loom:</b-col>
-      <b-col cols="6">
-        <h6 class="highlight">{{dappchainAddress | loomAddress}}</h6>
-      </b-col>
-      <b-col cols="3">
-        <a :href="loomScanUrl" target="_blank">
-          Show in Block Explorer
-          <fa icon="external-link-alt"/>
-        </a>
-      </b-col>
-    </b-row>
+    <div class="account ethereum">
+      <label>Ethereum</label>
+      <address>
+        <span class="highlight">{{ethAccount}}</span>
+        <fa icon="paste"/>
+      </address>
+      <a a class="explorer" :href="etherScanUrl" target="_blank">
+        Show in EtherScan
+        <fa icon="external-link-alt"/>
+      </a>
+    </div>
+    <div class="account ethereum">
+      <label>Loom</label>
+      <address>
+        <span class="highlight">{{dappchainAddress | loomAddress}}</span>
+        <fa icon="paste"/>
+      </address>
+      <a class="explorer" :href="loomScanUrl" target="_blank">
+        Show in Block Explorer
+        <fa icon="external-link-alt"/>
+      </a>
+    </div>
   </b-card>
 </template>
 
@@ -58,3 +56,67 @@ export default class Account extends Vue {
 
 }
 </script>
+<style lang="scss" scoped>
+.account {
+  display: flex;
+  align-items: baseline;
+  flex-direction: column;
+  margin-bottom: 8px;
+  label {
+    width: 82px;
+    font-size: 0.825rem;
+    font-weight: bold;
+    margin: 0 8px;
+  }
+}
+address {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  max-width: 300px;
+  margin-bottom: 0;
+  align-items: center;
+  background: #0000000d;
+  border-radius: 11px;
+  padding: 2px 10px;
+  box-shadow: inset 0px 1px 4px #0000001d;
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
+    text-align: right;
+    margin: 0 8px 0;
+    font-size: 0.825rem;
+    min-width: 100px;
+    max-width: 300px;
+  }
+  > svg {
+    color: gray;
+  }
+}
+a.explorer {
+  font-size: 0.825rem;
+  white-space: nowrap;
+  padding-left: 16px;
+}
+
+@media only screen and (min-width: 780px) {
+  .account {
+    flex-direction: row;
+  }
+  address {
+    max-width: 380px;
+    span {
+      min-width: 100px;
+      max-width: 400px;
+    }
+    > svg {
+      color: gray;
+    }
+  }
+  a.explorer {
+    flex: 1;
+  }
+}
+</style>

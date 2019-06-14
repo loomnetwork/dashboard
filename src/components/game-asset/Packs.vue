@@ -1,26 +1,24 @@
 <template>
-  <b-card class="mb-5">
+  <b-card class="packs-view" no-body>
     <transfer-packs-modal ref="transferPackModalConfig"></transfer-packs-modal>
-    <b-card-title>My Packs</b-card-title>
-    <b-table
-      v-show="packs && packs.length > 0"
-      striped
-      bordered
-      hover
-      :items="packs"
-      :fields="packTableFields"
-    >
-      <template slot="type" slot-scope="row">
-        <span>{{ row.item.type | capitalizeWord}}</span>
-      </template>
-      <template slot="transfer" slot-scope="row">
-        <b-button
-          type="button"
-          @click="transferpackTo(row.item)"
-          :disabled="row.item.amount == '0'"
-        >Transfer</b-button>
-      </template>
-    </b-table>
+    <b-card-header>
+      <h4 class="card-title">{{$t('My Packs')}}</h4>
+    </b-card-header>
+    <b-list-group flush>
+      <b-list-group-item v-for="pack in packs" :key="pack.type">
+        <label class="name">{{ pack.type | capitalizeWord}}</label>
+        <span class="balance">{{pack.amount}}</span>
+        <b-button-group class="actions">
+          <b-button
+            class="button"
+            :disabled="pack.amount == '0'"
+            size="sm"
+            variant="outline-primary"
+            @click="transferpackTo(pack)"
+          >Transfer</b-button>
+        </b-button-group>
+      </b-list-group-item>
+    </b-list-group>
   </b-card>
 </template>
 
@@ -46,20 +44,6 @@ export default class Packs extends Vue {
   setPackToTransferSelected = assetsModule.setPackToTransferSelected
   packTypes = PACKS_NAME
   packs: PackDetail[] = []
-  packTableFields = [
-    {
-      key: "type",
-      sortable: true,
-    },
-    {
-      key: "amount",
-      sortable: true,
-    },
-    {
-      key: "transfer",
-      label: "Transfer",
-    },
-  ]
 
   get state(): HasAssetsState {
     return this.$store.state
@@ -93,3 +77,63 @@ export default class Packs extends Vue {
 
 }
 </script>
+<style lang="scss" scoped>
+.packs-view {
+  max-width: 600px;
+  .card-header {
+    display: flex;
+    align-items: center;
+    background: none;
+    > h4 {
+      width: 100%;
+      margin: 0 0 16px;
+    }
+  }
+}
+
+.list-group {
+  height: calc(100vh - 229px);
+  overflow-y: scroll;
+}
+
+.list-group-item {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 1px 0 solid rgba(0, 0, 0, 0.125);
+  .name {
+    flex: 1;
+    white-space: nowrap;
+  }
+  .name,
+  .balance {
+    line-height: 36px;
+    margin: 0;
+  }
+  .balance {
+    flex: 1;
+    text-align: right;
+    padding: 0 16px;
+
+    > small {
+      opacity: 0.8;
+    }
+  }
+}
+
+/* bigger than mobile ----------- */
+@media only screen and (min-width: 520px) {
+  .card-header {
+    flex-wrap: nowrap;
+    > h4 {
+      margin: 0 20px 0 0;
+    }
+  }
+  .list-group-item {
+    flex-wrap: nowrap;
+    .actions {
+      width: 120px;
+    }
+  }
+}
+</style>

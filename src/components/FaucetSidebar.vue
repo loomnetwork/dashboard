@@ -37,7 +37,6 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "../types"
 
-
 @Component
 export default class FaucetSidebar extends Vue {
 

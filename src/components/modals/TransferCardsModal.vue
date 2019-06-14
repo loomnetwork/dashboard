@@ -41,6 +41,7 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
+import { feedbackModule } from "../../feedback/store";
 @Component({
   components: {
     InputAddress
@@ -50,7 +51,7 @@ export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
   receiverAddress: string = ""
   transferCards = assetsModule.transferCards
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
   confirmCard = false
   isValidAddress = false
 
@@ -71,11 +72,11 @@ export default class TransferCardsModal extends Vue {
   transferCardsHandler() {
     // @ts-ignore
     if (parseInt(this.amountToTransfer, 10) > parseInt(this.cardToTransfer!.amount, 10) || parseInt(this.amountToTransfer, 10) % 1 !== 0) {
-      this.setErrorMsg(this.$t("messages.invalid_amount").toString())
+      this.showError(this.$t("messages.invalid_amount").toString())
       return
     }
     if (this.receiverAddress === "") {
-      this.setErrorMsg(this.$t("messages.invalid_addr").toString())
+      this.showError(this.$t("messages.invalid_addr").toString())
       return
     }
     this.transferCards({

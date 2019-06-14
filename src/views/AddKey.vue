@@ -44,12 +44,12 @@
       <seed-phrase-modal ref="seed-phrase-modal"/>
       <label for="input-live">Amount to Stake</label>
       <div class="tierBlock tierDisplay">
-        <label v-for="tier in tiers" v-bind:key="tier.id" class="radio">
+        <label v-for="tier in tiers" v-bind:key="tier.tierId" class="radio">
           <input type="radio" v-model="tierSelected" :value="tier">
           <b-card class="tierText">
-            <b-row>Tier: {{tier.id}}</b-row>
+            <b-row>Tier: {{tier.tierId}}</b-row>
             <b-row>Name: {{tier.name}}</b-row>
-            <b-row>Fee: {{tier.fee}} LOOM</b-row>
+            <b-row>Fee: {{tier.fee | tokenAmount}} LOOM</b-row>
           </b-card>
         </label>
       </div>
@@ -79,12 +79,15 @@ import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
 import { CommonTypedStore } from "@/store/common"
 import { whiteListModule } from "@/store/whitelist"
-import { WhiteListState, Tier, DeployerAddress } from "@/store/whitelist/types"
+import { WhiteListState, DeployerAddress } from "@/store/whitelist/types"
 import { plasmaModule } from "@/store/plasma"
 import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
+import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
+import BN from "bn.js"
+import { feedbackModule } from "../feedback/store"
 
 @Component({
   components: {
@@ -94,12 +97,12 @@ import InputAddress from "@/components/InputAddress.vue"
 })
 
 export default class AddKey extends Vue {
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
   addDeployerAsync = whiteListModule.addDeployerAsync
   getDeployersAsync = whiteListModule.getDeployersAsync
   isShowGenPublicKeyModal = false
   newPublicAddress = ""
-  tierSelected: Tier | {} = {}
+  tierSelected: ITier | {} = {}
   setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   isValidAddress = false
   loomAddress = "loom0000000000000000000000000000000000000000"
@@ -129,21 +132,22 @@ export default class AddKey extends Vue {
     return this.state.userDeployersAddress
   }
 
-  async addKey(tier: Tier) {
-    if (parseFloat(this.loomBalance!) < tier.fee) {
-      this.setErrorMsg("Your balance isn't enough. Please deposit first.")
+  async addKey(tier: ITier) {
+    if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance )) {
+      this.showError("Your balance isn't enough. Please deposit first.")
       return
     }
 
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     if (this.publicKeys.filter((address) => address.hex === loomAddress).length > 0) {
-      this.setErrorMsg("This address is already exists in your deployer list.")
+      this.showError("This address is already exists in your deployer list.")
       return
     }
 
     this.setShowLoadingSpinner(true)
-    let result = await this.addDeployerAsync({ deployer: loomAddress, tier })
+    const result = await this.addDeployerAsync({ deployer: loomAddress, tier })
     this.setShowLoadingSpinner(false)
+    this.newPublicAddress = ""
   }
 
   isValidAddressFormat(isValid) {

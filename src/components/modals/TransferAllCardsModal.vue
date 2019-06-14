@@ -28,7 +28,7 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
-import { CommonTypedStore } from "../../store/common"
+import { feedbackModule } from "../../feedback/store"
 import InputAddress from "../InputAddress.vue"
 
 @Component ({
@@ -39,10 +39,9 @@ import InputAddress from "../InputAddress.vue"
 export default class TransferAllCardsModal extends Vue {
   receiverAddress: string = ""
   transferCards = assetsModule.transferCards
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
   confirmCards = false
   isValidAddress = false
-
 
   resetModal() {
     this.receiverAddress = ""
@@ -58,7 +57,7 @@ export default class TransferAllCardsModal extends Vue {
 
   transferAllCardsHandler() {
     if (this.receiverAddress === "") {
-      this.setErrorMsg(this.$t("messages.receiver_addr_err_tx").toString())
+      this.showError(this.$t("messages.receiver_addr_err_tx").toString())
       return
     }
     const cardsToTransfer = this.cardsToTransfer.cards

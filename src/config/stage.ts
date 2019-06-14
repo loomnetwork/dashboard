@@ -1,3 +1,5 @@
+import { DashboardConfig } from "@/types"
+
 export default {
   name: "stage",
   plasma: {
@@ -5,6 +7,7 @@ export default {
     chainId: "default",
     endpoint: "wss://test-z-us1.dappchains.com",
     blockExplorer: "http://us1-blockexplorer.devdc.io",
+    loomGamesEndpoint: "https://stage.loom.games/en/dpos-link",
   },
   ethereum: {
     networkId: "4",
@@ -18,4 +21,6 @@ export default {
     },
   },
   coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
-}
+  disabled: ["binance"],
+  chains: ["ethereum", "binance"],
+} as DashboardConfig

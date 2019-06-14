@@ -249,7 +249,6 @@ export default class MobileAccount extends Vue {
   setGatewayBusy = DPOSTypedStore.setGatewayBusy
   setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   setShowDepositForm = DPOSTypedStore.setShowDepositForm
-  setErrorMsg = CommonTypedStore.setErrorMsg
 
   get web3() { return DPOSTypedStore.state.web3 }
   get dposUser() { return DPOSTypedStore.state.dposUser }

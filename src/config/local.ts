@@ -1,3 +1,5 @@
+import { DashboardConfig } from "@/types"
+
 export default {
   name: "local",
   plasma: {
@@ -5,6 +7,7 @@ export default {
     chainId: "default",
     endpoint: "ws://localhost:46658",
     blockExplorer: "",
+    loomGamesEndpoint: "https://localhost:8000/",
   },
   ethereum: {
     networkId: "default",
@@ -18,4 +21,6 @@ export default {
     },
   },
   coinDataUrl: "",
-}
+  disabled: [],
+  chains: ["ethereum"],
+} as DashboardConfig

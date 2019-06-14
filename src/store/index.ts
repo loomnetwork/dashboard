@@ -40,6 +40,7 @@ const dashboardStore = {
     ethereumModule.setConfig(env.ethereum)
     log("tokensService", env.coinDataUrl)
     tokenService.setBaseURL(env.coinDataUrl)
+    state.disabled = env.disabled
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     state.envs = envs

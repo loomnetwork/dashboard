@@ -26,7 +26,7 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "@/store/gateway"
-import { CommonTypedStore } from "../../store/common"
+import { feedbackModule } from "../../feedback/store"
 
 @Component
 export default class WithdrawConfirmed extends Vue {
@@ -35,18 +35,18 @@ export default class WithdrawConfirmed extends Vue {
   setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
   setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
   completeWithdrawal = gatewayModule.ethereumWithdraw
-  setSuccessMsg = CommonTypedStore.setSuccessMsg
-  setErrorMsg = CommonTypedStore.setErrorMsg
+  showSuccess = feedbackModule.showSuccess
+  showError = feedbackModule.showError
 
   completeWithdrawalHandler() {
     const symbol = "LOOM" // TODO: Load symbol from receipt
     // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
     // const symbol = getTokenSymbolFromAddress(tokenAddress)
     this.completeWithdrawal(symbol).then(() => {
-      this.setSuccessMsg("Withdrawal complete!")
+      this.showSuccess("Withdrawal complete!")
     }).catch((err) => {
       console.log(err)
-      this.setErrorMsg("Withdrawal failed, please try again")
+      this.showError("Withdrawal failed, please try again")
       this.status = "error"
     })
     this.close()

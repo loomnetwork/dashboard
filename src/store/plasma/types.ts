@@ -10,6 +10,7 @@ export interface PlasmaConfig {
   chainId: string
   endpoint: string
   blockExplorer: string
+  loomGamesEndpoint: string
 }
 
 export interface HasPlasmaState {

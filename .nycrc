@@ -1,0 +1,22 @@
+{
+    "extends": "@istanbuljs/nyc-config-babel",
+    "check-coverage": true,
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "build/",
+        "src/**/*.spec.ts"
+    ],
+    "reporter": [
+        "lcov",
+        "text"
+    ],
+    "extension": [
+        ".ts"
+    ],
+    "cache": true,
+    "all": true,
+    "sourceMap": false,
+    "instrument": false
+}

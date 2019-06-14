@@ -1,3 +1,5 @@
+import { DashboardConfig } from "@/types"
+
 export default {
   name: "production",
   plasma: {
@@ -5,6 +7,7 @@ export default {
     chainId: "default",
     endpoint: "wss://plasma.dappchains.com",
     blockExplorer: "http://plasma-blockexplorer.dappchains.com",
+    loomGamesEndpoint: "https://google.com",
   },
   ethereum: {
     networkId: "1",
@@ -18,4 +21,6 @@ export default {
     },
   },
   coinDataUrl: "",
-}
+  disabled: ["transfer-asset", "binance", "dev-deploy"],
+  chains: ["ethereum"],
+} as DashboardConfig

@@ -13,6 +13,9 @@ import { HasWhiteListState } from "./store/whitelist/types"
 export interface DashboardConfig {
   name: string
   coinDataUrl: string
+  disabled: string[]
+  // config for the gateway enabled chains
+  chains: string[]
   plasma: PlasmaConfig
   ethereum: EthereumConfig
 }
@@ -24,7 +27,7 @@ export interface DashboardState
     HasAssetsState {
   env: string
   envs: DashboardConfig[]
-
+  disabled: string[]
   // remove
   DPOS: DposState
   // DappChain: DappchainState
@@ -98,6 +101,7 @@ export interface DposState {
   metamaskStatus?: any
   metamaskError?: any
   withdrewSignature: string
+  notMapped: boolean
 }
 
 // export interface DappchainState {

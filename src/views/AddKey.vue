@@ -142,8 +142,9 @@ export default class AddKey extends Vue {
     }
 
     this.setShowLoadingSpinner(true)
-    let result = await this.addDeployerAsync({ deployer: loomAddress, tier })
+    const result = await this.addDeployerAsync({ deployer: loomAddress, tier })
     this.setShowLoadingSpinner(false)
+    this.newPublicAddress = ""
   }
 
   isValidAddressFormat(isValid) {

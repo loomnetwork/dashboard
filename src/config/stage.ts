@@ -20,6 +20,6 @@ export default {
     },
   },
   coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
-  disabled: ["dev-deploy"],
+  disabled: ["binance"],
   chains: ["ethereum", "binance"],
 } as DashboardConfig

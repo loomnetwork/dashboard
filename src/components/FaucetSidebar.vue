@@ -67,6 +67,7 @@ export default class FaucetSidebar extends Vue {
       {
         to: "/game-assets",
         text: "components.faucet_sidebar.game_assets",
+        name: "transfer-asset",
       },
       {
         to: "/faq",
@@ -81,6 +82,7 @@ export default class FaucetSidebar extends Vue {
       {
         to: "/add-key",
         text: "components.faucet_sidebar.deploy_to_plasmachain",
+        name: "dev-deploy",
       },
       {
         to: "/",
@@ -94,11 +96,13 @@ export default class FaucetSidebar extends Vue {
   }
 
   get normalMenu() {
-    return this.menu.normal
+    const disable = this.state.disabled
+    return this.menu.normal.filter((menu) => !disable.includes(menu.name || ""))
   }
 
   get devMenu() {
-    return this.menu.devMenu
+    const disable = this.state.disabled
+    return this.menu.devMenu.filter((menu) => !disable.includes(menu.name || ""))
   }
 
   get state(): DashboardState {

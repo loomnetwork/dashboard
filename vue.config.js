@@ -4,7 +4,8 @@ var path = require("path")
 const Renderer = PrerenderSpaPlugin.PuppeteerRenderer
 const SentryCliPlugin = require("@sentry/webpack-plugin")
 const TerserPlugin = require("terser-webpack-plugin")
-
+const CopyPlugin = require("copy-webpack-plugin")
+const webpack = require("webpack")
 const baseUrl = "/"
 
 module.exports = {
@@ -25,7 +26,9 @@ module.exports = {
   },
   configureWebpack: config => {
     console.log("nodeenv:", process.env.NODE_ENV)
-    let plugins = []
+
+    // https://github.com/sindresorhus/got/issues/345
+    let plugins = [new webpack.IgnorePlugin(/^electron$/)]
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -48,6 +51,22 @@ module.exports = {
         })
       ]
     }
+
+    if (process.env.NODE_ENV === "test") {
+      plugins.push(
+        new CopyPlugin([
+          {
+            from: "node_modules/scrypt/build",
+            to: "dist"
+          }
+        ])
+      )
+      config.externals = {
+        scrypt: "require('scrypt')"
+      }
+      config.target = "node"
+    }
+
     return {
       plugins: plugins
     }
@@ -56,5 +75,17 @@ module.exports = {
     config.module.rules.delete("eslint")
     config.resolve.set("symlinks", false) // makes yarn link loom-js work
     config.module.rules.delete("uglify")
+
+    if (process.env.NODE_ENV === "test") {
+      // config.module
+      //   .rule("istanbul")
+      //   .test(/\.(ts|vue)$/)
+      //   .enforce("post")
+      //   .include.add(path.resolve("src"))
+      //   .end()
+      //   .use("istanbul-instrumenter-loader")
+      //   .loader("istanbul-instrumenter-loader")
+      //   .options({ esModules: true })
+    }
   }
 }

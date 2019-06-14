@@ -8,32 +8,14 @@ import BN from "bn.js"
 import debug from "debug"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
-import { fromIDelegation } from "./helpers"
+import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address } from "loom-js"
 
 const log = debug("dpos")
 
-const initialState: DPOSState = {
-  bootstrapNodes: [],
-  contract: null,
-  loading: {
-    electionTime: false,
-    validators: false,
-    delegations: false,
-    rewards: false,
-  },
-  electionTime: new Date(),
-  validators: [],
-  delegations: [],
-  rewards: new BN(0),
-
-  intent: "",
-  delegation: null,
-}
-
-const builder = getStoreBuilder<HasDPOSState>().module("dpos", initialState)
+const builder = getStoreBuilder<HasDPOSState>().module("dpos", defaultState())
 const stateGetter = builder.state()
 
 const dposModule = {
@@ -177,7 +159,7 @@ async function refreshDelegations(context: ActionContext) {
   state.loading.delegations = false
 }
 
-function requestDelegation(state: DPOSState, validator: ICandidate) {
+export function requestDelegation(state: DPOSState, validator: ICandidate) {
   state.intent = "delegate"
   state.delegation = fromIDelegation(
     {

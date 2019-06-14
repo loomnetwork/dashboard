@@ -1,3 +1,5 @@
+import { DashboardConfig } from "@/types"
+
 export default {
   name: "local",
   plasma: {
@@ -18,4 +20,6 @@ export default {
     },
   },
   coinDataUrl: "",
-}
+  disabled: [],
+  chains: ["ethereum"],
+} as DashboardConfig

@@ -11,6 +11,7 @@ import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
 import { i18n } from "../../../i18n"
 import debug from "debug"
+import { feedbackModule } from "@/feedback/store"
 const log = debug("assets")
 
 function initialState(): AssetsState {
@@ -135,7 +136,7 @@ async function transferCards(
     log("transfer cards result", result)
     await assetsModule.checkCardBalance()
     CommonTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg(
+    feedbackModule.showSuccess(
       i18n
         .t("messages.transfer_card_success_tx", {
           transactionHash: result.transactionHash,
@@ -145,9 +146,9 @@ async function transferCards(
   } catch (error) {
     CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
-      CommonTypedStore.setErrorMsg(i18n.t("messages.user_denied_tx").toString())
+      feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {
-      CommonTypedStore.setErrorMsg(
+      feedbackModule.showError(
         i18n
           .t("messages.transfer_card_err_tx", { msg: error.message })
           .toString(),
@@ -177,7 +178,7 @@ async function transferPacks(
     log("transfer packs result", result)
     await assetsModule.checkPackBalance()
     CommonTypedStore.setShowLoadingSpinner(false)
-    CommonTypedStore.setSuccessMsg(
+    feedbackModule.showSuccess(
       i18n
         .t("messages.transfer_pack_success_tx", {
           transactionHash: result.transactionHash,
@@ -187,9 +188,9 @@ async function transferPacks(
   } catch (error) {
     CommonTypedStore.setShowLoadingSpinner(false)
     if (error.message.includes("denied")) {
-      CommonTypedStore.setErrorMsg(i18n.t("messages.user_denied_tx").toString())
+      feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {
-      CommonTypedStore.setErrorMsg(
+      feedbackModule.showError(
         i18n
           .t("messages.transfer_pack_err_tx", { msg: error.message })
           .toString(),

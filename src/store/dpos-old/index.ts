@@ -264,6 +264,7 @@ import { BareActionContext } from "vuex-typex"
 // import { DappChainTypedModule } from '../dappchain';
 import { CommonTypedStore } from "../common"
 import { createDefaultClient } from "loom-js/dist/helpers"
+import { feedbackModule } from "@/feedback/store"
 
 // shorthand for action context
 declare type Context = BareActionContext<DposState, DashboardState>
@@ -279,12 +280,7 @@ async function initializeDependencies(ctx: Context, payload) {
     if (err.message === "no Metamask installation detected") {
       DPOSTypedStore.setMetamaskDisabled(true)
     }
-    CommonTypedStore.setErrorMsg({
-      msg: "An error occurred, please refresh the page",
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError("An error occurred, please refresh the page")
     CommonTypedStore.setShowLoadingSpinner(false)
     throw err
   }
@@ -312,12 +308,7 @@ async function checkMappingAccountStatus(ctx: Context) {
       if (err.message.includes("identity mapping already exists")) {
         DPOSTypedStore.setAlreadyMappedModal(true)
       } else {
-        CommonTypedStore.setErrorMsg({
-          msg: err.message,
-          forever: false,
-          report: true,
-          cause: err,
-        })
+        feedbackModule.showError(err.message)
       }
     }
   } else if (
@@ -450,12 +441,7 @@ async function queryRewards(ctx: Context) {
     if (err.message.includes("Distribution record not found")) {
       DPOSTypedStore.setRewardsResults("0")
     } else {
-      CommonTypedStore.setErrorMsg({
-        msg: "Failed querying rewards",
-        forever: false,
-        report: true,
-        cause: err,
-      })
+      feedbackModule.showError("Failed querying rewards")
     }
   }
 }
@@ -508,18 +494,10 @@ async function redelegateAsync(
 
   try {
     await user.redelegateAsync(origin, target, new BN(amount), index)
-    CommonTypedStore.setSuccessMsg({
-      msg: i18n.t("messages.redelegate_success_tx").toString(),
-      forever: false,
-    })
+    feedbackModule.showSuccess(i18n.t("messages.redelegate_success_tx").toString())
   } catch (err) {
     console.error(err)
-    CommonTypedStore.setErrorMsg({
-      msg: i18n.t("messages.redelegate_err_tx").toString(),
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError(i18n.t("messages.redelegate_err_tx").toString())
   }
 }
 
@@ -790,17 +768,9 @@ async function delegateAsync(
     const weiAmount = new BN("" + payload.amount, 10).mul(WEI_TOKEN)
     const tier = payload.tier
     await user.delegateAsync(payload.candidate, weiAmount, tier)
-    CommonTypedStore.setSuccessMsg({
-      msg: `Success delegating ${payload.amount} tokens`,
-      forever: false,
-    })
+    feedbackModule.showSuccess(`Success delegating ${payload.amount} tokens`)
   } catch (err) {
-    CommonTypedStore.setErrorMsg({
-      msg: i18n.t("messages.delegate_err_tx").toString(),
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError(i18n.t("messages.delegate_err_tx").toString())
   }
 }
 async function undelegateAsync(
@@ -814,17 +784,9 @@ async function undelegateAsync(
   const weiAmount = new BN("" + payload.amount, 10).mul(WEI_TOKEN)
   try {
     await user.undelegateAsync(payload.candidate, weiAmount, payload.index)
-    CommonTypedStore.setSuccessMsg({
-      msg: `Success un-delegating ${weiAmount} tokens`,
-      forever: false,
-    })
+    feedbackModule.showSuccess(`Success un-delegating ${weiAmount} tokens`)
   } catch (err) {
-    CommonTypedStore.setErrorMsg({
-      msg: i18n.t("messages.undelegate_err_tx").toString(),
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError(i18n.t("messages.undelegate_err_tx").toString())
   }
 }
 async function getValidatorsAsync(ctx: Context) {
@@ -973,12 +935,7 @@ async function initDposUser(ctx: Context) {
   })
   user.catch((err) => {
     console.error(err)
-    CommonTypedStore.setErrorMsg({
-      msg: i18n.t("messages.init_dposUser_err_tx").toString(),
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError(i18n.t("messages.init_dposUser_err_tx").toString())
   })
   // set the promise
   DPOSTypedStore.setDPOSUserV3(user)
@@ -1012,12 +969,7 @@ async function switchDposUser(ctx: Context, payload: { web3?: any }) {
       })
     }
   } catch (err) {
-    CommonTypedStore.setErrorMsg({
-      msg: i18n.t("messages.switch_dpouser_err_tx").toString(),
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError(i18n.t("messages.switch_dpouser_err_tx").toString())
   }
   ctx.state.dposUser = user
 }
@@ -1157,12 +1109,7 @@ async function getMetamaskLoomBalance(ctx: Context) {
     )
     return mainnetBalance
   } catch (err) {
-    CommonTypedStore.setErrorMsg({
-      msg: "Error getting metamask balance",
-      forever: false,
-      report: true,
-      cause: err,
-    })
+    feedbackModule.showError("Error getting metamask balance")
     return 0
   }
 }
@@ -1186,7 +1133,7 @@ async function getUnclaimedLoomTokens(ctx: Context) {
     return unclaimAmount
   } catch (err) {
     console.log("Error check unclaim loom tokens", err)
-    CommonTypedStore.setErrorMsg("Error check unclaim loom tokens")
+    feedbackModule.showError("Error check unclaim loom tokens")
   }
 }
 async function reclaimDeposit(ctx: Context) {
@@ -1197,7 +1144,7 @@ async function reclaimDeposit(ctx: Context) {
     await dappchainGateway.reclaimDepositorTokensAsync()
   } catch (err) {
     console.log("Error reclaiming tokens", err)
-    CommonTypedStore.setErrorMsg("Error reclaiming tokens")
+    feedbackModule.showError("Error reclaiming tokens")
   }
   DPOSTypedStore.setGatewayBusy(false)
 }
@@ -1213,7 +1160,7 @@ async function getPendingWithdrawalReceipt(ctx: Context) {
     return { signature, amount, tokenOwner: owner }
   } catch (err) {
     console.log("Error get pending withdrawal receipt", err)
-    CommonTypedStore.setErrorMsg("Error get pending withdrawal receipt")
+    feedbackModule.showError("Error get pending withdrawal receipt")
   }
 }
 
@@ -1285,9 +1232,9 @@ async function init(ctx: Context) {
 }
 function showMsg(ctx: Context, payload: { type: string; msg: string }) {
   if (payload.type === "error") {
-    CommonTypedStore.setErrorMsg(payload.msg)
+    feedbackModule.showError(payload.msg)
   } else {
-    CommonTypedStore.setSuccessMsg(payload.msg)
+    feedbackModule.showSuccess(payload.msg)
   }
 }
 

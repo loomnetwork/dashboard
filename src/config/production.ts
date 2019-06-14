@@ -1,3 +1,5 @@
+import { DashboardConfig } from "@/types"
+
 export default {
   name: "production",
   plasma: {
@@ -18,4 +20,6 @@ export default {
     },
   },
   coinDataUrl: "",
-}
+  disabled: ["transfer-asset", "binance", "dev-deploy"],
+  chains: ["ethereum"],
+} as DashboardConfig

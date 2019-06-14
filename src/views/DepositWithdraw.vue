@@ -77,7 +77,7 @@ import { BModal } from "bootstrap-vue"
 import { tokenService } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "../store/ethereum"
-import { CommonTypedStore } from "../store/common"
+import { feedbackModule } from "../feedback/store"
 
 @Component({
   components: {
@@ -94,7 +94,7 @@ export default class DepositWithdraw extends Vue {
   WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
-  setShowErrorMsg = CommonTypedStore.setErrorMsg
+  showError = feedbackModule.showError
 
   selectedToken = "LOOM"
   fields = ["symbol", "balance", "actions"]
@@ -181,12 +181,12 @@ export default class DepositWithdraw extends Vue {
   requestWithdraw(token: string) {
 
     if (!ethereumModule.state.blockNumber) {
-      this.setShowErrorMsg("Synching with Ethereum, please wait a moment and try again.")
+      this.showError("Synching with Ethereum, please wait a moment and try again.")
       return
     }
 
     if (this.withdrawalInProgress) {
-      this.setShowErrorMsg("There is a processing withdrawal, please try again later.")
+      this.showError("There is a processing withdrawal, please try again later.")
       return
     }
     this.selectedToken = token

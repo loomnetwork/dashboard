@@ -97,6 +97,7 @@ import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import Web3 from "web3"
 import { ethereumModule } from '../../store/ethereum';
+import { feedbackModule } from "../../feedback/store"
 
 @Component({
   components: {
@@ -129,8 +130,8 @@ export default class HardwareWalletModal extends Vue {
 
   web3js: Web3 | null = null
 
-  setErrorMsg = CommonTypedStore.setErrorMsg
-  setSuccessMsg = CommonTypedStore.setSuccessMsg
+  showError = feedbackModule.showError
+  showSuccess = feedbackModule.showSuccess
 
   // @ts-ignore
   setWeb3 = ethereumModule.setWeb3
@@ -271,10 +272,7 @@ export default class HardwareWalletModal extends Vue {
         this.showLoadingSpinner = true
         this.hdWallet = await LedgerWallet()
       } catch (err) {
-        this.setErrorMsg({
-          msg: this.$t("messages.select_path_err_tx").toString(),
-          forever: false, report: true, cause: err,
-        })
+        this.showError(this.$t("messages.select_path_err_tx").toString())
         console.error("Error in LedgerWallet:", err)
         this.showLoadingSpinner = false
         return
@@ -285,9 +283,7 @@ export default class HardwareWalletModal extends Vue {
       this.showLoadingSpinner = true
       await this.hdWallet.init(path)
     } catch (err) {
-      this.setErrorMsg({
-        msg: this.$t("messages.select_path_err_tx").toString(), forever: false, report: true, cause: err,
-      })
+      this.showError(this.$t("messages.select_path_err_tx").toString())
       console.log("Error when trying to init hd wallet:", err)
       this.showLoadingSpinner = false
       return
@@ -313,9 +309,7 @@ export default class HardwareWalletModal extends Vue {
       if (this.accounts.length > 0) return this.getBalances()
 
     }).catch((err) => {
-      this.setErrorMsg({
-        msg: this.$t("messages.load_wallet_err_tx").toString(), forever: false, report: true, cause: err,
-      })
+      this.showError(this.$t("messages.load_wallet_err_tx").toString())
       console.log("Error when trying to get accounts:", err)
       this.showLoadingSpinner = false
     }).then(async () => {

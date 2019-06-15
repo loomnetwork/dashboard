@@ -78,6 +78,10 @@ export default class Packs extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+.card {
+  border: none;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
 .packs-view {
   max-width: 600px;
   .card-header {

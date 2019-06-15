@@ -1,6 +1,6 @@
 <template>
   <b-card class="mb-1">
-    <b-card-title>My Account</b-card-title>
+    <b-card-title>Account</b-card-title>
     <div class="account ethereum">
       <label>Ethereum</label>
       <address>
@@ -57,6 +57,10 @@ export default class Account extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+.card {
+  border: none;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
 .account {
   display: flex;
   align-items: baseline;
@@ -66,7 +70,7 @@ export default class Account extends Vue {
     width: 82px;
     font-size: 0.825rem;
     font-weight: bold;
-    margin: 0 8px;
+    margin: 0 8px 0 0;
   }
 }
 address {

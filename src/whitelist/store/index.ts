@@ -4,25 +4,24 @@ import {
   HasWhiteListState,
   DeployerAddress,
   DeployerAddressResponse,
-} from "@/store/whitelist/types"
+} from "@/whitelist/store/types"
 import * as mutations from "./mutations"
 import { WhiteListContext } from "./types"
 import { Address, LocalAddress } from "loom-js"
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 
 import debug from "debug"
-import { plasmaModule } from "../plasma"
-const log = debug("whitelist")
-import BN from "bn.js"
-import { CommonTypedStore } from "../common"
+import { plasmaModule } from "../../store/plasma"
 import { i18n } from "../../i18n"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 import { feedbackModule } from "@/feedback/store"
 
+const log = debug("whitelist")
+
 const initialState: WhiteListState = {
   userDeployerWhitelist: null,
   userDeployersAddress: [],
-  whiteListContractAddress: null, 
+  whiteListContractAddress: null,
   tierIDs: [0], // TODO: update this if we have more tier: add more tier ID
   tiers: [],
 }
@@ -65,8 +64,10 @@ async function createUserDeployerWhitelistAsync(context: WhiteListContext) {
   whiteListModule.setWhiteListContractAddress(contractAddress!)
 }
 
-async function getTierInfoAsync(context: WhiteListContext,
-                                payload: { tierID: number}) {
+async function getTierInfoAsync(
+  context: WhiteListContext,
+  payload: { tierID: number },
+) {
   const userDeployerWhitelist = context.state.userDeployerWhitelist
   let tierDetail
   try {
@@ -75,7 +76,6 @@ async function getTierInfoAsync(context: WhiteListContext,
     log("getTierInfoAsync error", error)
   }
   return tierDetail
-
 }
 
 async function addDeployerAsync(
@@ -112,7 +112,7 @@ async function addDeployerAsync(
 
   let result
   try {
-    // TODO: update this if we have more tier: pass tier 
+    // TODO: update this if we have more tier: pass tier
     result = await userDeployerWhitelist!.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
     await whiteListModule.getDeployersAsync()

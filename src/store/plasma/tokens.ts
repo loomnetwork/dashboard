@@ -191,12 +191,15 @@ export async function refreshBalance(
   const adapter = getAdapter(tokenSymbol)
   // caution make sure balanceState is always set befor calling refreshBalance
   const balanceState = context.state.coins[tokenSymbol.toUpperCase()]
+  balanceState.loading = true
   try {
     const balance = await adapter.balanceOf(context.state.address)
     balanceState.balance = balance
   } catch (e) {
     console.error("Could not refresh balance of " + tokenSymbol)
     console.error(e)
+  } finally {
+    balanceState.loading = false
   }
 }
 

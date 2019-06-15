@@ -35,6 +35,7 @@
         <label for="input-live">Your Loom Public Address</label>
         <input-address
           v-model="newPublicAddress"
+          chain="loom"
           :placeholder="'loom0000000000000000000000000000000000000000'"
           @isValid="isValidAddressFormat"
         />
@@ -63,7 +64,7 @@
         <span class="text-right">Remaining Balance: {{ loomBalance }} LOOM (</span>
         <router-link
           class="text-right"
-          :to='{name :"depositeWithdraw", query: { action: "deposit" } }'
+          :to="{name :'depositeWithdraw', query: { action: 'deposit' } }"
         >deposit</router-link>
         <span class="text-right">)</span>
       </div>
@@ -78,8 +79,8 @@ import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
 import { CommonTypedStore } from "@/store/common"
-import { whiteListModule } from "@/store/whitelist"
-import { WhiteListState, DeployerAddress } from "@/store/whitelist/types"
+import { whiteListModule } from "@/whitelist/store"
+import { WhiteListState, DeployerAddress } from "@/whitelist/store/types"
 import { plasmaModule } from "@/store/plasma"
 import { formatFromLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
@@ -87,7 +88,7 @@ import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 import BN from "bn.js"
-import { feedbackModule } from "../feedback/store"
+import { feedbackModule } from "@/feedback/store"
 
 @Component({
   components: {
@@ -133,7 +134,7 @@ export default class AddKey extends Vue {
   }
 
   async addKey(tier: ITier) {
-    if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance )) {
+    if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance)) {
       this.showError("Your balance isn't enough. Please deposit first.")
       return
     }

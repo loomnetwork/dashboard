@@ -1,5 +1,6 @@
 <template>
   <div id="mobile-account">
+    <account-info/>
     <b-card title="Balance" class="mb-4" no-body>
       <b-card-header class="custom-card-header d-flex justify-content-between">
         <h4>Balance</h4>
@@ -118,9 +119,8 @@ import Web3 from "web3"
 import BN from "bn.js"
 import debug from "debug"
 import { formatToCrypto, sleep } from "@/utils.ts"
-import TransferStepper from "../components/TransferStepper.vue"
-import DepositForm from "@/components/gateway/DepositForm.vue"
 import Rewards from "@/dpos/components/Rewards.vue"
+import AccountInfo from "@/components/Account.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
@@ -135,9 +135,8 @@ const ELECTION_CYCLE_MILLIS = 600000
 
 @Component({
   components: {
+    AccountInfo,
     LoomIcon,
-    TransferStepper,
-    DepositForm,
     Rewards,
     ElectionTimer,
   },

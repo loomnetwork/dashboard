@@ -11,7 +11,6 @@ export interface HasWhiteListState extends HasPlasmaState {
 export interface WhiteListState {
   userDeployerWhitelist: UserDeployerWhitelist | null
   userDeployersAddress: DeployerAddress[] | []
-  whiteListContractAddress: Address | null
   tierIDs: number[]
   tiers: ITier[]
 }
@@ -21,7 +20,6 @@ export interface DeployerAddress {
   hex: string
   tier: number
   base64: string
-  defaultFormat: "hex" | "base64"
 }
 
 export interface DeployerAddressResponse {

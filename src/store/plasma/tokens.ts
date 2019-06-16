@@ -14,6 +14,9 @@ const ERC20ABI = require("loom-js/dist/mainnet-contracts/ERC20.json")
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
 import { tokenService } from "@/services/TokenService"
+import { feedbackModule } from "@/feedback/store"
+import { i18n } from "@/i18n"
+import { formatTokenAmount } from "@/filters"
 
 const log = debug("plasma")
 
@@ -221,7 +224,10 @@ export async function allowance(
  * @param symbol
  * @param tokenAmount
  */
-export function approve(context: PlasmaContext, payload: TransferRequest) {
+export async function approve(
+  context: PlasmaContext,
+  payload: TransferRequest,
+) {
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
@@ -230,7 +236,24 @@ export function approve(context: PlasmaContext, payload: TransferRequest) {
     // TODO: fix error message
     throw new Error("plasma.approval.balance.low")
   }
-  return adapter.approve(to, weiAmount)
+  feedbackModule.setStep(
+    "Approving spending of " + formatTokenAmount(weiAmount) + " LOOM",
+  )
+  try {
+    await adapter.approve(to, weiAmount)
+  } catch (error) {
+    let errorMessage = error.message
+    const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
+    if (error.message.includes("User denied message")) {
+      errorMessage = userDeniedSignTx
+    }
+    feedbackModule.showError(
+      i18n
+        .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
+        .toString(),
+    )
+    throw error
+  }
 }
 
 /**
@@ -249,5 +272,8 @@ export async function transfer(
   }
 
   // plasmaModule.refreshBalance(payload.symbol)
+  feedbackModule.setStep(
+    `Transfering ${formatTokenAmount(weiAmount)} ${symbol}`,
+  )
   return await adapter.transfer(to, weiAmount)
 }

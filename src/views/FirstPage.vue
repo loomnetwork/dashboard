@@ -9,7 +9,7 @@
             <div class="confirm-link text-center">
               <h3>Are you from Relentless Marketplace ?</h3>
               <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
-               <div class="linking-div">
+              <div class="linking-div">
                 <img src="../assets/images/relentless.png">
                 <i style="font-size:56px;" class="fa">&#8651;</i>
                 <loom-icon width="56px" height="56px" :color="'#6eccd8'"/>
@@ -19,12 +19,22 @@
               </div>
             </div>
             <div slot="modal-footer" class="w-100" style="text-align: center;">
-               <b-button v-show="!reconsider" variant="link" style="color: gray;" @click="reconsider = true">Nope, I'm not from Relentless Marketplace</b-button>
-               <div class="reconsider" v-show="reconsider">
-                 <h5> Are you sure ? </h5>
-                 <p style="color: red;"> We will create a new fresh account for you, But account linking is unable anymore</p>
-                 <b-button variant="outline-dark" @click="setNewMappingAgree(true)"> Create a new account </b-button>
-               </div>
+              <b-button
+                v-show="!reconsider"
+                variant="link"
+                style="color: gray;"
+                @click="reconsider = true"
+              >Nope, I'm not from Relentless Marketplace</b-button>
+              <div class="reconsider" v-show="reconsider">
+                <h5>Are you sure ?</h5>
+                <p
+                  style="color: red;"
+                >We will create a new fresh account for you, But account linking is unable anymore</p>
+                <b-button
+                  variant="outline-dark"
+                  @click="setNewMappingAgree(true)"
+                >Create a new account</b-button>
+              </div>
             </div>
           </b-modal>
           <b-card title="Select wallet">
@@ -47,7 +57,7 @@
                 <b-card
                   id="metamask-button"
                   class="wallet-selection-card text-center"
-                  :class="{'wallet-selection-card disabled' : !isMetamaskInstalled()}"
+                  :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
                   @click="setWallet('metamask')"
                 >
                   <h5>Metamask</h5>
@@ -62,7 +72,7 @@
                 <b-card
                   id="trezor-button"
                   class="wallet-selection-card text-center"
-                  :class="{'wallet-selection-card disabled' : !isMetamaskInstalled()}"
+                  :class="{'disabled' : !metamaskInstalled}"
                   @click="setWallet('metamask')"
                 >
                   <h5>
@@ -83,21 +93,21 @@
                   @click="addressModalShow = !addressModalShow"
                 >
                   <h5>Explore</h5>
-                  <img id="wallet-card-img-large" src="../assets/network-error-graphic.png">
+                  <fa icon="search" style=" height: 70px;width: 70px;"/>
                   <small>Explore an account</small>
                 </b-card>
               </div>
             </div>
           </b-card>
 
-          <b-card v-if="!isMetamaskInstalled()" class="metamask-suggest">
+          <b-card v-if="!metamaskInstalled" class="metamask-suggest">
             <img id="metamask-mini-icon" src="../assets/metamask_logo.png">
             <b-card-text class="text-inline">
               Looks like you don't have
-              <font id="orange">Metamask</font> with you
+              <font id="orange">Metamask</font> extension
             </b-card-text>
             <b-button
-              target="_blank" 
+              target="_blank"
               variant="outline-primary"
               href="https://metamask.io/"
               style="float: right; margin-top: 5px"
@@ -122,18 +132,14 @@
 import { Vue, Component, Watch } from "vue-property-decorator"
 import ChainSelector from "../components/ChainSelector.vue"
 import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
-import { setInterval } from "timers"
 import { BModal } from "bootstrap-vue"
 
 import { ethereumModule } from "@/store/ethereum"
-
-import { DPOSTypedStore } from "@/store/dpos-old"
-import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
 
 import LoomIcon from "@/components/LoomIcon.vue"
-import { Gateway } from '../store/gateway/contracts/Gateway';
-import { gatewayModule } from '../store/gateway';
+import { Gateway } from "../store/gateway/contracts/Gateway"
+import { gatewayModule } from "../store/gateway"
 
 @Component({
   components: {
@@ -144,59 +150,25 @@ import { gatewayModule } from '../store/gateway';
 })
 export default class FirstPage extends Vue {
 
-  get userIsLoggedIn() { return CommonTypedStore.getUserIsLoggedIn }
-  get chainUrls() { return this.$state.DPOS.chainUrls }
-  get networkId() { return this.$state.DPOS.networkId }
-  get walletType() { return this.$state.DPOS.walletType }
-  get mappingSuccess() { return this.$state.DPOS.mappingSuccess }
   get $state() { return (this.$store.state as DashboardState) }
 
-  get notMapped() { return (this.$state.gateway.mapping !== null) && (this.$state.gateway.mapping.to!.isEmpty()) && (this.$state.ethereum.signer) }
+  get notMapped() {    return (this.$state.gateway.mapping !== null) &&
+      (this.$state.gateway.mapping.to!.isEmpty()) &&
+      (this.$state.ethereum.signer)
+  }
   get newMappingAgree() { return this.$state.gateway.newMappingAgree }
 
   loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
-  // vuex
-  // setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
-  // initializeDependencies = DPOSTypedStore.initializeDependencies
-  // setWalletType = DPOSTypedStore.setWalletType
-  // setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
-  // signOut = CommonTypedStore.signOut
 
-  addChainUrl = DPOSTypedStore.addChainUrl
-  setMappingError = DPOSTypedStore.setMappingError
-  setMappingStatus = DPOSTypedStore.setMappingStatus
   setNewMappingAgree = gatewayModule.setNewMappingAgree
 
   address = ""
   addressModalShow = false
   mappedModalShow = false
   reconsider = false
-
-  // async selectWallet(wallet) {
-  //   if (wallet === "ledger") {
-  //     this.setWalletType("ledger")
-  //     this.setUserIsLoggedIn(true)
-
-  //     this.modal("hardwareWalletConfigRef").show()
-  //   } else if (wallet === "metamask") {
-  //     this.setWalletType("metamask")
-  //     this.setUserIsLoggedIn(true)
-  //     await this.initializeDependencies()
-  //   } else {
-  //     return
-  //   }
-  // }
-
-  modal(ref: string) {
-    return this.$refs[ref] as BModal
-  }
-
-  // async openLoginModal() {
-  //   this.$root.$emit("bv::show::modal", "login-account-modal")
-  // }
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
@@ -207,25 +179,17 @@ export default class FirstPage extends Vue {
   set newMappingAgree(val) {
   }
 
-  isMetamaskInstalled() {
-    /* For Chrome & Firefox Browser
-       if user dont have Metamask installed, there is no web3 that inject in their browser
-       (except user install other extensions for crypto wallet (Ethereum platform))
+  /* For Chrome & Firefox Browser
+     if user dont have Metamask installed, there is no web3 that inject in their browser
+     (except user install other extensions for crypto wallet (Ethereum platform))
 
-       For Opera Browser
-       Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
-    */
-    // @ts-ignore
-    if (typeof window.web3 == "undefined" || window.ethereum == "undefined") { // No injected web3 in browser
-      return false
-    } else { // Already have a injected web3 in browser
+     For Opera Browser
+     Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
+  */
+  get metamaskInstalled() {
+    return ("ethereum" in window) ||
       // @ts-ignore
-      if (window.web3.currentProvider.isMetaMask || window.ethereum.isMetaMask) {
-        return true
-      } else {
-        return false // No Metamask installed
-      }
-    }
+      ("web3" in window && window.web3.currentProvider.isMetaMask)
   }
 
 }
@@ -398,7 +362,7 @@ export default class FirstPage extends Vue {
 }
 
 .reconsider {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .linking-div {

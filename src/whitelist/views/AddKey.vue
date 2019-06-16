@@ -1,80 +1,130 @@
 <template>
-  <div class="container mb-5">
-    <!-- Deployer Public key section -->
-    <h4 class="mt-3">Deployer Public Keys</h4>
-    <div v-if="publicKeys.length > 0">
-      <b-card v-for="(pk, index) in publicKeys" :key="pk.hex">
-        <b-row>
-          <b-col cols="12" sm="6">
-            <h6>{{pk[pk.defaultFormat] | loomAddress}}</h6>
-          </b-col>
-          <b-col cols="12" sm="3">
-            <b-button
-              @click="switchPubKeyType(index)"
-            >View {{pk.defaultFormat | swapTextBase64AndHexLabel}}</b-button>
-          </b-col>
-          <b-col cols="12" sm="3">
-            <b-badge variant="success">Tier: {{pk.tier}}</b-badge>
-          </b-col>
-        </b-row>
-      </b-card>
-    </div>
-    <div v-else class="mt-3">You have no deployer address.</div>
-    <!-- Add new key section -->
-    <b-card class="my-5">
-      <b-row>
-        <b-col cols="12" sm="3">
-          <h4>Add New Key</h4>
-        </b-col>
-        <b-col cols="12" sm="9">
-          In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.
-          <router-link class="text-right" to="/faq">Developer FAQ</router-link>
-        </b-col>
-      </b-row>
-      <div role="group">
-        <label for="input-live">Your Loom Public Address</label>
-        <input-address
-          v-model="newPublicAddress"
-          chain="loom"
-          :placeholder="'loom0000000000000000000000000000000000000000'"
-          @isValid="isValidAddressFormat"
-        />
-      </div>
-      <p @click="showSeedPhraseModal()" class="text-right text-link">Generate New Public Address</p>
-      <br>
-      <seed-phrase-modal ref="seed-phrase-modal"/>
-      <label for="input-live">Amount to Stake</label>
-      <div class="tierBlock tierDisplay">
-        <label v-for="tier in tiers" v-bind:key="tier.tierId" class="radio">
-          <input type="radio" v-model="tierSelected" :value="tier">
-          <b-card class="tierText">
-            <b-row>Tier: {{tier.tierId}}</b-row>
-            <b-row>Name: {{tier.name}}</b-row>
-            <b-row>Fee: {{tier.fee | tokenAmount}} LOOM</b-row>
-          </b-card>
-        </label>
-      </div>
+  <main class="container">
+    <header>
+      <h1>Deploy to Plasmachain</h1>
       <b-button
-        class="d-inline-flex"
-        @click="addKey(tierSelected)"
-        :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress || !isValidAddress"
-        v-model="loomAddress"
-      >Add Key</b-button>
-      <div class="remaining my-3">
-        <span class="text-right">Remaining Balance: {{ loomBalance }} LOOM (</span>
-        <router-link
-          class="text-right"
-          :to="{name :'depositeWithdraw', query: { action: 'deposit' } }"
-        >deposit</router-link>
-        <span class="text-right">)</span>
-      </div>
-    </b-card>
-  </div>
+        class="help"
+        :class="{active:showHelp}"
+        variant="outline-info"
+        pill
+        size="sm"
+        @click="showHelp =!showHelp"
+      >?</b-button>
+    </header>
+    <section>
+      <b-alert fade :show="showHelp">
+        <p>In order to deploy contracts to PlasmaChain, you need to white list your deployment keys. You can manage your keys bellow, whitelist an existing key or generate a new one.</p>
+        <p>Adding a key requires you to stake tokens by choosing a tier.</p>
+      </b-alert>
+      <b-card class="deployer-keys mb-4" no-body>
+        <header>
+          <b-card-title>Deployer Public Keys</b-card-title>
+          <b-button-group size="sm">
+            <b-button
+              variant="outline-primary"
+              :class="{active: keyViewMode ==='hex'}"
+              @click="keyViewMode = 'hex'"
+            >Hex</b-button>
+            <b-button
+              variant="outline-primary"
+              :class="{active: keyViewMode ==='base64'}"
+              @click="keyViewMode = 'base64'"
+            >Base64</b-button>
+          </b-button-group>
+        </header>
+        <b-card-body>
+          <p
+            v-if="publicKeys.length === 0"
+            class="mt-3"
+          >You have no deployer address yet. Use the form bellow to add one</p>
+        </b-card-body>
+        <b-list-group class="deployer-keys" flush>
+          <b-list-group-item v-for="pk in publicKeys" :key="pk.hex">
+            <address class="key hex" v-if="keyViewMode === 'hex'" @click="copyAddress(pk.hex)">
+              <span>{{pk.hex | loomAddress}}</span>
+              <fa icon="paste"/>
+            </address>
+            <div class="key" v-else>{{pk.base64}}</div>
+            <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
+          </b-list-group-item>
+        </b-list-group>
+      </b-card>
+
+      <b-alert variant="warning" :show="balanceTooLow" style="max-width: 600px;">
+        <h5 class="alert-heading">LOOM balance low.</h5>
+        <p>Whitelisting keys requires at least 10 LOOM. Your balance is {{ loomBalance }} LOOM</p>
+        <footer style="display: flex;justify-content: flex-end;">
+          <b-button variant="primary">Deposit more LOOM to Plasmachain</b-button>
+        </footer>
+      </b-alert>
+
+      <!-- Add new key section -->
+      <b-card class="my-5 add-key-form" style="max-width: 600px;" no-body>
+        <b-card-header>Add New Key</b-card-header>
+
+        <b-card-body>
+          <p
+            @click="showSeedPhraseModal()"
+            class="text-right text-link"
+            style="position: absolute;right: 20px;"
+          >Generate New Key</p>
+          <b-form-group
+            id="da-input-group"
+            label="Your Loom Public Address"
+            label-for="deployer-address-input"
+            description="Use an existing address or creare a new one by clicking on generate new key"
+          >
+            <input-address
+              id="deployer-address-input"
+              v-model="newPublicAddress"
+              chain="loom"
+              :placeholder="'loom0000000000000000000000000000000000000000'"
+              @isValid="isValidAddressFormat"
+            />
+          </b-form-group>
+          <b-form-group
+            label="Select a tier"
+            label-for="whitelist-tier-input"
+            description="In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators."
+          >
+            <div class="tier-options">
+              <label
+                v-for="tier in tiers"
+                :key="tier.tierId"
+                class="radio tier"
+                :class="{selected: tier === tierSelected}"
+              >
+                <input type="radio" v-model="tierSelected" :value="tier">
+                <strong>Tier {{tier.tierId +1}}</strong>
+                <div class="spec">Max 10 Tx/min</div>
+                <div class="fee">{{tier.fee | tokenAmount}} LOOM</div>
+              </label>
+              <label class="radio tier disabled" v-for="i in [1,2,3]" :key="i">
+                <input type="radio" disabled v-model="tierSelected" :value="-1">
+                <div class="spec">Coming soon</div>
+              </label>
+            </div>
+          </b-form-group>
+        </b-card-body>
+
+        <b-card-footer>
+          <b-button
+            variant="primary"
+            @click="addKey(tierSelected)"
+            :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress || !isValidAddress"
+            v-model="loomAddress"
+            size="lg"
+          >Add Key</b-button>
+        </b-card-footer>
+      </b-card>
+    </section>
+    <seed-phrase-modal ref="seed-phrase-modal"/>
+  </main>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import { Component } from "vue-property-decorator"
+import { Component, Watch } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
@@ -82,13 +132,14 @@ import { CommonTypedStore } from "@/store/common"
 import { whiteListModule } from "@/whitelist/store"
 import { WhiteListState, DeployerAddress } from "@/whitelist/store/types"
 import { plasmaModule } from "@/store/plasma"
-import { formatFromLoomAddress } from "@/utils"
+import { formatFromLoomAddress, formatToLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 import BN from "bn.js"
 import { feedbackModule } from "@/feedback/store"
+import { PlasmaState } from "../../store/plasma/types"
 
 @Component({
   components: {
@@ -99,30 +150,35 @@ import { feedbackModule } from "@/feedback/store"
 
 export default class AddKey extends Vue {
   showError = feedbackModule.showError
-  addDeployerAsync = whiteListModule.addDeployerAsync
-  getDeployersAsync = whiteListModule.getDeployersAsync
   isShowGenPublicKeyModal = false
   newPublicAddress = ""
   tierSelected: ITier | {} = {}
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
   isValidAddress = false
   loomAddress = "loom0000000000000000000000000000000000000000"
 
+  keyViewMode: "hex" | "base64" | "" = ""
+
+  showHelp = false
+
   modal(ref: string) {
     return this.$refs[ref] as BModal
-  }
-
-  switchPubKeyType(inputKey) {
-    this.publicKeys[inputKey].defaultFormat = this.publicKeys[inputKey].defaultFormat === "hex" ? "base64" : "hex"
   }
 
   get state(): WhiteListState {
     return this.$store.state.whiteList
   }
 
+  get plasma(): PlasmaState {
+    return this.$store.state.plasma
+  }
+
   get loomBalance() {
-    const loomBalanceBN = plasmaModule.state.coins.LOOM.balance
+    const loomBalanceBN = this.plasma.coins.LOOM.balance
     return formatTokenAmount(loomBalanceBN)
+  }
+
+  get balanceTooLow() {
+    return this.tiers.length > 0 && this.plasma.coins.LOOM.balance.lt(this.tiers[0].fee)
   }
 
   get tiers() {
@@ -145,29 +201,85 @@ export default class AddKey extends Vue {
       return
     }
 
-    this.setShowLoadingSpinner(true)
-    const result = await this.addDeployerAsync({ deployer: loomAddress, tier })
-    this.setShowLoadingSpinner(false)
-    this.newPublicAddress = ""
+    const result = await whiteListModule.addDeployer({ deployer: loomAddress, tier })
+    this.resetForm()
   }
 
   isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
   }
 
+  resetForm() {
+    this.newPublicAddress = ""
+    this.tierSelected = {}
+  }
+
   showSeedPhraseModal() {
     this.$root.$emit("bv::show::modal", "seed-phrase-modal")
   }
 
+  copyAddress(hex: string) {
+    this.$copyText(formatToLoomAddress(hex)).then(() =>
+      feedbackModule.showSuccess("Address copied."),
+      console.error,
+    )
+  }
+
   async mounted() {
-    await this.getDeployersAsync()
+    this.keyViewMode = "hex"
+    await whiteListModule.getDeployers()
   }
 }
 </script>
 <style lang="scss" scoped>
-.container {
-  display: flex;
-  flex-direction: column;
+main > section {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card.deployer-keys {
+  border: none;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+  > header {
+    display: flex;
+    flex: 1;
+    padding: 10px 10px 0;
+
+    align-items: center;
+    h4 {
+      flex: 1;
+      margin: 0;
+    }
+  }
+  .list-group-item {
+    display: flex;
+    .key {
+      flex: 1;
+      font-family: Monaco, "Lucida Console", monospace;
+      font-size: 0.825rem;
+      margin: 0;
+      &.hex {
+        cursor: copy;
+      }
+      // fa icon
+      > svg {
+        margin-left: 0.5rem;
+        color: #007cff;
+      }
+    }
+    .badge {
+      font-size: 0.825rem;
+    }
+  }
+}
+
+.add-key-form {
+  max-width: 600px;
+  margin: auto;
+}
+
+p {
+  color: inherit;
 }
 .text-right {
   text-align: right !important;
@@ -184,29 +296,39 @@ export default class AddKey extends Vue {
 .remaining {
   align-self: flex-end;
 }
-.tierBlock {
-  margin: 20px;
-}
-.tierBlock input {
-  display: none;
-}
-.tierBlock label {
-  margin-right: 50px;
-  display: inline-block;
-  cursor: pointer;
-}
-.tierDisplay .tierText {
-  display: block;
-  padding: 5px 25px 5px 25px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  position: relative;
-  transition: all 0.25s linear;
-}
-.tierDisplay .radio input:checked + .tierText {
-  background-color: #fff;
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
-  color: #ffc107;
-  border-color: #ffc107;
+
+.tier-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .tier {
+    border: 1px solid #d8d8d8;
+    color: rgba(0, 0, 0, 0.86);
+    padding: 16px 8px;
+    text-align: center;
+    margin: 0 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    &.selected {
+      background-color: #007cff;
+      color: #fff;
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+    }
+    &.disabled {
+      opacity: 0.56;
+    }
+    > input {
+      display: none;
+    }
+    > * {
+      height: 1.8em;
+    }
+    .spec {
+      font-size: 0.825rem;
+    }
+  }
 }
 </style>

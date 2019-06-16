@@ -44,16 +44,24 @@ button.help {
   width: 32px;
   height: 32px;
 }
-header {
-  > h1 {
-    flex: 1;
-    color: #5246d5;
-    font-size: 1.35em;
-    text-align: center;
-    margin: 16px -14px;
-    font-weight: normal;
-    border-bottom: 1px solid #ededed;
-    padding-bottom: 16px;
+
+main.container {
+  > header {
+    display: flex;
+    align-items: center;
+    h1 {
+      flex: 1;
+      color: #5246d5;
+      font-size: 1.35em;
+      text-align: center;
+      margin: 16px -14px;
+      font-weight: normal;
+      border-bottom: 1px solid #ededed;
+      padding-bottom: 16px;
+    }
+  }
+  h4.card-title {
+    font-size: 1.2rem;
   }
 }
 </style>

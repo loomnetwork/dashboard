@@ -1,18 +1,26 @@
 <template>
-  <b-modal v-model="visible"
+  <b-modal
+    v-model="visible"
     hide-footer
-    no-close-on-backdrop 
+    no-close-on-backdrop
     no-close-on-esc
-    hide-header-close
-    id="progress" :title="task">
-    
+    hide-header
+    id="progress"
+    body-bg-variant="info"
+    body-text-variant="dark"
+  >
+    <!--     :title="task" -->
     <section v-if="status === 'default'">
-      <transition-group  name="list"
-                        tag="ul"
-                        enter-active-class="animated fadeIn"
-                        leave-active-class="animated fadeOut">
-        <li v-for="i in steps.length" :key="i" class="mb-3 pt-3">
-          <div class="icon-container mr-2">
+      <img src="@/assets/loomy-running.gif" class="looping-loomy mb-2" alt="loomy">
+
+      <transition-group
+        name="list"
+        tag="ul"
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <li v-for="i in steps.length" :key="i" class="mb-2 pt-2">
+          <div class="icon-container mr-3">
             <Checkmark v-if="i-1 < currentStep"/>
             <b-spinner variant="primary" label="Spinning" v-else/>
           </div>
@@ -67,20 +75,32 @@ export default class ProgressModal extends Vue {
 </script>
 
 <style scoped lang="scss">
-  #progress {
-    ul {
-      li {
-        list-style: none;
-        display: flex;
-        align-items: center;
-        span {
-          font-weight: bold;
-          color: #bdbcbc;
-        }
+#progress {
+  section {
+    display: flex;
+    flex-direction: column;
+  }
+  .looping-loomy {
+    width: 100px;
+    height: 100px;
+    align-self: center;
+  }
+  ul {
+    li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      span {
+        font-weight: normal;
       }
     }
-    .icon-container {
-      display: inline-block;
+  }
+  .icon-container {
+    display: inline-block;
+    > * {
+      width: 24px;
+      height: 24px;
     }
   }
+}
 </style>

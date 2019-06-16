@@ -23,6 +23,7 @@
         <span>Receiver Loom Address:</span>
         <input-address
           v-model="receiverAddress"
+          chain="loom"
           placeholder="'Loom Address'"
           @isValid="isValidAddressFormat"
         />

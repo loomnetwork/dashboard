@@ -1,9 +1,9 @@
 <template>
   <b-card class="mb-1">
-    <b-card-title>My Account</b-card-title>
+    <b-card-title>Account</b-card-title>
     <div class="account ethereum">
       <label>Ethereum</label>
-      <address>
+      <address @click="copyEthereum">
         <span class="highlight">{{ethAccount}}</span>
         <fa icon="paste"/>
       </address>
@@ -14,8 +14,8 @@
     </div>
     <div class="account ethereum">
       <label>Loom</label>
-      <address>
-        <span class="highlight">{{dappchainAddress | loomAddress}}</span>
+      <address @click="copyPlasma">
+        <span class="highlight">{{plasmaAccount | loomAddress}}</span>
         <fa icon="paste"/>
       </address>
       <a class="explorer" :href="loomScanUrl" target="_blank">
@@ -31,12 +31,12 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { dposModule } from "@/dpos/store"
 import { DashboardState, DposState } from "@/types"
-// import configs from "chain-config"
+import { feedbackModule } from "@/feedback/store"
 
 @Component
 export default class Account extends Vue {
   etherScanUrl = `${this.state.ethereum.blockExplorer}/address/${this.ethAccount}`
-  loomScanUrl = `${this.state.plasma.blockExplorer}/address/${this.dappchainAddress}/transactions`
+  loomScanUrl = `${this.state.plasma.blockExplorer}/address/${this.plasmaAccount}/transactions`
 
   get state(): DashboardState {
     return this.$store.state
@@ -50,13 +50,31 @@ export default class Account extends Vue {
     return this.state.ethereum.address
   }
 
-  get dappchainAddress() {
+  get plasmaAccount() {
     return this.state.plasma.address
+  }
+
+  copyEthereum() {
+    this.$copyText(this.plasmaAccount).then(() =>
+      feedbackModule.showSuccess("Ethereum address copied."),
+      console.error,
+    )
+  }
+
+  copyPlasma() {
+    this.$copyText(this.plasmaAccount).then(() =>
+      feedbackModule.showSuccess("Plasma address copied."),
+      console.error,
+    )
   }
 
 }
 </script>
 <style lang="scss" scoped>
+.card {
+  border: none;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
 .account {
   display: flex;
   align-items: baseline;
@@ -66,7 +84,7 @@ export default class Account extends Vue {
     width: 82px;
     font-size: 0.825rem;
     font-weight: bold;
-    margin: 0 8px;
+    margin: 0 8px 0 0;
   }
 }
 address {

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <b-form-input v-bind:value="value"
+    <b-form-input
+      v-bind:value="internal"
       :placeholder="placeholder"
-      v-on:input="updateAddress"
-      v-on:keyup="validateAddressFormat"
+      v-on:input="onInput"
       :state="this.value.length === 0 ? null : isValidAddress"
       class="my-2"
-      ></b-form-input>
-    <p v-show="!isValidAddress" style="" :key="value">Invalid {{ token }} address format!</p>
+    ></b-form-input>
+    <p v-show="!isValidAddress" style :key="value">Invalid {{ chain }} address.</p>
   </div>
 </template>
 
@@ -21,37 +21,36 @@ export default class InputAmount extends Vue {
 
   @Prop(String) value!: string
   @Prop(String) placeholder!: string
-  @Prop({ default: "loom"}) token!: string
+  @Prop({ default: "loom" }) chain!: string
+  @Prop({ type: Array, default() { return [] } }) blacklist!: string[]
+
+  patterns = {
+    loom: /^loom[a-fA-F0-9]{40}$/,
+    bnb: /^0x[a-fA-F0-9]{40}$/,
+  }
+
+  internal: string = ""
+
   isValidAddress: boolean = true
 
-  @Watch("plasma.selectedToken")
-  setDefaultInputAddress(newVal, oldVal) {
-    this.value = ""
-    this.isValidAddress = true
-  }
-
-  updateAddress(value) {
-    this.$emit("input", value)
-  }
-
-  validateAddressFormat() {
-    switch (this.token.toLowerCase()) {
-      case "loom":
-        // Address (value) must be 44 characters and have a "loom" as prefix
-        if ((this.value.length !== 44 || this.value.slice(0, 4) !== "loom") && this.value !== "") {
-          this.emitValidAddress(false)
-        } else {
-          this.emitValidAddress(true)
-        }
-        break
-      case "bnb":
-        const regex = /^0x[a-fA-F0-9]{40}$/g
-        const isValid = regex.test(this.value)
-        this.emitValidAddress(isValid)
-        break
-      default:
-        break
+  onInput(value) {
+    this.validateAddressFormat(value)
+    this.internal = value
+    if (this.isValidAddress) {
+      this.$emit("input", value)
+    } else {
+      this.$emit("input", "")
     }
+  }
+
+  validateAddressFormat(value) {
+    const chain = this.chain.toLowerCase()
+    let valid = false
+    if (chain in this.patterns) {
+      valid = this.patterns[chain].test("" + value)
+    }
+    valid = valid && (false === this.blacklist.includes(value.toLowerCase()))
+    this.emitValidAddress(valid)
   }
 
   emitValidAddress(isValid: boolean) {
@@ -59,23 +58,15 @@ export default class InputAmount extends Vue {
     this.$emit("isValid", isValid)
   }
 
-  get state(): DashboardState {
-    return this.$store.state
-  }
-
-  get plasma(): PlasmaState {
-    return this.state.plasma
-  }
-
 }
 </script>
 
 <style scoped>
-  p {
-    color: red
-  }
+p {
+  color: red;
+}
 
-  ::placeholder {
-    color: lightgrey;
-  }
+::placeholder {
+  color: lightgrey;
+}
 </style>

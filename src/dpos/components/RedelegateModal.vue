@@ -40,7 +40,6 @@ import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdown
 import { DashboardState } from "@/types"
 import { dposModule } from "@/dpos/store"
 import { Validator } from "@/dpos/store/types"
-import { CommonTypedStore } from "@/store/common"
 
 @Component({
   components: {
@@ -65,13 +64,14 @@ export default class RedelegateModal extends Vue {
 
   set visible(val: boolean) {
     // clear
+    if (val === false) {
+      dposModule.cancelRequest()
+    }
   }
 
   get sourceDelegation() {
     return this.state.dpos.delegation
   }
-
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   get state(): DashboardState {
     return this.$store.state

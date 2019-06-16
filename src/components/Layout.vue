@@ -91,7 +91,6 @@ import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
 
 import { DashboardState } from "../types"
-import { DPOSTypedStore } from "../store/dpos-old"
 import { store } from "../store"
 
 @Component({
@@ -135,10 +134,6 @@ export default class Layout extends Vue {
   get mappingError() { return this.s.DPOS.mappingError }
   get networkId() { return this.s.plasma.networkId }
 
-  initializeDependencies = DPOSTypedStore.initializeDependencies
-  setMappingError = DPOSTypedStore.setMappingError
-  setMappingStatus = DPOSTypedStore.setMappingStatus
-
   metamaskChangeAlert = false
 
   loginEmail = ""
@@ -156,35 +151,6 @@ export default class Layout extends Vue {
     }
   }
 
-  @Watch("mappingSuccess")
-  onMappingSuccessChange(newValue, oldValue) {
-    if (newValue && this.walletType === "metamask") {
-      // @ts-ignore
-      this.$router.push({
-        name: "account",
-      })
-    }
-  }
-
-  @Watch("status")
-  onMappedChange(newValue, oldValue) {
-    if (newValue === "mapped" && this.walletType === "metamask") {
-      this.$router.push({
-        name: "account",
-      })
-    }
-  }
-
-  @Watch("showAlreadyMappedModal")
-  onAlreadyMappedModalChange(newValue, oldValue) {
-    if (newValue) {
-      this.$root.$emit("bv::show::modal", "already-mapped")
-    } else {
-      this.$root.$emit("bv::hide::modal", "already-mapped")
-
-    }
-  }
-
   @Watch("showSignWalletModal")
   onSignLedgerModalChange(newValue, oldValue) {
     if (newValue) {
@@ -195,11 +161,6 @@ export default class Layout extends Vue {
   }
 
   async mounted() {
-    // @ts-ignore
-    if (this.$route.meta.requireDeps) {
-      this.attemptToInitialize()
-    }
-
     if ("ethereum" in window) {
       // @ts-ignore
       window.ethereum.on("accountsChanged", (accounts) => {
@@ -224,18 +185,6 @@ export default class Layout extends Vue {
 
   async restart() {
     window.location.reload(true)
-  }
-
-  async attemptToInitialize() {
-    try {
-      await this.initializeDependencies()
-      this.$root.$emit("initialized")
-      this.$root.$emit("refreshBalances")
-    } catch (err) {
-      this.$root.$emit("logout")
-      this.setMappingError(null)
-      this.setMappingStatus("")
-    }
   }
 
   get getClassNameForStyling() {

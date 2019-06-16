@@ -1,16 +1,17 @@
 <template>
-  <b-modal v-model="visible"
-           no-close-on-backdrop 
-           no-close-on-esc
-           hide-header-close
-           id="deposit-approval-success"  title="Withdraw">
+  <b-modal
+    v-model="visible"
+    no-close-on-backdrop
+    no-close-on-esc
+    hide-header-close
+    id="deposit-approval-success"
+    title="Withdraw"
+  >
     <div v-if="status === 'default'">
       <amount-input :min="1" :max="100" :symbol="token" v-model="amount" @isError="errorHandler"/>
     </div>
     <div v-if="status === 'error'">
-      <h2>
-        An error occurred, please try again!
-      </h2>
+      <h2>An error occurred, please try again!</h2>
     </div>
     <template slot="modal-footer">
       <div v-if="status === 'default'">
@@ -22,7 +23,6 @@
         <span style="flex:1"></span>
         <b-btn @click="close()">Close</b-btn>
       </div>
-
     </template>
   </b-modal>
 </template>
@@ -31,11 +31,10 @@
 import Vue from "vue"
 import BN from "bn.js"
 import { Component, Prop } from "vue-property-decorator"
-import {ethers} from "ethers"
+import { ethers } from "ethers"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState, Funds } from "../../types"
-import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "../../store/gateway"
 import { gatewayReactions } from "../../store/gateway/reactions"
 
@@ -51,7 +50,7 @@ import { setShowWithdrawProgress } from "../../store/gateway/mutations"
 
 export default class WithdrawForm extends Vue {
 
-  @Prop({required: true}) token!: string // prettier-ignore
+  @Prop({ required: true }) token!: string // prettier-ignore
 
   status: string = "default"
   amount: any = 0
@@ -71,7 +70,7 @@ export default class WithdrawForm extends Vue {
 
   set visible(value) {
     if (value === false) {
-     this.setShowWithdrawForm(false)
+      this.setShowWithdrawForm(false)
     }
   }
 
@@ -103,7 +102,7 @@ export default class WithdrawForm extends Vue {
       this.status = "error"
     })
     this.close()
-    this.setShowWithdrawProgress(true)}
+    this.setShowWithdrawProgress(true)  }
 
 }
 </script>

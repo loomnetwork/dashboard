@@ -49,35 +49,35 @@
             <b-collapse is-nav id="nav_collapse">
               <!-- Right aligned nav items -->
               <b-navbar-nav class="mobile-nav ml-auto">
-                <b-nav-item v-if="state.common.userIsLoggedIn">
+                <b-nav-item v-if="false">
                   <h5>
-                    <router-link to="/account" class="router text-light hover-warning">Account</router-link>
+                    <router-link to="/analytics" class="router text-light hover-warning">{{ $t('components.faucet_sidebar.analytics') }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-if="state.common.userIsLoggedIn">
+                <b-nav-item v-for="(menu, index) in menus.staking" :key="index">
                   <h5>
-                    <router-link to="/history" class="router text-light hover-warning">History</router-link>
+                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item>
+                <b-nav-item v-for="(menu, index) in menus.wallet" :key="index">
                   <h5>
-                    <router-link to="/validators" class="router text-light hover-warning">Validators</router-link>
+                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <div v-if="isMobile">
-                  <b-nav-item>
-                    <h5>
-                      <router-link
-                        to="/blockexplorer"
-                        class="router text-light hover-warning"
-                      >Block Explorer</router-link>
-                    </h5>
-                  </b-nav-item>
-                </div>
+                <b-nav-item v-for="(menu, index) in menus.dev" :key="index">
+                  <h5>
+                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
+                  </h5>
+                </b-nav-item>
+                <b-nav-item v-for="(menu, index) in menus.help" :key="index">
+                  <h5>
+                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
+                  </h5>
+                </b-nav-item>
                 <LangSwitcher/>
-                <b-nav-item v-if="state.common.userIsLoggedIn">
+                <b-nav-item v-if="!!state.plasma.address">
                   <h5>
-                    <a @click="logOut" class="router text-light hover-warning">Sign out</a>
+                    <a @click="logout" class="router text-light hover-warning">Sign out</a>
                   </h5>
                 </b-nav-item>
               </b-navbar-nav>
@@ -140,6 +140,63 @@ export default class FaucetHeader extends Vue {
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
+  menus = {
+    staking: [
+      {
+        to: "/validators",
+        text: "components.faucet_sidebar.validators",
+      },
+      {
+        to: "/account",
+        text: "components.faucet_sidebar.my_account",
+      },
+      {
+        to: "/history",
+        text: "components.faucet_sidebar.history",
+      },
+    ],
+    wallet: [
+      {
+        to: "/wallet",
+        text: "components.faucet_sidebar.deposit_withdraw",
+      },
+      {
+        to: "/game-assets",
+        text: "components.faucet_sidebar.game_assets",
+        name: "transfer-asset",
+      },
+    ],
+    dev: [
+      {
+        to: "/",
+        text: "components.faucet_sidebar.block_explorer",
+      },
+      {
+        to: "/add-key",
+        text: "components.faucet_sidebar.deploy_to_plasmachain",
+        name: "dev-deploy",
+      },
+      {
+        to: "/",
+        text: "components.faucet_sidebar.transfer_gateway",
+      },
+      {
+        to: "/",
+        text: "components.faucet_sidebar.validator_management",
+      },
+    ],
+    help: [
+      {
+        to: "/faq",
+        text: "components.faucet_sidebar.faq",
+      },
+      {
+        to: "/feedback",
+        text: "components.faucet_sidebar.feedback_form",
+      },
+    ]
+  }
+
   get state(): DashboardState {
     return this.$store.state
   }
@@ -194,7 +251,9 @@ export default class FaucetHeader extends Vue {
     }
   }
 
-
+  logout() {
+    this.$root.$emit("logout")
+  }
 }
 </script>
 <style lang="scss">

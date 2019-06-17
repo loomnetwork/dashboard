@@ -11,6 +11,7 @@ import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
 import { ethereumModule } from "../ethereum"
+import { feedbackModule as fb } from "@/feedback/store"
 import networks from "@/../chain-config"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
@@ -24,6 +25,7 @@ import { plasmaModule } from "../plasma"
 import { AbiItem } from "web3-utils"
 import { state } from "../common"
 import BigNumber from "bignumber.js"
+import { setShowDepositApproved } from "./mutations"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -212,9 +214,22 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       to: gateway.contract._address,
       ...funds,
     })
-  } else {
-    await gateway.deposit(funds.weiAmount, context.rootState.ethereum.address)
   }
+  fb.requireConfirmation({
+    title: "Complete deposit",
+    message: "Please sign click confirm to complete your deposit.",
+    onConfirm: async () => {
+      try {
+        await gateway.deposit(
+          funds.weiAmount,
+          context.rootState.ethereum.address,
+        )
+        fb.showAlert({title: "Deposit successful", message: "components.gateway.deposit.confirmed"})
+      } catch (err) {
+        fb.showAlert({title: "Deposit failed", message: "components.gateway.deposit.failure"})
+      }
+    },
+  })
 }
 
 /**

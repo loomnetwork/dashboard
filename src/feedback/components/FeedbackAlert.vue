@@ -1,17 +1,18 @@
 <template>
   <b-modal v-model="visible"
-    :title="title"
+    :title="$t(title)"
     :hide-footer="hideFooter"
     @ok="handleOk"
     @hide="close">
 
-    {{ message }}
+    {{ $t(message) }}
   </b-modal>
 </template>
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { feedbackModule } from "@/feedback/store"
+import { isAfter } from 'date-fns';
 
 @Component
 export default class FeedbackAlert extends Vue {
@@ -24,7 +25,9 @@ export default class FeedbackAlert extends Vue {
   }
 
   get message() {
-    return this.alert.message
+    return Array.isArray(this.alert) ?
+      this.$t(this.alert[0], this.alert[1]) :
+      this.$t(this.alert.message)
   }
 
   get visible() {

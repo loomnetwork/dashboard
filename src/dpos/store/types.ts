@@ -18,8 +18,11 @@ export interface HasDPOSState extends HasPlasmaState {
   dpos: DPOSState
 }
 
-export interface DPOSState {
+export interface DPOSConfig {
   bootstrapNodes: string[]
+}
+
+export interface DPOSState extends DPOSConfig {
   contract: DPOS3 | null
   loading: {
     electionTime: boolean
@@ -74,7 +77,7 @@ export class Validator implements IValidator, ICandidate {
     // this.delegationTotal = c.delegationTotal.sub(c.whitelistAmount)
     this.fee = c.fee.div(new BN(100))
     this.newFee = c.newFee.div(new BN(100))
-    this.addr = c.address.local.toString()
+    this.addr = c.address.local.toString().toLocaleLowerCase()
   }
   setValidatorData(v: IValidator) {
     Object.assign(this, v)

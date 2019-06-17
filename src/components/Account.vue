@@ -1,0 +1,140 @@
+<template>
+  <b-card class="mb-1">
+    <b-card-title>Account</b-card-title>
+    <div class="account ethereum">
+      <label>Ethereum</label>
+      <address @click="copyEthereum">
+        <span class="highlight">{{ethAccount}}</span>
+        <fa icon="paste"/>
+      </address>
+      <a a class="explorer" :href="etherScanUrl" target="_blank">
+        Show in EtherScan
+        <fa icon="external-link-alt"/>
+      </a>
+    </div>
+    <div class="account ethereum">
+      <label>Loom</label>
+      <address @click="copyPlasma">
+        <span class="highlight">{{plasmaAccount | loomAddress}}</span>
+        <fa icon="paste"/>
+      </address>
+      <a class="explorer" :href="loomScanUrl" target="_blank">
+        Show in Block Explorer
+        <fa icon="external-link-alt"/>
+      </a>
+    </div>
+  </b-card>
+</template>
+
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
+import { dposModule } from "@/dpos/store"
+import { DashboardState, DposState } from "@/types"
+import { feedbackModule } from "@/feedback/store"
+
+@Component
+export default class Account extends Vue {
+  etherScanUrl = `${this.state.ethereum.blockExplorer}/address/${this.ethAccount}`
+  loomScanUrl = `${this.state.plasma.blockExplorer}/address/${this.plasmaAccount}/transactions`
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get dposState(): DposState {
+    return this.$store.state.dpos
+  }
+
+  get ethAccount() {
+    return this.state.ethereum.address
+  }
+
+  get plasmaAccount() {
+    return this.state.plasma.address
+  }
+
+  copyEthereum() {
+    this.$copyText(this.plasmaAccount).then(() =>
+      feedbackModule.showSuccess("Ethereum address copied."),
+      console.error,
+    )
+  }
+
+  copyPlasma() {
+    this.$copyText(this.plasmaAccount).then(() =>
+      feedbackModule.showSuccess("Plasma address copied."),
+      console.error,
+    )
+  }
+
+}
+</script>
+<style lang="scss" scoped>
+.card {
+  border: none;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
+.account {
+  display: flex;
+  align-items: baseline;
+  flex-direction: column;
+  margin-bottom: 8px;
+  label {
+    width: 82px;
+    font-size: 0.825rem;
+    font-weight: bold;
+    margin: 0 8px 0 0;
+  }
+}
+address {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  max-width: 300px;
+  margin-bottom: 0;
+  align-items: center;
+  background: #0000000d;
+  border-radius: 11px;
+  padding: 2px 10px;
+  box-shadow: inset 0px 1px 4px #0000001d;
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
+    text-align: right;
+    margin: 0 8px 0;
+    font-size: 0.825rem;
+    min-width: 100px;
+    max-width: 300px;
+  }
+  > svg {
+    color: gray;
+  }
+}
+a.explorer {
+  font-size: 0.825rem;
+  white-space: nowrap;
+  padding-left: 16px;
+}
+
+@media only screen and (min-width: 780px) {
+  .account {
+    flex-direction: row;
+  }
+  address {
+    max-width: 380px;
+    span {
+      min-width: 100px;
+      max-width: 400px;
+    }
+    > svg {
+      color: gray;
+    }
+  }
+  a.explorer {
+    flex: 1;
+  }
+}
+</style>

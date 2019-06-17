@@ -1,23 +1,31 @@
 <template>
   <div id="faucet-header" ref="header" class="header">
+    <b-alert
+      variant="danger"
+      dismissible
+      :show="!!showErrorMsg"
+      class="custom-alert text-center"
+      ref="errorMsg"
+    >{{state.common.errorMsg}}</b-alert>
 
-    <b-alert variant="danger"
-               dismissible
-               :show="!!showErrorMsg"
-               class="custom-alert text-center"
-               ref="errorMsg">
-      {{this.$store.state.errorMsg}}
-      </b-alert>
-      <b-alert variant="success" class="custom-alert text-center" dismissible :show="!!showSuccessMsg" ref="successMsg">      
-      <span class="text-dark" v-html="this.$store.state.successMsg"></span>
+    <b-alert
+      variant="success"
+      class="custom-alert text-center"
+      dismissible
+      :show="!!showSuccessMsg"
+      ref="successMsg"
+    >
+      <span class="text-dark" v-html="state.common.successMsg"></span>
     </b-alert>
+
+    <feedback-notification class="custom-alert text-center"/>
 
     <div class="d-none d-md-block">
       <nav class="navbar">
         <div class="container-fluid">
           <router-link to="/account" class="navbar-brand">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'"/> Plasmachain          
-          </router-link>          
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>Plasmachain
+          </router-link>
           <form class="form-inline">
             <LangSwitcher/>
           </form>
@@ -28,14 +36,10 @@
     <div class="d-sm-block d-md-none">
       <nav class="mobile-navbar">
         <b-navbar toggleable="md" type="dark">
-          <div class="container d-flex justify-content-between ensure-padded">        
-
+          <div class="container d-flex justify-content-between ensure-padded">
             <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
-              <strong>
-                Back
-              </strong>
+              <strong>Back</strong>
             </a>
-
 
             <b-navbar-brand href="#">
               <loom-icon :color="'#ffffff'"/>
@@ -43,16 +47,14 @@
 
             <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
             <b-collapse is-nav id="nav_collapse">
-
               <!-- Right aligned nav items -->
               <b-navbar-nav class="mobile-nav ml-auto">
-                
-                <b-nav-item v-if="userIsLoggedIn">
+                <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <router-link to="/account" class="router text-light hover-warning">Account</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-if="userIsLoggedIn">
+                <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <router-link to="/history" class="router text-light hover-warning">History</router-link>
                   </h5>
@@ -65,42 +67,43 @@
                 <div v-if="isMobile">
                   <b-nav-item>
                     <h5>
-                      <router-link to="/blockexplorer" class="router text-light hover-warning">Block Explorer</router-link>
+                      <router-link
+                        to="/blockexplorer"
+                        class="router text-light hover-warning"
+                      >Block Explorer</router-link>
                     </h5>
-                  </b-nav-item>              
+                  </b-nav-item>
                 </div>
                 <LangSwitcher/>
-                <b-nav-item v-if="userIsLoggedIn">
+                <b-nav-item v-if="state.common.userIsLoggedIn">
                   <h5>
                     <a @click="logOut" class="router text-light hover-warning">Sign out</a>
                   </h5>
                 </b-nav-item>
               </b-navbar-nav>
-            </b-collapse>        
+            </b-collapse>
           </div>
-        </b-navbar> 
-      </nav>      
+        </b-navbar>
+      </nav>
     </div>
-
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import ChainSelector from './ChainSelector'
-import LoomIcon from '@/components/LoomIcon'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import LangSwitcher from './LangSwitcher'
-
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
+import ChainSelector from "./ChainSelector.vue"
+import LoomIcon from "@/components/LoomIcon.vue"
+import LangSwitcher from "./LangSwitcher.vue"
+import { DashboardState } from "../types"
+import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
 @Component({
   components: {
     ChainSelector,
     LangSwitcher,
-    LoomIcon
+    LoomIcon,
+    FeedbackNotification,
   },
   props: {
     hideDashboard: {
@@ -128,138 +131,17 @@ const DPOSStore = createNamespacedHelpers('DPOS')
       default: false,
     },
   },
-  methods: {
-    ...mapMutations([
-      'setUserIsLoggedIn'
-    ]),
-    ...DPOSStore.mapMutations([
-      'setUserBalance',
-      'setShowLoadingSpinner'
-    ]),
-    ...DPOSStore.mapActions(['clearPrivateKey', 'connectToMetamask', 'getTimeUntilElectionsAsync']),
-    ...DappChainStore.mapActions([
-      'addChainUrl',
-      'getDappchainLoomBalance',
-      'getMetamaskLoomBalance',
-    ]),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ]) 
-    
-  },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn',
-      'errorMsg',
-      'successMsg'
-    ]),
-    ...DPOSStore.mapState([
-      'web3',
-      'connectedToMetamask',
-      'currentMetamaskAddress',
-      'userBalance',
-      'status',
-      'timeUntilElectionCycle'
-    ]),
-    ...DappChainStore.mapState([
-      'chainUrls',
-      'isConnectedToDappChain',
-      'mappingStatus',
-      'networkId'
-    ]),
-    ...DappChainStore.mapGetters([
-      'currentChain',
-    ])
-  },
 })
-
 export default class FaucetHeader extends Vue {
 
-  refreshInterval = null
   timerRefreshInterval = null
   formattedTimeUntilElectionCycle = null
-  timeLeft = 600
-  errorRefreshing = false
-  connectedToDappChain = false 
 
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
-  logOut() {
-    this.clearPrivateKey()
-    sessionStorage.removeItem("userIsLoggedIn")
-    this.setUserIsLoggedIn(false)
-    this.setMappingError(null)
-    this.setMappingStatus(null)
-    this.setShowLoadingSpinner(false)
-    window.location.reload(true)
-  }
-
-  login() {
-    if (this.userIsLoggedIn) {
-      this.logOut()
-      return
-    }
-    this.$router.push({ path: '/login' })
-    // this.$root.$emit('bv::show::modal', 'login-account-modal')
-  }
-
-  @Watch('isConnectedToDappChain')
-    onConnectingToDappChainChange(newValue, oldValue) {
-    if(newValue) {
-      this.connectedToDappChain = true
-    } else {
-      this.connectedToDappChain = false
-    }
-  }
-
-  testHide() {
-    this.$emit("bv::toggle::collapse", "nav_collapse", false);
-  }
-
-  async mounted() { 
-
-    // Start election cycle timer
-    // this.$root.$on('initialized', async () => {
-    //   await this.updateTimeUntilElectionCycle()
-    //   this.startTimer()
-    // })
-
-    this.$root.$on('logout', () => {
-      this.logOut()
-    })
-
-  }
-
-  startTimer() {
-    this.timerRefreshInterval = setInterval(async () => this.decreaseTimer(), 1000)
-  }
-
-  async updateTimeUntilElectionCycle() {
-    //await this.getTimeUntilElectionsAsync()
-    this.electionCycleTimer = this.timeUntilElectionCycle    
-  }
-
-  async decreaseTimer() {
-    if(this.electionCycleTimer) {
-      let timeLeft = parseInt(this.electionCycleTimer)      
-      if(timeLeft > 0) {
-        timeLeft--
-        this.timeLeft = timeLeft
-        this.electionCycleTimer = timeLeft.toString()
-        this.showTimeUntilElectionCycle()
-      } else {
-        await this.updateTimeUntilElectionCycle()
-      }
-    }
-    
-  }
-
-  startPolling() {
-    if(this.userIsLoggedIn) {
-      this.refreshInterval = setInterval(async () => this.refresh(), 5000)
-    }
+  get state(): DashboardState {
+    return this.$store.state
   }
 
   get showBackButton() {
@@ -268,128 +150,54 @@ export default class FaucetHeader extends Vue {
 
   get isMobile() {
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
-  }  
-  
-  destroyed() {
-    this.deleteIntervals()
-  }
-
-  deleteIntervals() {
-    if(this.refreshInterval) clearInterval(this.refreshInterval)
-    if(this.timerRefreshInterval) clearInterval(this.timerRefreshInterval)    
-  }
-
-
-  get loginText() {
-    return this.userIsLoggedIn ? 'Log Out' : 'Log In'
-  }
-
-  async refresh() {
-    if(this.status !== 'mapped') return
-    try {
-      this.showRefreshSpinner = true
-      let loomBalance = await this.getDappchainLoomBalance()
-      let mainnetBalance = await this.getMetamaskLoomBalance({
-        web3: this.web3,
-        address: this.currentMetamaskAddress
-      })
-      return
-      // let stakedAmount = await this.getAccumulatedStakingAmount()
-      let isLoading = false
-      console.log(mainnetBalance)
-      this.setUserBalance({
-        isLoading,
-        loomBalance,
-        mainnetBalance,
-        //stakedAmount
-      })
-      this.showRefreshSpinner = false
-      this.errorRefreshing = false
-    } catch(err) {
-      console.log('error refreshing', err)
-      this.errorRefreshing = true
-    }
-  }
-
-  onLoginAccount() {
-    this.$emit('onLogin')
-  }
-
-  onConnectionUrlChanged(newUrl) {
-    this.$emit('update:chain')
-    // this.blockchain.setServerUrl(newUrl)
-  }
-
-  async onUserInputUrl(url){
-    if (await this.addChainUrl({ url })) {
-      this.onConnectionUrlChanged(url)
-    }
   }
 
   get isLoggedIn() {
-    return this.userIsLoggedIn ? true : false
+    return this.state.common.userIsLoggedIn ? true : false
   }
 
   get showErrorMsg() {
-    /*
-    message opt can be like
-    {
-      stay: true, // if you don't want it be auto hidden, set it to true
-      waitTime: 5 // define how long do you want it to stay
-    }
-     */
-    if(this.$store.state.errorMsg) {
+    if (this.state.common.errorMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
-        ref: this.$refs.errorMsg
+        ref: this.$refs.errorMsg,
       })
     }
-    return this.$store.state.errorMsg ? { message: this.$store.state.errorMsg, variant: 'error' } : false
+    return this.state.common.errorMsg ? { message: this.state.common.errorMsg, variant: "error" } : false
   }
 
   get showSuccessMsg() {
-    if(this.$store.state.successMsg) {
+    if (this.state.common.successMsg) {
       this.hideAlert({
         opt: this.$store.state.msgOpt,
-        ref: this.$refs.successMsg
+        ref: this.$refs.successMsg,
       })
     }
-    return this.$store.state.successMsg ? { message: this.$store.state.successMsg, variant: 'success' } : false
+    return this.state.common.successMsg ? { message: this.state.common.successMsg, variant: "success" } : false
   }
 
-  get formatLoomBalance() {
-      return this.userBalance.loomBalance.toString()
-  }
+  hideAlert(alertOpt) {
+    const stay = alertOpt.opt ? alertOpt.opt.stay : false
+    const waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
 
-  showTimeUntilElectionCycle() {    
-    if(this.electionCycleTimer) {
-      let timeLeft = this.electionCycleTimer
-      let date = new Date(null)
-      date.setSeconds(timeLeft)
-      let result = date.toISOString().substr(11, 8)
-      this.formattedTimeUntilElectionCycle = result
-    } else {
-      this.formattedTimeUntilElectionCycle = ""      
-    }
-  }
-
-  hideAlert(alertOpt){
-    let stay = alertOpt.opt ? alertOpt.opt.stay : false
-    let waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
-    if(!stay){
-      setTimeout(()=>{
+    if (!stay) {
+      setTimeout(() => {
         if (alertOpt.ref) {
           try {
-            alertOpt.ref.dismiss()
-          } catch (e) {}
+            alertOpt.ref.dismiss() // set dismissed to true
+            this.state.common.errorMsg = ""
+          } catch (e) {
+            console.error(e)
+          }
         }
       }, waitTime * 1000)
     }
   }
+
+
 }
 </script>
 <style lang="scss">
-
 .navbar {
   background: #5756e6;
   .navbar-brand {
@@ -397,10 +205,14 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-.mobile-navbar {  
+.mobile-navbar {
   .navbar {
     padding: 0;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13));
+    background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.13)
+    );
     width: 100%;
     .navbar-brand {
       position: absolute;
@@ -412,7 +224,6 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-
 .rmv-margin {
   margin: 0;
 }
@@ -420,7 +231,7 @@ export default class FaucetHeader extends Vue {
 .refresh-icon {
   color: #6eb1ff;
   &:hover {
-    transform:rotate(360deg);
+    transform: rotate(360deg);
     transition: all 0.5s;
   }
 }
@@ -432,7 +243,7 @@ export default class FaucetHeader extends Vue {
   margin-right: auto;
 }
 
-.sign-out-link {  
+.sign-out-link {
   color: #007bff !important;
 }
 
@@ -452,8 +263,9 @@ a.hover-warning:hover {
 }
 
 .custom-alert {
-  position: absolute;
-  width: 100%;  
+  position: fixed;
+  width: 100%;
+  top: 0;
   font-weight: 600;
   margin-bottom: 0px;
   border: 0px;
@@ -519,7 +331,7 @@ a.hover-warning:hover {
   position: relative;
   right: 0px;
   margin-left: auto;
-  padding-right: 0;  
+  padding-right: 0;
 }
 
 .mobile-nav {
@@ -531,7 +343,7 @@ a.hover-warning:hover {
   }
   li {
     list-style: none;
-  } 
+  }
 }
 
 .back-btn {
@@ -539,10 +351,5 @@ a.hover-warning:hover {
     color: #ffffff;
   }
 }
-
 </style>
 
-  // form {
-  //   flex-direction: column;
-  //   align-items: normal;    
-  // }

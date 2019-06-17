@@ -1,0 +1,58 @@
+{
+    "local": {
+        "booster" : "0x04aed4899e1514e9ebd3b1ea19d845d60f9eab95",
+        "minion" : "0xea59a949651ffc6d3e039db2d89f4e047301718d",
+        "small" : "0x67ad69baca9265bc07f2219cc156bb61648e103a",
+        "air" : "0xb681fbf4b36c49e0811ee640cca1933ab57be81e",
+        "earth" : "0x909de1c6f5863a70e593267db4148f73d475517a",
+        "fire" : "0x54ec9e19f72312167b310dcd6bc4039e416cc1bc",
+        "life" : "0xa243cd1ed96d8af80109b88b448105b0473f5cad",
+        "toxic" : "0x99a3378185f7b7b6aa9f6632e8ca0514ec01247d",
+        "water" : "0x9ed8380b47feef8945251ded45f0ba4f1b72f522",
+        "super" : "0x60ab575af210cc952999976854e938447e919871",
+        "binance" : "0x0fd6e6405b2cef67447b11630d1c9e0ae03e39dc",
+        "tron" : "0x03a66793dfbec8ed27b6ef96fd3215a1b4f35093"
+    }, 
+    "asia1": {
+        "booster" : "0x04aed4899e1514e9ebd3b1ea19d845d60f9eab95",
+        "minion" : "0xea59a949651ffc6d3e039db2d89f4e047301718d",
+        "small" : "0x67ad69baca9265bc07f2219cc156bb61648e103a",
+        "air" : "0xb681fbf4b36c49e0811ee640cca1933ab57be81e",
+        "earth" : "0x909de1c6f5863a70e593267db4148f73d475517a",
+        "fire" : "0x54ec9e19f72312167b310dcd6bc4039e416cc1bc",
+        "life" : "0xa243cd1ed96d8af80109b88b448105b0473f5cad",
+        "toxic" : "0x99a3378185f7b7b6aa9f6632e8ca0514ec01247d",
+        "water" : "0x9ed8380b47feef8945251ded45f0ba4f1b72f522",
+        "super" : "0x60ab575af210cc952999976854e938447e919871",
+        "binance" : "0x0fd6e6405b2cef67447b11630d1c9e0ae03e39dc",
+        "tron" : "0x03a66793dfbec8ed27b6ef96fd3215a1b4f35093"
+    },
+    "us1": {
+        "booster" : "0xdc745ac9945c981a63748a6b46dc31c2909bc865",
+        "minion" : "0x63c43b64f40b8115c2c9970e559405fd16377a57",
+        "small" : "0x0049493999a5ecc90654b5f0678d50a8952b9c3d",
+        "air" : "0x4408927c62a6c8013612c11d630c222c130fd4f8",
+        "earth" : "0x2926196ef74fe0611c474ba822c3b41b8796373e",
+        "fire" : "0x5a1a9d8d8cb5ce2e1f664133effb1ba0c9597074",
+        "life" : "0xcc8450ab3f874e741d187d897602ec5a72c4a0be",
+        "toxic" : "0x750ffb9928d9fb1dd3b8b7eda47c130b410dde72",
+        "water" : "0x4f5b70188f14b6d80e8bf0002eca2ab2863ece5e",
+        "super" : "0xd05b46ffb3828218d5b7d9b1225575477c9e79d7",
+        "binance" : "0x837da2498b31d1654d51c1871b10fc4e3d192f02",
+        "tron" : "0x3d9cb3c4af539f88f3fdd863621758be4917ef05"
+    },
+    "plasma": {
+        "booster" : "0x2fa54683d976c72806d2e54d1d61a476848e4da9",
+        "minion" : "0x01d78e15525f4500dc2a7e1fe0ec997dfc3a982e",
+        "small" : "0xd28138eb47f20314a60714f95f55d5f3dc39da60",
+        "air" : "0xcfaef1552a11acc7794088ea2434c23af8434ced",
+        "earth" : "0x413db2a16de5d2bd6b4a48be7a772d739932ded1",
+        "fire" : "0x6c73a3d880ec475d69576a44705ae24aa5dfaf06",
+        "life" : "0x3f2147aac990e11f0b20ca01a1347b41d52739ae",
+        "toxic" : "0x7aef265be0f7aac7c2fe0343d328afbc4c1253c2",
+        "water" : "0xb8357e4deb282fb20bc6da6a18f21f2da546149b",
+        "super" : "0x2b44d4f3b086d4b752d762ec2cf1ab7a0b3bfe44",
+        "binance" : "0x554e93eca9f192a07d5e1337b0d85a12abceb803",
+        "tron" : "0x90df68c6745ee7664ac35eae18d98bd0cf930cfb"
+    }
+}

@@ -12,39 +12,28 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import {ethers} from "ethers"
-
-import {
-  State,
-  Getter,
-  Action,
-  Mutation,
-  namespace
-} from 'vuex-class'
-import { formatToCrypto } from '@/utils';
-
-const dposModule = namespace('DPOS')
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
+import { DashboardState } from "../../types"
+import { gatewayModule } from "../../store/gateway"
 
 @Component
 export default class DepositConfirmed extends Vue {
 
-  @dposModule.State("showDepositConfirmed")
-  showDepositConfirmed:boolean
+  setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
 
-  @dposModule.Mutation("setShowDepositConfirmed")
-  setShowDepositConfirmed:Function
+  get state(): DashboardState {
+    return this.$store.state
+  }
 
   get visible() {
-    console.log("showDepositConfirmed",this.showDepositConfirmed)
-    return  this.showDepositConfirmed
+    return this.state.gateway.showDepositConfirmed
   }
 
   set visible(value) {
     if (value === false) {
-     this.setShowDepositConfirmed(false)
-     this.$root.$emit("refreshBalances")
+      this.setShowDepositConfirmed(false)
+      this.$root.$emit("refreshBalances")
     }
   }
 

@@ -1,20 +1,20 @@
-import Vue from 'vue'
+import Vue from "vue"
 
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import BlockInfo from './BlockInfo.vue'
+import BlockInfo from "./BlockInfo.vue"
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import ConnectionStatus from './ConnectionStatus.vue'
+import ConnectionStatus from "./ConnectionStatus.vue"
 // @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import TransactionTable from './TransactionTable.vue'
+import TransactionTable from "./TransactionTable.vue"
 
-import { Blockchain } from './blockchain'
-import { IBlockInfoProps } from './block-info'
+import { Blockchain } from "./blockchain"
+import { IBlockInfoProps } from "./block-info"
 import {
   ITransactionTableProps,
   ITransactionTableColumn,
   TransactionTableColumnKey,
-  ITransactionTableItem
-} from './transaction-table'
+  ITransactionTableItem,
+} from "./transaction-table"
 
 interface ITxListData {
   sortBy: string
@@ -29,21 +29,21 @@ const txTableColumns: ITransactionTableColumn[] = [
   { key: TransactionTableColumnKey.BlockHeight, sortable: true },
   { key: TransactionTableColumnKey.TxType, sortable: false },
   { key: TransactionTableColumnKey.Age, sortable: true },
-  { key: TransactionTableColumnKey.Sender, sortable: false }
+  { key: TransactionTableColumnKey.Sender, sortable: false },
 ]
 
 export default Vue.extend({
-  name: 'TransactionList',
+  name: "TransactionList",
   props: {
-    blockchain: { type: Object, required: true }
+    blockchain: { type: Object, required: true },
   },
   data(): ITxListData {
     return {
-      sortBy: 'blockHeight',
+      sortBy: "blockHeight",
       sortDesc: true,
-      muted: 'gray',
+      muted: "gray",
       selectedItem: null,
-      isTxInfoVisible: false
+      isTxInfoVisible: false,
     }
   },
   computed: {
@@ -51,7 +51,7 @@ export default Vue.extend({
       return {
         columns: txTableColumns,
         transactions: (this.blockchain as Blockchain).transactions,
-        onRowClicked: this.onRowClicked
+        onRowClicked: this.onRowClicked,
       }
     },
     txInfoProps(): IBlockInfoProps {
@@ -59,9 +59,9 @@ export default Vue.extend({
         transaction: this.selectedItem ? this.selectedItem.tx : null,
         block: null,
         blockchain: this.blockchain,
-        onCloseBtnClicked: this.closeBlockInfoOverlay
+        onCloseBtnClicked: this.closeBlockInfoOverlay,
       }
-    }
+    },
   },
   methods: {
     onRowClicked(item: ITransactionTableItem /*, index: number, event: Event*/) {
@@ -75,11 +75,11 @@ export default Vue.extend({
     },
     closeBlockInfoOverlay() {
       this.isTxInfoVisible = false
-    }
+    },
   },
   components: {
     BlockInfo,
     ConnectionStatus,
-    TransactionTable
-  }
+    TransactionTable,
+  },
 })

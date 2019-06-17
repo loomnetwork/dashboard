@@ -5,72 +5,47 @@
     </b-form-select>
   </div>
 </template>
+<script lang="ts">
+import { Component, Watch, Vue } from "vue-property-decorator"
+import { loadLocale, isLocaleSupported } from "@/i18n"
 
-<script>
-  import { loadLocale, supportedLocales } from '../i18n'
-  import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
-
-  export default {
-    name: 'LangSwitcher',
-    data() {
-      return {
-        selectedLang: '',
-        langs: [
-          {
-            key: 'en',
-            localizedName: 'English'
-          },
-          {
-            key: 'zh',
-            localizedName: '中文'
-          }
-        ]        
-      }
+@Component
+export default class LangSwitcher extends Vue {
+  langs = [
+    {
+      key: "en",
+      localizedName: "English",
     },
-    mounted: function() {
-      this.configureLocale()
-    },    
-    methods: {
-      ...mapMutations([
-        'setLocale',
-      ]),
-      async switchLang(locale) {
-        this.setLocale(locale)
-        await loadLocale(locale)
-        // window.location.pathname = window.location.pathname.replace(/^\/\w{2}/i, locale)
-      },
-      async configureLocale() {
-        let candidateLang = navigator.language || "en"
-        let res = this.langs.find(function(lang) {
-          return candidateLang.includes(lang.key)
-        })
-        await loadLocale(res.key)
-      }
+    {
+      key: "zh",
+      localizedName: "中文",
     },
-    computed: mapState([
-      'locale'
-    ])
+  ]
 
+  async switchLang(locale) {
+    this.$i18n.locale = locale
+    await loadLocale(locale)
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .locale-changer {
-    max-width: 120px;
-    margin: 0 auto;
-    .custom-select {
-      background-color: transparent;
-      border: none;
-      font-size: 1rem;
-      font-weight: 500;
-      color: white;
-      &:focus {
-        box-shadow: none;
-      }
+.locale-changer {
+  max-width: 120px;
+  margin: 0 auto;
+  .custom-select {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    &:focus {
+      box-shadow: none;
+    }
 
-      option {
-        background-color: black;
-      }
+    option {
+      background-color: black;
     }
   }
+}
 </style>

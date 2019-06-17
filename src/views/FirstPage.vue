@@ -1,324 +1,245 @@
 <!-- PlasmaChain Delegators -->
 <template>
-  <div class="">
+  <div class>
     <div class="pt-3">
       <main>
-        <!-- <login-account-modal ref="loginAccountRef" @ok="onLoginAccount" @onLogin="onLoginAccount"/> -->
-        <!-- <create-account-modal ref="createAccountRef" @ok="onCreateAcount"></create-account-modal> -->
-        <seed-phrase-modal ref="seedPhraseRef" @ok="onGenerateSeeds"/>
-        <confirm-seed-modal ref="confirmSeedRef" @ok="onConfirmSeeds"/>
-        <restore-account-modal ref="restoreAccountModal" @ok="onRestoreAccount"/>
-        <hardware-wallet-modal ref="hardwareWalletConfigRef" @ok="onWalletConfig"/>
+        <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
         <div class="container-fluid mb-5 rmv-padding">
-     
+          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" v-model="notMapped">
+            <div class="confirm-link text-center">
+              <h3>Are you from Relentless Marketplace ?</h3>
+              <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
+              <div class="linking-div">
+                <img src="../assets/images/relentless.png">
+                <i style="font-size:56px;" class="fa">&#8651;</i>
+                <loom-icon width="56px" height="56px" :color="'#6eccd8'"/>
+              </div>
+              <div class="linking-div-choice">
+                <b-button block variant="outline-primary" :href="loomGamesUrl">Link my account</b-button>
+              </div>
+            </div>
+            <div slot="modal-footer" class="w-100" style="text-align: center;">
+              <b-button
+                v-show="!reconsider"
+                variant="link"
+                style="color: gray;"
+                @click="reconsider = true"
+              >Nope, I'm not from Relentless Marketplace</b-button>
+              <div class="reconsider" v-show="reconsider">
+                <h5>Are you sure ?</h5>
+                <p
+                  style="color: red;"
+                >We will create a new fresh account for you, But account linking is unable anymore</p>
+                <b-button
+                  variant="outline-dark"
+                  @click="setNewMappingAgree(true)"
+                >Create a new account</b-button>
+              </div>
+            </div>
+          </b-modal>
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center mb-3" @click="selectWallet('ledger')">
+                <b-card
+                  id="ledger-button"
+                  class="wallet-selection-card text-center mb-3"
+                  @click="setWallet('ledger')"
+                >
                   <h5>Ledger</h5>
                   <img src="../assets/ledger_logo.svg">
                   <small>
-                    Connect & sign via your <br>
-                    hardware wallet                      
+                    Connect & sign via your
+                    <br>hardware wallet
                   </small>
                 </b-card>
               </div>
               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
+                <b-card
+                  id="metamask-button"
+                  class="wallet-selection-card text-center"
+                  :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                  @click="setWallet('metamask')"
+                >
                   <h5>Metamask</h5>
                   <img src="../assets/metamask_logo.png">
                   <small>
-                    Connect & sign via your browser <br>
-                    or extension                      
+                    Connect & sign via your browser
+                    <br>or extension
                   </small>
-                </b-card>                  
-              </div>      
-               <div class="col-sm-12 col-md-6">
-                <b-card class="wallet-selection-card text-center" @click="selectWallet('metamask')">
-                  <h5>Trezor <small>via Metamask</small></h5>
+                </b-card>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <b-card
+                  id="trezor-button"
+                  class="wallet-selection-card text-center"
+                  :class="{'disabled' : !metamaskInstalled}"
+                  @click="setWallet('metamask')"
+                >
+                  <h5>
+                    Trezor
+                    <small>via Metamask</small>
+                  </h5>
                   <img src="../assets/trezor_logo.png">
                   <small>
-                    Connect to your Trezor wallet <br>
-                    via Metamask                    
+                    Connect to your Trezor wallet
+                    <br>via Metamask
                   </small>
-                </b-card>                  
-              </div>                 
-            </div>  
+                </b-card>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <b-card
+                  id="explore-button"
+                  class="wallet-selection-card text-center"
+                  @click="addressModalShow = !addressModalShow"
+                >
+                  <h5>Explore</h5>
+                  <fa icon="search" style=" height: 70px;width: 70px;"/>
+                  <small>Explore an account</small>
+                </b-card>
+              </div>
+            </div>
           </b-card>
 
+          <b-card v-if="!metamaskInstalled" class="metamask-suggest">
+            <img id="metamask-mini-icon" src="../assets/metamask_logo.png">
+            <b-card-text class="text-inline">
+              Looks like you don't have
+              <font id="orange">Metamask</font> extension
+            </b-card-text>
+            <b-button
+              target="_blank"
+              variant="outline-primary"
+              href="https://metamask.io/"
+              style="float: right; margin-top: 5px"
+            >Get one here!</b-button>
+          </b-card>
 
-          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"
-                      v-if="!isProduction"
-                      :allowedUrls="chainUrls"
-                      :serverUrl="networkId"
-                      @urlClicked="onUserInputUrl"
-                      @urlInput="onUserInputUrl"/>
+          <b-modal v-model="addressModalShow" hide-header hide-footer>
+            <div>
+              <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
+              <b-button type="submit" @click="setExploreMode(address)" variant="primary">Submit</b-button>
+            </div>
+          </b-modal>
 
-
+          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"/>
         </div>
       </main>
     </div>
   </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import FaucetHeader from '../components/FaucetHeader'
-import FaucetFooter from '../components/FaucetFooter'
-import ChainSelector from '../components/ChainSelector'
-import SeedPhraseModal from '../components/modals/SeedPhraseModal'
-import ConfirmSeedModal from '../components/modals/ConfirmSeedModal'
-import RestoreAccountModal from '../components/modals/RestoreAccountModal'
-import HardwareWalletModal from '../components/modals/HardwareWalletModal'
-import { mapGetters, mapState, mapActions, mapMutations, createNamespacedHelpers } from 'vuex'
-import { setInterval } from 'timers';
-const bip39 = require('bip39')
+<script lang="ts">
+import { Vue, Component, Watch } from "vue-property-decorator"
+import ChainSelector from "../components/ChainSelector.vue"
+import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
+import { BModal } from "bootstrap-vue"
 
-const DPOSStore = createNamespacedHelpers('DPOS')
-const DappChainStore = createNamespacedHelpers('DappChain')
+import { ethereumModule } from "@/store/ethereum"
+import { DashboardState } from "../types"
+
+import LoomIcon from "@/components/LoomIcon.vue"
+import { Gateway } from "../store/gateway/contracts/Gateway"
+import { gatewayModule } from "../store/gateway"
 
 @Component({
   components: {
-    FaucetHeader,
-    FaucetFooter,
     ChainSelector,
-    SeedPhraseModal,
-    ConfirmSeedModal,
     HardwareWalletModal,
-    RestoreAccountModal
+    LoomIcon,
   },
-  computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DappChainStore.mapState([
-      'chainUrls',
-      'networkId'
-    ]),    
-    ...DPOSStore.mapState([
-      'isLoggedIn',
-      'walletType',
-      'mappingSuccess'
-    ]),
-    ...mapGetters([
-      'getPrivateKey'
-    ])
-  },
-  methods: {    
-    ...mapActions(['signOut', 'setPrivateKey']),
-    ...DPOSStore.mapActions(['storePrivateKeyFromSeed','initializeDependencies']),
-    ...DPOSStore.mapMutations(['setShowLoadingSpinner','setWalletType']),
-    ...DappChainStore.mapActions([
-      'addChainUrl'
-    ]),    
-    ...mapMutations(['setUserIsLoggedIn']),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ]) 
-  }
 })
 export default class FirstPage extends Vue {
-  seedPhrases = []
-  activeTab = 0
-  currentStatus = this.STATUS.NONE
-  showTabSpinner = false
-  isProduction = window.location.hostname === "dashboard.dappchains.com"
 
-  async selectWallet(wallet) {
-    if(wallet === "ledger") {
-      this.setWalletType("ledger")
-     this.$refs.hardwareWalletConfigRef.show() 
-    } else if(wallet === "metamask") {
-      this.setWalletType("metamask")
-      this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-      console.log("done initializeDependencies")
-      //this.$root.$emit("login")
-      
-    } else {
-      return
-    }
-  }
+  get $state() { return (this.$store.state as DashboardState) }
 
-  async openLoginModal() {
-    this.$root.$emit('bv::show::modal', 'login-account-modal')
+  get notMapped() {    return (this.$state.gateway.mapping !== null) &&
+      (this.$state.gateway.mapping.to!.isEmpty()) &&
+      (this.$state.ethereum.signer)
   }
+  get newMappingAgree() { return this.$state.gateway.newMappingAgree }
 
-  signOutHandler() {
-    this.signOut()
-    this.$router.push('/')
-    this.setMappingError(null)
-    this.setMappingStatus(null)
-  }
+  loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
-  async onLoginAccount() {
-    if (this.currentStatus === this.STATUS.CREATE_ACCOUNT) {
-      this.openCreateAccountModal()
-    } else if (this.currentStatus === this.STATUS.RESTORE_ACCOUNT) {
-      this.openRestoreAccountModal()
-    }
-  }
+  setWallet = ethereumModule.setWalletType
+  setExploreMode = ethereumModule.setToExploreMode
 
-  openCreateAccountModal() {
-    this.currentStatus = this.STATUS.CREATE_ACCOUNT
-    if (this.userIsLoggedIn) {
-      this.$refs.seedPhraseRef.show()
-    } else {
-      this.openLoginModal()
-    }
-  }
+  setNewMappingAgree = gatewayModule.setNewMappingAgree
 
-  onGenerateSeeds(seeds) {
-    this.seedPhrases = seeds
-    this.$refs.confirmSeedRef.show(seeds)
-  }
+  address = ""
+  addressModalShow = false
+  mappedModalShow = false
+  reconsider = false
 
   onConnectionUrlChanged(newUrl) {
-    this.$emit('update:chain')
-    // this.blockchain.setServerUrl(newUrl)
+    this.$emit("update:chain")
   }
 
-  async onUserInputUrl(id){
-    this.addChainUrl({id})
-    // this.onConnectionUrlChanged(id)
-    this.$forceUpdate()
-    window.location.reload()
-  }  
-
-  async onConfirmSeeds() {
-    this.currentStatus = this.STATUS.NONE
-    const mnemonic = this.seedPhrases.join(' ')
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    await this.storePrivateKeyFromSeed({
-      seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab()
+  set notMapped(val) {
+  }
+  set newMappingAgree(val) {
   }
 
-  newUser() {
-    this.$refs.seedPhraseRef.show()
-  }
+  /* For Chrome & Firefox Browser
+     if user dont have Metamask installed, there is no web3 that inject in their browser
+     (except user install other extensions for crypto wallet (Ethereum platform))
 
-  returningUser() {
-    this.$refs.restoreAccountModal.show()
-  }
-
-  openRestoreAccountModal() {
-    this.currentStatus = this.STATUS.RESTORE_ACCOUNT
-    if (this.userIsLoggedIn) {
-      this.$refs.restoreAccountModal.show()
-    } else {
-      this.openLoginModal()
-    }
-  }
-
-  async onRestoreAccount(mnemonic) {
-    this.currentStatus = this.STATUS.NONE
-    const seed = bip39.mnemonicToSeed(mnemonic)
-    await this.storePrivateKeyFromSeed({
-      seed
-    })
-    this.setUserIsLoggedIn(true)
-    this.switchTab() 
-  }
-
-  async mounted() {
-    if(!this.isMobile) return
-    if ((window.web3 && window.web3.currentProvider.isTrust) || 
-        !!window.imToken ||
-        (window.web3 && window.web3.currentProvider.isMetaMask) ||
-        (window.web3 && window.web3.isCobo)
-      ) {
-      this.setWalletType("metamask")
-      this.setUserIsLoggedIn(true)
-      await this.initializeDependencies()
-    // this.$root.$emit("login") 
-    }
-
-  }
-  
-  switchTab() {
-    this.showTabSpinner = true
-
-    setTimeout(() => {
-      this.activeTab === 0 ? this.activeTab = 1 : this.activeTab = 0
-      this.showTabSpinner = false
-    }, 1000)
-  }
-
-  get STATUS() {
-    return {
-      NONE: 'NONE',
-      CREATE_ACCOUNT: 'CREATE_ACCOUNT',
-      RESTORE_ACCOUNT: 'RESTORE_ACCOUNT'
-    }
-  }
-
-  get isMobile() {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
-  }
-
-  async onWalletConfig() {
-    this.setWalletType("ledger")
+     For Opera Browser
+     Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
+  */
+  get metamaskInstalled() {
+    return ("ethereum" in window) ||
+      // @ts-ignore
+      ("web3" in window && window.web3.currentProvider.isMetaMask)
   }
 
 }
 </script>
 <style lang="scss" scoped>
-  .button-container {
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 2px solid #f2f1f3;
+}
+.banner-container .col {
+  padding: 0 36px;
+}
+
+.button-inner-container {
+  width: 250px;
+}
+
+.rmv-padding {
+  padding: 0 !important;
+}
+
+#login-tab {
+  .actions {
     display: flex;
     justify-content: center;
-    align-items: center;
-    border-left: 2px solid #f2f1f3;
+    button {
+      width: 250px;
+      margin: 16px;
+    }
   }
-  .banner-container .col {
-    padding: 0 36px;
-  }
+}
 
-  .button-inner-container {
-    width: 250px;
-  }
-
-  .rmv-padding {
-    padding: 0 !important;
-  }
-
+@media (max-width: 767px) {
   #login-tab {
     .actions {
       display: flex;
-      justify-content: center;
-      button {
-        width: 250px;
-        margin:16px;
-      }
-    }
-  }
-
-  @media (max-width: 767px) { 
-    #login-tab {
-      .actions {
-      display: flex;
       flex-direction: column;
-        button {
-          width:100%;
-          margin:8px 0;
-        }
+      button {
+        width: 100%;
+        margin: 8px 0;
       }
     }
-
   }
-
-
+}
 </style>
 
 
 <style lang="scss">
-
-
-
 .header {
   .navbar {
     padding: 0;
@@ -363,7 +284,8 @@ export default class FirstPage extends Vue {
     justify-content: center;
   }
   color: gray;
-  h3,h1 {
+  h3,
+  h1 {
     color: gray;
   }
   .bottom-border {
@@ -377,7 +299,7 @@ export default class FirstPage extends Vue {
   }
   .no-bottom-border {
     border-bottom: 0;
-  }  
+  }
   .button {
     border-left: 0;
     border-right: 0;
@@ -390,6 +312,7 @@ export default class FirstPage extends Vue {
 .wallet-provider-container {
   .wallet-selection-card {
     position: relative;
+    min-height: 220px;
     img {
       width: 72px;
       height: auto;
@@ -398,9 +321,9 @@ export default class FirstPage extends Vue {
     small {
       display: block;
     }
-    span.qa {        
+    span.qa {
       display: inline-block;
-      line-height: 20px;        
+      line-height: 20px;
       right: 12px;
       bottom: 12px;
       position: absolute;
@@ -412,8 +335,63 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
   }
+  .wallet-selection-card.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+  }
 }
 
+.metamask-suggest {
+  position: relative;
+  margin-top: 12px;
+  .text-inline {
+    margin-left: 10px;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    display: inline;
+  }
+}
+
+.confirm-link {
+  display: flex;
+  flex-direction: column;
+  h3 {
+    color: black;
+  }
+}
+
+.reconsider {
+  margin-bottom: 10px;
+}
+
+.linking-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 35%;
+  align-self: center;
+  margin: 0em 0.5em;
+}
+
+.linking-div-choice {
+  margin-top: 20px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+#wallet-card-img-large {
+  height: auto;
+  width: 96px;
+}
+#metamask-mini-icon {
+  width: 48px;
+  height: auto;
+  display: inline;
+}
+#orange {
+  color: #f29040;
+}
 </style>
 <style>
 body {

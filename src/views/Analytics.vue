@@ -4,126 +4,115 @@
       <div class="col-md-6 mb-4">
         <b-card title="Total amount staked">
           <canvas id="barChart" width="300" height="300"></canvas>
-        </b-card>      
+        </b-card>
       </div>
       <div class="col-md-6 mb-4">
         <b-card title="Tier distribution">
           <canvas id="pieChart" width="300" height="300"></canvas>
-        </b-card>      
+        </b-card>
       </div>
     </div>
   </div>
 </template>
 
 
-<script>
-  import Vue from 'vue'
-  import Chart from 'chart.js'
-  import { Component } from 'vue-property-decorator'
-  import FaucetTable from '../components/FaucetTable'
-  import { mapGetters, mapState, mapActions, mapMutatioins, createNamespacedHelpers } from 'vuex'
+<script lang="ts">
+import Vue from "vue"
+import Chart from "chart.js"
+import { Component } from "vue-property-decorator"
 
-  import { formatToCrypto } from '@/utils'
-  import { isIP } from 'net'
+import { DPOSTypedStore } from "../store/dpos-old"
+import { DashboardState } from "../types"
 
-  const DappChainStore = createNamespacedHelpers('DappChain')
-  const DPOSStore = createNamespacedHelpers('DPOS')
+@Component
+export default class Analytics extends Vue {
 
-  @Component({
-    components: {
-    },
-    computed: {
-      ...DPOSStore.mapState([
-        "analyticsData",
-      ])
-    },
-    methods: {
-      ...DPOSStore.mapActions([
-        "fetchAnalyticsData"
-      ])
-    }
-  })
-  export default class Analytics extends Vue {
-    async mounted() {
-      await this.fetchAnalyticsData()
-      const ctx = document.getElementById("pieChart")
-      const ctx2 = document.getElementById("barChart")
+  fetchAnalyticsData = DPOSTypedStore.fetchAnalyticsData
 
-
-      let totalTiers = this.analyticsData.data.data[0].tiers 
-      let tierAmount = []
-      let tiers = {"zero": "2 weeks", "one": "3 months", "two": "6 months", "three": "1 year"}
-      let tierKeys = []
-      for (var key in totalTiers) {
-        tierKeys.push(tiers[key])
-        if(totalTiers.hasOwnProperty(key)) {
-          tierAmount.push(totalTiers[key])
-        }
-      }
-
-      let timeIntervalChunks = this.analyticsData.data.data.filter((x, idx) => idx % 10 === 0).map((item) => {
-        let int = parseInt(item.delegationTotal)
-        return (int / 10 ** 18)
-      })
-
-      let config = {
-        type: 'pie',
-        data: {
-          datasets: [{
-            data: tierAmount,
-            backgroundColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(153, 102, 255, 1)",
-            ],
-            label: "Total Tiers"
-          }],
-          labels: tierKeys
-        },
-        options: {
-          responsive: true
-        }
-      }
-
-      let config2 = {
-        type: 'line',
-        data: {
-          datasets: [{
-            data: timeIntervalChunks,
-            backgroundColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 99, 132, 1)",
-            ],
-            label: "Amount of LOOM staked"
-          }],
-          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-        },
-        options: {
-          responsive: true
-        }
-      }
-
-      const pieChart = new Chart(ctx, config)
-      const barChart = new Chart(ctx2, config2)
-      
-    }
-
-		randomScalingFactor = () => {
-			return Math.round(Math.random() * 100)
-		}
-
+  get state(): DashboardState {
+    return this.$store.state
   }
-  
-  </script>
+
+  async mounted() {
+    await this.fetchAnalyticsData()
+    const data = this.state.DPOS.analyticsData.data.data
+    const ctx = document.getElementById("pieChart")
+    const ctx2 = document.getElementById("barChart")
+
+    const totalTiers = data[0].tiers
+    const tierAmount: any[] = []
+    const tiers = { zero: "2 weeks", one: "3 months", two: "6 months", three: "1 year" }
+    const tierKeys: any[] = []
+
+    // tslint
+    for (const key of Object.keys(totalTiers)) {
+      tierKeys.push(tiers[key])
+      if (totalTiers.hasOwnProperty(key)) {
+        tierAmount.push(totalTiers[key])
+      }
+    }
+
+    const timeIntervalChunks = data.filter((x, idx) => idx % 10 === 0).map((item) => {
+      const int = parseInt(item.delegationTotal, 10)
+      return (int / 10 ** 18)
+    })
+
+    const config = {
+      type: "pie",
+      data: {
+        datasets: [{
+          data: tierAmount,
+          backgroundColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(153, 102, 255, 1)",
+          ],
+          label: "Total Tiers",
+        }],
+        labels: tierKeys,
+      },
+      options: {
+        responsive: true,
+      },
+    }
+
+    const config2 = {
+      type: "line",
+      data: {
+        datasets: [{
+          data: timeIntervalChunks,
+          backgroundColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(255, 99, 132, 1)",
+          ],
+          label: "Amount of LOOM staked",
+        }],
+        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      },
+      options: {
+        responsive: true,
+      },
+    }
+
+    const pieChart = new Chart(ctx, config)
+    const barChart = new Chart(ctx2, config2)
+  }
+
+  randomScalingFactor() {
+    return Math.round(Math.random() * 100)
+  }
+
+}
+</script>
 
 <style lang="scss" scoped>
 </style>

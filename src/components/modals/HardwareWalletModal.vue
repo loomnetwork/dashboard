@@ -1,82 +1,68 @@
 <template>
-  <div>
-    <b-modal
-      id="confirm-seed-modal"
-      ref="modalRef"
-      title="Hardware wallet"
-      hide-footer
-      centered
-      no-close-on-backdrop
-    >
-      <b-container fluid>
-        <b-row class="my-1 align-items-center min-height">
-          <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
-          <div v-if="componentLoaded" class="dropdown-container mb-4">
-            <b-form>
-              <b-form-select
-                class="mb-2 mr-sm-2 mb-sm-0"
-                :value="null"
-                v-model="selectedPath"
-                :options="filteredPaths"
-                id="inlineFormCustomSelectPref"
-              >
-                <option slot="first" :value="null">Select a path</option>
-              </b-form-select>
-            </b-form>
-          </div>
-
-          <b-card no-body class="wallet-config-container">
-            <b-form-group v-if="accounts">
-              <div class="table-container address-table">
-                <table class="table b-table table-striped table-hover">
-                  <tbody>
-                    <b-form-radio-group v-model="selectedAddress" stacked name="radiosStacked">
-                      <tr
-                        v-for="(account, index) in accounts"
-                        :key="index"
-                        @click="selectAccount(account)"
-                      >
-                        <td>{{account.index}}</td>
-                        <td>{{formatAddress(account.account)}}</td>
-                        <td>{{formatBalance(account.balance)}}</td>
-                        <td>
-                          <b-form-radio :value="index"></b-form-radio>
-                        </td>
-                      </tr>
-                    </b-form-radio-group>
-                    <div v-if="accounts.length > 0" class="pagination-container">
-                      <b-pagination
-                        v-model="currentPage"
-                        :total-rows="rows"
-                        :per-page="perPage"
-                        size="md"
-                      />
-                    </div>
-                  </tbody>
-                </table>
-              </div>
-            </b-form-group>
-          </b-card>
-        </b-row>
-        <b-row class="my-1 justify-content-between pt-4">
-          <span v-if="errorMsg" class="text-error mt-2" variant="error">{{errorMsg}}</span>
-          <b-button
-            class="btn proceed-btn"
-            :disabled="selectedAddress < 0 || disableProgressBtn"
-            variant="primary"
-            @click="okHandler"
-          >Proceed</b-button>
-        </b-row>
-      </b-container>
-    </b-modal>
-    <b-modal
-      id="unlock-ledger-modal"
-      title="Unlock Hardware wallet"
-      hide-footer
-      centered
-      no-close-on-backdrop
-    >{{ $t('components.modals.hardware_wallet_modal.enter_pin_code') }}</b-modal>
-  </div>
+  <b-modal
+    id="confirm-seed-modal"
+    v-model="visible"
+    title="Hardware wallet"
+    hide-footer
+    centered
+    no-close-on-backdrop
+  >
+    <b-form style="display: flex; flex-direction: column;">
+      <b-form-select class="mb-2" :value="null" :options="paths" v-model="selectedPath">
+        <option slot="first" :value="null">Select a path</option>
+      </b-form-select>
+      <div v-if="loadingAccounts">
+        <b-spinner label="Loading accoumt"/>Loading accounts. Please wait
+      </div>
+      <div v-else-if="loading">
+        <b-spinner label="Loading accoumt"/>Loading accounts. Please wait
+      </div>
+      {{accounts}}
+      <b-list-group class="account-list">
+        <b-list-group-item
+          v-for="(entry) in accounts"
+          :key="entry.account"
+          :active="entry.account === account.account"
+          @click="account = entry"
+        >
+          <address>{{formatAddress(entry.account)}}</address>
+          <div class="balance">{{entry.balance}}</div>
+        </b-list-group-item>
+      </b-list-group>
+      <!--
+      <b-form-group v-if="accounts">
+        <table class="table b-table table-striped table-hover">
+          <tbody>
+            <b-form-radio-group v-model="selectedAddress" stacked name="radiosStacked">
+              <tr v-for="(entry, index) in accounts" :key="index" @click="account = entry">
+                <td>{{entry.index}}</td>
+                <td>{{formatAddress(entry.account)}}</td>
+                <td>{{formatBalance(entry.balance)}}</td>
+                <td>
+                  <b-form-radio :value="index"></b-form-radio>
+                </td>
+              </tr>
+            </b-form-radio-group>
+            <div v-if="accounts.length > 0" class="pagination-container">
+              <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" size="md"/>
+            </div>
+          </tbody>
+        </table>
+      </b-form-group>
+      -->
+      <b-row class="my-1 justify-content-between pt-4">
+        <span v-if="errorMsg" class="text-error mt-2" variant="error">{{errorMsg}}</span>
+      </b-row>
+    </b-form>
+    <footer slot="modal-footer" class="w-100">
+      <b-button
+        class="btn proceed-btn"
+        :disabled="account === null"
+        variant="primary"
+        @click="connect(account)"
+      >Proceed</b-button>
+    </footer>
+  </b-modal>
 </template>
 
 <script lang="ts">
@@ -84,7 +70,7 @@ import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../LoadingSpinner.vue"
 import DropdownTemplate from "./DropdownTemplate.vue"
-import LedgerWallet from "@/services/ledger/ledgerWallet"
+import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
 import { pathsArr as hdPaths } from "@/services/ledger/paths"
 
 // @ts-ignore
@@ -96,8 +82,14 @@ import { CommonTypedStore } from "@/store/common"
 import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import Web3 from "web3"
-import { ethereumModule } from '../../store/ethereum';
-import { feedbackModule } from "../../feedback/store"
+import { ethereumModule } from "@/store/ethereum"
+import { feedbackModule as feedback } from "@/feedback/store"
+
+interface LedgerAccount {
+  address: string
+  balance: any
+  path: string
+}
 
 @Component({
   components: {
@@ -111,48 +103,39 @@ export default class HardwareWalletModal extends Vue {
   perPage = 10
   currentPage = 1
 
-  hdWallet: any = undefined
+  hdWallet: CustomLedgerWallet | null = null
   maxAddresses = 100
   errorMsg: any = null
   accounts: any[] = []
-
-  showLoadingSpinner = false
+  loadingAccounts = false
+  loading = false
   path = ""
+  account: LedgerAccount | null = null
   derivationPath = ""
-  paths: any[] = []
-  filteredPaths: any[] = []
-  addresses = []
-  selectedPath: string | null = null
+  paths = hdPaths.paths.map((item) => ({ value: item.path, text: item.label }))
+  selectedPath: string = ""
   selectedAddress = -1
-  dropdownTemplate = DropdownTemplate
-  componentLoaded = false
-  disableProgressBtn = false
 
-  web3js: Web3 | null = null
+  web3: Web3 | null = null
 
-  showError = feedbackModule.showError
-  showSuccess = feedbackModule.showSuccess
+  showError = feedback.showError
+  showSuccess = feedback.showSuccess
 
-  // @ts-ignore
-  setWeb3 = ethereumModule.setWeb3
-  setSelectedAccount = DPOSTypedStore.setSelectedAccount
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
-  setStatus = DPOSTypedStore.setStatus
-  setSelectedLedgerPath = DPOSTypedStore.setSelectedLedgerPath
+  get visible(): boolean {
+    const state = this.state.ethereum
+    return state.walletType === "ledger" && state.signer === null
+  }
 
-  checkMappingAccountStatus = DPOSTypedStore.checkMappingAccountStatus
-  ensureIdentityMappingExists = DPOSTypedStore.ensureIdentityMappingExists
-  init = DPOSTypedStore.init
+  set visible(val) {
+    if (val === false) {
+      // disconnect ledger?
+      ethereumModule.clearWalletType()
+    }
+  }
 
   get state(): DashboardState {
     return this.$store.state
   }
-
-  get mappingStatus() { return this.state.DPOS.mappingStatus }
-  get mappingError() { return this.state.DPOS.mappingError }
-  get status() { return this.state.DPOS.status }
-  get mappingSuccess() { return this.state.DPOS.mappingSuccess }
-  get selectedAccount() { return this.state.DPOS.selectedAccount }
 
   @Watch("currentPage")
   onCurrentPageChange(newValue, oldValue) {
@@ -161,24 +144,24 @@ export default class HardwareWalletModal extends Vue {
     }
   }
 
-  @Watch("selectedPath")
+  //@Watch("selectedPath")
   onPathChange(newValue, oldValue) {
     if (newValue) {
       this.updateAddresses()
-      // this.selectPath(newValue)
+      this.selectPath(newValue)
     }
   }
 
   async updateAddresses() {
-    this.showLoadingSpinner = true
-    this.derivationPath = this.selectedPath!.replace("m/", "")
+    this.loadingAccounts = true
+    this.derivationPath = this.selectedPath.replace("m/", "")
     const offset = (this.currentPage - 1) * this.perPage
 
-    const results = await initWeb3SelectedWalletBeta(this.calculatePath(offset))
-    this.accounts = results.map((account, index) => {
+    const results = await initWeb3SelectedWalletBeta(this.calculatePath(offset)!)
+    results.map((address, index) => {
       const offsetIndex = offset + index
       return {
-        account,
+        address,
         balance: "loading",
         index: offsetIndex,
         path: this.calculatePath(offsetIndex),
@@ -186,7 +169,7 @@ export default class HardwareWalletModal extends Vue {
     })
 
     if (this.accounts.length > 0) this.getBalances()
-    this.showLoadingSpinner = false
+    this.loading = false
   }
 
   calculatePath(offset) {
@@ -199,148 +182,84 @@ export default class HardwareWalletModal extends Vue {
     }
   }
 
-  onPaginationChange() {
-    console.log("the current page", this.currentPage)
-  }
+  async connect(account: LedgerAccount) {
+    const selectedAddress = account.address
 
-  async okHandler() {
-    this.disableProgressBtn = true
-    const selectedAddress = this.selectedAccount.account
-
-    this.setSelectedLedgerPath(this.path)
     // @ts-ignore
-    this.web3js = await initWeb3SelectedWallet(this.path)
-
+    const providerEngine = await initWeb3SelectedWallet(account.path)
     // assert web3 address is the actual user selected address. Until we fully test/trust this thing...
-    const web3account = (await this.web3js!.eth.getAccounts())[0]
-    console.assert(web3account === selectedAddress,
-      `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
+    //const web3account = (await .web3!.eth.getAccounts())[0]
+    //console.assert(web3account === selectedAddress,
+    //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
     // @ts-ignore
-    this.setWeb3(this.web3js!)
-    // @ts-ignore
-    this.$refs.modalRef.hide()
-    await this.checkMapping(selectedAddress)
-    this.disableProgressBtn = false
-    if (this.mappingSuccess) {
-      this.$emit("ok")
-      this.$router.push({
-        name: "account",
-      })
-    }
+    ethereumModule.setProvider(providerEngine)
   }
 
-  async checkMapping(selectedAddress) {
-    this.setShowLoadingSpinner(true)
-    await this.init()
-    await this.ensureIdentityMappingExists({ currentAddress: selectedAddress })
-    this.setShowLoadingSpinner(false)
-    await this.checkMappingAccountStatus()
-  }
-
-  mounted() {
-    this.paths = hdPaths.paths
-    this.filteredPaths = hdPaths.paths.map((item) => ({ value: item.path, text: item.label }))
-  }
-
-  getLabel(item) {
-    if (!item) return
-    return item.label
-  }
-
-  updateItems(query) {
-    if (query) {
-      this.filteredPaths = this.paths.filter((item: any) => {
-        return item.label.toLowerCase().includes(query.toLowerCase())
-      })
-    } else {
-      this.filteredPaths = this.paths
-    }
-  }
-
-  async selectItem(item) {
-    if (!item) return
-    const { path } = item
-    await this.selectPath(path)
-  }
-
+  @Watch("selectedPath")
   async selectPath(path) {
     this.accounts = []
     this.selectedAddress = -1
 
-    if (typeof this.hdWallet === "undefined") {
+    if (this.hdWallet === null) {
       try {
-        this.showLoadingSpinner = true
-        this.hdWallet = await LedgerWallet()
+        this.loading = true
+        this.hdWallet = await createWallet()
       } catch (err) {
         this.showError(this.$t("messages.select_path_err_tx").toString())
         console.error("Error in LedgerWallet:", err)
-        this.showLoadingSpinner = false
+        this.loading = false
         return
       }
     }
 
+    this.loadingAccounts = true
     try {
-      this.showLoadingSpinner = true
+      this.loading = true
+
       await this.hdWallet.init(path)
     } catch (err) {
       this.showError(this.$t("messages.select_path_err_tx").toString())
       console.log("Error when trying to init hd wallet:", err)
-      this.showLoadingSpinner = false
+      this.loading = false
       return
     }
-
     let i = 0
     const accountsTemp: any[] = []
     while (i <= this.maxAddresses) {
-      const account = this.hdWallet.getAccount(i)
-      accountsTemp.push(account)
+      const account: HDKey = await this.hdWallet.getAccount(i)
+      console.log("account", account)
+      this.accounts.push({
+        address: account,
+        balance: "loading",
+      })
       i++
     }
+    this.loadingAccounts = false
 
-    Promise.all(accountsTemp).then((values) => {
+    if (this.accounts.length > 0) return this.getBalances()
 
-      this.accounts = values.map((account) => {
-        return {
-          account,
-          balance: "loading",
-        }
-      })
-
-      if (this.accounts.length > 0) return this.getBalances()
-
-    }).catch((err) => {
-      this.showError(this.$t("messages.load_wallet_err_tx").toString())
-      console.log("Error when trying to get accounts:", err)
-      this.showLoadingSpinner = false
-    }).then(async () => {
-      this.showLoadingSpinner = false
-    })
+    // }).catch((err) => {
+    //   this.showError(this.$t("messages.load_wallet_err_tx").toString())
+    //   console.log("Error when trying to get accounts:", err)
+    // }).finally(async () => {
+    //   this.loadingAccounts = false
+    // })
 
   }
 
-  selectAccount(account) {
-    this.setSelectedAccount(account)
-    this.path = account.path
-  }
 
-  loadAddresses(path) {
-    console.log("Loading addresses at path: ", path)
-  }
 
-  async setWeb3Instance() {
-    if (typeof this.web3js === "undefined") {
-      const web3js = await initWeb3Hardware()
-      // @ts-ignore
-      window.ledgerweb3 = web3js
-      this.web3js = web3js
-      // @ts-ignore
-      this.setWeb3(web3js)
-    }
-  }
+  // async setWeb3Instance() {
+  //   if (typeof this.web3 === "undefined") {
+  //     const web3 = await initWeb3Hardware()
+  //     // @ts-ignore
+  //     this.setWeb3(web3js)
+  //   }
+  // }
 
-  async getBalances() {
+  getBalances() {
     this.accounts.forEach((item) => {
-      this.web3js!.eth
+      this.web3.eth
         .getBalance(item.account)
         .then((balance) => {
           item.balance = balance
@@ -348,34 +267,49 @@ export default class HardwareWalletModal extends Vue {
     })
   }
 
-  formatBalance(amount) {
-    return formatToCrypto(amount)
-  }
-
   formatAddress(address) {
     const cap = 10
     return address.slice(0, cap) + "..." + address.slice(-cap, address.length)
   }
 
-  async show(myWeb3) {
-    this.componentLoaded = true
-    await this.setWeb3Instance()
+  @Watch("visible")
+  async init(visible) {
+    if (visible === false) return
+
+    console.log("visible")
+    // await this.setWeb3Instance()
     try {
-      this.showLoadingSpinner = true
-      this.hdWallet = await LedgerWallet()
+      this.loading = true
+      this.hdWallet = await createWallet()
     } catch (err) {
-      this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
-      this.showLoadingSpinner = false
+      feedback.showInfo("Please unlock your ledger and go to ethereum app")
+      //this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      this.loading = false
       return
     }
-    // @ts-ignore
-    this.$refs.modalRef.show()
-    this.showLoadingSpinner = false
+    this.loading = false
   }
+
+
 
 }
 </script>
 <style lang="scss">
+.account-list {
+  .list-group-item {
+    display: flex;
+    > address {
+      margin: 0;
+      font-family: "Courier New", Courier, monospace;
+      width: 230px;
+    }
+    .balance {
+      flex: 1;
+      text-align: right;
+    }
+  }
+}
+
 label {
   color: gray;
 }

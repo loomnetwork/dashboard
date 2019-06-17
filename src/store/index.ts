@@ -53,6 +53,7 @@ const dashboardStore = {
     log("tokensService", env.coinDataUrl)
     tokenService.setBaseURL(env.coinDataUrl)
     state.disabled = env.disabled
+    state.chains = env.chains
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     state.envs = envs

@@ -3,13 +3,12 @@
     <template slot="modal-title">{{ title }}</template>
     <b-form-group label="From">
       <div class="button-group">
-        <div class="chain-option" @click="onSelect(`ethereum`)" v-if="showButton(`ethereum`)">
-          <p>Ethereum</p>
-          <img src="../../assets/ethereum_logo.png" class="logo" alt="">
-        </div>
-        <div class="chain-option" @click="onSelect(`binance`)" v-if="showButton(`binance`)">
-          <p>Binance</p>
-          <img src="../../assets/binance_logo.png" class="logo" alt="">
+        <div class="chain-option"
+          v-for="chain in chainsList" :key="chain"
+          @click="onSelect(chain)"
+        >
+          <p>{{ chain | capitalizeWord }}</p>
+          <img :src="`../../assets/${chain}_logo.png`" class="logo" alt="">
         </div>
       </div>
     </b-form-group>
@@ -25,7 +24,7 @@ import { DashboardState } from "../../types"
 export default class SelectChainModal extends Vue {
   @Prop(String) type: string = ""
 
-  get title() {
+  get title(): string {
     return capitalize(this.type.toLowerCase())
   }
 
@@ -33,10 +32,10 @@ export default class SelectChainModal extends Vue {
     return this.$store.state
   }
 
-  showButton(chain: string) {
+  get chainsList(): string[] {
     const chains = this.state.chains
     const disabled = this.state.disabled
-    return chains.includes(chain) && !disabled.includes(chain)
+    return chains.filter((chainName) => chains.includes(chainName) && !disabled.includes(chainName))
   }
 
   onSelect(chain: string) {

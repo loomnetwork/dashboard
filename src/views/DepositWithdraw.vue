@@ -98,6 +98,7 @@ import { feedbackModule } from "@/feedback/store"
     SelectChainModal,
     DepositBinance,
     Account,
+  },
 })
 export default class DepositWithdraw extends Vue {
   DEPOSIT = "DEPOSIT"

@@ -47,8 +47,8 @@ class TokenService {
     this.symbols = result.data.tokens.map(
       (data): TokenData => ({
         symbol: data.symbol,
-        ethereum: data.address,
-        plasma: data.plasma_addr,
+        ethereum: data.address.toLowerCase(),
+        plasma: data.plasma_addr.toLowerCase(),
         decimals: data.decimal,
       }),
     )

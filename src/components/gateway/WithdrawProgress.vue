@@ -1,16 +1,20 @@
 <template>
-  <b-modal v-model="visible"
+  <b-modal
+    v-model="visible"
     hide-footer
-    no-close-on-backdrop 
+    no-close-on-backdrop
     no-close-on-esc
     hide-header-close
-    id="withdraw-progress"  title="Withdrawal progress">
-    
+    id="withdraw-progress"
+    title="Withdrawal progress"
+  >
     <section v-if="status === 'default'">
-      <transition-group  name="list"
-                        tag="ul"
-                        enter-active-class="animated fadeIn"
-                        leave-active-class="animated fadeOut">
+      <transition-group
+        name="list"
+        tag="ul"
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
         <li v-for="(stage, idx) in visibleStates" :key="`stage-${idx}`" class="mb-3 pt-3">
           <div class="icon-container mr-2">
             <Checkmark v-if="stage.isComplete"/>
@@ -25,18 +29,16 @@
         <p>An error occurred, please try again.</p>
       </div>
     </section>
-
   </b-modal>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import {ethers} from "ethers"
+import { ethers } from "ethers"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../../types"
-import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "../../store/gateway"
 import { gatewayReactions } from "../../store/gateway/reactions"
 import { setShowWithdrawProgress, incrementWithdrawStateIdx } from "../../store/gateway/mutations"
@@ -56,14 +58,14 @@ export default class WithdrawProgress extends Vue {
   setShowWithdrawProgress = gatewayModule.setShowWithdrawProgress
   incrementWithdrawStateIdx = gatewayModule.incrementWithdrawStateIdx
   setWithdrawStateAsCompleted = gatewayModule.setWithdrawStateAsCompleted
-  stateGenerator = () => {}
+  stateGenerator = () => { }
 
   mounted() {
     this.stateGenerator = this.createGenerator()
   }
 
   createGenerator() {
-     return function * generatorFunction() {
+    return function* generatorFunction() {
       let index = 0
       while (index < index + 1) {
         yield index++
@@ -89,7 +91,7 @@ export default class WithdrawProgress extends Vue {
 
   set visible(value) {
     if (value === false) {
-     this.setShowWithdrawProgress(false)
+      this.setShowWithdrawProgress(false)
     }
   }
 
@@ -101,18 +103,18 @@ export default class WithdrawProgress extends Vue {
 </script>
 
 <style scoped lang="scss">
-  #withdraw-progress {
-    ul {
-      li {
-        list-style: none;
-        span {
-          font-weight: bold;
-          color: #bdbcbc; 
-        }
+#withdraw-progress {
+  ul {
+    li {
+      list-style: none;
+      span {
+        font-weight: bold;
+        color: #bdbcbc;
       }
     }
-    .icon-container {
-      display: inline-block;
-    }
   }
+  .icon-container {
+    display: inline-block;
+  }
+}
 </style>

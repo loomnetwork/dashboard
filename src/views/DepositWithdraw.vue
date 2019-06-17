@@ -2,15 +2,13 @@
   <main class="container">
     <header>
       <h1>Wallet</h1>
-      <b-button size="sm" @click="showHelp =!showHelp">?</b-button>
+      <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <b-alert :show="showHelp">
-      These are your token balances on plasma chain...etc
-      <br>(use $t with the key to some help text.)
-    </b-alert>
+    <b-alert fade :show="showHelp">Please refer to the FAQ</b-alert>
+    <Account/>
     <b-card class="balances" no-body>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
-        <b-form-input v-model="inputFilter" placeholder="Search"></b-form-input>
+        <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
@@ -35,17 +33,30 @@
             <b-button
               class="button"
               variant="outline-primary"
+              :disabled="disableWithdraw || plasma.coins[symbol].balance.isZero()"
               @click="requestWithdraw(symbol)"
-            >Withdraw</b-button>
-            <b-button class="button" variant="outline-primary" @click="requestSwap(symbol)">Swap</b-button>
+            >
+              <span>Withdraw</span>
+              <b-spinner
+                v-if="disableWithdraw"
+                variant="primary"
+                label="Spinning"
+                class="ml-2"
+                small
+              />
+            </b-button>
+            <b-button
+              class="button"
+              variant="outline-primary"
+              :disabled="plasma.coins[symbol].balance.isZero()"
+              @click="requestSwap(symbol)"
+            >Transfer</b-button>
           </b-button-group>
         </b-list-group-item>
       </b-list-group>
       <b-card-footer>
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
-      <!-- <pre>{{(plasma.coins.BNB || {}).balance}}</pre>
-      {{plasmaBalance}}-->
     </b-card>
     <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
     <add-token-modal @refreshTokenList="filterTokens"/>
@@ -66,18 +77,17 @@ import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal
 import SelectChainModal from "@/components/modals/SelectChainModal.vue"
 import DepositBinance from "@/components/gateway/DepositBinance.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
+import Account from "@/components/Account.vue"
 
 import { DashboardState } from "@//types"
 import { PlasmaState } from "@/store/plasma/types"
 import { gatewayModule } from "@/store/gateway"
 import { plasmaModule } from "@/store/plasma"
 
-import { BModal } from "bootstrap-vue"
-
 import { tokenService } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
-import { ethereumModule } from "../store/ethereum"
-import { feedbackModule } from "../feedback/store"
+import { ethereumModule } from "@/store/ethereum"
+import { feedbackModule } from "@/feedback/store"
 
 @Component({
   components: {
@@ -87,7 +97,7 @@ import { feedbackModule } from "../feedback/store"
     AddTokenModal,
     SelectChainModal,
     DepositBinance,
-  },
+    Account,
 })
 export default class DepositWithdraw extends Vue {
   DEPOSIT = "DEPOSIT"
@@ -111,29 +121,18 @@ export default class DepositWithdraw extends Vue {
     return this.$store.state
   }
 
+  get disableWithdraw(): boolean {
+    return !ethereumModule.state.blockNumber || gatewayModule.withdrawalInProgress()
+  }
+
   get plasma(): PlasmaState {
     return this.state.plasma
   }
 
-  get withdrawalInProgress(): boolean {
-    // @ts-ignore
-    const withdrawalBlock = JSON.parse(localStorage.getItem("latestWithdrawalBlock"))
-    if (!withdrawalBlock) return false
-    // 10 block confirmations + 5 for processing
-    const result = (ethereumModule.state.blockNumber - 15) > withdrawalBlock ? false : true
-    return result
-  }
-
   async mounted() {
     const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
-    tokenSymbols.forEach((symbol) => {
-      plasmaModule.addToken(symbol)
-    })
+    tokenSymbols.forEach((symbol) => plasmaModule.addToken(symbol))
     this.filterTokens()
-  }
-
-  modal(ref: string) {
-    return this.$refs[ref] as BModal
   }
 
   @Watch("inputFilter")
@@ -179,16 +178,6 @@ export default class DepositWithdraw extends Vue {
   }
 
   requestWithdraw(token: string) {
-
-    if (!ethereumModule.state.blockNumber) {
-      this.showError("Synching with Ethereum, please wait a moment and try again.")
-      return
-    }
-
-    if (this.withdrawalInProgress) {
-      this.showError("There is a processing withdrawal, please try again later.")
-      return
-    }
     this.selectedToken = token
     this.setShowWithdrawForm(true)
   }
@@ -207,14 +196,18 @@ export default class DepositWithdraw extends Vue {
 
 <style lang="scss" scoped>
 .container {
-  margin: 16px auto;
-  max-width: 600px;
-
   > header {
     display: flex;
     align-items: center;
     h1 {
       flex: 1;
+      color: #5246d5;
+      font-size: 1.35em;
+      text-align: center;
+      margin: 16px -14px;
+      font-weight: normal;
+      border-bottom: 1px solid #ededed;
+      padding-bottom: 16px;
     }
   }
 }
@@ -229,6 +222,8 @@ export default class DepositWithdraw extends Vue {
 }
 
 .card.balances {
+  margin: 16px auto;
+  max-width: 600px;
   .list-group-item {
     display: flex;
     flex-wrap: wrap;

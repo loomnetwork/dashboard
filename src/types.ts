@@ -5,10 +5,10 @@ import { Contract } from "web3-eth-contract"
 import { CommonState } from "./store/common/types"
 import { HasDPOSState } from "@/dpos/store/types"
 import { EthereumConfig } from "./store/ethereum/types"
-import { HasGatewayState } from "./store/gateway/types"
+import { HasGatewayState } from "@/store/gateway/types"
+import { PlasmaConfig } from "@/store/plasma/types"
+import { HasWhiteListState } from "@/whitelist/store/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
-import { PlasmaConfig } from "./store/plasma/types"
-import { HasWhiteListState } from "./store/whitelist/types"
 
 export interface DashboardConfig {
   name: string
@@ -102,6 +102,7 @@ export interface DposState {
   metamaskStatus?: any
   metamaskError?: any
   withdrewSignature: string
+  notMapped: boolean
 }
 
 // export interface DappchainState {

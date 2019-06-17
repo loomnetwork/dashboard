@@ -1,21 +1,28 @@
 <template>
-  <b-modal v-model="visible"
-           no-close-on-backdrop 
-           no-close-on-esc
-           hide-header-close
-           id="deposit-approval-success"  title="Withdraw">
+  <b-modal
+    v-model="visible"
+    no-close-on-backdrop
+    no-close-on-esc
+    hide-header-close
+    id="deposit-approval-success"
+    title="Withdraw"
+  >
     <div v-if="status === 'default'">
       <amount-input :min="1" :max="100" :symbol="token" v-model="amount" @isError="errorHandler"/>
     </div>
     <div v-if="status === 'error'">
-      <h2>
-        An error occurred, please try again!
-      </h2>
+      <h2>An error occurred, please try again!</h2>
     </div>
     <template slot="modal-footer">
-      <b-btn @click="close()">Cancel</b-btn>
-      <span style="flex:1"></span>      
-      <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
+      <div v-if="status === 'default'">
+        <b-btn @click="close()">Cancel</b-btn>
+        <span style="flex:1"></span>
+        <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
+      </div>
+      <div v-else>
+        <span style="flex:1"></span>
+        <b-btn @click="close()">Close</b-btn>
+      </div>
     </template>
   </b-modal>
 </template>
@@ -24,11 +31,10 @@
 import Vue from "vue"
 import BN from "bn.js"
 import { Component, Prop } from "vue-property-decorator"
-import {ethers} from "ethers"
+import { ethers } from "ethers"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState, Funds } from "../../types"
-import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "../../store/gateway"
 import { gatewayReactions } from "../../store/gateway/reactions"
 
@@ -44,7 +50,7 @@ import { setShowWithdrawProgress } from "../../store/gateway/mutations"
 
 export default class WithdrawForm extends Vue {
 
-  @Prop({required: true}) token!: string // prettier-ignore
+  @Prop({ required: true }) token!: string // prettier-ignore
 
   status: string = "default"
   amount: any = 0
@@ -64,7 +70,7 @@ export default class WithdrawForm extends Vue {
 
   set visible(value) {
     if (value === false) {
-     this.setShowWithdrawForm(false)
+      this.setShowWithdrawForm(false)
     }
   }
 
@@ -78,30 +84,25 @@ export default class WithdrawForm extends Vue {
 
   async requestWithdrawHandler(e) {
     e.preventDefault()
-    try {
 
-      // TODO: Cache transactions
-      // const txObj = this.state.gateway.pendingTransactions[0]
-      const payload: Funds = {
-        chain: "ethereum",
-        symbol: this.token,
-        weiAmount: this.amount,
-      }
-
-      this.beginWithdrawal(payload).then(() => {
-        this.setShowWithdrawProgress(false)
-      }).catch((err) => {
-        console.log(err)
-        this.setShowWithdrawProgress(false)
-        this.setShowWithdrawForm(true)
-        this.status = "error"
-      })
-      this.close()
-      this.setShowWithdrawProgress(true)
-    } catch (error) {
-      console.log(error)
+    // TODO: Cache transactions
+    // const txObj = this.state.gateway.pendingTransactions[0]
+    const payload: Funds = {
+      chain: "ethereum",
+      symbol: this.token,
+      weiAmount: this.amount,
     }
-  }
+
+    this.beginWithdrawal(payload).then(() => {
+      this.setShowWithdrawProgress(false)
+    }).catch((err) => {
+      console.log(err)
+      this.setShowWithdrawProgress(false)
+      this.setShowWithdrawForm(true)
+      this.status = "error"
+    })
+    this.close()
+    this.setShowWithdrawProgress(true)  }
 
 }
 </script>

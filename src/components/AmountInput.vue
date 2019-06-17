@@ -12,7 +12,7 @@
         </b-form-input>
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
-      <b-col sm="4">
+      <b-col>
         <b-button variant="outline-primary" @click="setAllAmount">All ({{ `${max} ${symbol}` }})</b-button>
       </b-col>
     </b-row>

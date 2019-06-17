@@ -24,7 +24,6 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
-import { DPOSTypedStore } from "../../store/dpos-old"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
 

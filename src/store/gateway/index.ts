@@ -11,6 +11,7 @@ import * as Mapper from "./mapper"
 import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
 import * as mutations from "./mutations"
+import { ethereumModule } from "../ethereum"
 
 const log = debug("dash.gateway")
 
@@ -31,6 +32,8 @@ function initialState(): GatewayState {
       { text: "Withdrawing to your Ethereum account...", isComplete: false },
     ],
     withdrawStateIdx: 0,
+    notMapped: false,
+    newMappingAgree: false,
   }
 }
 
@@ -44,6 +47,8 @@ export const gatewayModule = {
   get state() {
     return stateGetter()
   },
+
+  withdrawalInProgress: builder.read(withdrawalInProgress),
 
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
@@ -71,4 +76,16 @@ export const gatewayModule = {
   setWithdrawStateAsCompleted: builder.commit(
     mutations.setWithdrawStateAsCompleted,
   ),
+  setNewMappingAgree: builder.commit(mutations.setNewMappingAgree),
+}
+
+function withdrawalInProgress() {
+  const withdrawalBlock = JSON.parse(
+    localStorage.getItem("latestWithdrawalBlock") || "null",
+  )
+  if (!withdrawalBlock) return false
+  // 10 block confirmations + 5 for processing
+  const result =
+    ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
+  return result
 }

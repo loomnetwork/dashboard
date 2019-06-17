@@ -2,30 +2,42 @@ import dev from "@/config/dev"
 import local from "@/config/local"
 import production from "@/config/production"
 import stage from "@/config/stage"
-import { zbcardsReactions } from "@/store/plasma/assets/reactions"
-import { DashboardConfig, DashboardState } from "@/types"
+
 import debug from "debug"
 import Vue from "vue"
 import Vuex, { Store } from "vuex"
 import { getStoreBuilder } from "vuex-typex"
-import "./common"
-import "@/dpos/store"
+
+import { tokenService } from "@/services/TokenService"
+
 import "@/feedback/store"
-import "./dpos-old"
-import { dposReactions } from "@/dpos/store/reactions"
+import { zbcardsReactions } from "@/store/plasma/assets/reactions"
+
 import "./ethereum"
 import { ethereumModule } from "./ethereum"
 import { ethereumReactions } from "./ethereum/reactions"
-import "./gateway"
-import { gatewayReactions } from "./gateway/reactions"
-import "./locale"
+
 import "./plasma"
 import { plasmaModule } from "./plasma"
-import "./plasma/assets"
-import { plasmaReactions } from "./plasma/reactions"
-import { whiteListReaction } from "./whitelist/reactions"
 
-import { tokenService } from "@/services/TokenService"
+import "./gateway"
+import { gatewayReactions } from "./gateway/reactions"
+
+import "@/dpos/store"
+import { dposReactions } from "@/dpos/store/reactions"
+
+import { DashboardConfig, DashboardState } from "@/types"
+
+import "@/whitelist/store"
+import { whiteListReaction } from "../whitelist/store/reactions"
+
+import "./common"
+import "./dpos-old"
+
+import "./locale"
+import "./plasma/assets"
+
+import { plasmaReactions } from "./plasma/reactions"
 
 const log = debug("dash")
 

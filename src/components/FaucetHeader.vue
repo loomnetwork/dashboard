@@ -19,7 +19,7 @@
     </b-alert>
 
     <feedback-notification class="custom-alert text-center"/>
-    
+
     <div class="d-none d-md-block">
       <nav class="navbar">
         <div class="container-fluid">
@@ -96,9 +96,6 @@ import ChainSelector from "./ChainSelector.vue"
 import LoomIcon from "@/components/LoomIcon.vue"
 import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
-import { DPOSTypedStore } from "../store/dpos-old"
-import { CommonTypedStore } from "../store/common"
-import { setTimeout } from 'timers';
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
 @Component({
@@ -137,57 +134,14 @@ import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue
 })
 export default class FaucetHeader extends Vue {
 
-  refreshInterval = null
   timerRefreshInterval = null
   formattedTimeUntilElectionCycle = null
-  timeLeft = 600
-  errorRefreshing = false
-  connectedToDappChain = false
 
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
   get state(): DashboardState {
     return this.$store.state
-  }
-
-  setUserIsLoggedIn = CommonTypedStore.setUserIsLoggedIn
-  setMappingError = DPOSTypedStore.setMappingError
-  setMappingStatus = DPOSTypedStore.setMappingStatus
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
-
-  logOut() {
-    sessionStorage.removeItem("userIsLoggedIn")
-    this.setUserIsLoggedIn(false)
-    this.setMappingError(null)
-    this.setMappingStatus("")
-    this.setShowLoadingSpinner(false)
-    window.location.reload(true)
-  }
-
-  login() {
-    if (this.state.common.userIsLoggedIn) {
-      this.logOut()
-      return
-    }
-    this.$router.push({ path: "/login" })
-  }
-
-  @Watch("state.DPOS.isConnectedToDappChain")
-  onConnectingToDappChainChange(newValue, oldValue) {
-    if (newValue) {
-      this.connectedToDappChain = true
-    } else {
-      this.connectedToDappChain = false
-    }
-  }
-
-  async mounted() {
-
-    this.$root.$on("logout", () => {
-      this.logOut()
-    })
-
   }
 
   get showBackButton() {

@@ -8,6 +8,7 @@ import RavenVue from "raven-js/plugins/vue"
 import Vue from "vue"
 import { sync } from "vuex-router-sync"
 import Progress from "vue-multiple-progress"
+import VueClipboard from "vue-clipboard2"
 
 import moment from "moment"
 import durationFormatSetup from "moment-duration-format"
@@ -60,6 +61,8 @@ Vue.use(BootstrapVue)
 Vue.use(VueAwesomeSwiper, {})
 Vue.use(Autocomplete)
 Vue.use(Progress)
+Vue.use(VueClipboard)
+
 FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)
 Vue.component("fa", FontAwesomeIcon)
 Vue.config.productionTip = false

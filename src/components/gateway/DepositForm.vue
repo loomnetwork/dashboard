@@ -47,8 +47,8 @@ import { DashboardState } from "../../types"
 
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { setShowDepositForm, setShowDepositApproved } from '../../store/dpos-old/mutations';
-import { gatewayReactions } from '../../store/gateway/reactions';
+import { setShowDepositForm, setShowDepositApproved } from "../../store/dpos-old/mutations"
+import { gatewayReactions } from "../../store/gateway/reactions"
 
 @Component({
   components: {

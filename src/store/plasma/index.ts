@@ -84,7 +84,6 @@ export const plasmaModule = {
   transfer: builder.dispatch(Tokens.transfer),
   // addTokens: builder.dispatch(Tokens.addContract),
 
-  setSelectedToken: builder.commit(mutations.setSelectedToken),
   addCoinState: builder.commit(Tokens.addCoinState),
 
   // Assets

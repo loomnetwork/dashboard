@@ -8,7 +8,7 @@
             <h3>{{ $t('views.help.what_is_plasma_chain') }}</h3>
           </b-card-header>
           <b-collapse id="collaspe-1">
-            <b-card-body class="border">
+            <b-card-body>
               <b-card-text>
                 {{ $t('views.help.plasma_chain_is_our_plasma_cash_backed') }}
               </b-card-text>

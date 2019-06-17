@@ -8,18 +8,30 @@
     @show="resetModal()"
   >
     <b-container fluid>
-      <h6> This will transfer all of your <strong>{{cardsToTransfer.edition}}</strong> edition cards.</h6>
-      <h6>Amount: {{cardsToTransfer.amount}}</h6>
-      Receiver Loom Address:
-      <input-address v-model="receiverAddress" :placeholder="'Loom Address'" @isValid="isValidAddressFormat"/>
-      <b-form-checkbox class="my-2"
-        id="confirmCards"
+      <h6>
+        This will transfer all of your
+        <strong>{{cardsToTransfer.edition}}</strong> edition cards.
+      </h6>
+      <h6>Amount: {{cardsToTransfer.amount}}</h6>Receiver Loom Address:
+      <input-address
+        v-model="receiverAddress"
+        chain="loom"
+        :blacklist="[ownAddress]"
+        :placeholder="'Loom Address'"
+        @isValid="isValidAddressFormat"
+      />
+      <b-form-checkbox
+        class="my-2"
         v-model="confirmCards"
         name="confirmCards"
-        v-show="receiverAddress">        
-        I confirm to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}} address.
-      </b-form-checkbox>
-      <b-button class="my-2" type="button" @click="transferAllCardsHandler()" :disabled="!receiverAddress || !confirmCards || !isValidAddress" >Transfer All</b-button>
+        v-show="receiverAddress"
+      >I confirm that i want to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}} address.</b-form-checkbox>
+      <b-button
+        class="my-2"
+        type="button"
+        @click="transferAllCardsHandler()"
+        :disabled="!receiverAddress || !confirmCards || !isValidAddress"
+      >Transfer All</b-button>
     </b-container>
   </b-modal>
 </template>
@@ -30,11 +42,12 @@ import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { feedbackModule } from "../../feedback/store"
 import InputAddress from "../InputAddress.vue"
+import { formatToLoomAddress } from "../../utils"
 
-@Component ({
-  components : {
-    InputAddress
-  }
+@Component({
+  components: {
+    InputAddress,
+  },
 })
 export default class TransferAllCardsModal extends Vue {
   receiverAddress: string = ""
@@ -53,6 +66,10 @@ export default class TransferAllCardsModal extends Vue {
 
   get cardsToTransfer() {
     return this.state.assets.allCardsToTransferSelected
+  }
+
+  get ownAddress() {
+    return formatToLoomAddress(this.state.plasma.address.toLowerCase())
   }
 
   transferAllCardsHandler() {
@@ -77,7 +94,6 @@ export default class TransferAllCardsModal extends Vue {
 
   isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
-    console.log(this.isValidAddress);
   }
 }
 </script>

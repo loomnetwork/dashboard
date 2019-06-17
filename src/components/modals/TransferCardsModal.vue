@@ -1,5 +1,12 @@
 <template>
-  <b-modal id="transfer-cards-modal" ref="modalRef" title="Transfer Cards" hide-footer centered @show="resetModal()">
+  <b-modal
+    id="transfer-cards-modal"
+    ref="modalRef"
+    title="Transfer Cards"
+    hide-footer
+    centered
+    @show="resetModal()"
+  >
     <b-container fluid>
       <h6>Card ID: {{cardToTransfer.id}}</h6>
       <h6>Name: {{cardToTransfer.display_name}}</h6>
@@ -9,12 +16,14 @@
       <b-input
         class="my-2"
         type="number"
-        v-model="amountToTransfer"
+        v-model.number="amountToTransfer"
         :max="cardToTransfer.amount"
         :min="1"
       ></b-input>Receiver Loom Address:
       <input-address
         v-model="receiverAddress"
+        chain="loom"
+        :blacklist="[ownAddress]"
         :placeholder="'Loom Address'"
         @isValid="isValidAddressFormat"
       />
@@ -29,7 +38,7 @@
         class="my-2"
         type="button"
         @click="transferCardsHandler()"
-        :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer > parseInt(cardToTransfer.amount) || amountToTransfer < 1 || !confirmCard || !isValidAddress"
+        :disabled="validInput === false"
       >Transfer</b-button>
     </b-container>
   </b-modal>
@@ -41,11 +50,12 @@ import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "../../store/plasma/assets"
 import { CommonTypedStore } from "../../store/common"
-import { feedbackModule } from "../../feedback/store";
+import { feedbackModule } from "../../feedback/store"
+import { formatToLoomAddress } from "../../utils"
 @Component({
   components: {
-    InputAddress
-  }
+    InputAddress,
+  },
 })
 export default class TransferCardsModal extends Vue {
   amountToTransfer: number = 1
@@ -55,8 +65,7 @@ export default class TransferCardsModal extends Vue {
   confirmCard = false
   isValidAddress = false
 
-
-  resetModal(){
+  resetModal() {
     this.amountToTransfer = 1
     this.receiverAddress = ""
   }
@@ -69,7 +78,20 @@ export default class TransferCardsModal extends Vue {
     return this.state.assets.cardToTransferSelected
   }
 
+  get ownAddress() {
+    return formatToLoomAddress(this.state.plasma.address.toLowerCase())
+  }
+
+  get validInput(): boolean {
+    return this.isValidAddress &&
+      Number(this.amountToTransfer) < this.cardToTransfer!.amount &&
+      Number(this.amountToTransfer) > 0 &&
+      this.confirmCard
+  }
+
   transferCardsHandler() {
+    const amount = Number(this.amountToTransfer)
+    console.log("amount", amount)
     // @ts-ignore
     if (parseInt(this.amountToTransfer, 10) > parseInt(this.cardToTransfer!.amount, 10) || parseInt(this.amountToTransfer, 10) % 1 !== 0) {
       this.showError(this.$t("messages.invalid_amount").toString())
@@ -89,7 +111,7 @@ export default class TransferCardsModal extends Vue {
 
   isValidAddressFormat(isValid) {
     this.isValidAddress = isValid
-    console.log(this.isValidAddress);
+    console.log(this.isValidAddress)
   }
 
 }

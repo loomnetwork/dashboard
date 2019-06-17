@@ -1,5 +1,6 @@
 <template>
   <div id="mobile-account">
+    <account-info/>
     <b-card title="Balance" class="mb-4" no-body>
       <b-card-header class="custom-card-header d-flex justify-content-between">
         <h4>Balance</h4>
@@ -55,31 +56,6 @@
           <div v-if="state.plasma.coins.LOOM.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
-          <!-- unclaimed 
-          <div v-if="unclaimWithdrawTokensETH > 0 && !gatewayBusy">
-            <p>{{$t('views.my_account.tokens_pending_withdraw',{pendingWithdrawAmount:unclaimWithdrawTokensETH} )}}</p>
-            <br>
-            <div class="center-children" id="complete-withdrawal-container">
-              <b-btn
-                variant="outline-primary"
-                class="mr-2"
-                @click="reclaimWithdrawHandler"
-              >{{$t('views.my_account.complete_withdraw')}}</b-btn>
-              <b-spinner
-                v-if="isWithdrawalInprogress || hasJustWithdrawn()"
-                variant="primary"
-                label="Spinning"
-                small
-              />
-              <b-tooltip
-                v-if="isWithdrawalInprogress || hasJustWithdrawn()"
-                target="complete-withdrawal-container"
-                placement="bottom"
-                title="Your transaction is processing, check back in a few mintues."
-              ></b-tooltip>
-            </div>
-          </div>
-          -->
           <b-modal
             id="wait-tx"
             title="Done"
@@ -87,65 +63,8 @@
             centered
             no-close-on-backdrop
           >{{ $t('views.my_account.wait_tx') }}</b-modal>
-          <!--
-          <b-modal
-            id="unclaimed-tokens"
-            title="Unclaimed Tokens"
-            hide-footer
-            centered
-            no-close-on-backdrop
-          >
-            <p>{{$t('views.my_account.tokens_pending_deposit',{pendingDepositAmount:unclaimedTokens} )}}</p>
-            <b-btn
-              variant="outline-primary"
-              @click="reclaimDepositHandler"
-            >{{$t('views.my_account.reclaim_deposit')}}</b-btn>
-          </b-modal>
-          -->
         </div>
       </b-card-body>
-
-      <!--
-      <b-card-footer class="custom-card-footer">
-        <DepositForm/>
-        <a
-          v-if="pendingTx"
-          style="display: flex;align-items: center;"
-          :href="`https://etherscan.io/tx/${pendingTx.hash}`"
-          target="_blank"
-        >
-          <b-spinner variant="primary" style="margin-right:16px;"></b-spinner>
-          <span>pending: {{pendingTx.type}}</span>
-        </a>
-        <footer
-          v-if="unclaimWithdrawTokensETH == 0 && unclaimedTokens.isZero() && !pendingTx"
-          class="d-flex justify-content-between"
-        >
-          <b-button-group class="gateway" style="display: flex;">
-            <b-btn
-              variant="outline-primary"
-              @click="setShowDepositForm(true)"
-            >{{ $t("components.faucet_header.deposit")}}</b-btn>
-            <TransferStepper
-              v-if="userBalance.loomBalance > 0 && oracleEnabled"
-              @withdrawalDone="afterWithdrawalDone"
-              @withdrawalFailed="afterWithdrawalFailed"
-              :balance="userBalance.loomBalance"
-              :transferAction="executeWithdrawal"
-              :resolveTxSuccess="resolveWithdraw"
-              buttonLabel="Withdraw"
-              executionTitle="Execute transfer"
-            >
-              <template #pendingMessage>
-                <p>Transfering funds from plasma chain to your ethereum account...</p>
-              </template>
-              <template #failueMessage>Withdrawal failed... retry?</template>
-              <template #confirmingMessage>Waiting for ethereum confirmation</template>
-            </TransferStepper>
-          </b-button-group>
-        </footer>
-      </b-card-footer>
-      -->
     </b-card>
 
     <b-card title="Election Cycle" class="mb-4">
@@ -200,9 +119,8 @@ import Web3 from "web3"
 import BN from "bn.js"
 import debug from "debug"
 import { formatToCrypto, sleep } from "@/utils.ts"
-import TransferStepper from "../components/TransferStepper.vue"
-import DepositForm from "@/components/gateway/DepositForm.vue"
 import Rewards from "@/dpos/components/Rewards.vue"
+import AccountInfo from "@/components/Account.vue"
 import { DPOSTypedStore } from "../store/dpos-old"
 import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
@@ -217,9 +135,8 @@ const ELECTION_CYCLE_MILLIS = 600000
 
 @Component({
   components: {
+    AccountInfo,
     LoomIcon,
-    TransferStepper,
-    DepositForm,
     Rewards,
     ElectionTimer,
   },
@@ -373,9 +290,6 @@ h3 {
   border-bottom-left-radius: 0;
   margin-left: -1px;
 }
-</style>
-
-<style lang="scss">
 #delegations-container {
   .card-header {
     background-color: #fff;

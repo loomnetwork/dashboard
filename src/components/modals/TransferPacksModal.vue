@@ -1,5 +1,12 @@
 <template>
-  <b-modal id="transfer-packs-modal" ref="modalRef" title="Transfer Packs" hide-footer centered @show="resetModal()" >
+  <b-modal
+    id="transfer-packs-modal"
+    ref="modalRef"
+    title="Transfer Packs"
+    hide-footer
+    centered
+    @show="resetModal()"
+  >
     <b-container fluid>
       <h6>Pack type: {{packToTransfer.type}}</h6>
       <h6>Your existing pack: {{packToTransfer.amount}}</h6>
@@ -13,6 +20,7 @@
       ></b-input>Receiver Loom Address:
       <input-address
         v-model="receiverAddress"
+        chain="loom"
         :placeholder="'Loom Address'"
         @isValid="isValidAddressFormat"
       />
@@ -54,7 +62,7 @@ export default class TransferPacksModal extends Vue {
   confirmPack = false
   isValidAddress = false
 
-  resetModal(){
+  resetModal() {
     this.amountToTransfer = 1
     this.receiverAddress = ""
   }

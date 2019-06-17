@@ -33,7 +33,7 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
       // @ts-ignore
       `eth:${ethereumModule.state.erc20Addresses.LOOM}`,
     )
-    this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
+    return this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
   }
   async withdrawalReceipt() {
     const receipt = await this.contract.withdrawalReceiptAsync(this.mapping.to)

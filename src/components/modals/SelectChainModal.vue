@@ -22,7 +22,7 @@ import { DashboardState } from "../../types"
 
 @Component
 export default class SelectChainModal extends Vue {
-  @Prop(String) type: string = ""
+  @Prop(String) type!: "DEPOSIT" | "WITHDRAW"
 
   get title(): string {
     return capitalize(this.type.toLowerCase())

@@ -20,7 +20,7 @@
 
     <feedback-notification class="custom-alert text-center"/>
 
-    <div class="d-none d-md-block">
+    <div class="d-none d-lg-block">
       <nav class="navbar">
         <div class="container-fluid">
           <router-link to="/account" class="navbar-brand">
@@ -33,9 +33,9 @@
       </nav>
     </div>
 
-    <div class="d-sm-block d-md-none">
+    <div class="d-lg-none">
       <nav class="mobile-navbar">
-        <b-navbar toggleable="md" type="dark">
+        <b-navbar toggleable="lg" type="dark">
           <div class="container d-flex justify-content-between ensure-padded">
             <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
               <strong>Back</strong>

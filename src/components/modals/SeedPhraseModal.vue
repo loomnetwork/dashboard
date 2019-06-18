@@ -116,8 +116,9 @@ export default class SeedPhraseModal extends Vue {
     const mnemonic = generateMnemonic()
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
-    const privateKeyUint8ArrayFromSeed = await CryptoUtils.generatePrivateKeyFromSeed(
-      new Uint8Array(sha256.array(mnemonic)))
+    const seed = mnemonicToSeedSync(mnemonic)
+    const privateKeyUint8ArrayFromSeed = CryptoUtils.generatePrivateKeyFromSeed(new Uint8Array(sha256.array(seed)))
+    const privateKeyB64 = CryptoUtils.Uint8ArrayToB64(privateKeyUint8ArrayFromSeed)
     const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({ privateKey: privateKeyUint8ArrayFromSeed })
     this.publicAddress = publicKey
     this.confirmMnemonic = false

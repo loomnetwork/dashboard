@@ -28,5 +28,5 @@ export default {
   },
   coinDataUrl: "",
   disabled: [],
-  chains: ["ethereum"],
+  chains: ["ethereum", "binance"],
 } as DashboardConfig

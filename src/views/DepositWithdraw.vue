@@ -124,6 +124,11 @@ export default class DepositWithdraw extends Vue {
     const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
     tokenSymbols.forEach((symbol) => plasmaModule.addToken(symbol))
     this.filterTokens()
+
+    if (this.$route.query.depositCoin === "LOOM") {
+      this.selectedToken = "LOOM"
+      this.setShowDepositForm(true)
+    }
   }
 
   @Watch("inputFilter")

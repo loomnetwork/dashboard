@@ -126,7 +126,8 @@ export default class DepositWithdraw extends Vue {
     this.filterTokens()
 
     if (this.$route.query.depositCoin === "LOOM") {
-      this.requestDeposit("LOOM")
+      this.selectedToken = "LOOM"
+      this.setShowDepositForm(true)
     }
   }
 

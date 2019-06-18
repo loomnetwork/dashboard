@@ -62,9 +62,9 @@ export default class AddTokenModal extends Vue {
 
   @Watch("selectedToken")
   filterToken() {
-    const filter = this.selectedToken
+    const filter = this.selectedToken.toLowerCase()
     this.filteredSymbols = this.tokenSymbol
-      .filter((token) => (token.includes(filter) || filter === ""))
+      .filter((token) => (token.toLowerCase().includes(filter) || filter === ""))
   }
 
   addToken() {

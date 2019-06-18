@@ -77,7 +77,7 @@
             <input-address
               id="deployer-address-input"
               v-model="newPublicAddress"
-              chain="loom"
+              chain="any"
               :placeholder="'loom0000000000000000000000000000000000000000'"
               @isValid="isValidAddressFormat"
             />
@@ -96,7 +96,6 @@
               >
                 <input type="radio" v-model="tierSelected" :value="tier">
                 <strong>Tier {{tier.tierId +1}}</strong>
-                <div class="spec">Max 10 Tx/min</div>
                 <div class="fee">{{tier.fee | tokenAmount}} LOOM</div>
               </label>
               <label class="radio tier disabled" v-for="i in [1,2,3]" :key="i">

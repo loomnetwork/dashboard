@@ -48,7 +48,7 @@
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken"/>
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
@@ -124,6 +124,11 @@ export default class DepositWithdraw extends Vue {
     const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
     tokenSymbols.forEach((symbol) => plasmaModule.addToken(symbol))
     this.filterTokens()
+
+    if (this.$route.query.depositCoin === "LOOM") {
+      this.selectedToken = "LOOM"
+      this.setShowDepositForm(true)
+    }
   }
 
   @Watch("inputFilter")
@@ -183,7 +188,7 @@ export default class DepositWithdraw extends Vue {
   // }
 
   requestSwap(token: string) {
-    plasmaModule.setSelectedToken(token)
+    this.selectedToken = token
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 

@@ -20,7 +20,11 @@ export default {
       loomGateway: "0xEA319a0Ea64f482060032b4BE8d9d3F7232c1214",
     },
   },
+  dpos: {
+    bootstrapNodes: ["0x0e99fc16e32e568971908f2ce54b967a42663a26"],
+  },
   coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
   disabled: ["binance"],
   chains: ["ethereum", "binance"],
+  gateway: { chains: ["ethereum", "binance"] },
 } as DashboardConfig

@@ -54,7 +54,7 @@
         <h5 class="alert-heading">LOOM balance low.</h5>
         <p>Whitelisting keys requires at least 10 LOOM. Your balance is {{ loomBalance }} LOOM</p>
         <footer style="display: flex;justify-content: flex-end;">
-          <b-button variant="primary">Deposit more LOOM to Plasmachain</b-button>
+          <b-button variant="primary" @click="goDeposit">Deposit more LOOM to Plasmachain</b-button>
         </footer>
       </b-alert>
 
@@ -223,6 +223,10 @@ export default class AddKey extends Vue {
       feedbackModule.showSuccess("Address copied."),
       console.error,
     )
+  }
+
+  goDeposit() {
+    this.$router.push({ path: 'wallet', query: { depositCoin: 'LOOM' } })
   }
 
   async mounted() {

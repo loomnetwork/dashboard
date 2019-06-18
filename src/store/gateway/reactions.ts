@@ -35,7 +35,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
       }
       if (mapping.to!.isEmpty() === false && store.state.ethereum.signer) {
         await setPlasmaAccount(mapping)
-        initializeGateways(mapping)
+        await initializeGateways(mapping)
 
         const plasmaGateways = PlasmaGateways.service()
         const ethereumGateways = EthereumGateways.service()
@@ -69,6 +69,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
   )
 
   async function initializeGateways(mapping: IAddressMapping) {
+
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,

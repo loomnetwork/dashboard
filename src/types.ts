@@ -3,9 +3,9 @@ import { Client, DPOSUserV3 } from "loom-js"
 import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
 import { Contract } from "web3-eth-contract"
 import { CommonState } from "./store/common/types"
-import { HasDPOSState } from "@/dpos/store/types"
+import { HasDPOSState, DPOSConfig } from "@/dpos/store/types"
 import { EthereumConfig } from "./store/ethereum/types"
-import { HasGatewayState } from "@/store/gateway/types"
+import { HasGatewayState, GatewayConfig } from "@/store/gateway/types"
 import { PlasmaConfig } from "@/store/plasma/types"
 import { HasWhiteListState } from "@/whitelist/store/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
@@ -18,6 +18,8 @@ export interface DashboardConfig {
   chains: string[]
   plasma: PlasmaConfig
   ethereum: EthereumConfig
+  dpos: DPOSConfig
+  gateway: GatewayConfig
 }
 
 export interface DashboardState
@@ -28,9 +30,9 @@ export interface DashboardState
   env: string
   envs: DashboardConfig[]
   disabled: string[]
+  chains: string[]
   // remove
   DPOS: DposState
-  // DappChain: DappchainState
   common: CommonState
 }
 

@@ -2,6 +2,8 @@ import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb"
 import Vue from "vue"
 import BN from "bn.js"
 import { formatToCrypto, formatToLoomAddress } from "./utils"
+import { ethers } from "ethers"
+import BigNumber from "bignumber.js"
 
 // https://github.com/palantir/blueprint/issues/959#issuecomment-335965129\
 // const durationFormat = require("moment-duration-format")
@@ -63,10 +65,15 @@ export function formatLockTimeBonus(value: LocktimeTier) {
 //     console.log(moment.duration(parseInt(unixTimestamp)*1000 - Date.now()))
 //     return moment.duration(parseInt(unixTimestamp)*1000 - Date.now()).humanize(true)
 // }
-
+const DATE_TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+})
 export function formatDate(timestamp) {
-  console.log("date", timestamp)
-  return new Date(parseInt("" + timestamp, 10) * 1000).toString()
+  return DATE_TIME_FORMAT.format(new Date(parseInt("" + timestamp, 10) * 1000))
 }
 
 export function readableDateTime(timestamp) {
@@ -97,9 +104,10 @@ export function formatUrl(domainOrUrl: string) {
     : "https://" + domainOrUrl
 }
 
-export function formatTokenAmount(wei: BN) {
-  const token = wei.div(new BN("" + 10 ** 18))
-  return token.lt(new BN(0)) ? token.toString(10) : token.toString(10)
+export function formatTokenAmount(wei: BN, decimals = 18) {
+  if (wei.isZero()) return "0"
+  const c = new BigNumber(wei.toString()).dividedBy(10 ** decimals)
+  return c.lt(1) ? c.toFormat(6) : c.toFormat(2)
 }
 
 export function swapTextBase64AndHexLabel(input) {

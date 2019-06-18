@@ -112,10 +112,6 @@ export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
 ) {
-  // return new EthereumGateways()
-  const account = web3.eth.defaultAccount
-  // create gateways and vmc (maybe vmc does not care...)
-
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI_v2 as AbiItem[],
     addresses.loomGateway,

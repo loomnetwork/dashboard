@@ -149,8 +149,10 @@ export default class DelegateModal extends Vue {
     return Math.floor(this.balance)
   }
 
-  async delegate() {
-    dposModule.delegate(this.dposState.delegation!)
+  delegate() {
+    const delegation = this.dposState.delegation!
+    dposModule.clearRequest()
+    dposModule.delegate(delegation)
   }
 
   formatRangeInput(value, event) {
@@ -164,7 +166,7 @@ export default class DelegateModal extends Vue {
   }
 
   cancel() {
-    dposModule.cancelRequest()
+    dposModule.clearRequest()
   }
 
 }

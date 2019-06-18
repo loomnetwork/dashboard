@@ -81,7 +81,7 @@ class CoinAdapter implements ContractAdapter {
   get contractAddress() {
     return this.contract.address.local.toString().toLocaleLowerCase()
   }
-  constructor(readonly token: string, public contract: Coin) {}
+  constructor(readonly token: string, public contract: Coin) { }
 
   balanceOf(account: string) {
     const chainId = this.contract.address.chainId
@@ -108,7 +108,7 @@ class CoinAdapter implements ContractAdapter {
 }
 
 class ERC20Adapter implements ContractAdapter {
-  constructor(readonly token: string, public contract: ERC20) {}
+  constructor(readonly token: string, public contract: ERC20) { }
   get contractAddress() {
     return this.contract.address.toLocaleLowerCase()
   }
@@ -241,18 +241,18 @@ export async function approve(
   )
   try {
     await adapter.approve(to, weiAmount)
+    return true
   } catch (error) {
-    let errorMessage = error.message
-    const userDeniedSignTx = i18n.t("messages.user_denied_sign_tx").toString()
     if (error.message.includes("User denied message")) {
-      errorMessage = userDeniedSignTx
+      feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
+    } else {
+      feedbackModule.showError(
+        i18n
+          .t("messages.transaction_apprv_err_tx", { msg: error.message })
+          .toString(),
+      )
     }
-    feedbackModule.showError(
-      i18n
-        .t("messages.transaction_apprv_err_tx", { msg: errorMessage })
-        .toString(),
-    )
-    throw error
+    return false
   }
 }
 

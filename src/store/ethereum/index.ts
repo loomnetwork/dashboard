@@ -22,6 +22,7 @@ import { tokenService } from "@/services/TokenService"
 import { setBlockNumber } from "./mutations"
 import { modifyRPCSigner } from "../gateway/signer"
 import { provider } from "web3-providers/types"
+import { feedbackModule } from "@/feedback/store"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -131,12 +132,16 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
   context.state.walletType = walletType
   if (wallet.isMultiAccount === false) {
+    feedbackModule.setTask("Connecting wallet")
+    feedbackModule.setStep("Connecting wallet")
+
     await wallet
       .createProvider()
       .then(async (web3provider) => await setProvider(context, web3provider))
       .catch((e) => {
         console.error(e)
       })
+    feedbackModule.endTask()
   } else {
     context.state.walletType = walletType
   }

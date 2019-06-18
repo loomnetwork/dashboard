@@ -65,7 +65,7 @@ export default class RedelegateModal extends Vue {
   set visible(val: boolean) {
     // clear
     if (val === false) {
-      dposModule.cancelRequest()
+      dposModule.clearRequest()
     }
   }
 

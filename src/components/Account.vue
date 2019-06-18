@@ -30,7 +30,7 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { dposModule } from "@/dpos/store"
-import { DashboardState, DposState } from "@/types"
+import { DashboardState } from "@/types"
 import { feedbackModule } from "@/feedback/store"
 
 @Component
@@ -40,10 +40,6 @@ export default class Account extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
-  }
-
-  get dposState(): DposState {
-    return this.$store.state.dpos
   }
 
   get ethAccount() {

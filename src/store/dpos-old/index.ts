@@ -11,7 +11,6 @@ import {
   SignedTxMiddleware,
 } from "loom-js"
 import { formatToCrypto, getDomainType } from "../../utils"
-import { initWeb3 as web3init } from "../../services/initWeb3"
 import Web3 from "web3"
 import debug from "debug"
 import GatewayJSON from "@/contracts/Gateway.json"
@@ -495,7 +494,9 @@ async function redelegateAsync(
 
   try {
     await user.redelegateAsync(origin, target, new BN(amount), index)
-    feedbackModule.showSuccess(i18n.t("messages.redelegate_success_tx").toString())
+    feedbackModule.showSuccess(
+      i18n.t("messages.redelegate_success_tx").toString(),
+    )
   } catch (err) {
     console.error(err)
     feedbackModule.showError(i18n.t("messages.redelegate_err_tx").toString())
@@ -970,7 +971,9 @@ async function switchDposUser(ctx: Context, payload: { web3?: any }) {
       })
     }
   } catch (err) {
-    feedbackModule.showError(i18n.t("messages.switch_dpouser_err_tx").toString())
+    feedbackModule.showError(
+      i18n.t("messages.switch_dpouser_err_tx").toString(),
+    )
   }
   ctx.state.dposUser = user
 }

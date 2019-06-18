@@ -49,26 +49,17 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import LoadingSpinner from "../LoadingSpinner.vue"
-import DropdownTemplate from "./DropdownTemplate.vue"
 import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
 import { pathsArr as hdPaths } from "@/services/ledger/paths"
 
-// @ts-ignore
-// const HookedWalletProvider = require("web3-provider-engine/subproviders/hooked-wallet")
-import HookedWalletProvider from "web3-provider-engine/subproviders/hooked-wallet"
-import { formatToCrypto } from "@/utils"
-import { initWeb3Hardware, initWeb3SelectedWallet, initWeb3SelectedWalletBeta } from "@/services/initWeb3"
-import { CommonTypedStore } from "@/store/common"
-import { DPOSTypedStore } from "@/store/dpos-old"
 import { DashboardState } from "@/types"
 import Web3 from "web3"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule as feedback } from "@/feedback/store"
 import TransportU2F from "@ledgerhq/hw-transport-u2f"
 import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
-import { of, from } from 'rxjs';
-import { map, tap, flatMap, concatMap } from 'rxjs/operators';
+import { of, from } from "rxjs"
+import { map, tap, flatMap, concatMap } from "rxjs/operators"
 
 interface LedgerAccount {
   address: string
@@ -76,11 +67,7 @@ interface LedgerAccount {
   path: string
 }
 
-@Component({
-  components: {
-    LoadingSpinner,
-  },
-})
+@Component
 export default class HardwareWalletModal extends Vue {
   transport!: Promise<TransportU2F>
   // Pagination
@@ -145,8 +132,8 @@ export default class HardwareWalletModal extends Vue {
       path,
       "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
       networkId)
-    //const web3account = (await .web3!.eth.getAccounts())[0]
-    //console.assert(web3account === selectedAddress,
+    // const web3account = (await .web3!.eth.getAccounts())[0]
+    // console.assert(web3account === selectedAddress,
     //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
     // @ts-ignore
     ethereumModule.setProvider(providerEngine)
@@ -180,7 +167,7 @@ export default class HardwareWalletModal extends Vue {
       , {
         networkId,
         accountsLength,
-        path: this.calculatePath(path, offset)
+        path: this.calculatePath(path, offset),
       })
     const t = Date.now()
     console.log("getAccounts")
@@ -226,7 +213,7 @@ export default class HardwareWalletModal extends Vue {
     } catch (err) {
       this.ledgerLocked = true
       feedback.showInfo("Please unlock your ledger and go to ethereum app")
-      //this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      // this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       this.loading = false
       return
     }
@@ -243,7 +230,7 @@ export default class HardwareWalletModal extends Vue {
     } catch (err) {
       this.ledgerLocked = true
       feedback.showInfo("Please unlock your ledger and go to ethereum app")
-      //this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      // this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       this.loading = false
       return
     }
@@ -252,9 +239,8 @@ export default class HardwareWalletModal extends Vue {
   async mounted() {
     this.transport = await TransportU2F.create(3000, 10000)
     // use state.ethereum.ennpoint
-    this.infura = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0'))
+    this.infura = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0"))
   }
-
 
 }
 </script>

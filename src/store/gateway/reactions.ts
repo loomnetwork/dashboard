@@ -93,8 +93,8 @@ export function gatewayReactions(store: Store<DashboardState>) {
     const loomGatewayAddr = Address.fromString(`eth:${addresses.loomGateway}`)
     const ethGatewayAddr = Address.fromString(`eth:${addresses.mainGateway}`)
 
-    plasmaGatewayService.add("LOOM", loomGatewayAddr)
-    plasmaGatewayService.add("ETH", ethGatewayAddr)
+    plasmaGatewayService.add("ethereum", "LOOM", loomGatewayAddr)
+    plasmaGatewayService.add("ethereum", "ETH", ethGatewayAddr)
   }
 
   /**
@@ -104,7 +104,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     const plasmaGateways = PlasmaGateways.service()
 
     // TODO: Add support for multiple tokens
-    const receipt = await plasmaGateways.get("LOOM").withdrawalReceipt()
+    const receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     // @ts-ignore
     const withdrawalIsPending = JSON.parse(
       localStorage.getItem("pendingWithdrawal") || "false",

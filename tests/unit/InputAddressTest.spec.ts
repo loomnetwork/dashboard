@@ -30,17 +30,13 @@ describe("InputAddress: Valid address cases", () => {
 })
 
 describe("InputAddress: Invalid address cases", () => {
-  it("Should show an error message when address is empty", () => {
+  it("Should not show an error message when address is empty", () => {
     const wrapper = factory({ value: "" })
-    // @ts-ignore
-    wrapper.vm.onInput("")
-    expect(wrapper.find(".error").exists()).to.equal(true)
+    expect(wrapper.find(".error").exists()).to.equal(false)
   })
 
   it("Should not show an error message after clear invalid address", () => {
-    const wrapper = factory({ value: "", chain: LOOM_CHAIN })
-    // @ts-ignore
-    wrapper.vm.onInput(LOOM_ADDRESS)
+    const wrapper = factory({ value: "" })
     // @ts-ignore
     wrapper.vm.onInput("")
     expect(wrapper.find(".error").exists()).to.equal(false)

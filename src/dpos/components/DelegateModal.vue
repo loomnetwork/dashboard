@@ -64,7 +64,6 @@
 import Vue from "vue"
 import { Component, Prop } from "vue-property-decorator"
 import BN from "bn.js"
-import { CommonTypedStore } from "../../store/common"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState, DPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
@@ -100,8 +99,6 @@ export default class DelegateModal extends Vue {
 
   minAmount = new BN("1")
   minLockTimeTier = 0
-
-  setError = CommonTypedStore.setError
 
   get state(): HasDPOSState {
     return this.$store.state

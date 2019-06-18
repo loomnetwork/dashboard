@@ -32,7 +32,6 @@ import "@/whitelist/store"
 import { whiteListReaction } from "../whitelist/store/reactions"
 
 import "./common"
-import "./dpos-old"
 
 import "./locale"
 import "./plasma/assets"

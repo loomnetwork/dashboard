@@ -7,11 +7,18 @@
     :busy="true"
     no-close-on-esc
     no-close-on-backdrop
-    hide-header-close>
+    hide-header-close
+  >
     <template slot="modal-title">Approve deposit</template>
     <div v-if="!status">
       <form>
-        <amount-input :min="1" :max="userBalance" v-model="transferAmount" :symbol="token" @isError="errorHandler" />
+        <amount-input
+          :min="1"
+          :max="userBalance"
+          v-model="transferAmount"
+          :symbol="token"
+          @isError="errorHandler"
+        />
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
       </form>
     </div>
@@ -50,7 +57,6 @@ import { Funds } from "@/types"
 
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { setShowDepositForm, setShowDepositApproved } from "../../store/dpos-old/mutations"
 import { gatewayReactions } from "../../store/gateway/reactions"
 
 @Component({
@@ -60,7 +66,7 @@ import { gatewayReactions } from "../../store/gateway/reactions"
 })
 export default class DepositForm extends Vue {
 
-  @Prop({required: true}) token!: string // prettier-ignore
+  @Prop({ required: true }) token!: string // prettier-ignore
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowDepositApproved = gatewayModule.setShowDepositApproved
@@ -107,9 +113,9 @@ export default class DepositForm extends Vue {
   }
 
   async sendApproval(bvModalEvt) {
-    if(this.transferAmount === "") return
-    if(this.hasErrors) return
-    
+    if (this.transferAmount === "") return
+    if (this.hasErrors) return
+
     // Prevent modal from closing
     bvModalEvt.preventDefault()
     const payload: Funds = {

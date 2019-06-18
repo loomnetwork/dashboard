@@ -45,14 +45,13 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { assetsModule } from "@/store/plasma/assets"
-import { CommonTypedStore } from "@/store/common"
 import InputAddress from "../InputAddress.vue"
-import { feedbackModule } from "../../feedback/store";
+import { feedbackModule } from "../../feedback/store"
 
 @Component({
   components: {
-    InputAddress
-  }
+    InputAddress,
+  },
 })
 export default class TransferPacksModal extends Vue {
   amountToTransfer: number = 1

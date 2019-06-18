@@ -92,8 +92,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import { mapActions, createNamespacedHelpers } from "vuex"
-import { CommonTypedStore } from "@/store/common"
 import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 import { CryptoUtils } from "loom-js"
@@ -110,9 +108,11 @@ export default class SeedPhraseModal extends Vue {
   confirmMnemonic = false
   showSuccess = feedbackModule.showSuccess
   getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   async generateSeeds() {
+    feedbackModule.setTask("New key")
+    feedbackModule.setStep("Generating new key")
+
     const mnemonic = generateMnemonic()
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
@@ -122,12 +122,11 @@ export default class SeedPhraseModal extends Vue {
     const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({ privateKey: privateKeyUint8ArrayFromSeed })
     this.publicAddress = publicKey
     this.confirmMnemonic = false
-    this.setShowLoadingSpinner(false)
+    feedbackModule.endTask()
   }
 
   mounted() {
     this.$root.$on("bv::modal::show", () => {
-      this.setShowLoadingSpinner(true)
       this.generateSeeds()
     })
   }

@@ -55,7 +55,7 @@ export default class Account extends Vue {
   }
 
   copyEthereum() {
-    this.$copyText(this.plasmaAccount).then(() =>
+    this.$copyText(this.ethAccount).then(() =>
       feedbackModule.showSuccess("Ethereum address copied."),
       console.error,
     )

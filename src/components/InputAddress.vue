@@ -27,6 +27,7 @@ export default class InputAddress extends Vue {
   patterns = {
     loom: /^loom[a-fA-F0-9]{40}$/,
     bnb: /^0x[a-fA-F0-9]{40}$/,
+    any: /^(0x|loom)[a-fA-F0-9]{40}$/,
   }
 
   internal: string = ""
@@ -34,12 +35,16 @@ export default class InputAddress extends Vue {
   isValidAddress: boolean = true
 
   onInput(value) {
-    this.validateAddressFormat(value)
-    this.internal = value
-    if (this.isValidAddress) {
-      this.$emit("input", value)
+    if (value !== "") {
+      this.validateAddressFormat(value)
+      this.internal = value
+      if (this.isValidAddress) {
+        this.$emit("input", value)
+      } else {
+        this.$emit("input", "")
+      }
     } else {
-      this.$emit("input", "")
+      this.isValidAddress = true
     }
   }
 

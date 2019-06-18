@@ -23,6 +23,8 @@ const dposModule = {
     return stateGetter()
   },
 
+  setConfig: builder.commit(mutations.setConfig),
+
   setElectionTime: builder.commit(mutations.setElectionTime),
   setRewards: builder.commit(mutations.setRewards),
 
@@ -98,6 +100,8 @@ async function refreshValidators(ctx: ActionContext) {
     if (existing === undefined) {
       existing = new Validator()
       existing.addr = addr
+      debugger
+      existing.isBootstrap = ctx.state.bootstrapNodes.includes(addr)
       nodes.push(existing)
     }
     return existing

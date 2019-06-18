@@ -166,11 +166,11 @@ async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
   return Address.fromString(`${chainId}:${caller}`)
 }
 
-async function getPublicAddressFromPrivateKeyUint8Array(
+function getPublicAddressFromPrivateKeyUint8Array(
   context: PlasmaContext,
   payload: { privateKey: Uint8Array },
 ) {
-  const publicKeyUint8Array = await CryptoUtils.publicKeyFromPrivateKey(
+  const publicKeyUint8Array = CryptoUtils.publicKeyFromPrivateKey(
     payload.privateKey,
   )
   const publicAddress = LocalAddress.fromPublicKey(

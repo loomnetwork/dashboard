@@ -20,7 +20,13 @@ export default {
       loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
   },
+  dpos: {
+    bootstrapNodes: [],
+  },
+  gateway: {
+    chains: ["ethereum"],
+  },
   coinDataUrl: "",
   disabled: [],
-  chains: ["ethereum"],
+  chains: ["ethereum", "binance"],
 } as DashboardConfig

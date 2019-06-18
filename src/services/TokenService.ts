@@ -72,7 +72,6 @@ class TokenService {
    */
   getAllTokenSymbol() {
     const symbolList = this.symbols.map((token) => token.symbol)
-    console.log("getting all token symbol... : ", symbolList)
     return symbolList
   }
   /**

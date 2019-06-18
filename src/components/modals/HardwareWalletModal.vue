@@ -1,67 +1,48 @@
 <template>
   <b-modal
-    id="confirm-seed-modal"
+    id="hd-wallet-modal"
     v-model="visible"
     title="Hardware wallet"
     hide-footer
     centered
     no-close-on-backdrop
   >
+    <b-alert>Please make sure your Ledger is connected, unlocked and then go tho ethereum app.</b-alert>
     <b-form style="display: flex; flex-direction: column;">
+      <b-alert class="my-1 justify-content-between pt-4">
+        <p v-if="errorMsg" class="text-error mt-2" variant="error">{{errorMsg}}</p>
+      </b-alert>
       <b-form-select class="mb-2" :value="null" :options="paths" v-model="selectedPath">
         <option slot="first" :value="null">Select a path</option>
       </b-form-select>
-      <div v-if="loadingAccounts">
+      <div v-if="loading">
         <b-spinner label="Loading accoumt"/>Loading accounts. Please wait
       </div>
-      <div v-else-if="loading">
-        <b-spinner label="Loading accoumt"/>Loading accounts. Please wait
-      </div>
-      {{accounts}}
-      <b-list-group class="account-list">
+      <b-list-group class="account-list" v-if="selectedPath">
         <b-list-group-item
-          v-for="(entry) in accounts"
-          :key="entry.account"
-          :active="entry.account === account.account"
-          @click="account = entry"
+          v-for="option in accounts"
+          :key="option.address"
+          :active="option === account"
+          @click="account = option"
         >
-          <address>{{formatAddress(entry.account)}}</address>
-          <div class="balance">{{entry.balance}}</div>
+          <address>{{formatAddress(option.address)}}</address>
+          <div class="balance">{{option.balance}} ETH</div>
+        </b-list-group-item>
+        <b-list-group-item class="load-more" @click="loadMore" v-if="!loadingAccounts">Load more</b-list-group-item>
+        <b-list-group-item class="loading" v-else>
+          <b-spinner label="Loading accoumt"/>
         </b-list-group-item>
       </b-list-group>
-      <!--
-      <b-form-group v-if="accounts">
-        <table class="table b-table table-striped table-hover">
-          <tbody>
-            <b-form-radio-group v-model="selectedAddress" stacked name="radiosStacked">
-              <tr v-for="(entry, index) in accounts" :key="index" @click="account = entry">
-                <td>{{entry.index}}</td>
-                <td>{{formatAddress(entry.account)}}</td>
-                <td>{{formatBalance(entry.balance)}}</td>
-                <td>
-                  <b-form-radio :value="index"></b-form-radio>
-                </td>
-              </tr>
-            </b-form-radio-group>
-            <div v-if="accounts.length > 0" class="pagination-container">
-              <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" size="md"/>
-            </div>
-          </tbody>
-        </table>
-      </b-form-group>
-      -->
-      <b-row class="my-1 justify-content-between pt-4">
-        <span v-if="errorMsg" class="text-error mt-2" variant="error">{{errorMsg}}</span>
-      </b-row>
+
+      <footer slot="modal-footer" class="mt-3">
+        <b-button
+          class="btn proceed-btn"
+          :disabled="account === null"
+          variant="primary"
+          @click="connect(account)"
+        >Use account</b-button>
+      </footer>
     </b-form>
-    <footer slot="modal-footer" class="w-100">
-      <b-button
-        class="btn proceed-btn"
-        :disabled="account === null"
-        variant="primary"
-        @click="connect(account)"
-      >Proceed</b-button>
-    </footer>
   </b-modal>
 </template>
 
@@ -84,6 +65,10 @@ import { DashboardState } from "@/types"
 import Web3 from "web3"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule as feedback } from "@/feedback/store"
+import TransportU2F from "@ledgerhq/hw-transport-u2f"
+import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
+import { of, from } from 'rxjs';
+import { map, tap, flatMap, concatMap } from 'rxjs/operators';
 
 interface LedgerAccount {
   address: string
@@ -97,29 +82,30 @@ interface LedgerAccount {
   },
 })
 export default class HardwareWalletModal extends Vue {
-
+  transport!: Promise<TransportU2F>
   // Pagination
   rows = 100
   perPage = 10
   currentPage = 1
 
+  ledgerLocked = false
+
   hdWallet: CustomLedgerWallet | null = null
   maxAddresses = 100
   errorMsg: any = null
   accounts: any[] = []
-  loadingAccounts = false
   loading = false
   path = ""
   account: LedgerAccount | null = null
   derivationPath = ""
   paths = hdPaths.paths.map((item) => ({ value: item.path, text: item.label }))
   selectedPath: string = ""
-  selectedAddress = -1
 
   web3: Web3 | null = null
+  infura: Web3
+  ledger: any = null
 
-  showError = feedback.showError
-  showSuccess = feedback.showSuccess
+  loadingAccounts: boolean = false
 
   get visible(): boolean {
     const state = this.state.ethereum
@@ -137,57 +123,28 @@ export default class HardwareWalletModal extends Vue {
     return this.$store.state
   }
 
-  @Watch("currentPage")
-  onCurrentPageChange(newValue, oldValue) {
-    if (newValue) {
-      this.updateAddresses()
-    }
-  }
-
-  //@Watch("selectedPath")
-  onPathChange(newValue, oldValue) {
-    if (newValue) {
-      this.updateAddresses()
-      this.selectPath(newValue)
-    }
-  }
-
-  async updateAddresses() {
-    this.loadingAccounts = true
-    this.derivationPath = this.selectedPath.replace("m/", "")
-    const offset = (this.currentPage - 1) * this.perPage
-
-    const results = await initWeb3SelectedWalletBeta(this.calculatePath(offset)!)
-    results.map((address, index) => {
-      const offsetIndex = offset + index
-      return {
-        address,
-        balance: "loading",
-        index: offsetIndex,
-        path: this.calculatePath(offsetIndex),
-      }
-    })
-
-    if (this.accounts.length > 0) this.getBalances()
-    this.loading = false
-  }
-
-  calculatePath(offset) {
-    if (this.derivationPath === "44'/60'") {
+  calculatePath(path, offset) {
+    const derivationPath = path.replace("m/", "")
+    if (derivationPath === "44'/60'") {
       // Ethereum addresses (Ledger live)
       return `44'/60'/${offset}'/0/0`
-    } else if (this.derivationPath === "44'/60'/0'") {
+    } else if (derivationPath === "44'/60'/0'") {
       // Ethereum addresses (legacy)
-      return `${this.derivationPath}/${offset}`
+      return `${derivationPath}/${offset}`
     }
+    throw new Error("Don't now how to handle path " + path)
   }
 
   async connect(account: LedgerAccount) {
     const selectedAddress = account.address
-
+    const path = this.calculatePath(this.selectedPath, this.accounts.indexOf(account))
+    console.log(path, this.state.ethereum.endpoint)
+    const networkId = Number(this.state.ethereum.networkId)
     // @ts-ignore
-    const providerEngine = await initWeb3SelectedWallet(account.path)
-    // assert web3 address is the actual user selected address. Until we fully test/trust this thing...
+    const providerEngine = await initWeb3SelectedWallet(
+      path,
+      "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
+      networkId)
     //const web3account = (await .web3!.eth.getAccounts())[0]
     //console.assert(web3account === selectedAddress,
     //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
@@ -196,75 +153,60 @@ export default class HardwareWalletModal extends Vue {
   }
 
   @Watch("selectedPath")
-  async selectPath(path) {
-    this.accounts = []
-    this.selectedAddress = -1
-
-    if (this.hdWallet === null) {
-      try {
-        this.loading = true
-        this.hdWallet = await createWallet()
-      } catch (err) {
-        this.showError(this.$t("messages.select_path_err_tx").toString())
-        console.error("Error in LedgerWallet:", err)
-        this.loading = false
-        return
-      }
-    }
-
-    this.loadingAccounts = true
-    try {
-      this.loading = true
-
-      await this.hdWallet.init(path)
-    } catch (err) {
-      this.showError(this.$t("messages.select_path_err_tx").toString())
-      console.log("Error when trying to init hd wallet:", err)
-      this.loading = false
-      return
-    }
-    let i = 0
-    const accountsTemp: any[] = []
-    while (i <= this.maxAddresses) {
-      const account: HDKey = await this.hdWallet.getAccount(i)
-      console.log("account", account)
-      this.accounts.push({
-        address: account,
-        balance: "loading",
-      })
-      i++
-    }
-    this.loadingAccounts = false
-
-    if (this.accounts.length > 0) return this.getBalances()
-
-    // }).catch((err) => {
-    //   this.showError(this.$t("messages.load_wallet_err_tx").toString())
-    //   console.log("Error when trying to get accounts:", err)
-    // }).finally(async () => {
-    //   this.loadingAccounts = false
-    // })
-
+  onPathChange() {
+    this.loadMore()
   }
 
+  @Watch("selectedPath")
+  async loadAccounts() {
+    this.accounts = []
+  }
 
+  loadMore() {
+    const getTransport = () => this.transport
+    const path = this.selectedPath
+    const networkId = Number(this.state.ethereum.networkId)
+    const accountsLength = 4
+    const offset = this.accounts.length
+    // stop the loop when selectedPath has chaned or max accounts reached
+    if (offset + accountsLength >= 100) {
+      return
+    }
 
-  // async setWeb3Instance() {
-  //   if (typeof this.web3 === "undefined") {
-  //     const web3 = await initWeb3Hardware()
-  //     // @ts-ignore
-  //     this.setWeb3(web3js)
-  //   }
-  // }
+    console.log("loading,", path, offset, networkId, accountsLength)
+    this.loadingAccounts = true
+    const ledger = createLedgerSubprovider(
+      getTransport
+      , {
+        networkId,
+        accountsLength,
+        path: this.calculatePath(path, offset)
+      })
+    const t = Date.now()
+    console.log("getAccounts")
+    ledger.getAccounts((error, accounts: string[]) => {
+      console.log("getAccounts", (Date.now() - t) / 1000)
 
-  getBalances() {
-    this.accounts.forEach((item) => {
-      this.web3.eth
-        .getBalance(item.account)
-        .then((balance) => {
-          item.balance = balance
-        })
+      if (error) {
+        // show error "please unlock your ledger wallet and go to the etherum app"
+        console.log(error)
+      } else {
+        from(accounts)
+          .pipe(
+            map((address) => ({ address, balance: -1 })),
+            concatMap(this.loadBalance),
+          ).subscribe(
+            (account) => this.accounts.push(account),
+            console.error,
+            () => this.loadingAccounts = false,
+          )
+      }
     })
+  }
+
+  async loadBalance(account) {
+    account.balance = await this.infura.eth.getBalance(account.address)
+    return account
   }
 
   formatAddress(address) {
@@ -273,7 +215,7 @@ export default class HardwareWalletModal extends Vue {
   }
 
   @Watch("visible")
-  async init(visible) {
+  async onToggle(visible) {
     if (visible === false) return
 
     console.log("visible")
@@ -282,6 +224,7 @@ export default class HardwareWalletModal extends Vue {
       this.loading = true
       this.hdWallet = await createWallet()
     } catch (err) {
+      this.ledgerLocked = true
       feedback.showInfo("Please unlock your ledger and go to ethereum app")
       //this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       this.loading = false
@@ -290,18 +233,57 @@ export default class HardwareWalletModal extends Vue {
     this.loading = false
   }
 
+  async init() {
+    // await this.setWeb3Instance()
+    this.ledgerLocked = false
+    try {
+      this.loading = true
+      this.hdWallet = await createWallet()
+      this.loading = false
+    } catch (err) {
+      this.ledgerLocked = true
+      feedback.showInfo("Please unlock your ledger and go to ethereum app")
+      //this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
+      this.loading = false
+      return
+    }
+  }
+
+  async mounted() {
+    this.transport = await TransportU2F.create(3000, 10000)
+    // use state.ethereum.ennpoint
+    this.infura = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0'))
+  }
 
 
 }
 </script>
 <style lang="scss">
 .account-list {
+  counter-reset: address;
+  max-height: calc(100vh - 300px);
+  overflow-y: scroll;
   .list-group-item {
     display: flex;
     > address {
       margin: 0;
-      font-family: "Courier New", Courier, monospace;
-      width: 230px;
+      font-family: Monaco, "Lucida Console", monospace;
+      width: 260px;
+      font-size: 14px;
+    }
+    &::before {
+      display: block;
+      text-align: center;
+      padding-right: 10px;
+      font-size: 12px;
+      font-family: inherit;
+      counter-increment: address;
+      content: counter(address);
+      width: 36px;
+    }
+    &.load-more::before,
+    &.loading::before {
+      content: "";
     }
     .balance {
       flex: 1;

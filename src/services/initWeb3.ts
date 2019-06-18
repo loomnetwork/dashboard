@@ -8,31 +8,7 @@ import ProviderEngine from "web3-provider-engine"
 import TransportU2F from "@ledgerhq/hw-transport-u2f"
 import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch"
-
-export const connectToMetamask = async () => {
-  let web3js
-  // @ts-ignore
-  if (window.ethereum) {
-    // @ts-ignore
-    window.web3 = new Web3(ethereum)
-    // @ts-ignore
-    web3js = new Web3(ethereum)
-    // @ts-ignore
-    await ethereum.enable()
-    // @ts-ignore
-  } else if (window.web3) {
-    // @ts-ignore
-    window.web3 = new Web3(window.web3.currentProvider)
-    // @ts-ignore
-    web3js = new Web3(window.web3.currentProvider)
-  } else {
-    throw new Error("Metamask is not Enabled")
-  }
-
-  if (web3js) {
-    return web3js
-  }
-}
+import RpcSubprovider from "web3-provider-engine/subproviders/rpc.js"
 
 export function initWeb3Hardware(): Promise<Web3> {
   return new Promise(async (resolve, reject) => {
@@ -61,22 +37,28 @@ export function initWeb3Hardware(): Promise<Web3> {
  *
  * @param {*} path
  */
-export const initWeb3SelectedWallet = (path) => {
+export function initWeb3SelectedWallet(
+  path: string,
+  rpcUrl: string,
+  networkId: number = 1,
+  accountsLength: number = 5,
+) {
   return new Promise(async (resolve, reject) => {
     const engine = new ProviderEngine()
     const getTransport = () => TransportU2F.create()
     const ledger = createLedgerSubprovider(getTransport, {
-      networkId: 1,
+      networkId,
       // maybe we only need 1 now that we solved this
-      accountsLength: 5,
+      accountsLength,
       path,
     })
 
     ledger.signMessage = ledger.signPersonalMessage
     engine.addProvider(ledger)
     engine.addProvider(
+      // new RpcSubprovider({ rpcUrl }),
       new FetchSubprovider({
-        rpcUrl: "https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0",
+        rpcUrl,
       }),
     )
     engine.start()

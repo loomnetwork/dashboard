@@ -13,7 +13,7 @@ export default {
     networkId: "4",
     networkName: "rinkeby",
     chainId: "eth",
-    endpoint: "wss://rinkeby.infura.io/ws",
+    endpoint: "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
       mainGateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",

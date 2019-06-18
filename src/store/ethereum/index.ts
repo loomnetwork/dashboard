@@ -19,8 +19,9 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
-import { setBlockNumber } from './mutations';
-import { modifyRPCSigner } from '../gateway/signer';
+import { setBlockNumber } from "./mutations"
+import { modifyRPCSigner } from "../gateway/signer"
+import { provider } from "web3-providers/types"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -101,6 +102,9 @@ export const ethereumModule = {
   transfer: builder.dispatch(transfer),
 
   setWalletType: builder.dispatch(setWalletType),
+  setProvider: builder.dispatch(setProvider),
+  clearWalletType: builder.commit(clearWalletType),
+
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
 
@@ -109,7 +113,6 @@ export const ethereumModule = {
 
   // Mutations
   setBlockNumber: builder.commit(setBlockNumber),
-
 }
 
 // holds the contracts. We don't need to exposed these on the state
@@ -128,30 +131,27 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
   context.state.walletType = walletType
   if (wallet.isMultiAccount === false) {
-    wallet
+    await wallet
       .createProvider()
-      .then((web3provider) => {
-        // context.state.provider = web3provider
-        web3 = new Web3(web3provider)
-        log("web3 provider", web3provider)
-        // using web3 but  need an ethers signer for eth signing.
-        // @ts-ignore
-        return new ethers.providers.Web3Provider(web3provider).getSigner()
-      })
-      .then((signer) => {
-        context.state.signer = signer
-        log("signer", signer)
-        return signer.getAddress()
-      })
-      .then((address) => {
-        log("address", address)
-        context.state.address = address
-        log("wallet set")
-      })
+      .then(async (web3provider) => await setProvider(context, web3provider))
       .catch((e) => {
         console.error(e)
       })
+  } else {
+    context.state.walletType = walletType
   }
+}
+
+async function setProvider(context: ActionContext, p: provider) {
+  log("setting provider", p)
+  context.state.provider = p
+  web3 = new Web3(p)
+  // @ts-ignore
+  const signer = new ethers.providers.Web3Provider(p).getSigner()
+  log("setting web3")
+  const address = await signer.getAddress()
+  context.state.signer = signer
+  context.state.address = address
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
@@ -168,6 +168,10 @@ function setConfig(state: EthereumState, config: EthereumConfig) {
   Object.assign(state, config)
   // remove any web3 stuff
   web3 = null
+}
+
+function clearWalletType(state: EthereumState) {
+  state.walletType = ""
 }
 
 /**

@@ -29,11 +29,12 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
     (s) => s.gateway.mapping,
     async (mapping) => {
+      log(mapping)
       if (mapping === null) {
+        log("null mapping")
         // todo destroy anything that needs to be disposed of
         return
-      }
-      if (mapping.to!.isEmpty() === false && store.state.ethereum.signer) {
+      } else if (mapping.to!.isEmpty() === false) {
         await setPlasmaAccount(mapping)
         await initializeGateways(mapping)
 
@@ -69,7 +70,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
   )
 
   async function initializeGateways(mapping: IAddressMapping) {
-
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,

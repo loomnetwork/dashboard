@@ -15,8 +15,8 @@
       <b-form-select class="mb-2" :value="null" :options="paths" v-model="selectedPath">
         <option slot="first" :value="null">Select a path</option>
       </b-form-select>
-      <div v-if="loading">
-        <b-spinner label="Loading accoumt"/>Loading accounts. Please wait
+      <div v-if="!hdWallet">
+        <b-spinner label="Loading accoumt"/>Initializing. Please wait...
       </div>
       <b-list-group class="account-list" v-if="selectedPath">
         <b-list-group-item
@@ -49,7 +49,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
 import { pathsArr as hdPaths } from "@/services/ledger/paths"
 
 import { DashboardState } from "@/types"
@@ -58,6 +57,10 @@ import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule as feedback } from "@/feedback/store"
 import TransportU2F from "@ledgerhq/hw-transport-u2f"
 import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
+import ProviderEngine from "web3-provider-engine"
+import FetchSubprovider from "web3-provider-engine/subproviders/fetch"
+import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
+
 import { of, from } from "rxjs"
 import { map, tap, flatMap, concatMap } from "rxjs/operators"
 
@@ -71,27 +74,27 @@ interface LedgerAccount {
 export default class HardwareWalletModal extends Vue {
   transport!: Promise<TransportU2F>
   // Pagination
-  rows = 100
-  perPage = 10
-  currentPage = 1
+  // rows = 100
+  // perPage = 10
+  // currentPage = 1
 
   ledgerLocked = false
 
   hdWallet: CustomLedgerWallet | null = null
-  maxAddresses = 100
+  readonly maxAddresses = 100
   errorMsg: any = null
   accounts: any[] = []
-  loading = false
   path = ""
   account: LedgerAccount | null = null
   derivationPath = ""
-  paths = hdPaths.paths.map((item) => ({ value: item.path, text: item.label }))
+  readonly paths = hdPaths.paths.map((item) => ({ value: item.path, text: item.label }))
   selectedPath: string = ""
 
   web3: Web3 | null = null
   infura: Web3
   ledger: any = null
 
+  loading = false
   loadingAccounts: boolean = false
 
   get visible(): boolean {
@@ -119,22 +122,36 @@ export default class HardwareWalletModal extends Vue {
       // Ethereum addresses (legacy)
       return `${derivationPath}/${offset}`
     }
-    throw new Error("Don't now how to handle path " + path)
+    throw new Error("Don't know how to handle path " + path)
   }
 
   async connect(account: LedgerAccount) {
     const selectedAddress = account.address
     const path = this.calculatePath(this.selectedPath, this.accounts.indexOf(account))
-    console.log(path, this.state.ethereum.endpoint)
     const networkId = Number(this.state.ethereum.networkId)
+    const rpcUrl = this.state.ethereum.endpoint
+    const engine = new ProviderEngine()
+    const ledger = createLedgerSubprovider(
+      () => this.transport, {
+        networkId,
+        accountsLength: 1,
+        path,
+      })
+
+    ledger.signMessage = ledger.signPersonalMessage
+    engine.addProvider(ledger)
+    engine.addProvider(
+      // new RpcSubprovider({ rpcUrl }),
+      new FetchSubprovider({
+        rpcUrl,
+      }),
+    )
+    engine.start()
     // @ts-ignore
-    const providerEngine = await initWeb3SelectedWallet(
-      path,
-      "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
-      networkId)
-    // const web3account = (await .web3!.eth.getAccounts())[0]
-    // console.assert(web3account === selectedAddress,
+    //const web3account = (await .web3!.eth.getAccounts())[0]
+    //console.assert(web3account === selectedAddress,
     //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
+
     // @ts-ignore
     ethereumModule.setProvider(providerEngine)
   }

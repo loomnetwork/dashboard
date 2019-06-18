@@ -89,13 +89,14 @@ export async function init(
 ) {
   // return new EthereumGateways()
   // create gateways and vmc (maybe vmc does not care...)
-  const mainGateway = await TransferGateway.createAsync(client, mapping.from)
-  const loomGateway = await LoomCoinTransferGateway.createAsync(
+  const ethereumMainGateway = await TransferGateway.createAsync(client, mapping.from)
+  const ethereumLoomGateway = await LoomCoinTransferGateway.createAsync(
     client,
     mapping.from,
   )
   // todo: add binance loom adapter
-  instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3, mapping)
+  const binanceLoomGateway = null
+  instance = new PlasmaGateways(ethereumMainGateway, ethereumLoomGateway, binanceLoomGateway, plasmaWeb3, mapping)
 
   return instance
 }
@@ -108,8 +109,9 @@ class PlasmaGateways {
   adapters = new Map<string, PlasmaGatewayAdapter>()
 
   constructor(
-    readonly mainGateway: TransferGateway,
-    readonly loomGateway: LoomCoinTransferGateway,
+    readonly ethereumMainGateway: TransferGateway,
+    readonly ethereumLoomGateway: LoomCoinTransferGateway,
+    readonly binanceLoomGateway: null,
     readonly web3: Web3,
     readonly mapping: IAddressMapping,
   ) {}
@@ -118,6 +120,7 @@ class PlasmaGateways {
     this.adapters.clear()
   }
 
+  // add chain payload
   get(symbol: string): PlasmaGatewayAdapter {
     const adapter = this.adapters.get(symbol)
     if (adapter === undefined) {
@@ -131,14 +134,14 @@ class PlasmaGateways {
     switch (token) {
       case "LOOM":
         adapter = new LoomGatewayAdapter(
-          this.loomGateway,
+          this.ethereumLoomGateway,
           srcChainGateway,
           this.mapping,
         )
         break
       case "ETH":
         adapter = new EthGatewayAdapter(
-          this.mainGateway,
+          this.ethereumMainGateway,
           srcChainGateway,
           this.mapping,
         )
@@ -149,7 +152,7 @@ class PlasmaGateways {
 
       default:
         adapter = new ERC20GatewayAdapter(
-          this.mainGateway,
+          this.ethereumMainGateway,
           srcChainGateway,
           token,
           this.mapping,

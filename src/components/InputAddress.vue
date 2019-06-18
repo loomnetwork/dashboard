@@ -35,12 +35,16 @@ export default class InputAmount extends Vue {
   isValidAddress: boolean = true
 
   onInput(value) {
-    this.validateAddressFormat(value)
-    this.internal = value
-    if (this.isValidAddress) {
-      this.$emit("input", value)
+    if (value !== "") {
+      this.validateAddressFormat(value)
+      this.internal = value
+      if (this.isValidAddress) {
+        this.$emit("input", value)
+      } else {
+        this.$emit("input", "")
+      }
     } else {
-      this.$emit("input", "")
+      this.isValidAddress = true
     }
   }
 

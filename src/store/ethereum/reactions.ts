@@ -19,6 +19,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
     }
     ethereumModule.initERC20("LOOM")
     ethereumModule.web3.eth.getBlockNumber().then((blockNumber: number) => {
+      ethereumModule.setBlockNumber(blockNumber)
       ethereumModule.web3.eth.subscribe("newBlockHeaders", (error, event) => {
         if (!error) {
           console.log("New block header received: ", event.number)

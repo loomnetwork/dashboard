@@ -104,7 +104,6 @@ export default class Layout extends Vue {
   // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
 
-
   get walletType() { return this.s.ethereum.walletType }
   get showLoadingSpinner() { return false }
 
@@ -132,6 +131,10 @@ export default class Layout extends Vue {
 
       })
     }
+
+    this.$root.$on("logout", () => {
+      window.location.reload(true)
+    })
 
   }
 

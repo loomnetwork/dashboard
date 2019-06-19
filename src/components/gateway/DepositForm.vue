@@ -54,7 +54,6 @@ import { DashboardState } from "../../types"
 
 import { Funds } from "@/types"
 
-
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
 import { gatewayReactions } from "../../store/gateway/reactions"
@@ -124,7 +123,7 @@ export default class DepositForm extends Vue {
       weiAmount: this.transferAmount,
     }
 
-    await this.approveDeposit(payload)
+    this.approveDeposit(payload)
     this.close()
   }
 

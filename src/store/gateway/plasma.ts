@@ -209,17 +209,17 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
 }
 
-export function pollReceipt(context: ActionContext, chain: string, symbol: string) {
+export function pollReceipt(chain: string, symbol: string) {
   return interval(2000)
     .pipe(
-      switchMap(() => refreshPendingReceipt(context, chain, symbol)),
+      switchMap(() => refreshPendingReceipt(chain, symbol)),
       filter((receipt) => receipt !== null && receipt.oracleSignature.length > 0),
       take(1),
     )
     .toPromise()
 }
 
-async function refreshPendingReceipt(context: ActionContext, chain: string, symbol: string) {
+async function refreshPendingReceipt(chain: string, symbol: string) {
   const gateway = service().get(chain, symbol)
   return await gateway.withdrawalReceipt()
 }

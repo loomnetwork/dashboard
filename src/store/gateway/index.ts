@@ -55,7 +55,7 @@ export const gatewayModule = {
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
-  pollReceipt: builder.dispatch(PlasmaGateways.pollReceipt),
+  pollReceipt: PlasmaGateways.pollReceipt,
 
   // mapper
   loadMapping: builder.dispatch(Mapper.loadMapping),

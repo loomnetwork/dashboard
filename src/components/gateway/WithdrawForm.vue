@@ -8,7 +8,7 @@
     title="Withdraw"
   >
     <div v-if="status === 'default'">
-      <amount-input :min="1" :max="100" :symbol="token" v-model="amount" @isError="errorHandler"/>
+      <amount-input :min="toWei('1')" :max="toWei('100')" :symbol="token" v-model="amount" @isError="errorHandler"/>
     </div>
     <div v-if="status === 'error'">
       <h2>An error occurred, please try again!</h2>
@@ -33,7 +33,7 @@ import BN from "bn.js"
 import { Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 
-import { formatToCrypto } from "@/utils"
+import { formatToCrypto, parseToWei } from "@/utils"
 import { DashboardState, Funds } from "../../types"
 import { gatewayModule } from "../../store/gateway"
 import { gatewayReactions } from "../../store/gateway/reactions"
@@ -102,7 +102,11 @@ export default class WithdrawForm extends Vue {
       this.status = "error"
     })
     this.close()
-    this.setShowWithdrawProgress(true)  }
+    this.setShowWithdrawProgress(true)
+  }
 
+  toWei(val: string) {
+    return parseToWei(val)
+  }
 }
 </script>

@@ -13,8 +13,8 @@
     <div v-if="!status">
       <form>
         <amount-input
-          :min="1"
-          :max="userBalance"
+          :min="toWei('1')"
+          :max="toWei(userBalance)"
           v-model="transferAmount"
           :symbol="token"
           @isError="errorHandler"
@@ -93,7 +93,7 @@ export default class DepositForm extends Vue {
   }
 
   get userBalance() {
-    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10)
+    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10) + ""
   }
 
   get state(): DashboardState {
@@ -127,6 +127,8 @@ export default class DepositForm extends Vue {
     await this.approveDeposit(payload)
     this.close()
   }
-
+  toWei(val: string) {
+    return parseToWei(val)
+  }
 }
 </script>

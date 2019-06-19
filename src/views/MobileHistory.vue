@@ -14,7 +14,10 @@
           No activity detected in the last
           <span class="highlight">{{blockOffset}}</span> blocks.
           To search for events further back, please
-          <a class="query-past-events" @click="goBackFurther">click here</a>
+          <a
+            class="query-past-events"
+            @click="goBackFurther"
+          >click here</a>
         </p>
         <small>
           Or head over to the
@@ -65,8 +68,6 @@ import HistoryEvent from "../components/HistoryEvent.vue"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
-import { DPOSTypedStore } from "../store/dpos-old"
-import { CommonTypedStore } from "@/store/common"
 
 @Component({
   components: {
@@ -87,26 +88,17 @@ export default class History extends Vue {
     return this.$store.state
   }
 
-  get currentMetamaskAddress() { return this.state.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.state.common.showLoadingSpinner }
-  get dappChainEventUrl() { return this.state.DPOS.dappChainEventUrl }
-  get dappChainEvents() { return this.state.DPOS.dappChainEvents }
-  get web3() { return this.state.DPOS.web3 }
-  get GatewayInstance() { return this.state.DPOS.GatewayInstance }
 
-  get latestBlockNumber() { return DPOSTypedStore.getLatestBlockNumber() }
-  get cachedEvents() { return DPOSTypedStore.getCachedEvents() }
+  get latestBlockNumber() { return 0 }
+  get cachedEvents() { return [] }
 
-  fetchDappChainEvents = DPOSTypedStore.fetchDappChainEvents
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
-  setLatesBlockNumber = DPOSTypedStore.setLatesBlockNumber
-  setCachedEvents = DPOSTypedStore.setCachedEvents
+  fetchDappChainEvents() { return 0 }
+  setLatesBlockNumber() { return 0 }
+  setCachedEvents() { return 0 }
 
   async mounted() {
-
-    await this.refresh()
-    this.pollLatestBlockNumber()
-
+    //await this.refresh()
+    //this.pollLatestBlockNumber()
   }
 
   async refresh() {
@@ -140,104 +132,96 @@ export default class History extends Vue {
   }
 
   async updateCachedEvents() {
+    return
 
-    // Ensure web3 and Gateway contract exist
-    if (!this.web3 ||
-      !this.GatewayInstance ||
-      !this.currentMetamaskAddress) return
+    // // Filter based on user's address (does not seem to work)
+    // // let filter = { from: this.currentMetamaskAddress }
 
-    this.setShowLoadingSpinner(true)
+    // // Get latest mined block from Ethereum
+    // const blockNumber = await this.web3.eth.getBlockNumber()
 
-    // Filter based on user's address (does not seem to work)
-    // let filter = { from: this.currentMetamaskAddress }
+    // // Fetch latest events
+    // const events = await this.GatewayInstance.getPastEvents(
+    //   "allEvents",
+    //   {
+    //     fromBlock: this.latestBlockNumber,
+    //     toBlock: blockNumber,
+    //   },
+    // )
 
-    // Get latest mined block from Ethereum
-    const blockNumber = await this.web3.eth.getBlockNumber()
+    // // Filter based on event type and user address
+    // const results = events.filter((event) => {
+    //   return event.returnValues.from === this.currentMetamaskAddress ||
+    //     event.returnValues.owner === this.currentMetamaskAddress
+    // }).map((event) => {
+    //   const type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
+    //   const amount = event.returnValues.amount || event.returnValues.value || 0
+    //   return {
+    //     "Block #": event.blockNumber,
+    //     "Event": type,
+    //     "Amount": formatToCrypto(amount),
+    //     "Tx Hash": event.transactionHash,
+    //   }
+    // })
 
-    // Fetch latest events
-    const events = await this.GatewayInstance.getPastEvents(
-      "allEvents",
-      {
-        fromBlock: this.latestBlockNumber,
-        toBlock: blockNumber,
-      },
-    )
+    // // Combine cached events with new events
+    // const mergedEvents = this.cachedEvents.concat(results)
 
-    // Filter based on event type and user address
-    const results = events.filter((event) => {
-      return event.returnValues.from === this.currentMetamaskAddress ||
-        event.returnValues.owner === this.currentMetamaskAddress
-    }).map((event) => {
-      const type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
-      const amount = event.returnValues.amount || event.returnValues.value || 0
-      return {
-        "Block #": event.blockNumber,
-        "Event": type,
-        "Amount": formatToCrypto(amount),
-        "Tx Hash": event.transactionHash,
-      }
-    })
+    // // // Store results
+    // // this.setLatesBlockNumber(blockNumber)
+    // // this.setCachedEvents(mergedEvents)
 
-    // Combine cached events with new events
-    const mergedEvents = this.cachedEvents.concat(results)
+    // // // Display trades in the UI
+    // // this.history = mergedEvents
 
-    // Store results
-    this.setLatesBlockNumber(blockNumber)
-    this.setCachedEvents(mergedEvents)
-
-    // Display trades in the UI
-    this.history = mergedEvents
-
-    this.setShowLoadingSpinner(false)
+    // // this.setShowLoadingSpinner(false)
 
   }
 
   async queryEvents() {
-    if (!this.web3 ||
-      !this.GatewayInstance ||
-      !this.currentMetamaskAddress) return
+    return
 
-    this.setShowLoadingSpinner(true)
+    // this.setShowLoadingSpinner(true)
 
-    // Filter based on user's address (does not seem to work)
-    // let filter = { from: this.currentMetamaskAddress }
-    const blockNumber = await this.web3.eth.getBlockNumber()
+    // // Filter based on user's address (does not seem to work)
+    // // let filter = { from: this.currentMetamaskAddress }
+    // const blockNumber = await this.web3.eth.getBlockNumber()
 
-    // Fetch latest events
+    // // Fetch latest events
 
-    console.log("Fetching events with offset: ", this.blockOffset)
+    // console.log("Fetching events with offset: ", this.blockOffset)
 
-    const events = await this.GatewayInstance.getPastEvents(
-      "allEvents",
-      {
-        fromBlock: blockNumber - this.blockOffset,
-        toBlock: blockNumber,
-      },
-    )
+    // const events = await this.GatewayInstance.getPastEvents(
+    //   "allEvents",
+    //   {
+    //     fromBlock: blockNumber - this.blockOffset,
+    //     toBlock: blockNumber,
+    //   },
+    // )
 
-    // Filter based on event type and user address
-    const results = events.filter((event) => {
-      return event.returnValues.from === this.currentMetamaskAddress ||
-        event.returnValues.owner === this.currentMetamaskAddress
-    }).map((event) => {
-      const type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
-      const amount = event.returnValues.amount || event.returnValues.value || 0
-      return {
-        "Block #": event.blockNumber,
-        "Event": type,
-        "Amount": formatToCrypto(amount),
-        "Tx Hash": event.transactionHash,
-      }
-    })
+    // // Filter based on event type and user address
+    // const results = events.filter((event) => {
+    //   return event.returnValues.from === this.currentMetamaskAddress ||
+    //     event.returnValues.owner === this.currentMetamaskAddress
+    // }).map((event) => {
+    //   const type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
+    //   const amount = event.returnValues.amount || event.returnValues.value || 0
+    //   return {
+    //     "Block #": event.blockNumber,
+    //     "Event": type,
+    //     "Amount": formatToCrypto(amount),
+    //     "Tx Hash": event.transactionHash,
+    //   }
+    // })
 
-    // Store results
-    this.setLatesBlockNumber(blockNumber)
-    this.setCachedEvents(results)
+    // // Store results
+    // this.setLatesBlockNumber(blockNumber)
+    // this.setCachedEvents(results)
 
-    // Display trades in the UI
-    this.history = results
+    // // Display trades in the UI
+    // this.history = results
 
-    this.setShowLoadingSpinner(false)
+    // this.setShowLoadingSpinner(false)
 
   }
 
@@ -250,7 +234,7 @@ export default class History extends Vue {
   }
 
   get showDappChainHistoryTable() {
-    return this.dappChainEvents && this.dappChainEvents.length > 0
+    return false
   }
 
 }

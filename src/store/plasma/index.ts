@@ -21,6 +21,7 @@ import {
 import debug from "debug"
 
 import * as Tokens from "./tokens"
+import { feedbackModule } from "@/feedback/store"
 
 const log = debug("dash.plasma")
 
@@ -130,6 +131,7 @@ async function changeIdentity(
   const client = ctx.state.client!
   ctx.state.address = address
   ctx.state.signer = signer
+
   // add the conresponding middleware
   if (signer === null) {
     // reset client middleware
@@ -140,8 +142,12 @@ async function changeIdentity(
     )
     // destroy loomProvider and old web3
   } else {
+    feedbackModule.setTask("Connecting to Plasma chain")
+    feedbackModule.setStep("Connecting to Plasma chain")
     await signer.configureClient(ctx.state.client!)
+    feedbackModule.endTask()
   }
+
 }
 
 // getter but async so I guess it's an action according to vuex

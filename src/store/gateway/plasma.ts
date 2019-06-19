@@ -17,6 +17,7 @@ import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
 import { feedbackModule } from "@/feedback/store"
+import { BinanceLoomCoinTransferGateway } from "./binance"
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
@@ -89,13 +90,15 @@ export async function init(
 ) {
   // return new EthereumGateways()
   // create gateways and vmc (maybe vmc does not care...)
-  const mainGateway = await TransferGateway.createAsync(client, mapping.from)
-  const loomGateway = await LoomCoinTransferGateway.createAsync(
+  const ethereumMainGateway = await TransferGateway.createAsync(client, mapping.from)
+  const ethereumLoomGateway = await LoomCoinTransferGateway.createAsync(
     client,
     mapping.from,
   )
   // todo: add binance loom adapter
-  instance = new PlasmaGateways(mainGateway, loomGateway, plasmaWeb3, mapping)
+  const binanceLoomGateway = await BinanceLoomCoinTransferGateway.createAsync()
+
+  instance = new PlasmaGateways(ethereumMainGateway, ethereumLoomGateway, binanceLoomGateway, plasmaWeb3, mapping)
 
   return instance
 }
@@ -105,11 +108,14 @@ export function service() {
 }
 
 class PlasmaGateways {
+
+  chains = new Map<string, Map<string, PlasmaGatewayAdapter>>()
   adapters = new Map<string, PlasmaGatewayAdapter>()
 
   constructor(
-    readonly mainGateway: TransferGateway,
-    readonly loomGateway: LoomCoinTransferGateway,
+    readonly ethereumMainGateway: TransferGateway,
+    readonly ethereumLoomGateway: LoomCoinTransferGateway,
+    readonly binanceLoomGateway: BinanceLoomCoinTransferGateway,
     readonly web3: Web3,
     readonly mapping: IAddressMapping,
   ) {}
@@ -118,27 +124,30 @@ class PlasmaGateways {
     this.adapters.clear()
   }
 
-  get(symbol: string): PlasmaGatewayAdapter {
-    const adapter = this.adapters.get(symbol)
+  // add chain payload
+  get(chain: string, symbol: string): PlasmaGatewayAdapter {
+    const chains = this.chains.get(chain)
+    const adapter = chains!.get(symbol)
+
     if (adapter === undefined) {
       throw new Error("No gateway for " + symbol)
     }
     return adapter
   }
 
-  add(token: string, srcChainGateway: Address) {
+  add(chain: string, symbol: string, srcChainGateway: Address) {
     let adapter: PlasmaGatewayAdapter
-    switch (token) {
+    switch (symbol) {
       case "LOOM":
         adapter = new LoomGatewayAdapter(
-          this.loomGateway,
+          this.ethereumLoomGateway,
           srcChainGateway,
           this.mapping,
         )
         break
       case "ETH":
         adapter = new EthGatewayAdapter(
-          this.mainGateway,
+          this.ethereumMainGateway,
           srcChainGateway,
           this.mapping,
         )
@@ -149,14 +158,17 @@ class PlasmaGateways {
 
       default:
         adapter = new ERC20GatewayAdapter(
-          this.mainGateway,
+          this.ethereumMainGateway,
           srcChainGateway,
-          token,
+          symbol,
           this.mapping,
         )
         break
     }
-    this.adapters.set(token, adapter)
+
+    const tmp = this.adapters.set(symbol, adapter)
+    this.chains.set(chain, tmp)
+    // this.adapters.set(symbol, adapter)
   }
 }
 
@@ -168,7 +180,8 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
-  const gateway = service().get(funds.symbol)
+  const {chain, symbol, weiAmount} = funds
+  const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
   try {
     receipt = await gateway.withdrawalReceipt()
@@ -184,9 +197,9 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     return
   }
   try {
-    await gateway.withdraw(funds.weiAmount)
+    await gateway.withdraw(weiAmount)
     next()
-    receipt = await gatewayModule.pollReceipt(funds.symbol)
+    receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
     localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     next()
@@ -196,18 +209,18 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
 }
 
-export function pollReceipt(context: ActionContext, symbol: string) {
+export function pollReceipt(context: ActionContext, chain: string, symbol: string) {
   return interval(2000)
     .pipe(
-      switchMap(() => refreshPendingReceipt(context, symbol)),
+      switchMap(() => refreshPendingReceipt(context, chain, symbol)),
       filter((receipt) => receipt !== null && receipt.oracleSignature.length > 0),
       take(1),
     )
     .toPromise()
 }
 
-async function refreshPendingReceipt(context: ActionContext, symbol: string) {
-  const gateway = service().get(symbol)
+async function refreshPendingReceipt(context: ActionContext, chain: string, symbol: string) {
+  const gateway = service().get(chain, symbol)
   return await gateway.withdrawalReceipt()
 }
 

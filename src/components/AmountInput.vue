@@ -23,19 +23,21 @@
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
+import { parseToWei } from "@/utils"
+import BigNumber from "bignumber.js"
 
 @Component
 export default class AmountInput extends Vue {
   @Prop() value!: any // v-model is it accepts a value prop and emit an input event.
 
   /**
-   * in token
+   * in wei
    */
-  @Prop(Number) min!: number
+  @Prop(Object) min!: BN
   /**
-   * in token
+   * in wei
    */
-  @Prop(Number) max!: number
+  @Prop(Object) max!: BN
   @Prop(String) symbol!: string
   @Prop({ default: true }) round!: boolean
 
@@ -48,7 +50,7 @@ export default class AmountInput extends Vue {
   // Call this function when amount changed. emits valud in WEI
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-    const amountBN = new BN(this.amount).mul(new BN("" + 10 ** 18))
+    const amountBN = parseToWei(this.amount.toString())
     this.$emit("input", amountBN)
   }
 
@@ -61,18 +63,19 @@ export default class AmountInput extends Vue {
 
   validateAmount() {
     let amount = Number(this.amount)
-    const max = new BN(this.max).mul(new BN("" + 10 ** 18))
+    const max = Number(this.max)
+    const min = Number(this.min)
     if (this.round) {
       amount = Math.floor(this.value)
     }
     if (!this.amount) {
       this.errorMsg = ""
       this.$emit("isError", true)
-    } else if (amount > this.max) {
-      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: this.max }).toString()
+    } else if (amount > max) {
+      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: max }).toString()
       this.$emit("isError", true)
-    } else if (amount < this.min) {
-      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: this.min }).toString()
+    } else if (amount < min) {
+      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: min }).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""
@@ -82,7 +85,7 @@ export default class AmountInput extends Vue {
 
   // Button Action
   setAllAmount() {
-    this.amount = this.max
+    this.amount = Number(formatTokenAmount(this.max))
   }
 
   mounted() {

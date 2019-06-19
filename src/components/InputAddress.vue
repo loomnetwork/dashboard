@@ -7,7 +7,7 @@
       :state="this.value.length === 0 ? null : isValidAddress"
       class="my-2"
     ></b-form-input>
-    <p v-show="!isValidAddress" style :key="value">Invalid {{ chain }} address.</p>
+    <p v-if="!isValidAddress" style :key="value" class="error">Invalid {{ chain }} address.</p>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ import { DashboardState } from "@/types"
 import { PlasmaState } from "../store/plasma/types"
 
 @Component
-export default class InputAmount extends Vue {
+export default class InputAddress extends Vue {
 
   @Prop(String) value!: string
   @Prop(String) placeholder!: string

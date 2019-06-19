@@ -7,11 +7,18 @@
     :busy="true"
     no-close-on-esc
     no-close-on-backdrop
-    hide-header-close>
+    hide-header-close
+  >
     <template slot="modal-title">Approve deposit</template>
     <div v-if="!status">
       <form>
-        <amount-input :min="1" :max="userBalance" v-model="depositAmount" :symbol="token" @isError="errorHandler" />
+        <amount-input
+          :min="1"
+          :max="userBalance"
+          v-model="transferAmount"
+          :symbol="token"
+          @isError="errorHandler"
+        />
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
       </form>
     </div>
@@ -45,10 +52,11 @@ import { formatToCrypto, parseToWei } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { DashboardState } from "../../types"
 
+import { Funds } from "@/types"
+
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { setShowDepositForm, setShowDepositApproved } from '../../store/dpos-old/mutations';
-import { gatewayReactions } from '../../store/gateway/reactions';
+import { gatewayReactions } from "../../store/gateway/reactions"
 
 @Component({
   components: {
@@ -57,14 +65,14 @@ import { gatewayReactions } from '../../store/gateway/reactions';
 })
 export default class DepositForm extends Vue {
 
-  @Prop({required: true}) token!: string // prettier-ignore
+  @Prop({ required: true }) token!: string // prettier-ignore
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowDepositApproved = gatewayModule.setShowDepositApproved
   approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
-  transferAmount: number | "" = ""
+  transferAmount: BN | "" = ""
   amountErrors: string[] = []
   hasErrors: boolean = false
   status: string = ""
@@ -103,49 +111,20 @@ export default class DepositForm extends Vue {
     this.visible = false
   }
 
-  depositAll() {
-    this.transferAmount = Number.parseInt("" + this.userBalance, 10)
-  }
-
-  validateAmount() {
-    const errors: string[] = []
-    const input = this.transferAmount
-    if (input === "") {
-      return errors.push("Invalid amount")
-    }
-    const int = Number.parseInt("" + input, 10)
-    // TODO: Add validation for decimal values
-    // if (int !== input) errors.push("Only round amounts allowed")
-    if (int < 1) errors.push("At least 1 loom")
-    if (int > this.userBalance) errors.push("Not enough funds in your account")
-    this.amountErrors = errors
-  }
-
   async sendApproval(bvModalEvt) {
-    this.validateAmount()
-    if (this.amountErrors.length) return
+    if (this.transferAmount === "") return
+    if (this.hasErrors) return
+
     // Prevent modal from closing
     bvModalEvt.preventDefault()
-    this.status = "sending"
-    try {
-      const stringAmount = this.transferAmount.toString()
-      const weiAmount = parseToWei(stringAmount)
-      const payload = {
-        chain: "ethereum",
-        symbol: this.token,
-        weiAmount,
-      }
-      this.approveDeposit(payload).then(() => {
-        this.setShowDepositApproved(true)
-      }).catch((err) => {
-        throw new Error(err)
-      })
-      this.status = "sent"
-    } catch (e) {
-      this.status = "failed"
-      // todo tell the user about it
-      console.error(e)
+    const payload: Funds = {
+      chain: "ethereum",
+      symbol: this.token,
+      weiAmount: this.transferAmount,
     }
+
+    this.approveDeposit(payload)
+    this.close()
   }
 
 }

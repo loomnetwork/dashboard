@@ -5,7 +5,6 @@ import * as getters from "./getters"
 import * as mutations from "./mutations"
 
 import { CardDetail, PackDetail } from "../types"
-import { CommonTypedStore } from "@/store/common"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
@@ -117,7 +116,8 @@ async function transferCards(
     receiver: string,
   },
 ) {
-  CommonTypedStore.setShowLoadingSpinner(true)
+  feedbackModule.setTask("Batch transfer")
+  feedbackModule.setStep("Transfering cards")
   log("transferCards payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
@@ -135,7 +135,7 @@ async function transferCards(
       .send({ from: ethAddressString })
     log("transfer cards result", result)
     await assetsModule.checkCardBalance()
-    CommonTypedStore.setShowLoadingSpinner(false)
+    feedbackModule.endTask()
     feedbackModule.showSuccess(
       i18n
         .t("messages.transfer_card_success_tx", {
@@ -144,7 +144,7 @@ async function transferCards(
         .toString(),
     )
   } catch (error) {
-    CommonTypedStore.setShowLoadingSpinner(false)
+    feedbackModule.endTask()
     if (error.message.includes("denied")) {
       feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {
@@ -168,7 +168,8 @@ async function transferPacks(
 ) {
   log("transferPacks payload", payload)
   try {
-    CommonTypedStore.setShowLoadingSpinner(true)
+    feedbackModule.setTask("Pack transfer")
+    feedbackModule.setStep("Transfering packes")
     const ethAddress = await plasmaModule.getCallerAddress()
     const ethAddressString = ethAddress.local.toString()
     const receiver = formatFromLoomAddress(payload.receiver)
@@ -176,8 +177,10 @@ async function transferPacks(
       .transfer(receiver, payload.amount)
       .send({ from: ethAddressString })
     log("transfer packs result", result)
+    feedbackModule.setStep("Refreshing balance")
     await assetsModule.checkPackBalance()
-    CommonTypedStore.setShowLoadingSpinner(false)
+
+    feedbackModule.endTask()
     feedbackModule.showSuccess(
       i18n
         .t("messages.transfer_pack_success_tx", {
@@ -186,7 +189,7 @@ async function transferPacks(
         .toString(),
     )
   } catch (error) {
-    CommonTypedStore.setShowLoadingSpinner(false)
+    feedbackModule.endTask()
     if (error.message.includes("denied")) {
       feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {

@@ -8,8 +8,8 @@
           :type="'number'"
           placeholder="Enter amount"
           aria-describedby="input-live-help input-live-feedback"
-          @keyup="validateAmount">
-        </b-form-input>
+          @keyup="validateAmount"
+        ></b-form-input>
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col>
@@ -25,7 +25,6 @@ import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
 import { PlasmaState } from "../store/plasma/types"
-import { state } from "../store/common"
 
 @Component
 export default class AmountInput extends Vue {
@@ -33,7 +32,7 @@ export default class AmountInput extends Vue {
   @Prop(Number) min!: number
   @Prop(Number) max!: number
   @Prop(String) symbol!: string
-  @Prop({default: true}) round!: boolean
+  @Prop({ default: true }) round!: boolean
 
   // State declaration
   amount: any = ""

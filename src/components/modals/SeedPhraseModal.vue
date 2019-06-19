@@ -92,13 +92,12 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import { mapActions, createNamespacedHelpers } from "vuex"
-import { CommonTypedStore } from "@/store/common"
 import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
-import { CryptoUtils } from 'loom-js';
-import { generateMnemonic, mnemonicToSeedSync } from "bip39";
+import { CryptoUtils } from "loom-js"
+import { generateMnemonic, mnemonicToSeedSync } from "bip39"
 import { feedbackModule } from "@/feedback/store"
+import { sha256 } from "js-sha256"
 @Component({
 })
 
@@ -109,23 +108,25 @@ export default class SeedPhraseModal extends Vue {
   confirmMnemonic = false
   showSuccess = feedbackModule.showSuccess
   getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
 
   async generateSeeds() {
+    feedbackModule.setTask("New key")
+    feedbackModule.setStep("Generating new key")
+
     const mnemonic = generateMnemonic()
     this.seeds = mnemonic.split(" ")
     this.seedsLine = mnemonic
-    const privateKeyBuffer = mnemonicToSeedSync(mnemonic)
-    const privateKeyUint8ArrayFromSeed = await CryptoUtils.generatePrivateKeyFromSeed(privateKeyBuffer.slice(0, 32))
+    const seed = mnemonicToSeedSync(mnemonic)
+    const privateKeyUint8ArrayFromSeed = CryptoUtils.generatePrivateKeyFromSeed(new Uint8Array(sha256.array(seed)))
+    const privateKeyB64 = CryptoUtils.Uint8ArrayToB64(privateKeyUint8ArrayFromSeed)
     const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({ privateKey: privateKeyUint8ArrayFromSeed })
     this.publicAddress = publicKey
     this.confirmMnemonic = false
-    this.setShowLoadingSpinner(false)
+    feedbackModule.endTask()
   }
 
   mounted() {
     this.$root.$on("bv::modal::show", () => {
-      this.setShowLoadingSpinner(true)
       this.generateSeeds()
     })
   }

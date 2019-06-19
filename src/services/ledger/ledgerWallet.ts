@@ -13,8 +13,7 @@ import {
 
 const NEED_PASSWORD = false
 
-// tslint:disable-next-line: class-name
-class ledgerWallet {
+export class CustomLedgerWallet {
   identifier = "ledger"
   isHardware = true
   needPassword = NEED_PASSWORD
@@ -29,7 +28,9 @@ class ledgerWallet {
   // constructor() {}
 
   async init(basePath) {
-    this.basePath = basePath ? basePath : this.supportedPaths.ledgerEthereum.path
+    this.basePath = basePath
+      ? basePath
+      : this.supportedPaths.ledgerEthereum.path
     this.isHardened = this.basePath.split("/").length - 1 === 2
     this.transport = await getLedgerTransport()
     this.ledger = new Ledger(this.transport)
@@ -78,7 +79,7 @@ class ledgerWallet {
             networkId +
             ", Got: " +
             signedChainId +
-          "InvalidNetworkId",
+            "InvalidNetworkId",
         )
       }
       return getSignTransactionObject(tx)
@@ -112,8 +113,8 @@ class ledgerWallet {
     return this.supportedPaths
   }
 }
-const createWallet = async (basePath?) => {
-  const _ledgerWallet = new ledgerWallet()
+export const createWallet = async (basePath?) => {
+  const _ledgerWallet = new CustomLedgerWallet()
   await _ledgerWallet.init(basePath)
   return _ledgerWallet
 }
@@ -132,5 +133,3 @@ const getRootPubKey = async (_ledger, _path) => {
     chainCode: pubObj.chainCode,
   }
 }
-
-export default createWallet

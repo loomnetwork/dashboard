@@ -13,14 +13,18 @@ export default {
     networkId: "4",
     networkName: "rinkeby",
     chainId: "eth",
-    endpoint: "wss://rinkeby.infura.io/ws",
+    endpoint: "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
       mainGateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
       loomGateway: "0xEA319a0Ea64f482060032b4BE8d9d3F7232c1214",
     },
   },
+  dpos: {
+    bootstrapNodes: ["0x0e99fc16e32e568971908f2ce54b967a42663a26"],
+  },
   coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
   disabled: ["binance"],
   chains: ["ethereum", "binance"],
+  gateway: { chains: ["ethereum", "binance"] },
 } as DashboardConfig

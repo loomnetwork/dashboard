@@ -18,13 +18,13 @@
             <b-button
               class="button"
               variant="outline-primary"
-              @click="requestDeposit(symbol)"
+              @click="showSelectChainModal(DEPOSIT, symbol)"
             >Deposit</b-button>
             <b-button
               class="button"
               variant="outline-primary"
               :disabled="disableWithdraw || plasma.coins[symbol].balance.isZero()"
-              @click="requestWithdraw(symbol)"
+              @click="showSelectChainModal(WITHDRAW, symbol)"
             >
               <span>Withdraw</span>
               <b-spinner
@@ -48,10 +48,12 @@
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <transfer-tokens-form-modal @refreshTokenList="filterTokens"/>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken"/>
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
+    <SelectChainModal :type="selectChainModalType" @selectedChain="onSelectedChain" />
+    <DepositBinance />
   </main>
 </template>
 
@@ -62,6 +64,8 @@ import BN from "bn.js"
 import DepositForm from "@/components/gateway/DepositForm.vue"
 import WithdrawForm from "@/components/gateway/WithdrawForm.vue"
 import TransferTokensFormModal from "@/components/modals/TransferTokensFormModal.vue"
+import SelectChainModal from "@/components/modals/SelectChainModal.vue"
+import DepositBinance from "@/components/gateway/DepositBinance.vue"
 import AddTokenModal from "@/components/modals/AddTokenModal.vue"
 import Account from "@/components/Account.vue"
 
@@ -81,11 +85,14 @@ import { feedbackModule } from "@/feedback/store"
     WithdrawForm,
     TransferTokensFormModal,
     AddTokenModal,
+    SelectChainModal,
+    DepositBinance,
     Account,
   },
 })
 export default class DepositWithdraw extends Vue {
-
+  DEPOSIT = "DEPOSIT"
+  WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   showError = feedbackModule.showError
@@ -95,6 +102,7 @@ export default class DepositWithdraw extends Vue {
   inputFilter = ""
   showHelp: boolean = false
   refreshBalance = plasmaModule.refreshBalance
+  selectChainModalType: string = ""
   coins = this.plasma.coins
 
   // get the full list from state or somewhere else
@@ -116,6 +124,11 @@ export default class DepositWithdraw extends Vue {
     const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
     tokenSymbols.forEach((symbol) => plasmaModule.addToken(symbol))
     this.filterTokens()
+
+    if (this.$route.query.depositCoin === "LOOM") {
+      this.selectedToken = "LOOM"
+      this.setShowDepositForm(true)
+    }
   }
 
   @Watch("inputFilter")
@@ -129,18 +142,53 @@ export default class DepositWithdraw extends Vue {
       .filter((symbol) => (filter === "" || symbol.includes(filter)))
   }
 
-  requestDeposit(token: string) {
-    this.selectedToken = token
-    this.setShowDepositForm(true)
+  /**
+   * This function will call when SelectChainModal emit 'selectedChain' 
+   * @param payload => { type: "DEPOSIT" | "WITHDRAW", chain: "ethereum" | "binance"}
+   */
+  onSelectedChain(payload) {
+    switch (payload.type) {
+      case this.DEPOSIT:
+        if (payload.chain === "ethereum") {
+          this.setShowDepositForm(true)
+        } else if (payload.chain === "binance") {
+          // request deposit binance modal
+          this.$root.$emit("bv::show::modal", "deposit-binance")
+        }
+        break
+      case this.WITHDRAW:
+        if (payload.chain === "ethereum") {
+          // request deposit modal
+          this.setShowWithdrawForm(true)
+        } else if (payload.chain === "binance") {
+          // request deposit binance modal
+        }
+        break
+      default:
+        break
+    }
   }
+  /**
+   * set selected token to component state
+   * then show selectChain modal
+   */
+  showSelectChainModal(type: string, token: string) {
+    this.selectChainModalType = type
+    this.selectedToken = token
+    this.$root.$emit("bv::show::modal", "select-chain-modal")
+  }
+  // requestDeposit(token: string) {
+  //   this.selectedToken = token
+  //   this.setShowDepositForm(true)
+  // }
 
-  requestWithdraw(token: string) {
-    this.selectedToken = token
-    this.setShowWithdrawForm(true)
-  }
+  // requestWithdraw(token: string) {
+  //   this.selectedToken = token
+  //   this.setShowWithdrawForm(true)
+  // }
 
   requestSwap(token: string) {
-    plasmaModule.setSelectedToken(token)
+    this.selectedToken = token
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }
 

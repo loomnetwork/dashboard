@@ -12,6 +12,7 @@ import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address } from "loom-js"
+import { feedbackModule as feedback } from "@/feedback/store"
 
 const log = debug("dpos")
 
@@ -23,13 +24,15 @@ const dposModule = {
     return stateGetter()
   },
 
+  setConfig: builder.commit(mutations.setConfig),
+
   setElectionTime: builder.commit(mutations.setElectionTime),
   setRewards: builder.commit(mutations.setRewards),
 
   requestDelegation: builder.commit(requestDelegation),
   requestRedelegation: builder.commit(requestRedelegation),
   requestUndelegation: builder.commit(requestUndelegation),
-  cancelRequest: builder.commit(cancelRequest),
+  clearRequest: builder.commit(clearRequest),
 
   delegate: builder.dispatch(delegate),
   redelegate: builder.dispatch(redelegate),
@@ -98,6 +101,7 @@ async function refreshValidators(ctx: ActionContext) {
     if (existing === undefined) {
       existing = new Validator()
       existing.addr = addr
+      existing.isBootstrap = ctx.state.bootstrapNodes.includes(addr)
       nodes.push(existing)
     }
     return existing
@@ -178,7 +182,7 @@ export function requestDelegation(state: DPOSState, validator: ICandidate) {
   // set state thqt triggers pop
 }
 
-function cancelRequest(state: DPOSState) {
+function clearRequest(state: DPOSState) {
   state.intent = ""
   state.delegation = null
 }
@@ -204,20 +208,32 @@ async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
-  // feedback.setTask("delegating x loom to {validatror.name}")
-  await plasmaModule.approve({
+  feedback.setTask("Delegate")
+
+  const approved = await plasmaModule.approve({
     symbol: "LOOM",
     weiAmount: delegation.amount,
     to: contract.address.local.toString(),
   })
-  // feedback.setStep("delegating...<amoubt> to <validator>")
-  await context.state.contract!.delegateAsync(
-    delegation.validator.address,
-    delegation.amount,
-    delegation.lockTimeTier,
-    delegation.referrer,
-  )
-  // feedback.endTask()
+
+  if (!approved) {
+    return
+  }
+
+  try {
+    feedback.setStep("Delegating...")
+    await context.state.contract!.delegateAsync(
+      delegation.validator.address,
+      delegation.amount,
+      delegation.lockTimeTier,
+      delegation.referrer,
+    )
+    feedback.endTask()
+  } catch (error) {
+    feedback.endTask()
+    feedback.showError("Unexpected error while delegating, please contact support.")
+    console.error(error)
+  }
 }
 
 /**
@@ -230,26 +246,33 @@ async function delegate(context: ActionContext, delegation: Delegation) {
  *  - updateAmount is the amount to redelegate
  */
 async function redelegate(context: ActionContext, delegation: Delegation) {
-  // feedback.setTask("redalgating")
-  // feedback.setStep("redelegating...<amoubt> to <validator>")
-  await context.state.contract!.redelegateAsync(
-    delegation.validator.address,
-    delegation.updateValidator!.address,
-    delegation.updateAmount,
-    delegation.index,
-    // referer
-  )
-  context.state.intent = ""
-  context.state.delegation = null
-
-  // feedback.endTask()
+  feedback.setTask("Redelegating")
+  feedback.setStep("Scheduling redelegation...") // amount validator
+  try {
+    await context.state.contract!.redelegateAsync(
+      delegation.validator.address,
+      delegation.updateValidator!.address,
+      delegation.updateAmount,
+      delegation.index,
+      // referer
+    )
+    feedback.endTask()
+  } catch (error) {
+    feedback.endTask()
+    feedback.showError("Error while redelegating. Please contact support")
+  }
 }
 
 async function consolidate(context: ActionContext, validator: ICandidate) {
-  // feedback.setTask("consolidating")
-  // feedback.setStep("consolidate delegations on <validator>")
-  await context.state.contract!.consolidateDelegations(validator.address)
-  // feedback.endTask()
+  feedback.setTask("Consolidating")
+  feedback.setStep("Consolidating unloced delegations on " + validator.name)
+  try {
+    await context.state.contract!.consolidateDelegations(validator.address)
+    feedback.endTask()
+  } catch (error) {
+    feedback.endTask()
+    feedback.showError("Error while redelegating. Please contact support")
+  }
 }
 
 /**
@@ -261,12 +284,21 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - updateAmount is the amount to un-delegate
  */
 async function undelegate(context: ActionContext, delegation: Delegation) {
-  // feedback.setTask("dpos.undelegating", {validator:delegation.validator.name, amount: delegation.updateAmoumt.div(config.coins.loom.decimals)})
+  feedback.setTask("Consolidating")
+  feedback.setStep("Consolidating unlocked delegations on " + delegation.validator.name)
   await context.state.contract!.unbondAsync(
     delegation.validator.address,
     delegation.updateAmount,
     delegation.index,
   )
+  try {
+    await context.state.contract!.consolidateDelegations(delegation.validator.address)
+    feedback.endTask()
+    // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
+  } catch (error) {
+    feedback.endTask()
+    feedback.showError("Error while redelegating. Please contact support")
+  }
   // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
   // feedback.alert("dpos.undelegate.success_credit_next")
 }
@@ -279,19 +311,25 @@ async function claimRewards(context: ActionContext) {
   const contract = context.state.contract!
   // limbo
   const limboValidator = Address.fromString(
-    context.rootState.plasma.chainId + ":0x00000000000000000000000000000000",
+    context.rootState.plasma.chainId + ":0x00000000000000000000000000000000", // "".padEnd(32,"0")
   )
+  feedback.setTask("Claiming rewards")
+  feedback.setStep("Checking...")
   const limboDelegations = await contract.checkDelegationAsync(
     limboValidator,
     contract.caller,
   )
   if (limboDelegations!.delegationsArray.length > 0) {
+    feedback.setStep("Claiming DPOS 2 rewards...") // add amount
     // feedback.setTask("claiming dpos 2 rewards")
     await contract.unbondAsync(limboValidator, 0, 0)
-  }
 
-  // feedback.setTask("dpos.claiming_rewards")
-  return context.state.contract!.claimDelegatorRewardsAsync()
-  // .then(() => feedback.endTask(), () => feedback.endTask())
-  // feedback.endTask()
+  }
+  try {
+    feedback.setStep("Claiming rewards...") // add amount
+    return context.state.contract!.claimDelegatorRewardsAsync()
+  } catch (error) {
+    feedback.endTask()
+    feedback.showError("Error while claiming rewards. Please contact support")
+  }
 }

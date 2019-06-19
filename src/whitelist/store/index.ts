@@ -114,6 +114,7 @@ async function addDeployer(
     // TODO: update this if we have more tier: pass tier
     result = await userDeployerWhitelist.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
+    await whiteListModule.getDeployers()
     feedbackModule.showSuccess(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )

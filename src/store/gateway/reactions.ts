@@ -29,13 +29,14 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.watch(
     (s) => s.gateway.mapping,
     async (mapping) => {
+      log(mapping)
       if (mapping === null) {
+        log("null mapping")
         // todo destroy anything that needs to be disposed of
         return
-      }
-      if (mapping.to!.isEmpty() === false && store.state.ethereum.signer) {
+      } else if (mapping.to!.isEmpty() === false) {
         await setPlasmaAccount(mapping)
-        initializeGateways(mapping)
+        await initializeGateways(mapping)
 
         const plasmaGateways = PlasmaGateways.service()
         const ethereumGateways = EthereumGateways.service()

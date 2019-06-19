@@ -54,7 +54,7 @@
         <h5 class="alert-heading">LOOM balance low.</h5>
         <p>Whitelisting keys requires at least 10 LOOM. Your balance is {{ loomBalance }} LOOM</p>
         <footer style="display: flex;justify-content: flex-end;">
-          <b-button variant="primary">Deposit more LOOM to Plasmachain</b-button>
+          <b-button variant="primary" @click="goDeposit">Deposit more LOOM to Plasmachain</b-button>
         </footer>
       </b-alert>
 
@@ -77,7 +77,7 @@
             <input-address
               id="deployer-address-input"
               v-model="newPublicAddress"
-              chain="loom"
+              chain="any"
               :placeholder="'loom0000000000000000000000000000000000000000'"
               @isValid="isValidAddressFormat"
             />
@@ -96,7 +96,6 @@
               >
                 <input type="radio" v-model="tierSelected" :value="tier">
                 <strong>Tier {{tier.tierId +1}}</strong>
-                <div class="spec">Max 10 Tx/min</div>
                 <div class="fee">{{tier.fee | tokenAmount}} LOOM</div>
               </label>
               <label class="radio tier disabled" v-for="i in [1,2,3]" :key="i">
@@ -128,7 +127,6 @@ import { Component, Watch } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
-import { CommonTypedStore } from "@/store/common"
 import { whiteListModule } from "@/whitelist/store"
 import { WhiteListState, DeployerAddress } from "@/whitelist/store/types"
 import { plasmaModule } from "@/store/plasma"
@@ -223,6 +221,10 @@ export default class AddKey extends Vue {
       feedbackModule.showSuccess("Address copied."),
       console.error,
     )
+  }
+
+  goDeposit() {
+    this.$router.push({ path: 'wallet', query: { depositCoin: 'LOOM' } })
   }
 
   async mounted() {

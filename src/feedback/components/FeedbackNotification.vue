@@ -4,9 +4,8 @@
     :variant="type"
     dismissible
     @dismiss-count-down="countDownChanged"
-    fade>
-  {{ message }}
-  </b-alert>
+    fade
+  >{{ message }}</b-alert>
 </template>
 <script lang="ts">
 import Vue from "vue"
@@ -33,8 +32,9 @@ export default class FeedbackNotification extends Vue {
     this.dismissCountDown = dismissCountDown
 
     if (dismissCountDown === 0) {
+      // feedbackModule.clearNotification()
       this.$store.state.feedback.notification.message = ""
-      this.dismissCountDown = 2
+      this.dismissCountDown = 5
     }
   }
 }

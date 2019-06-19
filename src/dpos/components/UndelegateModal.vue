@@ -104,7 +104,7 @@ export default class DelegateModal extends Vue {
   }
 
   cancel() {
-    dposModule.cancelRequest()
+    dposModule.clearRequest()
   }
 
 }

@@ -74,35 +74,16 @@
 
     <rewards></rewards>
 
-    <b-card title="Delegations" id="delegations-container">
-      <b-card
-        v-for="(delegation, idx) in state.dpos.delegations"
-        :key="'delegations' + idx"
-        no-body
-        class="mb-1"
-      >
-        <b-card-header
-          @click="toggleAccordion(idx)"
-          header-tag="header"
-          class="d-flex justify-content-between p-2"
-          role="tab"
-        >
-          <span>{{delegation.validator.name}}</span>
-          <strong>{{delegation.amount | tokenAmount}}</strong>
-        </b-card-header>
-        <b-collapse :id="'accordion' + idx" accordion="my-accordion" role="tabpanel">
-          <b-card-body>
-            <ul>
-              <li
-                v-if="!delegation.updateAmount.isZero()"
-              >Update amount: {{delegation.updateAmount}}</li>
-              <li>Unlock time: {{delegation.lockTime}}</li>
-              <li>State: {{delegation.state}}</li>
-            </ul>
-          </b-card-body>
-        </b-collapse>
-      </b-card>
+    <b-card id="delegations-container" no-body>
+      <b-card-body>
+        <h4 class="card-title" style="margin: 0;">Delegations</h4>
+      </b-card-body>
+      <delegations :delegations="delegations" show-validator/>
     </b-card>
+
+    <pre>
+      {{state.dpos.unclaimedTokens}}
+    </pre>
 
     <div class="button-container">
       <b-button @click="$router.push({ path: '/validators' })">Stake tokens</b-button>
@@ -121,13 +102,12 @@ import debug from "debug"
 import { formatToCrypto, sleep } from "@/utils.ts"
 import Rewards from "@/dpos/components/Rewards.vue"
 import AccountInfo from "@/components/Account.vue"
-import { DPOSTypedStore } from "../store/dpos-old"
-import { CommonTypedStore } from "../store/common"
 import { DashboardState } from "../types"
 import { ethereumModule } from "../store/ethereum"
 import { plasmaModule } from "../store/plasma"
 import { dposModule } from "@/dpos/store"
 import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
+import Delegations from "@/dpos/components/Delegations.vue"
 
 const log = debug("mobileaccount")
 
@@ -139,6 +119,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     LoomIcon,
     Rewards,
     ElectionTimer,
+    Delegations,
   },
 })
 export default class MobileAccount extends Vue {
@@ -148,83 +129,39 @@ export default class MobileAccount extends Vue {
   }
 
   currentAllowance = 0
-
-  // gateway related
-  // unclaimed tokens
-  unclaimedTokens = new BN(0)
-  unclaimWithdrawTokens = 0
-  unclaimWithdrawTokensETH = 0
-  unclaimSignature = ""
-  oracleEnabled = true
-  receipt: any = null
-  isWithdrawalInprogress = false
   withdrawLimit = 0
 
   showRefreshSpinner = false
 
-  // methods
-  setGatewayBusy = DPOSTypedStore.setGatewayBusy
-  setShowLoadingSpinner = CommonTypedStore.setShowLoadingSpinner
-  setShowDepositForm = DPOSTypedStore.setShowDepositForm
-
-  get web3() { return DPOSTypedStore.state.web3 }
-  get dposUser() { return DPOSTypedStore.state.dposUser }
-  get validators() { return DPOSTypedStore.state.validators }
-  get gatewayBusy() { return DPOSTypedStore.state.gatewayBusy }
-  get rewardsResults() { return DPOSTypedStore.state.rewardsResults }
-  get delegations() { return DPOSTypedStore.state.delegations }
-  get states() { return DPOSTypedStore.state.states }
-  get pendingTx() { return DPOSTypedStore.state.pendingTx }
-
-  get formatedDelegations() {
-    const candidates = this.validators
-    console.log(this.delegations)
-    return this.delegations
-      .filter((d) => d.index > 0)
-      .map((delegation) => {
-        const candidate = candidates.find((c) => c.address === delegation.validator.local.toString())
-        return {
-          "Name": candidate.name,
-          "Amount": `${formatToCrypto(delegation.amount)}`,
-          "Update Amount": `${formatToCrypto(delegation.updateAmount)}`,
-          "Locktime": `${new Date(delegation.lockTime * 1000)}`,
-          "State": `${this.states[delegation.state]}`,
-          "_cellVariants": { Status: "active" },
-        }
-      })
-  }
+  get delegations() { return this.state.dpos.delegations }
 
   toggleAccordion(idx) {
     this.$root.$emit("bv::toggle::collapse", "accordion" + idx)
   }
 
-  async completeDeposit() {
-    const dposUser = await this.dposUser!
-    this.setGatewayBusy(true)
-    this.setShowLoadingSpinner(true)
-    const tokens = new BN(this.currentAllowance)
-    const weiAmount = new BN(this.web3.utils.toWei(tokens, "ether"), 10)
-    try {
-      await dposUser.ethereumGateway.functions.depositERC20(
-        weiAmount.toString(),
-        dposUser.ethereumLoom.address,
-      )
-      this.currentAllowance = 0
-    } catch (error) {
-      console.error(error)
-    }
-    this.$emit("refreshBalances")
-    this.setGatewayBusy(false)
-    this.setShowLoadingSpinner(false)
-  }
+  // async completeDeposit() {
+  //   const dposUser = await this.dposUser!
+  //   this.setGatewayBusy(true)
+  //   this.setShowLoadingSpinner(true)
+  //   const tokens = new BN(this.currentAllowance)
+  //   const weiAmount = new BN(tokens, "ether"), 10)
+  //   try {
+  //     await dposUser.ethereumGateway.functions.depositERC20(
+  //       weiAmount.toString(),
+  //       dposUser.ethereumLoom.address,
+  //     )
+  //     this.currentAllowance = 0
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  //   this.$emit("refreshBalances")
+  //   this.setGatewayBusy(false)
+  //   this.setShowLoadingSpinner(false)
+  // }
 
   refresh() {
     ethereumModule.refreshBalance("LOOM")
     plasmaModule.refreshBalance("LOOM")
-  }
-
-  get rewardsValue() {
-    return this.rewardsResults ? (this.rewardsResults.toString() + " LOOM") : "0.00"
   }
 
 }

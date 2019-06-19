@@ -32,12 +32,12 @@ import "@/whitelist/store"
 import { whiteListReaction } from "../whitelist/store/reactions"
 
 import "./common"
-import "./dpos-old"
 
 import "./locale"
 import "./plasma/assets"
 
 import { plasmaReactions } from "./plasma/reactions"
+import { dposModule } from "@/dpos/store"
 
 const log = debug("dash")
 
@@ -50,9 +50,11 @@ const dashboardStore = {
     state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
+    dposModule.setConfig(env.dpos)
     log("tokensService", env.coinDataUrl)
     tokenService.setBaseURL(env.coinDataUrl)
     state.disabled = env.disabled
+    state.chains = env.chains
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     state.envs = envs

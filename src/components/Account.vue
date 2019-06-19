@@ -30,7 +30,7 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { dposModule } from "@/dpos/store"
-import { DashboardState, DposState } from "@/types"
+import { DashboardState } from "@/types"
 import { feedbackModule } from "@/feedback/store"
 
 @Component
@@ -42,10 +42,6 @@ export default class Account extends Vue {
     return this.$store.state
   }
 
-  get dposState(): DposState {
-    return this.$store.state.dpos
-  }
-
   get ethAccount() {
     return this.state.ethereum.address
   }
@@ -55,7 +51,7 @@ export default class Account extends Vue {
   }
 
   copyEthereum() {
-    this.$copyText(this.plasmaAccount).then(() =>
+    this.$copyText(this.ethAccount).then(() =>
       feedbackModule.showSuccess("Ethereum address copied."),
       console.error,
     )

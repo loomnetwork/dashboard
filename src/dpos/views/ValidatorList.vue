@@ -5,6 +5,19 @@
         <header>
           <h1>{{ $t('views.validator_list.validators') }}</h1>
         </header>
+        <b-card
+          no-body
+          style="justify-content: space-around;flex-direction: row;text-align: center;align-items: flex-end;padding-top: 5px;"
+        >
+          <h6>
+            Next election in:
+            <election-timer/>
+          </h6>
+          <h6>
+            Total staked amount
+            <h5 class="highlight">{{totalStaked | tokenAmount}} LOOM</h5>
+          </h6>
+        </b-card>
         <div class="content">
           <template v-if="isSmallDevice">
             <b-list-group>
@@ -21,7 +34,7 @@
                 </div>
                 <div class="stakes">
                   <label>Stake</label>
-                  <span>{{validator.totalStaked | tokenAmount}}</span>
+                  <span>{{validator.delegationTotal | tokenAmount}}</span>
                 </div>
                 <div
                   v-if="!isSmallDevice"
@@ -44,7 +57,7 @@
               <template
                 slot="delegationsTotal"
                 slot-scope="data"
-              >{{data.item.totalStaked | tokenAmount}}</template>
+              >{{data.item.delegationTotal | tokenAmount}}</template>
               <template slot="active" slot-scope="data">{{data.item.active ? "Active" : ""}}</template>
             </b-table>
           </template>
@@ -58,8 +71,10 @@
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
+import ElectionTimer from "../components/ElectionTimer.vue"
 import { CryptoUtils, LocalAddress } from "loom-js"
 import { HasDPOSState } from "@/dpos/store/types"
+import { ZERO } from '../../utils';
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -73,18 +88,24 @@ function random() {
   return x - Math.floor(x)
 }
 
-@Component
+@Component({
+  components: { ElectionTimer }
+})
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
   { key: "delegationsTotal", sortable: true, label: "Total Staked" },
-  { key: "fees", sortable: true, label: "Fee" },
+  { key: "fee", sortable: true, label: "Fee" },
   ]
 
   get state(): HasDPOSState {
     return this.$store.state
+  }
+
+  get totalStaked() {
+    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.delegationTotal), ZERO)
   }
 
   get validators() {

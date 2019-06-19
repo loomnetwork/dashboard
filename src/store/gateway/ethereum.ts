@@ -11,7 +11,7 @@ import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
 import { ethereumModule } from "../ethereum"
-import networks from "@/../chain-config"
+import { feedbackModule as fb } from "@/feedback/store"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
 // XXX
@@ -20,10 +20,7 @@ import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/Validato
 import { CryptoUtils } from "loom-js"
 import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
-import { plasmaModule } from "../plasma"
 import { AbiItem } from "web3-utils"
-import { state } from "../common"
-import BigNumber from "bignumber.js"
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -43,7 +40,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     readonly contract: ERC20Gateway_v2 | Gateway,
     readonly tokenAddress: string,
     readonly token: string,
-  ) {}
+  ) { }
 
   deposit(amount: BN, address: string) {
     return (
@@ -61,17 +58,15 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
-    const result = this.contract.methods.withdrawERC20(
-      amount,
-      this.tokenAddress,
-      valIndexes,
-      vs,
-      rs,
-      ss,
-    ).send({from: localAddress})
+    const result = this.contract.methods
+      .withdrawERC20(amount, this.tokenAddress, valIndexes, vs, rs, ss)
+      .send({ from: localAddress })
     result.then((tx) => {
       localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-      localStorage.setItem("latestWithdrawalBlock", JSON.stringify(tx.blockNumber))
+      localStorage.setItem(
+        "latestWithdrawalBlock",
+        JSON.stringify(tx.blockNumber),
+      )
     })
     return result
   }
@@ -88,7 +83,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
     readonly contract: Gateway,
     readonly tokenAddress: string,
     readonly web3: Web3,
-  ) {}
+  ) { }
 
   deposit(amount: BN) {
     this.web3.eth.sendTransaction({
@@ -117,11 +112,6 @@ export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
 ) {
-  // return new EthereumGateways()
-  const account = web3.eth.defaultAccount
-  // create gateways and vmc (maybe vmc does not care...)
-
-  const gwAddress = networks[plasmaModule.state.networkId].gatewayAddress
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI_v2 as AbiItem[],
     addresses.loomGateway,
@@ -155,7 +145,7 @@ class EthereumGateways {
     readonly loomGateway: ERC20Gateway_v2,
     readonly vmc: ValidatorManagerContract,
     readonly web3: Web3,
-  ) {}
+  ) { }
 
   destroy() {
     this.adapters.clear()
@@ -212,9 +202,28 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       to: gateway.contract._address,
       ...funds,
     })
-  } else {
-    await gateway.deposit(funds.weiAmount, context.rootState.ethereum.address)
   }
+  fb.requireConfirmation({
+    title: "Complete deposit",
+    message: "Please sign click confirm to complete your deposit.",
+    onConfirm: async () => {
+      try {
+        await gateway.deposit(
+          funds.weiAmount,
+          context.rootState.ethereum.address,
+        )
+        fb.showAlert({
+          title: "Deposit successful",
+          message: "components.gateway.deposit.confirmed",
+        })
+      } catch (err) {
+        fb.showAlert({
+          title: "Deposit failed",
+          message: "components.gateway.deposit.failure",
+        })
+      }
+    },
+  })
 }
 
 /**

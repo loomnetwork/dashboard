@@ -21,6 +21,7 @@ import {
 import debug from "debug"
 
 import * as Tokens from "./tokens"
+import { feedbackModule } from "@/feedback/store"
 
 const log = debug("dash.plasma")
 
@@ -84,7 +85,6 @@ export const plasmaModule = {
   transfer: builder.dispatch(Tokens.transfer),
   // addTokens: builder.dispatch(Tokens.addContract),
 
-  setSelectedToken: builder.commit(mutations.setSelectedToken),
   addCoinState: builder.commit(Tokens.addCoinState),
 
   // Assets
@@ -131,6 +131,7 @@ async function changeIdentity(
   const client = ctx.state.client!
   ctx.state.address = address
   ctx.state.signer = signer
+
   // add the conresponding middleware
   if (signer === null) {
     // reset client middleware
@@ -141,8 +142,12 @@ async function changeIdentity(
     )
     // destroy loomProvider and old web3
   } else {
+    feedbackModule.setTask("Connecting to Plasma chain")
+    feedbackModule.setStep("Connecting to Plasma chain")
     await signer.configureClient(ctx.state.client!)
+    feedbackModule.endTask()
   }
+
 }
 
 // getter but async so I guess it's an action according to vuex
@@ -167,11 +172,11 @@ async function getCallerAddress(ctx: PlasmaContext): Promise<Address> {
   return Address.fromString(`${chainId}:${caller}`)
 }
 
-async function getPublicAddressFromPrivateKeyUint8Array(
+function getPublicAddressFromPrivateKeyUint8Array(
   context: PlasmaContext,
   payload: { privateKey: Uint8Array },
 ) {
-  const publicKeyUint8Array = await CryptoUtils.publicKeyFromPrivateKey(
+  const publicKeyUint8Array = CryptoUtils.publicKeyFromPrivateKey(
     payload.privateKey,
   )
   const publicAddress = LocalAddress.fromPublicKey(

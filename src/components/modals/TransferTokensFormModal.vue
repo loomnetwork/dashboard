@@ -8,15 +8,15 @@
   >
     <b-card>
       <h6>Token type: {{ token }}</h6>
-      <h6>Your token balance: {{ balance }} {{ token }}</h6>
+      <h6>Your token balance: {{ balance | tokenAmount}} {{ token }}</h6>
       <div class="input-section">
-        <span>Amount: (max: {{ balance }} )</span>
+        <span>Amount: (max: {{ balance | tokenAmount}} )</span>
         <amount-input
           :min="1"
-          :max="Number(balance)"
+          :max="maxToken"
           :round="false"
-          :symbol= "token"
-          v-model="transferAmount"
+          :symbol="token"
+          v-model="transferWeiAmount"
           @isError="onAmountError"
         />
       </div>
@@ -43,6 +43,7 @@ import { plasmaModule } from "../../store/plasma"
 import AmountInput from "@/components/AmountInput.vue"
 import BN from "bn.js"
 import { toBigNumber, ZERO } from "@/utils"
+import { BigNumber } from "bignumber.js";
 import { formatTokenAmount } from "@/filters"
 import InputAddress from "../InputAddress.vue"
 
@@ -55,10 +56,10 @@ import InputAddress from "../InputAddress.vue"
 
 export default class TransferTokensFormModal extends Vue {
 
-  @Prop({required: true}) token!: string
+  @Prop({ required: true }) token!: string
 
   transfer = plasmaModule.transfer
-  transferAmount: BN = ZERO
+  transferWeiAmount: BN = ZERO
   receiverAddress: string = ""
   amountError = false
   isValidAddress = false
@@ -72,14 +73,19 @@ export default class TransferTokensFormModal extends Vue {
 
   get balance() {
     const balance = this.state.plasma.coins[this.token].balance
-    return formatTokenAmount(balance)
+    return balance
+  }
+
+  get maxToken(): number {
+    return (new BigNumber(this.balance.toString())
+      .div(10 ** 18)).toNumber()
   }
 
   async transferToken() {
-    // const amount = new BN(""+this.transferAmount).mul(new BN(""+10**18))
+    // const amount = new BN(""+this.transferWeiAmount).mul(new BN(""+10**18))
     this.transfer({
       symbol: this.token,
-      weiAmount: this.transferAmount,
+      weiAmount: this.transferWeiAmount,
       to: this.receiverAddress.replace("loom", "0x"),
     })
     this.$root.$emit("bv::hide::modal", "transfer-tokens-form-modal")

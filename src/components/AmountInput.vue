@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button variant="outline-primary" @click="setAllAmount">All ({{ `${max} ${symbol}` }})</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount">All balance</b-button>
       </b-col>
     </b-row>
   </div>
@@ -21,24 +21,31 @@
 
 <script lang="ts">
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
-import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
-import { PlasmaState } from "../store/plasma/types"
 
 @Component
 export default class AmountInput extends Vue {
   @Prop() value!: any // v-model is it accepts a value prop and emit an input event.
+
+  /**
+   * in token
+   */
   @Prop(Number) min!: number
+  /**
+   * in token
+   */
   @Prop(Number) max!: number
   @Prop(String) symbol!: string
   @Prop({ default: true }) round!: boolean
 
-  // State declaration
-  amount: any = ""
+  /**
+   * User input is in token
+   */
+  amount: number | "" = ""
   errorMsg: string = ""
 
-  // Call this function when amount changed
+  // Call this function when amount changed. emits valud in WEI
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
     const amountBN = new BN(this.amount).mul(new BN("" + 10 ** 18))
@@ -46,14 +53,14 @@ export default class AmountInput extends Vue {
   }
 
   // Set default amount when select another token
-  @Watch("plasma.selectedToken")
+  @Watch("symbol")
   setDefaultAmount(newVal, oldVal) {
     this.amount = 0
     this.validateAmount()
   }
 
   validateAmount() {
-    let amount = this.amount
+    let amount = Number(this.amount)
     const max = new BN(this.max).mul(new BN("" + 10 ** 18))
     if (this.round) {
       amount = Math.floor(this.value)
@@ -61,7 +68,7 @@ export default class AmountInput extends Vue {
     if (!this.amount) {
       this.errorMsg = ""
       this.$emit("isError", true)
-    } else if (amount > max) {
+    } else if (amount > this.max) {
       this.errorMsg = this.$t("messages.amount_input_should_less", { amount: this.max }).toString()
       this.$emit("isError", true)
     } else if (amount < this.min) {
@@ -73,13 +80,6 @@ export default class AmountInput extends Vue {
     }
   }
 
-  get state(): DashboardState {
-    return this.$store.state
-  }
-
-  get plasma(): PlasmaState {
-    return this.state.plasma
-  }
   // Button Action
   setAllAmount() {
     this.amount = this.max

@@ -35,15 +35,21 @@
           <span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span>
         </b-col>
         <b-col>
-          <b-form-input
-            v-model="locktimeTierVal"
-            :min="minLockTimeTier"
-            max="3"
-            :formatter="formatRangeInput"
-            id="locktime"
-            type="range"
-            data-toggle="tooltip"
-          ></b-form-input>
+          <div class="tier-options">
+            <label
+              v-for="(n, i) in locktimeTiers.length"
+              :key="i"
+              class="radio tier"
+              :class="{selected: i === locktimeTierVal}"
+            >
+              <input type="radio" v-model="locktimeTierVal" :value="i">
+              <strong>Locktime</strong>
+              <div>{{ locktimeTiers[i] }}</div>
+              <strong>Bonuses</strong>
+              <div class="fee">{{ bonusTiers[i] }}</div>
+              <div class="spec">({{ calcReceiveAmount(i) }} LOOM)</div>
+            </label>
+          </div>
         </b-col>
       </b-row>
     </b-container>
@@ -95,6 +101,13 @@ export default class DelegateModal extends Vue {
     "x1.5",
     "x2",
     "x4",
+  ]
+
+  rewardTiers = [
+    0.05,
+    0.075,
+    0.1,
+    0.2,
   ]
 
   minAmount = new BN("1")
@@ -169,6 +182,9 @@ export default class DelegateModal extends Vue {
     dposModule.clearRequest()
   }
 
+  calcReceiveAmount(i) {
+    return Intl.NumberFormat().format(this.delegationAmount * (1 + this.rewardTiers[i]))
+  }
 }
 </script>
 <style lang="scss">
@@ -177,5 +193,40 @@ label {
 }
 .loading-spinner-container {
   height: 200px;
+}
+
+.tier-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .tier {
+    border: 1px solid #d8d8d8;
+    color: rgba(0, 0, 0, 0.86);
+    padding: 16px 8px;
+    text-align: center;
+    margin: 0 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    &.selected {
+      background-color: #007cff;
+      color: #fff;
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+    }
+    &.disabled {
+      opacity: 0.56;
+    }
+    > input {
+      display: none;
+    }
+    > * {
+      height: 1.8em;
+    }
+    .spec {
+      font-size: 0.7rem;
+    }
+  }
 }
 </style>

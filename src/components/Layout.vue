@@ -133,9 +133,13 @@ export default class Layout extends Vue {
     }
 
     this.$root.$on("logout", () => {
-      window.location.reload(true)
+      this.restart()
     })
 
+  }
+
+  restart() {
+    window.location.reload(true)
   }
 
 }

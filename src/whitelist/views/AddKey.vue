@@ -39,15 +39,19 @@
           >You have no deployer address yet. Use the form bellow to add one</p>
         </b-card-body>
         <b-list-group class="deployer-keys" flush>
-          <b-list-group-item v-for="pk in publicKeys" :key="pk.hex">
-            <address class="key hex" v-if="keyViewMode === 'hex'">
-              <span>{{pk.hex | loomAddress}}</span>
-              <fa icon="paste" @click="copyAddress(pk.hex)"/>
-            </address>
-            <div class="key" v-else>{{pk.base64}}</div>
-            <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
-            <b-collapse id="collapse-2">
-              <b-card>I am collapsible content!</b-card>
+          <b-list-group-item v-for="pk in publicKeys" :key="pk.hex" class="flex-column">
+            <div class="flex-row my-2">
+              <address class="key hex" v-if="keyViewMode === 'hex'">
+                <span @click="showCollapse(pk.hex)">{{pk.hex | loomAddress}}</span>
+                <fa icon="paste" @click="copyAddress(pk.hex)" class="icon-copy"/>
+              </address>
+              <div class="key" v-else>{{pk.base64}}</div>
+              <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
+            </div>
+            <b-collapse :id="pk.hex">
+              <div class="collapse-content">
+                Something
+              </div>
             </b-collapse>
           </b-list-group-item>
         </b-list-group>
@@ -235,12 +239,28 @@ export default class AddKey extends Vue {
     this.keyViewMode = "hex"
     await whiteListModule.getDeployers()
   }
+  showCollapse(key) {
+    this.$root.$emit("bv::toggle::collapse", key)
+  }
 }
 </script>
 <style lang="scss" scoped>
 main > section {
   max-width: 600px;
   margin: 0 auto;
+}
+.collapse-content {
+  background: #007bff0f;
+  padding: 1em;
+  border-radius: 4px;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .card.deployer-keys {
@@ -265,7 +285,12 @@ main > section {
       font-size: 0.825rem;
       margin: 0;
       &.hex {
-        cursor: copy;
+        > span {
+          cursor: pointer; 
+        }
+        .icon-copy {
+          cursor: copy;
+        }
       }
       // fa icon
       > svg {

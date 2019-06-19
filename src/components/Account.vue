@@ -32,6 +32,7 @@ import { Component } from "vue-property-decorator"
 import { dposModule } from "@/dpos/store"
 import { DashboardState } from "@/types"
 import { feedbackModule } from "@/feedback/store"
+import { formatToLoomAddress } from "@/utils"
 
 @Component
 export default class Account extends Vue {
@@ -58,7 +59,7 @@ export default class Account extends Vue {
   }
 
   copyPlasma() {
-    this.$copyText(this.plasmaAccount).then(() =>
+    this.$copyText(formatToLoomAddress(this.plasmaAccount)).then(() =>
       feedbackModule.showSuccess("Plasma address copied."),
       console.error,
     )

@@ -40,12 +40,15 @@
         </b-card-body>
         <b-list-group class="deployer-keys" flush>
           <b-list-group-item v-for="pk in publicKeys" :key="pk.hex">
-            <address class="key hex" v-if="keyViewMode === 'hex'" @click="copyAddress(pk.hex)">
+            <address class="key hex" v-if="keyViewMode === 'hex'">
               <span>{{pk.hex | loomAddress}}</span>
-              <fa icon="paste"/>
+              <fa icon="paste" @click="copyAddress(pk.hex)"/>
             </address>
             <div class="key" v-else>{{pk.base64}}</div>
             <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
+            <b-collapse id="collapse-2">
+              <b-card>I am collapsible content!</b-card>
+            </b-collapse>
           </b-list-group-item>
         </b-list-group>
       </b-card>
@@ -225,7 +228,7 @@ export default class AddKey extends Vue {
   }
 
   goDeposit() {
-    this.$router.push({ path: 'wallet', query: { depositCoin: 'LOOM' } })
+    this.$router.push({ path: "wallet", query: { depositCoin: "LOOM" } })
   }
 
   async mounted() {

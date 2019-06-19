@@ -40,11 +40,12 @@
         </b-card-body>
         <b-list-group class="deployer-keys" flush>
           <b-list-group-item v-for="pk in publicKeys" :key="pk.hex">
-            <address class="key hex" v-if="keyViewMode === 'hex'" @click="copyAddress(pk.hex)">
+            <address class="key hex" v-if="keyViewMode === 'hex'" @click="getDeployedContract(pk.address)">
               <span>{{pk.hex | loomAddress}}</span>
-              <fa icon="paste"/>
+              <fa icon="paste" @click="copyAddress(pk.hex)"/>
             </address>
             <div class="key" v-else>{{pk.base64}}</div>
+            {{deployedContract[pk.hex]}}
             <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
           </b-list-group-item>
         </b-list-group>
@@ -188,6 +189,10 @@ export default class AddKey extends Vue {
     return this.state.userDeployersAddress
   }
 
+  get deployedContract() {
+    return this.state.deployedContractAddress
+  }
+
   async addKey(tier: ITier) {
     if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance)) {
       this.showError("Your balance isn't enough. Please deposit first.")
@@ -222,6 +227,10 @@ export default class AddKey extends Vue {
       feedbackModule.showSuccess("Address copied."),
       console.error,
     )
+  }
+
+  async getDeployedContract(deployerAddress: Address) {
+    await whiteListModule.getDeployedContractAddresses({deployerAddress})
   }
 
   goDeposit() {

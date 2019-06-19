@@ -4,7 +4,7 @@ import { getStoreBuilder } from "vuex-typex"
 
 import { Address, LocalAddress } from "loom-js"
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
-import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
+import { ITier, IDeployedContract } from "loom-js/dist/contracts/user-deployer-whitelist"
 import { TierID } from "loom-js/dist/proto/user_deployer_whitelist_pb"
 
 import { i18n } from "@/i18n"
@@ -19,6 +19,7 @@ import {
   WhiteListContext,
 } from "@/whitelist/store/types"
 import * as mutations from "./mutations"
+import { async } from "rxjs/internal/scheduler/async"
 
 const log = debug("whitelist")
 
@@ -27,6 +28,7 @@ const initialState: WhiteListState = {
   userDeployersAddress: [],
   tierIDs: [0], // TODO: update this if we have more tier: add more tier ID
   tiers: [],
+  deployedContractAddress: {},
 }
 const builder = getStoreBuilder<HasWhiteListState>().module(
   "whiteList",
@@ -42,11 +44,13 @@ export const whiteListModule = {
   setUserDeployerWhitelist: builder.commit(mutations.setUserDeployerWhitelist),
   setUserDeployersAddress: builder.commit(mutations.setUserDeployersAddress),
   setDefaultTiers: builder.commit(mutations.setDefaultTiers),
+  setDeployedContractAddress: builder.commit(mutations.setDeployedContractAddress),
 
   createContract: builder.dispatch(createContract),
   addDeployer: builder.dispatch(addDeployer),
   getDeployers: builder.dispatch(getDeployers),
   getTierInfo: builder.dispatch(getTierInfo),
+  getDeployedContractAddresses: builder.dispatch(getDeployedContractAddresses),
 }
 
 /**
@@ -74,8 +78,7 @@ async function getTierInfo(
   try {
     tierDetail = await userDeployerWhitelist!.getTierInfoAsync(payload.tierID)
   } catch (error) {
-    log("getTierInfoAsync error")
-    console.error(error)
+    log("getTierInfoAsync error", error)
   }
   return tierDetail
 }
@@ -119,8 +122,7 @@ async function addDeployer(
       i18n.t("messages.add_deployer_addr_success_tx").toString(),
     )
   } catch (error) {
-    log("addDeployerAsync error")
-    console.error(error)
+    log("addDeployerAsync error", error)
     let errorMessage = error.message
     if (error.message.includes("User denied message")) {
       errorMessage = i18n.t("messages.user_denied_sign_tx").toString()
@@ -150,10 +152,35 @@ async function getDeployers(context: WhiteListContext) {
     result = await contract.getDeployersAsync(accountAddr)
     deployerAddresses = formatDeployersAddress(result)
   } catch (error) {
-    console.error(error)
+    log("getDeployersAsync error", error)
     deployerAddresses = []
   }
   mutations.setUserDeployersAddress(context.state, deployerAddresses)
+}
+
+/**
+ *
+ * @param context
+ * @param payload
+ */
+async function getDeployedContractAddresses(context: WhiteListContext, payload: {deployerAddress: Address}) {
+  const chainId = context.rootState.plasma.chainId
+  const contract = context.state.userDeployerWhitelist!
+  console.log("contract",contract);
+
+  const deployerAddressTemp = Address.fromString(`${chainId}:${"0x85a5082a6b01371cad401593ce6182e577af690f"}`)
+  let contractAddresses: IDeployedContract[] | [] = []
+  console.log("deployerAddressTemp", deployerAddressTemp)
+
+  try {
+    contractAddresses = await contract.getDeployedContractsAsync(deployerAddressTemp)
+    // contractAddresses = await contract.getDeployedContractsAsync(payload.deployerAddress)
+    console.log("contractAddresses", contractAddresses)
+
+  } catch (error) {
+    log("getDeployedContractsAsync error", error)
+  }
+  return contractAddresses
 }
 
 /**

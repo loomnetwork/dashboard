@@ -32,7 +32,7 @@
           >{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label>
         </b-col>
         <b-col sm="6">
-          <span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span>
+          <span>{{locktimeTiers[delegation.lockTimeTier]}} / {{bonusTiers[delegation.lockTimeTier]}}</span>
         </b-col>
         <b-col>
           <div class="tier-options">
@@ -40,9 +40,9 @@
               v-for="(n, i) in locktimeTiers.length"
               :key="i"
               class="radio tier"
-              :class="{selected: i === locktimeTierVal}"
+              :class="{selected: i === delegation.lockTimeTier}"
             >
-              <input type="radio" v-model="locktimeTierVal" :value="i">
+              <input type="radio" v-model="delegation.lockTimeTier" :value="i">
               <strong>Locktime</strong>
               <div>{{ locktimeTiers[i] }}</div>
               <strong>Bonuses</strong>
@@ -79,9 +79,6 @@ const MULTIPLIER = new BN("10").pow(new BN("18"))
 @Component
 export default class DelegateModal extends Vue {
 
-  @Prop({})
-  locktimeTier = 0
-  locktimeTierVal = 0
   validator = null
   showValidators = false
   formattedValidators: any[] = []

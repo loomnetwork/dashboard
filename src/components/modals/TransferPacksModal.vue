@@ -21,6 +21,7 @@
       <input-address
         v-model="receiverAddress"
         chain="loom"
+        :blacklist="[ownAddress]"
         :placeholder="'Loom Address'"
         @isValid="isValidAddressFormat"
       />
@@ -47,6 +48,7 @@ import { DashboardState } from "@/types"
 import { assetsModule } from "@/store/plasma/assets"
 import InputAddress from "../InputAddress.vue"
 import { feedbackModule } from "../../feedback/store"
+import { formatToLoomAddress } from "../../utils"
 
 @Component({
   components: {
@@ -72,6 +74,10 @@ export default class TransferPacksModal extends Vue {
 
   get packToTransfer() {
     return this.state.assets.packToTransferSelected
+  }
+
+  get ownAddress() {
+    return formatToLoomAddress(this.state.plasma.address.toLowerCase())
   }
 
   transferPacksHandler() {

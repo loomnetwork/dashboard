@@ -48,6 +48,11 @@ export default class InputAmount extends Vue {
     }
   }
 
+  @Watch("value")
+  onValueChanged(newVal, oldVal) {
+    this.internal = newVal
+  }
+
   validateAddressFormat(value) {
     const chain = this.chain.toLowerCase()
     let valid = false

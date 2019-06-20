@@ -83,7 +83,7 @@ export default class TransferTokensFormModal extends Vue {
   }
 
   get ownAddress() {
-    return this.plasma.address.replace("0x", "loom")
+    return this.plasma.address.replace("0x", "loom").toLowerCase()
   }
 
   async transferToken() {

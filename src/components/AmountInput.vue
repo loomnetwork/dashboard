@@ -63,19 +63,24 @@ export default class AmountInput extends Vue {
 
   validateAmount() {
     let amount = Number(this.amount)
-    const max = Number(this.max)
-    const min = Number(this.min)
-    if (this.round) {
-      amount = Math.floor(this.value)
+    if (!amount) {
+      this.errorMsg = "Please enter a valid amount"
+      this.$emit("isError", true)
+      return
     }
-    if (!this.amount) {
-      this.errorMsg = ""
+    if (this.round && Number.isInteger(amount) === false) {
+      this.errorMsg = "Only round amounts allowed"
       this.$emit("isError", true)
-    } else if (amount > max) {
-      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: max }).toString()
+      return
+    }
+    const amountBN = parseToWei("" + amount)
+    const max = this.max
+    const min = this.min
+    if (amountBN.gt(max)) {
+      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: formatTokenAmount(max) }).toString()
       this.$emit("isError", true)
-    } else if (amount < min) {
-      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: min }).toString()
+    } else if (amountBN.lt(min)) {
+      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: formatTokenAmount(min) }).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""
@@ -86,6 +91,7 @@ export default class AmountInput extends Vue {
   // Button Action
   setAllAmount() {
     this.amount = Number(formatTokenAmount(this.max))
+    this.validateAmount()
   }
 
   mounted() {

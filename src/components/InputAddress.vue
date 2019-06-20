@@ -7,7 +7,8 @@
       :state="this.value.length === 0 ? null : isValidAddress"
       class="my-2"
     ></b-form-input>
-    <p v-if="!isValidAddress" style :key="value" class="error">Invalid {{ chain }} address.</p>
+    <p v-if="isBlacklisted" style :key="value" class="error">Cannot transfer to own address.</p>
+    <p v-else-if="!isValidAddress" style :key="value" class="error">Invalid {{ chain }} address.</p>
   </div>
 </template>
 
@@ -33,6 +34,7 @@ export default class InputAddress extends Vue {
   internal: string = ""
 
   isValidAddress: boolean = true
+  isBlacklisted: boolean = false
 
   onInput(value) {
     if (value !== "") {
@@ -54,7 +56,8 @@ export default class InputAddress extends Vue {
     if (chain in this.patterns) {
       valid = this.patterns[chain].test("" + value)
     }
-    valid = valid && (false === this.blacklist.includes(value.toLowerCase()))
+    this.isBlacklisted = this.blacklist.includes(value.toLowerCase())
+    valid = valid && (this.isBlacklisted === false)
     this.emitValidAddress(valid)
   }
 

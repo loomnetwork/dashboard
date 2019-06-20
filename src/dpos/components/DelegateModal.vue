@@ -97,10 +97,10 @@ export default class DelegateModal extends Vue {
   ]
 
   bonusTiers = [
-    "x1",
-    "x1.5",
-    "x2",
-    "x4",
+    "5%",
+    "8%",
+    "10%",
+    "20%",
   ]
 
   rewardTiers = [

@@ -8,6 +8,8 @@
     title="Withdraw"
   >
     <div v-if="status === 'default'">
+      <h6>Token type: {{ token }}</h6>
+      <h6>Your token balance: {{ userBalance | formatTokenAmount}} {{ token }}</h6>      
       <amount-input :min="toWei('1')" :max="toWei('100')" :symbol="token" v-model="amount" @isError="errorHandler"/>
     </div>
     <div v-if="status === 'error'">
@@ -33,6 +35,7 @@ import BN from "bn.js"
 import { Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 
+import { formatTokenAmount } from "@/filters"
 import { formatToCrypto, parseToWei } from "@/utils"
 import { DashboardState, Funds } from "../../types"
 import { gatewayModule } from "../../store/gateway"
@@ -62,6 +65,10 @@ export default class WithdrawForm extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get userBalance() {
+    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10) + ""
   }
 
   get visible() {

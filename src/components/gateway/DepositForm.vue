@@ -12,6 +12,8 @@
     <template slot="modal-title">Approve deposit</template>
     <div v-if="!status">
       <form>
+        <h6>Token type: {{ token }}</h6>
+        <h6>Your token balance: {{ userBalance | formatTokenAmount}} {{ token }}</h6>
         <amount-input
           :min="toWei('1')"
           :max="toWei(userBalance)"

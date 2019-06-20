@@ -14,7 +14,7 @@
         :min="min"
         :max="userBalance"
         :symbol="token"
-        v-model="amount"
+        v-model="weiAmount"
         @isError="errorHandler"
       />
     </div>

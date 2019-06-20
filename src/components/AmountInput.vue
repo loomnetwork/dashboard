@@ -63,18 +63,23 @@ export default class AmountInput extends Vue {
 
   validateAmount() {
     let amount = Number(this.amount)
-    const max = Number(this.max)
-    const min = Number(this.min)
-    if (this.round) {
-      amount = Math.floor(this.value)
-    }
-    if (!this.amount) {
-      this.errorMsg = ""
+    if (!amount) {
+      this.errorMsg = "Please enter a valid amount"
       this.$emit("isError", true)
-    } else if (amount > max) {
+      return
+    }
+    if (this.round && Number.isInteger(amount) === false) {
+      this.errorMsg = "Only round amounts allowed"
+      this.$emit("isError", true)
+      return
+    }
+    const amountBN = parseToWei("" + amount)
+    const max = this.max
+    const min = this.min
+    if (amountBN.gt(max)) {
       this.errorMsg = this.$t("messages.amount_input_should_less", { amount: max }).toString()
       this.$emit("isError", true)
-    } else if (amount < min) {
+    } else if (amountBN.lt(min)) {
       this.errorMsg = this.$t("messages.amount_input_should_more", { amount: min }).toString()
       this.$emit("isError", true)
     } else {

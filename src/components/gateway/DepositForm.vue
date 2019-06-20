@@ -9,14 +9,14 @@
     no-close-on-backdrop
     hide-header-close
   >
-    <template slot="modal-title">Approve deposit</template>
+    <template slot="modal-title">Deposit {{ token }}</template>
     <div v-if="!status">
       <form>
         <h6>Token type: {{ token }}</h6>
-        <h6>Your token balance: {{ userBalance | formatTokenAmount}} {{ token }}</h6>
+        <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
         <amount-input
-          :min="toWei('1')"
-          :max="toWei(userBalance)"
+          :min="min"
+          :max="userBalance"
           v-model="transferAmount"
           :symbol="token"
           @isError="errorHandler"
@@ -74,6 +74,7 @@ export default class DepositForm extends Vue {
   approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
+  min = new BN(1)
   transferAmount: BN | "" = ""
   amountErrors: string[] = []
   hasErrors: boolean = false
@@ -93,8 +94,8 @@ export default class DepositForm extends Vue {
     return this.showDepositForm
   }
 
-  get userBalance() {
-    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10) + ""
+  get userBalance(): BN {
+    return this.state.ethereum.coins[this.token].balance
   }
 
   get state(): DashboardState {
@@ -127,9 +128,6 @@ export default class DepositForm extends Vue {
 
     this.approveDeposit(payload)
     this.close()
-  }
-  toWei(val: string) {
-    return parseToWei(val)
   }
 }
 </script>

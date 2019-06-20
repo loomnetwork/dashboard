@@ -5,16 +5,18 @@
     no-close-on-esc
     hide-header-close
     id="deposit-approval-success"
-    title="Withdraw"
+    :title="'Withdraw ' + token"
   >
     <div v-if="status === 'default'">
       <h6>Token type: {{ token }}</h6>
-      <h6>Your token balance: {{ userBalance | formatTokenAmount}} {{ token }}</h6>      
-      <amount-input :min="toWei('1')"
-                    :max="toWei(userBalance)"
-                    :symbol="token"
-                    v-model="amount"
-                    @isError="errorHandler"/>
+      <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+      <amount-input
+        :min="min"
+        :max="userBalance"
+        :symbol="token"
+        v-model="amount"
+        @isError="errorHandler"
+      />
     </div>
     <div v-if="status === 'error'">
       <h2>An error occurred, please try again!</h2>
@@ -60,7 +62,8 @@ export default class WithdrawForm extends Vue {
   @Prop({ required: true }) token!: string // prettier-ignore
 
   status: string = "default"
-  amount: any = 0
+  weiAmount: BN = new BN(0)
+  min = new BN(1)
   amountIsValid: boolean = false
 
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
@@ -72,7 +75,7 @@ export default class WithdrawForm extends Vue {
   }
 
   get userBalance() {
-    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10) + ""
+    return this.state.plasma.coins[this.token].balance
   }
 
   get visible() {
@@ -101,7 +104,7 @@ export default class WithdrawForm extends Vue {
     const payload: Funds = {
       chain: "ethereum",
       symbol: this.token,
-      weiAmount: this.amount,
+      weiAmount: this.weiAmount,
     }
 
     this.beginWithdrawal(payload).then(() => {

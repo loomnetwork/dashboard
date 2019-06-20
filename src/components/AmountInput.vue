@@ -77,10 +77,10 @@ export default class AmountInput extends Vue {
     const max = this.max
     const min = this.min
     if (amountBN.gt(max)) {
-      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: max }).toString()
+      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: formatTokenAmount(max) }).toString()
       this.$emit("isError", true)
     } else if (amountBN.lt(min)) {
-      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: min }).toString()
+      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: formatTokenAmount(min) }).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""

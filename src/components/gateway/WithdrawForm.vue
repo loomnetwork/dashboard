@@ -10,7 +10,11 @@
     <div v-if="status === 'default'">
       <h6>Token type: {{ token }}</h6>
       <h6>Your token balance: {{ userBalance | formatTokenAmount}} {{ token }}</h6>      
-      <amount-input :min="toWei('1')" :max="toWei('100')" :symbol="token" v-model="amount" @isError="errorHandler"/>
+      <amount-input :min="toWei('1')"
+                    :max="toWei(userBalance)"
+                    :symbol="token"
+                    v-model="amount"
+                    @isError="errorHandler"/>
     </div>
     <div v-if="status === 'error'">
       <h2>An error occurred, please try again!</h2>

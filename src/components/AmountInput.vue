@@ -86,6 +86,7 @@ export default class AmountInput extends Vue {
   // Button Action
   setAllAmount() {
     this.amount = Number(formatTokenAmount(this.max))
+    this.validateAmount()
   }
 
   mounted() {

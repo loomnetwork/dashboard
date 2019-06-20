@@ -8,6 +8,7 @@ import { ethers } from "ethers"
 
 import { WalletType } from "../types"
 import { provider } from "web3-providers"
+import { feedbackModule } from "@/feedback/store"
 
 export const MetaMaskAdapter: WalletType = {
   id: "netamask",
@@ -52,6 +53,7 @@ async function getCurrentApi(): Promise<provider> {
     // return new ethers.providers.Web3Provider(window.ethereum)
     return window.ethereum
   } catch (err) {
+    feedbackModule.endTask()
     throw Error("User denied access to Metamask")
   }
 }

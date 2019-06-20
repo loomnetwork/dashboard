@@ -141,7 +141,6 @@ async function setWalletType(context: ActionContext, walletType: string) {
       .catch((e) => {
         console.error(e)
       })
-    feedbackModule.endTask()
   } else {
     context.state.walletType = walletType
   }

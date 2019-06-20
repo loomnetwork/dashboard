@@ -12,8 +12,8 @@
       <div class="input-section">
         <span>Amount: (max: {{ balance | tokenAmount}} )</span>
         <amount-input
-          :min="1"
-          :max="maxToken"
+          :min="min"
+          :max="balance"
           :round="false"
           :symbol="token"
           v-model="transferWeiAmount"
@@ -25,11 +25,12 @@
         <input-address
           v-model="receiverAddress"
           chain="loom"
+          :blacklist="[ownAddress]"
           placeholder="'Loom Address'"
           @isValid="isValidAddressFormat"
         />
       </div>
-      <b-button type="button" @click="transferToken()">Transfer</b-button>
+      <b-button type="button" :disabled="valid === false" @click="transferToken()">Transfer</b-button>
     </b-card>
   </b-modal>
 </template>
@@ -63,6 +64,7 @@ export default class TransferTokensFormModal extends Vue {
   receiverAddress: string = ""
   amountError = false
   isValidAddress = false
+  min = new BN(1)
 
   get state(): DashboardState {
     return this.$store.state
@@ -76,9 +78,12 @@ export default class TransferTokensFormModal extends Vue {
     return balance
   }
 
-  get maxToken(): number {
-    return (new BigNumber(this.balance.toString())
-      .div(10 ** 18)).toNumber()
+  get valid() {
+    return this.isValidAddress && this.amountError === false
+  }
+
+  get ownAddress() {
+    return this.plasma.address.replace("0x", "loom")
   }
 
   async transferToken() {

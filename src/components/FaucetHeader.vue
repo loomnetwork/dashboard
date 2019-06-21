@@ -87,6 +87,8 @@
         </b-navbar>
       </nav>
     </div>
+    <!-- Loading bar -->
+    <loading-bar></loading-bar>
   </div>
 </template>
 
@@ -97,6 +99,7 @@ import ChainSelector from "./ChainSelector.vue"
 import LoomIcon from "@/components/LoomIcon.vue"
 import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
+import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
 @Component({
@@ -104,6 +107,7 @@ import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue
     ChainSelector,
     LangSwitcher,
     LoomIcon,
+    LoadingBar,
     FeedbackNotification,
   },
   props: {
@@ -200,6 +204,10 @@ export default class FaucetHeader extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get showLoadingBar(): boolean {
+    return this.state.whiteList
   }
 
   get showBackButton() {

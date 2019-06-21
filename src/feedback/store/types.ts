@@ -23,4 +23,5 @@ export interface FeedbackState {
     message: string,
     onConfirm(): any,
   },
+  isLoading: boolean,
 }

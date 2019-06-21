@@ -27,6 +27,7 @@ const initialState: FeedbackState = {
       return
     },
   },
+  isLoading: false,
 }
 
 const builder = getStoreBuilder<HasFeedbackState>().module(
@@ -47,6 +48,7 @@ const feedbackModule = {
   showSuccess: builder.commit(mutations.showSuccess),
   showError: builder.commit(mutations.showError),
   showAlert: builder.commit(mutations.showAlert),
+  showLoadingBar: builder.commit(mutations.showLoadingBar),
   requireConfirmation: builder.commit(mutations.requireConfirmation),
 }
 

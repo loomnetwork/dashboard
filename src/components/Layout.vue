@@ -64,6 +64,7 @@
     <WithdrawProgress/>
     <WithdrawConfirmed/>
     <feedback-alert/>
+    <!-- <SelectChainModal /> -->
   </div>
 </template>
 
@@ -84,7 +85,7 @@ import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
 import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
-
+import SelectChainModal from "@/components/modals/SelectChainModal.vue"
 import { DashboardState } from "@/types"
 
 @Component({
@@ -102,6 +103,7 @@ import { DashboardState } from "@/types"
     UndelegateModal,
     WithdrawProgress,
     WithdrawConfirmed,
+    SelectChainModal,
   },
   props: {
     data: Object,

@@ -1,5 +1,9 @@
 <template>
-  <b-modal id="select-chain-modal" hide-footer>
+  <b-modal
+  lazy
+  id="select-chain-modal"
+  v-model="showSelectChainModal"
+  hide-footer>
     <template slot="modal-title">{{ title }}</template>
     <b-form-group label="From">
       <div class="button-group">
@@ -19,10 +23,15 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { capitalize } from "@/utils"
 import { DashboardState } from "../../types"
+import { gatewayModule } from "../../store/gateway"
 
 @Component
 export default class SelectChainModal extends Vue {
   @Prop(String) type!: "DEPOSIT" | "WITHDRAW"
+
+  get showSelectChainModal(): boolean {
+    return this.state.gateway.showSelectChainModal
+  }
 
   get title(): string {
     return capitalize(this.type.toLowerCase())

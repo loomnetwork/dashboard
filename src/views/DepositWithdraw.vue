@@ -95,6 +95,7 @@ export default class DepositWithdraw extends Vue {
   WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
+  setShowSelectChainModal = gatewayModule.setShowSelectChainModal
   showError = feedbackModule.showError
 
   selectedToken = "LOOM"
@@ -175,7 +176,8 @@ export default class DepositWithdraw extends Vue {
   showSelectChainModal(type: string, token: string) {
     this.selectChainModalType = type
     this.selectedToken = token
-    this.$root.$emit("bv::show::modal", "select-chain-modal")
+    // this.$root.$emit("bv::show::modal", "select-chain-modal")
+    this.setShowSelectChainModal(true)
   }
   // requestDeposit(token: string) {
   //   this.selectedToken = token

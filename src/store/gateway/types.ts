@@ -31,6 +31,7 @@ export interface GatewayState {
   withdrawStateIdx: number
   notMapped: boolean
   newMappingAgree: boolean
+  showSelectChainModal: boolean
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

@@ -1,5 +1,9 @@
 <template>
-  <b-modal id="deposit-binance" lazy @hidden="resetModal"
+  <b-modal
+  id="deposit-binance"
+  lazy
+  @hidden="resetModal"
+  v-model="visible"
   no-close-on-esc
   no-close-on-backdrop
   :hide-header-close="step === 3">
@@ -55,9 +59,11 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { capitalize } from "@/utils"
+import { DashboardState } from "../../types"
 
 @Component
 export default class DepositBinance extends Vue {
+
   step: number = 1
   txHash: string = ""
   form = {
@@ -69,6 +75,18 @@ export default class DepositBinance extends Vue {
     memo: "loom00000"
   }
 
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get transferRequestState() {
+    return this.state.gateway.TransferRequestState
+  }
+
+  get visible() {
+    return this.transferRequestState.chain === "binance"
+          && this.transferRequestState.type === "DEPOSIT"
+  }
   get title() {
     return this.step === 4 ? "Success" : "Deposit to Plasmachain from Binance"
   }

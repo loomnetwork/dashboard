@@ -2,10 +2,16 @@
   <b-modal
   lazy
   id="select-chain-modal"
-  v-model="showSelectChainModal"
-  @hidden="resetModal"
+  v-model="visible"
   hide-footer>
-    <template slot="modal-title">{{ title }}</template>
+    <template slot="modal-title">
+        {{ title }}
+    </template>
+    <template slot="modal-header-close">
+      <button type="button" class="close" aria-label="Close" @click="resetModal">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </template>
     <b-form-group label="From">
       <div class="button-group">
         <div class="chain-option"
@@ -29,15 +35,24 @@ import { gatewayModule } from "../../store/gateway"
 @Component
 export default class SelectChainModal extends Vue {
   @Prop(String) type!: "DEPOSIT" | "WITHDRAW"
+  @Prop(String) token!: string
 
-  setShowSelectChainModal = gatewayModule.setShowSelectChainModal
+  setTransferRequestState = gatewayModule.setTransferRequestState
+  setShowDepositForm = gatewayModule.setShowDepositForm
+  setShowWithdrawForm = gatewayModule.setShowWithdrawForm
 
-  get showSelectChainModal(): boolean {
-    return this.state.gateway.showSelectChainModal
+  get transferRequestState() {
+    return this.state.gateway.TransferRequestState
   }
 
-  get title(): string {
-    return capitalize(this.type.toLowerCase())
+  get visible() {
+   return !this.transferRequestState.chain && this.transferRequestState.type
+  }
+
+  get title() {
+    if (this.transferRequestState.type) {
+      return capitalize(this.transferRequestState.type.toLowerCase())
+    }
   }
 
   get state(): DashboardState {
@@ -51,14 +66,14 @@ export default class SelectChainModal extends Vue {
   }
 
   onSelect(chain: string) {
-    this.$emit("selectedChain", {
-      type: this.type,
+    this.setTransferRequestState({
+      type: this.transferRequestState.type,
       chain,
+      token: this.transferRequestState.token,
     })
-    this.setShowSelectChainModal(false)
   }
   resetModal() {
-    this.setShowSelectChainModal(false)
+    this.setTransferRequestState({ chain: null, type: null, token: null })
   }
 }
 </script>

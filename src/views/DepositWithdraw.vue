@@ -52,7 +52,7 @@
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
-    <SelectChainModal :type="selectChainModalType" @selectedChain="onSelectedChain"/>
+    <SelectChainModal />
     <DepositBinance/>
   </main>
 </template>
@@ -95,7 +95,7 @@ export default class DepositWithdraw extends Vue {
   WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
-  setShowSelectChainModal = gatewayModule.setShowSelectChainModal
+  setTransferRequestState = gatewayModule.setTransferRequestState
   showError = feedbackModule.showError
 
   selectedToken = "LOOM"
@@ -144,54 +144,19 @@ export default class DepositWithdraw extends Vue {
   }
 
   /**
-   * This function will call when SelectChainModal emit 'selectedChain' 
-   * @param payload => { type: "DEPOSIT" | "WITHDRAW", chain: "ethereum" | "binance"}
-   */
-  onSelectedChain(payload: { chain: string, type: string }) {
-    switch (payload.type) {
-      case this.DEPOSIT:
-        if (payload.chain === "ethereum") {
-          this.setShowDepositForm(true)
-        } else if (payload.chain === "binance") {
-          // request deposit binance modal
-          this.$root.$emit("bv::show::modal", "deposit-binance")
-        }
-        break
-      case this.WITHDRAW:
-        if (payload.chain === "ethereum") {
-          // request deposit modal
-          this.setShowWithdrawForm(true)
-        } else if (payload.chain === "binance") {
-          // request deposit binance modal
-        }
-        break
-      default:
-        break
-    }
-  }
-  /**
    * set selected token to component state
    * then show selectChain modal
    */
   showSelectChainModal(type: string, token: string) {
-
     this.selectChainModalType = type
     this.selectedToken = token
     if (this.state.chains.length === 1) {
-      this.onSelectedChain({ chain: this.state.chains[0], type })
+      this.setTransferRequestState({ chain: this.state.chains[0], type, token })
+
     } else {
-    this.setShowSelectChainModal(true)
+      this.setTransferRequestState({ chain: null, type, token })
     }
   }
-  // requestDeposit(token: string) {
-  //   this.selectedToken = token
-  //   this.setShowDepositForm(true)
-  // }
-
-  // requestWithdraw(token: string) {
-  //   this.selectedToken = token
-  //   this.setShowWithdrawForm(true)
-  // }
 
   requestSwap(token: string) {
     this.selectedToken = token
@@ -201,7 +166,6 @@ export default class DepositWithdraw extends Vue {
   requestAddToken() {
     this.$root.$emit("bv::show::modal", "add-token-modal")
   }
-
 }
 </script>
 

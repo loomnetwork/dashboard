@@ -71,6 +71,7 @@ export default class DepositForm extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowDepositApproved = gatewayModule.setShowDepositApproved
+  setTransferRequestState = gatewayModule.setTransferRequestState
   approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
@@ -91,11 +92,17 @@ export default class DepositForm extends Vue {
   }
 
   get visible() {
-    return this.showDepositForm
+    return this.transferRequestState.type === "DEPOSIT"
+          && this.transferRequestState.token
+          && this.transferRequestState.chain === "ethereum"
   }
 
   get userBalance(): BN {
     return this.state.ethereum.coins[this.token].balance
+  }
+
+  get transferRequestState() {
+    return this.state.gateway.TransferRequestState
   }
 
   get state(): DashboardState {
@@ -112,6 +119,7 @@ export default class DepositForm extends Vue {
 
   close() {
     this.visible = false
+    this.setTransferRequestState({ chain: null, type: null, token: null })
   }
 
   async sendApproval(bvModalEvt) {

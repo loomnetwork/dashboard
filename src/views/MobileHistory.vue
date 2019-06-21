@@ -1,31 +1,23 @@
 <template>
   <div class="py-4">
     <b-card title="Ethereum events" id="history-items-container" class="mb-3">
-      <div v-if="showHistoryTable">
+      <div v-if="state.ethereum.history.length">
         <history-event
-          v-for="(item, idx) in history"
-          :key="'item' + idx"
-          :latestBlock="latestBlockNumber"
-          :event="{item, idx}"
+          v-for="item in state.ethereum.history"
+          :key="item.transactionHash"
+          :event="item"
         ></history-event>
+        <div v-for="item in state.ethereum.history" :key="item.transactionHash">gggggggg</div>
       </div>
       <div v-else>
-        <p>
-          No activity detected in the last
-          <span class="highlight">{{blockOffset}}</span> blocks.
-          To search for events further back, please
-          <a
-            class="query-past-events"
-            @click="goBackFurther"
-          >click here</a>
-        </p>
+        <p>No activity detected</p>
         <small>
           Or head over to the
           <router-link to="/validators">validators page</router-link>to get started
         </small>
       </div>
     </b-card>
-
+    {{state.ethereum.history}}
     <b-card title="DappChain events" id="history-items-container" class="mb-3">
       <div v-if="showDappChainHistoryTable">
         <b-card v-for="(item, idx) in dappChainEvents" :key="'item' + idx" no-body class="mb-1">
@@ -68,6 +60,7 @@ import HistoryEvent from "../components/HistoryEvent.vue"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
+import { gatewayModule } from "../store/gateway";
 
 @Component({
   components: {
@@ -89,46 +82,20 @@ export default class History extends Vue {
   }
 
 
-  get latestBlockNumber() { return 0 }
-  get cachedEvents() { return [] }
+  get plasmaHistory() {
+    return []
+  }
+
+  get ethererumBlockNumber() { return 0 }
 
   fetchDappChainEvents() { return 0 }
   setLatesBlockNumber() { return 0 }
   setCachedEvents() { return 0 }
 
   async mounted() {
-    //await this.refresh()
-    //this.pollLatestBlockNumber()
-  }
-
-  async refresh() {
-
-    // await this.fetchDappChainEvents()
-
-    // Check if there are any cached events
-    if (this.latestBlockNumber && this.cachedEvents.length > 0) {
-      // Query from latest block in cache
-      await this.updateCachedEvents()
-    } else {
-      // Query the latest 10k blocks
-      await this.queryEvents()
-    }
-
-  }
-
-  destroyed() {
-    if (this.pollInterval) clearInterval(this.pollInterval)
-  }
-
-  pollLatestBlockNumber() {
-    this.pollInterval = window.setInterval(async () => {
-      this.refresh()
-    }, 15 * 1000)
-  }
-
-  async goBackFurther() {
-    if (this.blockOffset < 10000 * 10) this.blockOffset += 10000
-    await this.queryEvents()
+    // await this.refresh()
+    // this.pollLatestBlockNumber()
+    gatewayModule.refreshEthereumHistory()
   }
 
   async updateCachedEvents() {

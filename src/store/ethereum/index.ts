@@ -65,6 +65,7 @@ const initialState: EthereumState = {
   },
   contracts: {},
   blockNumber: 0,
+  history: [],
 }
 
 // web3 instance

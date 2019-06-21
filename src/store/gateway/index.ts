@@ -53,6 +53,7 @@ export const gatewayModule = {
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
+  refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,

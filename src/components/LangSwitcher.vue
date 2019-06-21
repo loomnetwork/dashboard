@@ -1,6 +1,6 @@
 <template>
   <div class="locale-changer">
-    <b-form-select v-model="$i18n.locale" @change="switchLang">
+    <b-form-select v-model="locale">
       <option v-for="lang in langs" :key="lang.key" :value="lang.key">{{ lang.localizedName }}</option>
     </b-form-select>
   </div>
@@ -22,9 +22,12 @@ export default class LangSwitcher extends Vue {
     },
   ]
 
+  locale = "en"
+
+  @Watch("locale")
   async switchLang(locale) {
-    this.$i18n.locale = locale
     await loadLocale(locale)
+
   }
 }
 </script>

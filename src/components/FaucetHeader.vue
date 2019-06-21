@@ -207,7 +207,8 @@ export default class FaucetHeader extends Vue {
   }
 
   get showLoadingBar(): boolean {
-    return this.state.whiteList
+    return false
+    // return this.state.whiteList
   }
 
   get showBackButton() {

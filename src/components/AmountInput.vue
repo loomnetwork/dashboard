@@ -57,7 +57,6 @@ export default class AmountInput extends Vue {
   // Set default amount when select another token
   @Watch("symbol")
   setDefaultAmount(newVal, oldVal) {
-    this.amount = 0
     this.validateAmount()
   }
 
@@ -102,9 +101,6 @@ export default class AmountInput extends Vue {
 
   }
 
-  mounted() {
-    this.amount = 0
-  }
 }
 </script>
 

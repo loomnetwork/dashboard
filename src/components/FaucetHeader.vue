@@ -5,8 +5,9 @@
     <div class="d-none d-lg-block">
       <nav class="navbar">
         <div class="container-fluid">
-          <router-link to="/account" class="navbar-brand">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>Plasmachain
+          <router-link to="/account" class="navbar-brand ml-3">
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>
+            <span class="px-1">Plasmachain</span>
           </router-link>
           <form class="form-inline">
             <LangSwitcher/>

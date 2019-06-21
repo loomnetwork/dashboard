@@ -62,7 +62,7 @@ export default class AmountInput extends Vue {
   }
 
   validateAmount() {
-    let amount = Number(this.amount)
+    const amount = Number(this.amount)
     if (!amount) {
       this.errorMsg = "Please enter a valid amount"
       this.$emit("isError", true)

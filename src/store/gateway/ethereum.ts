@@ -197,26 +197,31 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     spender: gateway.contract._address,
   })
   if (weiAmount.gt(approvalAmount)) {
+    fb.showLoadingBar(true)
     await ethereumModule.approve({
       // @ts-ignore
       to: gateway.contract._address,
       ...funds,
     })
+    fb.showLoadingBar(false)
   }
   fb.requireConfirmation({
     title: "Complete deposit",
     message: "Please sign click confirm to complete your deposit.",
     onConfirm: async () => {
       try {
+        fb.showLoadingBar(true)
         await gateway.deposit(
           funds.weiAmount,
           context.rootState.ethereum.address,
         )
+        fb.showLoadingBar(false)
         fb.showAlert({
           title: "Deposit successful",
           message: "components.gateway.deposit.confirmed",
         })
       } catch (err) {
+        fb.showLoadingBar(false)
         fb.showAlert({
           title: "Deposit failed",
           message: "components.gateway.deposit.failure",

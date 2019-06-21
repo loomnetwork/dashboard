@@ -45,3 +45,7 @@ export function requireConfirmation(state: FeedbackState, { title, message, onCo
     state.alert.message = message
     state.alert.onConfirm = onConfirm
 }
+
+export function showLoadingBar(state: FeedbackState, payload: boolean) {
+    state.isLoading = payload
+}

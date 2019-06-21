@@ -56,6 +56,11 @@
           <div v-if="state.plasma.coins.LOOM.loading">
             <b-spinner variant="primary" label="Spinning"/>
           </div>
+          <b-link href="#" class="card-link">
+            <router-link to="/wallet">
+              Deposit/Withdraw
+            </router-link>
+          </b-link>
           <b-modal
             id="wait-tx"
             title="Done"

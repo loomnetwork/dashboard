@@ -11,7 +11,7 @@ import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
-import { Address } from "loom-js"
+import { Address, LocalAddress } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 
 const log = debug("dpos")
@@ -271,7 +271,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while redelegating. Please contact support")
+    feedback.showError("Error while redelegating. Please contact support.")
   }
 }
 
@@ -284,23 +284,19 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - updateAmount is the amount to un-delegate
  */
 async function undelegate(context: ActionContext, delegation: Delegation) {
-  feedback.setTask("Consolidating")
-  feedback.setStep("Consolidating unlocked delegations on " + delegation.validator.name)
-  await context.state.contract!.unbondAsync(
-    delegation.validator.address,
-    delegation.updateAmount,
-    delegation.index,
-  )
+  feedback.setTask("Undelegating")
+  feedback.setStep("Undelegating from " + delegation.validator.name)
   try {
-    await context.state.contract!.consolidateDelegations(delegation.validator.address)
+    await context.state.contract!.unbondAsync(
+      delegation.validator.address,
+      delegation.updateAmount,
+      delegation.index,
+    )
     feedback.endTask()
-    // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while redelegating. Please contact support")
+    feedback.showError("Error while undelegating. Please contact support.")
   }
-  // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
-  // feedback.alert("dpos.undelegate.success_credit_next")
 }
 
 /**
@@ -309,27 +305,27 @@ async function undelegate(context: ActionContext, delegation: Delegation) {
  */
 async function claimRewards(context: ActionContext) {
   const contract = context.state.contract!
-  // limbo
+  // limbo context.rootState.plasma.chainId
   const limboValidator = Address.fromString(
-    context.rootState.plasma.chainId + ":0x00000000000000000000000000000000", // "".padEnd(32,"0")
+    context.rootState.plasma.chainId + ":0x" + "".padEnd(40, "0"),
   )
   feedback.setTask("Claiming rewards")
-  feedback.setStep("Checking...")
+  feedback.setStep("Checking rewards...")
   const limboDelegations = await contract.checkDelegationAsync(
     limboValidator,
     contract.caller,
   )
   if (limboDelegations!.delegationsArray.length > 0) {
     feedback.setStep("Claiming DPOS 2 rewards...") // add amount
-    // feedback.setTask("claiming dpos 2 rewards")
     await contract.unbondAsync(limboValidator, 0, 0)
-
   }
   try {
     feedback.setStep("Claiming rewards...") // add amount
-    return context.state.contract!.claimDelegatorRewardsAsync()
+    await contract.claimDelegatorRewardsAsync()
+    feedback.endTask()
+    feedback.showInfo("Rewards succesfully claimed.")
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while claiming rewards. Please contact support")
+    feedback.showError("Error while claiming rewards. Please contact support.")
   }
 }

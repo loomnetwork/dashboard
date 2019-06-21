@@ -162,6 +162,11 @@ export default class Cards extends Vue {
         edition.cards.push(cd)
       })
     }
+
+    const cards = this.cards.filter((card) => {
+      return this.state.assets.cardBalance.includes(card)
+    })
+    this.cards = cards
   }
 }
 </script>

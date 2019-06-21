@@ -1,5 +1,6 @@
 <template>
   <b-modal
+    v-model="visible"
     id="seed-phrase-modal"
     ref="modalRef"
     title="Create Account"
@@ -94,42 +95,15 @@ import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
-import { CryptoUtils } from "loom-js"
-import { generateMnemonic, mnemonicToSeedSync } from "bip39"
 import { feedbackModule } from "@/feedback/store"
-import { sha256 } from "js-sha256"
+import { whiteListModule } from "../../whitelist/store";
+
 @Component({
 })
-
 export default class SeedPhraseModal extends Vue {
-  seeds: string[] = []
-  seedsLine = ""
-  publicAddress = ""
-  confirmMnemonic = false
   showSuccess = feedbackModule.showSuccess
   getPublicAddressFromPrivateKeyUint8Array = plasmaModule.getPublicAddrePriaKeyUint8Array
-
-  async generateSeeds() {
-    feedbackModule.setTask("New key")
-    feedbackModule.setStep("Generating new key")
-
-    const mnemonic = generateMnemonic()
-    this.seeds = mnemonic.split(" ")
-    this.seedsLine = mnemonic
-    const seed = mnemonicToSeedSync(mnemonic)
-    const privateKeyUint8ArrayFromSeed = CryptoUtils.generatePrivateKeyFromSeed(new Uint8Array(sha256.array(seed)))
-    const privateKeyB64 = CryptoUtils.Uint8ArrayToB64(privateKeyUint8ArrayFromSeed)
-    const publicKey = await this.getPublicAddressFromPrivateKeyUint8Array({ privateKey: privateKeyUint8ArrayFromSeed })
-    this.publicAddress = publicKey
-    this.confirmMnemonic = false
-    feedbackModule.endTask()
-  }
-
-  mounted() {
-    this.$root.$on("bv::modal::show", () => {
-      this.generateSeeds()
-    })
-  }
+  confirmMnemonic = false
 
   copyToClipboard(inputId) {
     const copyText = document.getElementById(inputId)
@@ -145,6 +119,35 @@ export default class SeedPhraseModal extends Vue {
 
   closeModal() {
     this.modal("modalRef").hide()
+  }
+
+  mounted() {
+    this.$root.$on("bv::modal::show", () => {
+      this.confirmMnemonic = false
+    })
+  }
+
+  get visible() {
+    return !!this.$store.state.whiteList.seed.publicAddress
+  }
+
+  set visible(value) {
+    if (value === false) {
+      this.$store.state.whiteList.seed.mnemonic = ""
+      this.$store.state.whiteList.seed.publicAddress = ""
+    }
+  }
+
+  get seeds() {
+    return this.$store.state.whiteList.seed.mnemonic.split(" ")
+  }
+
+  get seedsLine() {
+    return this.$store.state.whiteList.seed.mnemonic
+  }
+
+  get publicAddress() {
+    return this.$store.state.whiteList.seed.publicAddress
   }
 }
 </script>

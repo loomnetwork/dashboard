@@ -142,7 +142,6 @@ async function changeIdentity(
     )
     // destroy loomProvider and old web3
   } else {
-    feedbackModule.setTask("Connecting to Plasma chain")
     feedbackModule.setStep("Connecting to Plasma chain")
     await signer.configureClient(ctx.state.client!)
     feedbackModule.endTask()

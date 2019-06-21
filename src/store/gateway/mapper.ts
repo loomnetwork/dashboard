@@ -22,7 +22,6 @@ export async function loadMapping(context: ActionContext, address: string) {
   const client = context.rootState.plasma.client!
   const chainId = client.chainId
   const caller = context.rootState.plasma.appId.address
-  feedbackModule.setTask("Checking account mapping")
   feedbackModule.setStep("Checking account mapping")
   const mapper = await AddressMapper.createAsync(
     client,
@@ -51,7 +50,6 @@ export async function loadMapping(context: ActionContext, address: string) {
     }
   } finally {
     mapper.removeAllListeners()
-    feedbackModule.endTask()
   }
 }
 

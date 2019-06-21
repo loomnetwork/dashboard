@@ -90,7 +90,12 @@ export default class AmountInput extends Vue {
 
   // Button Action
   setAllAmount() {
-    this.amount = Number(formatTokenAmount(this.max))
+    // todo fix this mess
+    this.amount = Number(
+      this.max.toString().padStart(19, "0")
+        .replace(/(\d{18})$/, ".$1")
+        .replace(/(\.\d{6})\d*$/, "$1")
+    )
     this.errorMsg = ""
     this.$emit("isError", false)
     this.$emit("input", this.max)

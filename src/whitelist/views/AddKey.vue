@@ -64,7 +64,7 @@
 
         <b-card-body>
           <p
-            @click="showSeedPhraseModal()"
+            @click.stop.prevent="showSeedPhraseModal"
             class="text-right text-link"
             style="position: absolute;right: 20px;"
           >Generate New Key</p>
@@ -214,6 +214,7 @@ export default class AddKey extends Vue {
 
   showSeedPhraseModal() {
     this.$root.$emit("bv::show::modal", "seed-phrase-modal")
+    whiteListModule.generateSeeds()
   }
 
   copyAddress(hex: string) {

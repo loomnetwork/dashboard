@@ -3,6 +3,7 @@
   lazy
   id="select-chain-modal"
   v-model="showSelectChainModal"
+  @hidden="resetModal"
   hide-footer>
     <template slot="modal-title">{{ title }}</template>
     <b-form-group label="From">
@@ -29,6 +30,8 @@ import { gatewayModule } from "../../store/gateway"
 export default class SelectChainModal extends Vue {
   @Prop(String) type!: "DEPOSIT" | "WITHDRAW"
 
+  setShowSelectChainModal = gatewayModule.setShowSelectChainModal
+
   get showSelectChainModal(): boolean {
     return this.state.gateway.showSelectChainModal
   }
@@ -52,7 +55,10 @@ export default class SelectChainModal extends Vue {
       type: this.type,
       chain,
     })
-    this.$root.$emit("bv::hide::modal", "select-chain-modal")
+    this.setShowSelectChainModal(false)
+  }
+  resetModal() {
+    this.setShowSelectChainModal(false)
   }
 }
 </script>

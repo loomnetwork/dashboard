@@ -52,8 +52,8 @@
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
-    <SelectChainModal :type="selectChainModalType" @selectedChain="onSelectedChain" />
-    <DepositBinance />
+    <SelectChainModal :type="selectChainModalType" @selectedChain="onSelectedChain"/>
+    <DepositBinance/>
   </main>
 </template>
 
@@ -147,7 +147,7 @@ export default class DepositWithdraw extends Vue {
    * This function will call when SelectChainModal emit 'selectedChain' 
    * @param payload => { type: "DEPOSIT" | "WITHDRAW", chain: "ethereum" | "binance"}
    */
-  onSelectedChain(payload) {
+  onSelectedChain(payload: { chain: string, type: string }) {
     switch (payload.type) {
       case this.DEPOSIT:
         if (payload.chain === "ethereum") {
@@ -174,10 +174,14 @@ export default class DepositWithdraw extends Vue {
    * then show selectChain modal
    */
   showSelectChainModal(type: string, token: string) {
+
     this.selectChainModalType = type
     this.selectedToken = token
-    // this.$root.$emit("bv::show::modal", "select-chain-modal")
+    if (this.state.chains.length === 1) {
+      this.onSelectedChain({ chain: this.state.chains[0], type })
+    } else {
     this.setShowSelectChainModal(true)
+    }
   }
   // requestDeposit(token: string) {
   //   this.selectedToken = token

@@ -4,23 +4,23 @@
     id="faucet-delegate-modal"
     ok-only
     hide-header-close
-    title="Stake tokens"
+    title="Undelegate"
   >
     <b-form-group
+      v-if="delegation"
       id="gdelegation-amount-input"
       :label="$t('components.modals.faucet_delegate_modal.amount')"
       label-for="delegation-amount-input"
-      :description="'Your balance is ' + balance + ' LOOM'"
     >
-      <b-form-input
-        id="delegation-amount-input"
-        v-model.number="delegationAmount"
-        required
-        placeholder="Enter amount"
-        :state="isAmountValid"
-        inputmode="numeric"
-        pattern="[0-9]*"
-      ></b-form-input>
+      <div>
+        <amount-input
+          :min="minWeiAmount"
+          :max="delegation.amount"
+          v-model="delegation.updateAmount"
+          :symbol="token"
+          @isError="errorHandler"
+        />
+      </div>
     </b-form-group>
 
     <div slot="modal-footer" class="w-100">
@@ -42,13 +42,17 @@ import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState, DPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
-
+import AmountInput from "@/components/AmountInput.vue";
 const MULTIPLIER = new BN("10").pow(new BN("18"))
 
-@Component
+@Component({
+  components: {
+    AmountInput,
+  },
+})
 export default class DelegateModal extends Vue {
 
-  minAmount = new BN("1")
+  minWeiAmount = new BN(10 * 18)
   minLockTimeTier = 0
 
   get state(): HasDPOSState {
@@ -64,41 +68,32 @@ export default class DelegateModal extends Vue {
   }
 
   get visible() {
-    console.log("delegate ? ", this.dposState.intent, this.dposState.delegation)
     return this.dposState.intent === "undelegate" && this.dposState.delegation !== null
   }
 
   set visible(val: boolean) {
     console.log("set visible...")
+    if (val === false) {
+      dposModule.clearRequest()
+    }
   }
 
   get validators() {
     return this.state.dpos.validators
   }
 
-  get unbondAmount(): number {
-    return this.delegation!.updateAmount.div(MULTIPLIER).toNumber()
-  }
-
-  // if empty or invalid Vue returns ""
-  set unbondAmount(amount: number) {
-    if (Number.isInteger(amount)) {
-      this.delegation!.updateAmount = MULTIPLIER.mul(new BN(amount))
-    }
-  }
-
-  get maxAmount(): number {
-    const wei = this.delegation!.amount
-    return wei.div(MULTIPLIER).toNumber()
-  }
-
   async undelegate() {
     dposModule.undelegate(this.delegation!)
+    dposModule.clearRequest()
   }
 
   get isAmountValid() {
-    const d = this.delegation!
-    return d.updateAmount.gt(ZERO) && d.updateAmount.lte(d.amount)
+    const d = this.delegation
+    return d && d.updateAmount.gt(ZERO) && d.updateAmount.lte(d.amount)
+  }
+
+  errorHandler() {
+
   }
 
   cancel() {

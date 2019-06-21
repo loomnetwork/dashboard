@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button variant="outline-primary" @click="setAllAmount">All balance</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>
       </b-col>
     </b-row>
   </div>

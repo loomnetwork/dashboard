@@ -271,7 +271,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while redelegating. Please contact support")
+    feedback.showError("Error while redelegating. Please contact support.")
   }
 }
 
@@ -284,23 +284,19 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - updateAmount is the amount to un-delegate
  */
 async function undelegate(context: ActionContext, delegation: Delegation) {
-  feedback.setTask("Consolidating")
-  feedback.setStep("Consolidating unlocked delegations on " + delegation.validator.name)
-  await context.state.contract!.unbondAsync(
-    delegation.validator.address,
-    delegation.updateAmount,
-    delegation.index,
-  )
+  feedback.setTask("Undelegating")
+  feedback.setStep("Undelegating from " + delegation.validator.name)
   try {
-    await context.state.contract!.consolidateDelegations(delegation.validator.address)
+    await context.state.contract!.unbondAsync(
+      delegation.validator.address,
+      delegation.updateAmount,
+      delegation.index,
+    )
     feedback.endTask()
-    // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while redelegating. Please contact support")
+    feedback.showError("Error while undelegating. Please contact support.")
   }
-  // feedback.alert({type:"info", message:"Funds successfuly undelegated, your account will be credited after the next election")
-  // feedback.alert("dpos.undelegate.success_credit_next")
 }
 
 /**

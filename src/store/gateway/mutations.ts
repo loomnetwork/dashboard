@@ -1,8 +1,8 @@
-import { GatewayState } from "./types"
+import { GatewayState, TransferRequestState } from "./types"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
-export function setShowSelectChainModal(state: GatewayState, payload: boolean) {
-  state.showSelectChainModal = payload
+export function setTransferRequestState(state: GatewayState, payload: TransferRequestState) {
+  state.TransferRequestState = payload
 }
 
 export function setShowDepositForm(state: GatewayState, payload: boolean) {

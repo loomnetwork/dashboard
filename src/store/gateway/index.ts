@@ -25,7 +25,11 @@ function initialState(): GatewayState {
     showDepositConfirmed: false,
     showWithdrawForm: false,
     showWithdrawProgress: false,
-    showSelectChainModal: false,
+    TransferRequestState: {
+      type: null,
+      chain: null,
+      token: null,
+    },
     withdrawStates: [
       { text: "Checking for pre-existing receipts...", isComplete: false },
       { text: "Depositing to Plasmachain Gateway...", isComplete: false },
@@ -63,8 +67,8 @@ export const gatewayModule = {
   createMapping: builder.dispatch(Mapper.createMapping),
 
   // mutations
-  setShowSelectChainModal: builder.commit(mutations.setShowSelectChainModal),
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
+  setTransferRequestState: builder.commit(mutations.setTransferRequestState),
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
   setShowWithdrawForm: builder.commit(mutations.setShowWithdrawForm),

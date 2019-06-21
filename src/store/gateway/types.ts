@@ -31,7 +31,7 @@ export interface GatewayState {
   withdrawStateIdx: number
   notMapped: boolean
   newMappingAgree: boolean
-  showSelectChainModal: boolean
+  TransferRequestState: TransferRequestState
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {
@@ -41,6 +41,12 @@ export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {
     rs: Array<string | number[]>
     ss: Array<string | number[]>,
   }
+}
+
+export interface TransferRequestState {
+  type: string | null
+  chain: string | null
+  token: string | null
 }
 
 export interface WithdrawState {

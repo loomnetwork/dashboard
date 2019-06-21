@@ -65,8 +65,6 @@
       ></faucet-delegate-modal>-->
       <template v-if="!!state.dpos.delegation">
         <delegate-modal></delegate-modal>
-        <redelegate-modal></redelegate-modal>
-        <undelegate-modal></undelegate-modal>
       </template>
       <success-modal></success-modal>
     </b-card>
@@ -76,9 +74,7 @@
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import SuccessModal from "@/components/modals/SuccessModal.vue"
-import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import DelegateModal from "@/dpos/components/DelegateModal.vue"
-import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
 
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
@@ -90,8 +86,6 @@ import { feedbackModule } from "../../feedback/store"
   components: {
     SuccessModal,
     DelegateModal,
-    RedelegateModal,
-    UndelegateModal,
     DelegationsList,
   },
 })

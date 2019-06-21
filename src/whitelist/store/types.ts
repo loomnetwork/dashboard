@@ -13,6 +13,10 @@ export interface WhiteListState {
   userDeployersAddress: DeployerAddress[] | []
   tierIDs: number[]
   tiers: ITier[]
+  seed: {
+    mnemonic: string
+    publicAddress: string
+  }
 }
 
 export interface DeployerAddress {

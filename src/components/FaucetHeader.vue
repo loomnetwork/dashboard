@@ -39,31 +39,34 @@
                     >{{ $t('components.faucet_sidebar.analytics') }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.staking" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.staking" :key="index+'s'">
                   <h5>
+                    {{index}}
                     <router-link
                       :to="menu.to"
                       class="router text-light hover-warning"
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.wallet" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.wallet" :key="index+'w'">
                   <h5>
+                    {{index}}
                     <router-link
                       :to="menu.to"
                       class="router text-light hover-warning"
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.dev" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
                   <h5>
+                    {{index}}
                     <router-link
                       :to="menu.to"
                       class="router text-light hover-warning"
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.help" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.help" :key="index+'h'">
                   <h5>
                     <router-link
                       :to="menu.to"

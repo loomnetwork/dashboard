@@ -10,7 +10,11 @@ import { Address } from "loom-js"
 /**
  * temporary stub for BinanceLoomCoinTransferGateway
  */
-class BinanceLoomCoinTransferGateway {
+export class BinanceLoomCoinTransferGateway {
+  static async createAsync() {
+    await timer(2000).toPromise()
+    return new BinanceLoomCoinTransferGateway()
+  }
   async withdrawLoomCoinAsync(amount: BN, recipient: Address): Promise<void> {
     await timer(2000).toPromise()
   }

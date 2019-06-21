@@ -5,10 +5,18 @@
     no-close-on-esc
     hide-header-close
     id="deposit-approval-success"
-    title="Withdraw"
+    :title="'Withdraw ' + token"
   >
     <div v-if="status === 'default'">
-      <amount-input :min="1" :max="100" :symbol="token" v-model="amount" @isError="errorHandler"/>
+      <h6>Token type: {{ token }}</h6>
+      <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+      <amount-input
+        :min="min"
+        :max="userBalance"
+        :symbol="token"
+        v-model="weiAmount"
+        @isError="errorHandler"
+      />
     </div>
     <div v-if="status === 'error'">
       <h2>An error occurred, please try again!</h2>
@@ -33,7 +41,8 @@ import BN from "bn.js"
 import { Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 
-import { formatToCrypto } from "@/utils"
+import { formatTokenAmount } from "@/filters"
+import { formatToCrypto, parseToWei } from "@/utils"
 import { DashboardState, Funds } from "../../types"
 import { gatewayModule } from "../../store/gateway"
 import { gatewayReactions } from "../../store/gateway/reactions"
@@ -53,7 +62,8 @@ export default class WithdrawForm extends Vue {
   @Prop({ required: true }) token!: string // prettier-ignore
 
   status: string = "default"
-  amount: any = 0
+  weiAmount: BN = new BN(0)
+  min = new BN(1)
   amountIsValid: boolean = false
 
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
@@ -62,6 +72,10 @@ export default class WithdrawForm extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get userBalance() {
+    return this.state.plasma.coins[this.token].balance
   }
 
   get visible() {
@@ -90,7 +104,7 @@ export default class WithdrawForm extends Vue {
     const payload: Funds = {
       chain: "ethereum",
       symbol: this.token,
-      weiAmount: this.amount,
+      weiAmount: this.weiAmount,
     }
 
     this.beginWithdrawal(payload).then(() => {
@@ -102,7 +116,11 @@ export default class WithdrawForm extends Vue {
       this.status = "error"
     })
     this.close()
-    this.setShowWithdrawProgress(true)  }
+    this.setShowWithdrawProgress(true)
+  }
 
+  toWei(val: string) {
+    return parseToWei(val)
+  }
 }
 </script>

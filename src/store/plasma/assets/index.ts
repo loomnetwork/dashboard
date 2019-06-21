@@ -169,7 +169,7 @@ async function transferPacks(
   log("transferPacks payload", payload)
   try {
     feedbackModule.setTask("Pack transfer")
-    feedbackModule.setStep("Transfering packes")
+    feedbackModule.setStep("Transfering packs")
     const ethAddress = await plasmaModule.getCallerAddress()
     const ethAddressString = ethAddress.local.toString()
     const receiver = formatFromLoomAddress(payload.receiver)

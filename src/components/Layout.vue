@@ -53,6 +53,10 @@
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
+    <!-- dpos -->
+    <redelegate-modal></redelegate-modal>
+    <undelegate-modal></undelegate-modal>
+
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
@@ -78,6 +82,8 @@ import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
 import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
+import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
+import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
 
 import { DashboardState } from "@/types"
 
@@ -92,6 +98,8 @@ import { DashboardState } from "@/types"
     FeedbackNotification,
     ProgressModal,
     FeedbackAlert,
+    RedelegateModal,
+    UndelegateModal,
     WithdrawProgress,
     WithdrawConfirmed,
   },
@@ -133,9 +141,13 @@ export default class Layout extends Vue {
     }
 
     this.$root.$on("logout", () => {
-      window.location.reload(true)
+      this.restart()
     })
 
+  }
+
+  restart() {
+    window.location.reload(true)
   }
 
 }

@@ -26,11 +26,10 @@
     <div slot="modal-footer" class="w-100">
       <b-button @click="cancel">{{$t("cancel")}}</b-button>
       <b-button
-        v-if="!loading"
         style="width: 160px; float: right;"
         variant="primary"
         :disabled="!isAmountValid"
-        @click="delegate"
+        @click="undelegate"
       >{{$t("undelegate")}}</b-button>
     </div>
   </b-modal>
@@ -51,7 +50,6 @@ export default class DelegateModal extends Vue {
 
   minAmount = new BN("1")
   minLockTimeTier = 0
-
 
   get state(): HasDPOSState {
     return this.$store.state

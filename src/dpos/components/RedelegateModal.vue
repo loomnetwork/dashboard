@@ -106,6 +106,7 @@ export default class RedelegateModal extends Vue {
     // for now redelegate all
     delegation.updateAmount = delegation.amount
     dposModule.redelegate(delegation)
+    dposModule.clearRequest()
   }
 
   getLabel(item) {

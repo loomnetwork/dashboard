@@ -1,30 +1,13 @@
 <template>
   <div id="faucet-header" ref="header" class="header">
-    <b-alert
-      variant="danger"
-      dismissible
-      :show="!!showErrorMsg"
-      class="custom-alert text-center"
-      ref="errorMsg"
-    >{{state.common.errorMsg}}</b-alert>
-
-    <b-alert
-      variant="success"
-      class="custom-alert text-center"
-      dismissible
-      :show="!!showSuccessMsg"
-      ref="successMsg"
-    >
-      <span class="text-dark" v-html="state.common.successMsg"></span>
-    </b-alert>
-
     <feedback-notification class="custom-alert text-center"/>
 
     <div class="d-none d-lg-block">
       <nav class="navbar">
         <div class="container-fluid">
-          <router-link to="/account" class="navbar-brand">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>Plasmachain
+          <router-link to="/account" class="navbar-brand ml-3">
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>
+            <span class="px-1">Plasmachain</span>
           </router-link>
           <form class="form-inline">
             <LangSwitcher/>
@@ -51,27 +34,45 @@
               <b-navbar-nav class="mobile-nav ml-auto">
                 <b-nav-item v-if="false">
                   <h5>
-                    <router-link to="/analytics" class="router text-light hover-warning">{{ $t('components.faucet_sidebar.analytics') }}</router-link>
+                    <router-link
+                      to="/analytics"
+                      class="router text-light hover-warning"
+                    >{{ $t('components.faucet_sidebar.analytics') }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.staking" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.staking" :key="index+'s'">
                   <h5>
-                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
+                    {{index}}
+                    <router-link
+                      :to="menu.to"
+                      class="router text-light hover-warning"
+                    >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.wallet" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.wallet" :key="index+'w'">
                   <h5>
-                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
+                    {{index}}
+                    <router-link
+                      :to="menu.to"
+                      class="router text-light hover-warning"
+                    >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.dev" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
                   <h5>
-                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
+                    {{index}}
+                    <router-link
+                      :to="menu.to"
+                      class="router text-light hover-warning"
+                    >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.help" :key="index">
+                <b-nav-item v-for="(menu, index) in menus.help" :key="index+'h'">
                   <h5>
-                    <router-link :to="menu.to" class="router text-light hover-warning">{{ $t(menu.text) }}</router-link>
+                    <router-link
+                      :to="menu.to"
+                      class="router text-light hover-warning"
+                    >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
                 <LangSwitcher/>
@@ -86,6 +87,8 @@
         </b-navbar>
       </nav>
     </div>
+    <!-- Loading bar -->
+    <loading-bar></loading-bar>
   </div>
 </template>
 
@@ -96,6 +99,7 @@ import ChainSelector from "./ChainSelector.vue"
 import LoomIcon from "@/components/LoomIcon.vue"
 import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
+import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
 @Component({
@@ -103,6 +107,7 @@ import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue
     ChainSelector,
     LangSwitcher,
     LoomIcon,
+    LoadingBar,
     FeedbackNotification,
   },
   props: {
@@ -201,54 +206,13 @@ export default class FaucetHeader extends Vue {
     return this.$store.state
   }
 
+  get showLoadingBar(): boolean {
+    return false
+    // return this.state.whiteList
+  }
+
   get showBackButton() {
     return this.$route.path.includes("login") ? false : true
-  }
-
-  get isMobile() {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? true : false
-  }
-
-  get isLoggedIn() {
-    return this.state.common.userIsLoggedIn ? true : false
-  }
-
-  get showErrorMsg() {
-    if (this.state.common.errorMsg) {
-      this.hideAlert({
-        opt: this.$store.state.msgOpt,
-        ref: this.$refs.errorMsg,
-      })
-    }
-    return this.state.common.errorMsg ? { message: this.state.common.errorMsg, variant: "error" } : false
-  }
-
-  get showSuccessMsg() {
-    if (this.state.common.successMsg) {
-      this.hideAlert({
-        opt: this.$store.state.msgOpt,
-        ref: this.$refs.successMsg,
-      })
-    }
-    return this.state.common.successMsg ? { message: this.state.common.successMsg, variant: "success" } : false
-  }
-
-  hideAlert(alertOpt) {
-    const stay = alertOpt.opt ? alertOpt.opt.stay : false
-    const waitTime = alertOpt.opt ? alertOpt.opt.waitTime : 4
-
-    if (!stay) {
-      setTimeout(() => {
-        if (alertOpt.ref) {
-          try {
-            alertOpt.ref.dismiss() // set dismissed to true
-            this.state.common.errorMsg = ""
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      }, waitTime * 1000)
-    }
   }
 
   logout() {

@@ -7,11 +7,20 @@
     :busy="true"
     no-close-on-esc
     no-close-on-backdrop
-    hide-header-close>
-    <template slot="modal-title">Approve deposit</template>
+    hide-header-close
+  >
+    <template slot="modal-title">Deposit {{ token }}</template>
     <div v-if="!status">
       <form>
-        <amount-input :min="1" :max="userBalance" v-model="transferAmount" :symbol="token" @isError="errorHandler" />
+        <h6>Token type: {{ token }}</h6>
+        <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+        <amount-input
+          :min="min"
+          :max="userBalance"
+          v-model="transferAmount"
+          :symbol="token"
+          @isError="errorHandler"
+        />
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
       </form>
     </div>
@@ -47,10 +56,8 @@ import { DashboardState } from "../../types"
 
 import { Funds } from "@/types"
 
-
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { setShowDepositForm, setShowDepositApproved } from "../../store/dpos-old/mutations"
 import { gatewayReactions } from "../../store/gateway/reactions"
 
 @Component({
@@ -60,13 +67,14 @@ import { gatewayReactions } from "../../store/gateway/reactions"
 })
 export default class DepositForm extends Vue {
 
-  @Prop({required: true}) token!: string // prettier-ignore
+  @Prop({ required: true }) token!: string // prettier-ignore
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowDepositApproved = gatewayModule.setShowDepositApproved
   approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
+  min = new BN(1)
   transferAmount: BN | "" = ""
   amountErrors: string[] = []
   hasErrors: boolean = false
@@ -79,15 +87,22 @@ export default class DepositForm extends Vue {
       this.status = ""
       this.transferAmount = ""
       this.amountErrors.length = 0
+      gatewayModule.clearTransferRequest()
     }
   }
 
   get visible() {
-    return this.showDepositForm
+    return this.transferRequest.type === "DEPOSIT"
+      && this.transferRequest.token
+      && this.transferRequest.chain === "ethereum"
   }
 
-  get userBalance() {
-    return parseInt(formatTokenAmount(this.state.ethereum.coins[this.token].balance), 10)
+  get userBalance(): BN {
+    return this.state.ethereum.coins[this.token].balance
+  }
+
+  get transferRequest() {
+    return this.state.gateway.transferRequest
   }
 
   get state(): DashboardState {
@@ -107,9 +122,9 @@ export default class DepositForm extends Vue {
   }
 
   async sendApproval(bvModalEvt) {
-    if(this.transferAmount === "") return
-    if(this.hasErrors) return
-    
+    if (this.transferAmount === "") return
+    if (this.hasErrors) return
+
     // Prevent modal from closing
     bvModalEvt.preventDefault()
     const payload: Funds = {
@@ -118,9 +133,8 @@ export default class DepositForm extends Vue {
       weiAmount: this.transferAmount,
     }
 
-    await this.approveDeposit(payload)
+    this.approveDeposit(payload)
     this.close()
   }
-
 }
 </script>

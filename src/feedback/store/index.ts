@@ -23,11 +23,17 @@ const initialState: FeedbackState = {
     type: "alert",
     title: "",
     message: "",
-    onConfirm() { return },
+    onConfirm() {
+      return
+    },
   },
+  isLoading: false,
 }
 
-const builder = getStoreBuilder<HasFeedbackState>().module("feedback", initialState)
+const builder = getStoreBuilder<HasFeedbackState>().module(
+  "feedback",
+  initialState,
+)
 const stateGetter = builder.state()
 
 const feedbackModule = {
@@ -42,7 +48,8 @@ const feedbackModule = {
   showSuccess: builder.commit(mutations.showSuccess),
   showError: builder.commit(mutations.showError),
   showAlert: builder.commit(mutations.showAlert),
-  requireConfirmation: builder.commit(mutations.requireConfirmation)
+  showLoadingBar: builder.commit(mutations.showLoadingBar),
+  requireConfirmation: builder.commit(mutations.requireConfirmation),
 }
 
 // vuex module as a service

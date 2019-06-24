@@ -14,6 +14,7 @@ import {
 import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
 import { ActionContext } from "./types"
 import { createDefaultClient } from "loom-js/dist/helpers"
+import { feedbackModule } from "@/feedback/store"
 
 const log = debug("dash.mapper")
 
@@ -21,6 +22,7 @@ export async function loadMapping(context: ActionContext, address: string) {
   const client = context.rootState.plasma.client!
   const chainId = client.chainId
   const caller = context.rootState.plasma.appId.address
+  feedbackModule.setStep("Checking account mapping")
   const mapper = await AddressMapper.createAsync(
     client,
     Address.fromString([chainId, caller].join(":")),
@@ -83,8 +85,8 @@ export async function createMapping(context: ActionContext) {
     console.error(e)
     console.error(
       "could not get mapping after creating a new identity" +
-        ethAddress +
-        plasmaId.address,
+      ethAddress +
+      plasmaId.address,
     )
     // feedback.showError("mapper.errors.create", e.message,{ethereum:ethAddress, plasma:plasmaId.address})
   } finally {

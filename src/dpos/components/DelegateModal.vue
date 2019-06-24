@@ -32,18 +32,24 @@
           >{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label>
         </b-col>
         <b-col sm="6">
-          <span>{{locktimeTiers[locktimeTierVal]}} / {{bonusTiers[locktimeTierVal]}}</span>
+          <span>{{locktimeTiers[delegation.lockTimeTier]}} / {{bonusTiers[delegation.lockTimeTier]}}</span>
         </b-col>
         <b-col>
-          <b-form-input
-            v-model="locktimeTierVal"
-            :min="minLockTimeTier"
-            max="3"
-            :formatter="formatRangeInput"
-            id="locktime"
-            type="range"
-            data-toggle="tooltip"
-          ></b-form-input>
+          <div class="tier-options">
+            <label
+              v-for="(n, i) in locktimeTiers.length"
+              :key="i"
+              class="radio tier"
+              :class="{selected: i === delegation.lockTimeTier}"
+            >
+              <input type="radio" v-model="delegation.lockTimeTier" :value="i">
+              <strong>Locktime</strong>
+              <div>{{ locktimeTiers[i] }}</div>
+              <strong>Bonuses</strong>
+              <div class="fee">{{ bonusTiers[i] }}</div>
+              <div class="spec">({{ calcReceiveAmount(i) }} LOOM)</div>
+            </label>
+          </div>
         </b-col>
       </b-row>
     </b-container>
@@ -64,7 +70,6 @@
 import Vue from "vue"
 import { Component, Prop } from "vue-property-decorator"
 import BN from "bn.js"
-import { CommonTypedStore } from "../../store/common"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState, DPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
@@ -74,9 +79,6 @@ const MULTIPLIER = new BN("10").pow(new BN("18"))
 @Component
 export default class DelegateModal extends Vue {
 
-  @Prop({})
-  locktimeTier = 0
-  locktimeTierVal = 0
   validator = null
   showValidators = false
   formattedValidators: any[] = []
@@ -92,16 +94,21 @@ export default class DelegateModal extends Vue {
   ]
 
   bonusTiers = [
-    "x1",
-    "x1.5",
-    "x2",
-    "x4",
+    "5%",
+    "8%",
+    "10%",
+    "20%",
+  ]
+
+  rewardTiers = [
+    0.05,
+    0.075,
+    0.1,
+    0.2,
   ]
 
   minAmount = new BN("1")
   minLockTimeTier = 0
-
-  setError = CommonTypedStore.setError
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -152,8 +159,10 @@ export default class DelegateModal extends Vue {
     return Math.floor(this.balance)
   }
 
-  async delegate() {
-    dposModule.delegate(this.dposState.delegation!)
+  delegate() {
+    const delegation = this.dposState.delegation!
+    dposModule.clearRequest()
+    dposModule.delegate(delegation)
   }
 
   formatRangeInput(value, event) {
@@ -167,9 +176,12 @@ export default class DelegateModal extends Vue {
   }
 
   cancel() {
-    dposModule.cancelRequest()
+    dposModule.clearRequest()
   }
 
+  calcReceiveAmount(i) {
+    return Intl.NumberFormat().format(this.delegationAmount * (1 + this.rewardTiers[i]))
+  }
 }
 </script>
 <style lang="scss">
@@ -178,5 +190,40 @@ label {
 }
 .loading-spinner-container {
   height: 200px;
+}
+
+.tier-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .tier {
+    border: 1px solid #d8d8d8;
+    color: rgba(0, 0, 0, 0.86);
+    padding: 16px 8px;
+    text-align: center;
+    margin: 0 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    &.selected {
+      background-color: #007cff;
+      color: #fff;
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+    }
+    &.disabled {
+      opacity: 0.56;
+    }
+    > input {
+      display: none;
+    }
+    > * {
+      height: 1.8em;
+    }
+    .spec {
+      font-size: 0.7rem;
+    }
+  }
 }
 </style>

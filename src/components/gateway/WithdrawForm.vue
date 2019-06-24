@@ -5,10 +5,18 @@
     no-close-on-esc
     hide-header-close
     id="deposit-approval-success"
-    title="Withdraw"
+    :title="'Withdraw ' + token"
   >
     <div v-if="status === 'default'">
-      <amount-input :min="1" :max="100" :symbol="token" v-model="amount" @isError="errorHandler"/>
+      <h6>Token type: {{ token }}</h6>
+      <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+      <amount-input
+        :min="min"
+        :max="userBalance"
+        :symbol="token"
+        v-model="weiAmount"
+        @isError="errorHandler"
+      />
     </div>
     <div v-if="status === 'error'">
       <h2>An error occurred, please try again!</h2>
@@ -33,6 +41,7 @@ import BN from "bn.js"
 import { Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 
+import { formatTokenAmount } from "@/filters"
 import { formatToCrypto } from "@/utils"
 import { DashboardState, Funds } from "../../types"
 import { gatewayModule } from "../../store/gateway"
@@ -53,7 +62,8 @@ export default class WithdrawForm extends Vue {
   @Prop({ required: true }) token!: string // prettier-ignore
 
   status: string = "default"
-  amount: any = 0
+  weiAmount: BN = new BN(0)
+  min = new BN(1)
   amountIsValid: boolean = false
 
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
@@ -64,13 +74,23 @@ export default class WithdrawForm extends Vue {
     return this.$store.state
   }
 
+  get userBalance() {
+    return this.state.plasma.coins[this.token].balance
+  }
+
+  get transferRequest() {
+    return this.state.gateway.transferRequest
+  }
+
   get visible() {
-    return this.state.gateway.showWithdrawForm
+    return this.transferRequest.type === "WITHDRAW"
+      && this.transferRequest.token !== ""
+      && this.transferRequest.chain === "ethereum"
   }
 
   set visible(value) {
     if (value === false) {
-      this.setShowWithdrawForm(false)
+      gatewayModule.clearTransferRequest()
     }
   }
 
@@ -90,7 +110,7 @@ export default class WithdrawForm extends Vue {
     const payload: Funds = {
       chain: "ethereum",
       symbol: this.token,
-      weiAmount: this.amount,
+      weiAmount: this.weiAmount,
     }
 
     this.beginWithdrawal(payload).then(() => {
@@ -102,7 +122,7 @@ export default class WithdrawForm extends Vue {
       this.status = "error"
     })
     this.close()
-    this.setShowWithdrawProgress(true)  }
-
+    this.setShowWithdrawProgress(true)
+  }
 }
 </script>

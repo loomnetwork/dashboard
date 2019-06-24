@@ -42,12 +42,11 @@ export default class BlockExplorer extends Vue {
   searchQuery!: ISearchQuery
 
   $refs!: {
-    blockList: BlockList;
+    blockList: BlockList,
   }
 
   get dappchainEndpoint(): string {
-    return (this.$store.state as DashboardState).DPOS.currentChain
-      .dappchainEndpoint
+    return (this.$store.state as DashboardState).plasma.endpoint
   }
 
   blockchain: Blockchain | null = null

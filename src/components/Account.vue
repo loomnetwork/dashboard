@@ -30,8 +30,9 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { dposModule } from "@/dpos/store"
-import { DashboardState, DposState } from "@/types"
+import { DashboardState } from "@/types"
 import { feedbackModule } from "@/feedback/store"
+import { formatToLoomAddress } from "@/utils"
 
 @Component
 export default class Account extends Vue {
@@ -40,10 +41,6 @@ export default class Account extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
-  }
-
-  get dposState(): DposState {
-    return this.$store.state.dpos
   }
 
   get ethAccount() {
@@ -55,14 +52,14 @@ export default class Account extends Vue {
   }
 
   copyEthereum() {
-    this.$copyText(this.plasmaAccount).then(() =>
+    this.$copyText(this.ethAccount).then(() =>
       feedbackModule.showSuccess("Ethereum address copied."),
       console.error,
     )
   }
 
   copyPlasma() {
-    this.$copyText(this.plasmaAccount).then(() =>
+    this.$copyText(formatToLoomAddress(this.plasmaAccount)).then(() =>
       feedbackModule.showSuccess("Plasma address copied."),
       console.error,
     )

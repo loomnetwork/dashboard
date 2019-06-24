@@ -71,7 +71,7 @@
 
         <b-card-body>
           <p
-            @click="showSeedPhraseModal()"
+            @click.stop.prevent="showSeedPhraseModal"
             class="text-right text-link"
             style="position: absolute;right: 20px;"
           >Generate New Key</p>
@@ -111,6 +111,12 @@
               </label>
             </div>
           </b-form-group>
+          <div class="balance">
+            <span>Your balance: {{ loomBalance }} LOOM</span>
+            <router-link to="/wallet">
+              <b-button variant="outline-primary">Deposit</b-button>
+            </router-link>
+          </div>
         </b-card-body>
 
         <b-card-footer>
@@ -134,7 +140,6 @@ import { Component, Watch } from "vue-property-decorator"
 import { createNamespacedHelpers } from "vuex"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
-import { CommonTypedStore } from "@/store/common"
 import { whiteListModule } from "@/whitelist/store"
 import { WhiteListState, DeployerAddress } from "@/whitelist/store/types"
 import { plasmaModule } from "@/store/plasma"
@@ -222,6 +227,7 @@ export default class AddKey extends Vue {
 
   showSeedPhraseModal() {
     this.$root.$emit("bv::show::modal", "seed-phrase-modal")
+    whiteListModule.generateSeeds()
   }
 
   copyAddress(hex: string) {
@@ -360,6 +366,15 @@ p {
     .spec {
       font-size: 0.825rem;
     }
+  }
+}
+
+.balance {
+  float: right;
+
+  span {
+    vertical-align: middle;
+    padding: 4px;
   }
 }
 </style>

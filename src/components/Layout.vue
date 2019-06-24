@@ -1,21 +1,14 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">
-    <b-alert
-      variant="light"
-      :show="showSigningAlert"
-      dismissible
-      class="custom-notification text-center"
-    >
-      <strong>
-        <fa :icon="['fa', 'bell']"/>
-        {{ $t('Please sign the transaction on your wallet') }}
-      </strong>
-    </b-alert>
-    <div v-if="networkId === 'us1'" style="background: #FFC107;padding: 0 16px;">Testnet</div>
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>
+  <div id="layout" class="d-flex flex-column">
+    <div class="beta-ribbon">
+      <span>BETA</span>
+    </div>
+    <div
+      v-if="networkId !== 'plasma'"
+      style="background: #FFC107;padding: 0 16px;"
+    >Network: {{networkId}}</div>
+    <faucet-header></faucet-header>
     <div class="content">
-      <warning-overlay type="metamask"></warning-overlay>
-      <warning-overlay type="mapping"></warning-overlay>
       <div class="d-none d-lg-block">
         <faucet-sidebar></faucet-sidebar>
       </div>
@@ -63,13 +56,17 @@
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
+    <!-- dpos -->
+    <redelegate-modal></redelegate-modal>
+    <undelegate-modal></undelegate-modal>
+
     <!-- gateway -->
     <DepositApproved/>
     <DepositConfirmed/>
     <progress-modal/>
-    <feedback-alert/>
     <WithdrawProgress/>
     <WithdrawConfirmed/>
+    <feedback-alert/>
   </div>
 </template>
 
@@ -77,21 +74,20 @@
 import { Vue, Component, Watch } from "vue-property-decorator"
 
 import FaucetHeader from "@/components/FaucetHeader.vue"
-import FaucetSidebar from "../components/FaucetSidebar.vue"
+import FaucetSidebar from "@/components/FaucetSidebar.vue"
 import FaucetFooter from "@/components/FaucetFooter.vue"
-import LoadingSpinner from "../components/LoadingSpinner.vue"
-import WarningOverlay from "../components/WarningOverlay.vue"
-import FeedbackNotification from "../feedback/components/FeedbackNotification.vue"
-import ProgressModal from "../feedback/components/ProgressModal.vue"
-import FeedbackAlert from "../feedback/components/FeedbackAlert.vue"
+import LoadingSpinner from "@/components/LoadingSpinner.vue"
+import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
+import ProgressModal from "@/feedback/components/ProgressModal.vue"
+import FeedbackAlert from "@/feedback/components/FeedbackAlert.vue"
 
 import DepositApproved from "@/components/gateway/DepositApproved.vue"
 import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
 import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
-
-import { DashboardState } from "../types"
-import { store } from "../store"
+import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
+import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
+import { DashboardState } from "@/types"
 
 @Component({
   components: {
@@ -99,12 +95,13 @@ import { store } from "../store"
     FaucetSidebar,
     FaucetFooter,
     LoadingSpinner,
-    WarningOverlay,
     DepositApproved,
     DepositConfirmed,
     FeedbackNotification,
     ProgressModal,
     FeedbackAlert,
+    RedelegateModal,
+    UndelegateModal,
     WithdrawProgress,
     WithdrawConfirmed,
   },
@@ -117,48 +114,12 @@ export default class Layout extends Vue {
   // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
 
-  get userIsLoggedIn() { return this.s.common.userIsLoggedIn }
+  get walletType() { return this.s.ethereum.walletType }
+  get showLoadingSpinner() { return false }
 
-  get walletType() { return this.s.DPOS.walletType }
-  get showSidebar() { return this.s.DPOS.showSidebar }
-  get currentMetamaskAddress() { return this.s.DPOS.currentMetamaskAddress }
-  get showLoadingSpinner() { return this.s.common.showLoadingSpinner }
-  get showAlreadyMappedModal() { return this.s.DPOS.showAlreadyMappedModal }
-  get showSignWalletModal() { return this.s.DPOS.showSignWalletModal }
-  get mappingSuccess() { return this.s.DPOS.mappingSuccess }
-  get status() { return this.s.DPOS.status }
-
-  get account() { return this.s.DPOS.account }
-  get showSigningAlert() { return this.s.DPOS.showSigningAlert }
-  get metamaskError() { return this.s.DPOS.metamaskError }
-  get mappingError() { return this.s.DPOS.mappingError }
   get networkId() { return this.s.plasma.networkId }
 
   metamaskChangeAlert = false
-
-  loginEmail = ""
-  routeArray = [
-    {
-      className: "gradient-bg",
-      routeNames: ["browse", "Browse Type", "card detail", "trade history", "Account",
-        "Confirmed Package Purchase", "Card Pack"],
-    },
-  ]
-
-  beforeMount() {
-    if (!this.userIsLoggedIn) {
-      this.$router.push({ path: "/login" })
-    }
-  }
-
-  @Watch("showSignWalletModal")
-  onSignLedgerModalChange(newValue, oldValue) {
-    if (newValue) {
-      this.$root.$emit("bv::show::modal", "sign-wallet-modal")
-    } else {
-      this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
-    }
-  }
 
   async mounted() {
     if ("ethereum" in window) {
@@ -170,8 +131,8 @@ export default class Layout extends Vue {
           return
         }
 
-        if (store.state.ethereum.address &&
-          store.state.ethereum.address !== accounts[0]) {
+        if (this.$store.state.ethereum.address &&
+          this.$store.state.ethereum.address !== accounts[0]) {
           localStorage.removeItem("lastWithdrawTime")
           this.metamaskChangeAlert = true
           // @ts-ignore
@@ -181,24 +142,16 @@ export default class Layout extends Vue {
       })
     }
 
+    this.$root.$on("logout", () => {
+      this.restart()
+    })
+
   }
 
-  async restart() {
+  restart() {
     window.location.reload(true)
   }
 
-  get getClassNameForStyling() {
-    let className = ""
-    const self = this
-    this.routeArray.forEach((item) => {
-      // @ts-ignore
-      if (item.routeNames.includes(self.$route.name)) {
-        className = item.className
-        return
-      }
-    })
-    return className
-  }
 }
 </script>
 
@@ -261,6 +214,56 @@ export default class Layout extends Vue {
 
 .highlight {
   color: #f0ad4e;
+}
+
+.beta-ribbon {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  z-index: 1000000000000;
+  overflow: hidden;
+  width: 75px;
+  height: 75px;
+  text-align: right;
+  span {
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    width: 100px;
+    display: block;
+    background: #F79E05;
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px;
+    left: -21px;
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0px;
+      top: 100%;
+      z-index: -1;
+      border-left: 3px solid #8F5408;
+      border-right: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      border-top: 3px solid #8F5408;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0px;
+      top: 100%;
+      z-index: -1;
+      border-left: 3px solid transparent;
+      border-right: 3px solid #8F5408;
+      border-bottom: 3px solid transparent;
+      border-top: 3px solid #8F5408;
+    }
+  }
 }
 
 @media (max-width: 576px) {

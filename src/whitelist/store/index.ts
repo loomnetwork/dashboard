@@ -2,10 +2,12 @@ import debug from "debug"
 
 import { getStoreBuilder } from "vuex-typex"
 
-import { Address, LocalAddress } from "loom-js"
+import { Address, LocalAddress, CryptoUtils } from "loom-js"
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 import { TierID } from "loom-js/dist/proto/user_deployer_whitelist_pb"
+import { generateMnemonic, mnemonicToSeedSync } from "bip39"
+import { sha256 } from "js-sha256"
 
 import { i18n } from "@/i18n"
 import { plasmaModule } from "@/store/plasma"
@@ -27,6 +29,10 @@ const initialState: WhiteListState = {
   userDeployersAddress: [],
   tierIDs: [0], // TODO: update this if we have more tier: add more tier ID
   tiers: [],
+  seed: {
+    mnemonic: "",
+    publicAddress: "",
+  },
 }
 const builder = getStoreBuilder<HasWhiteListState>().module(
   "whiteList",
@@ -47,6 +53,7 @@ export const whiteListModule = {
   addDeployer: builder.dispatch(addDeployer),
   getDeployers: builder.dispatch(getDeployers),
   getTierInfo: builder.dispatch(getTierInfo),
+  generateSeeds: builder.dispatch(generateSeeds),
 }
 
 /**
@@ -175,4 +182,24 @@ function formatDeployersAddress(
       ).toString("base64"),
     }
   })
+}
+
+/**
+ *
+ * @param context
+ */
+async function generateSeeds(context: WhiteListContext) {
+  feedbackModule.setTask("New key")
+  feedbackModule.setStep("Generating new key")
+
+  const mnemonic = generateMnemonic()
+  const seed = mnemonicToSeedSync(mnemonic)
+  const privateKeyUint8ArrayFromSeed = CryptoUtils.generatePrivateKeyFromSeed(new Uint8Array(sha256.array(seed)))
+  const privateKeyB64 = CryptoUtils.Uint8ArrayToB64(privateKeyUint8ArrayFromSeed)
+  const publicKey = await plasmaModule.getPublicAddrePriaKeyUint8Array({ privateKey: privateKeyUint8ArrayFromSeed })
+
+  feedbackModule.endTask()
+
+  context.state.seed.mnemonic = mnemonic
+  context.state.seed.publicAddress = publicKey
 }

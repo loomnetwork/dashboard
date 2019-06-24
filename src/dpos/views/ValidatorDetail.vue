@@ -65,8 +65,6 @@
       ></faucet-delegate-modal>-->
       <template v-if="!!state.dpos.delegation">
         <delegate-modal></delegate-modal>
-        <redelegate-modal></redelegate-modal>
-        <undelegate-modal></undelegate-modal>
       </template>
       <success-modal></success-modal>
     </b-card>
@@ -76,22 +74,18 @@
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import SuccessModal from "@/components/modals/SuccessModal.vue"
-import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import DelegateModal from "@/dpos/components/DelegateModal.vue"
-import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
 
-import { CommonTypedStore } from "@/store/common"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
 import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
+import { feedbackModule } from "../../feedback/store"
 
 @Component({
   components: {
     SuccessModal,
     DelegateModal,
-    RedelegateModal,
-    UndelegateModal,
     DelegationsList,
   },
 })
@@ -125,17 +119,6 @@ export default class ValidatorDetail extends Vue {
   get delegations() {
     const addr = this.validator!.addr
     return this.state.dpos.delegations.filter((d) => d.validator.addr === addr)
-  }
-
-  copyAddress() {
-    // @ts-ignore
-    this.$refs.address.select()
-    const successful = document.execCommand("copy")
-    if (successful) {
-      CommonTypedStore.setSuccess(this.$t("messages.copy_addr_success_tx").toString())
-    } else {
-      CommonTypedStore.setSuccess(this.$t("messages.copy_addr_err_tx").toString())
-    }
   }
 
   get canConsolidate() {

@@ -50,6 +50,7 @@ export interface EthereumState extends EthereumConfig {
     },
   },
   blockNumber: number,
+  history: any[]
 }
 
 export interface WalletType {

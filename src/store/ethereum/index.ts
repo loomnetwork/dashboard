@@ -20,8 +20,8 @@ import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
 import { setBlockNumber } from "./mutations"
-import { modifyRPCSigner } from "../gateway/signer"
 import { provider } from "web3-providers/types"
+import { feedbackModule } from "@/feedback/store"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -64,6 +64,7 @@ const initialState: EthereumState = {
   },
   contracts: {},
   blockNumber: 0,
+  history: [],
 }
 
 // web3 instance
@@ -131,6 +132,9 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
   context.state.walletType = walletType
   if (wallet.isMultiAccount === false) {
+    feedbackModule.setTask("Connecting wallet")
+    feedbackModule.setStep("Connecting wallet")
+
     await wallet
       .createProvider()
       .then(async (web3provider) => await setProvider(context, web3provider))

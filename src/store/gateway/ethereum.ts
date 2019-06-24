@@ -245,27 +245,49 @@ export async function refreshEthereumHistory(context: ActionContext) {
   const { mainGateway, loomGateway } = service()
 
   const fromBlock = cached.length ? cached[0].blockNumber : 0
-  const depositFilter = {
-    filter: {
-      from: ethereum.address,
-    },
-    fromBlock,
-    // @ts-ignore
-    toBlock: "latest",
-  }
 
   // @ts-ignore
-  loomGateway.getPastEvents("ERC20Received", depositFilter, (e, results) => {
-    const entries = results.reverse().map((entry) => ({
-      event: "ERC20Received",
-      blockNumber: entry.blockNumber,
-      transactionHash: entry.transactionHash,
-      amount: new BN(entry.returnValues.amount),
-      token: "LOOM",
-    }))
-    ethereum.history.push(...entries)
-    console.log(ethereum.history)
-  })
+  loomGateway.getPastEvents(
+    "ERC20Received",
+    {
+      filter: {
+        from: ethereum.address,
+      },
+      fromBlock,
+      toBlock: "latest",
+    },
+    (e, results) => {
+      const entries = results.reverse().map((entry) => ({
+        type: "ERC20Received",
+        blockNumber: entry.blockNumber,
+        transactionHash: entry.transactionHash,
+        amount: new BN(entry.returnValues.amount),
+        token: "LOOM",
+      }))
+      ethereum.history.push(...entries)
+    })
+
+  // @ts-ignore
+  loomGateway.getPastEvents(
+    "TokenWithdrawn",
+    {
+      filter: {
+        owner: ethereum.address,
+      },
+      fromBlock,
+      toBlock: "latest",
+    },
+    (e, results) => {
+      const entries = results.reverse().map((entry) => ({
+        type: "TokenWithdrawn",
+        blockNumber: entry.blockNumber,
+        transactionHash: entry.transactionHash,
+        amount: new BN(entry.returnValues.amount),
+        token: "LOOM",
+      }))
+      ethereum.history.push(...entries)
+      console.log(entries)
+    })
 
 }
 

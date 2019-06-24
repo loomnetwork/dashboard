@@ -1,55 +1,66 @@
 <template>
-  <div class="py-4">
-    <b-card title="Ethereum events" id="history-items-container" class="mb-3">
-      <div v-if="state.ethereum.history.length">
-        <history-event
-          v-for="item in state.ethereum.history"
-          :key="item.transactionHash"
-          :event="item"
-        ></history-event>
-        <div v-for="item in state.ethereum.history" :key="item.transactionHash">gggggggg</div>
-      </div>
-      <div v-else>
-        <p>No activity detected</p>
-        <small>
-          Or head over to the
-          <router-link to="/validators">validators page</router-link>to get started
-        </small>
-      </div>
-    </b-card>
-    {{state.ethereum.history}}
-    <b-card title="DappChain events" id="history-items-container" class="mb-3">
-      <div v-if="showDappChainHistoryTable">
-        <b-card v-for="(item, idx) in dappChainEvents" :key="'item' + idx" no-body class="mb-1">
-          <b-card-header
-            @click="toggleAccordion(idx)"
-            header-tag="header"
-            class="d-flex justify-content-between p-2"
-            role="tab"
-          >
-            <span>{{item["Event"]}}</span>
-            <strong>{{item["Amount"]}}</strong>
-          </b-card-header>
-          <b-collapse :id="'history-item' + idx" accordion="my-accordion" role="tabpanel">
-            <b-card-body>
-              <ul>
-                <li>Block #: {{item["Block #"]}}</li>
-                <li>Amount: {{item["Amount"]}}</li>
-                <li>Tx Hash: {{item["Tx Hash"]}}</li>
-              </ul>
-            </b-card-body>
-          </b-collapse>
-        </b-card>
-      </div>
-      <div v-else>
-        <p>No activity detected.</p>
-        <small>
-          Or head over to the
-          <router-link to="/validators">validators page</router-link>to get started
-        </small>
-      </div>
-    </b-card>
-  </div>
+  <main class="container py-4">
+    <header>
+      <h1>History</h1>
+      <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
+    </header>
+    <div style="max-width: 620px;margin:0 auto">
+      <b-button-group style="display: flex" class="py-4">
+        <b-button
+          variant="outline-primary"
+          @click="visible = 'plasma'"
+          :class="{active:visible === 'plasma'}"
+        >PlasmaChain</b-button>
+        <b-button
+          variant="outline-primary"
+          @click="visible = 'ethereum'"
+          :class="{active:visible === 'ethereum'}"
+        >Ethereum</b-button>
+      </b-button-group>
+
+      <section v-if="visible === 'plasma'">
+        <div class="events">
+          <article v-for="(event, id) in state.plasma.history" :key="id" class="event">
+            <h5 class="type">{{ $t( "events." + event.type) }}</h5>
+            <ul>
+              <li class="block">Block # {{event.blockNumber}}</li>
+              <li class="amount">{{event.amount | tokenAmount}}</li>
+            </ul>
+            <!--
+        <a class="transaction-hash" href target="_blank">{{event.transactionHash}}</a>
+            -->
+          </article>
+        </div>
+
+        <div v-if="state.plasma.history.length === 0">
+          <p>No activity detected.</p>
+          <small>
+            Or head over to the
+            <router-link to="/validators">validators page</router-link>to get started
+          </small>
+        </div>
+      </section>
+      <section v-else-if="visible === 'ethereum'">
+        <div class="events">
+          <history-event v-for="(item,i) in state.ethereum.history" :key="i" :event="item"></history-event>
+        </div>
+        <!--
+        <b-pagination
+          v-if="state.ethereum.history.length"
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="my-table"
+        ></b-pagination>-->
+        <div v-if="state.ethereum.history.length == 0">
+          <p>
+            No activity detected.
+            <a>Deposit funds to the PlasmaChain</a>
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
 </template>
 
 
@@ -60,7 +71,8 @@ import HistoryEvent from "../components/HistoryEvent.vue"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
-import { gatewayModule } from "../store/gateway";
+import { gatewayModule } from "../store/gateway"
+import { plasmaModule } from "../store/plasma"
 
 @Component({
   components: {
@@ -69,162 +81,91 @@ import { gatewayModule } from "../store/gateway";
 })
 export default class History extends Vue {
 
-  // "ERC20Received" = Deposit?
-  // "TokenWithdrawn" = Withdraw?
-  blockOffset = 10000
-  history: any[] = []
-
-  pollInterval: number | null = null
-  pollingBlockNumber = 0
+  visible = "plasma"
 
   get state(): DashboardState {
     return this.$store.state
   }
 
-
-  get plasmaHistory() {
-    return []
-  }
-
-  get ethererumBlockNumber() { return 0 }
-
-  fetchDappChainEvents() { return 0 }
-  setLatesBlockNumber() { return 0 }
-  setCachedEvents() { return 0 }
-
   async mounted() {
-    // await this.refresh()
-    // this.pollLatestBlockNumber()
     gatewayModule.refreshEthereumHistory()
-  }
-
-  async updateCachedEvents() {
-    return
-
-    // // Filter based on user's address (does not seem to work)
-    // // let filter = { from: this.currentMetamaskAddress }
-
-    // // Get latest mined block from Ethereum
-    // const blockNumber = await this.web3.eth.getBlockNumber()
-
-    // // Fetch latest events
-    // const events = await this.GatewayInstance.getPastEvents(
-    //   "allEvents",
-    //   {
-    //     fromBlock: this.latestBlockNumber,
-    //     toBlock: blockNumber,
-    //   },
-    // )
-
-    // // Filter based on event type and user address
-    // const results = events.filter((event) => {
-    //   return event.returnValues.from === this.currentMetamaskAddress ||
-    //     event.returnValues.owner === this.currentMetamaskAddress
-    // }).map((event) => {
-    //   const type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
-    //   const amount = event.returnValues.amount || event.returnValues.value || 0
-    //   return {
-    //     "Block #": event.blockNumber,
-    //     "Event": type,
-    //     "Amount": formatToCrypto(amount),
-    //     "Tx Hash": event.transactionHash,
-    //   }
-    // })
-
-    // // Combine cached events with new events
-    // const mergedEvents = this.cachedEvents.concat(results)
-
-    // // // Store results
-    // // this.setLatesBlockNumber(blockNumber)
-    // // this.setCachedEvents(mergedEvents)
-
-    // // // Display trades in the UI
-    // // this.history = mergedEvents
-
-    // // this.setShowLoadingSpinner(false)
-
-  }
-
-  async queryEvents() {
-    return
-
-    // this.setShowLoadingSpinner(true)
-
-    // // Filter based on user's address (does not seem to work)
-    // // let filter = { from: this.currentMetamaskAddress }
-    // const blockNumber = await this.web3.eth.getBlockNumber()
-
-    // // Fetch latest events
-
-    // console.log("Fetching events with offset: ", this.blockOffset)
-
-    // const events = await this.GatewayInstance.getPastEvents(
-    //   "allEvents",
-    //   {
-    //     fromBlock: blockNumber - this.blockOffset,
-    //     toBlock: blockNumber,
-    //   },
-    // )
-
-    // // Filter based on event type and user address
-    // const results = events.filter((event) => {
-    //   return event.returnValues.from === this.currentMetamaskAddress ||
-    //     event.returnValues.owner === this.currentMetamaskAddress
-    // }).map((event) => {
-    //   const type = event.event === "ERC20Received" ? "Deposit" : event.event === "TokenWithdrawn" ? "Withdraw" : ""
-    //   const amount = event.returnValues.amount || event.returnValues.value || 0
-    //   return {
-    //     "Block #": event.blockNumber,
-    //     "Event": type,
-    //     "Amount": formatToCrypto(amount),
-    //     "Tx Hash": event.transactionHash,
-    //   }
-    // })
-
-    // // Store results
-    // this.setLatesBlockNumber(blockNumber)
-    // this.setCachedEvents(results)
-
-    // // Display trades in the UI
-    // this.history = results
-
-    // this.setShowLoadingSpinner(false)
-
-  }
-
-  toggleAccordion(idx) {
-    this.$root.$emit("bv::toggle::collapse", "history-item" + idx)
-  }
-
-  get showHistoryTable() {
-    return this.history && this.history.length > 0
-  }
-
-  get showDappChainHistoryTable() {
-    return false
+    plasmaModule.refreshHistory()
   }
 
 }
 </script>
 
 <style lang="scss" scoped>
-.dropdown-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-.query-past-events {
-  color: #007bff !important;
-  cursor: pointer;
-}
-.tab-heading {
-  color: gray;
-  margin: 0px;
-  padding: 12px 1.25rem;
-}
-#history-items-container {
-  .card-header {
-    background-color: #fff;
+.events {
+  height: calc(100vh - 200px);
+  overflow: scroll;
+  padding: 5px;
+  box-shadow: inset 0px 0px 5px #80808094;
+  max-width: 620px;
+  border: 1px solid #ededed;
+
+  .event {
+    position: relative;
+    display: flex;
+    max-width: 600px;
+    border-left: 5px solid #00bcd4;
+    box-shadow: rgba(219, 219, 219, 0.56) -1px 1px 3px 0px;
+    margin: 0 0 5px 0;
+    height: 100px;
+    background: white;
+
+    .type {
+      font-size: 1rem;
+      padding: 10px;
+      &.deposit {
+        font-size: 1rem;
+        padding: 10px;
+      }
+    }
+
+    .amount {
+      position: absolute;
+      top: 40px;
+      left: 10px;
+    }
+
+    &.deposit .type {
+      color: #00bcd4;
+    }
+  }
+  ul {
+    list-style: none;
+  }
+  .block {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+  }
+  .transaction-hash {
+    font-size: 9px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-family: Monaco;
+    max-width: 475px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    @media (min-width: 529px) {
+      & {
+        font-size: 12px;
+      }
+    }
+  }
+  .confirmations {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    .spinner-border {
+      height: 16px;
+      width: 16px;
+    }
   }
 }
 </style>

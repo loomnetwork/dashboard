@@ -1,28 +1,33 @@
 <template>
-  <b-card class="mb-1">
+  <section class="event deposit" :class="{pending: confirmations < 11 }">
+    <h5 class="type">{{ $t("events." + event.type) }}</h5>
     <ul>
-      <li>
-        <strong
-          class="block-confirmation-msg"
-        >Confirmations: {{(latestBlock - event.blockNumber) + 1}}</strong>
+      <li v-if="confirmations < 11" class="confirmations">
+        <b-spinner variant="primary"></b-spinner>
+        {{confirmations}} Confirmations
       </li>
-      <li>Block #: {{event.blockNumber}}</li>
-      <li>Amount: {{event.amount | tokenAmount}} {{event.token}}</li>
-      <li>Tx Hash: {{event.transactionHash}}</li>
+      <li class="block">Block # {{event.blockNumber}}</li>
+      <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
     </ul>
-  </b-card>
+    <a class="transaction-hash" href target="_blank">{{event.transactionHash}}</a>
+  </section>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch } from "vue-property-decorator"
-import { EthereumState } from "../store/ethereum/types"
-@Component({
-  props: {
-    event: Object,
-  },
-})
+import { Component, Watch, Prop } from "vue-property-decorator"
+import { EthereumState } from "@/store/ethereum/types"
+
+// ({
+//   props: {
+//     event: Object,
+//   },
+// })
+@Component
 export default class HistoryEvent extends Vue {
+
+  @Prop({ required: true })
+  event: any
 
   get ethereum(): EthereumState {
     return this.$store.state.ethereum
@@ -32,21 +37,74 @@ export default class HistoryEvent extends Vue {
     return this.ethereum.blockNumber
   }
 
-  // @Watch("event")
-  //   onMappedChange(newValue, oldValue) {
-  //   if(newValue) {
-  //     this.latestBlock - newValue.item['Block #'] <= 10
-  //     this.$emit("keepPolling");
-  //   }
-  // }
+  get confirmations() {
+    return this.ethereum.blockNumber - this.event.blockNumber + 1
+  }
 
 }
 </script>
 <style scoped lang="scss">
-.custom-card-header {
-  background-color: #ffffff;
+.event {
+  position: relative;
+  display: flex;
+  max-width: 600px;
+  border-left: 5px solid #00bcd4;
+  box-shadow: rgba(219, 219, 219, 0.56) -1px 1px 3px 0px;
+  margin: 0 0 5px 0;
+  height: 100px;
+  background: white;
+
+  .type {
+    font-size: 1rem;
+    padding: 10px;
+    &.deposit {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  }
+
+  .amount {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+  }
+
+  &.deposit .type {
+    color: #00bcd4;
+  }
 }
-.block-confirmation-msg {
-  color: #f04e4e;
+ul {
+  list-style: none;
+}
+.block {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+}
+.transaction-hash {
+  font-size: 9px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-family: Monaco;
+  max-width: 475px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  @media (min-width: 529px) {
+    & {
+      font-size: 12px;
+    }
+  }
+}
+.confirmations {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  .spinner-border {
+    height: 16px;
+    width: 16px;
+  }
 }
 </style>

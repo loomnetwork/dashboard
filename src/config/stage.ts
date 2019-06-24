@@ -6,8 +6,9 @@ export default {
     networkId: "us1",
     chainId: "default",
     endpoint: "wss://test-z-us1.dappchains.com",
-    blockExplorer: "http://us1-blockexplorer.devdc.io",
+    blockExplorer: "https://us1-blockexplorer.devdc.io",
     loomGamesEndpoint: "https://stage.loom.games/en/dpos-link",
+    historyUrl: "https://stage-api.loom.games/plasma/address/{address}?sort=-block_height",
   },
   ethereum: {
     networkId: "4",

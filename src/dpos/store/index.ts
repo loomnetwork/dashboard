@@ -14,7 +14,7 @@ import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, LocalAddress } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 
-const log = debug("dpos")
+const log = debug("dash.dpos")
 
 const builder = getStoreBuilder<HasDPOSState>().module("dpos", defaultState())
 const stateGetter = builder.state()
@@ -92,6 +92,7 @@ async function refreshValidators(ctx: ActionContext) {
   const nodes = candidates.map((c) => {
     const node = new Validator()
     node.setCandidateData(c)
+    node.isBootstrap = ctx.state.bootstrapNodes.includes(node.addr)
     return node
   })
   // Helper: if node not found in the array

@@ -30,7 +30,6 @@ const dposModule = {
   setConfig: builder.commit(mutations.setConfig),
 
   setElectionTime: builder.commit(mutations.setElectionTime),
-  setRewards: builder.commit(mutations.setRewards),
 
   requestDelegation: builder.commit(requestDelegation),
   requestRedelegation: builder.commit(requestRedelegation),

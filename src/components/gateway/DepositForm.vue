@@ -87,15 +87,22 @@ export default class DepositForm extends Vue {
       this.status = ""
       this.transferAmount = ""
       this.amountErrors.length = 0
+      gatewayModule.clearTransferRequest()
     }
   }
 
   get visible() {
-    return this.showDepositForm
+    return this.transferRequest.type === "DEPOSIT"
+      && this.transferRequest.token
+      && this.transferRequest.chain === "ethereum"
   }
 
   get userBalance(): BN {
     return this.state.ethereum.coins[this.token].balance
+  }
+
+  get transferRequest() {
+    return this.state.gateway.transferRequest
   }
 
   get state(): DashboardState {

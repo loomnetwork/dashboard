@@ -104,6 +104,12 @@
               </label>
             </div>
           </b-form-group>
+          <div class="balance">
+            <span>Your balance: {{ loomBalance }} LOOM</span>
+            <router-link to="/wallet">
+              <b-button variant="outline-primary">Deposit</b-button>
+            </router-link>
+          </div>
         </b-card-body>
 
         <b-card-footer>
@@ -332,6 +338,15 @@ p {
     .spec {
       font-size: 0.825rem;
     }
+  }
+}
+
+.balance {
+  float: right;
+
+  span {
+    vertical-align: middle;
+    padding: 4px;
   }
 }
 </style>

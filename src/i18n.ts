@@ -1,6 +1,7 @@
 import Vue from "vue"
 import VueI18n from "vue-i18n"
 import defaultMessage from "./locales/en.json"
+import Axios from "axios"
 
 Vue.use(VueI18n)
 
@@ -27,12 +28,13 @@ export function isLocaleSupported(localeKey) {
 }
 
 export async function loadLocale(locale) {
+  console.log("LOCALE ", locale)
   if (i18n.locale !== locale) {
     if (loadedLocales.indexOf(locale) === -1) {
-      const msgs = await import(`./locales/${locale}.json`)
+      const msgs = await require(`./locales/${locale}.json`)
       i18n.setLocaleMessage(locale, msgs)
       loadedLocales.push(locale)
-      i18n.locale = locale
     }
+    i18n.locale = locale
   }
 }

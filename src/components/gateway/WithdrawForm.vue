@@ -42,7 +42,7 @@ import { Component, Prop } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { formatTokenAmount } from "@/filters"
-import { formatToCrypto, parseToWei } from "@/utils"
+import { formatToCrypto } from "@/utils"
 import { DashboardState, Funds } from "../../types"
 import { gatewayModule } from "../../store/gateway"
 import { gatewayReactions } from "../../store/gateway/reactions"
@@ -78,13 +78,19 @@ export default class WithdrawForm extends Vue {
     return this.state.plasma.coins[this.token].balance
   }
 
+  get transferRequest() {
+    return this.state.gateway.transferRequest
+  }
+
   get visible() {
-    return this.state.gateway.showWithdrawForm
+    return this.transferRequest.type === "WITHDRAW"
+      && this.transferRequest.token !== ""
+      && this.transferRequest.chain === "ethereum"
   }
 
   set visible(value) {
     if (value === false) {
-      this.setShowWithdrawForm(false)
+      gatewayModule.clearTransferRequest()
     }
   }
 
@@ -117,10 +123,6 @@ export default class WithdrawForm extends Vue {
     })
     this.close()
     this.setShowWithdrawProgress(true)
-  }
-
-  toWei(val: string) {
-    return parseToWei(val)
   }
 }
 </script>

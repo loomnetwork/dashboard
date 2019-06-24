@@ -227,7 +227,7 @@ export async function allowance(
 export async function approve(
   context: PlasmaContext,
   payload: TransferRequest,
-) {
+): Promise<boolean> {
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance

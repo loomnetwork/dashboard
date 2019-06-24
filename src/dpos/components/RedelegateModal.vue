@@ -20,6 +20,7 @@
         :component-item="dropdownTemplate"
         @item-selected="selectTargetItem"
         @update-items="updateTargetItems"
+        :min-len="0"
       ></v-autocomplete>
     </div>
     <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>
@@ -56,6 +57,12 @@ export default class RedelegateModal extends Vue {
 
   errorMsg = ""
   originErrorMsg = ""
+
+  mounted() {
+    this.$root.$on("bv::modal::show", () => {
+      this.updateTargetItems()
+    })
+  }
 
   get visible() {
     const dpos = this.state.dpos
@@ -99,6 +106,7 @@ export default class RedelegateModal extends Vue {
     // for now redelegate all
     delegation.updateAmount = delegation.amount
     dposModule.redelegate(delegation)
+    dposModule.clearRequest()
   }
 
   getLabel(item) {

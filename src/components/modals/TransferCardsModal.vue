@@ -84,7 +84,7 @@ export default class TransferCardsModal extends Vue {
 
   get validInput(): boolean {
     return this.isValidAddress &&
-      Number(this.amountToTransfer) < this.cardToTransfer!.amount &&
+      Number(this.amountToTransfer) <= this.cardToTransfer!.amount &&
       Number(this.amountToTransfer) > 0 &&
       this.confirmCard
   }

@@ -5,8 +5,9 @@
     <div class="d-none d-lg-block">
       <nav class="navbar">
         <div class="container-fluid">
-          <router-link to="/account" class="navbar-brand">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>Plasmachain
+          <router-link to="/account" class="navbar-brand ml-3">
+            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>
+            <span class="px-1">Plasmachain</span>
           </router-link>
           <form class="form-inline">
             <LangSwitcher/>
@@ -86,6 +87,8 @@
         </b-navbar>
       </nav>
     </div>
+    <!-- Loading bar -->
+    <loading-bar></loading-bar>
   </div>
 </template>
 
@@ -96,6 +99,7 @@ import ChainSelector from "./ChainSelector.vue"
 import LoomIcon from "@/components/LoomIcon.vue"
 import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
+import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
 @Component({
@@ -103,6 +107,7 @@ import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue
     ChainSelector,
     LangSwitcher,
     LoomIcon,
+    LoadingBar,
     FeedbackNotification,
   },
   props: {
@@ -199,6 +204,11 @@ export default class FaucetHeader extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get showLoadingBar(): boolean {
+    return false
+    // return this.state.whiteList
   }
 
   get showBackButton() {

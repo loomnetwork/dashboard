@@ -13,7 +13,7 @@
         <p v-if="errorMsg">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button variant="outline-primary" @click="setAllAmount">All balance</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>
       </b-col>
     </b-row>
   </div>
@@ -57,12 +57,11 @@ export default class AmountInput extends Vue {
   // Set default amount when select another token
   @Watch("symbol")
   setDefaultAmount(newVal, oldVal) {
-    this.amount = 0
     this.validateAmount()
   }
 
   validateAmount() {
-    let amount = Number(this.amount)
+    const amount = Number(this.amount)
     if (!amount) {
       this.errorMsg = "Please enter a valid amount"
       this.$emit("isError", true)
@@ -102,9 +101,6 @@ export default class AmountInput extends Vue {
 
   }
 
-  mounted() {
-    this.amount = 0
-  }
 }
 </script>
 

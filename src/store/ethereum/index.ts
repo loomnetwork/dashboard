@@ -20,7 +20,6 @@ import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
 import { setBlockNumber } from "./mutations"
-import { modifyRPCSigner } from "../gateway/signer"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 
@@ -65,6 +64,7 @@ const initialState: EthereumState = {
   },
   contracts: {},
   blockNumber: 0,
+  history: [],
 }
 
 // web3 instance

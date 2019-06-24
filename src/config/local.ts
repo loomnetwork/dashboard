@@ -8,6 +8,7 @@ export default {
     endpoint: "ws://localhost:46658",
     blockExplorer: "",
     loomGamesEndpoint: "https://localhost:8000/",
+    historyUrl: "https://stage.loom.games/{address}",
   },
   ethereum: {
     networkId: "default",

@@ -3,6 +3,8 @@ import BN from "bn.js"
 import Web3 from "web3"
 
 import { Gateway } from "./contracts/Gateway"
+import ERC20GatewayABI from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
+
 import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
 import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
@@ -135,8 +137,9 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   multisig: boolean,
 ) {
+  const ERC20GW_ABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI
   const loomGateway = new web3.eth.Contract(
-    ERC20GatewayABI_v2 as AbiItem[],
+    ERC20GW_ABI,
     addresses.loomGateway,
   ) as ERC20Gateway_v2
   log("loom gateway initialized")

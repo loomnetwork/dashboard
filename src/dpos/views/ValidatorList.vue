@@ -130,6 +130,12 @@ export default class ValidatorList extends Vue {
 </script>
 
 <style lang="scss">
+tr {
+  &:hover {
+    background-color: #5756e60F;
+    cursor: pointer;
+  }
+}
 main.validators {
   // ther should be global class for page titles
   header > h1 {

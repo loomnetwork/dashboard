@@ -1,5 +1,17 @@
-import { GatewayState } from "./types"
+import { GatewayState, TransferRequest } from "./types"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+
+export function setTransferRequestState(state: GatewayState, payload: TransferRequest) {
+  state.transferRequest = payload
+}
+
+export function clearTransferRequest(state: GatewayState) {
+  state.transferRequest = {
+    type: "",
+    chain: "",
+    token: "",
+  }
+}
 
 export function setShowDepositForm(state: GatewayState, payload: boolean) {
   state.showDepositForm = payload

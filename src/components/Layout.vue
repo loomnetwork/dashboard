@@ -87,7 +87,6 @@ import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
 import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
-
 import { DashboardState } from "@/types"
 
 @Component({

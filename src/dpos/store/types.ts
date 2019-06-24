@@ -33,7 +33,7 @@ export interface DPOSState extends DPOSConfig {
   electionTime: Date
   validators: Validator[]
   delegations: Delegation[]
-  rewards: BN
+  rewards: Delegation[]
   // when user is requesting an action
   intent: "" | "delegate" | "redelegate" | "undelegate"
   delegation: Delegation | null

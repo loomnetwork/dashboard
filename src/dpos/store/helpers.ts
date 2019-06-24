@@ -16,7 +16,7 @@ export function defaultState(): DPOSState {
     electionTime: new Date(),
     validators: [],
     delegations: [],
-    rewards: ZERO,
+    rewards: [],
 
     intent: "",
     delegation: null,

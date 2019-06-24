@@ -4,10 +4,13 @@
       <div v-if="state.dpos.loading.delegations">
         <b-spinner variant="primary" label="Spinning"/>
       </div>
-      <div v-else-if="hasRewards">
+      <div v-else-if="hasRewardsUnclaimed">
         <h6>{{ $t('views.rewards.unclaimed_rewards') }}</h6>
-        <h5 class="highlight">{{state.dpos.rewards | tokenAmount}} LOOM</h5>
+        <h5 class="highlight">{{rewardsUnclaimed | tokenAmount}} LOOM</h5>
       </div>
+      <div
+        v-else-if="hasRewardsBeingClaimed"
+      >{{rewardsBeingClaimed| tokenAmount}} LOOM will be reclaimed after next election.</div>
       <div v-else>
         <h6>
           You do not have any rewards at the moment.
@@ -21,18 +24,12 @@
       </div>
     </div>
     <b-button
-      id="claimRewardBtn"
+      id="claim-rewards"
       class="px-5 py-2"
       variant="primary"
       @click="claimRewards"
-      :disabled="hasRewards === false"
+      :disabled="hasRewardsUnclaimed === false"
     >{{ $t('views.rewards.claim_reward') }}</b-button>
-    <b-tooltip
-      v-if="!hideTooltip"
-      target="claimRewardBtn"
-      placement="bottom"
-      title="Once the lock time period has expired, click here to claim your reward"
-    ></b-tooltip>
   </b-card>
 </template>
 
@@ -43,6 +40,7 @@ import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
+import { ZERO } from '../../utils';
 
 @Component
 export default class Rewards extends Vue {
@@ -56,8 +54,19 @@ export default class Rewards extends Vue {
     return this.$store.state
   }
 
-  get hasRewards() {
-    return this.state.dpos.rewards.gt(new BN("0"))
+  get rewardsUnclaimed() {
+    return dposModule.rewardsUnclaimedTotal()
+  }
+
+  get rewardsBeingClaimed() {
+    return dposModule.rewardsBeingClaimedTotal()
+  }
+
+  get hasRewardsUnclaimed() {
+    return this.rewardsUnclaimed.gt(ZERO)
+  }
+  get hasRewardsBeingClaimed() {
+    return this.rewardsBeingClaimed.gt(ZERO)
   }
 
 }

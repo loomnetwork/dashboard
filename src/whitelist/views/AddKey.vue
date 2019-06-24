@@ -50,7 +50,7 @@
             </div>
             <b-collapse :id="pk.hex">
               <div class="collapse-content">
-            {{deployedContract[pk.hex]}}
+                {{deployedContract[pk.hex]}}
               </div>
             </b-collapse>
           </b-list-group-item>

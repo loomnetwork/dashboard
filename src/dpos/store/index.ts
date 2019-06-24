@@ -24,6 +24,9 @@ const dposModule = {
     return stateGetter()
   },
 
+  rewardsUnclaimedTotal: builder.read(rewardsUnclaimedTotal),
+  rewardsBeingClaimedTotal: builder.read(rewardsBeingClaimedTotal),
+
   setConfig: builder.commit(mutations.setConfig),
 
   setElectionTime: builder.commit(mutations.setElectionTime),
@@ -51,6 +54,17 @@ export { dposModule }
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
 // read/static
+
+function rewardsUnclaimedTotal(state: DPOSState) {
+  return state.rewards
+    .filter((r) => !r.pending)
+    .reduce((sum, r) => sum.add(r.amount), ZERO)
+}
+function rewardsBeingClaimedTotal(state: DPOSState) {
+  return state.rewards
+    .filter((r) => r.pending)
+    .reduce((sum, r) => sum.add(r.amount), ZERO)
+}
 
 /**
  * reloads time until next election
@@ -157,7 +171,9 @@ async function refreshDelegations(context: ActionContext) {
   log("delegations", plasmaModule.getAddress().toString(), response)
   const rewards = response.delegationsArray
     .filter((d) => d.index === 0)
-    .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
+    .map((item) => fromIDelegation(item, state.validators))
+
+  // .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
 
   state.rewards = rewards
   log("rewards", rewards.toString())

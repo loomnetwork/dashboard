@@ -164,19 +164,11 @@ async function getDeployers(context: WhiteListContext) {
  * @param payload
  */
 async function getDeployedContractAddresses(context: WhiteListContext, payload: {deployerAddress: Address}) {
-  const chainId = context.rootState.plasma.chainId
   const contract = context.state.userDeployerWhitelist!
-  console.log("contract",contract);
-
-  const deployerAddressTemp = Address.fromString(`${chainId}:${"0x85a5082a6b01371cad401593ce6182e577af690f"}`)
   let contractAddresses: IDeployedContract[] | [] = []
-  console.log("deployerAddressTemp", deployerAddressTemp)
 
   try {
-    contractAddresses = await contract.getDeployedContractsAsync(deployerAddressTemp)
-    // contractAddresses = await contract.getDeployedContractsAsync(payload.deployerAddress)
-    console.log("contractAddresses", contractAddresses)
-
+    contractAddresses = await contract.getDeployedContractsAsync(payload.deployerAddress)
   } catch (error) {
     log("getDeployedContractsAsync error", error)
   }

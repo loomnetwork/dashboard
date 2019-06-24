@@ -11,6 +11,7 @@ export interface PlasmaConfig {
   endpoint: string
   blockExplorer: string
   loomGamesEndpoint: string
+  historyUrl: string
 }
 
 export interface HasPlasmaState {
@@ -26,18 +27,18 @@ export interface PlasmaState extends PlasmaConfig {
   ethersProvider: Provider | null
   address: string
   signer: PlasmaSigner | null
-
+  history: any[]
   appId: {
-    private: string
-    public: string
+    private: string,
+    public: string,
     address: string,
   }
 
   coins: {
-    LOOM: BalanceInfo
+    LOOM: BalanceInfo,
     [tokenSymbol: string]: BalanceInfo,
   }
-  selectedToken: string,
+  selectedToken: string
 
 }
 

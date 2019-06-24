@@ -1,12 +1,12 @@
 {
   "messages": {
-    "user_denied_tx":"You denied the transaction",
+    "user_denied_tx": "You denied the transaction",
     "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
     "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
-    "transfer_card_err_tx":"Error Transferring cards: {msg}",
-    "transfer_pack_err_tx":"Error Transferring packs: {msg}",
-    "user_denied_sign_tx":"User denied message signature",
-    "deployer_already_exists":"Deployer alrready exists.",
+    "transfer_card_err_tx": "Error Transferring cards: {msg}",
+    "transfer_pack_err_tx": "Error Transferring packs: {msg}",
+    "user_denied_sign_tx": "User denied message signature",
+    "deployer_already_exists": "Deployer alrready exists.",
     "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
     "add_deployer_addr_success_tx": "Add deployer address successful.",
     "add_key_err_tx": "Error Adding a key: {msg}",
@@ -312,5 +312,11 @@
         "pending": "Pending"
       }
     }
+  },
+  "events": {
+    "ERC20Received": "Deposit",
+    "event:MainnetDepositEvent": "Deposit",
+    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "event:TokenWithdrawalSigned": "Withdrawal signed"
   }
 }

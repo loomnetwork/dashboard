@@ -8,6 +8,7 @@ export default {
     endpoint: "wss://plasma.dappchains.com",
     blockExplorer: "http://plasma-blockexplorer.dappchains.com",
     loomGamesEndpoint: "https://google.com",
+    historyUrl: "http://api.loom.games/plasma/address/{address}?sort=-block_height",
   },
   ethereum: {
     networkId: "1",

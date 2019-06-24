@@ -22,6 +22,8 @@ import debug from "debug"
 
 import * as Tokens from "./tokens"
 import { feedbackModule } from "@/feedback/store"
+import Axios from "axios"
+import { tokenService } from "@/services/TokenService"
 
 const log = debug("dash.plasma")
 
@@ -31,6 +33,7 @@ const initialState: PlasmaState = {
   networkId: "",
   chainId: "",
   endpoint: "",
+  historyUrl: "",
   // todo move these out of the state
   client: null, // createClient(configs.us1),
   web3: null,
@@ -61,6 +64,7 @@ const initialState: PlasmaState = {
   selectedToken: "",
   blockExplorer: "",
   loomGamesEndpoint: "",
+  history: [],
 }
 const builder = getStoreBuilder<HasPlasmaState>().module("plasma", initialState)
 const stateGetter = builder.state()
@@ -83,7 +87,8 @@ export const plasmaModule = {
   allowance: builder.dispatch(Tokens.allowance),
   approve: builder.dispatch(Tokens.approve),
   transfer: builder.dispatch(Tokens.transfer),
-  // addTokens: builder.dispatch(Tokens.addContract),
+
+  refreshHistory: builder.dispatch(refreshHistory),
 
   addCoinState: builder.commit(Tokens.addCoinState),
 
@@ -118,7 +123,8 @@ function createClient(env: { chainId: string; endpoint: string }) {
 }
 
 /**
- * on identify change set signer, configure client with signer middleware
+ * On identity change set signer
+ * configure client with signer middleware
  * reinitialise loom provider and web3 for contracts
  * @param ctx
  * @param id
@@ -149,7 +155,6 @@ async function changeIdentity(
 
 }
 
-// getter but async so I guess it's an action according to vuex
 /**
  * - if we have a signer use it's address (connected wallet case)
  * - if just address, use that (explorer case, readonly)
@@ -182,4 +187,54 @@ function getPublicAddressFromPrivateKeyUint8Array(
     publicKeyUint8Array,
   ).toString()
   return publicAddress
+}
+
+/**
+ *
+ * @param context
+ */
+async function refreshHistory(context: PlasmaContext) {
+  // FIXME indexer is called with the signers address (eth:)
+  // and does not return the sane data if called woth loom address
+  // so this won't work if we have no signer and only use the account's loom address
+  const address = await getCallerAddress(context)
+  const indexerUrl = context.state.historyUrl.replace("{address}", address.toString())
+
+  // `${dappChainEventUrl}/eth:${currentMetamaskAddress}?sort=-block_height`,
+  Axios.get(indexerUrl)
+    .then((response) => {
+      context.state.history = (response.data.txs || [])
+        .map((item) => {
+          const tokenInfo = tokenService.tokenFromAddress(
+            item.token_contract.replace("eth:", "").toLowerCase(),
+            "ethereum")
+          const token = tokenInfo ? tokenInfo.symbol : "Unknown token"
+          console.log(item)
+          return {
+            type: item.topic,
+            amount: new BN(item.token_amount || "0"),
+            token,
+            blockNumber: item.block_height,
+          }
+        })
+    })
+    .catch((e) => console.error("Error loading plasma history. " + e.message))
+  // example entry
+  // {
+  //   "id": 5640,
+  //   "created_at": "2019-05-08T04:17:08Z",
+  //   "updated_at": "2019-05-08T04:17:30Z",
+  //   "block_height": 4699351,
+  //   "block_time": 1557289028,
+  //   "tx_hash": "",
+  //   "tx_index": 0,
+  //   "token_owner": "eth:0xff7c1A7d2878d2cc6E7C2b7eF8Dcb615F620184a",
+  //   "token_contract": "eth:0xA4E8C3eC456107ea67D3075bf9e3df3a75823Db0",
+  //   "token_kind": 4,
+  //   "token_amount_raw": "DeC2s6dkAAA=",
+  //   "token_amount": "1000000000000000000",
+  //   "signature": null,
+  //   "status": 1,
+  //   "topic": "event:MainnetWithdrawalEvent"
+  // }
 }

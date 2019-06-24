@@ -244,6 +244,58 @@ export async function ethereumWithdraw(context: ActionContext, token: string) {
   await gateway.withdraw(receipt)
 }
 
+export async function refreshEthereumHistory(context: ActionContext) {
+  const ethereum = context.rootState.ethereum
+  const cached = ethereum.history
+  const { mainGateway, loomGateway } = service()
+
+  const fromBlock = cached.length ? cached[0].blockNumber : 0
+
+  // @ts-ignore
+  loomGateway.getPastEvents(
+    "ERC20Received",
+    {
+      filter: {
+        from: ethereum.address,
+      },
+      fromBlock,
+      toBlock: "latest",
+    },
+    (e, results) => {
+      const entries = results.reverse().map((entry) => ({
+        type: "ERC20Received",
+        blockNumber: entry.blockNumber,
+        transactionHash: entry.transactionHash,
+        amount: new BN(entry.returnValues.amount),
+        token: "LOOM",
+      }))
+      ethereum.history.push(...entries)
+    })
+
+  // @ts-ignore
+  loomGateway.getPastEvents(
+    "TokenWithdrawn",
+    {
+      filter: {
+        owner: ethereum.address,
+      },
+      fromBlock,
+      toBlock: "latest",
+    },
+    (e, results) => {
+      const entries = results.reverse().map((entry) => ({
+        type: "TokenWithdrawn",
+        blockNumber: entry.blockNumber,
+        transactionHash: entry.transactionHash,
+        amount: new BN(entry.returnValues.amount),
+        token: "LOOM",
+      }))
+      ethereum.history.push(...entries)
+      console.log(entries)
+    })
+
+}
+
 /**
  * WARNING: keep order the same as {loom-js/dist/contracts/transfer-gateway/GatewayTokenKind}
  */
@@ -303,3 +355,5 @@ async function createWithdrawalHash(
     [prefix, ethAddress, nonce, gatewayAddress, amountHashed],
   )
 }
+
+const example = { address: "0xEA319a0Ea64f482060032b4BE8d9d3F7232c1214", blockHash: "0x65a1e36ad1e50963bb18d8365caa2ecd1e3921a6d58fdf3720ccc41ca4abb005", blockNumber: 4420430, logIndex: 5, removed: false, transactionHash: "0xa4c077281a5e979dfdd116483f92b5fe0535bff53d222e9477c1464c2c399759", transactionIndex: 4, id: "log_9d144686", returnValues: { 0: "0x611e9CDFf7a7635C87EE5D6F7693Dc5C5018B5d2", 1: "10000000000000000000", 2: "0x425532c6a0b0327bbD702AD7a1aB618b1E86289D", from: "0x611e9CDFf7a7635C87EE5D6F7693Dc5C5018B5d2", amount: "10000000000000000000", contractAddress: "0x425532c6a0b0327bbD702AD7a1aB618b1E86289D" }, event: "ERC20Received", signature: "0xa13cf347fb36122550e414f6fd1a0c2e490cff76331c4dcc20f760891ecca12a", raw: { data: "0x000000000000000000000000611e9cdff7a7635c87ee5d6f7693dc5c5018b5d20000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000425532c6a0b0327bbd702ad7a1ab618b1e86289d", topics: ["0xa13cf347fb36122550e414f6fd1a0c2e490cff76331c4dcc20f760891ecca12a"] } }

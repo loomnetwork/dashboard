@@ -1,18 +1,22 @@
 <template>
   <b-modal
-  id="deposit-binance"
-  lazy
-  @hidden="resetModal"
-  v-model="visible"
-  no-close-on-esc
-  no-close-on-backdrop
-  :hide-header-close="step === 3">
+    id="deposit-binance"
+    lazy
+    @hidden="resetModal"
+    v-model="visible"
+    no-close-on-esc
+    no-close-on-backdrop
+    :hide-header-close="step === 3"
+  >
     <!-- <template slot="modal-title">Deposit</template> -->
     <div class="deposit-container">
       <h3>{{ title }}</h3>
       <span class="step" v-if="step <= 2">Step {{ step }} of 2</span>
       <div class="content" v-if="step === 1">
-        <div class="description">Please go to <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form</div>
+        <div class="description">
+          Please go to
+          <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form
+        </div>
         <div class="deposit-form">
           <p>Send Asset</p>
           <div class="flex-row my-4">
@@ -22,7 +26,7 @@
           <p>Select Asset</p>
           <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
           <p>Gateway Address</p>
-          <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled ></b-form-input>
+          <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled></b-form-input>
           <p>Amount to send</p>
           <b-form-input placeholder="Amount" :value="0" disabled></b-form-input>
           <p>Memo</p>
@@ -35,11 +39,13 @@
       </div>
       <div class="content mb-3" v-else-if="step === 2">
         <p>Transaction hash from</p>
-        <a href="https://testnet.binance.org/en/transactionHistory">https://testnet.binance.org/en/transactionHistory</a>
+        <a
+          href="https://testnet.binance.org/en/transactionHistory"
+        >https://testnet.binance.org/en/transactionHistory</a>
         <b-form-input v-model="txHash" placeholder="txHash"></b-form-input>
       </div>
       <div class="content" v-else-if="step === 3">
-        <img src="../../assets/loomy-running.gif" class="loomy_running" alt="">
+        <img src="../../assets/loomy-running.gif" class="loomy_running" alt>
         <h4>Please be patient, Loomy is on it!</h4>
         <h4 style="color: #919598;">This may take several minutes.</h4>
         <h4 style="color: #e11f61;">Please don't close or refresh your browser!</h4>
@@ -72,20 +78,20 @@ export default class DepositBinance extends Vue {
       { value: "loom", text: "LOOM LOOM-Token", disabled: true },
     ],
     gateway: "something",
-    memo: "loom00000"
+    memo: "loom00000",
   }
 
   get state(): DashboardState {
     return this.$store.state
   }
 
-  get transferRequestState() {
-    return this.state.gateway.TransferRequestState
+  get transferRequest() {
+    return this.state.gateway.transferRequest
   }
 
   get visible() {
-    return this.transferRequestState.chain === "binance"
-          && this.transferRequestState.type === "DEPOSIT"
+    return this.transferRequest.chain === "binance"
+      && this.transferRequest.type === "DEPOSIT"
   }
   get title() {
     return this.step === 4 ? "Success" : "Deposit to Plasmachain from Binance"
@@ -169,7 +175,7 @@ p {
   margin: 1.5em 0;
   width: 100%;
   padding: 0 1em 1em 1em;
-  background-color: rgba(240,185,11,0.08);
+  background-color: rgba(240, 185, 11, 0.08);
   border-radius: 8px;
   box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0;
 }

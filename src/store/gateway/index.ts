@@ -25,10 +25,10 @@ function initialState(): GatewayState {
     showDepositConfirmed: false,
     showWithdrawForm: false,
     showWithdrawProgress: false,
-    TransferRequestState: {
-      type: null,
-      chain: null,
-      token: null,
+    transferRequest: {
+      type: "",
+      chain: "",
+      token: "",
     },
     withdrawStates: [
       { text: "Checking for pre-existing receipts...", isComplete: false },
@@ -68,7 +68,8 @@ export const gatewayModule = {
 
   // mutations
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
-  setTransferRequestState: builder.commit(mutations.setTransferRequestState),
+  setTransferRequest: builder.commit(mutations.setTransferRequestState),
+  clearTransferRequest: builder.commit(mutations.clearTransferRequest),
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),
   setShowWithdrawForm: builder.commit(mutations.setShowWithdrawForm),

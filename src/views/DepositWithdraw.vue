@@ -18,13 +18,13 @@
             <b-button
               class="button"
               variant="outline-primary"
-              @click="showSelectChainModal(DEPOSIT, symbol)"
+              @click="requestCrossChainTranfer(DEPOSIT, symbol)"
             >Deposit</b-button>
             <b-button
               class="button"
               variant="outline-primary"
               :disabled="disableWithdraw || plasma.coins[symbol].balance.isZero()"
-              @click="showSelectChainModal(WITHDRAW, symbol)"
+              @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
               <span>Withdraw</span>
               <b-spinner
@@ -52,7 +52,7 @@
     <add-token-modal @refreshTokenList="filterTokens"/>
     <DepositForm :token="selectedToken"/>
     <WithdrawForm :token="selectedToken"/>
-    <SelectChainModal />
+    <SelectChainModal/>
     <DepositBinance/>
   </main>
 </template>
@@ -95,7 +95,6 @@ export default class DepositWithdraw extends Vue {
   WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
-  setTransferRequestState = gatewayModule.setTransferRequestState
   showError = feedbackModule.showError
 
   selectedToken = "LOOM"
@@ -147,15 +146,12 @@ export default class DepositWithdraw extends Vue {
    * set selected token to component state
    * then show selectChain modal
    */
-  showSelectChainModal(type: string, token: string) {
+  requestCrossChainTranfer(type: string, token: string) {
     this.selectChainModalType = type
     this.selectedToken = token
-    if (this.state.chains.length === 1) {
-      this.setTransferRequestState({ chain: this.state.chains[0], type, token })
-
-    } else {
-      this.setTransferRequestState({ chain: null, type, token })
-    }
+    console.log("dss", this.state.chains)
+    const chain = this.state.chains.length === 1 ? this.state.chains[0] : ""
+    gatewayModule.setTransferRequest({ chain, type, token })
   }
 
   requestSwap(token: string) {

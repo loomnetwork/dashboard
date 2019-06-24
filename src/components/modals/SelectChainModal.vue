@@ -1,12 +1,6 @@
 <template>
-  <b-modal
-  lazy
-  id="select-chain-modal"
-  v-model="visible"
-  hide-footer>
-    <template slot="modal-title">
-        {{ title }}
-    </template>
+  <b-modal lazy id="select-chain-modal" v-model="visible" hide-footer>
+    <template slot="modal-title">{{ title }}</template>
     <template slot="modal-header-close">
       <button type="button" class="close" aria-label="Close" @click="resetModal">
         <span aria-hidden="true">&times;</span>
@@ -14,12 +8,9 @@
     </template>
     <b-form-group label="From">
       <div class="button-group">
-        <div class="chain-option"
-          v-for="chain in chainsList" :key="chain"
-          @click="onSelect(chain)"
-        >
+        <div class="chain-option" v-for="chain in chains" :key="chain" @click="onSelect(chain)">
           <p>{{ chain | capitalizeWord }}</p>
-          <img :src="`../../assets/${chain}_logo.png`" class="logo" alt="">
+          <img :src="`../../assets/${chain}_logo.png`" class="logo" alt>
         </div>
       </div>
     </b-form-group>
@@ -37,21 +28,20 @@ export default class SelectChainModal extends Vue {
   @Prop(String) type!: "DEPOSIT" | "WITHDRAW"
   @Prop(String) token!: string
 
-  setTransferRequestState = gatewayModule.setTransferRequestState
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
 
-  get transferRequestState() {
-    return this.state.gateway.TransferRequestState
+  get transferRequest() {
+    return this.state.gateway.transferRequest
   }
 
   get visible() {
-   return !this.transferRequestState.chain && this.transferRequestState.type
+    return this.transferRequest.type !== "" && this.transferRequest.chain === ""
   }
 
   get title() {
-    if (this.transferRequestState.type) {
-      return capitalize(this.transferRequestState.type.toLowerCase())
+    if (this.transferRequest.type) {
+      return capitalize(this.transferRequest.type.toLowerCase())
     }
   }
 
@@ -59,21 +49,19 @@ export default class SelectChainModal extends Vue {
     return this.$store.state
   }
 
-  get chainsList(): string[] {
-    const chains = this.state.chains
-    const disabled = this.state.disabled
-    return chains.filter((chainName) => chains.includes(chainName) && !disabled.includes(chainName))
+  get chains(): string[] {
+    return this.state.chains
   }
 
   onSelect(chain: string) {
-    this.setTransferRequestState({
-      type: this.transferRequestState.type,
+    gatewayModule.setTransferRequest({
+      type: this.transferRequest.type,
       chain,
-      token: this.transferRequestState.token,
+      token: this.transferRequest.token,
     })
   }
   resetModal() {
-    this.setTransferRequestState({ chain: null, type: null, token: null })
+    gatewayModule.clearTransferRequest()
   }
 }
 </script>

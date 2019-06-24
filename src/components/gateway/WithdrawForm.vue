@@ -68,7 +68,6 @@ export default class WithdrawForm extends Vue {
 
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   setShowWithdrawProgress = gatewayModule.setShowWithdrawProgress
-  setTransferRequestState = gatewayModule.setTransferRequestState
   beginWithdrawal = gatewayModule.plasmaWithdraw
 
   get state(): DashboardState {
@@ -79,19 +78,19 @@ export default class WithdrawForm extends Vue {
     return this.state.plasma.coins[this.token].balance
   }
 
-  get transferRequestState() {
-    return this.state.gateway.TransferRequestState
+  get transferRequest() {
+    return this.state.gateway.transferRequest
   }
 
   get visible() {
-    return this.transferRequestState.type === "WITHDRAW"
-          && this.transferRequestState.token
-          && this.transferRequestState.chain === "ethereum"
+    return this.transferRequest.type === "WITHDRAW"
+      && this.transferRequest.token !== ""
+      && this.transferRequest.chain === "ethereum"
   }
 
   set visible(value) {
     if (value === false) {
-      this.setTransferRequestState({ chain: null, type: null, token: null })
+      gatewayModule.clearTransferRequest()
     }
   }
 

@@ -17,6 +17,8 @@ const log = debug("dash.gateway")
 
 function initialState(): GatewayState {
   return {
+    multisig: false,
+    chains: [],
     mapping: null,
     withdrawalReceipts: null,
     pendingTransactions: [],
@@ -68,8 +70,9 @@ export const gatewayModule = {
   createMapping: builder.dispatch(Mapper.createMapping),
 
   // mutations
+  setConfig: builder.commit(mutations.setConfig),
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
-  setTransferRequest: builder.commit(mutations.setTransferRequestState),
+  setTransferRequest: builder.commit(mutations.setTransferRequest),
   clearTransferRequest: builder.commit(mutations.clearTransferRequest),
   setShowDepositApproved: builder.commit(mutations.setShowDepositApproved),
   setShowDepositConfirmed: builder.commit(mutations.setShowDepositConfirmed),

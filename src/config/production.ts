@@ -33,6 +33,7 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
+    multisig: false,
   },
   coinDataUrl: "https://auth.loom.games/wallet/tokens",
   disabled: ["transfer-asset", "binance", "dev-deploy"],

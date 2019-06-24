@@ -38,6 +38,7 @@ import "./plasma/assets"
 
 import { plasmaReactions } from "./plasma/reactions"
 import { dposModule } from "@/dpos/store"
+import { gatewayModule } from "./gateway"
 
 const log = debug("dash")
 
@@ -51,6 +52,7 @@ const dashboardStore = {
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
     dposModule.setConfig(env.dpos)
+    gatewayModule.setConfig(env.gateway)
     log("tokensService", env.coinDataUrl)
     tokenService.setBaseURL(env.coinDataUrl)
     state.disabled = env.disabled

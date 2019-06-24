@@ -26,6 +26,7 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
+    multisig: true,
   },
   coinDataUrl: "",
   disabled: [],

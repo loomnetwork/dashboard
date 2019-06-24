@@ -1,7 +1,6 @@
 import BN from "bn.js"
 
 import Web3 from "web3"
-import { Contract } from "web3-eth-contract"
 
 import { Gateway } from "./contracts/Gateway"
 import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
@@ -15,12 +14,16 @@ import { feedbackModule as fb } from "@/feedback/store"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
 // XXX
-import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
+import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
 import { CryptoUtils } from "loom-js"
 import { parseSigs } from "loom-js/dist/helpers"
 import { ethers } from "ethers"
 import { AbiItem } from "web3-utils"
+
+import debug from "debug"
+
+const log = debug("dash.gateway")
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -36,7 +39,7 @@ interface EthereumGatewayAdapter {
 
 class ERC20GatewayAdapter implements EthereumGatewayAdapter {
   constructor(
-    private vmc: ValidatorManagerContract,
+    private vmc: ValidatorManagerContract | null,
     readonly contract: ERC20Gateway_v2 | Gateway,
     readonly tokenAddress: string,
     readonly token: string,
@@ -54,13 +57,25 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
   }
 
   async withdraw(receipt: IWithdrawalReceipt) {
-    const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
-    const { valIndexes, vs, ss, rs } = decodedSig
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
-    const result = this.contract.methods
-      .withdrawERC20(amount, this.tokenAddress, valIndexes, vs, rs, ss)
-      .send({ from: localAddress })
+    const tokenAddress = this.tokenAddress
+    let result
+    // multisig
+    if (this.vmc) {
+      const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
+      const { valIndexes, vs, ss, rs } = decodedSig
+      result = this.contract.methods
+        .withdrawERC20(amount, tokenAddress, valIndexes, vs, rs, ss)
+        .send({ from: localAddress })
+    } else {
+      const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
+      // @ts-ignore
+      result = this.contract.methods
+        .withdrawERC20(amount, signature, tokenAddress)
+        .send({ from: localAddress })
+    }
+
     result.then((tx) => {
       localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
       localStorage.setItem(
@@ -79,7 +94,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
   token = "ETH"
 
   constructor(
-    private vmc: ValidatorManagerContract,
+    private vmc: ValidatorManagerContract | null,
     readonly contract: Gateway,
     readonly tokenAddress: string,
     readonly web3: Web3,
@@ -94,16 +109,23 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
   }
 
   async withdraw(receipt: IWithdrawalReceipt) {
-    const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
-    const { valIndexes, vs, ss, rs } = decodedSig
-    const amount = receipt.tokenAmount!
-    return this.contract.methods.withdrawETH(
-      amount.toString(),
-      valIndexes,
-      vs,
-      ss,
-      rs,
-    )
+    // multisig
+    if (this.vmc) {
+      const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
+      const { valIndexes, vs, ss, rs } = decodedSig
+      const amount = receipt.tokenAmount!
+      return this.contract.methods.withdrawETH(
+        amount.toString(),
+        valIndexes,
+        vs,
+        ss,
+        rs,
+      )
+    } else {
+      // @ts-ignore
+      this.contract.methods.withdrawETH(amount.toString(), receipt.oracleSignature)
+    }
+
   }
 }
 
@@ -111,22 +133,31 @@ let instance: EthereumGateways | null = null
 export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
+  multisig: boolean,
 ) {
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI_v2 as AbiItem[],
     addresses.loomGateway,
-  )
-  // TODO: Move to config
+  ) as ERC20Gateway_v2
+  log("loom gateway initialized")
   const mainGateway = new web3.eth.Contract(
     GatewayABI as AbiItem[],
-    addresses.mainGateway, // "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
+    addresses.mainGateway,
   )
-  const vmcAddress = await loomGateway.methods.vmc().call()
-  const vmcContract = new web3.eth.Contract(
-    ValidatorManagerContractABI,
-    vmcAddress,
-  )
-
+  log("main gateway initialized")
+  let vmcContract = null
+  if (multisig) {
+    log("Assuming multisig gateways")
+    const vmcAddress = await loomGateway.methods.vmc().call()
+    log("vmc address", vmcAddress)
+    vmcContract = new web3.eth.Contract(
+      ValidatorManagerContractABI,
+      vmcAddress,
+    )
+    log("vmc initialized")
+  } else {
+    log("Assuming oracle sig gateways")
+  }
   instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
   return instance
 }
@@ -140,10 +171,18 @@ export function service() {
  */
 class EthereumGateways {
   private adapters = new Map<string, EthereumGatewayAdapter>()
+
+  /**
+   *
+   * @param mainGateway
+   * @param loomGateway
+   * @param vmc null if not multisig
+   * @param web3
+   */
   constructor(
     readonly mainGateway: Gateway,
     readonly loomGateway: ERC20Gateway_v2,
-    readonly vmc: ValidatorManagerContract,
+    readonly vmc: ValidatorManagerContract | null,
     readonly web3: Web3,
   ) { }
 

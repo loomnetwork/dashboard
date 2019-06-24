@@ -27,5 +27,8 @@ export default {
   coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
   disabled: ["binance"],
   chains: ["ethereum"],
-  gateway: { chains: ["ethereum"] },
+  gateway: {
+    chains: ["ethereum"],
+    multisig: true,
+  },
 } as DashboardConfig

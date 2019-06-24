@@ -26,6 +26,9 @@ export default {
 </script>
 
 <style lang="scss">
+button {
+  text-transform: capitalize !important;
+}
 @media (max-width: 767px) {
   body {
     background: #9e9e9e12;

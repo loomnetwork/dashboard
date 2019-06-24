@@ -39,7 +39,7 @@ export function showAlert(state: FeedbackState, { title, message }) {
     state.alert.message = message
 }
 
-export function requireConfirmation(state: FeedbackState, { title, message, onConfirm}) {
+export function requireConfirmation(state: FeedbackState, { title, message, onConfirm }) {
     state.alert.type = "confirmation"
     state.alert.title = title
     state.alert.message = message

@@ -17,7 +17,7 @@ export default {
     endpoint: "https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0",
     blockExplorer: "https://etherscan.com",
     contracts: {
-      gateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
+      mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
       loomGateway: "0x8f8e8b3c4de76a31971fe6a87297d8f703be8570",
     },
   },

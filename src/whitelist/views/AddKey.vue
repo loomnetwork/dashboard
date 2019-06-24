@@ -50,7 +50,7 @@
             </div>
             <b-collapse :id="pk.hex">
               <div class="collapse-content">
-                Something
+            {{deployedContract[pk.hex]}}
               </div>
             </b-collapse>
           </b-list-group-item>
@@ -200,6 +200,10 @@ export default class AddKey extends Vue {
     return this.state.userDeployersAddress
   }
 
+  get deployedContract() {
+    return this.state.deployedContractAddress
+  }
+
   async addKey(tier: ITier) {
     if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance)) {
       this.showError("Your balance isn't enough. Please deposit first.")
@@ -235,6 +239,10 @@ export default class AddKey extends Vue {
       feedbackModule.showSuccess("Address copied."),
       console.error,
     )
+  }
+
+  async getDeployedContract(deployerAddress: Address) {
+    await whiteListModule.getDeployedContractAddresses({deployerAddress})
   }
 
   goDeposit() {

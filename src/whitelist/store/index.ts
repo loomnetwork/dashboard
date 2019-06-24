@@ -169,6 +169,10 @@ async function getDeployedContractAddresses(context: WhiteListContext, payload: 
 
   try {
     contractAddresses = await contract.getDeployedContractsAsync(payload.deployerAddress)
+    log("deployed contract addresses", contractAddresses)
+    whiteListModule.setDeployedContractAddress({
+      deployerAddress: payload.deployerAddress.local.toString(),
+      deployedContractAddress: contractAddresses})
   } catch (error) {
     log("getDeployedContractsAsync error", error)
   }

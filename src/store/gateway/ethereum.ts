@@ -124,8 +124,9 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
         rs,
       )
     } else {
+      const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
       // @ts-ignore
-      this.contract.methods.withdrawETH(amount.toString(), receipt.oracleSignature)
+      this.contract.methods.withdrawETH(amount.toString(), signature)
     }
 
   }

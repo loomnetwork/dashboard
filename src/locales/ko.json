@@ -312,5 +312,11 @@
         "pending": "처리 중"
       }
     }
+  },
+  "events": {
+    "ERC20Received": "Deposit",
+    "event:MainnetDepositEvent": "Deposit",
+    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "event:TokenWithdrawalSigned": "Withdrawal signed"
   }
 }

@@ -17,7 +17,7 @@ export default {
     endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
-      gateway: "0xe57e0793f953684bc9d2ef3d795408afb4a100c3",
+      mainGateway: "0xe57e0793f953684bc9d2ef3d795408afb4a100c3",
       loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
   },
@@ -26,7 +26,7 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
-    multisig: true,
+    multisig: false,
   },
   coinDataUrl: "",
   disabled: [],

@@ -24,7 +24,7 @@ export default {
   dpos: {
     bootstrapNodes: ["0x0e99fc16e32e568971908f2ce54b967a42663a26"],
   },
-  coinDataUrl: "https://stage-auth.loom.games/wallet/tokens",
+  coinDataUrl: "https://dev-auth.loom.games/wallet/tokens",
   disabled: ["binance"],
   chains: ["ethereum"],
   gateway: {

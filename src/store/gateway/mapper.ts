@@ -62,7 +62,7 @@ export async function createMapping(context: ActionContext) {
   const ethAddress = getRequired(state.mapping, "mapping").from
   // @ts-ignore, bignumber changed between version
   const ethSigner = new EthersSigner(signer)
-  const plasmaId = generateNewId()
+  const plasmaId = generateNewId(context.rootState.plasma.chainId)
   console.log("caller", caller)
 
   const { address, client } = createDefaultClient(

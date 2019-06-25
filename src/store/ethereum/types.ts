@@ -26,11 +26,6 @@ export interface EthereumState extends EthereumConfig {
   address: string
   signer: ethers.Signer | null
   walletType: string
-  // config: erc20 contracts addresses
-  erc20Addresses: {
-    LOOM: string
-    [erc20Symbol: string]: string,
-  }
   balances: {
     [erc20Symbol: string]: BN,
   }

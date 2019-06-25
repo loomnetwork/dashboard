@@ -162,7 +162,10 @@ async function getDeployers(context: WhiteListContext) {
     log("getDeployersAsync error", error)
     deployerAddresses = []
   }
+  const deployedContractAddress = {}
+  deployerAddresses.forEach((address) => { deployedContractAddress[address.hex] = [] })
   mutations.setUserDeployersAddress(context.state, deployerAddresses)
+  mutations.setDefaultDeployedContractAddress(context.state, deployedContractAddress)
 }
 
 /**
@@ -177,9 +180,11 @@ async function getDeployedContractAddresses(context: WhiteListContext, payload: 
   try {
     contractAddresses = await contract.getDeployedContractsAsync(payload.deployerAddress)
     log("deployed contract addresses", contractAddresses)
+    const Addresses = contractAddresses.map((addr) => addr.address.local.toString())
     whiteListModule.setDeployedContractAddress({
       deployerAddress: payload.deployerAddress.local.toString(),
-      deployedContractAddress: contractAddresses})
+      deployedContractAddress: Addresses,
+    })
   } catch (error) {
     log("getDeployedContractsAsync error", error)
   }

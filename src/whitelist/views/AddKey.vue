@@ -42,7 +42,7 @@
           <b-list-group-item v-for="pk in publicKeys" :key="pk.hex" class="flex-column">
             <div class="flex-row my-2">
               <address class="key hex" v-if="keyViewMode === 'hex'">
-                <span @click="showCollapse(pk.hex)">{{pk.hex | loomAddress}}</span>
+                <span @click="showCollapse(pk)">{{pk.hex | loomAddress}}</span>
                 <fa icon="paste" @click="copyAddress(pk.hex)" class="icon-copy"/>
               </address>
               <div class="key" v-else>{{pk.base64}}</div>
@@ -50,7 +50,10 @@
             </div>
             <b-collapse :id="pk.hex">
               <div class="collapse-content">
-                {{deployedContract[pk.hex]}}
+                <p v-for="(addr, index) in deployedContract[pk.hex]" :key="addr">
+                  {{ index + 1 + ') ' + addr }}
+                </p>
+                <p v-if="deployedContract[pk.hex].length === 0">No contract deployed</p>
               </div>
             </b-collapse>
           </b-list-group-item>
@@ -253,8 +256,9 @@ export default class AddKey extends Vue {
     this.keyViewMode = "hex"
     await whiteListModule.getDeployers()
   }
-  showCollapse(key) {
-    this.$root.$emit("bv::toggle::collapse", key)
+  async showCollapse(pk) {
+    await this.getDeployedContract(pk.address)
+    this.$root.$emit("bv::toggle::collapse", pk.hex)
   }
 }
 </script>
@@ -267,6 +271,9 @@ main > section {
   background: #007bff0f;
   padding: 1em;
   border-radius: 4px;
+  p {
+    margin: 0;
+  }
 }
 .flex-row {
   display: flex;

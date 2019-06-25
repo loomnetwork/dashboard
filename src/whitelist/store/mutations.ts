@@ -1,6 +1,6 @@
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
-import { WhiteListState, DeployerAddress } from "./types"
-import { ITier, IDeployedContract } from "loom-js/dist/contracts/user-deployer-whitelist"
+import { WhiteListState, DeployerAddress, DeployedContractAddress } from "./types"
+import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
 
 export function setUserDeployerWhitelist(
   state: WhiteListState,
@@ -22,7 +22,13 @@ export function setDefaultTiers(state: WhiteListState, payload: ITier[]) {
 
 export function setDeployedContractAddress(
   state: WhiteListState,
-  payload: {deployerAddress: string, deployedContractAddress: IDeployedContract[]},
+  payload: {deployerAddress: string, deployedContractAddress: string[]},
 ) {
   state.deployedContractAddress[payload.deployerAddress] = payload.deployedContractAddress
+}
+
+export function setDefaultDeployedContractAddress(
+  state: WhiteListState, payload: DeployedContractAddress,
+) {
+  state.deployedContractAddress = payload
 }

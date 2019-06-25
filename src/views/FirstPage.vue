@@ -5,7 +5,7 @@
       <main>
         <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
         <div class="container-fluid mb-5 rmv-padding">
-          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" v-model="notMapped">
+          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" v-model="fromMarketplace">
             <div class="confirm-link text-center">
               <h3>Are you from Relentless Marketplace ?</h3>
               <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
@@ -37,6 +37,7 @@
               </div>
             </div>
           </b-modal>
+          <p>mapResult = {{ fromMarketplace }}</p>
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">
@@ -141,6 +142,8 @@ import LoomIcon from "@/components/LoomIcon.vue"
 import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
 
+import Axios from "axios"
+
 @Component({
   components: {
     ChainSelector,
@@ -157,6 +160,8 @@ export default class FirstPage extends Vue {
       (this.$state.ethereum.signer)
   }
   get newMappingAgree() { return this.$state.gateway.newMappingAgree }
+
+  get fromMarketplace() { return this.$state.gateway.fromMarketplace }
 
   loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
@@ -178,7 +183,9 @@ export default class FirstPage extends Vue {
   }
   set newMappingAgree(val) {
   }
-
+  set fromMarketplace(val) {
+  }
+  
   /* For Chrome & Firefox Browser
      if user dont have Metamask installed, there is no web3 that inject in their browser
      (except user install other extensions for crypto wallet (Ethereum platform))

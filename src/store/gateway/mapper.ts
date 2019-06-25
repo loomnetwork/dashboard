@@ -16,6 +16,8 @@ import { ActionContext } from "./types"
 import { createDefaultClient } from "loom-js/dist/helpers"
 import { feedbackModule } from "@/feedback/store"
 
+import axios from "axios"
+
 const log = debug("dash.mapper")
 
 export async function loadMapping(context: ActionContext, address: string) {
@@ -27,6 +29,8 @@ export async function loadMapping(context: ActionContext, address: string) {
     client,
     Address.fromString([chainId, caller].join(":")),
   )
+  // check if user mapping is from Relentless Marketplace
+  isUserFromMarketplace(address)
   try {
     log("getMappingAsync", `eth:${address}`)
     const mapping = await mapper.getMappingAsync(
@@ -99,4 +103,11 @@ function generateNewId(chainId = "default") {
   const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
   const address = new Address(chainId, LocalAddress.fromPublicKey(publicKey))
   return { address, privateKey, publicKey }
+}
+
+async function isUserFromMarketplace(address: string) {
+  const checkURL = `https://stage-auth.loom.games/wallet/address?address=${address}&wallet=eth`
+  await axios.get(checkURL).then((response) => {
+    console.log(`MAPRESULT from address ${address} => ${response.data.valid_address}`)
+  })
 }

@@ -37,7 +37,6 @@
               </div>
             </div>
           </b-modal>
-          <p>mapResult = {{ fromMarketplace }}</p>
           <b-card title="Select wallet">
             <div class="row wallet-provider-container">
               <div class="col-sm-12 col-md-6">

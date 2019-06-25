@@ -17,6 +17,8 @@ import { createDefaultClient } from "loom-js/dist/helpers"
 import { feedbackModule } from "@/feedback/store"
 
 import axios from "axios"
+import { state } from '../common';
+import { setFromMarketplace, setNewMappingAgree } from './mutations';
 
 const log = debug("dash.mapper")
 
@@ -30,7 +32,7 @@ export async function loadMapping(context: ActionContext, address: string) {
     Address.fromString([chainId, caller].join(":")),
   )
   // check if user mapping is from Relentless Marketplace
-  isUserFromMarketplace(address)
+  isUserFromMarketplace(context, address)
   try {
     log("getMappingAsync", `eth:${address}`)
     const mapping = await mapper.getMappingAsync(
@@ -74,7 +76,6 @@ export async function createMapping(context: ActionContext) {
     rootState.plasma.endpoint,
     rootState.plasma.chainId,
   )
-
   const mapper = await AddressMapper.createAsync(client, address)
   try {
     await mapper.addIdentityMappingAsync(
@@ -83,7 +84,6 @@ export async function createMapping(context: ActionContext) {
       ethSigner,
     )
     console.error("addIdentityMappingAsync ok  ")
-
     loadMapping(context, rootState.ethereum.address)
   } catch (e) {
     console.error(e)
@@ -105,9 +105,20 @@ function generateNewId(chainId = "default") {
   return { address, privateKey, publicKey }
 }
 
-async function isUserFromMarketplace(address: string) {
+async function isUserFromMarketplace(context: ActionContext, address: string) {
+  /* Check if user already have mapping, return in valid_address
+    if valid_address = false, There is a possibility that users have logged in marketplace with wallet before.
+    otherwise, it's assume that user is newcomer so new mapping will be create
+  */
+
+  // https://dev-auth.loom.games always return 'valid_address' as true no matter what address is
+  // So url will be change later
   const checkURL = `https://stage-auth.loom.games/wallet/address?address=${address}&wallet=eth`
   await axios.get(checkURL).then((response) => {
-    console.log(`MAPRESULT from address ${address} => ${response.data.valid_address}`)
+    console.log("RESPONSE Valid_address = ", response.data.valid_address)
+    setFromMarketplace(context.state, !response.data.valid_address)
+    setTimeout(() => {
+      setNewMappingAgree(context.state, response.data.valid_address)
+    }, 2000)
   })
 }

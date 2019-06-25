@@ -1,7 +1,7 @@
 import "mocha"
-import { requestRedelegation } from ".."
+import { requestRedelegation, redelegate } from ".."
 import { defaultState, fromIDelegation } from "../helpers"
-import { ICandidate } from "loom-js/dist/contracts/dpos3"
+import { ICandidate, DPOS3 } from "loom-js/dist/contracts/dpos3"
 import { Address, CryptoUtils } from "loom-js"
 import { LocktimeTier, CandidateState, DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import { ZERO } from "@/utils"
@@ -10,6 +10,23 @@ import { expect } from "chai"
 import { DPOSState, Delegation, Validator } from "../types"
 import BN from "bn.js"
 import sinon from "sinon"
+import { emptyValidator, feedback } from "./_helpers"
+
+function dummyDelegation(validator) {
+  return fromIDelegation({
+    amount: new BN(1000),
+    updateAmount: new BN(1000),
+    index: 1,
+    state: DelegationState.BONDED,
+    delegator: Address.fromString("default:0x" + "".padEnd(40, "0")),
+    lockTime: 0,
+    lockTimeTier: 0,
+    validator: validator.address,
+    referrer: "",
+  },
+    // @ts-ignore
+    [validator])
+}
 
 describe("Redelegation", () => {
   describe("requestRedelegation", () => {
@@ -58,7 +75,57 @@ describe("Redelegation", () => {
   })
 
   describe("redelegate", () => {
-    it.skip("calls DPOS.redelegateAsync")
+    const dpos3Stub = sinon.createStubInstance(DPOS3)
+    let state: DPOSState
+
+    before(() => {
+      state = defaultState()
+      dpos3Stub.redelegateAsync.resolves()
+      // @ts-ignore
+      state.contract = dpos3Stub
+      state.delegation = dummyDelegation(emptyValidator())
+      state.delegation.updateValidator = {
+        address: Address.fromString("default:0x" + "".padEnd(40, "0")),
+        pubKey: new Uint8Array(),
+        delegationTotal: ZERO,
+        slashPercentage: ZERO,
+        whitelistAmount: ZERO,
+        whitelistLocktimeTier: LocktimeTier.TIER_ONE,
+        fee: ZERO,
+        newFee: ZERO,
+        candidateState: CandidateState.REGISTERED,
+        name: "",
+        description: "",
+        website: "",
+        stakedAmount: ZERO,
+        delegations: [],
+        totalStaked: ZERO,
+        isBootstrap: false,
+        active: true,
+        addr: "",
+        setCandidateData: () => {},
+        setValidatorData: () => {},
+      }
+      // @ts-ignore
+      redelegate({
+        state,
+      }, state.delegation)
+    })
+
+    it("calls DPOS.redelegateAsync", () => {
+      const d = state.delegation!
+      sinon.assert.calledOnce(dpos3Stub.redelegateAsync)
+      sinon.assert.calledWith(dpos3Stub.redelegateAsync,
+        d.validator.address, d.updateValidator!.address, d.updateAmount, d.index)
+    })
+    it("notifies feedback module", () => {
+      sinon.assert.callOrder(
+        feedback.setTask,
+        feedback.setStep,
+        dpos3Stub.redelegateAsync,
+        feedback.endTask,
+      )
+    })
     it.skip("sends delegation.updateValidator.address as address")
     it.skip("sends delegation.updateAmount as amount to redelegate")
     it.skip("sends delegation.index as index")

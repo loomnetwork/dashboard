@@ -28,10 +28,10 @@ import { DashboardState } from "@/types"
 @Component
 export default class HistoryEvent extends Vue {
 
-  etherScanUrl = `${this.state.ethereum.blockExplorer}/tx/${this.event.transactionHash}`
-
   @Prop({ required: true })
   event: any
+  etherScanUrl = `${this.state.ethereum.blockExplorer}/tx/${this.event.transactionHash}`
+
   get state(): DashboardState {
     return this.$store.state
   }

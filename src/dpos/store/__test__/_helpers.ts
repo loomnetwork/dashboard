@@ -2,6 +2,8 @@ import { ZERO } from "@/utils"
 import { LocktimeTier, CandidateState, DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import { Address, CryptoUtils } from "loom-js"
 import { fromIDelegation } from "../helpers"
+import { feedbackModule } from "@/feedback/store"
+import sinon from "sinon"
 
 export function emptyValidator() {
     return {
@@ -20,3 +22,4 @@ export function emptyValidator() {
     }
 }
 
+export const feedback = sinon.stub(feedbackModule)

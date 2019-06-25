@@ -11,8 +11,7 @@ import { expect } from "chai"
 import { DPOSState, Delegation } from "../types"
 
 import sinon from "sinon"
-import { feedbackModule } from "@/feedback/store"
-import { emptyValidator } from "./_helpers"
+import { emptyValidator, feedback } from "./_helpers"
 
 function dummyDelegation(validator) {
   return fromIDelegation({
@@ -79,7 +78,6 @@ describe("Undelegate", () => {
 
   describe("undelegate()", () => {
     const dpos3Stub = sinon.createStubInstance(DPOS3)
-    const feedback = sinon.stub(feedbackModule)
     let state: DPOSState
     before(() => {
       state = defaultState()

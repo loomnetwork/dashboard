@@ -25,7 +25,7 @@
       <div v-if="status === 'default'">
         <b-btn @click="close()">Cancel</b-btn>
         <span style="flex:1"></span>
-        <b-btn @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
+        <b-btn class="ml-2" @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
       </div>
       <div v-else>
         <span style="flex:1"></span>

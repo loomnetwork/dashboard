@@ -4,7 +4,11 @@
       <h1>Game Assets</h1>
       <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <b-alert :show="showHelp" fade>Please refer to the FAQ</b-alert>
+    <b-alert :show="showHelp" fade>
+      Check your Relentless assets (more coming soon)
+      <hr>
+      <span><b>Transfer</b> : Transfer assets to other addresses </span>
+    </b-alert>
     <Account/>
     <section>
       <Packs/>

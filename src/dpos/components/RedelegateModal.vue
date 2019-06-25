@@ -9,25 +9,32 @@
     no-close-on-backdrop
     no-close-on-esc
   >
-    <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
-    <strong>To</strong>
-    <div class="dropdown-container mb-4" v-if="delegation">
-      <v-autocomplete
-        class="mb-4"
-        placeholder="Please select a validator"
-        :items="filteredTargetItems"
-        :get-label="getLabel"
-        :component-item="dropdownTemplate"
-        @item-selected="selectTargetItem"
-        @update-items="updateTargetItems"
-        :min-len="0"
-      ></v-autocomplete>
-    </div>
-    <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>
-    <div class="row">
-      <div class="col btn-container">
-        <b-button id="submitBtn" class="px-5 py-2" variant="primary" @click="redelegate">Redelegate</b-button>
+    <div v-if="visible">
+      <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
+      <strong>To</strong>
+      <div class="dropdown-container mb-4" v-if="delegation">
+        <v-autocomplete
+          class="mb-4"
+          placeholder="Please select a validator"
+          :items="filteredTargetItems"
+          :get-label="getLabel"
+          :component-item="dropdownTemplate"
+          @item-selected="selectTargetItem"
+          @update-items="updateTargetItems"
+          :min-len="0"
+        ></v-autocomplete>
       </div>
+      <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>
+      <footer class="row">
+        <div class="col btn-container">
+          <b-button
+            id="submitBtn"
+            class="px-5 py-2"
+            variant="primary"
+            @click="redelegate"
+          >Redelegate</b-button>
+        </div>
+      </footer>
     </div>
   </b-modal>
 </template>
@@ -114,6 +121,7 @@ export default class RedelegateModal extends Vue {
   }
 
   updateTargetItems(query = "") {
+    if (!this.visible) return []
     const validators = this.validators
     const origin = this.delegation!.validator
     const str = query.toLowerCase()

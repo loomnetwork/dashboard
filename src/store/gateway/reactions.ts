@@ -36,7 +36,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         return
       } else if (mapping.to!.isEmpty() === false) {
         await setPlasmaAccount(mapping)
-        await initializeGateways(mapping)
+        await initializeGateways(mapping, store.state.gateway.multisig)
 
         const plasmaGateways = PlasmaGateways.service()
         const ethereumGateways = EthereumGateways.service()
@@ -69,32 +69,44 @@ export function gatewayReactions(store: Store<DashboardState>) {
     },
   )
 
-  async function initializeGateways(mapping: IAddressMapping) {
+  async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
     }
+    try {
+      const ethereumGateway = await EthereumGateways.init(
+        ethereumModule.web3,
+        addresses,
+        multisig,
+      )
+      const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
+      ethereumGateway.add("LOOM", loomAddr)
+      ethereumGateway.add("ETH", "") // Ether does not have a contract address
+    } catch (error) {
+      console.error("Error initializing ethereum gateways " + error.message)
+      return
+    }
     // Initialize Ethereum gateways & coin contracts
-    const ethereumGatewayService = await EthereumGateways.init(
-      ethereumModule.web3,
-      addresses,
-    )
-    const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
-    ethereumGatewayService.add("LOOM", loomAddr)
-    ethereumGatewayService.add("ETH", "") // Ether does not have a contract address
 
     // Init plasma side
-    const plasmaGatewayService = await PlasmaGateways.init(
-      plasmaModule.state.client!,
-      plasmaModule.state.web3!,
-      mapping,
-    )
+    try {
+      const plasmaGateways = await PlasmaGateways.init(
+        plasmaModule.state.client!,
+        plasmaModule.state.web3!,
+        mapping,
+      )
 
-    const loomGatewayAddr = Address.fromString(`eth:${addresses.loomGateway}`)
-    const ethGatewayAddr = Address.fromString(`eth:${addresses.mainGateway}`)
+      const loomGatewayAddr = Address.fromString(`eth:${addresses.loomGateway}`)
+      const ethGatewayAddr = Address.fromString(`eth:${addresses.mainGateway}`)
 
-    plasmaGatewayService.add("ethereum", "LOOM", loomGatewayAddr)
-    plasmaGatewayService.add("ethereum", "ETH", ethGatewayAddr)
+      plasmaGateways.add("ethereum", "LOOM", loomGatewayAddr)
+      plasmaGateways.add("ethereum", "ETH", ethGatewayAddr)
+    } catch (error) {
+      console.error("Error initializing plasma gateways " + error.message)
+      return
+    }
+
   }
 
   /**

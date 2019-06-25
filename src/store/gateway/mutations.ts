@@ -1,7 +1,11 @@
-import { GatewayState, TransferRequest } from "./types"
+import { GatewayState, TransferRequest, GatewayConfig } from "./types"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
-export function setTransferRequestState(state: GatewayState, payload: TransferRequest) {
+export function setConfig(state: GatewayState, config: GatewayConfig) {
+  Object.assign(state, config)
+}
+
+export function setTransferRequest(state: GatewayState, payload: TransferRequest) {
   state.transferRequest = payload
 }
 

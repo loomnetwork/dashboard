@@ -4,7 +4,15 @@
       <h1>Wallet</h1>
       <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
-    <b-alert fade :show="showHelp">Please refer to the FAQ</b-alert>
+    <b-alert fade :show="showHelp">
+      Check your token balances
+      <hr>
+      <div class="helpAlert">
+        <p><b>Deposit</b> : Deposit to Plasmachain from Ethereuem</p>
+        <p><b>Withdraw</b> : Withdraw to Ethereum </p>
+        <b>Transfer</b> : Transfer tokens to other PlasmaChain accounts
+      </div>
+    </b-alert>
     <Account/>
     <b-card class="balances" no-body>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
@@ -219,6 +227,10 @@ export default class DepositWithdraw extends Vue {
       flex: 1;
     }
   }
+}
+
+.helpAlert p {
+  color: #0e4a55;
 }
 
 /* Smartphones (portrait) ----------- */

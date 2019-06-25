@@ -18,6 +18,7 @@ import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
 import { feedbackModule } from "@/feedback/store"
 import { BinanceLoomCoinTransferGateway } from "./binance"
+import { tokenService } from "@/services/TokenService"
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
@@ -26,14 +27,12 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
     private contract: LoomCoinTransferGateway,
     readonly ethereumGateway: Address,
     readonly mapping: IAddressMapping,
-  ) {}
+  ) { }
 
   withdraw(amount: BN) {
+    const ethereumLoomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
     // Address of Loom on Ethereum]
-    const loomCoinAddress = Address.fromString(
-      // @ts-ignore
-      `eth:${ethereumModule.state.erc20Addresses.LOOM}`,
-    )
+    const loomCoinAddress = Address.fromString(`eth:${ethereumLoomAddr}`)
     return this.contract.withdrawLoomCoinAsync(amount, loomCoinAddress)
   }
   async withdrawalReceipt() {
@@ -49,7 +48,7 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
     public contract: TransferGateway,
     readonly ethereumGateway: Address,
     readonly mapping: IAddressMapping,
-  ) {}
+  ) { }
 
   withdraw(amount: BN) {
     this.contract.withdrawETHAsync(amount, this.ethereumGateway)
@@ -118,7 +117,7 @@ class PlasmaGateways {
     readonly binanceLoomGateway: BinanceLoomCoinTransferGateway,
     readonly web3: Web3,
     readonly mapping: IAddressMapping,
-  ) {}
+  ) { }
 
   destroy() {
     this.adapters.clear()
@@ -180,7 +179,7 @@ class PlasmaGateways {
  * @param tokenAmount
  */
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
-  const {chain, symbol, weiAmount} = funds
+  const { chain, symbol, weiAmount } = funds
   const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
   try {

@@ -13,8 +13,11 @@
     </header>
     <section>
       <b-alert fade :show="showHelp">
-        <p>In order to deploy contracts to PlasmaChain, you need to white list your deployment keys. You can manage your keys bellow, whitelist an existing key or generate a new one.</p>
-        <p>Adding a key requires you to stake tokens by choosing a tier.</p>
+        <h5>Deployer Public Keys</h5>
+        <p>In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.</p>
+        <hr>
+        <h5>Add New Key</h5>
+        <p>Adding a key requires you to stake tokens.</p>
       </b-alert>
       <b-card class="deployer-keys mb-4" no-body>
         <header>

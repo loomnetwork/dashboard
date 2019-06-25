@@ -177,7 +177,7 @@ export default class FirstPage extends Vue {
   }
 
   onClose() {
-    feedbackModule.endTask()
+    if (!this.$state.ethereum.signer) feedbackModule.endTask()
   }
 
   set notMapped(val) {

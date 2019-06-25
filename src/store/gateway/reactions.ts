@@ -70,12 +70,10 @@ export function gatewayReactions(store: Store<DashboardState>) {
   )
 
   async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
-
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
     }
-
     try {
       const ethereumGateway = await EthereumGateways.init(
         ethereumModule.web3,

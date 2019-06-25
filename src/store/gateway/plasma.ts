@@ -87,7 +87,6 @@ export async function init(
   plasmaWeb3: Web3,
   mapping: IAddressMapping,
 ) {
-  
   // return new EthereumGateways()
   // create gateways and vmc (maybe vmc does not care...)
   const ethereumMainGateway = await TransferGateway.createAsync(client, mapping.from)

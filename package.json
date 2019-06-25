@@ -83,6 +83,7 @@
     "@types/google-protobuf": "^3.2.7",
     "@types/mocha": "^5.2.7",
     "@types/retry": "^0.10.2",
+    "@types/sinon": "^7.0.13",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-plugin-typescript": "^3.7.0",

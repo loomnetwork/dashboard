@@ -209,12 +209,12 @@ function clearRequest(state: DPOSState) {
  * @param state
  * @param d
  */
-function requestRedelegation(state: DPOSState, d: Delegation) {
+export function requestRedelegation(state: DPOSState, d: Delegation) {
   state.intent = "redelegate"
   // copy
   state.delegation = { ...d }
 }
-function requestUndelegation(state: DPOSState, d: Delegation) {
+export function requestUndelegation(state: DPOSState, d: Delegation) {
   state.intent = "undelegate"
   // copy
   state.delegation = { ...d }
@@ -261,7 +261,7 @@ async function delegate(context: ActionContext, delegation: Delegation) {
  *  - updateValidator is the target validator
  *  - updateAmount is the amount to redelegate
  */
-async function redelegate(context: ActionContext, delegation: Delegation) {
+export async function redelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask("Redelegating")
   feedback.setStep("Scheduling redelegation...") // amount validator
   try {
@@ -299,7 +299,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - index is the delegation index in the source validator
  *  - updateAmount is the amount to un-delegate
  */
-async function undelegate(context: ActionContext, delegation: Delegation) {
+export async function undelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask("Undelegating")
   feedback.setStep("Undelegating from " + delegation.validator.name)
   try {

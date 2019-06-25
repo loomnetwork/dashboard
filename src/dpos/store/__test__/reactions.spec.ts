@@ -14,19 +14,20 @@ import sinon from "sinon"
 
 describe("Reactions", () => {
   describe("On client ready", () => {
-    it.skip("creates the contract", () => {})
-    it.skip("refreshes DPoS State", () => {})
-    it.skip("shedules election time update call", () => {})
+    it.skip("creates the contract", () => { })
+    it.skip("refreshes DPoS State", () => { })
+    it.skip("schedules election time update call", () => { })
+    it.skip("election time polling is throttle to 1 call per 10 seconds", () => { })
   })
 
   describe("On account change", () => {
-    it.skip("(re) creates the contract with the right caller", () => {})
-    it.skip("refreshes DPoS User State", () => {})
+    it.skip("(re)creates the contract with the right caller", () => { })
+    it.skip("refreshes DPoS User State", () => { })
   })
 
   describe("On election time update", () => {
-    it.skip("refreshes DPoS State", () => {})
-    it.skip("does not refreshes DPoS Account State if state.plasma.address is not set", () => {})
-    it.skip("refreshes DPoS Account State if state.plasma.address is set", () => {})
+    it.skip("refreshes DPoS State", () => { })
+    it.skip("does not refreshes DPoS Account State if state.plasma.address is not set", () => { })
+    it.skip("refreshes DPoS Account State if state.plasma.address is set", () => { })
   })
 })

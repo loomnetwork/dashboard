@@ -85,7 +85,6 @@ function plugin(store_: Store<DashboardState>) {
     },
   })
 
-  // dposStorePlugin(store_)
   ethereumReactions(store_)
   plasmaReactions(store_)
   gatewayReactions(store_)

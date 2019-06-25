@@ -62,6 +62,12 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
     const tokenAddress = this.tokenAddress
+    console.assert(
+      tokenAddress.toLocaleLowerCase() === receipt.tokenContract.local.toString(),
+      "Receipt contract address different from current contract",
+      receipt.tokenContract.local.toString(),
+      tokenAddress,
+    )
     let result
     // multisig
     if (this.vmc) {

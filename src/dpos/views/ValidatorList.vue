@@ -55,7 +55,7 @@
               @row-clicked="showValidatorDetail"
             >
               <template
-                slot="delegationsTotal"
+                slot="delegationTotal"
                 slot-scope="data"
               >{{data.item.delegationTotal | tokenAmount}}</template>
               <template slot="active" slot-scope="data">{{data.item.active ? "Active" : ""}}</template>
@@ -96,7 +96,7 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "delegationsTotal", sortable: true, label: "Total Staked" },
+  { key: "delegationTotal", sortable: true, label: "Total Staked" },
   { key: "fee", sortable: true, label: "Fee" },
   ]
 

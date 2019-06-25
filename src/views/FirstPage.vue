@@ -5,7 +5,7 @@
       <main>
         <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
         <div class="container-fluid mb-5 rmv-padding">
-          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" v-model="fromMarketplace">
+          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" @hide="onClose" v-model="notMapped">
             <div class="confirm-link text-center">
               <h3>Are you from Relentless Marketplace ?</h3>
               <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
@@ -140,6 +140,7 @@ import { DashboardState } from "../types"
 import LoomIcon from "@/components/LoomIcon.vue"
 import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
+import { feedbackModule } from '../feedback/store';
 
 import Axios from "axios"
 
@@ -154,9 +155,10 @@ export default class FirstPage extends Vue {
 
   get $state() { return (this.$store.state as DashboardState) }
 
-  get notMapped() {    return (this.$state.gateway.mapping !== null) &&
-      (this.$state.gateway.mapping.to!.isEmpty()) &&
-      (this.$state.ethereum.signer)
+  get notMapped() {
+      return (this.$state.gateway.mapping !== null) &&
+             (this.$state.gateway.mapping.to!.isEmpty()) &&
+             (this.$state.ethereum.signer)
   }
   get newMappingAgree() { return this.$state.gateway.newMappingAgree }
 
@@ -176,6 +178,10 @@ export default class FirstPage extends Vue {
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
+  }
+
+  onClose() {
+    feedbackModule.endTask()
   }
 
   set notMapped(val) {

@@ -38,6 +38,8 @@ debug.enable("dash*")
 durationFormatSetup(moment)
 
 import { initFilters } from "./filters"
+import { ethereumModule } from "./store/ethereum"
+import { isMobile } from "./utils";
 
 // tslint:disable-next-line: no-var-requires
 require("./assets/scss/main.scss")
@@ -84,6 +86,19 @@ export default new Vue({
   render: (h) => h(App),
   mounted() {
     document.dispatchEvent(new Event("render-event"))
+
+    if (!isMobile()) return
+    // @ts-ignore
+    if ((window.web3 && window.web3.currentProvider.isTrust) ||
+      // @ts-ignore
+      !!window.imToken ||
+      // @ts-ignore
+      (window.web3 && window.web3.currentProvider.isMetaMask) ||
+      // @ts-ignore
+      (window.web3 && window.web3.isCobo)
+    ) {
+      ethereumModule.setWalletType("metamask")
+    }
   },
 }).$mount("#app")
 

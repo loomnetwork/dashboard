@@ -30,6 +30,7 @@ export default class HistoryEvent extends Vue {
 
   @Prop({ required: true })
   event: any
+
   etherScanUrl = `${this.state.ethereum.blockExplorer}/tx/${this.event.transactionHash}`
 
   get state(): DashboardState {
@@ -47,7 +48,6 @@ export default class HistoryEvent extends Vue {
   get confirmations() {
     return this.ethereum.blockNumber - this.event.blockNumber + 1
   }
-
 
 }
 </script>

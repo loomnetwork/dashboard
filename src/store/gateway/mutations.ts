@@ -49,6 +49,10 @@ export function setNewMappingAgree(state: GatewayState, payload: boolean) {
   state.newMappingAgree = payload
 }
 
+export function setFromMarketplace(state: GatewayState, payload: boolean) {
+  state.fromMarketplace = payload
+}
+
 export function setWithdrawalReceipts(
   state: GatewayState,
   payload: IWithdrawalReceipt | null,

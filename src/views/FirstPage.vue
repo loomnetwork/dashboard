@@ -142,6 +142,8 @@ import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from '../feedback/store';
 
+import Axios from "axios"
+
 @Component({
   components: {
     ChainSelector,
@@ -159,6 +161,8 @@ export default class FirstPage extends Vue {
              (this.$state.ethereum.signer)
   }
   get newMappingAgree() { return this.$state.gateway.newMappingAgree }
+
+  get fromMarketplace() { return this.$state.gateway.fromMarketplace }
 
   loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
@@ -184,7 +188,9 @@ export default class FirstPage extends Vue {
   }
   set newMappingAgree(val) {
   }
-
+  set fromMarketplace(val) {
+  }
+  
   /* For Chrome & Firefox Browser
      if user dont have Metamask installed, there is no web3 that inject in their browser
      (except user install other extensions for crypto wallet (Ethereum platform))

@@ -18,7 +18,6 @@ import { feedbackModule } from "@/feedback/store"
 
 import axios from "axios"
 import { state } from "../common"
-import { setFromMarketplace, setNewMappingAgree } from "./mutations"
 
 const log = debug("dash.mapper")
 
@@ -40,7 +39,6 @@ export async function loadMapping(context: ActionContext, address: string) {
     log("got mapping", context.state.mapping)
   } catch (e) {
     // check if user mapping is from Relentless Marketplace
-    await isUserFromMarketplace(context, address)
     if (e.message.includes("failed to map address")) {
       context.state.mapping = {
         from: Address.fromString(`eth:${address}`),
@@ -78,6 +76,7 @@ export async function createMapping(context: ActionContext) {
   )
   const mapper = await AddressMapper.createAsync(client, address)
   try {
+    feedbackModule.setStep("Creating a new mapping from ethereum account")
     await mapper.addIdentityMappingAsync(
       ethAddress,
       plasmaId.address,
@@ -105,7 +104,7 @@ function generateNewId(chainId = "default") {
   return { address, privateKey, publicKey }
 }
 
-async function isUserFromMarketplace(context: ActionContext, address: string) {
+export async function checkRelentlessUser(context: ActionContext, address: string) {
   /* Check if user already have mapping, return in valid_address
     if valid_address = false, There is a possibility that users have logged in marketplace with wallet before.
     otherwise, it's assume that user is newcomer so new mapping will be create
@@ -116,9 +115,7 @@ async function isUserFromMarketplace(context: ActionContext, address: string) {
   const checkURL = `https://stage-auth.loom.games/wallet/address?address=${address}&wallet=eth`
   await axios.get(checkURL).then((response) => {
     console.log("RESPONSE Valid_address = ", response.data.valid_address)
-    setFromMarketplace(context.state, !response.data.valid_address)
-    setTimeout(() => {
-      setNewMappingAgree(context.state, response.data.valid_address)
-    }, 2000)
+    context.state.maybeRelentlessUser = !response.data.valid_address
+
   })
 }

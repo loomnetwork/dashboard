@@ -3,7 +3,7 @@ import {
   LoomCoinTransferGateway,
   Coin,
 } from "loom-js/dist/contracts"
-import { Address, CryptoUtils, Client } from "loom-js"
+import { Address, CryptoUtils, Client, Contract } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import BN from "bn.js"
@@ -21,6 +21,7 @@ import { BinanceLoomCoinTransferGateway } from "./binance"
 import { tokenService } from "@/services/TokenService"
 
 import debug from "debug"
+import { plasmaModule } from "../plasma"
 
 const log = debug("dash.gateway.plasma")
 
@@ -28,7 +29,7 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
 
   constructor(
-    private contract: LoomCoinTransferGateway,
+    public contract: LoomCoinTransferGateway,
     readonly ethereumGateway: Address,
     readonly mapping: IAddressMapping,
   ) { }
@@ -55,10 +56,11 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
   ) { }
 
   withdraw(amount: BN) {
-    this.contract.withdrawETHAsync(amount, this.ethereumGateway)
+    return this.contract.withdrawETHAsync(amount, this.ethereumGateway)
   }
   withdrawalReceipt() {
-    const owner = this.contract.caller
+    // const owner = this.contract.caller
+    const owner = this.mapping.to
     return this.contract.withdrawalReceiptAsync(owner)
   }
 }
@@ -77,16 +79,10 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
   }
 
   withdraw(amount: BN) {
-    const ethereumTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "ethereum")
-    const ethereumTokenAddr = Address.fromString(`eth:${ethereumTokenAddrStr}`)
-    log("TransferGateway.withdrawERC20Async", amount.toString(), ethereumTokenAddrStr.toString())
-    this.contract.withdrawERC20Async(amount, ethereumTokenAddr)
-  }
-  withdrawalReceipt() {
-    const owner = this.contract.caller
-    const receipt = this.contract.withdrawalReceiptAsync(owner)
-    receipt.then((r) => console.log("withdraw receipt on maingatway", receipt))
-    return receipt
+    const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
+    const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
+    console.log("TransferGateway withdrawERC20Async", this.token, `default:${plasmaTokenAddrStr}`)
+    return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
   }
 }
 
@@ -200,7 +196,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     console.error(err)
     feedback.endTask()
     feedback.showError("Withdraw failed, please try again.")
-    throw new Error(err)
+    throw err
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
@@ -210,6 +206,9 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     return
   }
   try {
+    await plasmaModule.approve({
+      ...funds, to: (gateway.contract as Contract).address.local.toString(),
+    })
     feedback.setStep("Depositing to Plasmachain Gateway...")
     await gateway.withdraw(weiAmount)
     feedback.setStep("Awaiting Oracle signature...")

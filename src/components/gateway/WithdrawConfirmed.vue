@@ -1,5 +1,5 @@
 <template>
-  <b-modal lazy id="withdraw-confirmed" v-model="visible" title="Withdraw to gateway confirmed">
+  <b-modal lazy id="withdraw-confirmed" v-model="visible" :title="title">
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
@@ -53,6 +53,10 @@ export default class WithdrawConfirmed extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get title(): string {
+    return status === "error" ? "Withdrawal failed" : "Withdraw to gateway confirmed"
   }
 
   get visible() {

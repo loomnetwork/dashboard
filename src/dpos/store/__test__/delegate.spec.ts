@@ -14,10 +14,12 @@ import sinon from "sinon"
 
 describe("Delegating", () => {
   describe("requestDelegation", () => {
+    const plasmaMock = sinon.mock(plasmaModule)
     let state: DPOSState
     let validator: ICandidate
 
     beforeEach(() => {
+      plasmaMock.restore()
       state = defaultState()
       validator = {
         address: Address.fromString(":0x".padEnd(44, "0")),
@@ -36,15 +38,15 @@ describe("Delegating", () => {
     })
 
     it("sets correct intent to delegate", () => {
-      const plasmaMock = sinon.mock(plasmaModule)
       plasmaMock.expects("getAddress").returns("xxx")
-
       requestDelegation(state, validator)
       expect(state.intent).to.equal("delegate")
+      plasmaMock.verify()
     })
   })
 
   describe("delegate", () => {
     it.skip("calls DPOS.delegate")
   })
+
 })

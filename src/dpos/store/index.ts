@@ -14,7 +14,7 @@ import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, LocalAddress } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 
-const log = debug("dpos")
+const log = debug("dash.dpos")
 
 const builder = getStoreBuilder<HasDPOSState>().module("dpos", defaultState())
 const stateGetter = builder.state()
@@ -24,10 +24,12 @@ const dposModule = {
     return stateGetter()
   },
 
+  rewardsUnclaimedTotal: builder.read(rewardsUnclaimedTotal),
+  rewardsBeingClaimedTotal: builder.read(rewardsBeingClaimedTotal),
+
   setConfig: builder.commit(mutations.setConfig),
 
   setElectionTime: builder.commit(mutations.setElectionTime),
-  setRewards: builder.commit(mutations.setRewards),
 
   requestDelegation: builder.commit(requestDelegation),
   requestRedelegation: builder.commit(requestRedelegation),
@@ -51,6 +53,17 @@ export { dposModule }
 declare type ActionContext = BareActionContext<DPOSState, HasDPOSState>
 
 // read/static
+
+function rewardsUnclaimedTotal(state: DPOSState) {
+  return state.rewards
+    .filter((r) => !r.pending)
+    .reduce((sum, r) => sum.add(r.amount), ZERO)
+}
+function rewardsBeingClaimedTotal(state: DPOSState) {
+  return state.rewards
+    .filter((r) => r.pending)
+    .reduce((sum, r) => sum.add(r.amount), ZERO)
+}
 
 /**
  * reloads time until next election
@@ -92,6 +105,7 @@ async function refreshValidators(ctx: ActionContext) {
   const nodes = candidates.map((c) => {
     const node = new Validator()
     node.setCandidateData(c)
+    node.isBootstrap = ctx.state.bootstrapNodes.includes(node.addr)
     return node
   })
   // Helper: if node not found in the array
@@ -156,7 +170,9 @@ async function refreshDelegations(context: ActionContext) {
   log("delegations", plasmaModule.getAddress().toString(), response)
   const rewards = response.delegationsArray
     .filter((d) => d.index === 0)
-    .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
+    .map((item) => fromIDelegation(item, state.validators))
+
+  // .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
 
   state.rewards = rewards
   log("rewards", rewards.toString())
@@ -193,12 +209,12 @@ function clearRequest(state: DPOSState) {
  * @param state
  * @param d
  */
-function requestRedelegation(state: DPOSState, d: Delegation) {
+export function requestRedelegation(state: DPOSState, d: Delegation) {
   state.intent = "redelegate"
   // copy
   state.delegation = { ...d }
 }
-function requestUndelegation(state: DPOSState, d: Delegation) {
+export function requestUndelegation(state: DPOSState, d: Delegation) {
   state.intent = "undelegate"
   // copy
   state.delegation = { ...d }
@@ -245,7 +261,7 @@ async function delegate(context: ActionContext, delegation: Delegation) {
  *  - updateValidator is the target validator
  *  - updateAmount is the amount to redelegate
  */
-async function redelegate(context: ActionContext, delegation: Delegation) {
+export async function redelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask("Redelegating")
   feedback.setStep("Scheduling redelegation...") // amount validator
   try {
@@ -283,7 +299,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - index is the delegation index in the source validator
  *  - updateAmount is the amount to un-delegate
  */
-async function undelegate(context: ActionContext, delegation: Delegation) {
+export async function undelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask("Undelegating")
   feedback.setStep("Undelegating from " + delegation.validator.name)
   try {

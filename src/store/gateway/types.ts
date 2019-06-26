@@ -13,12 +13,13 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 }
 
 export interface GatewayConfig {
+  multisig: boolean
   chains: string[]
 }
 /**
  * Gateway state
  */
-export interface GatewayState {
+export interface GatewayState extends GatewayConfig {
   mapping: IAddressMapping | null
   pendingTransactions: any[]
   withdrawalReceipts: IWithdrawalReceipt | null
@@ -32,6 +33,7 @@ export interface GatewayState {
   notMapped: boolean
   newMappingAgree: boolean
   transferRequest: TransferRequest
+  fromMarketplace: boolean
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

@@ -1,15 +1,14 @@
 import "mocha"
-import { requestUndelegation, undelegate } from ".."
+import { requestRedelegation, redelegate } from ".."
 import { defaultState, fromIDelegation } from "../helpers"
 import { ICandidate, DPOS3 } from "loom-js/dist/contracts/dpos3"
-import { Address } from "loom-js"
+import { Address, CryptoUtils } from "loom-js"
 import { LocktimeTier, CandidateState, DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import { ZERO } from "@/utils"
-import BN from "bn.js"
 
 import { expect } from "chai"
-import { DPOSState, Delegation } from "../types"
-
+import { DPOSState, Delegation, Validator } from "../types"
+import BN from "bn.js"
 import sinon from "sinon"
 import { emptyValidator, feedback } from "./_helpers"
 
@@ -29,15 +28,15 @@ function dummyDelegation(validator) {
     [validator])
 }
 
-describe("Undelegate", () => {
-  describe("requestUndelegation", () => {
+describe("Redelegation", () => {
+  describe("requestRedelegation", () => {
     let state: DPOSState
-    let validator: ICandidate
     let delegation: Delegation
+    let validator1: ICandidate
 
     before(() => {
       state = defaultState()
-      validator = {
+      validator1 = {
         address: Address.fromString("default:0x" + "".padEnd(40, "0")),
         pubKey: new Uint8Array(),
         delegationTotal: ZERO,
@@ -59,53 +58,76 @@ describe("Undelegate", () => {
         delegator: Address.fromString("default:0x" + "".padEnd(40, "0")),
         lockTime: 0,
         lockTimeTier: 0,
-        validator: validator.address,
+        validator: validator1.address,
         referrer: "",
       },
         // @ts-ignore
-        [validator])
-      requestUndelegation(state, delegation)
+        [validator1])
+      requestRedelegation(state, delegation)
     })
 
-    it("sets correct intent to delegate", () => {
-      expect(state.intent).to.equal("undelegate")
+    it("sets state.intent to redelegate", () => {
+      expect(state.intent).to.equal("redelegate")
     })
     it("sets state.delegation", () => {
-      expect(state.delegation).to.not.equal(null)
       expect(state.delegation).to.deep.equal(delegation)
     })
   })
 
-  describe("undelegate()", () => {
+  describe("redelegate", () => {
     const dpos3Stub = sinon.createStubInstance(DPOS3)
     let state: DPOSState
+
     before(() => {
       state = defaultState()
-      dpos3Stub.unbondAsync.resolves()
+      dpos3Stub.redelegateAsync.resolves()
       // @ts-ignore
       state.contract = dpos3Stub
       state.delegation = dummyDelegation(emptyValidator())
+      state.delegation.updateValidator = {
+        address: Address.fromString("default:0x" + "".padEnd(40, "0")),
+        pubKey: new Uint8Array(),
+        delegationTotal: ZERO,
+        slashPercentage: ZERO,
+        whitelistAmount: ZERO,
+        whitelistLocktimeTier: LocktimeTier.TIER_ONE,
+        fee: ZERO,
+        newFee: ZERO,
+        candidateState: CandidateState.REGISTERED,
+        name: "",
+        description: "",
+        website: "",
+        stakedAmount: ZERO,
+        delegations: [],
+        totalStaked: ZERO,
+        isBootstrap: false,
+        active: true,
+        addr: "",
+        setCandidateData: () => {},
+        setValidatorData: () => {},
+      }
       // @ts-ignore
-      undelegate({
+      redelegate({
         state,
       }, state.delegation)
     })
 
-    it("calls DPOS.delegate", () => {
+    it("calls DPOS.redelegateAsync", () => {
       const d = state.delegation!
-      sinon.assert.calledOnce(dpos3Stub.unbondAsync)
-      sinon.assert.calledWith(dpos3Stub.unbondAsync,
-        d.validator.address, d.updateAmount, d.index)
+      sinon.assert.calledOnce(dpos3Stub.redelegateAsync)
+      sinon.assert.calledWith(dpos3Stub.redelegateAsync,
+        d.validator.address, d.updateValidator!.address, d.updateAmount, d.index)
     })
     it("notifies feedback module", () => {
       sinon.assert.callOrder(
         feedback.setTask,
         feedback.setStep,
-        dpos3Stub.unbondAsync,
+        dpos3Stub.redelegateAsync,
         feedback.endTask,
       )
     })
-    it("sends delegation.updateAmount as amount")
-    it("sends delegation.index as index")
+    it.skip("sends delegation.updateValidator.address as address")
+    it.skip("sends delegation.updateAmount as amount to redelegate")
+    it.skip("sends delegation.index as index")
   })
 })

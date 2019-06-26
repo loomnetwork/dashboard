@@ -43,14 +43,11 @@ const initialState: EthereumState = {
   address: "",
   signer: null,
   walletType: "",
-  erc20Addresses: {
-    // us1
-    LOOM: "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
-  },
   balances: {
     ETH: ZERO,
     LOOM: ZERO,
   },
+  // not used
   LOOM: {
     contract: null,
     balance: ZERO,

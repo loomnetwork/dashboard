@@ -279,6 +279,9 @@
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "解锁硬件钱包",
         "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。"
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your ethereum account."
       }
     },
     "blockExplorer": {

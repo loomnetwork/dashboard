@@ -21,7 +21,12 @@
     <template slot="modal-footer">
       <b-btn @click="close()">Cancel</b-btn>
       <span style="flex:1"></span>
-      <b-btn class="ml-2" @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
+      <b-btn
+        class="ml-2"
+        @click="requestWithdrawHandler"
+        variant="primary"
+        :disabled="amountIsValid"
+      >Withdraw</b-btn>
     </template>
   </b-modal>
 </template>
@@ -99,7 +104,7 @@ export default class WithdrawForm extends Vue {
     // const txObj = this.state.gateway.pendingTransactions[0]
     const payload: Funds = {
       chain: "ethereum",
-      symbol: this.token,
+      symbol: this.transferRequest.token,
       weiAmount: this.weiAmount,
     }
 

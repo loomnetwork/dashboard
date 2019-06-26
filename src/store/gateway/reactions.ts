@@ -35,6 +35,8 @@ export function gatewayReactions(store: Store<DashboardState>) {
         log("null mapping")
         // todo destroy anything that needs to be disposed of
         return
+      } else if (mapping.to.isEmpty()) {
+        await gatewayModule.checkRelentlessUser(mapping.from.local.toString().toLowerCase())
       } else if (mapping.to!.isEmpty() === false) {
         await setPlasmaAccount(mapping)
         await initializeGateways(mapping, store.state.gateway.multisig)
@@ -61,11 +63,10 @@ export function gatewayReactions(store: Store<DashboardState>) {
   )
 
   store.watch(
-    (s) => s.gateway.newMappingAgree,
-    async (agree) => {
-      if (agree === true) {
+    (s) => s.gateway.maybeRelentlessUser,
+    async (maybeRelentlessUser) => {
+      if (maybeRelentlessUser === false) {
         // User agree to create a new mapping
-        feedbackModule.setStep("Create a new mapping")
         await gatewayModule.createMapping()
       }
     },
@@ -131,12 +132,22 @@ export function gatewayReactions(store: Store<DashboardState>) {
     const plasmaGateways = PlasmaGateways.service()
 
     // TODO: Add support for multiple tokens
-    const receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
+    let receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     // @ts-ignore
-    const withdrawalIsPending = JSON.parse(
+    let withdrawalIsPending = JSON.parse(
       localStorage.getItem("pendingWithdrawal") || "false",
     )
     if (receipt && withdrawalIsPending) {
+      gatewayModule.setWithdrawalReceipts(receipt)
+      return
+    }
+    // TODO: Add support for multiple tokens
+    receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
+    // @ts-ignore
+    withdrawalIsPending = JSON.parse(
+      localStorage.getItem("pendingWithdrawal") || "false",
+    )
+    if (receipt || withdrawalIsPending) {
       gatewayModule.setWithdrawalReceipts(receipt)
     }
   }

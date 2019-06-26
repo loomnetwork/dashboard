@@ -65,7 +65,6 @@ const initialState: EthereumState = {
 }
 
 // web3 instance
-// @ see
 let web3: Web3 | null
 
 const builder = getStoreBuilder<HasEthereumState>().module(
@@ -180,9 +179,27 @@ function clearWalletType(state: EthereumState) {
  * @param symbol
  * @param tokenAmount
  */
-export function refreshBalance(context: ActionContext, symbol: string) {
+export async function refreshBalance(context: ActionContext, symbol: string) {
+  if (!(symbol in context.state.coins)) {
+    context.state.coins = Object.assign(
+      context.state.coins,
+      {
+        [symbol]: {
+          balance: ZERO,
+          loading: true,
+        },
+      },
+    )
+  }
+  if (symbol === "ETH") {
+    const b = await web3.eth.getBalance(context.state.address)
+    context.state.coins.ETH.balance = new BN(b.toString())
+    return
+  }
   const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
   const coinState = context.state.coins[symbol]
+  // @ts-ignore
+  console.log(symbol, contract._address)
   coinState.loading = true
   return (
     contract.methods

@@ -12,7 +12,7 @@ import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
 import { ethereumModule } from "../ethereum"
-import { feedbackModule as fb } from "@/feedback/store"
+import { feedbackModule as fb, feedbackModule } from "@/feedback/store"
 
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
 // XXX
@@ -108,10 +108,17 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
     readonly web3: Web3,
   ) { }
 
-  deposit(amount: BN) {
-    this.web3.eth.sendTransaction({
+  deposit(amount: BN, sender: string) {
+    console.log({
+      from: sender,
       // @ts-ignore
-      to: this.contract.address,
+      to: this.contract._address,
+      value: amount.toString(),
+    })
+    this.web3.eth.sendTransaction({
+      from: sender,
+      // @ts-ignore
+      to: this.contract._address,
       value: amount.toString(),
     })
   }
@@ -229,6 +236,7 @@ class EthereumGateways {
 
     // todo cleanup if already set
     this.adapters.set(token, adapter)
+    return adapter
   }
 }
 
@@ -240,6 +248,13 @@ class EthereumGateways {
 export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
+  if (funds.symbol === "ETH") {
+    feedbackModule.setTask("ETH deposit")
+    feedbackModule.setStep("Depositing ETH")
+    await gateway.deposit(weiAmount, context.rootState.ethereum.address)
+    feedbackModule.endTask()
+    return
+  }
   const approvalAmount = await ethereumModule.allowance({
     symbol,
     // @ts-ignore
@@ -403,4 +418,3 @@ async function createWithdrawalHash(
     [prefix, ethAddress, nonce, gatewayAddress, amountHashed],
   )
 }
-

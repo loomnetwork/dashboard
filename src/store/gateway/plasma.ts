@@ -16,9 +16,13 @@ import { filter, tap, switchMap, take } from "rxjs/operators"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
-import { feedbackModule } from "@/feedback/store"
+import { feedbackModule as feedback } from "@/feedback/store"
 import { BinanceLoomCoinTransferGateway } from "./binance"
 import { tokenService } from "@/services/TokenService"
+
+import debug from "debug"
+
+const log = debug("dash.gateway.plasma")
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
@@ -73,11 +77,16 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
   }
 
   withdraw(amount: BN) {
-    this.contract.withdrawERC20Async(amount, this.ethereumGateway)
+    const ethereumTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "ethereum")
+    const ethereumTokenAddr = Address.fromString(`eth:${ethereumTokenAddrStr}`)
+    log("TransferGateway.withdrawERC20Async", amount.toString(), ethereumTokenAddrStr.toString())
+    this.contract.withdrawERC20Async(amount, ethereumTokenAddr)
   }
   withdrawalReceipt() {
     const owner = this.contract.caller
-    return this.contract.withdrawalReceiptAsync(owner)
+    const receipt = this.contract.withdrawalReceiptAsync(owner)
+    receipt.then((r) => console.log("withdraw receipt on maingatway", receipt))
+    return receipt
   }
 }
 
@@ -178,32 +187,40 @@ class PlasmaGateways {
  * @param symbol
  * @param tokenAmount
  */
+
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
   const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
   try {
+    feedback.setTask("withdraw")
+    feedback.setStep("Checking for pre-existing receipts...")
     receipt = await gateway.withdrawalReceipt()
-    next()
   } catch (err) {
     console.error(err)
+    feedback.endTask()
+    feedback.showError("Withdraw failed, please try again.")
     throw new Error(err)
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
-    feedbackModule.showInfo("Withdrawal already in progress.")
+    feedback.endTask()
+    feedback.showInfo("Withdrawal already in progress.")
     gatewayModule.setWithdrawalReceipts(receipt)
     return
   }
   try {
+    feedback.setStep("Depositing to Plasmachain Gateway...")
     await gateway.withdraw(weiAmount)
-    next()
+    feedback.setStep("Awaiting Oracle signature...")
     receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
     localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
-    next()
+    feedback.endTask()
   } catch (error) {
     console.error(error)
+    feedback.endTask()
+    feedback.showError("Withdraw failed, please try again.")
     throw new Error(error)
   }
 }
@@ -220,7 +237,9 @@ export function pollReceipt(chain: string, symbol: string) {
 
 async function refreshPendingReceipt(chain: string, symbol: string) {
   const gateway = service().get(chain, symbol)
-  return await gateway.withdrawalReceipt()
+  const receipt = await gateway.withdrawalReceipt()
+  console.log("receipt", symbol, receipt)
+  return receipt
 }
 
 async function next() {

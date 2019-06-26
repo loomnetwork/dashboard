@@ -71,6 +71,19 @@ export function gatewayReactions(store: Store<DashboardState>) {
     },
   )
 
+  store.subscribeAction({
+    after(action) {
+      if (/^plasma.+addToken$/.test(action.type)) {
+        ethereumModule.initERC20(action.payload)
+        const ethereumGateways = EthereumGateways.service()
+        const ethTokenAddress = tokenService.getTokenAddressBySymbol(action.payload, "ethereum")
+        const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
+        // @ts-ignore
+        PlasmaGateways.service().add("ethereum", action.payload, adapter!.contract._address)
+      }
+    },
+  })
+
   async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,

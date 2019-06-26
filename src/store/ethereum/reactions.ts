@@ -13,6 +13,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
       return
     }
     ethereumModule.initERC20("LOOM")
+    ethereumModule.refreshBalance("ETH")
     ethereumModule.web3.eth.getBlockNumber().then((blockNumber: number) => {
       ethereumModule.setBlockNumber(blockNumber)
       ethereumModule.web3.eth.subscribe("newBlockHeaders", (error, event) => {

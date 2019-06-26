@@ -9,8 +9,7 @@ import BN from "bn.js"
 
 import { expect } from "chai"
 import { DPOSState } from "../types"
-import { plasmaModule } from "@/store/plasma"
-import { emptyValidator, feedback } from "./_helpers"
+import { emptyValidator, feedback, plasmaModuleStub } from "./_helpers"
 
 import sinon from "sinon"
 
@@ -32,12 +31,11 @@ function dummyDelegation(validator) {
 
 describe("Delegating", () => {
   describe("requestDelegation", () => {
-    const plasmaMock = sinon.mock(plasmaModule)
     let state: DPOSState
     let validator: ICandidate
 
     beforeEach(() => {
-      plasmaMock.restore()
+      plasmaModuleStub.getAddress.returns(Address.fromString("default:0x" + "".padEnd(40, "0")))
       state = defaultState()
       validator = {
         address: Address.fromString(":0x".padEnd(44, "0")),
@@ -56,21 +54,18 @@ describe("Delegating", () => {
     })
 
     it("sets correct intent to delegate", () => {
-      plasmaMock.expects("getAddress").returns("xxx")
       requestDelegation(state, validator)
       expect(state.intent).to.equal("delegate")
-      plasmaMock.verify()
     })
   })
 
   describe("delegate", () => {
-    const approveStub = sinon.stub(plasmaModule, "approve")
     const dpos3Stub = sinon.createStubInstance(DPOS3)
     let state: DPOSState
 
     before(() => {
       state = defaultState()
-      approveStub.resolves(true)
+      plasmaModuleStub.approve.resolves(true)
       dpos3Stub.delegateAsync.resolves()
       // @ts-ignore
       state.contract = dpos3Stub
@@ -84,8 +79,8 @@ describe("Delegating", () => {
 
     it("calls plasmaModule.approve", () => {
       const d = state.delegation!
-      sinon.assert.calledOnce(approveStub)
-      sinon.assert.calledWith(approveStub, {
+      sinon.assert.calledOnce(plasmaModuleStub.approve)
+      sinon.assert.calledWith(plasmaModuleStub.approve, {
         symbol: "LOOM",
         weiAmount: d.amount,
         to: state.contract!.address.local.toString(),
@@ -102,7 +97,7 @@ describe("Delegating", () => {
     it("notifies feedback module", () => {
       sinon.assert.callOrder(
         feedback.setTask,
-        approveStub,
+        plasmaModuleStub.approve,
         feedback.setStep,
         dpos3Stub.delegateAsync,
         feedback.endTask,

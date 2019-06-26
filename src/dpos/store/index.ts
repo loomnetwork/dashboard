@@ -150,7 +150,7 @@ async function refreshValidators(ctx: ActionContext) {
  * @param ctx
  * @see {dpos.reactions}
  */
-async function refreshDelegations(context: ActionContext) {
+export async function refreshDelegations(context: ActionContext) {
   const { state } = context
   const contract = state.contract!
   state.loading.delegations = true

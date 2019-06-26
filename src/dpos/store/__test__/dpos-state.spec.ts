@@ -1,16 +1,14 @@
 import "mocha"
-import { refreshElectionTime, dposModule } from ".."
+import { refreshElectionTime, refreshDelegations, dposModule } from ".."
 import { defaultState } from "../helpers"
-import { ICandidate, DPOS3 } from "loom-js/dist/contracts/dpos3"
+import { DPOS3 } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
-import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
-import { ZERO } from "@/utils"
 import BN from "bn.js"
 
-import { expect } from "chai"
 import { DPOSState } from "../types"
 
 import sinon from "sinon"
+import { plasmaModuleStub } from "./_helpers"
 
 describe("DPoS state", () => {
   describe("refreshValidators", () => {
@@ -37,7 +35,7 @@ describe("DPoS state", () => {
       state = defaultState()
       dpos3Stub.getTimeUntilElectionAsync.resolves(time)
       nowStub.returns(now)
-      setElectionTimeStub.resolves()
+      setElectionTimeStub.returns()
       // @ts-ignore
       state.contract = dpos3Stub
       // @ts-ignore
@@ -56,10 +54,29 @@ describe("DPoS state", () => {
 
   describe("DPoS Account state", () => {
     describe("refreshDelegations", () => {
-      it.skip("calls DPOS.delegate")
-      it.skip("sends delegation.validator.address as address")
-      it.skip("sends delegation.updateAmount as amount")
-      it.skip("sends delegation.index as index")
+      const dpos3Stub = sinon.createStubInstance(DPOS3)
+      const address = Address.fromString(":0x".padEnd(44, "0"))
+      let state: DPOSState
+
+      before(() => {
+        state = defaultState()
+        plasmaModuleStub.getAddress.returns(address)
+        dpos3Stub.checkAllDelegationsAsync.resolves({
+          amount: new BN(100),
+          weightedAmount: new BN(100),
+          delegationsArray: [],
+        })
+        // @ts-ignore
+        state.contract = dpos3Stub
+        // @ts-ignore
+        refreshDelegations({ state })
+      })
+
+      it("calls DPOS.checkAllDelegationsAsync", () => {
+        sinon.assert.calledOnce(dpos3Stub.checkAllDelegationsAsync)
+        sinon.assert.calledWith(dpos3Stub.checkAllDelegationsAsync,
+          address)
+      })
     })
   })
 })

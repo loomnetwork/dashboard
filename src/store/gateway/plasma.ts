@@ -73,7 +73,9 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
   }
 
   withdraw(amount: BN) {
-    this.contract.withdrawERC20Async(amount, this.ethereumGateway)
+    const ethereumTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "ethereum")
+    const ethereumTokenAddr = Address.fromString(`eth:${ethereumTokenAddrStr}`)
+    this.contract.withdrawERC20Async(amount, ethereumTokenAddr)
   }
   withdrawalReceipt() {
     const owner = this.contract.caller

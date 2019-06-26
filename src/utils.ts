@@ -104,7 +104,9 @@ export function formatToCrypto(amount) {
 }
 
 export function parseToWei(amount: string) {
-  return new BN(amount).mul(new BN(`${10 ** 18}`))
+  // BN does not handle float
+  const bigNumber = new BigNumber(amount).multipliedBy(10 ** 18)
+  return new BN(bigNumber.toString())
 }
 
 export const DOMAIN_NETWORK_ID = {

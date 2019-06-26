@@ -58,10 +58,6 @@ const initialState: EthereumState = {
       balance: ZERO,
       loading: true,
     },
-    ETH: {
-      balance: ZERO,
-      loading: true,
-    },
   },
   contracts: {},
   blockNumber: 0,

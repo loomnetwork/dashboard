@@ -290,7 +290,9 @@ export async function ethereumWithdraw(context: ActionContext, token: string) {
   if (receipt === null || receipt === undefined) {
     throw new Error("no withdraw receipt in state for " + token)
   }
+  fb.showLoadingBar(true)
   await gateway.withdraw(receipt)
+  fb.showLoadingBar(false)
 }
 
 export async function refreshEthereumHistory(context: ActionContext) {

@@ -72,7 +72,7 @@ function rewardsBeingClaimedTotal(state: DPOSState) {
  * @param ctx
  * @see {dpos.reactions}
  */
-async function refreshElectionTime(context: ActionContext) {
+export async function refreshElectionTime(context: ActionContext) {
   if (context.state.contract === null) {
     console.warn("DPoS contract not initialized yet")
     return

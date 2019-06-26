@@ -16,7 +16,7 @@ import { filter, tap, switchMap, take } from "rxjs/operators"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
 import { ethereumModule } from "../ethereum"
-import { feedbackModule } from "@/feedback/store"
+import { feedbackModule as feedback } from "@/feedback/store"
 import { BinanceLoomCoinTransferGateway } from "./binance"
 import { tokenService } from "@/services/TokenService"
 
@@ -178,32 +178,40 @@ class PlasmaGateways {
  * @param symbol
  * @param tokenAmount
  */
+
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
   const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
   try {
+    feedback.setTask("withdraw")
+    feedback.setStep("Checking for pre-existing receipts...")
     receipt = await gateway.withdrawalReceipt()
-    next()
   } catch (err) {
     console.error(err)
+    feedback.endTask()
+    feedback.showError("Withdraw failed, please try again.")
     throw new Error(err)
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
-    feedbackModule.showInfo("Withdrawal already in progress.")
+    feedback.endTask()
+    feedback.showInfo("Withdrawal already in progress.")
     gatewayModule.setWithdrawalReceipts(receipt)
     return
   }
   try {
+    feedback.setStep("Depositing to Plasmachain Gateway...")
     await gateway.withdraw(weiAmount)
-    next()
+    feedback.setStep("Awaiting Oracle signature...")
     receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
     localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
-    next()
+    feedback.endTask()
   } catch (error) {
     console.error(error)
+    feedback.endTask()
+    feedback.showError("Withdraw failed, please try again.")
     throw new Error(error)
   }
 }

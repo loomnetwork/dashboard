@@ -1,16 +1,34 @@
 import "mocha"
-import { requestDelegation } from ".."
-import { defaultState } from "../helpers"
-import { ICandidate } from "loom-js/dist/contracts/dpos3"
+import { requestDelegation, delegate } from ".."
+import { defaultState, fromIDelegation } from "../helpers"
+import { ICandidate, DPOS3 } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
-import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
+import { LocktimeTier, CandidateState, DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import { ZERO } from "@/utils"
+import BN from "bn.js"
 
 import { expect } from "chai"
 import { DPOSState } from "../types"
 import { plasmaModule } from "@/store/plasma"
+import { emptyValidator, feedback } from "./_helpers"
 
 import sinon from "sinon"
+
+function dummyDelegation(validator) {
+  return fromIDelegation({
+    amount: new BN(1000),
+    updateAmount: new BN(1000),
+    index: 1,
+    state: DelegationState.BONDED,
+    delegator: Address.fromString("default:0x" + "".padEnd(40, "0")),
+    lockTime: 0,
+    lockTimeTier: 0,
+    validator: validator.address,
+    referrer: "",
+  },
+    // @ts-ignore
+    [validator])
+}
 
 describe("Delegating", () => {
   describe("requestDelegation", () => {
@@ -46,7 +64,50 @@ describe("Delegating", () => {
   })
 
   describe("delegate", () => {
-    it.skip("calls DPOS.delegate")
+    const approveStub = sinon.stub(plasmaModule, "approve")
+    const dpos3Stub = sinon.createStubInstance(DPOS3)
+    let state: DPOSState
+
+    before(() => {
+      state = defaultState()
+      approveStub.resolves(true)
+      dpos3Stub.delegateAsync.resolves()
+      // @ts-ignore
+      state.contract = dpos3Stub
+      state.contract!.address = Address.fromString(":0x".padEnd(44, "0"))
+      state.delegation = dummyDelegation(emptyValidator())
+      // @ts-ignore
+      delegate({
+        state,
+      }, state.delegation)
+    })
+
+    it("calls plasmaModule.approve", () => {
+      const d = state.delegation!
+      sinon.assert.calledOnce(approveStub)
+      sinon.assert.calledWith(approveStub, {
+        symbol: "LOOM",
+        weiAmount: d.amount,
+        to: state.contract!.address.local.toString(),
+      })
+    })
+
+    it("calls DPOS.delegateAsync", () => {
+      const d = state.delegation!
+      sinon.assert.calledOnce(dpos3Stub.delegateAsync)
+      sinon.assert.calledWith(dpos3Stub.delegateAsync,
+        d.validator.address, d.amount, d.lockTimeTier, d.referrer)
+    })
+
+    it("notifies feedback module", () => {
+      sinon.assert.callOrder(
+        feedback.setTask,
+        approveStub,
+        feedback.setStep,
+        dpos3Stub.delegateAsync,
+        feedback.endTask,
+      )
+    })
   })
 
 })

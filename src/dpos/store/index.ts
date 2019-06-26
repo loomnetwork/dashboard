@@ -220,7 +220,7 @@ export function requestUndelegation(state: DPOSState, d: Delegation) {
   state.delegation = { ...d }
 }
 
-async function delegate(context: ActionContext, delegation: Delegation) {
+export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 

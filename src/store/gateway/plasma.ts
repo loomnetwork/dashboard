@@ -20,6 +20,10 @@ import { feedbackModule as feedback } from "@/feedback/store"
 import { BinanceLoomCoinTransferGateway } from "./binance"
 import { tokenService } from "@/services/TokenService"
 
+import debug from "debug"
+
+const log = debug("dash.gateway.plasma")
+
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
 
@@ -75,11 +79,14 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
   withdraw(amount: BN) {
     const ethereumTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "ethereum")
     const ethereumTokenAddr = Address.fromString(`eth:${ethereumTokenAddrStr}`)
+    log("TransferGateway.withdrawERC20Async", amount.toString(), ethereumTokenAddrStr.toString())
     this.contract.withdrawERC20Async(amount, ethereumTokenAddr)
   }
   withdrawalReceipt() {
     const owner = this.contract.caller
-    return this.contract.withdrawalReceiptAsync(owner)
+    const receipt = this.contract.withdrawalReceiptAsync(owner)
+    receipt.then((r) => console.log("withdraw receipt on maingatway", receipt))
+    return receipt
   }
 }
 
@@ -230,7 +237,9 @@ export function pollReceipt(chain: string, symbol: string) {
 
 async function refreshPendingReceipt(chain: string, symbol: string) {
   const gateway = service().get(chain, symbol)
-  return await gateway.withdrawalReceipt()
+  const receipt = await gateway.withdrawalReceipt()
+  console.log("receipt", symbol, receipt)
+  return receipt
 }
 
 async function next() {

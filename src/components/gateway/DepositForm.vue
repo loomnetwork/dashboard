@@ -100,7 +100,6 @@ export default class DepositForm extends Vue {
   }
 
   get userBalance(): BN {
-    debugger
     return this.state.ethereum.coins[this.transferRequest.token].balance
   }
 

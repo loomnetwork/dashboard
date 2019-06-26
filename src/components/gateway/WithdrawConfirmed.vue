@@ -3,7 +3,7 @@
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
-          <p>{{$t("components.layout.confirm_withdrawal_modal", amount, symbol)}}</p>
+          <p>{{$t("components.modals.confirm_withdrawal_modal.confirm_withdrawl", {amount, token: this.symbol})}}</p>
         </div>
       </b-container>
     </section>
@@ -29,11 +29,13 @@ import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
 import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
 import { tokenService } from '../../services/TokenService';
+import { formatTokenAmount } from '../../filters';
 
 @Component
 export default class WithdrawConfirmed extends Vue {
 
   status = "default"
+  symbol = "LOOM"
   setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
   setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
   completeWithdrawal = gatewayModule.ethereumWithdraw
@@ -41,9 +43,6 @@ export default class WithdrawConfirmed extends Vue {
   showError = feedbackModule.showError
 
   completeWithdrawalHandler() {
-
-    const symbol = "LOOM" // TODO: Load symbol from receipt
-
     // if (!this.receipt) {
     //   console.log("No receipt found")
     //   this.status = "error"
@@ -51,7 +50,7 @@ export default class WithdrawConfirmed extends Vue {
     // }
     // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
     // const symbol = getTokenSymbolFromAddress(tokenAddress)
-    this.completeWithdrawal(symbol).then(() => {
+    this.completeWithdrawal(this.symbol).then(() => {
       this.showSuccess("Withdrawal complete!")
     }).catch((err) => {
       console.log(err)
@@ -66,7 +65,9 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get amount(): BN | undefined | "" {
-    return this.receipt ? this.receipt.tokenAmount : ""
+    if (!this.receipt) return ""
+    // @ts-ignore
+    return formatTokenAmount(this.receipt.tokenAmount)
   }
 
   get state(): DashboardState {

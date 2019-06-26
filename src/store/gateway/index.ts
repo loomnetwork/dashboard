@@ -41,6 +41,7 @@ function initialState(): GatewayState {
     withdrawStateIdx: 0,
     notMapped: false,
     newMappingAgree: false,
+    fromMarketplace: false,
   }
 }
 

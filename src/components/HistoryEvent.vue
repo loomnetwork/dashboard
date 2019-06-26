@@ -9,7 +9,7 @@
       <li class="block">Block # {{event.blockNumber}}</li>
       <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
     </ul>
-    <a class="transaction-hash" href target="_blank">{{event.transactionHash}}</a>
+    <a class="transaction-hash" :href="etherScanUrl" target="_blank">{{event.transactionHash}}</a>
   </section>
 </template>
 
@@ -17,6 +17,8 @@
 import Vue from "vue"
 import { Component, Watch, Prop } from "vue-property-decorator"
 import { EthereumState } from "@/store/ethereum/types"
+import { DashboardState } from "@/types"
+
 
 // ({
 //   props: {
@@ -28,6 +30,12 @@ export default class HistoryEvent extends Vue {
 
   @Prop({ required: true })
   event: any
+
+  etherScanUrl = `${this.state.ethereum.blockExplorer}/tx/${this.event.transactionHash}`
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
 
   get ethereum(): EthereumState {
     return this.$store.state.ethereum

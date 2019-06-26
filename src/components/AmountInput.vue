@@ -10,7 +10,7 @@
           aria-describedby="input-live-help input-live-feedback"
           @keyup="validateAmount"
         ></b-form-input>
-        <p v-if="errorMsg">{{ errorMsg }}</p>
+        <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       </b-col>
       <b-col>
         <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>

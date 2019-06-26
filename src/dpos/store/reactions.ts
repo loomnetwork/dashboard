@@ -2,7 +2,6 @@
  * @module dashboard.dpos
  */
 
-import { HasDPOSState } from "./types"
 import { Store } from "vuex"
 import { dposModule } from "."
 import { plasmaModule } from "@/store/plasma"
@@ -74,6 +73,7 @@ export function dposReactions(store: Store<DashboardState>) {
 
   function scheduleElectionTimeCall() {
     const time = store.state.dpos.electionTime.getTime()
+    // throttle to one call per 10 seconds
     const delay = Math.max(time - Date.now(), 10000)
     log("elections call in", delay / 1000)
     scheduledElectionCall = window.setTimeout(
@@ -92,7 +92,9 @@ export function dposReactions(store: Store<DashboardState>) {
 
   function refreshDPoSUserState() {
     log("refreshDPoSUserState")
-    plasmaModule.refreshBalance("LOOM")
+    if ("LOOM" in plasmaModule.state.coins) {
+      plasmaModule.refreshBalance("LOOM")
+    }
     dposModule.refreshDelegations()
   }
 }

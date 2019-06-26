@@ -33,6 +33,7 @@ export interface GatewayState extends GatewayConfig {
   notMapped: boolean
   newMappingAgree: boolean
   transferRequest: TransferRequest
+  fromMarketplace: boolean
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

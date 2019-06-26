@@ -47,6 +47,7 @@ const initialState: EthereumState = {
     ETH: ZERO,
     LOOM: ZERO,
   },
+  // not used
   LOOM: {
     contract: null,
     balance: ZERO,

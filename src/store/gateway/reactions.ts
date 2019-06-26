@@ -14,6 +14,7 @@ import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
+import { feedbackModule } from "@/feedback/store"
 
 const log = debug("dash.gateway")
 
@@ -64,6 +65,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     async (agree) => {
       if (agree === true) {
         // User agree to create a new mapping
+        feedbackModule.setStep("Create a new mapping")
         await gatewayModule.createMapping()
       }
     },

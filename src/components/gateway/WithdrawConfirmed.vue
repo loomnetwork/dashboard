@@ -3,7 +3,7 @@
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
-          <p>You have a pending withdrawal receipt, please click below to finish your withdrawal.</p>
+          <p>{{$t("components.layout.confirm_withdrawal_modal", amount, symbol)}}</p>
         </div>
       </b-container>
     </section>
@@ -22,10 +22,13 @@
 
 <script lang="ts">
 import Vue from "vue"
+import BN from "bn.js"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
+import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
+import { tokenService } from '../../services/TokenService';
 
 @Component
 export default class WithdrawConfirmed extends Vue {
@@ -38,7 +41,14 @@ export default class WithdrawConfirmed extends Vue {
   showError = feedbackModule.showError
 
   completeWithdrawalHandler() {
+
     const symbol = "LOOM" // TODO: Load symbol from receipt
+
+    // if (!this.receipt) {
+    //   console.log("No receipt found")
+    //   this.status = "error"
+    //   return
+    // }
     // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
     // const symbol = getTokenSymbolFromAddress(tokenAddress)
     this.completeWithdrawal(symbol).then(() => {
@@ -49,6 +59,14 @@ export default class WithdrawConfirmed extends Vue {
       this.status = "error"
     })
     this.close()
+  }
+
+  get receipt(): IWithdrawalReceipt | null {
+    return this.state.gateway.withdrawalReceipts
+  }
+
+  get amount(): BN | undefined | "" {
+    return this.receipt ? this.receipt.tokenAmount : ""
   }
 
   get state(): DashboardState {

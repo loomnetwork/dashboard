@@ -22,6 +22,6 @@ export function emptyValidator() {
     }
 }
 
-export const feedback = sinon.stub(feedbackModule)
+export const feedbackModuleStub = sinon.stub(feedbackModule)
 
 export const plasmaModuleStub = sinon.stub(plasmaModule)

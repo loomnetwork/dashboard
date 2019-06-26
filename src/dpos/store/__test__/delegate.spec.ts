@@ -9,7 +9,7 @@ import BN from "bn.js"
 
 import { expect } from "chai"
 import { DPOSState } from "../types"
-import { emptyValidator, feedback, plasmaModuleStub } from "./_helpers"
+import { emptyValidator, feedbackModuleStub, plasmaModuleStub } from "./_helpers"
 
 import sinon from "sinon"
 
@@ -96,11 +96,11 @@ describe("Delegating", () => {
 
     it("notifies feedback module", () => {
       sinon.assert.callOrder(
-        feedback.setTask,
+        feedbackModuleStub.setTask,
         plasmaModuleStub.approve,
-        feedback.setStep,
+        feedbackModuleStub.setStep,
         dpos3Stub.delegateAsync,
-        feedback.endTask,
+        feedbackModuleStub.endTask,
       )
     })
   })

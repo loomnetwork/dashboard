@@ -6,7 +6,10 @@
       </header>
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
-        <dd>{{delegation.state | delegationState}}</dd>
+        <dd>
+          <b-spinner v-if="delegation.pending" type="border" small/>
+          {{delegation.state | delegationState}}
+        </dd>
         <dt>{{ $t('views.validator_detail.amount_delegated') }}</dt>
         <dd>{{delegation.amount | tokenAmount}} LOOM</dd>
         <template v-if="delegation.updateAmount.gt(zero)">

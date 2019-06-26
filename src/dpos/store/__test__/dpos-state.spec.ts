@@ -1,22 +1,65 @@
 import "mocha"
-import { refreshElectionTime, refreshDelegations, dposModule } from ".."
+import { refreshValidators, refreshElectionTime, refreshDelegations, dposModule } from ".."
 import { defaultState } from "../helpers"
-import { DPOS3 } from "loom-js/dist/contracts/dpos3"
+import { DPOS3, ICandidate, ICandidateDelegations, IValidator } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
+import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import BN from "bn.js"
 
+import { expect } from "chai"
 import { DPOSState } from "../types"
 
 import sinon from "sinon"
-import { plasmaModuleStub } from "./_helpers"
+import { emptyValidator, plasmaModuleStub } from "./_helpers"
 
 describe("DPoS state", () => {
   describe("refreshValidators", () => {
-    it.skip("calls DPOS.delegate")
-    it.skip("calls DPOS.delegate")
-    it.skip("calls DPOS.delegate")
+    const dpos3Stub = sinon.createStubInstance(DPOS3)
+    const validator: IValidator = emptyValidator()
+    const candidate: ICandidate = emptyValidator()
+    const delegation: ICandidateDelegations = {
+      delegationTotal: new BN(100),
+      delegationsArray: [{
+        amount: new BN(1000),
+        updateAmount: new BN(1000),
+        index: 1,
+        state: DelegationState.BONDED,
+        delegator: Address.fromString("default:0x" + "".padEnd(40, "0")),
+        lockTime: 0,
+        lockTimeTier: 0,
+        validator: validator.address,
+        referrer: "",
+      }],
+    }
+    let state: DPOSState
 
-    it.skip("merges validator info in one object")
+    before(() => {
+      state = defaultState()
+      dpos3Stub.getValidatorsAsync.resolves([validator])
+      dpos3Stub.getCandidatesAsync.resolves([candidate])
+      dpos3Stub.getAllDelegations.resolves([delegation])
+      // @ts-ignore
+      state.contract = dpos3Stub
+      // @ts-ignore
+      refreshValidators({ state })
+    })
+
+    it("calls DPOS.getValidatorsAsync", () => {
+      sinon.assert.calledOnce(dpos3Stub.getValidatorsAsync)
+    })
+
+    it("calls DPOS.getCandidatesAsync", () => {
+      sinon.assert.calledOnce(dpos3Stub.getCandidatesAsync)
+    })
+
+    it("calls DPOS.getAllDelegations", () => {
+      sinon.assert.calledOnce(dpos3Stub.getAllDelegations)
+    })
+
+    it("merges validator info in one object", () => {
+      expect(state.validators[0].isBootstrap).to.equal(false)
+      expect(state.validators[0].stakedAmount).to.equal(delegation.delegationTotal)
+    })
 
     it.skip("sets bootstrap validators following addresses state.bootstrapNodes")
     it.skip("sets delegations amounts correctly")

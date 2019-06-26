@@ -92,7 +92,7 @@ export async function refreshElectionTime(context: ActionContext) {
  * @param ctx
  * @see {dpos.reactions}
  */
-async function refreshValidators(ctx: ActionContext) {
+export async function refreshValidators(ctx: ActionContext) {
   const contract = ctx.state.contract!
   log("getValidatorsAsync")
   // Get all validators, candidates and delegations

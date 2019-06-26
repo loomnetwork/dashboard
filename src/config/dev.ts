@@ -29,7 +29,6 @@ export default {
     chains: ["ethereum"],
     multisig: false,
   },
-  coinDataUrl: "",
   disabled: [],
   chains: ["ethereum", "binance"],
 } as DashboardConfig

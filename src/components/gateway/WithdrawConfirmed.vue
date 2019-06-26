@@ -3,7 +3,7 @@
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
-          <p>You have a pending withdrawal receipt, please click below to finish your withdrawal.</p>
+          <p>{{$t("components.modals.confirm_withdrawal_modal.confirm_withdrawl", {amount, token: this.symbol})}}</p>
         </div>
       </b-container>
     </section>
@@ -22,33 +22,54 @@
 
 <script lang="ts">
 import Vue from "vue"
+import BN from "bn.js"
 import { Component } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
+import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
+import { tokenService } from '../../services/TokenService';
+import { formatTokenAmount } from '../../filters';
 
 @Component
 export default class WithdrawConfirmed extends Vue {
 
   status = "default"
+  symbol = "LOOM"
   setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
   setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
   completeWithdrawal = gatewayModule.ethereumWithdraw
   showSuccess = feedbackModule.showSuccess
   showError = feedbackModule.showError
+  setShowLoadingBar = feedbackModule.showLoadingBar
 
   completeWithdrawalHandler() {
-    const symbol = "LOOM" // TODO: Load symbol from receipt
+    // if (!this.receipt) {
+    //   console.log("No receipt found")
+    //   this.status = "error"
+    //   return
+    // }
     // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
     // const symbol = getTokenSymbolFromAddress(tokenAddress)
-    this.completeWithdrawal(symbol).then(() => {
+    this.completeWithdrawal(this.symbol).then(() => {
       this.showSuccess("Withdrawal complete!")
     }).catch((err) => {
       console.log(err)
+      this.setShowLoadingBar(false)
       this.showError("Withdrawal failed, please try again")
       this.status = "error"
     })
     this.close()
+  }
+
+  get receipt(): IWithdrawalReceipt | null {
+    return this.state.gateway.withdrawalReceipts
+  }
+
+  get amount(): BN | undefined | "" {
+    if (!this.receipt) return ""
+    // @ts-ignore
+    return formatTokenAmount(this.receipt.tokenAmount)
   }
 
   get state(): DashboardState {

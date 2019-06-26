@@ -4,6 +4,7 @@
     id="deposit-form"
     title="BootstrapVue"
     v-model="visible"
+    v-if="visible"
     :busy="true"
     no-close-on-esc
     no-close-on-backdrop
@@ -18,6 +19,7 @@
           :min="min"
           :max="userBalance"
           v-model="transferAmount"
+          :round="false"
           :symbol="token"
           @isError="errorHandler"
         />
@@ -47,7 +49,7 @@
   </b-modal>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 import BN from "bn.js"
 import { formatToCrypto, parseToWei } from "@/utils"
@@ -59,6 +61,7 @@ import { Funds } from "@/types"
 import { gatewayModule } from "../../store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
 import { gatewayReactions } from "../../store/gateway/reactions"
+import { ethereumModule } from '../../store/ethereum';
 
 @Component({
   components: {
@@ -71,7 +74,6 @@ export default class DepositForm extends Vue {
 
   setShowDepositForm = gatewayModule.setShowDepositForm
   setShowDepositApproved = gatewayModule.setShowDepositApproved
-  approveDeposit = gatewayModule.ethereumDeposit
 
   // vue returns either number or empty string for input number
   min = new BN(1)
@@ -98,7 +100,7 @@ export default class DepositForm extends Vue {
   }
 
   get userBalance(): BN {
-    return this.state.ethereum.coins[this.token].balance
+    return this.state.ethereum.coins[this.transferRequest.token].balance
   }
 
   get transferRequest() {
@@ -121,6 +123,11 @@ export default class DepositForm extends Vue {
     this.visible = false
   }
 
+  @Watch("visible")
+  refreshBalance() {
+    ethereumModule.refreshBalance(this.transferRequest.token)
+  }
+
   async sendApproval(bvModalEvt) {
     if (this.transferAmount === "") return
     if (this.hasErrors) return
@@ -133,7 +140,8 @@ export default class DepositForm extends Vue {
       weiAmount: this.transferAmount,
     }
 
-    this.approveDeposit(payload)
+    gatewayModule.ethereumDeposit(payload)
+
     this.close()
   }
 }

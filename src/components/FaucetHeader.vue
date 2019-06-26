@@ -42,7 +42,6 @@
                 </b-nav-item>
                 <b-nav-item v-for="(menu, index) in menus.staking" :key="index+'s'">
                   <h5>
-                    {{index}}
                     <router-link
                       :to="menu.to"
                       class="router text-light hover-warning"
@@ -51,7 +50,6 @@
                 </b-nav-item>
                 <b-nav-item v-for="(menu, index) in menus.wallet" :key="index+'w'">
                   <h5>
-                    {{index}}
                     <router-link
                       :to="menu.to"
                       class="router text-light hover-warning"
@@ -60,7 +58,6 @@
                 </b-nav-item>
                 <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
                   <h5>
-                    {{index}}
                     <router-link
                       :to="menu.to"
                       class="router text-light hover-warning"

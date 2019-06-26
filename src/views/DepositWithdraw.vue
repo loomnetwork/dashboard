@@ -146,6 +146,7 @@ export default class DepositWithdraw extends Vue {
     // return token if :
     // - no filter and symbol is in the state,
     // - symbol matches filter  and symbol is in the state,
+
     this.filteredSymbols = tokenSymbols
       .filter((symbol) => (filter === "" || symbol.includes(filter)))
   }

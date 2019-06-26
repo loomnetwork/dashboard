@@ -39,7 +39,9 @@ export function dposReactions(store: Store<DashboardState>) {
     after(action) {
       if (
         store.state.plasma.address &&
-        DPOS_ACTIONS.find((a) => a === action.type)
+        // DPOS_ACTIONS.find((a) => a === action.type)
+        // TODO: link to chrome on windows bug
+        /(redelegate|consolidate|delegate|undelegate|claimRewards)$/.test(action.type)
       ) {
         refreshDPoSUserState()
       }

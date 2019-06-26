@@ -248,7 +248,6 @@ class EthereumGateways {
 export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
-<<<<<<< HEAD
   if (funds.symbol === "ETH") {
     feedbackModule.setTask("ETH deposit")
     feedbackModule.setStep("Depositing ETH")
@@ -256,10 +255,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     feedbackModule.endTask()
     return
   }
-=======
 
   fb.showLoadingBar(true)
->>>>>>> Fix issue with past tx
   const approvalAmount = await ethereumModule.allowance({
     symbol,
     // @ts-ignore

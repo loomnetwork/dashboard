@@ -17,8 +17,8 @@ import { createDefaultClient } from "loom-js/dist/helpers"
 import { feedbackModule } from "@/feedback/store"
 
 import axios from "axios"
-import { state } from '../common';
-import { setFromMarketplace, setNewMappingAgree } from './mutations';
+import { state } from "../common"
+import { setFromMarketplace, setNewMappingAgree } from "./mutations"
 
 const log = debug("dash.mapper")
 
@@ -31,8 +31,6 @@ export async function loadMapping(context: ActionContext, address: string) {
     client,
     Address.fromString([chainId, caller].join(":")),
   )
-  // check if user mapping is from Relentless Marketplace
-  isUserFromMarketplace(context, address)
   try {
     log("getMappingAsync", `eth:${address}`)
     const mapping = await mapper.getMappingAsync(
@@ -41,6 +39,8 @@ export async function loadMapping(context: ActionContext, address: string) {
     context.state.mapping = mapping
     log("got mapping", context.state.mapping)
   } catch (e) {
+    // check if user mapping is from Relentless Marketplace
+    await isUserFromMarketplace(context, address)
     if (e.message.includes("failed to map address")) {
       context.state.mapping = {
         from: Address.fromString(`eth:${address}`),
@@ -68,7 +68,7 @@ export async function createMapping(context: ActionContext) {
   const ethAddress = getRequired(state.mapping, "mapping").from
   // @ts-ignore, bignumber changed between version
   const ethSigner = new EthersSigner(signer)
-  const plasmaId = generateNewId()
+  const plasmaId = generateNewId(context.rootState.plasma.chainId)
   console.log("caller", caller)
 
   const { address, client } = createDefaultClient(

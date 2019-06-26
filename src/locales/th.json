@@ -279,6 +279,9 @@
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "Unlock Hardware wallet",
         "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your ethereum account."
       }
     },
     "blockExplorer": {

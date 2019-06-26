@@ -41,6 +41,7 @@ export default class WithdrawConfirmed extends Vue {
   completeWithdrawal = gatewayModule.ethereumWithdraw
   showSuccess = feedbackModule.showSuccess
   showError = feedbackModule.showError
+  setShowLoadingBar = feedbackModule.showLoadingBar
 
   completeWithdrawalHandler() {
     // if (!this.receipt) {
@@ -54,6 +55,7 @@ export default class WithdrawConfirmed extends Vue {
       this.showSuccess("Withdrawal complete!")
     }).catch((err) => {
       console.log(err)
+      this.setShowLoadingBar(false)
       this.showError("Withdrawal failed, please try again")
       this.status = "error"
     })

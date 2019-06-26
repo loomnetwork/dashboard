@@ -279,6 +279,9 @@
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "하드웨어 지갑 잠금해제",
         "enter_pin_code": "여러분의 장부에서 핀 코드를 입력하여 이더리움 앱에 로그인하세요."
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your ethereum account."
       }
     },
     "blockExplorer": {

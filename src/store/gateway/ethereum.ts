@@ -68,30 +68,30 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       receipt.tokenContract.local.toString(),
       tokenAddress,
     )
-    let result
+    let tx
     // multisig
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      result = this.contract.methods
+      tx = await this.contract.methods
         .withdrawERC20(amount, tokenAddress, valIndexes, vs, rs, ss)
         .send({ from: localAddress })
     } else {
       const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
       // @ts-ignore
-      result = this.contract.methods
+      tx = await this.contract.methods
         .withdrawERC20(amount, signature, tokenAddress)
         .send({ from: localAddress })
     }
 
-    result.then((tx) => {
-      localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-      localStorage.setItem(
-        "latestWithdrawalBlock",
-        JSON.stringify(tx.blockNumber),
-      )
-    })
-    return result
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+    localStorage.setItem(
+      "latestWithdrawalBlock",
+      JSON.stringify(tx.blockNumber),
+    )
+    ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
+
+    return tx
   }
 }
 
@@ -255,19 +255,26 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     feedbackModule.endTask()
     return
   }
+
+  fb.showLoadingBar(true)
   const approvalAmount = await ethereumModule.allowance({
     symbol,
     // @ts-ignore
     spender: gateway.contract._address,
   })
   if (weiAmount.gt(approvalAmount)) {
-    fb.showLoadingBar(true)
-    await ethereumModule.approve({
-      // @ts-ignore
-      to: gateway.contract._address,
-      ...funds,
-    })
-    fb.showLoadingBar(false)
+    try {
+      await ethereumModule.approve({
+        // @ts-ignore
+        to: gateway.contract._address,
+        ...funds,
+      })
+      fb.showLoadingBar(false)
+    } catch (err) {
+      console.log(err)
+      fb.showLoadingBar(false)
+      return
+    }
   }
   fb.requireConfirmation({
     title: "Complete deposit",

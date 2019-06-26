@@ -97,7 +97,5 @@ function withdrawalInProgress() {
   )
   if (!withdrawalBlock) return false
   // 10 block confirmations + 5 for processing
-  const result =
-    ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
-  return result
+  return ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
 }

@@ -16,18 +16,19 @@ export function ethereumReactions(store: Store<DashboardState>) {
     ethereumModule.refreshBalance("ETH")
     ethereumModule.web3.eth.getBlockNumber().then((blockNumber: number) => {
       ethereumModule.setBlockNumber(blockNumber)
+      if (localStorage.getItem("latestWithdrawalBlock")) {
+        const value = localStorage.getItem("latestWithdrawalBlock")
+        // @ts-ignore
+        const block = JSON.parse(value)
+        console.log("Setting the latest withdrawal block", block)
+        ethereumModule.setLatestWithdrawalBlock(block)
+      }
       ethereumModule.web3.eth.subscribe("newBlockHeaders", (error, event) => {
         if (!error) {
+          console.log("Setting the latest block", event.number)
           ethereumModule.setBlockNumber(event.number)
-          if (localStorage.getItem("latestWithdrawalBlock")) {
-            const value = localStorage.getItem("latestWithdrawalBlock")
-            // @ts-ignore
-            const block = JSON.parse(value)
-            console.log("Remaining blocks: ", event.number - (block + 15))
-          }
-          return
         }
-        console.warn("Error parsing blocks: ", error.message)
+        console.warn("Error parsing blocks: ", error)
       })
     })
   }

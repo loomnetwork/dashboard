@@ -36,6 +36,6 @@ export default {
     multisig: false,
   },
   coinDataUrl: "https://auth.loom.games/wallet/tokens",
-  disabled: ["transfer-asset", "binance", "dev-deploy", "eth-withdraw", "eth-deposit"],
+  disabled: ["transfer-asset", "binance", "dev-deploy"],
   chains: ["ethereum"],
 } as DashboardConfig

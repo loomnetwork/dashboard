@@ -191,8 +191,8 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
   if (receipt) {
     console.log("Setting pre-existing receipt")
+    feedbackModule.showInfo("Withdrawal already in progress.")
     gatewayModule.setWithdrawalReceipts(receipt)
-    feedbackModule.showError("Withdrawal already in progress, please try again later.")
     return
   }
   try {

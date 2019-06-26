@@ -7,7 +7,7 @@
     id="deposit-approval-success"
     :title="'Withdraw ' + token"
   >
-    <div v-if="status === 'default'">
+    <div>
       <h6>Token type: {{ token }}</h6>
       <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
       <amount-input
@@ -18,19 +18,10 @@
         @isError="errorHandler"
       />
     </div>
-    <div v-if="status === 'error'">
-      <h2>An error occurred, please try again!</h2>
-    </div>
     <template slot="modal-footer">
-      <div v-if="status === 'default'">
-        <b-btn @click="close()">Cancel</b-btn>
-        <span style="flex:1"></span>
-        <b-btn class="ml-2" @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
-      </div>
-      <div v-else>
-        <span style="flex:1"></span>
-        <b-btn @click="close()">Close</b-btn>
-      </div>
+      <b-btn @click="close()">Cancel</b-btn>
+      <span style="flex:1"></span>
+      <b-btn class="ml-2" @click="requestWithdrawHandler" variant="primary" :disabled="amountIsValid">Withdraw</b-btn>
     </template>
   </b-modal>
 </template>
@@ -61,7 +52,6 @@ export default class WithdrawForm extends Vue {
 
   @Prop({ required: true }) token!: string // prettier-ignore
 
-  status: string = "default"
   weiAmount: BN = new BN(0)
   min = new BN(1)
   amountIsValid: boolean = false
@@ -113,16 +103,8 @@ export default class WithdrawForm extends Vue {
       weiAmount: this.weiAmount,
     }
 
-    this.beginWithdrawal(payload).then(() => {
-      this.setShowWithdrawProgress(false)
-    }).catch((err) => {
-      console.log(err)
-      this.setShowWithdrawProgress(false)
-      this.setShowWithdrawForm(true)
-      this.status = "error"
-    })
+    this.beginWithdrawal(payload)
     this.close()
-    this.setShowWithdrawProgress(true)
   }
 }
 </script>

@@ -57,7 +57,7 @@ import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule as feedback } from "@/feedback/store"
 import TransportU2F from "@ledgerhq/hw-transport-u2f"
 import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
-const ProviderEngine = require("web3-provider-engine")
+import ProviderEngine from "web3-provider-engine"
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch"
 import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
 

@@ -1,9 +1,9 @@
 import { ZERO } from "@/utils"
-import { LocktimeTier, CandidateState, DelegationState } from "loom-js/dist/proto/dposv3_pb"
-import { Address, CryptoUtils } from "loom-js"
-import { fromIDelegation } from "../helpers"
+import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
+import { Address } from "loom-js"
 import { feedbackModule } from "@/feedback/store"
 import sinon from "sinon"
+import { plasmaModule } from "@/store/plasma"
 
 export function emptyValidator() {
     return {
@@ -22,4 +22,6 @@ export function emptyValidator() {
     }
 }
 
-export const feedback = sinon.stub(feedbackModule)
+export const feedbackModuleStub = sinon.stub(feedbackModule)
+
+export const plasmaModuleStub = sinon.stub(plasmaModule)

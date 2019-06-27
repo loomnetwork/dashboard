@@ -28,13 +28,14 @@
         >{{ $t(menu.text) }}</b-nav-item>
       </b-nav>
     </section>
-    <section class="developer-menu" v-if="!state.disabled.includes('developer-actions')">
+    <section class="developer-menu">
       <header>Developers</header>
       <b-nav vertical>
         <b-nav-item
           v-for="(menu, index) in menus.dev"
           :key="index"
           :to="menu.to"
+          :href="menu.href"
           class="router"
           exact-active-class="router-active"
         >{{ $t(menu.text) }}</b-nav-item>
@@ -95,7 +96,7 @@ export default class FaucetSidebar extends Vue {
     ],
     dev: [
       {
-        to: "/",
+        href: this.state.plasma.blockExplorer,
         text: "components.faucet_sidebar.block_explorer",
       },
       {
@@ -103,14 +104,14 @@ export default class FaucetSidebar extends Vue {
         text: "components.faucet_sidebar.deploy_to_plasmachain",
         name: "dev-deploy",
       },
-      {
-        to: "/",
-        text: "components.faucet_sidebar.transfer_gateway",
-      },
-      {
-        to: "/",
-        text: "components.faucet_sidebar.validator_management",
-      },
+      // {
+      //   to: "/",
+      //   text: "components.faucet_sidebar.transfer_gateway",
+      // },
+      // {
+      //   to: "/",
+      //   text: "components.faucet_sidebar.validator_management",
+      // },
     ],
     help: [
       {

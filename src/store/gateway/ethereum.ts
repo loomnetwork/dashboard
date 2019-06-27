@@ -255,8 +255,14 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   if (funds.symbol === "ETH") {
     feedbackModule.setTask("ETH deposit")
     feedbackModule.setStep("Depositing ETH")
-    await gateway.deposit(weiAmount, context.rootState.ethereum.address)
-    feedbackModule.endTask()
+    try {
+      await gateway.deposit(weiAmount, context.rootState.ethereum.address)
+      feedbackModule.endTask()
+    } catch (e) {
+      console.error(e)
+      feedbackModule.endTask()
+      feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+    }
     return
   }
 

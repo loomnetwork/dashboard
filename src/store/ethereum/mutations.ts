@@ -13,3 +13,7 @@ export function setBlockNumber(state: EthereumState, payload: number) {
 export function setLatestWithdrawalBlock(state: EthereumState, payload: number) {
   state.latestWithdrawalBlock = payload
 }
+
+export function setClaimedReceiptHasExpired(state: EthereumState, payload: boolean) {
+  state.claimedReceiptHasExpired = payload
+}

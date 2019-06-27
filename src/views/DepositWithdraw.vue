@@ -37,7 +37,7 @@
             >
               <span>Withdraw</span>
               <b-spinner
-                v-if="disableWithdraw"
+                v-if="!pastTxHasExpired"
                 variant="primary"
                 label="Spinning"
                 class="ml-2"
@@ -134,17 +134,13 @@ export default class DepositWithdraw extends Vue {
     return !ethereumModule.state.blockNumber || !this.pastTxHasExpired || this.txInProgress
   }
 
-  get blockNumberThreshold(): number {
-   return (ethereumModule.state.blockNumber - 15)
-  }
-
   get latestWithdrawalBlock(): number {
     return ethereumModule.state.latestWithdrawalBlock
   }
 
   get pastTxHasExpired() {
-    if (this.latestWithdrawalBlock === 0) return false
-    return this.blockNumberThreshold > this.latestWithdrawalBlock
+    if (this.latestWithdrawalBlock === 0) return true
+    return ethereumModule.state.claimedReceiptHasExpired
   }
 
   get disableTransfer(): boolean {

@@ -46,6 +46,7 @@ export interface EthereumState extends EthereumConfig {
   },
   blockNumber: number,
   latestWithdrawalBlock: number,
+  claimedReceiptHasExpired: boolean,
   history: any[]
 }
 

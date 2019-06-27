@@ -27,7 +27,7 @@
 
 import axios from "axios"
 
-interface TokenData {
+export interface TokenData {
   symbol: string
   ethereum: string
   plasma: string

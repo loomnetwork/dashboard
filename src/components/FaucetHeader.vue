@@ -56,7 +56,7 @@
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
+                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'" v-if="!state.disabled.includes('developer-actions')">
                   <h5>
                     <router-link
                       :to="menu.to"

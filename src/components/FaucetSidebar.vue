@@ -28,7 +28,7 @@
         >{{ $t(menu.text) }}</b-nav-item>
       </b-nav>
     </section>
-    <section class="developer-menu">
+    <section class="developer-menu" v-if="!state.disabled.includes('developer-actions')">
       <header>Developers</header>
       <b-nav vertical>
         <b-nav-item

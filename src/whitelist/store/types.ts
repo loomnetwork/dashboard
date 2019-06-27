@@ -15,10 +15,14 @@ export interface WhiteListState {
   tiers: ITier[]
   seed: {
     mnemonic: string
-    publicAddress: string
+    publicAddress: string,
   }
+  deployedContractAddress: DeployedContractAddress
 }
 
+export interface DeployedContractAddress {
+  [deployerAddress: string]: string[]
+}
 export interface DeployerAddress {
   address: Address
   hex: string

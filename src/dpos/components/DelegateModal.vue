@@ -59,7 +59,7 @@
         v-if="!loading"
         style="width: 160px; float: right;"
         variant="primary"
-        :disabled="!isAmountValid"
+        :disabled="delegation.lockTimeTier < 0 || !isAmountValid"
         @click="delegate"
       >{{$t("delegate")}}</b-button>
     </div>
@@ -79,6 +79,7 @@ const MULTIPLIER = new BN("10").pow(new BN("18"))
 @Component
 export default class DelegateModal extends Vue {
 
+  roundAmount = false
   validator = null
   showValidators = false
   formattedValidators: any[] = []
@@ -95,7 +96,7 @@ export default class DelegateModal extends Vue {
 
   bonusTiers = [
     "5%",
-    "8%",
+    "7.5%",
     "10%",
     "20%",
   ]
@@ -143,6 +144,9 @@ export default class DelegateModal extends Vue {
   set delegationAmount(amount: number) {
     if (Number.isInteger(amount)) {
       this.delegation!.amount = MULTIPLIER.mul(new BN(amount))
+      this.roundAmount = true
+    } else {
+      this.roundAmount = false
     }
   }
 
@@ -172,7 +176,7 @@ export default class DelegateModal extends Vue {
   get isAmountValid() {
     const d = this.delegation!
 
-    return d.amount.gt(ZERO) && d.amount.lte(this.state.plasma.coins.LOOM.balance)
+    return d.amount.gt(ZERO) && d.amount.lte(this.state.plasma.coins.LOOM.balance) && this.roundAmount
   }
 
   cancel() {

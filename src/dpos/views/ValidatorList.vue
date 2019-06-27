@@ -34,7 +34,7 @@
                 </div>
                 <div class="stakes">
                   <label>Stake</label>
-                  <span>{{validator.delegationTotal | tokenAmount}}</span>
+                  <span>{{validator.totalStaked | tokenAmount}}</span>
                 </div>
                 <div
                   v-if="!isSmallDevice"
@@ -57,7 +57,7 @@
               <template
                 slot="delegationTotal"
                 slot-scope="data"
-              >{{data.item.delegationTotal | tokenAmount}}</template>
+              >{{data.item.totalStaked | tokenAmount}}</template>
               <template slot="active" slot-scope="data">{{data.item.active ? "Active" : ""}}</template>
             </b-table>
           </template>
@@ -105,7 +105,7 @@ export default class ValidatorList extends Vue {
   }
 
   get totalStaked() {
-    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.delegationTotal), ZERO)
+    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
   }
 
   get validators() {

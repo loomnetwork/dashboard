@@ -34,12 +34,12 @@
                 </div>
                 <div class="stakes">
                   <label>Stake</label>
-                  <span>{{validator.delegationTotal | tokenAmount}}</span>
+                  <span>{{ validator.delegationTotal }}</span>
                 </div>
                 <div
                   v-if="!isSmallDevice"
                   class="status"
-                  :class="{'active': validator.Status === 'Active'}"
+                  :class="{ 'active': validator.Status === 'Active'}"
                 >{{validator.status}}</div>
               </b-list-group-item>
             </b-list-group>
@@ -54,11 +54,7 @@
               :sort-desc="false"
               @row-clicked="showValidatorDetail"
             >
-              <template
-                slot="delegationTotal"
-                slot-scope="data"
-              >{{data.item.delegationTotal | tokenAmount}}</template>
-              <template slot="active" slot-scope="data">{{data.item.active ? "Active" : ""}}</template>
+              <template slot="active" slot-scope="data">{{ data.item.active ? "Active" : "" }}</template>
             </b-table>
           </template>
         </div>
@@ -75,6 +71,7 @@ import ElectionTimer from "../components/ElectionTimer.vue"
 import { CryptoUtils, LocalAddress } from "loom-js"
 import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from '../../utils';
+import { formatTokenAmount } from "@/filters"
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -109,13 +106,18 @@ export default class ValidatorList extends Vue {
   }
 
   get validators() {
-    return this.state.dpos.validators.sort((a, b) => {
+    const storeValidators = this.state.dpos.validators.sort((a, b) => {
       const aValue = a.isBootstrap ? 0 : random() * 10000
       const bValue = b.isBootstrap ? 0 : random() * 10000
       return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
+    return storeValidators.map((validator) => ({
+        name: validator.name,
+        active: validator.active,
+        delegationTotal: formatTokenAmount(validator.delegationTotal),
+        fee: validator.fee
+    }))
   }
-
   /**
    * adds class bootstrap node if is bootstrap
    */

@@ -59,7 +59,7 @@
         v-if="!loading"
         style="width: 160px; float: right;"
         variant="primary"
-        :disabled="!isAmountValid"
+        :disabled="delegation.lockTimeTier < 0 || !isAmountValid"
         @click="delegate"
       >{{$t("delegate")}}</b-button>
     </div>

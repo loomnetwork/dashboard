@@ -44,21 +44,7 @@ export default class WithdrawConfirmed extends Vue {
   setShowLoadingBar = feedbackModule.showLoadingBar
 
   completeWithdrawalHandler() {
-    // if (!this.receipt) {
-    //   console.log("No receipt found")
-    //   this.status = "error"
-    //   return
-    // }
-    // const tokenAddress = this.state.gateway.withdrawalReceipts!.tokenContract
-    // const symbol = getTokenSymbolFromAddress(tokenAddress)
-    this.completeWithdrawal(this.symbol).then(() => {
-      this.showSuccess("Withdrawal complete!")
-    }).catch((err) => {
-      console.log(err)
-      this.setShowLoadingBar(false)
-      this.showError("Withdrawal failed, please try again")
-      this.status = "error"
-    })
+    this.completeWithdrawal(this.symbol)
     this.close()
   }
 

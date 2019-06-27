@@ -24,7 +24,7 @@ BRANCH_CHOICE=${1:-$GIT_BRANCH}
 # This is where you add any extra branches you want to recognise.
 case "$BRANCH_CHOICE" in
   origin/master|master)
-    FAUCET_PATH="wallet.loomx.io"
+    FAUCET_PATH="${PRESET_PROD}"
     AWS_DISTRIBUTION_ID=E2NYGSJ6V75DN
   ;;
   origin/staging|staging)

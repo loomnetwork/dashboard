@@ -27,7 +27,7 @@ export default {
   gateway: {
     chains: ["ethereum"],
     multisig: true,
-    checkMarketplaceURL: "https://stage-auth.loom.games/wallet/address?address={address}&wallet=eth",
+    checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
   },
   coinDataUrl: "",
   disabled: [],

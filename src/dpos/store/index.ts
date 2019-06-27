@@ -132,6 +132,7 @@ export async function refreshValidators(ctx: ActionContext) {
       const addr = d.delegationsArray[0].validator.local.toString()
       const node = getOrCreate(addr)
       node.stakedAmount = d.delegationTotal
+      node.totalStaked = node.whitelistAmount.add(d.delegationTotal)
     })
   // use the address for those without names
   nodes

@@ -5,24 +5,24 @@
 </template>
 
 <script>
-import Vue from "vue";
-import Layout from "@/components/Layout";
+import Vue from "vue"
+import Layout from "@/components/Layout"
 
 export default {
   name: "App",
   components: {
-    Layout
+    Layout,
   },
   watch: {
     "$store.state.plasma.address"(address) {
       if (address !== "") {
-        this.$router.push("/account");
+        this.$router.push("/account")
       } else {
-        this.$router.router.push("/");
+        this.$router.router.push("/")
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss">

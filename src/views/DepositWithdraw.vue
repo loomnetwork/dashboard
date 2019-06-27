@@ -131,7 +131,11 @@ export default class DepositWithdraw extends Vue {
   }
 
   get disableWithdraw(): boolean {
-    return !ethereumModule.state.blockNumber || !this.pastTxHasExpired || this.txInProgress
+    return !this.currentBlockNumber || !this.pastTxHasExpired || this.txInProgress
+  }
+
+  get currentBlockNumber(): number {
+   return ethereumModule.state.blockNumber
   }
 
   get latestWithdrawalBlock(): number {

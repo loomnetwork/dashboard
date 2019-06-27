@@ -23,7 +23,7 @@
 <script lang="ts">
 import Vue from "vue"
 import BN from "bn.js"
-import { Component } from "vue-property-decorator"
+import { Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
@@ -35,7 +35,7 @@ import { formatTokenAmount } from '../../filters';
 export default class WithdrawConfirmed extends Vue {
 
   status = "default"
-  symbol = "LOOM"
+  symbol = ""
   setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
   setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
   completeWithdrawal = gatewayModule.ethereumWithdraw
@@ -88,6 +88,21 @@ export default class WithdrawConfirmed extends Vue {
     if (value === false) {
       this.status = "default"
       this.$root.$emit("refreshBalances")
+    }
+  }
+
+  @Watch("receipt")
+  setTokenSymbol(receipt: IWithdrawalReceipt) {
+    if (receipt === null) return
+
+    const contractAddress = receipt.tokenContract.local.toString().toLowerCase()
+    const tokenInfo = tokenService.tokenFromAddress(contractAddress, "ethereum")
+    if (tokenInfo !== null) {
+      this.symbol = tokenInfo.symbol
+    } else if (contractAddress === this.state.ethereum.contracts.mainGateway.toLowerCase()) {
+      this.symbol = "ETH"
+    } else {
+      console.error("unknown token contract ", contractAddress)
     }
   }
 

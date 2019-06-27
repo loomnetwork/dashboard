@@ -121,10 +121,13 @@ class ERC20Adapter implements ContractAdapter {
       })
       .then((v) => new BN(v.toString()))
   }
-  allowance(account: string, to: string) {
+  async allowance(account: string, to: string) {
+    const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .allowance(account, to)
-      .call()
+      .call({
+        from: caller.local.toString(),
+      })
       .then((v) => new BN(v))
   }
   async approve(to: string, amount: BN) {
@@ -236,11 +239,17 @@ export async function approve(
     // TODO: fix error message
     throw new Error("plasma.approval.balance.low")
   }
+  const currentAllowance = await adapter.allowance(context.state.address, to)
+  if (currentAllowance.gte(weiAmount)) {
+    return Promise.resolve(true)
+  }
+  const approvalAmount = weiAmount.sub(currentAllowance)
+  // to do approve allowance - weiAmount
   feedbackModule.setStep(
-    "Approving spending of " + formatTokenAmount(weiAmount) + " LOOM",
+    "Approving spending of " + formatTokenAmount(approvalAmount) + " " + payload.symbol,
   )
   try {
-    await adapter.approve(to, weiAmount)
+    await adapter.approve(to, approvalAmount)
     return true
   } catch (error) {
     if (error.message.includes("User denied message")) {

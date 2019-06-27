@@ -5,7 +5,14 @@
       <main>
         <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
         <div class="container-fluid mb-5 rmv-padding">
-          <b-modal no-close-on-esc no-close-on-backdrop id="modal-lg" size="lg" @hide="onClose" v-model="notMapped">
+          <b-modal
+            no-close-on-esc
+            no-close-on-backdrop
+            id="modal-lg"
+            size="lg"
+            @hide="onClose"
+            v-model="maybeRelentlessUser"
+          >
             <div class="confirm-link text-center">
               <h3>Are you from Relentless Marketplace ?</h3>
               <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
@@ -29,10 +36,10 @@
                 <h5>Are you sure ?</h5>
                 <p
                   style="color: red;"
-                >We will create a new fresh account for you, But account linking is unable anymore</p>
+                >Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace</p>
                 <b-button
                   variant="outline-dark"
-                  @click="setNewMappingAgree(true)"
+                  @click="maybeRelentlessUser = false"
                 >Create a new account</b-button>
               </div>
             </div>
@@ -155,21 +162,21 @@ export default class FirstPage extends Vue {
 
   get $state() { return (this.$store.state as DashboardState) }
 
-  get notMapped() {
-      return (this.$state.gateway.mapping !== null) &&
-             (this.$state.gateway.mapping.to!.isEmpty()) &&
-             (this.$state.ethereum.signer)
+  get maybeRelentlessUser() {
+    return this.$state.gateway.maybeRelentlessUser
   }
-  get newMappingAgree() { return this.$state.gateway.newMappingAgree }
 
-  get fromMarketplace() { return this.$state.gateway.fromMarketplace }
+  set maybeRelentlessUser(val) {
+    if (val === false) {
+      gatewayModule.setMaybeRelentlessUser(val)
+    }
+  }
 
   loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
 
-  setNewMappingAgree = gatewayModule.setNewMappingAgree
 
   address = ""
   addressModalShow = false
@@ -184,13 +191,7 @@ export default class FirstPage extends Vue {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
   }
 
-  set notMapped(val) {
-  }
-  set newMappingAgree(val) {
-  }
-  set fromMarketplace(val) {
-  }
-  
+
   /* For Chrome & Firefox Browser
      if user dont have Metamask installed, there is no web3 that inject in their browser
      (except user install other extensions for crypto wallet (Ethereum platform))

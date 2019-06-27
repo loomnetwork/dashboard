@@ -26,6 +26,7 @@
             <b-button
               class="button"
               variant="outline-primary"
+              :disabled="disableDeposit"
               @click="requestCrossChainTranfer(DEPOSIT, symbol)"
             >Deposit</b-button>
             <b-button
@@ -46,7 +47,7 @@
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="plasma.coins[symbol].balance.isZero()"
+              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestSwap(symbol)"
             >Transfer</b-button>
           </b-button-group>
@@ -99,6 +100,7 @@ import { feedbackModule } from "@/feedback/store"
   },
 })
 export default class DepositWithdraw extends Vue {
+
   DEPOSIT = "DEPOSIT"
   WITHDRAW = "WITHDRAW"
   setShowDepositForm = gatewayModule.setShowDepositForm
@@ -120,8 +122,33 @@ export default class DepositWithdraw extends Vue {
     return this.$store.state
   }
 
+  get txInProgress(): boolean {
+    return feedbackModule.state.isLoading
+  }
+
+  get disableDeposit(): boolean {
+    return this.txInProgress
+  }
+
   get disableWithdraw(): boolean {
-    return !ethereumModule.state.blockNumber || gatewayModule.withdrawalInProgress()
+    return !ethereumModule.state.blockNumber || !this.pastTxHasExpired || this.txInProgress
+  }
+
+  get blockNumberThreshold(): number {
+   return (ethereumModule.state.blockNumber - 15)
+  }
+
+  get latestWithdrawalBlock(): number {
+    return ethereumModule.state.latestWithdrawalBlock
+  }
+
+  get pastTxHasExpired() {
+    if (this.latestWithdrawalBlock === 0) return false
+    return this.blockNumberThreshold > this.latestWithdrawalBlock
+  }
+
+  get disableTransfer(): boolean {
+    return this.txInProgress
   }
 
   get plasma(): PlasmaState {

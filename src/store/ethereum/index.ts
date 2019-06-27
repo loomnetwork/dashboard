@@ -19,7 +19,7 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
-import { setBlockNumber } from "./mutations"
+import { setBlockNumber, setLatestWithdrawalBlock } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 
@@ -61,6 +61,7 @@ const initialState: EthereumState = {
   },
   contracts: {},
   blockNumber: 0,
+  latestWithdrawalBlock: 0,
   history: [],
 }
 
@@ -110,6 +111,7 @@ export const ethereumModule = {
 
   // Mutations
   setBlockNumber: builder.commit(setBlockNumber),
+  setLatestWithdrawalBlock: builder.commit(setLatestWithdrawalBlock),
 }
 
 // holds the contracts. We don't need to exposed these on the state

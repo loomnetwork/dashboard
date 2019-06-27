@@ -9,3 +9,7 @@ export function setBalance(state: EthereumState, funds: Funds) {
 export function setBlockNumber(state: EthereumState, payload: number) {
   state.blockNumber = payload
 }
+
+export function setLatestWithdrawalBlock(state: EthereumState, payload: number) {
+  state.latestWithdrawalBlock = payload
+}

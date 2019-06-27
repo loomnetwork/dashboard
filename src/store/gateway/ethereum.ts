@@ -24,8 +24,9 @@ import { ethers } from "ethers"
 import { AbiItem } from "web3-utils"
 
 import debug from "debug"
+import { tokenService } from "@/services/TokenService"
 
-const log = debug("dash.gateway")
+const log = debug("dash.gateway.ethereum")
 
 /**
  * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
@@ -62,36 +63,37 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const amount = receipt.tokenAmount!.toString()
     const localAddress = receipt.tokenOwner.local.toString()
     const tokenAddress = this.tokenAddress
+    log("withdraw ERC20", receipt, amount)
     console.assert(
       tokenAddress.toLocaleLowerCase() === receipt.tokenContract.local.toString(),
       "Receipt contract address different from current contract",
       receipt.tokenContract.local.toString(),
       tokenAddress,
     )
-    let result
+    let tx
     // multisig
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      result = this.contract.methods
+      tx = await this.contract.methods
         .withdrawERC20(amount, tokenAddress, valIndexes, vs, rs, ss)
         .send({ from: localAddress })
     } else {
       const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
       // @ts-ignore
-      result = this.contract.methods
+      tx = await this.contract.methods
         .withdrawERC20(amount, signature, tokenAddress)
         .send({ from: localAddress })
     }
 
-    result.then((tx) => {
-      localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-      localStorage.setItem(
-        "latestWithdrawalBlock",
-        JSON.stringify(tx.blockNumber),
-      )
-    })
-    return result
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+    localStorage.setItem(
+      "latestWithdrawalBlock",
+      JSON.stringify(tx.blockNumber),
+    )
+    ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
+
+    return tx
   }
 }
 
@@ -108,14 +110,14 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
     readonly web3: Web3,
   ) { }
 
-  deposit(amount: BN, sender: string) {
+  async deposit(amount: BN, sender: string) {
     console.log({
       from: sender,
       // @ts-ignore
       to: this.contract._address,
       value: amount.toString(),
     })
-    this.web3.eth.sendTransaction({
+    await this.web3.eth.sendTransaction({
       from: sender,
       // @ts-ignore
       to: this.contract._address,
@@ -124,22 +126,24 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
   }
 
   async withdraw(receipt: IWithdrawalReceipt) {
+    const localAddress = receipt.tokenOwner.local.toString()
+    // for ETH amount is in value no tokenAmount
+    const amount = receipt.value.toString()
+    log("withdraw ETH", receipt, amount)
     // multisig
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      const amount = receipt.tokenAmount!
       return this.contract.methods.withdrawETH(
-        amount.toString(),
-        valIndexes,
-        vs,
-        ss,
-        rs,
-      )
+        amount,
+        valIndexes, vs, rs, ss,
+      ).send({ from: localAddress })
     } else {
       const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
       // @ts-ignore
-      this.contract.methods.withdrawETH(amount.toString(), signature)
+      return this.contract.methods.withdrawETH(amount.toString(), signature)
+        .send({ from: localAddress })
+
     }
 
   }
@@ -255,19 +259,26 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     feedbackModule.endTask()
     return
   }
+
+  fb.showLoadingBar(true)
   const approvalAmount = await ethereumModule.allowance({
     symbol,
     // @ts-ignore
     spender: gateway.contract._address,
   })
   if (weiAmount.gt(approvalAmount)) {
-    fb.showLoadingBar(true)
-    await ethereumModule.approve({
-      // @ts-ignore
-      to: gateway.contract._address,
-      ...funds,
-    })
-    fb.showLoadingBar(false)
+    try {
+      await ethereumModule.approve({
+        // @ts-ignore
+        to: gateway.contract._address,
+        ...funds,
+      })
+      fb.showLoadingBar(false)
+    } catch (err) {
+      console.log(err)
+      fb.showLoadingBar(false)
+      return
+    }
   }
   fb.requireConfirmation({
     title: "Complete deposit",
@@ -299,12 +310,27 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-export async function ethereumWithdraw(context: ActionContext, token: string) {
+export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const receipt = context.state.withdrawalReceipts
-  const gateway = service().get(token)
   if (receipt === null || receipt === undefined) {
-    throw new Error("no withdraw receipt in state for " + token)
+    console.error("no withdraw receipt in state")
+    return
   }
+  const tokenAddress = receipt.tokenContract.local.toString().toLowerCase()
+  let token: string
+  // ETH case tokenAddress is gateway address
+  if (tokenAddress === context.rootState.ethereum.contracts.mainGateway.toLowerCase()) {
+    console.log("eth withdraw")
+    token = "ETH"
+  } else {
+    const tokenInfo = tokenService.tokenFromAddress(tokenAddress, "ethereum")
+    if (tokenInfo === null) {
+      console.error("token contract address in receipt unknown ", tokenInfo)
+      return
+    }
+    token = tokenInfo.symbol
+  }
+  const gateway = service().get(token)
   fb.showLoadingBar(true)
   await gateway.withdraw(receipt)
   fb.showLoadingBar(false)
@@ -399,9 +425,10 @@ async function createWithdrawalHash(
 ): Promise<string> {
   const ethAddress = receipt.tokenOwner.local.toString()
   const tokenAddress = receipt.tokenContract.local.toString()
+  // ETH: gatewayAddress ?
   // @ts-ignore
   const gatewayAddress = gatewayContract._address
-  const amount = receipt.tokenAmount!.toString()
+  const amount = receipt.value.isZero() ? receipt.tokenAmount!.toString() : receipt.value.toString()
   const amountHashed = ethers.utils.solidityKeccak256(
     ["uint256", "address"],
     [amount, tokenAddress],
@@ -411,8 +438,8 @@ async function createWithdrawalHash(
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)
   }
-
   const nonce = await gatewayContract.methods.nonces(ethAddress).call()
+  log("hash", [prefix, ethAddress, nonce, gatewayAddress, amountHashed])
   return ethers.utils.solidityKeccak256(
     ["string", "address", "uint256", "address", "bytes32"],
     [prefix, ethAddress, nonce, gatewayAddress, amountHashed],

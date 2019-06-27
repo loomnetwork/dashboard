@@ -45,12 +45,8 @@ export function clearPendingTransactions(state: GatewayState) {
   state.pendingTransactions = new Array()
 }
 
-export function setNewMappingAgree(state: GatewayState, payload: boolean) {
-  state.newMappingAgree = payload
-}
-
-export function setFromMarketplace(state: GatewayState, payload: boolean) {
-  state.fromMarketplace = payload
+export function setMaybeRelentlessUser(state: GatewayState, payload: boolean) {
+  state.maybeRelentlessUser = payload
 }
 
 export function setWithdrawalReceipts(

@@ -5,7 +5,7 @@ import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import { timer } from "rxjs"
 // import { BinanceLoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { PlasmaGatewayAdapter } from "./types"
-import { Address } from "loom-js"
+import { Address, Contract } from "loom-js"
 
 /**
  * temporary stub for BinanceLoomCoinTransferGateway
@@ -29,9 +29,9 @@ export class BinanceLoomGatewayAdapter implements PlasmaGatewayAdapter {
   token = "LOOM"
   constructor(
     private vmc: ValidatorManagerContract,
-    readonly contract: BinanceLoomCoinTransferGateway,
+    public readonly contract: BinanceLoomCoinTransferGateway,
     readonly binanceRecipient: Address,
-  ) {}
+  ) { }
   deposit(amount: BN, binanceRecipient: Address) {
     // no deposit
     return

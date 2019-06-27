@@ -124,8 +124,8 @@ export default class DepositForm extends Vue {
   }
 
   @Watch("visible")
-  refreshBalance() {
-    ethereumModule.refreshBalance(this.transferRequest.token)
+  refreshBalance(value: boolean) {
+    if (value) ethereumModule.refreshBalance(this.transferRequest.token)
   }
 
   async sendApproval(bvModalEvt) {

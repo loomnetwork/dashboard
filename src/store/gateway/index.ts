@@ -39,9 +39,7 @@ function initialState(): GatewayState {
       { text: "Withdrawing to your Ethereum account...", isComplete: false },
     ],
     withdrawStateIdx: 0,
-    notMapped: false,
-    newMappingAgree: false,
-    fromMarketplace: false,
+    maybeRelentlessUser: null,
   }
 }
 
@@ -69,6 +67,8 @@ export const gatewayModule = {
   // mapper
   loadMapping: builder.dispatch(Mapper.loadMapping),
   createMapping: builder.dispatch(Mapper.createMapping),
+  setMaybeRelentlessUser: builder.commit(mutations.setMaybeRelentlessUser),
+  checkRelentlessUser: builder.dispatch(Mapper.checkRelentlessUser),
 
   // mutations
   setConfig: builder.commit(mutations.setConfig),
@@ -88,7 +88,6 @@ export const gatewayModule = {
   setWithdrawStateAsCompleted: builder.commit(
     mutations.setWithdrawStateAsCompleted,
   ),
-  setNewMappingAgree: builder.commit(mutations.setNewMappingAgree),
 }
 
 function withdrawalInProgress() {
@@ -97,7 +96,5 @@ function withdrawalInProgress() {
   )
   if (!withdrawalBlock) return false
   // 10 block confirmations + 5 for processing
-  const result =
-    ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
-  return result
+  return ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
 }

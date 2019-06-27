@@ -153,7 +153,7 @@ export default class HardwareWalletModal extends Vue {
     //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
 
     // @ts-ignore
-    ethereumModule.setProvider(providerEngine)
+    ethereumModule.setProvider(engine)
   }
 
   @Watch("selectedPath")

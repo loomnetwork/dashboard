@@ -27,10 +27,14 @@ export function ethereumReactions(store: Store<DashboardState>) {
         if (!error) {
           console.log("Setting the latest block", event.number)
           ethereumModule.setBlockNumber(event.number)
-          if ((ethereumModule.state.latestWithdrawalBlock + 15) >= event.number) {
-            ethereumModule.setClaimedReceiptHasExpired(true)
-            ethereumModule.setLatestWithdrawalBlock(0)
-            localStorage.removeItem("latestWithdrawalBlock")
+          // If a claimed withdrawal receipt exists...
+          if (ethereumModule.state.latestWithdrawalBlock && ethereumModule.state.latestWithdrawalBlock > 0) {
+            // ...check if it has expired
+            if ((ethereumModule.state.latestWithdrawalBlock + 15) <= event.number) {
+              ethereumModule.setClaimedReceiptHasExpired(true)
+              ethereumModule.setLatestWithdrawalBlock(0)
+              localStorage.removeItem("latestWithdrawalBlock")
+            }
           }
         }
       })

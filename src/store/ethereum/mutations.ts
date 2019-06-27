@@ -11,6 +11,7 @@ export function setBlockNumber(state: EthereumState, payload: number) {
 }
 
 export function setLatestWithdrawalBlock(state: EthereumState, payload: number) {
+  debugger
   state.latestWithdrawalBlock = payload
 }
 

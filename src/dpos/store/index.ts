@@ -72,7 +72,7 @@ function rewardsBeingClaimedTotal(state: DPOSState) {
  * @param ctx
  * @see {dpos.reactions}
  */
-async function refreshElectionTime(context: ActionContext) {
+export async function refreshElectionTime(context: ActionContext) {
   if (context.state.contract === null) {
     console.warn("DPoS contract not initialized yet")
     return
@@ -92,7 +92,7 @@ async function refreshElectionTime(context: ActionContext) {
  * @param ctx
  * @see {dpos.reactions}
  */
-async function refreshValidators(ctx: ActionContext) {
+export async function refreshValidators(ctx: ActionContext) {
   const contract = ctx.state.contract!
   log("getValidatorsAsync")
   // Get all validators, candidates and delegations
@@ -150,7 +150,7 @@ async function refreshValidators(ctx: ActionContext) {
  * @param ctx
  * @see {dpos.reactions}
  */
-async function refreshDelegations(context: ActionContext) {
+export async function refreshDelegations(context: ActionContext) {
   const { state } = context
   const contract = state.contract!
   state.loading.delegations = true
@@ -220,7 +220,7 @@ export function requestUndelegation(state: DPOSState, d: Delegation) {
   state.delegation = { ...d }
 }
 
-async function delegate(context: ActionContext, delegation: Delegation) {
+export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 

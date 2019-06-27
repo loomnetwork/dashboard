@@ -10,7 +10,7 @@ import { expect } from "chai"
 import { DPOSState, Delegation, Validator } from "../types"
 import BN from "bn.js"
 import sinon from "sinon"
-import { emptyValidator, feedback } from "./_helpers"
+import { emptyValidator, feedbackModuleStub } from "./_helpers"
 
 function dummyDelegation(validator) {
   return fromIDelegation({
@@ -120,10 +120,10 @@ describe("Redelegation", () => {
     })
     it("notifies feedback module", () => {
       sinon.assert.callOrder(
-        feedback.setTask,
-        feedback.setStep,
+        feedbackModuleStub.setTask,
+        feedbackModuleStub.setStep,
         dpos3Stub.redelegateAsync,
-        feedback.endTask,
+        feedbackModuleStub.endTask,
       )
     })
     it.skip("sends delegation.updateValidator.address as address")

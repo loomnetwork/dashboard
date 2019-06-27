@@ -319,7 +319,9 @@
   "events": {
     "ERC20Received": "Deposit",
     "event:MainnetDepositEvent": "Deposit",
+    "event:MainnetWithdrawalEvent": "Withdrawal",
     "event:WithdrawLoomCoin": "Withdraw (LOOM)",
-    "event:TokenWithdrawalSigned": "Withdrawal signed"
+    "event:TokenWithdrawalSigned": "Withdrawal signed",
+    "TokenWithdrawn": "Token Withdrawmn"
   }
 }

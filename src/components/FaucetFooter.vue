@@ -39,15 +39,14 @@
   </footer>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
+<script lang="ts">
+import Vue from "vue"
+import { Component } from "vue-property-decorator"
 
-@Component({
-})
-
+@Component({})
 export default class FaucetFooter extends Vue {
-}</script>
+}
+</script>
 <style lang="scss">
 .faucet-footer {
   color: #495057;

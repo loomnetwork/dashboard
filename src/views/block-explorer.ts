@@ -1,22 +1,20 @@
-import Vue from 'vue'
-import { Component, Prop } from 'vue-property-decorator'
-import { Getter } from 'vuex-class'
-import { VueConstructor } from 'vue/types/vue'
-import { mapGetters } from 'vuex'
-// @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import BlockList from '../components/blockExplorer/BlockList.vue'
-// @ts-ignore: Work around for https://github.com/Toilal/vue-webpack-template/issues/62
-import TransactionList from '../components/blockExplorer/TransactionList.vue'
+import Vue from "vue"
+import { Component, Prop } from "vue-property-decorator"
+import { VueConstructor } from "vue/types/vue"
+import { mapGetters } from "vuex"
+import BlockList from "../components/blockExplorer/block-list"
+import TransactionList from "../components/blockExplorer/TransactionList.vue"
 
-import { Blockchain } from '../components/blockExplorer/blockchain'
+import { Blockchain } from "../components/blockExplorer/blockchain"
 
-import FaucetSidebar from '../components/FaucetSidebar.vue'
-import FaucetHeader from '../components/FaucetHeader.vue'
-import FaucetFooter from '../components/FaucetFooter.vue'
+import FaucetSidebar from "../components/FaucetSidebar.vue"
+import FaucetHeader from "../components/FaucetHeader.vue"
+import FaucetFooter from "../components/FaucetFooter.vue"
+import { DashboardState } from "@/types"
 
 export enum BlockExplorerView {
-  Blocks = 'blocks',
-  Transactions = 'transactions'
+  Blocks = "blocks",
+  Transactions = "transactions",
 }
 
 export interface ISearchQuery {
@@ -29,21 +27,27 @@ export interface ISearchQuery {
     BlockList,
     FaucetSidebar,
     FaucetHeader,
-    FaucetFooter
+    FaucetFooter,
   },
   computed: {
-    ...mapGetters([
-      "currentRPCUrl"
-    ])
-  }
+    ...mapGetters(["currentRPCUrl"]),
+  },
 })
 export default class BlockExplorer extends Vue {
-  @Prop() view!: string // prettier-ignore
-  @Prop({ default: true }) showConnectionDropdown!: boolean // prettier-ignore
-  @Prop({ default: () => ({ blockHeight: null }) }) searchQuery!: ISearchQuery // prettier-ignore
+  @Prop()
+  view!: string
+  @Prop({ default: true })
+  showConnectionDropdown!: boolean
+  @Prop({ default: () => ({ blockHeight: null }) })
+  searchQuery!: ISearchQuery
 
-  @Getter("dappchainEndpoint", { namespace: "DappChain" })
-  dappchainEndpoint
+  $refs!: {
+    blockList: BlockList,
+  }
+
+  get dappchainEndpoint(): string {
+    return (this.$store.state as DashboardState).plasma.endpoint
+  }
 
   blockchain: Blockchain | null = null
 
@@ -57,17 +61,20 @@ export default class BlockExplorer extends Vue {
   beforeMount() {
     this.blockchain = new Blockchain({
       serverUrl: this.dappchainEndpoint + "/rpc",
-      allowedUrls: this.$store.state.allowedChainUrls
+      allowedUrls: this.$store.state.allowedChainUrls,
     })
   }
 
   refresh() {
-    this.blockchain!.setServerUrl(this.$store.state.chainUrl);
-    (this.$refs.blockList as BlockList).onConnectionUrlChanged(this.$store.state.chainUrl)
+    this.blockchain!.setServerUrl(this.$store.state.chainUrl)
+
+    this.$refs.blockList.onConnectionUrlChanged(this.$store.state.chainUrl)
   }
 
   get viewComponent(): VueConstructor {
-    return this.view === BlockExplorerView.Transactions ? TransactionList : BlockList
+    return this.view === BlockExplorerView.Transactions
+      ? TransactionList
+      : BlockList
   }
 
   get curSearchQuery(): ISearchQuery {

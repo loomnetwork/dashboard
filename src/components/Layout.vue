@@ -1,67 +1,90 @@
 <template>
-  <div id="layout" class="d-flex flex-column" :class="getClassNameForStyling">      
-    
-    <b-alert variant="light" :show="showSigningAlert" dismissible class="custom-notification text-center">
-      <strong>
-        <fa :icon="['fa', 'bell']" />
-        {{ $t('Please sign the transaction on your wallet') }}
-      </strong>
-    </b-alert>
-    <div v-if="networkId === 'us1'" style="background: #FFC107;padding: 0 16px;">Testnet</div>
-    <faucet-header v-on:update:chain="refresh()"></faucet-header>
-    <div class="content">      
-		  <warning-overlay type="metamask"></warning-overlay>
-      <warning-overlay type="mapping"></warning-overlay>
+  <div id="layout" class="d-flex flex-column">
+    <div
+      v-if="networkId !== 'plasma'"
+      style="background: #FFC107;padding: 0 16px;"
+    >Network: {{networkId}}</div>
+    <faucet-header></faucet-header>
+    <div class="content">
       <div class="d-none d-lg-block">
-        <faucet-sidebar></faucet-sidebar> 
+        <faucet-sidebar></faucet-sidebar>
       </div>
       <div class="main-container">
         <div class="inner-container container">
-          <b-modal id="sign-wallet-modal"  title="Sign Your wallet" hide-footer centered no-close-on-backdrop> 
-              {{ $t('components.layout.sign_wallet') }}
-          </b-modal>
-          <b-modal id="already-mapped" title="Account Mapped" hide-footer centered no-close-on-backdrop> 
-              {{ $t('components.layout.already_mapped') }}
-          </b-modal>
+          <b-modal
+            id="sign-wallet-modal"
+            title="Sign Your wallet"
+            hide-footer
+            centered
+            no-close-on-backdrop
+          >{{ $t('components.layout.sign_wallet') }}</b-modal>
+          <b-modal
+            id="already-mapped"
+            title="Account Mapped"
+            hide-footer
+            centered
+            no-close-on-backdrop
+          >{{ $t('components.layout.already_mapped') }}</b-modal>
           <transition name="page" mode="out-in">
-          <router-view></router-view>
-          <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
+            <router-view></router-view>
+            <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
           </transition>
         </div>
-      </div> 
-    </div>    
-     <b-modal id="metamaskChangeDialog" no-close-on-backdrop hider-header hide-footer centered v-model="metamaskChangeAlert">
-        <div class="d-block text-center">
-          <p>{{ $t('components.layout.metamask_changed')}}</p>
-        </div>
-        <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
-     </b-modal>
-    <transition name="router-anim" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+      </div>
+    </div>
+    <b-modal
+      id="metamaskChangeDialog"
+      no-close-on-backdrop
+      hider-header
+      hide-footer
+      centered
+      v-model="metamaskChangeAlert"
+    >
+      <div class="d-block text-center">
+        <p>{{ $t('components.layout.metamask_changed')}}</p>
+      </div>
+      <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
+    </b-modal>
+    <transition
+      name="router-anim"
+      enter-active-class="animated fadeIn faster"
+      leave-active-class="animated fadeOut faster"
+    >
       <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
     </transition>
 
+    <!-- dpos -->
+    <redelegate-modal></redelegate-modal>
+    <undelegate-modal></undelegate-modal>
+
     <!-- gateway -->
-    <DepositApproved />
-    <DepositConfirmed />
-  </div>  
+    <DepositApproved/>
+    <DepositConfirmed/>
+    <progress-modal/>
+    <WithdrawProgress/>
+    <WithdrawConfirmed/>
+    <feedback-alert/>
+  </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
+<script lang="ts">
+import { Vue, Component, Watch } from "vue-property-decorator"
 
-import FaucetHeader from '@/components/FaucetHeader'
-import FaucetSidebar from '../components/FaucetSidebar'
-import FaucetFooter from '@/components/FaucetFooter'
-import LoadingSpinner from '../components/LoadingSpinner'
-import WarningOverlay from '../components/WarningOverlay'
-const DappChainStore = createNamespacedHelpers('DappChain')
+import FaucetHeader from "@/components/FaucetHeader.vue"
+import FaucetSidebar from "@/components/FaucetSidebar.vue"
+import FaucetFooter from "@/components/FaucetFooter.vue"
+import LoadingSpinner from "@/components/LoadingSpinner.vue"
+import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
+import ProgressModal from "@/feedback/components/ProgressModal.vue"
+import FeedbackAlert from "@/feedback/components/FeedbackAlert.vue"
 
-import DepositApproved from '@/components/gateway/DepositApproved'
-import DepositConfirmed from '@/components/gateway/DepositConfirmed'
-
-const DPOSStore = createNamespacedHelpers('DPOS')
+import DepositApproved from "@/components/gateway/DepositApproved.vue"
+import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
+import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
+import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
+import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
+import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
+import { DashboardState } from "@/types"
 
 @Component({
   components: {
@@ -69,205 +92,102 @@ const DPOSStore = createNamespacedHelpers('DPOS')
     FaucetSidebar,
     FaucetFooter,
     LoadingSpinner,
-    WarningOverlay,
     DepositApproved,
     DepositConfirmed,
+    FeedbackNotification,
+    ProgressModal,
+    FeedbackAlert,
+    RedelegateModal,
+    UndelegateModal,
+    WithdrawProgress,
+    WithdrawConfirmed,
   },
   props: {
     data: Object,
   },
-  methods: {
-    ...mapMutations([
-      'setErrorMsg'
-    ]),
-    ...DPOSStore.mapActions([
-      'initializeDependencies',
-    ]),
-    ...DappChainStore.mapMutations([
-      'setMappingError',
-      'setMappingStatus'
-    ])    
-  },  
-  computed: {
-    ...mapState([
-      'userIsLoggedIn'
-    ]),
-    ...DappChainStore.mapState([
-      'account',
-      'showSigningAlert',
-      'metamaskError',
-      'mappingError',
-      'networkId',
-    ]),
-    ...DPOSStore.mapState([
-      'showSidebar',
-      "currentMetamaskAddress",
-      'showLoadingSpinner',
-      'showAlreadyMappedModal',
-      'showSignWalletModal',
-      'mappingSuccess',
-      'walletType',
-      'status'
-    ])    
-  },
 })
+export default class Layout extends Vue {
 
-export default class Layout extends Vue { 
+  // get $state() { return (this.$store.state as DashboardState) }
+  get s() { return (this.$store.state as DashboardState) }
+
+  get walletType() { return this.s.ethereum.walletType }
+  get showLoadingSpinner() { return false }
+
+  get networkId() { return this.s.plasma.networkId }
 
   metamaskChangeAlert = false
 
-  loginEmail = ''
-  routeArray = [
-    {
-      'className': 'dark-bg',
-      'routeNames': [ 'Open Pack']
-    },
-    {
-      'className': 'gradient-bg',
-      'routeNames': ['browse', 'Browse Type', 'card detail', 'trade history', 'Account',
-                  , 'Early Backer Sale Packages', 'Package Detail', 'Cards in Sale',
-                  'Confirmed Package Purchase', 'Card Pack',]
-    },
-    {
-      'className': 'image-bg',
-      'routeNames': ['My Cards', 'My Packs',  'trading', 'landing', 'overlords', 'cards', 'redeemSubmitted',  'How To Play']
-    }
-  ]
-
-  created() {
-    this.$router.afterEach((to, from) => this.$root.$emit("refreshBalances"))
-  }
-
-  beforeMount() {
-    if(!this.userIsLoggedIn) this.$router.push({ path: '/login' })
-  }
-
-  @Watch('mappingSuccess')
-    onMappingSuccessChange(newValue, oldValue) {
-    if(newValue && this.walletType === 'metamask') {
-      this.$router.push({
-        name: 'account'
-      })
-    }
-  }
-
-  @Watch('status')
-    onMappedChange(newValue, oldValue) {
-    if(newValue === 'mapped' && this.walletType === 'metamask') {
-      this.$router.push({
-        name: 'account'
-      })
-    }
-  }
-
-  @Watch('showAlreadyMappedModal')
-    onAlreadyMappedModalChange(newValue, oldValue) {
-    if(newValue) {
-        this.$root.$emit("bv::show::modal", "already-mapped")
-    } else {
-        this.$root.$emit("bv::hide::modal", "already-mapped")
-
-    }
-  }
-
-  @Watch('showSignWalletModal')
-  onSignLedgerModalChange(newValue, oldValue) {      
-    if(newValue) {
-        this.$root.$emit("bv::show::modal", "sign-wallet-modal")
-    } else {
-        this.$root.$emit("bv::hide::modal", "sign-wallet-modal")
-    }
-  }
-
   async mounted() {
-      
-    if(this.$route.meta.requireDeps) {
-      this.attemptToInitialize()     
-    } 
-    
-    if(window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts) => {
-        
-        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove. 
+    if ("ethereum" in window) {
+      // @ts-ignore
+      window.ethereum.on("accountsChanged", (accounts) => {
+        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove.
+        // @ts-ignore
         if (window.resolvingMismatchedReceipt) {
-          return;
+          return
         }
 
-        if (this.currentMetamaskAddress && 
-          this.currentMetamaskAddress !== accounts[0] ) {
-                localStorage.removeItem('lastWithdrawTime')
-                this.metamaskChangeAlert = true
-                window.ethereum.removeAllListeners()
+        if (this.$store.state.ethereum.address &&
+          this.$store.state.ethereum.address !== accounts[0]) {
+          // Remove any reference to past withdrawals as
+          // it is bound to a specific address
+          localStorage.removeItem("lastWithdrawTime")
+          this.metamaskChangeAlert = true
+          // @ts-ignore
+          window.ethereum.removeAllListeners()
         }
 
       })
     }
 
-  }
-
-  async restart() {
-      window.location.reload(true)
-  }
-
-
-  async attemptToInitialize() {
-    try {
-      await this.initializeDependencies()
-      this.$root.$emit("initialized")
-      this.$root.$emit("refreshBalances")
-    } catch(err) {
-      this.$root.$emit("logout")
-      this.setMappingError(null)
-      this.setMappingStatus(null)
-    }           
-  }
-
-  get getClassNameForStyling() {
-    let className = "";
-    const self = this;
-    this.routeArray.forEach(item => {
-      if(item.routeNames.includes(self.$route.name)) {
-        className = item.className;
-        return;
-      }
+    this.$root.$on("logout", () => {
+      this.restart()
     })
-    return className;
+
   }
+
+  restart() {
+    window.location.reload(true)
+  }
+
 }
 </script>
 
 <style lang="scss" scoped>
-  #layout {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
+#layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+.content {
+  display: flex;
+  position: relative;
+  flex: 1;
+  justify-content: center;
+  .row {
+    width: 100%;
   }
-  .content {
-    display: flex;
-    position: relative;
-    flex: 1;
-    justify-content: center;
-    .row {
-      width: 100%;;
-    }   
-  }
-  .sidebar-container {
-    display: flex;
-    align-items: stretch;
-  }
+}
+.sidebar-container {
+  display: flex;
+  align-items: stretch;
+}
 
-.page-enter-active, .page-leave-active {
+.page-enter-active,
+.page-leave-active {
   transition: opacity 0.3s, transform 0.3s;
   transition-delay: 0.5s;
 }
 
-.page-enter, .page-leave-to {
+.page-enter,
+.page-leave-to {
   opacity: 0;
   transform: translateX(-30%);
 }
 
 .main-container {
-	width: 100%;
+  width: 100%;
   .inner-container {
     position: relative;
     height: 100%;
@@ -283,59 +203,56 @@ export default class Layout extends Vue {
   transform: translateX(-50%);
   box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
 }
-
 </style>
 
 <style lang="scss">
+.rmv-spacing {
+  margin: 0px;
+  padding: 0px;
+}
 
-  .rmv-spacing {
-    margin: 0px;
-    padding: 0px;
-  }
+.highlight {
+  color: #f0ad4e;
+}
 
-  .highlight {
-    color: #f0ad4e;
-  }
+@media (max-width: 576px) {
+}
 
-  @media (max-width: 576px) {
-  }
-
-  @media (max-width: 768px) {
-    .validator-action-container {
-      div {
-        text-align: center;
-      }      
-      button {
-        width: 100%;
-        margin: 0 0 12px 0 !important;
-      }
-    }    
-  }
-
-  @media (max-width: 992px) {
-    .navbar-side {
-      display: flex;
-      flex-direction: row !important;     
-      border-right: none !important;
-      border-bottom: 2px solid #f2f1f3;
-      justify-content: space-evenly;
-      li {
-        max-width: 200px;
-        display: inline-block;
-        a {
-          padding: 0px 0px 6px 0px !important;
-        }
-      }
+@media (max-width: 768px) {
+  .validator-action-container {
+    div {
+      text-align: center;
     }
-    .router-active {
-      border-left: 0px !important;
-      border-bottom: 5px solid #5756e6;
+    button {
+      width: 100%;
+      margin: 0 0 12px 0 !important;
     }
   }
-  
-  @media (max-width: 1200px) {
-    
+}
+
+@media (max-width: 992px) {
+  .navbar-side {
+    display: flex;
+    flex-direction: row !important;
+    border-right: none !important;
+    border-bottom: 2px solid #f2f1f3;
+    justify-content: space-evenly;
+    li {
+      max-width: 200px;
+      display: inline-block;
+      a {
+        padding: 0px 0px 6px 0px !important;
+      }
+    }
   }
+  .router-active {
+    border-left: 0px !important;
+    border-bottom: 5px solid #5756e6;
+  }
+}
+
+@media (max-width: 1200px) {
+}
 </style>
 
 

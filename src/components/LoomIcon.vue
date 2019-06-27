@@ -14,16 +14,16 @@
   </svg>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch } from "vue-property-decorator"
 
 @Component({
   props: {
     color: String,
     width: String,
     height: String,
-  }  
+  },
 })
 export default class LoomIcon extends Vue {
 

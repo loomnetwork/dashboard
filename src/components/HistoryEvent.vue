@@ -1,63 +1,118 @@
 <template>
-
-    <b-card no-body class="mb-1"
-            :class="latestBlock - event.item['Block #'] <= 10 ? 'animated flash slow infinite' : '' ">
-      <b-card-header @click="$root.$emit('bv::toggle::collapse', 'history-item' + event.idx)"
-                    header-tag="header"
-                    class="d-flex justify-content-between p-2"
-                    role="tab">
-        <span>{{event.item["Event"]}}</span>
-        <strong>{{event.item["Amount"]}}</strong>
-      </b-card-header>
-      <b-collapse :id="'history-item' + event.idx" accordion="my-accordion" role="tabpanel">
-        <b-card-body>
-          <ul>
-            <li v-if="latestBlock - event.item['Block #'] <= 10">
-              <strong class="block-confirmation-msg">
-                Blocks confirmations: {{(latestBlock - event.item["Block #"]) + 1}}
-              </strong>
-            </li>
-            <li>Block #: {{event.item["Block #"]}}</li>
-            <li>Amount: {{event.item["Amount"]}}</li>
-            <li>Tx Hash: {{event.item["Tx Hash"]}}</li>
-          </ul>
-        </b-card-body>
-      </b-collapse>
-    </b-card>
-
+  <section class="event deposit" :class="{pending: confirmations < 11 }">
+    <h5 class="type">{{ $t("events." + event.type) }}</h5>
+    <ul>
+      <li v-if="confirmations < 11" class="confirmations">
+        <b-spinner variant="primary"></b-spinner>
+        {{confirmations}} Confirmations
+      </li>
+      <li class="block">Block # {{event.blockNumber}}</li>
+      <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
+    </ul>
+    <a class="transaction-hash" :href="etherScanUrl" target="_blank">{{event.transactionHash}}</a>
+  </section>
 </template>
 
-<script>
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
-import { mapActions, mapMutations, mapState, createNamespacedHelpers } from 'vuex'
-const DappChainStore = createNamespacedHelpers('DappChain')
-const DPOSStore = createNamespacedHelpers('DPOS')
+<script lang="ts">
+import Vue from "vue"
+import { Component, Watch, Prop } from "vue-property-decorator"
+import { EthereumState } from "@/store/ethereum/types"
+import { DashboardState } from "@/types"
 
-@Component({
-  props: {
-    event: Object,
-    latestBlock: Number
-  },
-  computed: {}
-})
+
+// ({
+//   props: {
+//     event: Object,
+//   },
+// })
+@Component
 export default class HistoryEvent extends Vue {
 
-  // @Watch("event")
-  //   onMappedChange(newValue, oldValue) {
-  //   if(newValue) {
-  //     this.latestBlock - newValue.item['Block #'] <= 10
-  //     this.$emit("keepPolling");
-  //   }
-  // }
+  @Prop({ required: true })
+  event: any
+
+  etherScanUrl = `${this.state.ethereum.blockExplorer}/tx/${this.event.transactionHash}`
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get ethereum(): EthereumState {
+    return this.$store.state.ethereum
+  }
+
+  get latestBlock() {
+    return this.ethereum.blockNumber
+  }
+
+  get confirmations() {
+    return this.ethereum.blockNumber - this.event.blockNumber + 1
+  }
 
 }
 </script>
 <style scoped lang="scss">
-  .custom-card-header {
-    background-color: #ffffff;
+.event {
+  position: relative;
+  display: flex;
+  max-width: 600px;
+  border-left: 5px solid #00bcd4;
+  box-shadow: rgba(219, 219, 219, 0.56) -1px 1px 3px 0px;
+  margin: 0 0 5px 0;
+  height: 100px;
+  background: white;
+
+  .type {
+    font-size: 1rem;
+    padding: 10px;
+    &.deposit {
+      font-size: 1rem;
+      padding: 10px;
+    }
   }
-  .block-confirmation-msg {
-    color: #f04e4e;
+
+  .amount {
+    position: absolute;
+    top: 40px;
+    left: 10px;
   }
+
+  &.deposit .type {
+    color: #00bcd4;
+  }
+}
+ul {
+  list-style: none;
+}
+.block {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+}
+.transaction-hash {
+  font-size: 9px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-family: Monaco;
+  max-width: 475px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  @media (min-width: 529px) {
+    & {
+      font-size: 12px;
+    }
+  }
+}
+.confirmations {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  .spinner-border {
+    height: 16px;
+    width: 16px;
+  }
+}
 </style>

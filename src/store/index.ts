@@ -68,7 +68,7 @@ const store: Store<DashboardState> = builder.vuexStore({
 })
 
 // set available envs
-if (window.location.host === "dashboard.dappchains.com") {
+if (window.location.host === "dashboard.dappchains.com" || window.location.host === "wallet.loomx.io") {
   dashboardStore.setEnvs([production])
   dashboardStore.setEnv(production)
 } else {

@@ -65,7 +65,7 @@
 
       <b-alert variant="warning" :show="balanceTooLow" style="max-width: 600px;">
         <h5 class="alert-heading">LOOM balance low.</h5>
-        <p>Whitelisting keys requires at least 10 LOOM. Your balance is {{ loomBalance }} LOOM</p>
+        <p>Whitelisting keys requires at least {{tiers[0].fee | tokenAmount}} LOOM. Your balance is {{ loomBalance }} LOOM</p>
         <footer style="display: flex;justify-content: flex-end;">
           <b-button variant="primary" @click="goDeposit">Deposit more LOOM to Plasmachain</b-button>
         </footer>

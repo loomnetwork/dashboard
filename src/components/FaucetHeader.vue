@@ -8,6 +8,7 @@
           <router-link to="/account" class="navbar-brand ml-3">
             <loom-icon width="18px" height="18px" :color="'#ffffff'"/>
             <span class="px-1">Plasmachain</span>
+            <span class="beta-label">BETA</span>
           </router-link>
           <form class="form-inline">
             <LangSwitcher/>
@@ -371,5 +372,18 @@ a.hover-warning:hover {
     color: #ffffff;
   }
 }
+
+.beta-label {
+  position: relative;
+  bottom: 2px;
+  display: inline;
+  background: #F79E05;
+  padding: 3px 8px;
+  color: #ffffff;
+  font-size: 0.5em;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
 </style>
 

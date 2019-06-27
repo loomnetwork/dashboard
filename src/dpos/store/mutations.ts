@@ -9,4 +9,3 @@ export function setElectionTime(state: DPOSState, electionTime: Date) {
   state.electionTime = electionTime
   state.loading.electionTime = false
 }
-

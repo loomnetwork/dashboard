@@ -1,24 +1,65 @@
 import "mocha"
-import { requestDelegation } from ".."
+import { refreshValidators, refreshElectionTime, refreshDelegations, dposModule } from ".."
 import { defaultState } from "../helpers"
-import { ICandidate } from "loom-js/dist/contracts/dpos3"
+import { DPOS3, ICandidate, ICandidateDelegations, IValidator } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
-import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
-import { ZERO } from "@/utils"
+import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
+import BN from "bn.js"
 
 import { expect } from "chai"
 import { DPOSState } from "../types"
-import { plasmaModule } from "@/store/plasma"
 
 import sinon from "sinon"
+import { emptyValidator, plasmaModuleStub } from "./_helpers"
 
 describe("DPoS state", () => {
   describe("refreshValidators", () => {
-    it.skip("calls DPOS.delegate")
-    it.skip("calls DPOS.delegate")
-    it.skip("calls DPOS.delegate")
+    const dpos3Stub = sinon.createStubInstance(DPOS3)
+    const validator: IValidator = emptyValidator()
+    const candidate: ICandidate = emptyValidator()
+    const delegation: ICandidateDelegations = {
+      delegationTotal: new BN(100),
+      delegationsArray: [{
+        amount: new BN(1000),
+        updateAmount: new BN(1000),
+        index: 1,
+        state: DelegationState.BONDED,
+        delegator: Address.fromString("default:0x" + "".padEnd(40, "0")),
+        lockTime: 0,
+        lockTimeTier: 0,
+        validator: validator.address,
+        referrer: "",
+      }],
+    }
+    let state: DPOSState
 
-    it.skip("merges validator info in one object")
+    before(() => {
+      state = defaultState()
+      dpos3Stub.getValidatorsAsync.resolves([validator])
+      dpos3Stub.getCandidatesAsync.resolves([candidate])
+      dpos3Stub.getAllDelegations.resolves([delegation])
+      // @ts-ignore
+      state.contract = dpos3Stub
+      // @ts-ignore
+      refreshValidators({ state })
+    })
+
+    it("calls DPOS.getValidatorsAsync", () => {
+      sinon.assert.calledOnce(dpos3Stub.getValidatorsAsync)
+    })
+
+    it("calls DPOS.getCandidatesAsync", () => {
+      sinon.assert.calledOnce(dpos3Stub.getCandidatesAsync)
+    })
+
+    it("calls DPOS.getAllDelegations", () => {
+      sinon.assert.calledOnce(dpos3Stub.getAllDelegations)
+    })
+
+    it("merges validator info in one object", () => {
+      expect(state.validators[0].isBootstrap).to.equal(false)
+      expect(state.validators[0].stakedAmount).to.equal(delegation.delegationTotal)
+    })
 
     it.skip("sets bootstrap validators following addresses state.bootstrapNodes")
     it.skip("sets delegations amounts correctly")
@@ -26,18 +67,59 @@ describe("DPoS state", () => {
   })
 
   describe("refreshElectionTime", () => {
-    it.skip("calls DPOS.delegate")
-    it.skip("sends delegation.validator.address as address")
-    it.skip("sends delegation.updateAmount as amount")
-    it.skip("sends delegation.index as index")
+    const dpos3Stub = sinon.createStubInstance(DPOS3)
+    const setElectionTimeStub = sinon.stub(dposModule, "setElectionTime")
+    const now = Date.now()
+    const nowStub = sinon.stub(Date, "now")
+    const time = new BN(100)
+    let state: DPOSState
+
+    before(() => {
+      state = defaultState()
+      dpos3Stub.getTimeUntilElectionAsync.resolves(time)
+      nowStub.returns(now)
+      setElectionTimeStub.returns()
+      // @ts-ignore
+      state.contract = dpos3Stub
+      // @ts-ignore
+      refreshElectionTime({ state })
+    })
+
+    it("calls DPOS.getTimeUntilElectionAsync", () => {
+      sinon.assert.calledOnce(dpos3Stub.getTimeUntilElectionAsync)
+    })
+    it("calls dposModule.setElectionTime", () => {
+      const date = now + time.toNumber() * 1000
+      sinon.assert.calledOnce(setElectionTimeStub)
+      sinon.assert.calledWith(setElectionTimeStub, new Date(date))
+    })
   })
 
   describe("DPoS Account state", () => {
     describe("refreshDelegations", () => {
-      it.skip("calls DPOS.delegate")
-      it.skip("sends delegation.validator.address as address")
-      it.skip("sends delegation.updateAmount as amount")
-      it.skip("sends delegation.index as index")
+      const dpos3Stub = sinon.createStubInstance(DPOS3)
+      const address = Address.fromString(":0x".padEnd(44, "0"))
+      let state: DPOSState
+
+      before(() => {
+        state = defaultState()
+        plasmaModuleStub.getAddress.returns(address)
+        dpos3Stub.checkAllDelegationsAsync.resolves({
+          amount: new BN(100),
+          weightedAmount: new BN(100),
+          delegationsArray: [],
+        })
+        // @ts-ignore
+        state.contract = dpos3Stub
+        // @ts-ignore
+        refreshDelegations({ state })
+      })
+
+      it("calls DPOS.checkAllDelegationsAsync", () => {
+        sinon.assert.calledOnce(dpos3Stub.checkAllDelegationsAsync)
+        sinon.assert.calledWith(dpos3Stub.checkAllDelegationsAsync,
+          address)
+      })
     })
   })
 })

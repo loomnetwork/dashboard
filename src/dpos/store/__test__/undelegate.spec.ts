@@ -11,7 +11,7 @@ import { expect } from "chai"
 import { DPOSState, Delegation } from "../types"
 
 import sinon from "sinon"
-import { emptyValidator, feedback } from "./_helpers"
+import { emptyValidator, feedbackModuleStub } from "./_helpers"
 
 function dummyDelegation(validator) {
   return fromIDelegation({
@@ -99,10 +99,10 @@ describe("Undelegate", () => {
     })
     it("notifies feedback module", () => {
       sinon.assert.callOrder(
-        feedback.setTask,
-        feedback.setStep,
+        feedbackModuleStub.setTask,
+        feedbackModuleStub.setStep,
         dpos3Stub.unbondAsync,
-        feedback.endTask,
+        feedbackModuleStub.endTask,
       )
     })
     it("sends delegation.updateAmount as amount")

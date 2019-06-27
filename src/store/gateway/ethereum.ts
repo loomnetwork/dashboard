@@ -326,13 +326,21 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     const tokenInfo = tokenService.tokenFromAddress(tokenAddress, "ethereum")
     if (tokenInfo === null) {
       console.error("token contract address in receipt unknown ", tokenInfo)
+      fb.showError("Withdraw failed, please try again or contact support.")
       return
     }
     token = tokenInfo.symbol
   }
+
   const gateway = service().get(token)
   fb.showLoadingBar(true)
-  await gateway.withdraw(receipt)
+  try {
+    await gateway.withdraw(receipt)
+    fb.showSuccess("Withdrawal complete!")
+  } catch (err) {
+    console.log(err)
+    fb.showError("Withdraw failed, please try again or contact support.")
+  }
   fb.showLoadingBar(false)
 }
 

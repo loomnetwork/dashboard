@@ -27,8 +27,12 @@ export function ethereumReactions(store: Store<DashboardState>) {
         if (!error) {
           console.log("Setting the latest block", event.number)
           ethereumModule.setBlockNumber(event.number)
+          if ((ethereumModule.state.latestWithdrawalBlock + 15) >= event.number) {
+            ethereumModule.setClaimedReceiptHasExpired(true)
+            ethereumModule.setLatestWithdrawalBlock(0)
+            localStorage.removeItem("latestWithdrawalBlock")
+          }
         }
-        console.warn("Error parsing blocks: ", error)
       })
     })
   }

@@ -225,6 +225,8 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
+  delegation.referrer = getReferrer()
+
   feedback.setTask("Delegate")
 
   const approved = await plasmaModule.approve({
@@ -251,6 +253,24 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
     feedback.showError("Unexpected error while delegating, please contact support.")
     console.error(error)
   }
+}
+
+function getReferrer() {
+  if (!window.web3) return ""
+
+  if (window.web3.currentProvider.isTrust) return "trust"
+
+  if (window.web3.currentProvider.isGoWallet) return "goWallet"
+
+  if (window.web3.currentProvider.isAlphaWallet) return "alphaWallet"
+
+  if (window.web3.currentProvider.isStatus) return "status"
+
+  if (window.web3.currentProvider.isToshi) return "coinbase"
+
+  if (typeof window.__CIPHER__ !== "undefined") return "cipher"
+
+  return ""
 }
 
 /**

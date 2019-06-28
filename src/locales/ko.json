@@ -322,6 +322,6 @@
     "event:MainnetWithdrawalEvent": "Withdrawal",
     "event:WithdrawLoomCoin": "Withdraw (LOOM)",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
-    "TokenWithdrawn": "Token Withdrawmn"
+    "TokenWithdrawn": "Token Withdrawn"
   }
 }

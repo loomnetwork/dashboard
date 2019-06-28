@@ -37,7 +37,7 @@ function isLegacyApi() {
 
 function isCurrentApi() {
   // @ts-ignore
-  return "ethereum" in window && window.ethereum.isMetaMask
+  return "ethereum" in window
 }
 
 function getLegacyApi(): Promise<provider> {

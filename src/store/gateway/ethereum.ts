@@ -374,7 +374,7 @@ export async function refreshEthereumHistory(context: ActionContext) {
         type: "ERC20Received",
         blockNumber: entry.blockNumber,
         transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.amount),
+        amount: new BN(entry.returnValues.value),
         token: "LOOM",
       }))
       ethereum.history.push(...entries)
@@ -390,11 +390,11 @@ export async function refreshEthereumHistory(context: ActionContext) {
         type: "TokenWithdrawn",
         blockNumber: entry.blockNumber,
         transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.amount),
+        amount: new BN(entry.returnValues.value),
         token: "LOOM",
       }))
       ethereum.history.push(...entries)
-      console.log(entries)
+      console.log("ENTRIES", results)
     })
 
 }

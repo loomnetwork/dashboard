@@ -93,8 +93,8 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "delegationTotal", sortable: true, label: "Total Staked" },
-  { key: "fee", sortable: true, label: "Fee" },
+  { key: "delegationTotal", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass:"align-right-td" },
+  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass:"align-right-td" },
   ]
 
   get state(): HasDPOSState {
@@ -138,6 +138,7 @@ tr {
     cursor: pointer;
   }
 }
+
 main.validators {
   // ther should be global class for page titles
   header > h1 {
@@ -196,6 +197,21 @@ main.validators {
         color: green;
       }
     }
+  }
+  .align-both{
+    th {
+      text-align: center
+    }
+    td {
+      text-align: right
+    }
+  }
+  .align-center-th {
+    text-align: center;
+  }
+  .align-right-td {
+    text-align: right;
+    padding-right: 3%;
   }
 }
 </style>

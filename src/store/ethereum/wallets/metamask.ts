@@ -32,7 +32,7 @@ export const MetaMaskAdapter: WalletType = {
 
 function isLegacyApi() {
   // @ts-ignore
-  return "web3" in window && window.web3.currentProvider.isMetaMask
+  return "web3" in window
 }
 
 function isCurrentApi() {
@@ -42,7 +42,7 @@ function isCurrentApi() {
 
 function getLegacyApi(): Promise<provider> {
   // @ts-ignore
-  return window.web3.currentProvider()
+  return window.web3.currentProvider
 }
 
 async function getCurrentApi(): Promise<provider> {

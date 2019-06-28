@@ -24,9 +24,7 @@ export const MetaMaskAdapter: WalletType = {
     if (isCurrentApi()) {
       return getCurrentApi()
     } else if (isLegacyApi()) {
-      // return getLegacyApi()
-      return getCurrentApi()
-
+      return getLegacyApi()
     }
     throw new Error("no Metamask installation detected")
   },
@@ -44,7 +42,7 @@ function isCurrentApi() {
 
 function getLegacyApi(): Promise<provider> {
   // @ts-ignore
-  return window.web3.currentProvider()
+  return window.web3.currentProvider
 }
 
 async function getCurrentApi(): Promise<provider> {

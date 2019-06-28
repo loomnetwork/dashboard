@@ -88,15 +88,13 @@ export default class History extends Vue {
   }
 
   get plasmaHistory() {
-    const plasmaHistory = this.state.plasma.history
-    const filtered = plasmaHistory.filter(history => history.amount > 0)
-    return this.state.plasma.history
+    const plasmaHistory = this.state.plasma.history.filter(history => history.amount > 0)
+    return plasmaHistory
   }
 
   get ethereumHistory() {
-    const ethereumHistory = this.state.ethereum.history
-    const filtered = ethereumHistory.filter(history => history.amount > 0)
-    return filtered
+    const ethereumHistory = this.state.ethereum.history.filter(history => history.amount > 0)
+    return ethereumHistory
   }
 
   async mounted() {

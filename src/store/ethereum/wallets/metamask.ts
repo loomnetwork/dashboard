@@ -25,10 +25,6 @@ export const MetaMaskAdapter: WalletType = {
       return getCurrentApi()
     } else if (isLegacyApi()) {
       return getLegacyApi()
-<<<<<<< HEAD
-
-=======
->>>>>>> dd89e745c30d01f7d67c829c085c49a2067950ca
     }
     throw new Error("no Metamask installation detected")
   },

@@ -2,12 +2,15 @@ import BN from "bn.js"
 
 import Web3 from "web3"
 
-import { Gateway } from "./contracts/Gateway"
-import ERC20GatewayABI from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
+import GatewayABI_v1 from "./contracts/Gateway_v1.json"
+import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
 
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
+import ERC20GatewayABI_v1 from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
 import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
-import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
+
+// these are v2 types
+import { Gateway } from "./contracts/Gateway"
+import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
@@ -155,20 +158,22 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   multisig: boolean,
 ) {
-  const ERC20GW_ABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI
+  const ERC20GatewayABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
+  const GatewayABI: AbiItem[] = multisig ? GatewayABI_v2 : GatewayABI_v1
+  // @ts-ignore
   const loomGateway = new web3.eth.Contract(
-    ERC20GW_ABI,
+    ERC20GatewayABI,
     addresses.loomGateway,
   ) as ERC20Gateway_v2
   log("loom gateway initialized")
-  const mainGateway = new web3.eth.Contract(
+  // @ts-ignore
+  const mainGateway: Gateway = new web3.eth.Contract(
     GatewayABI as AbiItem[],
     addresses.mainGateway,
   )
   log("main gateway initialized")
-  let vmcContract = null
+  let vmcContract: any = null
   if (multisig) {
-    log("Assuming multisig gateways")
     const vmcAddress = await loomGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(

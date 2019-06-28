@@ -198,14 +198,6 @@ main.validators {
       }
     }
   }
-  .align-both{
-    th {
-      text-align: center
-    }
-    td {
-      text-align: right
-    }
-  }
   .align-center-th {
     text-align: center;
   }

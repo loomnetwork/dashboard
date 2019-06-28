@@ -34,7 +34,7 @@
                 </div>
                 <div class="stakes">
                   <label>Stake</label>
-                  <span>{{ validator.delegationTotal }}</span>
+                  <span>{{validator.totalStaked}}</span>
                 </div>
                 <div
                   v-if="!isSmallDevice"
@@ -93,7 +93,7 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "delegationTotal", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass:"align-right-td" },
+  { key: "totalStaked", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass:"align-right-td" },
   { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass:"align-right-td" },
   ]
 
@@ -102,7 +102,7 @@ export default class ValidatorList extends Vue {
   }
 
   get totalStaked() {
-    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.delegationTotal), ZERO)
+    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
   }
 
   get validators() {
@@ -114,7 +114,7 @@ export default class ValidatorList extends Vue {
     return storeValidators.map((validator) => ({
         name: validator.name,
         active: validator.active,
-        delegationTotal: formatTokenAmount(validator.delegationTotal),
+        totalStaked: formatTokenAmount(validator.totalStaked),
         fee: validator.fee
     }))
   }

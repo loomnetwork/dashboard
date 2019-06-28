@@ -60,6 +60,7 @@ import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
 import ProviderEngine from "web3-provider-engine"
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch"
 import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
+import { isMobile } from "@/utils"
 
 import { of, from } from "rxjs"
 import { map, tap, flatMap, concatMap } from "rxjs/operators"
@@ -254,9 +255,11 @@ export default class HardwareWalletModal extends Vue {
   }
 
   async mounted() {
-    this.transport = await TransportU2F.create(3000, 10000)
-    // use state.ethereum.ennpoint
-    this.infura = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0"))
+    if (!isMobile) {
+      this.transport = await TransportU2F.create(3000, 10000)
+      // use state.ethereum.ennpoint
+      this.infura = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0"))
+    }
   }
 
 }

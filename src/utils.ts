@@ -104,9 +104,9 @@ export function formatToCrypto(amount) {
 }
 
 export function parseToWei(amount: string) {
-  // BN does not handle float
+  // BN is ints only
   const bigNumber = new BigNumber(amount).multipliedBy(10 ** 18)
-  return new BN(bigNumber.toString())
+  return new BN(bigNumber.toFixed())
 }
 
 export const DOMAIN_NETWORK_ID = {

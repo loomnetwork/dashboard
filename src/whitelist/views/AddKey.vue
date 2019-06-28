@@ -42,20 +42,30 @@
           >You have no deployer address yet. Use the form bellow to add one</p>
         </b-card-body>
         <b-list-group class="deployer-keys" flush>
-          <b-list-group-item v-for="pk in publicKeys" :key="pk.hex">
-            <address class="key hex" v-if="keyViewMode === 'hex'" @click="copyAddress(pk.hex)">
-              <span>{{pk.hex | loomAddress}}</span>
-              <fa icon="paste"/>
-            </address>
-            <div class="key" v-else>{{pk.base64}}</div>
-            <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
+          <b-list-group-item v-for="pk in publicKeys" :key="pk.hex" class="flex-column">
+            <div class="flex-row my-2">
+              <address class="key hex" v-if="keyViewMode === 'hex'">
+                <span @click="showCollapse(pk)">{{pk.hex | loomAddress}}</span>
+                <fa icon="paste" @click="copyAddress(pk.hex)" class="icon-copy"/>
+              </address>
+              <div class="key" v-else>{{pk.base64}}</div>
+              <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
+            </div>
+            <b-collapse :id="pk.hex">
+              <div class="collapse-content">
+                <p v-for="(addr, index) in deployedContract[pk.hex]" :key="addr">
+                  {{ index + 1 + ') ' + addr }}
+                </p>
+                <p v-if="deployedContract[pk.hex].length === 0">No contract deployed</p>
+              </div>
+            </b-collapse>
           </b-list-group-item>
         </b-list-group>
       </b-card>
 
       <b-alert variant="warning" :show="balanceTooLow" style="max-width: 600px;">
         <h5 class="alert-heading">LOOM balance low.</h5>
-        <p>Whitelisting keys requires at least 10 LOOM. Your balance is {{ loomBalance }} LOOM</p>
+        <p>Whitelisting keys requires at least {{tiers[0].fee | tokenAmount}} LOOM. Your balance is {{ loomBalance }} LOOM</p>
         <footer style="display: flex;justify-content: flex-end;">
           <b-button variant="primary" @click="goDeposit">Deposit more LOOM to Plasmachain</b-button>
         </footer>
@@ -99,7 +109,14 @@
               >
                 <input type="radio" v-model="tierSelected" :value="tier">
                 <strong>Tier {{tier.tierId +1}}</strong>
+                <div class="spec">1 year</div>
                 <div class="fee">{{tier.fee | tokenAmount}} LOOM</div>
+                <div class="fee" style="border: 11px solid;border-radius: 12px;border-width: 0px 2px;width: 95px;margin: 0 auto;">
+                  <span style="text-decoration: line-through;display: block;">$499</span>
+                  <big style="font-weight:bold">$99</big>
+                </div>
+                <div class="spec" style="color:red; text-transform:uppercase"><strong>Limited time offer</strong></div>
+      
               </label>
               <label class="radio tier disabled" v-for="i in [1,2,3]" :key="i">
                 <input type="radio" disabled v-model="tierSelected" :value="-1">
@@ -196,6 +213,10 @@ export default class AddKey extends Vue {
     return this.state.userDeployersAddress
   }
 
+  get deployedContract() {
+    return this.state.deployedContractAddress
+  }
+
   async addKey(tier: ITier) {
     if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance)) {
       this.showError("Your balance isn't enough. Please deposit first.")
@@ -233,13 +254,21 @@ export default class AddKey extends Vue {
     )
   }
 
+  async getDeployedContract(deployerAddress: Address) {
+    await whiteListModule.getDeployedContractAddresses({deployerAddress})
+  }
+
   goDeposit() {
-    this.$router.push({ path: 'wallet', query: { depositCoin: 'LOOM' } })
+    this.$router.push({ path: "wallet", query: { depositCoin: "LOOM" } })
   }
 
   async mounted() {
     this.keyViewMode = "hex"
     await whiteListModule.getDeployers()
+  }
+  async showCollapse(pk) {
+    await this.getDeployedContract(pk.address)
+    this.$root.$emit("bv::toggle::collapse", pk.hex)
   }
 }
 </script>
@@ -247,6 +276,22 @@ export default class AddKey extends Vue {
 main > section {
   max-width: 600px;
   margin: 0 auto;
+}
+.collapse-content {
+  background: #007bff0f;
+  padding: 1em;
+  border-radius: 4px;
+  p {
+    margin: 0;
+  }
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .card.deployer-keys {
@@ -271,7 +316,12 @@ main > section {
       font-size: 0.825rem;
       margin: 0;
       &.hex {
-        cursor: copy;
+        > span {
+          cursor: pointer; 
+        }
+        .icon-copy {
+          cursor: copy;
+        }
       }
       // fa icon
       > svg {
@@ -336,7 +386,7 @@ p {
       display: none;
     }
     > * {
-      height: 1.8em;
+      height: auto;
     }
     .spec {
       font-size: 0.825rem;

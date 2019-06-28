@@ -78,6 +78,7 @@ export class Validator implements IValidator, ICandidate {
     this.fee = c.fee.div(new BN(100))
     this.newFee = c.newFee.div(new BN(100))
     this.addr = c.address.local.toString().toLocaleLowerCase()
+    this.delegationTotal = c.delegationTotal.sub((c.whitelistAmount))
   }
   setValidatorData(v: IValidator) {
     Object.assign(this, v)
@@ -87,7 +88,7 @@ export class Validator implements IValidator, ICandidate {
     if (this.totalStaked.isZero()) {
       this.totalStaked = v.whitelistAmount
     }
-    v.delegationTotal.sub(v.whitelistAmount)
+    v.delegationTotal = v.delegationTotal.sub(v.whitelistAmount)
   }
 }
 

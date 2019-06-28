@@ -102,7 +102,9 @@ export default class ValidatorList extends Vue {
   }
 
   get totalStaked() {
-    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
+    // ignore bootstrap node
+    const filtered = this.state.dpos.validators.filter(v => !v.isBootstrap)
+    return filtered.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
   }
 
   get validators() {
@@ -122,7 +124,7 @@ export default class ValidatorList extends Vue {
    * adds class bootstrap node if is bootstrap
    */
   validatorCssClass(item, type) {
-    return item.isBoostrap ? ["boostrap-validator"] : []
+    return item.isBootstrap ? ["bootstrap-validator"] : []
   }
 
   showValidatorDetail(record, index) {

@@ -356,8 +356,7 @@ a.hover-warning:hover {
 }
 
 .mobile-nav {
-  text-align: center;
-  padding: 12px 0;
+  padding: 12px 24px;
   h5 {
     margin: 0;
     font-size: 1rem;

@@ -147,9 +147,9 @@ import { DashboardState } from "../types"
 import LoomIcon from "@/components/LoomIcon.vue"
 import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
-import { feedbackModule } from '../feedback/store';
+import { feedbackModule } from "../feedback/store"
 
-import Axios from "axios"
+import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 
 @Component({
   components: {
@@ -177,7 +177,6 @@ export default class FirstPage extends Vue {
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
 
-
   address = ""
   addressModalShow = false
   mappedModalShow = false
@@ -191,7 +190,6 @@ export default class FirstPage extends Vue {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
   }
 
-
   /* For Chrome & Firefox Browser
      if user dont have Metamask installed, there is no web3 that inject in their browser
      (except user install other extensions for crypto wallet (Ethereum platform))
@@ -200,9 +198,7 @@ export default class FirstPage extends Vue {
      Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
   */
   get metamaskInstalled() {
-    return ("ethereum" in window) ||
-      // @ts-ignore
-      ("web3" in window && window.web3.currentProvider.isMetaMask)
+    return MetaMaskAdapter.detect()
   }
 
 }

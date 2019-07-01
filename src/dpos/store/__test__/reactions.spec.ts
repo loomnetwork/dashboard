@@ -1,33 +1,142 @@
 import "mocha"
-import { requestDelegation } from ".."
-import { defaultState } from "../helpers"
-import { ICandidate } from "loom-js/dist/contracts/dpos3"
+import Vuex from "vuex"
+import { createLocalVue } from "@vue/test-utils"
+import { getStoreBuilder } from "vuex-typex"
+import { DashboardState } from "@/types"
+import { dposUtils, dposReactions } from "../reactions"
+import { DPOS3 } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
-import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
-import { ZERO } from "@/utils"
-
-import { expect } from "chai"
-import { DPOSState } from "../types"
-import { plasmaModule } from "@/store/plasma"
 
 import sinon from "sinon"
+import { now, nowStub, dposUtilsStub, dposModuleStub, plasmaModuleStub } from "./_helpers"
+
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
+const store = getStoreBuilder<DashboardState>().vuexStore()
+dposReactions(store)
 
 describe("Reactions", () => {
   describe("On client ready", () => {
-    it.skip("creates the contract", () => { })
-    it.skip("refreshes DPoS State", () => { })
-    it.skip("schedules election time update call", () => { })
-    it.skip("election time polling is throttle to 1 call per 10 seconds", () => { })
+    before(() => {
+      dposUtilsStub.onClientReady.restore()
+      dposUtils.onClientReady()
+    })
+
+    after(() => {
+      sinon.stub(dposUtils, "onClientReady")
+    })
+
+    it("creates the contract", () => {
+      sinon.assert.calledOnce(dposUtilsStub.createContract)
+    })
+    it("refreshes election time", () => {
+      sinon.assert.calledOnce(dposModuleStub.refreshElectionTime)
+    })
   })
 
   describe("On account change", () => {
-    it.skip("(re)creates the contract with the right caller", () => { })
-    it.skip("refreshes DPoS User State", () => { })
+    before(() => {
+      dposUtilsStub.createContract.reset()
+      dposUtilsStub.onAccountChange.restore()
+
+      dposUtils.onAccountChange()
+    })
+
+    it("(re)creates the contract with the right caller", () => {
+      sinon.assert.calledOnce(dposUtilsStub.createContract)
+    })
+    it("refreshes DPoS User State", () => {
+      sinon.assert.calledOnce(dposUtilsStub.refreshDPoSUserState)
+    })
   })
 
   describe("On election time update", () => {
-    it.skip("refreshes DPoS State", () => { })
-    it.skip("does not refreshes DPoS Account State if state.plasma.address is not set", () => { })
-    it.skip("refreshes DPoS Account State if state.plasma.address is set", () => { })
+    const date = new Date()
+    const getTimeStub = sinon.stub(date, "getTime")
+    const time = 10000
+
+    before(() => {
+      dposModuleStub.refreshElectionTime.reset()
+      dposUtilsStub.scheduleElectionTimeCall.restore()
+
+      getTimeStub.returns(time)
+      nowStub.returns(now)
+
+      dposUtils.scheduleElectionTimeCall()
+    })
+
+    it("refresh election time after delay", () => {
+      const delay = Math.max(time - now, 10000)
+      setTimeout(() => {
+        sinon.assert.calledOnce(dposModuleStub.refreshElectionTime)
+      }, delay)
+    })
+  })
+
+  describe("Refresh DPoS state", () => {
+    before(() => {
+      dposUtilsStub.refreshDPoSState.restore()
+    })
+
+    beforeEach(() => {
+      dposUtilsStub.refreshDPoSUserState.reset()
+      dposModuleStub.refreshValidators.reset()
+    })
+
+    it("does not refreshes DPoS Account State if state.plasma.address is not set", () => {
+      store.state.plasma.address = ""
+      dposUtils.refreshDPoSState()
+
+      sinon.assert.calledOnce(dposModuleStub.refreshValidators)
+      sinon.assert.notCalled(dposUtilsStub.refreshDPoSUserState)
+    })
+    it("refreshes DPoS Account State if state.plasma.address is set", () => {
+      store.state.plasma.address = "loom0000000000000000000000000000000000000000"
+      dposModuleStub.refreshValidators.resolves()
+      dposUtils.refreshDPoSState()
+
+      sinon.assert.calledOnce(dposModuleStub.refreshValidators)
+      sinon.assert.calledOnce(dposUtilsStub.refreshDPoSUserState) // no idea why it's not being called
+    })
+  })
+
+  describe("Refresh DPoS user state", () => {
+    before(() => {
+      dposUtilsStub.refreshDPoSUserState.restore()
+
+      dposUtils.refreshDPoSUserState()
+    })
+
+    it("calls plasmaModule.refreshBalance", () => {
+      sinon.assert.calledOnce(plasmaModuleStub.refreshBalance)
+      sinon.assert.calledWith(plasmaModuleStub.refreshBalance, "LOOM")
+    })
+
+    it("calls dposModule.refreshDelegations", () => {
+      sinon.assert.calledOnce(dposModuleStub.refreshDelegations)
+    })
+  })
+
+  describe("Create contract", () => {
+    const dpos3Stub = sinon.stub(DPOS3, "createAsync")
+    const caller = Address.fromString("default:0x" + "".padEnd(40, "0"))
+
+    before(() => {
+      dposUtilsStub.createContract.restore()
+      plasmaModuleStub.getCallerAddress.resolves(caller)
+      dpos3Stub.resolves()
+
+      dposUtils.createContract(store)
+    })
+
+    it("calls plasmaModule.getCallerAddress", () => {
+      sinon.assert.calledOnce(plasmaModuleStub.getCallerAddress)
+    })
+
+    it("calls DPOS3.createAsync", () => {
+      sinon.assert.calledOnce(dpos3Stub)
+      sinon.assert.calledWith(dpos3Stub, store.state.plasma.client!, caller)
+    })
   })
 })

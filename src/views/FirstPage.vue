@@ -53,10 +53,10 @@
                   :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
                   @click="setWallet('metamask')"
                 >
-                  <span>
-                    <span>Metamask</span>
+                  <div>
                     <img src="../assets/metamask_logo.png">
-                  </span>                  
+                    <span>Metamask</span>
+                  </div>                  
                 </b-card>
               </div>
               <div class="col-sm-12">
@@ -65,10 +65,10 @@
                   class="wallet-selection-card text-center mb-3"
                   @click="setWallet('ledger')"
                 >
-                  <span>
-                    <span>Ledger (Legacy)</span>
+                  <div>
                     <img src="../assets/ledger_logo.svg">
-                  </span>
+                    <span>Ledger (Legacy)</span>
+                  </div>
                 </b-card>
               </div>              
               <div class="col-sm-12">
@@ -77,10 +77,10 @@
                   class="wallet-selection-card text-center mb-3"
                   @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                 >
-                  <span>
-                    <span>Ledger (via Metamask)</span>
+                  <div>
                     <img src="../assets/ledger_logo.svg">
-                  </span>
+                    <span>Ledger (via Metamask)</span>
+                  </div>
                 </b-card>
               </div>
               <div class="col-sm-12 mb-3">
@@ -90,10 +90,10 @@
                   :class="{'disabled' : !metamaskInstalled}"
                   @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                 >
-                  <span>
-                    <span>Trezor (via Metamask)</span>
+                  <div>
                     <img src="../assets/metamask_logo.png">
-                  </span>
+                    <span>Trezor (via Metamask)</span>
+                  </div>
                 </b-card>
               </div>
               <div class="col-sm-12">
@@ -102,10 +102,10 @@
                   class="wallet-selection-card text-center"
                   @click="addressModalShow = !addressModalShow"
                 >
-                  <span>
+                  <div>
+                    <fa icon="search" class="search-icon"/>
                     <span>Explore</span>
-                    <fa icon="search" style="margin-left: 6px; height: 16px;width: 16px;"/>
-                  </span>                
+                  </div>                
                 </b-card>
               </div>
             </div>
@@ -354,15 +354,24 @@ export default class FirstPage extends Vue {
   margin: 24px auto;
   .wallet-selection-card {
     position: relative;
+    div {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
     img {
-      width: 20px;
-      margin-left: 3px;
+      height: 20px !important;
+      width: auto;
+      margin-right: 3px;
       height: auto;
     }
     small {
       display: block;
     }
     span {
+      flex: 1;
+      text-align: center;
+      margin-left: -24px;
       font-size: 14px;
     }
     span.qa {
@@ -379,7 +388,12 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
     .card-body {
-      padding: .5rem;
+      padding: .5rem .8rem;
+    }
+    .search-icon {
+      margin-right: 6px;
+      height: 16px;
+      width: 16px;
     }
   }
   .wallet-selection-card.disabled {

@@ -210,7 +210,7 @@ export default class FaucetHeader extends Vue {
   }
 
   get showBackButton() {
-    return this.$route.path.includes("login") ? false : true
+    return this.$route.path.includes("login") || this.$route.path.includes("account") ? false : true
   }
 
   logout() {

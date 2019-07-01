@@ -30,5 +30,6 @@ export default {
   gateway: {
     chains: ["ethereum", "binance"],
     multisig: true,
+    checkMarketplaceURL: "https://stage-auth.loom.games/wallet/address?address={address}&wallet=eth",
   },
 } as DashboardConfig

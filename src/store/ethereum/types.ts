@@ -45,6 +45,7 @@ export interface EthereumState extends EthereumConfig {
     },
   },
   blockNumber: number,
+  // TODO move to gateway module
   latestWithdrawalBlock: number,
   claimedReceiptHasExpired: boolean,
   history: any[]

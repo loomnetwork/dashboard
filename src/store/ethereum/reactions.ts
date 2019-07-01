@@ -5,7 +5,10 @@ import { DashboardState } from "@/types"
 export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.address, onAddressChange)
 
-  function onAddressChange(address, old) {
+  // TODO move this to gateway module
+  store.watch((s) => s.ethereum.blockNumber, checkWithdrawal)
+
+  function onAddressChange(address: string) {
     // store.state.ethereum.provider!.(old)
     if (address === "") {
       // thereumModule.web3.removeAllListeners ethereumModule.disconnect()
@@ -14,34 +17,33 @@ export function ethereumReactions(store: Store<DashboardState>) {
     }
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
-    ethereumModule.web3.eth.getBlockNumber().then((blockNumber: number) => {
-      ethereumModule.setBlockNumber(blockNumber)
-      if (localStorage.getItem("latestWithdrawalBlock")) {
-        const value = localStorage.getItem("latestWithdrawalBlock")
-        // @ts-ignore
-        const block = JSON.parse(value)
-        console.log("Setting the latest withdrawal block", block)
-        ethereumModule.setLatestWithdrawalBlock(block)
+    ethereumModule.pollLastBlockNumber()
+
+    // TODO move to gateway module
+    if (localStorage.getItem("latestWithdrawalBlock")) {
+      const blockNumber = Number(localStorage.getItem("latestWithdrawalBlock"))
+      if (blockNumber > 0) {
+        console.log("Setting the latest withdrawal block", blockNumber)
+        ethereumModule.setLatestWithdrawalBlock(blockNumber)
       }
-      ethereumModule.web3.eth.subscribe("newBlockHeaders", (error, event) => {
-        if (!error) {
-          console.log("Setting the latest block", event.number)
-          ethereumModule.setBlockNumber(event.number)
-          // If a claimed withdrawal receipt exists...
-          if (ethereumModule.state.latestWithdrawalBlock && ethereumModule.state.latestWithdrawalBlock > 0) {
-            // ...check if it has expired
-            const threshold = (ethereumModule.state.latestWithdrawalBlock + 15)
-            if (threshold <= event.number) {
-              ethereumModule.setClaimedReceiptHasExpired(true)
-              ethereumModule.setLatestWithdrawalBlock(0)
-              localStorage.removeItem("latestWithdrawalBlock")
-              return
-            }
-            console.log("Remaining blocks until cooldown complete: ", threshold - event.number)
-          }
-        }
-        console.log("Error parding block headers: ", error)
-      })
-    })
+    }
+  }
+
+  // TODO move this to gateway module
+  function checkWithdrawal(lastBlockNumber: number) {
+    console.log("checkWithdrawal")
+    // If a claimed withdrawal receipt exists...
+    if (ethereumModule.state.latestWithdrawalBlock && ethereumModule.state.latestWithdrawalBlock > 0) {
+      // ...check if it has expired
+      const threshold = (ethereumModule.state.latestWithdrawalBlock + 15)
+      if (threshold <= lastBlockNumber) {
+        ethereumModule.setClaimedReceiptHasExpired(true)
+        ethereumModule.setLatestWithdrawalBlock(0)
+        localStorage.removeItem("latestWithdrawalBlock")
+        return
+      }
+      console.log("Remaining blocks until cooldown complete: ", threshold - lastBlockNumber)
+    }
+
   }
 }

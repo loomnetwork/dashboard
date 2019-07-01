@@ -1,0 +1,59 @@
+language: node_js
+node_js:
+  - "stable"
+cache:
+  yarn: true
+install:
+  - yarn install
+stages:
+#  - lint
+  - test
+  - build
+
+# remove when when ready
+branches:
+  only:
+    - travis-test
+
+jobs:
+  include:
+#  - lint
+  - stage: test
+    env:
+      - NOVE_ENV=test
+    script: yarn test
+  - stage: build
+    env:
+      - NOVE_ENV=production
+    script: yarn build
+
+# before_deploy:
+#deploy:
+  # - on:
+  #     branch: develop
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "dashboard.dappchains.com"
+  #   local_dir: dist
+  #   # detect_encoding: true
+  #   # default_text_charset: 'utf-8'
+  #   # cache_control: "max-age=31536000"
+  # - on:
+  #     branch: staging
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "dashboard.dappchains.com"
+  #   local_dir: dist
+  # - on:
+  #     branch: master
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "dashboard.dappchains.com"
+  #   local_dir: dist
+  # - on:
+  #     branch: master
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "wallet-dashboard.dappchains.com"
+  #   local_dir: dist
+# after_deploy:

@@ -162,7 +162,7 @@ export async function refreshDelegations(context: ActionContext) {
   state.delegations = response!.delegationsArray
     .filter((d) => d.index > 0)
     // filter "ghost delegations"
-    .filter((d) => d.amount.isZero() && d.updateAmount.isZero())
+    .filter((d) => false === (d.amount.isZero() && d.updateAmount.isZero()))
     .map((item: IDelegation) => {
       const d: Delegation = fromIDelegation(item, state.validators)
       // add it to the corresponding validator so we avoid filtering later

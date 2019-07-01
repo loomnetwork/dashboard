@@ -28,7 +28,7 @@
           @click="account = option"
         >
           <address>{{formatAddress(option.address)}}</address>
-          <div class="balance">{{option.balance}} ETH</div>
+          <div class="balance">{{option.balance | tokenAmount}} ETH</div>
         </b-list-group-item>
         <b-list-group-item class="load-more" @click="loadMore" v-if="!loadingAccounts">Load more</b-list-group-item>
         <b-list-group-item class="loading" v-else>

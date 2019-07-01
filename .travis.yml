@@ -1,12 +1,13 @@
 language: node_js
 node_js:
-  - "stable"
+  - "11"
+before_install:
+  - npm install -g yarn
+  #- sudo apt-get update
+  # see https://github.com/paritytech/parity-ethereum/issues/4546
+  #- sudo apt-get install -y libudev-dev
 cache:
   yarn: true
-before_install:
-  - sudo apt-get update
-  # see https://github.com/paritytech/parity-ethereum/issues/4546
-  - sudo apt-get install -y libudev-dev
 install:
   - yarn install
 stages:

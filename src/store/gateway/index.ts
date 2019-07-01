@@ -40,6 +40,7 @@ function initialState(): GatewayState {
     ],
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
+    checkMarketplaceURL: "",
   }
 }
 

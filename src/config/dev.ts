@@ -28,6 +28,7 @@ export default {
   gateway: {
     chains: ["ethereum"],
     multisig: false,
+    checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
   },
   disabled: [],
   chains: ["ethereum", "binance"],

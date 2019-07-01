@@ -44,64 +44,68 @@
               </div>
             </div>
           </b-modal>
-          <b-card title="Select wallet">
-            <div class="row wallet-provider-container">
-              <div class="col-sm-12 col-md-6">
-                <b-card
-                  id="ledger-button"
-                  class="wallet-selection-card text-center mb-3"
-                  @click="setWallet('ledger')"
-                >
-                  <h5>Ledger</h5>
-                  <img src="../assets/ledger_logo.svg">
-                  <small>
-                    Connect & sign via your
-                    <br>hardware wallet
-                  </small>
-                </b-card>
-              </div>
-              <div class="col-sm-12 col-md-6">
+          <b-card title="Select wallet" class="wallet-provider-container">
+            <div class="row">
+              <div class="col-sm-12 mb-3">
                 <b-card
                   id="metamask-button"
                   class="wallet-selection-card text-center"
                   :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
                   @click="setWallet('metamask')"
                 >
-                  <h5>Metamask</h5>
-                  <img src="../assets/metamask_logo.png">
-                  <small>
-                    Connect & sign via your browser
-                    <br>or extension
-                  </small>
+                  <div>
+                    <img src="../assets/metamask_logo.png">
+                    <span>Metamask</span>
+                  </div>                  
                 </b-card>
               </div>
-              <div class="col-sm-12 col-md-6">
+              <div class="col-sm-12">
+                <b-card
+                  id="ledger-button"
+                  class="wallet-selection-card text-center mb-3"
+                  @click="setWallet('ledger')"
+                >
+                  <div>
+                    <img src="../assets/ledger_logo.svg">
+                    <span>Ledger (Legacy)</span>
+                  </div>
+                </b-card>
+              </div>              
+              <div class="col-sm-12">
+                <b-card
+                  id="ledger-button"
+                  class="wallet-selection-card text-center mb-3"
+                  @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
+                >
+                  <div>
+                    <img src="../assets/ledger_logo.svg">
+                    <span>Ledger (via Metamask)</span>
+                  </div>
+                </b-card>
+              </div>
+              <div class="col-sm-12 mb-3">
                 <b-card
                   id="trezor-button"
                   class="wallet-selection-card text-center"
                   :class="{'disabled' : !metamaskInstalled}"
-                  @click="setWallet('metamask')"
+                  @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                 >
-                  <h5>
-                    Trezor
-                    <small>via Metamask</small>
-                  </h5>
-                  <img src="../assets/trezor_logo.png">
-                  <small>
-                    Connect to your Trezor wallet
-                    <br>via Metamask
-                  </small>
+                  <div>
+                    <img src="../assets/metamask_logo.png">
+                    <span>Trezor (via Metamask)</span>
+                  </div>
                 </b-card>
               </div>
-              <div class="col-sm-12 col-md-6">
+              <div class="col-sm-12">
                 <b-card
                   id="explore-button"
                   class="wallet-selection-card text-center"
                   @click="addressModalShow = !addressModalShow"
                 >
-                  <h5>Explore</h5>
-                  <fa icon="search" style=" height: 70px;width: 70px;"/>
-                  <small>Explore an account</small>
+                  <div>
+                    <fa icon="search" class="search-icon"/>
+                    <span>Explore</span>
+                  </div>                
                 </b-card>
               </div>
             </div>
@@ -128,7 +132,24 @@
             </div>
           </b-modal>
 
-          <ChainSelector style="width: 250px; margin: 24px auto;" class="connection-status"/>
+
+          <b-modal id="metmask-hardware-wizard"  title="Hardware wallets">
+            <div>
+              <div class="wizard-img-container mb-3">
+                <img class="wizard-img" src="../assets/metamask-hardware-screencap.png" alt="">
+              </div>
+              <p>
+                {{$t("messages.metamask_hardware_wizard")}}
+              </p>
+            </div>
+            <template slot="modal-footer">
+              <div>
+                <b-btn @click="setWallet('metamask')">Next</b-btn>
+              </div>
+            </template>
+          </b-modal>          
+
+          <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"/>
         </div>
       </main>
     </div>
@@ -147,9 +168,9 @@ import { DashboardState } from "../types"
 import LoomIcon from "@/components/LoomIcon.vue"
 import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
-import { feedbackModule } from '../feedback/store';
+import { feedbackModule } from "../feedback/store"
 
-import Axios from "axios"
+import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 
 @Component({
   components: {
@@ -177,7 +198,6 @@ export default class FirstPage extends Vue {
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
 
-
   address = ""
   addressModalShow = false
   mappedModalShow = false
@@ -191,7 +211,6 @@ export default class FirstPage extends Vue {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
   }
 
-
   /* For Chrome & Firefox Browser
      if user dont have Metamask installed, there is no web3 that inject in their browser
      (except user install other extensions for crypto wallet (Ethereum platform))
@@ -200,9 +219,7 @@ export default class FirstPage extends Vue {
      Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
   */
   get metamaskInstalled() {
-    return ("ethereum" in window) ||
-      // @ts-ignore
-      ("web3" in window && window.web3.currentProvider.isMetaMask)
+    return MetaMaskAdapter.detect()
   }
 
 }
@@ -234,6 +251,18 @@ export default class FirstPage extends Vue {
       width: 250px;
       margin: 16px;
     }
+  }
+}
+
+
+.wizard-img-container {
+  background-color: #6f6f6f;
+  overflow: hidden;
+  .wizard-img {
+    display: block;
+    margin: 0 auto;
+    max-width: 220px;
+    box-shadow: rgba(23, 21, 21, 0.56) 0px 3px 8px 0px;
   }
 }
 
@@ -271,10 +300,6 @@ export default class FirstPage extends Vue {
   display: inline-block;
   color: #ffffff;
   margin-right: 6px;
-}
-
-.wallet-selection-card:hover {
-  border: 1px solid #53e63c;
 }
 
 .tab-title {
@@ -323,16 +348,29 @@ export default class FirstPage extends Vue {
 }
 
 .wallet-provider-container {
+  max-width: 350px;
+  margin: 24px auto;
   .wallet-selection-card {
     position: relative;
-    min-height: 220px;
+    div {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
     img {
-      width: 72px;
+      height: 20px !important;
+      width: auto;
+      margin-right: 3px;
       height: auto;
-      margin-bottom: 12px;
     }
     small {
       display: block;
+    }
+    span {
+      flex: 1;
+      text-align: center;
+      margin-left: -24px;
+      font-size: 14px;
     }
     span.qa {
       display: inline-block;
@@ -346,6 +384,14 @@ export default class FirstPage extends Vue {
       color: white;
       background-color: grey;
       border-radius: 50%;
+    }
+    .card-body {
+      padding: .5rem .8rem;
+    }
+    .search-icon {
+      margin-right: 6px;
+      height: 16px;
+      width: 16px;
     }
   }
   .wallet-selection-card.disabled {

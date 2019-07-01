@@ -65,7 +65,7 @@
 
       <b-alert variant="warning" :show="balanceTooLow" style="max-width: 600px;">
         <h5 class="alert-heading">LOOM balance low.</h5>
-        <p>Whitelisting keys requires at least 10 LOOM. Your balance is {{ loomBalance }} LOOM</p>
+        <p>Whitelisting keys requires at least {{tiers[0].fee | tokenAmount}} LOOM. Your balance is {{ loomBalance }} LOOM</p>
         <footer style="display: flex;justify-content: flex-end;">
           <b-button variant="primary" @click="goDeposit">Deposit more LOOM to Plasmachain</b-button>
         </footer>
@@ -109,7 +109,14 @@
               >
                 <input type="radio" v-model="tierSelected" :value="tier">
                 <strong>Tier {{tier.tierId +1}}</strong>
+                <div class="spec">1 year</div>
                 <div class="fee">{{tier.fee | tokenAmount}} LOOM</div>
+                <div class="fee" style="border: 11px solid;border-radius: 12px;border-width: 0px 2px;width: 95px;margin: 0 auto;">
+                  <span style="text-decoration: line-through;display: block;">$499</span>
+                  <big style="font-weight:bold">$99</big>
+                </div>
+                <div class="spec" style="color:red; text-transform:uppercase"><strong>Limited time offer</strong></div>
+      
               </label>
               <label class="radio tier disabled" v-for="i in [1,2,3]" :key="i">
                 <input type="radio" disabled v-model="tierSelected" :value="-1">
@@ -379,7 +386,7 @@ p {
       display: none;
     }
     > * {
-      height: 1.8em;
+      height: auto;
     }
     .spec {
       font-size: 0.825rem;

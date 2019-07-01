@@ -106,9 +106,9 @@ export function formatUrl(domainOrUrl: string) {
 
 export function formatTokenAmount(wei: BN, decimals = 18) {
   if (!wei) return wei
-  if (wei.isZero()) return "0"
   const c = new BigNumber(wei.toString()).dividedBy(10 ** decimals)
-  return c.lt(1) ? c.toFormat(6) : c.toFormat(2)
+  return (c.integerValue().eq(c)) ? c.toFormat(0) :
+    c.lt(1) ? c.toFormat(6) : c.toFormat(2)
 }
 
 export function swapTextBase64AndHexLabel(input) {

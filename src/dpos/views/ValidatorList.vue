@@ -34,12 +34,12 @@
                 </div>
                 <div class="stakes">
                   <label>Stake</label>
-                  <span>{{validator.totalStaked | tokenAmount}}</span>
+                  <span>{{validator.totalStaked}}</span>
                 </div>
                 <div
                   v-if="!isSmallDevice"
                   class="status"
-                  :class="{'active': validator.Status === 'Active'}"
+                  :class="{ 'active': validator.Status === 'Active'}"
                 >{{validator.status}}</div>
               </b-list-group-item>
             </b-list-group>
@@ -54,11 +54,7 @@
               :sort-desc="false"
               @row-clicked="showValidatorDetail"
             >
-              <template
-                slot="delegationTotal"
-                slot-scope="data"
-              >{{data.item.totalStaked | tokenAmount}}</template>
-              <template slot="active" slot-scope="data">{{data.item.active ? "Active" : ""}}</template>
+              <template slot="active" slot-scope="data">{{ data.item.active ? "Active" : "" }}</template>
             </b-table>
           </template>
         </div>
@@ -75,6 +71,7 @@ import ElectionTimer from "../components/ElectionTimer.vue"
 import { CryptoUtils, LocalAddress } from "loom-js"
 import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from '../../utils';
+import { formatTokenAmount } from "@/filters"
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -96,8 +93,8 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "delegationTotal", sortable: true, label: "Total Staked" },
-  { key: "fee", sortable: true, label: "Fee" },
+  { key: "totalStaked", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass:"align-right-td" },
+  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass:"align-right-td" },
   ]
 
   get state(): HasDPOSState {
@@ -105,22 +102,29 @@ export default class ValidatorList extends Vue {
   }
 
   get totalStaked() {
-    return this.state.dpos.validators.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
+    // ignore bootstrap node
+    const filtered = this.state.dpos.validators.filter(v => !v.isBootstrap)
+    return filtered.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
   }
 
   get validators() {
-    return this.state.dpos.validators.sort((a, b) => {
+    const storeValidators = this.state.dpos.validators.sort((a, b) => {
       const aValue = a.isBootstrap ? 0 : random() * 10000
       const bValue = b.isBootstrap ? 0 : random() * 10000
       return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
+    return storeValidators.map((validator) => ({
+        name: validator.name,
+        active: validator.active,
+        totalStaked: formatTokenAmount(validator.totalStaked),
+        fee: validator.fee
+    }))
   }
-
   /**
    * adds class bootstrap node if is bootstrap
    */
   validatorCssClass(item, type) {
-    return item.isBoostrap ? ["boostrap-validator"] : []
+    return item.isBootstrap ? ["bootstrap-validator"] : []
   }
 
   showValidatorDetail(record, index) {
@@ -136,6 +140,7 @@ tr {
     cursor: pointer;
   }
 }
+
 main.validators {
   // ther should be global class for page titles
   header > h1 {
@@ -194,6 +199,13 @@ main.validators {
         color: green;
       }
     }
+  }
+  .align-center-th {
+    text-align: center;
+  }
+  .align-right-td {
+    text-align: right;
+    padding-right: 3%;
   }
 }
 </style>

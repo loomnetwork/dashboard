@@ -112,7 +112,7 @@ export async function checkRelentlessUser(context: ActionContext, address: strin
 
   // https://dev-auth.loom.games always return 'valid_address' as true no matter what address is
   // So url will be change later
-  const checkURL = `https://stage-auth.loom.games/wallet/address?address=${address}&wallet=eth`
+  const checkURL = context.state.checkMarketplaceURL.replace("{address}", address)
   await axios.get(checkURL).then((response) => {
     console.log("RESPONSE Valid_address = ", response.data.valid_address)
     context.state.maybeRelentlessUser = !response.data.valid_address

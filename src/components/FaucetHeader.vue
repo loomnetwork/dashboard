@@ -210,7 +210,7 @@ export default class FaucetHeader extends Vue {
   }
 
   get showBackButton() {
-    return this.$route.path.includes("login") ? false : true
+    return this.$route.path.includes("login") || this.$route.path.includes("account") ? false : true
   }
 
   logout() {
@@ -356,8 +356,7 @@ a.hover-warning:hover {
 }
 
 .mobile-nav {
-  text-align: center;
-  padding: 12px 0;
+  padding: 12px 24px;
   h5 {
     margin: 0;
     font-size: 1rem;

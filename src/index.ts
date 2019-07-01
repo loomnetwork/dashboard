@@ -39,7 +39,7 @@ durationFormatSetup(moment)
 
 import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
-import { isMobile } from "./utils";
+import { isMobile } from "./utils"
 
 // tslint:disable-next-line: no-var-requires
 require("./assets/scss/main.scss")
@@ -86,8 +86,10 @@ export default new Vue({
   render: (h) => h(App),
   mounted() {
     document.dispatchEvent(new Event("render-event"))
+    // do not auto connect if mobile or more than one environement config is present
+    if (!isMobile() ||
+      this.$store.state.envs.length > 1) return
 
-    if (!isMobile()) return
     // @ts-ignore
     if ((window.web3 && window.web3.currentProvider.isTrust) ||
       // @ts-ignore

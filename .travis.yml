@@ -3,6 +3,10 @@ node_js:
   - "stable"
 cache:
   yarn: true
+before_install:
+  - sudo apt-get update
+  # see https://github.com/paritytech/parity-ethereum/issues/4546
+  - sudo apt-get install -y libudev-dev
 install:
   - yarn install
 stages:
@@ -57,3 +61,8 @@ jobs:
   #   bucket: "wallet-dashboard.dappchains.com"
   #   local_dir: dist
 # after_deploy:
+
+
+# todo
+# travis encrypt "<account>:<token>" --add notifications.slack.rooms
+# https://github.com/nickmerwin/node-coveralls

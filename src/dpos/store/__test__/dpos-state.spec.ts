@@ -1,5 +1,5 @@
 import "mocha"
-import { refreshValidators, refreshElectionTime, refreshDelegations, dposModule } from ".."
+import { refreshValidators, refreshElectionTime, refreshDelegations } from ".."
 import { defaultState } from "../helpers"
 import { DPOS3, ICandidate, ICandidateDelegations, IValidator } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
@@ -10,7 +10,7 @@ import { expect } from "chai"
 import { DPOSState } from "../types"
 
 import sinon from "sinon"
-import { emptyValidator, plasmaModuleStub } from "./_helpers"
+import { emptyValidator, now, nowStub, plasmaModuleStub, dposModuleStub } from "./_helpers"
 
 describe("DPoS state", () => {
   describe("refreshValidators", () => {
@@ -68,9 +68,6 @@ describe("DPoS state", () => {
 
   describe("refreshElectionTime", () => {
     const dpos3Stub = sinon.createStubInstance(DPOS3)
-    const setElectionTimeStub = sinon.stub(dposModule, "setElectionTime")
-    const now = Date.now()
-    const nowStub = sinon.stub(Date, "now")
     const time = new BN(100)
     let state: DPOSState
 
@@ -78,7 +75,7 @@ describe("DPoS state", () => {
       state = defaultState()
       dpos3Stub.getTimeUntilElectionAsync.resolves(time)
       nowStub.returns(now)
-      setElectionTimeStub.returns()
+      dposModuleStub.setElectionTime.returns()
       // @ts-ignore
       state.contract = dpos3Stub
       // @ts-ignore
@@ -90,8 +87,8 @@ describe("DPoS state", () => {
     })
     it("calls dposModule.setElectionTime", () => {
       const date = now + time.toNumber() * 1000
-      sinon.assert.calledOnce(setElectionTimeStub)
-      sinon.assert.calledWith(setElectionTimeStub, new Date(date))
+      sinon.assert.calledOnce(dposModuleStub.setElectionTime)
+      sinon.assert.calledWith(dposModuleStub.setElectionTime, new Date(date))
     })
   })
 

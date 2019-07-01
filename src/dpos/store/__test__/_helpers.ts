@@ -4,6 +4,7 @@ import { Address } from "loom-js"
 import { feedbackModule } from "@/feedback/store"
 import sinon from "sinon"
 import { plasmaModule } from "@/store/plasma"
+import { dposModule } from ".."
 
 export function emptyValidator() {
     return {
@@ -22,6 +23,11 @@ export function emptyValidator() {
     }
 }
 
+export const now = Date.now()
+export const nowStub = sinon.stub(Date, "now")
+
 export const feedbackModuleStub = sinon.stub(feedbackModule)
 
 export const plasmaModuleStub = sinon.stub(plasmaModule)
+
+export const dposModuleStub = sinon.stub(dposModule)

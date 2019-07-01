@@ -22,6 +22,7 @@ import { tokenService } from "@/services/TokenService"
 import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
+import { getMetamaskSigner } from "loom-js"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -153,9 +154,7 @@ async function setProvider(context: ActionContext, p: provider) {
   log("setting provider", p)
   context.state.provider = p
   web3 = new Web3(p)
-  // @ts-ignore
-  const signer = new ethers.providers.Web3Provider(p).getSigner()
-  log("setting web3")
+  const signer = getMetamaskSigner(p)
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address

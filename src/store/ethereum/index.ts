@@ -154,7 +154,6 @@ async function setProvider(context: ActionContext, p: provider) {
   log("setting provider", p)
   context.state.provider = p
   web3 = new Web3(p)
-  // @ts-ignore
   const signer = getMetamaskSigner(p)
   const address = await signer.getAddress()
   context.state.signer = signer

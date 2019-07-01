@@ -79,10 +79,11 @@ async function onClientReady() {
 }
 
 async function onAccountChange() {
+  console.log("onAccountChange")
   log("onAccountChange")
   // recreate the contract with the right caller
   await dposUtils.createContract(store)
-  dposUtils.refreshDPoSUserState()
+  await dposUtils.refreshDPoSUserState()
 }
 
 function scheduleElectionTimeCall() {
@@ -99,8 +100,9 @@ function scheduleElectionTimeCall() {
 async function refreshDPoSState() {
   log("refreshDPoSState", store.state.plasma.address)
   await dposModule.refreshValidators()
+
   if (store.state.plasma.address) {
-    dposUtils.refreshDPoSUserState()
+    await dposUtils.refreshDPoSUserState()
   }
 }
 

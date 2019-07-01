@@ -36,11 +36,11 @@ describe("Reactions", () => {
   })
 
   describe("On account change", () => {
-    before(() => {
+    before(async () => {
       dposUtilsStub.createContract.reset()
       dposUtilsStub.onAccountChange.restore()
 
-      dposUtils.onAccountChange()
+      await dposUtils.onAccountChange()
     })
 
     it("(re)creates the contract with the right caller", () => {
@@ -84,28 +84,29 @@ describe("Reactions", () => {
       dposModuleStub.refreshValidators.reset()
     })
 
-    it("does not refreshes DPoS Account State if state.plasma.address is not set", () => {
+    it("does not refreshes DPoS Account State if state.plasma.address is not set", async () => {
       store.state.plasma.address = ""
-      dposUtils.refreshDPoSState()
+      await dposUtils.refreshDPoSState()
 
       sinon.assert.calledOnce(dposModuleStub.refreshValidators)
       sinon.assert.notCalled(dposUtilsStub.refreshDPoSUserState)
     })
-    it("refreshes DPoS Account State if state.plasma.address is set", () => {
-      store.state.plasma.address = "loom0000000000000000000000000000000000000000"
-      dposModuleStub.refreshValidators.resolves()
-      dposUtils.refreshDPoSState()
-
+    it("refreshes DPoS Account State if state.plasma.address is set", async () => {
+      // store.state.plasma.address = "0x0000000000000000000000000000000000000000"
+      sinon.stub(store.state.plasma, "address").value("0x0000000000000000000000000000000000000000")
+      // dposModuleStub.refreshValidators.resolves()
+      await dposUtils.refreshDPoSState()
+      console.log(dposUtilsStub.refreshDPoSUserState.callCount)
       sinon.assert.calledOnce(dposModuleStub.refreshValidators)
       sinon.assert.calledOnce(dposUtilsStub.refreshDPoSUserState) // no idea why it's not being called
     })
   })
 
   describe("Refresh DPoS user state", () => {
-    before(() => {
+    before(async () => {
       dposUtilsStub.refreshDPoSUserState.restore()
 
-      dposUtils.refreshDPoSUserState()
+      await dposUtils.refreshDPoSUserState()
     })
 
     it("calls plasmaModule.refreshBalance", () => {

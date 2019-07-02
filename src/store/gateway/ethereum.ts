@@ -347,6 +347,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
     // imToken throws even if transaction succeeds
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
     if ("imToken" in window) {
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {

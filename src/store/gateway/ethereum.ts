@@ -73,6 +73,8 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       receipt.tokenContract.local.toString(),
       tokenAddress,
     )
+
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     let tx
     // multisig
     if (this.vmc) {
@@ -90,10 +92,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     }
 
     localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-    localStorage.setItem(
-      "latestWithdrawalBlock",
-      JSON.stringify(tx.blockNumber),
-    )
     ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
 
     return tx

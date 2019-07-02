@@ -101,6 +101,9 @@ export const plasmaModule = {
 function setConfig(state: PlasmaState, config: PlasmaConfig) {
   log("config", config)
   Object.assign(state, config)
+  if (state.client) {
+    state.client.removeAllListeners().disconnect()
+  }
   state.client = createClient({
     chainId: state.chainId,
     endpoint: state.endpoint,

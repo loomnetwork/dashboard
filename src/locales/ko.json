@@ -9,12 +9,12 @@
     "deployer_already_exists": "Deployer alrready exists.",
     "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
     "add_deployer_addr_success_tx": "Add deployer address successful.",
-    "add_key_err_tx": "Error Adding a key: {msg}",
-    "copy_addr_success_tx": "Address copied to clipboard",
+    "add_key_err_tx": "키 추가 중 에러가 발생했습니다: {msg}",
+    "copy_addr_success_tx": "주소가 클립보드에 복사되었습니다.",
     "copy_addr_err_tx": "Somehow copy didn't work...sorry",
     "redelegate_success_tx": "Success redelegating stake",
-    "redelegate_err_tx": "Failed to redelegate stake",
-    "delegate_err_tx": "Error delegating",
+    "redelegate_err_tx": "재위임에 실패하였습니다",
+    "delegate_err_tx": "위임 중 에러가 발생했습니다",
     "undelegate_err_tx": "Failed to undelegate",
     "init_DposUser_err_tx": "Error initDposUser",
     "switch_dpouser_err_tx": "Error initDposUser",
@@ -233,7 +233,7 @@
         "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
         "view_confirmation": "View confirmations",
-        "failure": "Deposit failed..."
+        "failure": "입금에 실패하였습니다..."
       }
     },
     "layout": {
@@ -269,7 +269,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "주의: 지갑 분실 또는 파손 시에 이 12개의 단어로 복구할 수 있습니다.",
-        "you_must_create_a_backup_nbsp": "You must create a backup!",
+        "you_must_create_a_backup_nbsp": "백업을 꼭 해두셔야 합니다!",
         "write_or_print_it_out": "적어두거나 인쇄하여 안전한 곳에 보관하세요.",
         "without_it_you_will_not": "이 시드가 없으면 문제가 생겼을 때 여러분의 토큰을 복구할 수 없습니다.",
         "copy_to_clipboard": "클립보드에 복사"
@@ -323,6 +323,6 @@
     "event:MainnetWithdrawalEvent": "Withdrawal",
     "event:WithdrawLoomCoin": "Withdraw (LOOM)",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
-    "TokenWithdrawn": "Token Withdrawn"
+    "TokenWithdrawn": "출금한 토큰"
   }
 }

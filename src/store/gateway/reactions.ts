@@ -144,7 +144,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     // TODO: Add support for multiple tokens
     receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
     // @ts-ignore
-    if (receipt || withdrawalIsPending) {
+    if (receipt || !pastWithdrawalExist) {
       gatewayModule.setWithdrawalReceipts(receipt)
       return
     }

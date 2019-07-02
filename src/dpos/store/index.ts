@@ -256,19 +256,26 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
 }
 
 function getReferrer() {
-  if (!window.web3) return ""
+  if ("imToken" in window ||
+    // @ts-ignore
+    ("ethereum" in window && window.ethereum.isImToken)
+  ) return "imToken"
 
-  if (window.web3.currentProvider.isTrust) return "trust"
+  // @ts-ignore
+  const web3 = window.web3
+  if (!web3) return ""
 
-  if (window.web3.currentProvider.isGoWallet) return "goWallet"
+  if (web3.currentProvider.isTrust) return "trust"
 
-  if (window.web3.currentProvider.isAlphaWallet) return "alphaWallet"
+  if (web3.currentProvider.isGoWallet) return "goWallet"
 
-  if (window.web3.currentProvider.isStatus) return "status"
+  if (web3.currentProvider.isAlphaWallet) return "alphaWallet"
 
-  if (window.web3.currentProvider.isToshi) return "coinbase"
+  if (web3.currentProvider.isStatus) return "status"
 
-  if (typeof window.__CIPHER__ !== "undefined") return "cipher"
+  if (web3.currentProvider.isToshi) return "coinbase"
+
+  if ("__CIPHER__" in window) return "cipher"
 
   return ""
 }

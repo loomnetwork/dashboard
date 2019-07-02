@@ -1,11 +1,11 @@
 {
   "messages": {
-    "user_denied_tx": "You denied the transaction",
-    "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
-    "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
-    "transfer_card_err_tx": "Error Transferring cards: {msg}",
-    "transfer_pack_err_tx": "Error Transferring packs: {msg}",
-    "user_denied_sign_tx": "User denied message signature",
+    "user_denied_tx": "트랜잭션을 거절했습니다",
+    "transfer_card_success_tx": "카드를 성공적으로 전송했습니다. Tx: {transactionHash}",
+    "transfer_pack_success_tx": "팩을 성공적으로 전송했습니다. Tx: {transactionHash}",
+    "transfer_card_err_tx": "카드 전송 중 에러가 발생했습니다: {msg}",
+    "transfer_pack_err_tx": "팩 전송 중 에러가 발생했습니다: {msg}",
+    "user_denied_sign_tx": "사용자가 메세지 서명을 거절했습니다",
     "deployer_already_exists": "Deployer alrready exists.",
     "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
     "add_deployer_addr_success_tx": "Add deployer address successful.",

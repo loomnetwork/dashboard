@@ -260,9 +260,14 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       await gateway.deposit(weiAmount, context.rootState.ethereum.address)
       feedbackModule.endTask()
     } catch (e) {
-      console.error(e)
       feedbackModule.endTask()
-      feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+      if ("imToken" in window) {
+        console.log("imToken error", e)
+        feedbackModule.showInfo("Please track the transaction on your wallet")
+      } else {
+        console.error(e)
+        feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+      }
     }
     return
   }
@@ -282,6 +287,13 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       })
       fb.showLoadingBar(false)
     } catch (err) {
+      if ("imToken" in window) {
+        console.log("imToken error", err)
+        fb.showInfo("Please track deposit approval the transaction on your wallet.")
+      } else {
+        console.error(err)
+        fb.showError("Deposit approval failed.")
+      }
       console.log(err)
       fb.showLoadingBar(false)
       return
@@ -298,16 +310,16 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           context.rootState.ethereum.address,
         )
         fb.showLoadingBar(false)
-        fb.showAlert({
-          title: "Deposit successful",
-          message: "components.gateway.deposit.confirmed",
-        })
+        fb.showSuccess("components.gateway.deposit.confirmed")
       } catch (err) {
         fb.showLoadingBar(false)
-        fb.showAlert({
-          title: "Deposit failed",
-          message: "components.gateway.deposit.failure",
-        })
+        if ("imToken" in window) {
+          console.log("imToken error", err)
+          fb.showInfo("Please track the transaction on your wallet")
+        } else {
+          console.error(err)
+          fb.showError("components.gateway.deposit.failure")
+        }
       }
     },
   })

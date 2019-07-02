@@ -74,7 +74,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       tokenAddress,
     )
 
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     let tx
     // multisig
     if (this.vmc) {
@@ -91,7 +90,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
         .send({ from: localAddress })
     }
 
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
     ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
 
     return tx
@@ -344,6 +342,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const gateway = service().get(token)
   fb.showLoadingBar(true)
   try {
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     await gateway.withdraw(receipt)
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
@@ -354,8 +353,8 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       console.log(err)
       fb.showError("Withdraw failed, please try again or contact support.")
     }
-
   }
+  localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
   fb.showLoadingBar(false)
 }
 

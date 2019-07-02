@@ -132,26 +132,23 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
     const plasmaGateways = PlasmaGateways.service()
 
-    // TODO: Add support for multiple tokens
     let receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
     // @ts-ignore
     if (receipt && !pastWithdrawalExist) {
       console.info("Setting unclaimed receipt")
       gatewayModule.setWithdrawalReceipts(receipt)
+      return
     }
-
-    return
 
     // TODO: Add support for multiple tokens
     receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
     // @ts-ignore
-    const withdrawalIsPending = JSON.parse(
-      localStorage.getItem("pendingWithdrawal") || "false",
-    )
     if (receipt || withdrawalIsPending) {
       gatewayModule.setWithdrawalReceipts(receipt)
+      return
     }
+
   }
 
   /**

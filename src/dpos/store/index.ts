@@ -265,6 +265,8 @@ function getReferrer() {
   const web3 = window.web3
   if (!web3) return ""
 
+  if (web3.isCobo) return "cobo"
+
   if (web3.currentProvider.isTrust) return "trust"
 
   if (web3.currentProvider.isGoWallet) return "goWallet"

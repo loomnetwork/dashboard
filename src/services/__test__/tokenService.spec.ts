@@ -24,7 +24,7 @@ const isString = (str: string) => {
   return typeof(str) === "string" && str.length > 0
 }
 
-describe.only("TokenService", () => {
+describe("TokenService", () => {
   describe("TokenService on Stage Env", () => {
     before(async () => {
       await tokenService.setBaseURL(coinUrl.stage)

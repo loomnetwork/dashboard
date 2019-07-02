@@ -56,6 +56,7 @@ export const gatewayModule = {
   },
 
   withdrawalInProgress: builder.read(withdrawalInProgress),
+  checkIfPastWithdrawalEventExists: builder.read(checkIfPastWithdrawalEventExists),
 
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
@@ -98,4 +99,14 @@ function withdrawalInProgress() {
   if (!withdrawalBlock) return false
   // 10 block confirmations + 5 for processing
   return ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
+}
+
+async function checkIfPastWithdrawalEventExists() {
+  await gatewayModule.refreshEthereumHistory()
+  return ethereumModule.state.history.find((event) => {
+    return (event.event === "TokenWithdrawn" &&
+    (event.blockNumber + 15) >= ethereumModule.state.blockNumber)
+  }) ? true : JSON.parse(
+    localStorage.getItem("pendingWithdrawal") || "false",
+  ) ? true : false
 }

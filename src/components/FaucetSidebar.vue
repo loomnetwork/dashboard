@@ -160,8 +160,7 @@ export default class FaucetSidebar extends Vue {
   header {
     font-weight: 300;
     font-size: 1.1rem;
-    border-bottom: 1px solid #ccc;
-    margin: 5px 20px;
+    margin: 0 20px;
     padding: 0 0 5px;
   }
   a {
@@ -196,4 +195,9 @@ export default class FaucetSidebar extends Vue {
 .login-link {
   color: #007bff;
 }
+
+.router .nav-link {
+  padding: 0.3rem 0;
+}
+
 </style>

@@ -73,6 +73,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       receipt.tokenContract.local.toString(),
       tokenAddress,
     )
+
     let tx
     // multisig
     if (this.vmc) {
@@ -89,11 +90,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
         .send({ from: localAddress })
     }
 
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-    localStorage.setItem(
-      "latestWithdrawalBlock",
-      JSON.stringify(tx.blockNumber),
-    )
     ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
 
     return tx
@@ -264,9 +260,14 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       await gateway.deposit(weiAmount, context.rootState.ethereum.address)
       feedbackModule.endTask()
     } catch (e) {
-      console.error(e)
       feedbackModule.endTask()
-      feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+      if ("imToken" in window) {
+        console.log("imToken error", e)
+        feedbackModule.showInfo("Please track the transaction on your wallet")
+      } else {
+        console.error(e)
+        feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+      }
     }
     return
   }
@@ -286,6 +287,13 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       })
       fb.showLoadingBar(false)
     } catch (err) {
+      if ("imToken" in window) {
+        console.log("imToken error", err)
+        fb.showInfo("Please track deposit approval the transaction on your wallet.")
+      } else {
+        console.error(err)
+        fb.showError("Deposit approval failed.")
+      }
       console.log(err)
       fb.showLoadingBar(false)
       return
@@ -302,16 +310,16 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           context.rootState.ethereum.address,
         )
         fb.showLoadingBar(false)
-        fb.showAlert({
-          title: "Deposit successful",
-          message: "components.gateway.deposit.confirmed",
-        })
+        fb.showSuccess("components.gateway.deposit.confirmed")
       } catch (err) {
         fb.showLoadingBar(false)
-        fb.showAlert({
-          title: "Deposit failed",
-          message: "components.gateway.deposit.failure",
-        })
+        if ("imToken" in window) {
+          console.log("imToken error", err)
+          fb.showInfo("Please track the transaction on your wallet")
+        } else {
+          console.error(err)
+          fb.showError("components.gateway.deposit.failure")
+        }
       }
     },
   })
@@ -346,12 +354,20 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const gateway = service().get(token)
   fb.showLoadingBar(true)
   try {
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     await gateway.withdraw(receipt)
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
-    console.log(err)
-    fb.showError("Withdraw failed, please try again or contact support.")
+    // imToken throws even if transaction succeeds
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+    if ("imToken" in window) {
+      console.log("imToken error", err, err.hash, "x", err.transactionHash)
+    } else {
+      console.log(err)
+      fb.showError("Withdraw failed, please try again or contact support.")
+    }
   }
+  localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
   fb.showLoadingBar(false)
 }
 

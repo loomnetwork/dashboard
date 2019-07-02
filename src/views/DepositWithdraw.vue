@@ -87,7 +87,6 @@ import { tokenService } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule } from "@/feedback/store"
-import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
 
 @Component({
   components: {
@@ -183,7 +182,7 @@ export default class DepositWithdraw extends Vue {
    * set selected token to component state
    * then show selectChain modal
    */
-  async requestCrossChainTranfer(type: string, token: string) {
+requestCrossChainTranfer(type: string, token: string) {
     this.selectChainModalType = type
     this.selectedToken = token
     console.log("dss", this.state.chains)

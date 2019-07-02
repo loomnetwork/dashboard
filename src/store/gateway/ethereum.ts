@@ -293,7 +293,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     } catch (err) {
       if ("imToken" in window) {
         console.log("imToken error", err)
-        fb.showInfo("Please track deposit approval the transaction on your wallet.")
+        fb.showInfo("Please track the deposit approval transaction on your wallet. Once confirmed, click again on Deposit to complete the deposit.")
       } else {
         console.error(err)
         fb.showError("Deposit approval failed.")

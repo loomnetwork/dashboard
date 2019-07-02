@@ -83,6 +83,7 @@ export default class WithdrawConfirmed extends Vue {
 
     const contractAddress = receipt.tokenContract.local.toString().toLowerCase()
     const tokenInfo = tokenService.tokenFromAddress(contractAddress, "ethereum")
+
     if (tokenInfo !== null) {
       this.symbol = tokenInfo.symbol
     } else if (contractAddress === this.state.ethereum.contracts.mainGateway.toLowerCase()) {

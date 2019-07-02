@@ -236,6 +236,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   })
 
   if (!approved) {
+    feedback.endTask()
     return
   }
 
@@ -311,7 +312,7 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
 
 async function consolidate(context: ActionContext, validator: ICandidate) {
   feedback.setTask("Consolidating")
-  feedback.setStep("Consolidating unloced delegations on " + validator.name)
+  feedback.setStep("Consolidating unlocked delegations on " + validator.name)
   try {
     await context.state.contract!.consolidateDelegations(validator.address)
     feedback.endTask()

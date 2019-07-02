@@ -347,8 +347,14 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     await gateway.withdraw(receipt)
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
-    console.log(err)
-    fb.showError("Withdraw failed, please try again or contact support.")
+    // imToken throws even if transaction succeeds
+    if ("imToken" in window) {
+      console.log("imToken error", err, err.hash, "x", err.transactionHash)
+    } else {
+      console.log(err)
+      fb.showError("Withdraw failed, please try again or contact support.")
+    }
+
   }
   fb.showLoadingBar(false)
 }

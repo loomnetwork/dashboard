@@ -129,22 +129,22 @@ export function gatewayReactions(store: Store<DashboardState>) {
    * checks incomplete withdawals
    */
   async function checkIncompleteTransfers() {
+
     const plasmaGateways = PlasmaGateways.service()
 
     // TODO: Add support for multiple tokens
     let receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
+    const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
     // @ts-ignore
-    let withdrawalIsPending = JSON.parse(
-      localStorage.getItem("pendingWithdrawal") || "false",
-    )
-    if (receipt && withdrawalIsPending) {
+    if (receipt && !pastWithdrawalExist || withdrawalIsPending) {
       gatewayModule.setWithdrawalReceipts(receipt)
       return
     }
+
     // TODO: Add support for multiple tokens
     receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
     // @ts-ignore
-    withdrawalIsPending = JSON.parse(
+    const withdrawalIsPending = JSON.parse(
       localStorage.getItem("pendingWithdrawal") || "false",
     )
     if (receipt || withdrawalIsPending) {

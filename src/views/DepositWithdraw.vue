@@ -32,17 +32,17 @@
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableWithdraw || plasma.coins[symbol].balance.isZero()"
+              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
               <span>Withdraw</span>
-              <b-spinner
+              <!-- <b-spinner
                 v-if="!pastTxHasExpired"
                 variant="primary"
                 label="Spinning"
                 class="ml-2"
                 small
-              />
+              /> -->
             </b-button>
             <b-button
               class="button"
@@ -87,6 +87,7 @@ import { tokenService } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule } from "@/feedback/store"
+import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
 
 @Component({
   components: {
@@ -182,7 +183,24 @@ export default class DepositWithdraw extends Vue {
    * set selected token to component state
    * then show selectChain modal
    */
-  requestCrossChainTranfer(type: string, token: string) {
+  async requestCrossChainTranfer(type: string, token: string) {
+
+    if (type === "WITHDRAW") {
+      const pendingReceipts = gatewayModule.state.withdrawalReceipts
+      debugger
+      if (pendingReceipts) {
+        const pastWithdrawals =  await gatewayModule.checkIfPastWithdrawalEventExists()
+        debugger
+        if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
+          feedbackModule.showAlert({
+            title: "Withdrawal ongoing",
+            message: "An existing withdrawal is currently being processed. Please try again later.",
+          })
+          return
+        }
+      }
+    }
+
     this.selectChainModalType = type
     this.selectedToken = token
     console.log("dss", this.state.chains)

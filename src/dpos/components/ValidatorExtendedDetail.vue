@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- for checking -->
     <h4 v-if="!validators" style="opacity:0.5;">Validator not found</h4>
     <div class="card" v-else>
       <b-card-header class="validator-head">
@@ -82,7 +81,7 @@ export default class ValidatorExtendedDetail extends Vue{
   
   get validators() {
     const myValidator = this.state.dpos.validators.find((validator) => {
-      return validator.addr === this.state.plasma.address
+      return validator.addr === this.userAddress
       //return validator.addr === this.plasmaAddress 
     })
     // console.log("validator ADDR", myValidator!.addr)

@@ -230,7 +230,6 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     feedback.setStep("Awaiting Oracle signature...")
     receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     feedback.endTask()
   } catch (error) {
     console.error(error)

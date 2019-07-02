@@ -73,6 +73,8 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       receipt.tokenContract.local.toString(),
       tokenAddress,
     )
+
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     let tx
     // multisig
     if (this.vmc) {
@@ -90,10 +92,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     }
 
     localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-    localStorage.setItem(
-      "latestWithdrawalBlock",
-      JSON.stringify(tx.blockNumber),
-    )
     ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
 
     return tx
@@ -349,8 +347,14 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     await gateway.withdraw(receipt)
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
-    console.log(err)
-    fb.showError("Withdraw failed, please try again or contact support.")
+    // imToken throws even if transaction succeeds
+    if ("imToken" in window) {
+      console.log("imToken error", err, err.hash, "x", err.transactionHash)
+    } else {
+      console.log(err)
+      fb.showError("Withdraw failed, please try again or contact support.")
+    }
+
   }
   fb.showLoadingBar(false)
 }

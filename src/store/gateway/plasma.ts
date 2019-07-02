@@ -204,6 +204,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
 
     const pastWithdrawals =  await gatewayModule.checkIfPastWithdrawalEventExists()
     if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
+      feedback.endTask()
       feedback.showAlert({
         title: "Withdrawal ongoing",
         message: "An existing withdrawal is currently being processed. Please try again later.",

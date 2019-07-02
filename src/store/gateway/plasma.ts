@@ -198,13 +198,28 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     feedback.showError("Withdraw failed, please try again.")
     throw err
   }
+
   if (receipt) {
     console.log("Setting pre-existing receipt")
+
+    const pastWithdrawals =  await gatewayModule.checkIfPastWithdrawalEventExists()
+    if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
+      feedback.showAlert({
+        title: "Withdrawal ongoing",
+        message: "An existing withdrawal is currently being processed. Please try again later.",
+      })
+      return
+    }
+
     feedback.endTask()
     feedback.showInfo("Withdrawal already in progress.")
-    gatewayModule.setWithdrawalReceipts(receipt)
+    gatewayModule.setWithdrawalReceipts(null)
+    setTimeout(() => {
+      gatewayModule.setWithdrawalReceipts(receipt)
+    }, 1)
     return
   }
+
   try {
     await plasmaModule.approve({
       ...funds, to: (gateway.contract as Contract).address.local.toString(),

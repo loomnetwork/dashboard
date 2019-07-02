@@ -184,23 +184,6 @@ export default class DepositWithdraw extends Vue {
    * then show selectChain modal
    */
   async requestCrossChainTranfer(type: string, token: string) {
-
-    if (type === "WITHDRAW") {
-      const pendingReceipts = gatewayModule.state.withdrawalReceipts
-      debugger
-      if (pendingReceipts) {
-        const pastWithdrawals =  await gatewayModule.checkIfPastWithdrawalEventExists()
-        debugger
-        if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
-          feedbackModule.showAlert({
-            title: "Withdrawal ongoing",
-            message: "An existing withdrawal is currently being processed. Please try again later.",
-          })
-          return
-        }
-      }
-    }
-
     this.selectChainModalType = type
     this.selectedToken = token
     console.log("dss", this.state.chains)

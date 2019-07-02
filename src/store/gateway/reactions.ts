@@ -136,10 +136,12 @@ export function gatewayReactions(store: Store<DashboardState>) {
     let receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
     // @ts-ignore
-    if (receipt && !pastWithdrawalExist || withdrawalIsPending) {
+    if (receipt && !pastWithdrawalExist) {
+      console.info("Setting unclaimed receipt")
       gatewayModule.setWithdrawalReceipts(receipt)
-      return
     }
+
+    return
 
     // TODO: Add support for multiple tokens
     receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()

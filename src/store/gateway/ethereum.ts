@@ -28,6 +28,7 @@ import { AbiItem } from "web3-utils"
 
 import debug from "debug"
 import { tokenService } from "@/services/TokenService"
+import { i18n } from "@/i18n"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -310,7 +311,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           context.rootState.ethereum.address,
         )
         fb.showLoadingBar(false)
-        fb.showSuccess("components.gateway.deposit.confirmed")
+        fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
       } catch (err) {
         fb.showLoadingBar(false)
         if ("imToken" in window) {
@@ -318,7 +319,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           fb.showInfo("Please track the transaction on your wallet")
         } else {
           console.error(err)
-          fb.showError("components.gateway.deposit.failure")
+          fb.showError(i18n.t("components.gateway.deposit.failure").toString())
         }
       }
     },

@@ -243,6 +243,7 @@ export default class HardwareWalletModal extends Vue {
     // await this.setWeb3Instance()
     try {
       this.loading = true
+      this.infura = new Web3(new Web3.providers.HttpProvider(this.state.ethereum.endpoint))
       this.hdWallet = await createWallet()
     } catch (err) {
       console.error(err)
@@ -269,12 +270,6 @@ export default class HardwareWalletModal extends Vue {
       this.loading = false
       return
     }
-  }
-
-  async mounted() {
-    // use state.ethereum.ennpoint
-    const endpoint = this.state.ethereum.endpoint
-    this.infura = new Web3(new Web3.providers.HttpProvider(endpoint))
   }
 
 }

@@ -47,16 +47,16 @@ Vue.use(Vuex)
 const builder = getStoreBuilder<DashboardState>()
 
 const dashboardStore = {
-  setEnv: builder.commit(function setEnv(state, env: DashboardConfig) {
-    state.env = env.name
+  setEnv: builder.dispatch(async function setEnv(context, env: DashboardConfig) {
+    await tokenService.setBaseURL(env.coinDataUrl)
+    context.state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
     dposModule.setConfig(env.dpos)
     gatewayModule.setConfig(env.gateway)
     log("tokensService", env.coinDataUrl)
-    tokenService.setBaseURL(env.coinDataUrl)
-    state.disabled = env.disabled
-    state.chains = env.chains
+    context.state.disabled = env.disabled
+    context.state.chains = env.chains
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     state.envs = envs
@@ -66,17 +66,6 @@ const dashboardStore = {
 const store: Store<DashboardState> = builder.vuexStore({
   plugins: [plugin],
 })
-
-// set available envs
-if (window.location.host === "dashboard.dappchains.com" || window.location.host === "wallet.loomx.io") {
-  dashboardStore.setEnvs([production])
-  dashboardStore.setEnv(production)
-} else {
-  console.log("all envsxs")
-  dashboardStore.setEnvs([production, stage, dev, local])
-  // default
-  dashboardStore.setEnv(stage)
-}
 
 function plugin(store_: Store<DashboardState>) {
   store_.subscribeAction({

@@ -1,83 +1,128 @@
 // init asset state from index.ts
 import "mocha"
-import sinon from "sinon"
-import { PlasmaState, CardDetail, PackDetail } from "../../types"
+import { CardDetail, PackDetail } from "../../types"
 import { Contract } from "web3-eth-contract"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
-import { BoosterPack } from "../web3-contracts/BoosterPack"
+import BoosterPackJSON from "@/contracts/BoosterPack.json"
+import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
+import packAddresses from "@/data/ZBGPackAddresses.json"
 import { AssetsState } from "../types"
-import { assetsModule } from "../index"
+import { PACKS_NAME } from "@/store/plasma/assets/reactions"
+import * as mutations from "../mutations"
+import { expect } from "chai"
 
-describe("Game Assets, Mutations", () => {
+const initialState = (): AssetsState => {
+  return {
+    packsContract: {},
+    cardContract: null,
+    cardBalance: [],
+    packBalance: [],
+    cardToTransferSelected: {
+      id: "0",
+      amount: 0,
+      display_name: "default",
+      image: "default",
+      title: "default",
+      variant: "default",
+      variation: "default",
+      mould_type: "default",
+      element: "default",
+      originalID: "default",
+    },
+    packToTransferSelected: {
+      type: "Booster",
+      amount: 0,
+    },
+    allCardsToTransferSelected: {
+      edition: "none",
+      cards: [],
+      amount: 0,
+    },
+  }
+}
+
+describe.only("Game Assets, Mutations", () => {
   let gameAssetState: AssetsState
+  let packType: String[]
   let contract: Contract
+  const envName = ["local", "asia1", "us1", "plasma"]
+  const exCard: CardDetail = {
+    id: "1",
+    amount: 1,
+    display_name: "Example",
+    image: "Example",
+    title: "Example",
+    variant: "Example edition",
+    variation: "Example",
+    mould_type: "Example",
+    element: "Air",
+    originalID: "Example",
+  }
+  const exPack: PackDetail = {
+    type: "Booster",
+    amount: 1,
+  }
 
   before(() => {
-
+    packType = PACKS_NAME
+    gameAssetState = initialState()
   })
 
-  it("setPackContract", () => {
-    //   for (const pack of PACKS_NAME) {
-    //     const packInstance = new web3.eth.Contract(
-    //       // @ts-ignore
-    //       BoosterPackJSON.abi,
-    //       packAddresses[envName][pack],
-    //     )
-    //     assetsModule.setPacksContract({ name: pack, contract: packInstance })
-    //   }
+  it("setPackContract by a random pack type and environment", () => {
+    const randomPack = packType[Math.floor(Math.random() * packType.length)].toString()
+    const randomEnv = envName[Math.floor(Math.random() * envName.length)]
+    // Pack contract
+    contract = {
+      jsonInterface: BoosterPackJSON.abi,
+      address: packAddresses[randomEnv][randomPack],
+    }
+    mutations.setPacksContract(gameAssetState, {name: randomPack, contract})
+    expect(gameAssetState.packsContract).to.eql({[randomPack]: contract})
   })
 
-  it("setCardContract", () => {
-    // const envName = store.state.plasma.networkId
-    //   const cardInstance = new web3.eth.Contract(
-    //     // @ts-ignore
-    //     MigratedZBGCardJSON.abi,
-    //     MigratedZBGCardJSON.networks[envName].address,
-    //   ) as MigratedZBGCard
-    //   assetsModule.setCardContract(cardInstance)
+  it("setCardContract by random environment", () => {
+    const randomEnv = envName[Math.floor(Math.random() * envName.length)]
+    // Card contract
+    contract = {
+      jsonInterface: MigratedZBGCardJSON.abi,
+      address: packAddresses[randomEnv].address,
+    }
+    mutations.setCardContract(gameAssetState, contract as MigratedZBGCard)
+    expect(gameAssetState.cardContract).to.eql(contract)
   })
 
   it("setCardBalance", () => {
-  //   const account = context.rootState.plasma.address
-  // const caller = await plasmaModule.getCallerAddress()
-
-  // const tokens = await context.state
-  //   .cardContract!.methods.tokensOwned(account)
-  //   // @ts-ignore
-  //   .call({ from: caller.local.toString() })
-  // const cards: CardDetail[] = []
-  // tokens.indexes.forEach((id: string, i: number) => {
-  //   const card = getCardByTokenId(id.toString())
-  //   card.amount = parseInt(tokens.balances[i], 10)
-  //   cards.push(card)
-  // })
-  // assetsModule.setCardBalance(cards)
+    const exCardDetail: CardDetail[] = []
+    exCardDetail.push(exCard)
+    mutations.setCardBalance(gameAssetState, exCardDetail)
+    expect(gameAssetState.cardBalance).to.eql(exCardDetail)
   })
 
   it("setPackBalance", () => {
-  // const account = context.rootState.plasma.address
-  // const caller = await plasmaModule.getCallerAddress()
-  // const packs: PackDetail[] = []
-
-  // PACKS_NAME.forEach(async (type) => {
-  //   const amount = await context.state.packsContract[type].methods
-  //     .balanceOf(account)
-  //     .call({ from: caller.local.toString() })
-  //   packs.push({ type, amount })
-  // })
-  // assetsModule.setPackBalance(packs)
+    const exPackDetail: PackDetail[] = []
+    exPackDetail.push(exPack)
+    mutations.setPackBalance(gameAssetState, exPackDetail)
+    expect(gameAssetState.packBalance).to.eql(exPackDetail)
   })
 
   it("setCardToTransferSelected", () => {
-  // init CardDetail obj. => set
+    mutations.setCardToTransferSelected(gameAssetState, exCard)
+    expect(gameAssetState.cardToTransferSelected).to.eql(exCard)
   })
 
   it("setPackToTransferSelected", () => {
-  // init obj(type, amount) => set
+    mutations.setPackToTransferSelected(gameAssetState, exPack)
+    expect(gameAssetState.packToTransferSelected).to.eql(exPack)
   })
 
   it("setAllCardsToTransferSelected", () => {
-  // init obj(edition, CardDetail[], amount) => set
+    const exCardDetail: CardDetail[] = [exCard]
+    const allCard = {
+      edition: "Standard Edition",
+      cards: exCardDetail,
+      amount: 1,
+    }
+    mutations.setAllCardsToTransferSelected(gameAssetState, allCard)
+    expect(gameAssetState.allCardsToTransferSelected).to.eql(allCard)
   })
-
 })

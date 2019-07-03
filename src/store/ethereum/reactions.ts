@@ -25,7 +25,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
 
 function trackUser(address: string) {
   // @ts-ignore
-  if (!analytics) return
+  if (typeof analytics === "undefined") return
   const ref = dposModule.getReferrer()
   // @ts-ignore
   analytics.identify(address, {

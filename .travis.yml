@@ -9,12 +9,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-# before_install:
-#   # see https://github.com/paritytech/parity-ethereum/issues/4546
-#   - sudo apt-get install -y libudev-dev
-#   # travis yarn version is too old. can we switch back to npm?
-#   - npm install -g yarn
-#   - export PATH="$HOME/.yarn/bin:$PATH"
 cache:
   yarn: true
 install:
@@ -22,9 +16,9 @@ install:
 stages:
 #  - lint
   - test
-  - build
+  - name: build
+    if: type = push AND ( branch = develop OR branch = staging OR branch = master)
 
-# remove when when ready
 branches:
   only:
     - develop

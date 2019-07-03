@@ -1,6 +1,7 @@
 import { Store } from "vuex"
 import { ethereumModule } from "."
 import { DashboardState } from "@/types"
+import { dposModule } from "@/dpos/store"
 
 export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.address, onAddressChange)
@@ -13,9 +14,21 @@ export function ethereumReactions(store: Store<DashboardState>) {
       // should reset contracts
       return
     }
+
+    trackUser(address)
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
     ethereumModule.pollLastBlockNumber()
   }
 
+}
+
+function trackUser(address: string) {
+  // @ts-ignore
+  if (typeof analytics === "undefined") return
+  const ref = dposModule.getReferrer()
+  // @ts-ignore
+  analytics.identify(address, {
+    provider: ref,
+  })
 }

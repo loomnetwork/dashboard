@@ -228,7 +228,8 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
-  delegation.referrer = getReferrer()
+  const ref = getReferrer()
+  delegation.referrer = ref === "metamask" ? "" : ref
 
   feedback.setTask("Delegate")
 

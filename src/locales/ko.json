@@ -8,7 +8,7 @@
     "user_denied_sign_tx": "사용자가 메세지 서명을 거절했습니다",
     "deployer_already_exists": "Deployer alrready exists.",
     "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
-    "add_deployer_addr_success_tx": "Add deployer address successful.",
+    "add_deployer_addr_success_tx": "Deployer address added successfully.",
     "add_key_err_tx": "키 추가 중 에러가 발생했습니다: {msg}",
     "copy_addr_success_tx": "주소가 클립보드에 복사되었습니다.",
     "copy_addr_err_tx": "Somehow copy didn't work...sorry",

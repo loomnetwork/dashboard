@@ -4,7 +4,7 @@
       <b-list-group-item class="rewards">
         <h4>Rewards</h4>
       </b-list-group-item>
-      <b-list-group-item variant="secondary">
+      <!-- <b-list-group-item variant="secondary">
         <div class="d-flex w-100 justify-content-between space">
           <h6>Organic Delegators</h6>
           <span>10,000,000</span>
@@ -27,7 +27,7 @@
           <h6>From Delegators</h6>
           <span>20,000,000</span>
         </div>
-      </b-list-group-item>
+      </b-list-group-item> -->
       <b-list-group-item variant="secondary">
         <div class="d-flex w-100 justify-content-between">
           <h6>Total</h6>

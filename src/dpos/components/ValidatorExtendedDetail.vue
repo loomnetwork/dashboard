@@ -1,60 +1,65 @@
 <template>
   <div>
-    <h4 v-if="!validators" style="opacity:0.5;">Validator not found</h4>
-    <div class="card" v-else>
-      <b-card-header class="validator-head">
+    <b-card>
+      <b-card-title>Validator Associated</b-card-title>
+      <hr>
+      <b-card-body v-if="!validator">
+        No associated validator found.  But you can becoming a new validator!
+        <b-button variant="primary" style="float:right;">Check out</b-button>
+      </b-card-body>
+      <b-card-header class="validator-head" v-if="validator">
         <div>
-          <h1>{{ validators.name }}</h1>
-          <h5>{{ validators.active ? "Active" : "Inactive" }}</h5>
+          <h2>{{ validator.name }}</h2>
+          <h5>{{ validator.active ? "Active" : "Inactive" }}</h5>
           <br>
-          <p>{{ validators.addr | loomAddress }}</p>
-          <a :href="validators.website | url" target="_blank">
-          {{validators.website | domain}}
+          <p>{{ validator.addr | loomAddress }}</p>
+          <a :href="validator.website | url" target="_blank">
+          {{validator.website | domain}}
           <fa icon="external-link-alt"/>
           </a>
         </div>
       </b-card-header>
-        <b-card-body class="validator-body">
+        <b-card-body class="validator-body" v-if="validator">
           <b-card-text>
-            <p>{{ validators.description }}</p>
+            <p>{{ validator.description }}</p>
             <div class="public-key">
               <p>Public key</p>
-              <span> {{ decodeUint8Array(validators.pubKey) }} </span>
+              <span> {{ decodeUint8Array(validator.pubKey) }} </span>
             </div>
           </b-card-text>
           <b-row>
             <b-col cols="4">
               <dl>
                 <dt>Fee</dt>
-                <dd>{{ validators.fee }}</dd>
+                <dd>{{ validator.fee }}</dd>
                 <dt>New fee</dt>
-                <dd>{{ validators.newFee }}</dd>
+                <dd>{{ validator.newFee }}</dd>
                 <dt>Candidate state</dt>
-                <dd>{{ validators.candidateState }}</dd>
+                <dd>{{ validator.candidateState }}</dd>
                 <dt>Max referral %</dt>
-                <dd>{{ validators.maxReferralPercentage }} %</dd>
+                <dd>{{ validator.maxReferralPercentage }} %</dd>
                 <dt>Slash %</dt>
-                <dd>{{ validators.slashPercentage }} %</dd>
+                <dd>{{ validator.slashPercentage }} %</dd>
               </dl>
             </b-col>
             <b-col cols="1"></b-col>
             <b-col cols="7">
               <dl>
                 <dt>Delegation total</dt>
-                <dd>{{ validators.delegationTotal | tokenAmount }}</dd>
+                <dd>{{ validator.delegationTotal | tokenAmount }}</dd>
                 <dt>Total staked</dt>
-                <dd>{{ validators.totalStaked | tokenAmount }}</dd>
+                <dd>{{ validator.totalStaked | tokenAmount }}</dd>
                 <dt>Staked amount</dt>
-                <dd>{{ validators.stakedAmount | tokenAmount }}</dd>
+                <dd>{{ validator.stakedAmount | tokenAmount }}</dd>
                 <dt>Whitelist amount</dt>
-                <dd>{{ validators.whitelistAmount | tokenAmount }}</dd>
+                <dd>{{ validator.whitelistAmount | tokenAmount }}</dd>
                 <dt>Whitelist locktime tier</dt>
-                <dd>{{ validators.whitelistLocktimeTier }}</dd>
+                <dd>{{ validator.whitelistLocktimeTier }}</dd>
               </dl>
             </b-col>
           </b-row>
         </b-card-body>
-    </div>
+    </b-card>
   </div>
 </template>
 
@@ -66,10 +71,14 @@ import { formatTokenAmount } from "@/filters"
 import { TextDecoder } from 'util';
 import { formatToLoomAddress } from "@/utils"
 
+@Component
 export default class ValidatorExtendedDetail extends Vue{
 
-  @Prop({ type: String })
-  userAddress!: string
+  @Prop(String) userAddress!: string
+
+  mounted() {
+    console.log("SEND userADDRESS!!!", this.userAddress)
+  }
   
   get state(): HasDPOSState {
     return this.$store.state
@@ -79,7 +88,8 @@ export default class ValidatorExtendedDetail extends Vue{
     return this.state.plasma.address
   }
   
-  get validators() {
+  get validator() {
+    console.log("SEND userADDRESS", this.userAddress)
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress
       //return validator.addr === this.plasmaAddress 
@@ -121,15 +131,14 @@ dl {
 .validator-head {
   background-color: white;
   div {
-    margin: 1.3em 2.5em 0 2.5em;
-    h1 {
+    h2 {
       display: inline;
       color: black;
     }
     h5 {
       font-weight: 300;
       float: right;
-      margin-top: 1.5%;
+      margin-top: 0.5%;
     }
     p {
       display: inline-block;
@@ -142,7 +151,6 @@ dl {
 }
 
 .validator-body {
-  margin: 0 2.5em 0 2.5em;
   p {
     color: black;
   }

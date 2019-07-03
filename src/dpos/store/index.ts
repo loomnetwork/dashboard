@@ -26,6 +26,7 @@ const dposModule = {
 
   rewardsUnclaimedTotal: builder.read(rewardsUnclaimedTotal),
   rewardsBeingClaimedTotal: builder.read(rewardsBeingClaimedTotal),
+  getReferrer: builder.read(getReferrer),
 
   setConfig: builder.commit(mutations.setConfig),
 
@@ -227,7 +228,8 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
-  delegation.referrer = getReferrer()
+  const ref = getReferrer()
+  delegation.referrer = ref === "metamask" ? "" : ref
 
   feedback.setTask("Delegate")
 
@@ -281,6 +283,8 @@ function getReferrer() {
   if (web3.currentProvider.isToshi) return "coinbase"
 
   if ("__CIPHER__" in window) return "cipher"
+
+  if (web3.currentProvider.isMetaMask) return "metamask"
 
   return ""
 }

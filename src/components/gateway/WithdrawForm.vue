@@ -7,29 +7,31 @@
     id="deposit-approval-success"
     :title="'Withdraw ' + token"
   >
-    <div v-if="fee.amount">
-      <p>Transfer to {{transferRequest.chain}} requires a fee of {{fee.amount|tokenAmount(fee.decimals)}}</p>
-    </div>
-    <div>
-      <h6>Your balance: {{ userBalance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-      <amount-input
-        :min="min"
-        :max="userBalance"
-        :symbol="transferRequest.token"
-        :decimals="tokenInfo.decimals"
-        :round="false"
-        v-model="weiAmount"
-        @isError="errorHandler"
-      />
-    </div>
-    <div v-if="transferRequest.chain === 'binance'" class="mt-3">
-      <h6>Recepient on {{transferRequest.chain}}</h6>
-      <input-address
-        v-model="recepient"
-        :chain="transferRequest.chain"
-        :placeholder="transferRequest.chain + ' address'"
-        @isValid="isValidAddressFormat"
-      />
+    <div v-if="visible">
+      <div v-if="fee.amount">
+        <p>Transfer to {{transferRequest.chain}} requires a fee of {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}</p>
+      </div>
+      <div>
+        <h6>Your balance: {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
+        <amount-input
+          :min="min"
+          :max="max"
+          :symbol="transferRequest.token"
+          :decimals="tokenInfo.decimals"
+          :round="false"
+          v-model="weiAmount"
+          @isError="errorHandler"
+        />
+      </div>
+      <div v-if="transferRequest.chain === 'binance'" class="mt-3">
+        <h6>Recepient on {{transferRequest.chain}}</h6>
+        <input-address
+          v-model="recepient"
+          :chain="transferRequest.chain"
+          :placeholder="transferRequest.chain + ' address'"
+          @isValid="isValidAddressFormat"
+        />
+      </div>
     </div>
     <template slot="modal-footer">
       <b-btn @click="close()">Cancel</b-btn>
@@ -77,6 +79,7 @@ export default class WithdrawForm extends Vue {
 
   weiAmount: BN = new BN(0)
   min = new BN(1)
+  max!: BN
   amountIsValid: boolean = false
   isValidAddress: Address | null = null
   recepient = ""
@@ -90,7 +93,7 @@ export default class WithdrawForm extends Vue {
     return this.$store.state
   }
 
-  get userBalance() {
+  get balance() {
     return this.state.plasma.coins[this.token].balance
   }
 
@@ -133,9 +136,14 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
+    this.max = this.balance
     if (fee) {
       const { decimals } = tokenService.getTokenbySymbol(token)
       this.fee = { ...fee, decimals }
+      if (fee.token === token) {
+        this.max = this.balance.sub(fee.amount)
+        console.log(this.max.toString(), this.balance.toString(), fee.amount.toString())
+      }
     } else {
       this.fee = {}
     }

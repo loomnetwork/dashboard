@@ -108,7 +108,7 @@ async function checkPackBalance(context: AssetsContext) {
   assetsModule.setPackBalance(packs)
 }
 
-async function transferCards(
+export async function transferCards(
   context: AssetsContext,
   payload: {
     cardIds: string[]

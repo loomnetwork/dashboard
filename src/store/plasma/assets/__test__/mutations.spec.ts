@@ -41,7 +41,7 @@ const initialState = (): AssetsState => {
   }
 }
 
-describe.only("Game Assets, Mutations", () => {
+describe("Game Assets, Mutations", () => {
   let gameAssetState: AssetsState
   let packType: String[]
   let contract: Contract

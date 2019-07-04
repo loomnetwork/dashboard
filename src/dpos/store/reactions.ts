@@ -19,8 +19,12 @@ const DPOS_ACTIONS = [
   "dpos/undelegate",
   "dpos/claimRewards",
 ]
-export function dposReactions(store: Store<DashboardState>) {
-  let scheduledElectionCall: number = -1
+
+let scheduledElectionCall: number = -1
+let store: Store<DashboardState>
+
+export function dposReactions(_store: Store<DashboardState>) {
+  store = _store
 
   store.watch((s) => s.plasma.client, onClientReady)
 
@@ -56,54 +60,65 @@ export function dposReactions(store: Store<DashboardState>) {
     }
     dposModule.refreshElectionTime()
   })
+}
 
-  async function onClientReady() {
-    log("onClientReady")
-    if (scheduledElectionCall > 0) {
-      window.clearTimeout(scheduledElectionCall)
-    }
-    await createContract(store)
-    await dposModule.refreshElectionTime()
+export const dposUtils = {
+  onClientReady,
+  onAccountChange,
+  scheduleElectionTimeCall,
+  refreshDPoSState,
+  refreshDPoSUserState,
+  createContract,
+}
+
+async function onClientReady() {
+  log("onClientReady")
+  if (scheduledElectionCall > 0) {
+    window.clearTimeout(scheduledElectionCall)
   }
+  await dposUtils.createContract(store)
+  await dposModule.refreshElectionTime()
+}
 
-  async function onAccountChange() {
-    log("onAccountChange")
-    // recreate the contract with the right caller
-    await createContract(store)
-    refreshDPoSUserState()
-  }
+async function onAccountChange() {
+  console.log("onAccountChange")
+  log("onAccountChange")
+  // recreate the contract with the right caller
+  await dposUtils.createContract(store)
+  await dposUtils.refreshDPoSUserState()
+}
 
-  function scheduleElectionTimeCall() {
-    const time = store.state.dpos.electionTime.getTime()
-    // throttle to one call per 10 seconds
-    const delay = Math.max(time - Date.now(), 10000)
-    log("elections call in", delay / 1000)
-    scheduledElectionCall = window.setTimeout(
-      () => dposModule.refreshElectionTime(),
-      delay,
-    )
-  }
+function scheduleElectionTimeCall() {
+  const time = store.state.dpos.electionTime.getTime()
+  // throttle to one call per 10 seconds
+  const delay = Math.max(time - Date.now(), 10000)
+  log("elections call in", delay / 1000)
+  scheduledElectionCall = window.setTimeout(
+    () => dposModule.refreshElectionTime(),
+    delay,
+  )
+}
 
-  async function refreshDPoSState() {
-    log("refreshDPoSState", store.state.plasma.address)
-    await dposModule.refreshValidators()
-    if (store.state.plasma.address) {
-      refreshDPoSUserState()
-    }
-  }
+async function refreshDPoSState() {
+  log("refreshDPoSState", store.state.plasma.address)
+  await dposModule.refreshValidators()
 
-  function refreshDPoSUserState() {
-    log("refreshDPoSUserState")
-    if ("LOOM" in plasmaModule.state.coins) {
-      plasmaModule.refreshBalance("LOOM")
-    }
-    dposModule.refreshDelegations()
+  if (store.state.plasma.address) {
+    await dposUtils.refreshDPoSUserState()
   }
 }
 
-async function createContract(store: Store<DashboardState>) {
+function refreshDPoSUserState() {
+  log("refreshDPoSUserState")
+  if ("LOOM" in plasmaModule.state.coins) {
+    plasmaModule.refreshBalance("LOOM")
+  }
+  dposModule.refreshDelegations()
+}
+
+async function createContract(_store: Store<DashboardState>) {
   const caller = await plasmaModule.getCallerAddress()
-  const client = store.state.plasma.client!
-  store.state.dpos.contract = await DPOS3.createAsync(client, caller)
+  const client = _store.state.plasma.client!
+  _store.state.dpos.contract = await DPOS3.createAsync(client, caller)
   log("dpos3 created")
 }

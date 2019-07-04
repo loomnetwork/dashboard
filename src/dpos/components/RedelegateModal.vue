@@ -9,67 +9,49 @@
     no-close-on-backdrop
     no-close-on-esc
   >
-    <div v-if="visible">
-      <strong v-if="originErrorMsg" class="error-message mb-4">{{originErrorMsg}}</strong>
-      <strong>To</strong>
-      <div class="dropdown-container mb-4" v-if="delegation">
-        <v-autocomplete
-          class="mb-4"
-          placeholder="Please select a validator"
-          :items="filteredTargetItems"
-          :get-label="getLabel"
-          :component-item="dropdownTemplate"
-          @item-selected="selectTargetItem"
-          @update-items="updateTargetItems"
-          :min-len="0"
-        ></v-autocomplete>
-      </div>
-      <strong v-if="errorMsg" class="error-message mb-4">{{errorMsg}}</strong>
-      <footer class="row">
-        <div class="col btn-container">
-          <b-button
-            id="submitBtn"
-            class="px-5 py-2"
-            variant="primary"
-            @click="redelegate"
-          >Redelegate</b-button>
+    <h6>Select a validator : {{ validatorSelected }}</h6>
+    <b-list-group class="mb-4">
+      <b-list-group-item
+        class="flex-column align-items-start"
+        v-for="(validator, index) in items" :key="index"
+        :class="{active: index === itemSelected}"
+        @click="onItemClicked(validator, index)"
+      >
+        <div class="d-flex w-100 justify-content-between">
+          <h6 class="mb-1">{{ validator.name }}</h6>
+          <small>Fee: {{ validator.fee }}%</small>
         </div>
-      </footer>
-    </div>
+
+        <span>
+          <small>Total staked: {{ validator.totalStaked | tokenAmount }}</small>
+        </span>
+      </b-list-group-item>
+    </b-list-group>
+    <strong v-if="errorMsg" class="error-message mb-4">{{ errorMsg }}</strong>
+    <footer class="row">
+      <div class="col btn-container">
+        <b-button
+          id="submitBtn"
+          class="px-5 py-2"
+          variant="primary"
+          @click="redelegate"
+        >Redelegate</b-button>
+      </div>
+    </footer>
   </b-modal>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import LoadingSpinner from "../../components/LoadingSpinner.vue"
-import RedelegateDropdownTemplate from "./RedelegateDropdownTemplate.vue"
-import RedelegateDelegationDropdownTemplate from "./RedelegateDelegationDropdownTemplate.vue"
 import { DashboardState } from "@/types"
 import { dposModule } from "@/dpos/store"
 import { Validator } from "@/dpos/store/types"
 
-@Component({
-  components: {
-    LoadingSpinner,
-    RedelegateDropdownTemplate,
-    RedelegateDelegationDropdownTemplate,
-  },
-})
+@Component
 export default class RedelegateModal extends Vue {
-
-  dropdownTemplate = RedelegateDropdownTemplate
-  dropdownDelegationTemplate = RedelegateDelegationDropdownTemplate
-  filteredTargetItems: Validator[] = []
-
   errorMsg = ""
-  originErrorMsg = ""
-
-  mounted() {
-    this.$root.$on("bv::modal::show", () => {
-      this.updateTargetItems()
-    })
-  }
+  itemSelected = -1
 
   get visible() {
     const dpos = this.state.dpos
@@ -80,11 +62,9 @@ export default class RedelegateModal extends Vue {
     // clear
     if (val === false) {
       dposModule.clearRequest()
+      this.errorMsg = ""
+      this.itemSelected = -1
     }
-  }
-
-  get sourceDelegation() {
-    return this.state.dpos.delegation
   }
 
   get state(): DashboardState {
@@ -116,37 +96,24 @@ export default class RedelegateModal extends Vue {
     dposModule.clearRequest()
   }
 
-  getLabel(item) {
-    return item ? item.name : "Please select a validator"
-  }
-
-  updateTargetItems(query = "") {
+  get items() {
     if (!this.visible) return []
-    const validators = this.validators
-    const origin = this.delegation!.validator
-    const str = query.toLowerCase()
-    if (str.length > 0) {
-      this.filteredTargetItems = validators.filter((item) =>
-        !item.isBootstrap &&
-        origin !== item &&
-        item.name.toLowerCase().includes(str),
-      )
-    } else {
-      this.filteredTargetItems = validators.filter((item) =>
-        !item.isBootstrap &&
-        origin !== item,
-      )
-    }
+    return this.validators.filter((validator) =>
+      !validator.isBootstrap &&
+      this.delegation!.validator !== validator,
+    )
   }
 
-  selectTargetItem(validator) {
+  onItemClicked(validator, index) {
+    if (!this.visible) return
     this.errorMsg = ""
     this.delegation!.updateValidator = validator
+    this.itemSelected = index
+    this.$forceUpdate()
   }
-
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .btn-container {
   display: flex;
   .submit-btn {
@@ -209,5 +176,14 @@ export default class RedelegateModal extends Vue {
   opacity: 0.5;
   pointer-events: none !important;
   cursor: not-allowed;
+}
+
+.list-group {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.list-group-item {
+  cursor: pointer;
 }
 </style>

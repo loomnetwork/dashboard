@@ -14,6 +14,7 @@ import GameAssets from "./views/GameAssets.vue"
 import AddKey from "@/whitelist/views/AddKey.vue"
 import DepositWithdraw from "./views/DepositWithdraw.vue"
 import FeedbackForm from "./views/FeedbackForm.vue"
+import ValidatorManagement from "./dpos/views/ValidatorManagement.vue"
 import { plasmaModule } from "./store/plasma"
 
 Vue.use(VueRouter)
@@ -26,6 +27,14 @@ function requireAccount(to, from, next) {
   }
 }
 
+function loginGuard(to, from, next) {
+  if (to.path === "/login" && plasmaModule.state.address) {
+    next("/account")
+  } else {
+    next()
+  }
+}
+
 const router = new VueRouter({
   mode: "history",
   routes: [
@@ -33,6 +42,7 @@ const router = new VueRouter({
       path: "/login",
       name: "firstPage",
       component: FirstPage,
+      beforeEnter: loginGuard,
     },
     {
       path: "/account",
@@ -94,6 +104,12 @@ const router = new VueRouter({
       path: "/feedback",
       name: "feedback",
       component: FeedbackForm,
+      beforeEnter: requireAccount,
+    },
+    {
+      path: "/validator-management",
+      name: "validatorManagement",
+      component: ValidatorManagement,
       beforeEnter: requireAccount,
     },
     {

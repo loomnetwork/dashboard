@@ -1,13 +1,12 @@
 import { Store } from "vuex"
 import { ethereumModule } from "."
 import { DashboardState } from "@/types"
+import { dposModule } from "@/dpos/store"
 
 export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.address, onAddressChange)
 
   // TODO move this to gateway module
-  store.watch((s) => s.ethereum.blockNumber, checkWithdrawal)
-
   function onAddressChange(address: string) {
     // store.state.ethereum.provider!.(old)
     if (address === "") {
@@ -15,35 +14,21 @@ export function ethereumReactions(store: Store<DashboardState>) {
       // should reset contracts
       return
     }
+
+    trackUser(address)
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
     ethereumModule.pollLastBlockNumber()
-
-    // TODO move to gateway module
-    if (localStorage.getItem("latestWithdrawalBlock")) {
-      const blockNumber = Number(localStorage.getItem("latestWithdrawalBlock"))
-      if (blockNumber > 0) {
-        console.log("Setting the latest withdrawal block", blockNumber)
-        ethereumModule.setLatestWithdrawalBlock(blockNumber)
-      }
-    }
   }
 
-  // TODO move this to gateway module
-  function checkWithdrawal(lastBlockNumber: number) {
-    console.log("checkWithdrawal")
-    // If a claimed withdrawal receipt exists...
-    if (ethereumModule.state.latestWithdrawalBlock && ethereumModule.state.latestWithdrawalBlock > 0) {
-      // ...check if it has expired
-      const threshold = (ethereumModule.state.latestWithdrawalBlock + 15)
-      if (threshold <= lastBlockNumber) {
-        ethereumModule.setClaimedReceiptHasExpired(true)
-        ethereumModule.setLatestWithdrawalBlock(0)
-        localStorage.removeItem("latestWithdrawalBlock")
-        return
-      }
-      console.log("Remaining blocks until cooldown complete: ", threshold - lastBlockNumber)
-    }
+}
 
-  }
+function trackUser(address: string) {
+  // @ts-ignore
+  if (typeof analytics === "undefined") return
+  const ref = dposModule.getReferrer()
+  // @ts-ignore
+  analytics.identify(address, {
+    provider: ref,
+  })
 }

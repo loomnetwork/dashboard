@@ -57,7 +57,7 @@
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'" v-if="!state.disabled.includes('developer-actions')">
+                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
                   <h5>
                     <router-link
                       :to="menu.to"
@@ -99,6 +99,64 @@ import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
 import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
+
+
+const MENU = {
+  staking: [
+    {
+      to: "/validators",
+      text: "components.faucet_sidebar.validators",
+    },
+    {
+      to: "/account",
+      text: "components.faucet_sidebar.my_account",
+    },
+    {
+      to: "/history",
+      text: "components.faucet_sidebar.history",
+    },
+  ],
+  wallet: [
+    {
+      to: "/wallet",
+      text: "components.faucet_sidebar.deposit_withdraw",
+    },
+    {
+      to: "/game-assets",
+      text: "components.faucet_sidebar.game_assets",
+      name: "transfer-asset",
+    },
+  ],
+  dev: [
+    {
+      to: "/",
+      text: "components.faucet_sidebar.block_explorer",
+    },
+    {
+      to: "/add-key",
+      text: "components.faucet_sidebar.deploy_to_plasmachain",
+      name: "dev-deploy",
+    },
+    {
+      to: "/",
+      text: "components.faucet_sidebar.transfer_gateway",
+    },
+    {
+      to: "/",
+      text: "components.faucet_sidebar.validator_management",
+    },
+  ],
+  help: [
+    {
+      to: "/faq",
+      text: "components.faucet_sidebar.faq",
+    },
+    {
+      to: "/feedback",
+      text: "components.faucet_sidebar.feedback_form",
+    },
+  ]
+}
 
 @Component({
   components: {
@@ -143,61 +201,15 @@ export default class FaucetHeader extends Vue {
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
-  menus = {
-    staking: [
-      {
-        to: "/validators",
-        text: "components.faucet_sidebar.validators",
-      },
-      {
-        to: "/account",
-        text: "components.faucet_sidebar.my_account",
-      },
-      {
-        to: "/history",
-        text: "components.faucet_sidebar.history",
-      },
-    ],
-    wallet: [
-      {
-        to: "/wallet",
-        text: "components.faucet_sidebar.deposit_withdraw",
-      },
-      {
-        to: "/game-assets",
-        text: "components.faucet_sidebar.game_assets",
-        name: "transfer-asset",
-      },
-    ],
-    dev: [
-      {
-        to: "/",
-        text: "components.faucet_sidebar.block_explorer",
-      },
-      {
-        to: "/add-key",
-        text: "components.faucet_sidebar.deploy_to_plasmachain",
-        name: "dev-deploy",
-      },
-      {
-        to: "/",
-        text: "components.faucet_sidebar.transfer_gateway",
-      },
-      {
-        to: "/",
-        text: "components.faucet_sidebar.validator_management",
-      },
-    ],
-    help: [
-      {
-        to: "/faq",
-        text: "components.faucet_sidebar.faq",
-      },
-      {
-        to: "/feedback",
-        text: "components.faucet_sidebar.feedback_form",
-      },
-    ]
+
+
+  get menus() {
+    return {
+      staking: MENU.staking,
+      wallet: MENU.wallet,
+      dev: MENU.dev,
+      help: MENU.help,
+    }
   }
 
   get state(): DashboardState {
@@ -376,13 +388,12 @@ a.hover-warning:hover {
   position: relative;
   bottom: 2px;
   display: inline;
-  background: #F79E05;
+  background: #f79e05;
   padding: 3px 8px;
   color: #ffffff;
   font-size: 0.5em;
   font-weight: bold;
   border-radius: 8px;
 }
-
 </style>
 

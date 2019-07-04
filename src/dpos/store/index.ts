@@ -26,6 +26,7 @@ const dposModule = {
 
   rewardsUnclaimedTotal: builder.read(rewardsUnclaimedTotal),
   rewardsBeingClaimedTotal: builder.read(rewardsBeingClaimedTotal),
+  getReferrer: builder.read(getReferrer),
 
   setConfig: builder.commit(mutations.setConfig),
 
@@ -227,6 +228,9 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
+  const ref = getReferrer()
+  delegation.referrer = ref === "metamask" ? "" : ref
+
   feedback.setTask("Delegate")
 
   const approved = await plasmaModule.approve({
@@ -236,6 +240,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   })
 
   if (!approved) {
+    feedback.endTask()
     return
   }
 
@@ -253,6 +258,35 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
     feedback.showError("Unexpected error while delegating, please contact support.")
     console.error(error)
   }
+}
+
+function getReferrer() {
+  if ("imToken" in window ||
+    // @ts-ignore
+    ("ethereum" in window && window.ethereum.isImToken)
+  ) return "imToken"
+
+  // @ts-ignore
+  const web3 = window.web3
+  if (!web3) return ""
+
+  if (web3.isCobo) return "cobo"
+
+  if (web3.currentProvider.isTrust) return "trust"
+
+  if (web3.currentProvider.isGoWallet) return "goWallet"
+
+  if (web3.currentProvider.isAlphaWallet) return "alphaWallet"
+
+  if (web3.currentProvider.isStatus) return "status"
+
+  if (web3.currentProvider.isToshi) return "coinbase"
+
+  if ("__CIPHER__" in window) return "cipher"
+
+  if (web3.currentProvider.isMetaMask) return "metamask"
+
+  return ""
 }
 
 /**
@@ -284,7 +318,7 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
 
 async function consolidate(context: ActionContext, validator: ICandidate) {
   feedback.setTask("Consolidating")
-  feedback.setStep("Consolidating unloced delegations on " + validator.name)
+  feedback.setStep("Consolidating unlocked delegations on " + validator.name)
   try {
     await context.state.contract!.consolidateDelegations(validator.address)
     feedback.endTask()

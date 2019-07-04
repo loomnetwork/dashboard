@@ -67,7 +67,7 @@ describe("Undelegate", () => {
       requestUndelegation(state, delegation)
     })
 
-    it("sets correct intent to delegate", () => {
+    it("sets correct intent to undelegate", () => {
       expect(state.intent).to.equal("undelegate")
     })
     it("sets state.delegation", () => {
@@ -91,7 +91,7 @@ describe("Undelegate", () => {
       }, state.delegation)
     })
 
-    it("calls DPOS.delegate", () => {
+    it("calls DPOS.unbondAsync", () => {
       const d = state.delegation!
       sinon.assert.calledOnce(dpos3Stub.unbondAsync)
       sinon.assert.calledWith(dpos3Stub.unbondAsync,

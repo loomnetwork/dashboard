@@ -26,6 +26,14 @@ function requireAccount(to, from, next) {
   }
 }
 
+function loginGuard(to, from, next) {
+  if (to.path === "/login" && plasmaModule.state.address) {
+    next("/account")
+  } else {
+    next()
+  }
+}
+
 const router = new VueRouter({
   mode: "history",
   routes: [
@@ -33,6 +41,7 @@ const router = new VueRouter({
       path: "/login",
       name: "firstPage",
       component: FirstPage,
+      beforeEnter: loginGuard,
     },
     {
       path: "/account",

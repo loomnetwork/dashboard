@@ -160,11 +160,9 @@ class PlasmaGateways {
       case "BNB":
         if (chain === "binance") {
           adapter = new BinanceGatewayAdapter(this.binanceGateway)
+          log("added BNB adapter")
           break
         }
-      // case "tron":
-
-      // break;
 
       default:
         adapter = new ERC20GatewayAdapter(

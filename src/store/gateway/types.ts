@@ -24,7 +24,7 @@ export interface GatewayConfig {
 export interface GatewayState extends GatewayConfig {
   mapping: IAddressMapping | null
   pendingTransactions: any[]
-  withdrawalReceipts: WithdrawalReceipt | null
+  withdrawalReceipts: IWithdrawalReceipt | WithdrawalReceipt | null
   showDepositForm: boolean
   showDepositApproved: boolean
   showDepositConfirmed: boolean

@@ -9,21 +9,29 @@ import { Address, Contract } from "loom-js"
 import { BinanceTransferGateway } from "loom-js/dist/contracts"
 import { tokenService } from "@/services/TokenService"
 
+import debug from "debug"
+
+const log = debug("dash.gateway.binance")
+
 export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   chain = "binance"
   token = "BNB"
   constructor(
     public readonly contract: BinanceTransferGateway,
   ) { }
-  deposit(amount: BN, binanceRecipient: Address) {
+  deposit() {
     // no deposit
     return
   }
-  withdraw(amount: BN) {
+  withdraw(amount: BN, recipient: Address) {
     const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
     const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
 
-    return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
+    log("binance.withdraw", amount.toString(), plasmaTokenAddr.toString())
+    log("recipient", recipient.toString())
+    log("caller", this.contract.caller.toString())
+
+    return this.contract.withdrawToken(amount, plasmaTokenAddr, recipient)
   }
   withdrawalReceipt() {
     return this.contract.withdrawalReceiptAsync(this.contract.caller)

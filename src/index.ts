@@ -10,9 +10,6 @@ import { sync } from "vuex-router-sync"
 import Progress from "vue-multiple-progress"
 import VueClipboard from "vue-clipboard2"
 
-import moment from "moment"
-import durationFormatSetup from "moment-duration-format"
-
 import FontAwesome from "@fortawesome/fontawesome"
 import BrandsFontAwesome from "@fortawesome/fontawesome-free-brands"
 import SolidFontAwesome from "@fortawesome/fontawesome-free-solid"
@@ -32,10 +29,6 @@ import router from "./router"
 import { store, dashboardStore } from "./store"
 
 import debug from "debug"
-
-debug.enable("dash*")
-
-durationFormatSetup(moment)
 
 import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
@@ -74,12 +67,6 @@ Vue.component("fa", FontAwesomeIcon)
 Vue.config.productionTip = false
 
 sync(store, router)
-
-Vue.filter("interval", (value) => {
-  if (!value) return ""
-  // @ts-ignore
-  return moment.duration(value, "seconds").format()
-})
 
 initFilters()
 

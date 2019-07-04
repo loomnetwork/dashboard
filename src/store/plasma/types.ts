@@ -51,7 +51,7 @@ export enum PlasmaTokenKind {
 }
 
 export interface BalanceInfo {
-  decimals?: number
+  decimals: number
   balance: BN
   loading: boolean
 }

@@ -166,23 +166,24 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
     throw new Error("Could not find token symbol " + tokenSymbol)
   }
   const address = tokenService.getTokenAddressBySymbol(symbol, chain)
-  if (!(symbol in state.coins)) {
-    state.coins[token.symbol] = {
-      decimals: token.decimals,
-      balance: new BN("0"),
-      loading: true,
-    }
-    state.coins = Object.assign({}, state.coins)
-    log("add token state ", state.coins)
-    let contract
-    try {
-      contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
-      await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
-    } catch (error) {
-      console.error("error ", error)
-    }
-    setNewTokenToLocalStorage(symbol)
+  if (symbol in state.coins) {
+    return
   }
+  state.coins[token.symbol] = {
+    decimals: token.decimals,
+    balance: new BN("0"),
+    loading: true,
+  }
+  state.coins = Object.assign({}, state.coins)
+  log("add token state ", state.coins)
+  let contract
+  try {
+    contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
+    await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
+  } catch (error) {
+    console.error("error ", error)
+  }
+  setNewTokenToLocalStorage(symbol)
 }
 
 /**

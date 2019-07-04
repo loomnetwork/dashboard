@@ -105,7 +105,7 @@ describe("InputAddress: Invalid address cases", () => {
     wrapper.vm.onInput("0xa777afeF41c00b2570A9ac3878F5D92e838f33710")
     expect(wrapper.find(".error").text()).to.equal(`Invalid ${BNB_CHAIN} address.`)
   })
-  
+
   it("Should show an error message when any address has more than 42 char", () => {
     const wrapper = factory({ value: "", chain: ANY_CHAIN })
     // @ts-ignore

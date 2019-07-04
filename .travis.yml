@@ -1,0 +1,72 @@
+language: node_js
+node_js:
+  - "11"
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+cache:
+  yarn: true
+install:
+  - yarn install
+stages:
+#  - lint
+  - test
+  - name: build
+    if: type = push AND ( branch = develop OR branch = staging OR branch = master)
+
+branches:
+  only:
+    - develop
+
+jobs:
+  include:
+#  - lint
+  - stage: test
+    env:
+      - NOVE_ENV=test
+    script: yarn test
+  - stage: build
+    env:
+      - NOVE_ENV=production
+    script: yarn build
+
+# before_deploy:
+#deploy:
+  # - on:
+  #     branch: develop
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "dashboard.dappchains.com"
+  #   local_dir: dist
+  #   # detect_encoding: true
+  #   # default_text_charset: 'utf-8'
+  #   # cache_control: "max-age=31536000"
+  # - on:
+  #     branch: staging
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "dashboard.dappchains.com"
+  #   local_dir: dist
+  # - on:
+  #     branch: master
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "dashboard.dappchains.com"
+  #   local_dir: dist
+  # - on:
+  #     branch: master
+  #   skip_cleanup: true
+  #   provider: s3
+  #   bucket: "wallet-dashboard.dappchains.com"
+  #   local_dir: dist
+# after_deploy:
+
+
+# todo
+# travis encrypt "<account>:<token>" --add notifications.slack.rooms
+# https://github.com/nickmerwin/node-coveralls

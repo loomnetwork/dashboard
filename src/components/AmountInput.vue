@@ -6,6 +6,7 @@
           id="input-amount"
           v-model="amount"
           :type="'number'"
+          :decimal="decimal"
           placeholder="Enter amount"
           aria-describedby="input-live-help input-live-feedback"
           @keyup="validateAmount"
@@ -41,6 +42,7 @@ export default class AmountInput extends Vue {
   @Prop(String) symbol!: string
   @Prop({ default: true }) round!: boolean
 
+  @Prop({ default: 18 }) decimal!: number
   /**
    * User input is in token
    */
@@ -50,7 +52,7 @@ export default class AmountInput extends Vue {
   // Call this function when amount changed. emits valud in WEI
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-    const amountBN = parseToWei(this.amount.toString())
+    const amountBN = parseToWei(this.amount.toString(), this.decimal)
     this.$emit("input", amountBN)
   }
 
@@ -72,7 +74,7 @@ export default class AmountInput extends Vue {
       this.$emit("isError", true)
       return
     }
-    const amountBN = parseToWei("" + amount)
+    const amountBN = parseToWei("" + amount, this.decimal)
     const max = this.max
     const min = this.min
     if (amountBN.gt(max)) {

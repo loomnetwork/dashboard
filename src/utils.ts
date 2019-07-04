@@ -103,9 +103,9 @@ export function formatToCrypto(amount) {
     : conversion.toFormat(2)
 }
 
-export function parseToWei(amount: string) {
+export function parseToWei(amount: string, decimal = 18) {
   // BN is ints only
-  const bigNumber = new BigNumber(amount).multipliedBy(10 ** 18)
+  const bigNumber = new BigNumber(amount).multipliedBy(10 ** decimal)
   return new BN(bigNumber.toFixed())
 }
 

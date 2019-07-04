@@ -22,6 +22,7 @@ import { tokenService } from "@/services/TokenService"
 import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
+import { getMetamaskSigner } from "loom-js"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -61,6 +62,7 @@ const initialState: EthereumState = {
   },
   contracts: {},
   blockNumber: 0,
+  // TODO move to gateway module
   latestWithdrawalBlock: 0,
   claimedReceiptHasExpired: false,
   history: [],
@@ -110,8 +112,10 @@ export const ethereumModule = {
   initERC20: builder.dispatch(initERC20),
   clearERC20: builder.dispatch(clearERC20),
 
-  // Mutations
   setBlockNumber: builder.commit(setBlockNumber),
+  pollLastBlockNumber: builder.dispatch(pollLastBlockNumber),
+
+  // TODO move these to gateway module
   setLatestWithdrawalBlock: builder.commit(setLatestWithdrawalBlock),
   setClaimedReceiptHasExpired: builder.commit(setClaimedReceiptHasExpired),
 }
@@ -150,9 +154,7 @@ async function setProvider(context: ActionContext, p: provider) {
   log("setting provider", p)
   context.state.provider = p
   web3 = new Web3(p)
-  // @ts-ignore
-  const signer = new ethers.providers.Web3Provider(p).getSigner()
-  log("setting web3")
+  const signer = getMetamaskSigner(p)
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
@@ -160,7 +162,7 @@ async function setProvider(context: ActionContext, p: provider) {
 
 async function setToExploreMode(context: ActionContext, address: string) {
   web3 = new Web3(
-    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"),
+    new Web3.providers.WebsocketProvider("wss://.infura.io/ws"),
   )
   // Signer is not used in explore mode
   context.state.signer = null
@@ -328,4 +330,20 @@ export function initERC20(context: ActionContext, symbol: string) {
 
 export function clearERC20() {
   erc20Contracts.clear()
+}
+
+let pollingBlockNumber = -1
+
+export function pollLastBlockNumber(context: ActionContext) {
+
+  if (pollingBlockNumber > -1) {
+    clearInterval(pollingBlockNumber)
+  }
+
+  pollingBlockNumber = window.setInterval(async () => {
+    const blockNumber = await web3!.eth.getBlockNumber()
+    log("blockNumber", blockNumber)
+    setBlockNumber(context.state, blockNumber)
+  }, 15000)
+
 }

@@ -20,16 +20,18 @@
 
       <section v-if="visible === 'plasma'">
         <div class="events">
-          <article v-for="(event, id) in plasmaHistory" :key="id" class="event">
-            <h5 class="type">{{ $t( "events." + event.type) }}</h5>
-            <ul>
-              <li class="block">Block # {{event.blockNumber}}</li>
-              <li class="amount">{{event.amount | tokenAmount}}</li>
-            </ul>
-            <!--
-        <a class="transaction-hash" href target="_blank">{{event.transactionHash}}</a>
-            -->
-          </article>
+          <virtual-list :size="110" :remain="5">
+            <article v-for="(event, id) in plasmaHistory" :key="id" class="event">
+              <h5 class="type">{{ $t( "events." + event.type) }}</h5>
+              <ul>
+                <li class="block">Block # {{event.blockNumber}}</li>
+                <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
+              </ul>
+              <!--
+          <a class="transaction-hash" href target="_blank">{{event.transactionHash}}</a>
+              -->
+            </article>            
+          </virtual-list>          
         </div>
 
         <div v-if="state.plasma.history.length === 0">
@@ -42,16 +44,10 @@
       </section>
       <section v-else-if="visible === 'ethereum'">
         <div class="events">
-          <history-event v-for="(item,i) in ethereumHistory" :key="i" :event="item"></history-event>
+          <virtual-list :size="110" :remain="5">
+            <history-event v-for="(item,i) in ethereumHistory" :key="i" :event="item"></history-event>
+          </virtual-list>
         </div>
-        <!--
-        <b-pagination
-          v-if="state.ethereum.history.length"
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="my-table"
-        ></b-pagination>-->
         <div v-if="state.ethereum.history.length == 0">
           <p>
             No activity detected.
@@ -68,6 +64,7 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import HistoryEvent from "../components/HistoryEvent.vue"
+import VirtualList from "vue-virtual-scroll-list"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
@@ -77,12 +74,13 @@ import { plasmaModule } from "../store/plasma"
 @Component({
   components: {
     HistoryEvent,
+    VirtualList,
   },
 })
 export default class History extends Vue {
 
   visible = "plasma"
-
+  
   get state(): DashboardState {
     return this.$store.state
   }
@@ -102,17 +100,15 @@ export default class History extends Vue {
     plasmaModule.refreshHistory()
   }
 
+  fetchProps(idx) {
+    return this.state.ethereum.history[idx]
+  }
+
 }
 </script>
 
 <style lang="scss" scoped>
 .events {
-  height: calc(100vh - 200px);
-  overflow: scroll;
-  padding: 5px;
-  box-shadow: inset 0px 0px 5px #80808094;
-  max-width: 620px;
-  border: 1px solid #ededed;
 
   .event {
     position: relative;
@@ -120,7 +116,7 @@ export default class History extends Vue {
     max-width: 600px;
     border-left: 5px solid #00bcd4;
     box-shadow: rgba(219, 219, 219, 0.56) -1px 1px 3px 0px;
-    margin: 0 0 5px 0;
+    margin: 0 0 10px 0;
     height: 100px;
     background: white;
 

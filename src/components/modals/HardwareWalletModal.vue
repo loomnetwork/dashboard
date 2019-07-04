@@ -7,17 +7,19 @@
     centered
     no-close-on-backdrop
   >
-    <b-alert>Please make sure your Ledger is connected, unlocked and then go tho ethereum app.</b-alert>
     <b-form style="display: flex; flex-direction: column;">
-      <b-alert class="my-1 justify-content-between pt-4">
-        <p v-if="errorMsg" class="text-error mt-2" variant="error">{{errorMsg}}</p>
-      </b-alert>
+      <b-alert
+        variant="info"
+        :show="ledgerLocked === true"
+      >Please make sure your Ledger is connected, unlocked and then go tho ethereum app.</b-alert>
+      <b-alert :show="!!errorMsg">{{errorMsg}}</b-alert>
+      <div v-if="!hdWallet && ledgerLocked === false">
+        <b-spinner label="Loading accoumt"/>Initializing. Please wait...
+      </div>
       <b-form-select class="mb-2" :value="null" :options="paths" v-model="selectedPath">
         <option slot="first" :value="null">Select a path</option>
       </b-form-select>
-      <div v-if="!hdWallet">
-        <b-spinner label="Loading accoumt"/>Initializing. Please wait...
-      </div>
+
       <b-list-group class="account-list" v-if="selectedPath">
         <b-list-group-item
           v-for="option in accounts"
@@ -26,7 +28,7 @@
           @click="account = option"
         >
           <address>{{formatAddress(option.address)}}</address>
-          <div class="balance">{{option.balance}} ETH</div>
+          <div class="balance">{{option.balance | tokenAmount}} ETH</div>
         </b-list-group-item>
         <b-list-group-item class="load-more" @click="loadMore" v-if="!loadingAccounts">Load more</b-list-group-item>
         <b-list-group-item class="loading" v-else>
@@ -60,7 +62,6 @@ import createLedgerSubprovider from "@ledgerhq/web3-subprovider"
 import ProviderEngine from "web3-provider-engine"
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch"
 import { createWallet, CustomLedgerWallet } from "@/services/ledger/ledgerWallet"
-import { isMobile } from "@/utils"
 
 import { of, from } from "rxjs"
 import { map, tap, flatMap, concatMap } from "rxjs/operators"
@@ -73,7 +74,7 @@ interface LedgerAccount {
 
 @Component
 export default class HardwareWalletModal extends Vue {
-  transport!: Promise<TransportU2F>
+  _transport!: TransportU2F
   // Pagination
   // rows = 100
   // perPage = 10
@@ -92,7 +93,7 @@ export default class HardwareWalletModal extends Vue {
   selectedPath: string = ""
 
   web3: Web3 | null = null
-  infura: Web3
+  infura!: Web3
   ledger: any = null
 
   loading = false
@@ -114,6 +115,19 @@ export default class HardwareWalletModal extends Vue {
     return this.$store.state
   }
 
+  async transport() {
+    if (!this._transport) {
+      try {
+        this._transport = await TransportU2F.create(3000, 10000)
+      } catch (e) {
+        this.errorMsg = "Unable to connect to Ledger"
+        console.error("unable to create TransportU2F")
+        console.error(e)
+      }
+    }
+    return this._transport
+  }
+
   calculatePath(path, offset) {
     const derivationPath = path.replace("m/", "")
     if (derivationPath === "44'/60'") {
@@ -132,8 +146,9 @@ export default class HardwareWalletModal extends Vue {
     const networkId = Number(this.state.ethereum.networkId)
     const rpcUrl = this.state.ethereum.endpoint
     const engine = new ProviderEngine()
+    const transport = await this.transport()
     const ledger = createLedgerSubprovider(
-      () => this.transport, {
+      () => transport, {
         networkId,
         accountsLength: 1,
         path,
@@ -167,8 +182,9 @@ export default class HardwareWalletModal extends Vue {
     this.accounts = []
   }
 
-  loadMore() {
-    const getTransport = () => this.transport
+  async loadMore() {
+    const transport = await this.transport()
+    const getTransport = () => transport
     const path = this.selectedPath
     const networkId = Number(this.state.ethereum.networkId)
     const accountsLength = 4
@@ -178,7 +194,7 @@ export default class HardwareWalletModal extends Vue {
       return
     }
 
-    console.log("loading,", path, offset, networkId, accountsLength)
+    // console.log("loading,", path, offset, networkId, accountsLength)
     this.loadingAccounts = true
     const ledger = createLedgerSubprovider(
       getTransport
@@ -188,7 +204,7 @@ export default class HardwareWalletModal extends Vue {
         path: this.calculatePath(path, offset),
       })
     const t = Date.now()
-    console.log("getAccounts")
+    // console.log("getAccounts")
     ledger.getAccounts((error, accounts: string[]) => {
       console.log("getAccounts", (Date.now() - t) / 1000)
 
@@ -227,10 +243,12 @@ export default class HardwareWalletModal extends Vue {
     // await this.setWeb3Instance()
     try {
       this.loading = true
+      this.infura = new Web3(new Web3.providers.HttpProvider(this.state.ethereum.endpoint))
       this.hdWallet = await createWallet()
     } catch (err) {
+      console.error(err)
       this.ledgerLocked = true
-      feedback.showInfo("Please unlock your ledger and go to ethereum app")
+      // feedback.showInfo("Please unlock your ledger and go to ethereum app")
       // this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       this.loading = false
       return
@@ -247,18 +265,10 @@ export default class HardwareWalletModal extends Vue {
       this.loading = false
     } catch (err) {
       this.ledgerLocked = true
-      feedback.showInfo("Please unlock your ledger and go to ethereum app")
+      // feedback.showInfo("Please unlock your ledger and go to ethereum app")
       // this.$root.$emit("bv::show::modal", "unlock-ledger-modal")
       this.loading = false
       return
-    }
-  }
-
-  async mounted() {
-    if (!isMobile) {
-      this.transport = await TransportU2F.create(3000, 10000)
-      // use state.ethereum.ennpoint
-      this.infura = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0"))
     }
   }
 

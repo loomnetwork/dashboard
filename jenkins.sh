@@ -12,6 +12,7 @@ PRESET_DEV="dev-dashboard.dappchains.com"
 PRESET_STAGE="stage-dashboard.dappchains.com" #future production
 PRESET_PROD="dashboard.dappchains.com"
 FAUCET_PATH='dashboard.dappchains.com'
+ALT_FAUCET_PATH="wallet.loomx.io"
 
 # You probably don't need to modify this stuff.
 if [ "$GIT_BRANCH" == '' ]; then
@@ -69,6 +70,17 @@ cd dist
 aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
 aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
 
+# deploys a copy to wallet.loomx.io because AWS does not support mis-matched bucket/url names
+case "$BRANCH_CHOICE" in
+  origin/master|master)
+    ALT_FAUCET_PATH="wallet.loomx.io"
+    aws s3 sync . s3://$ALT_FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
+    aws s3 sync . s3://$ALT_FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
+  ;;
+  *)
+    echo "Did not deploy to wallet.loomx.io"
+  ;;
+esac
 # TODO get the one for the faucet
 #if [ ! -z "${AWS_DISTRIBUTION_ID}" ]; then
 #  aws cloudfront create-invalidation --distribution-id ${AWS_DISTRIBUTION_ID} --paths /\*

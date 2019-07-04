@@ -14,78 +14,9 @@
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="https://use.typekit.net/ycn7hsp.css">
   <title>Loom Network - Plasmachain Staking and Validator Dashboard</title>
-
-  <% if(process.env.NODE_ENV === 'production' ) { %>
-  <script>
-    !function () {
-      var analytics = window.analytics = window.analytics || []; if (!analytics.initialize) if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice."); else {
-        analytics.invoked = !0; analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on"]; analytics.factory = function (t) { return function () { var e = Array.prototype.slice.call(arguments); e.unshift(t); analytics.push(e); return analytics } }; for (var t = 0; t < analytics.methods.length; t++) { var e = analytics.methods[t]; analytics[e] = analytics.factory(e) } analytics.load = function (t, e) { var n = document.createElement("script"); n.type = "text/javascript"; n.async = !0; n.src = "https://cdn.segment.com/analytics.js/v1/" + t + "/analytics.min.js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(n, a); analytics._loadOptions = e }; analytics.SNIPPET_VERSION = "4.1.0";
-        analytics.load("9yLkdq1pxHhBIuuPArnEmnTAKvBuLtxx");
-        analytics.page();
-      }
-    }();
-
-    window.onload = function (e) {
-    }
-  </script>
-  <% } %>
-
   <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>
   <style type="text/css" media="screen, projection">
     @import url(https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.css);
-  </style>
-  <style>
-    body {
-      overflow: hidden;
-    }
-
-    #loading_wrapper-outer {
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 99999;
-      transition: all .2s;
-    }
-
-    .loading_wrapper {
-      position: relative;
-      height: 100vh;
-      width: 100vw;
-      background-color: #08050c;
-    }
-
-    #loading-outline {
-      animation: rotate 2s linear infinite;
-      position: absolute;
-      left: calc(50% - 72.5px);
-      top: calc(50% - 72.5px);
-    }
-
-    #loading-center {
-      animation: rotate-diff 3s linear infinite;
-      position: absolute;
-      left: calc(50% - 72.5px);
-      top: calc(50% - 72.5px);
-    }
-
-    @keyframes rotate {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes rotate-diff {
-      0% {
-        transform: rotate(0);
-      }
-
-      100% {
-        transform: rotate(-360deg);
-      }
-    }
   </style>
 </head>
 
@@ -98,6 +29,33 @@
 
   <!-- Freshdesk Support ticket -->
   <script type="text/javascript" src="https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.js"></script>
+  <% if(process.env.NODE_ENV === 'production' ) { %>
+  <script>
+    /*
+    twitter analytics
+     */
+    !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+    },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
+            a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+    // Insert Twitter Pixel ID and Standard Event data below
+    twq('init','nyw09');
+    twq('track','PageView');
+
+    /*
+    facebook tracking
+     */
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '135237727203133');
+    fbq('track', 'PageView');
+  </script>
+  <% } %>
 </body>
 
 </html>

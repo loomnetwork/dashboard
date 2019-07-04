@@ -138,7 +138,6 @@ h1, h2, h3 {
     font-family: $font-family-soleil
   }
   .modal-content {
-    background-image: url('../modal-back.png') !important;
     background-color: transparent !important;
     border: none;
     background-size: 100% 100%;
@@ -171,7 +170,6 @@ h1, h2, h3 {
   }
 
   .custom-btn {
-    background-image: url('../btn-1.png');
     padding-top: 21px;
     padding-bottom: 17px;
     background-size: 100% 100%;
@@ -182,7 +180,6 @@ h1, h2, h3 {
     background-color: transparent;
     font-size: 16px;
     &.disabled {
-      background-image: url('../btn-2.png');
     }
     &:active, &:focus {
       box-shadow: none !important;

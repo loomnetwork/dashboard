@@ -1,47 +1,34 @@
 import { Store } from "vuex"
 import { ethereumModule } from "."
 import { DashboardState } from "@/types"
+import { dposModule } from "@/dpos/store"
 
 export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.address, onAddressChange)
 
-  function onAddressChange(address, old) {
+  // TODO move this to gateway module
+  function onAddressChange(address: string) {
     // store.state.ethereum.provider!.(old)
     if (address === "") {
       // thereumModule.web3.removeAllListeners ethereumModule.disconnect()
       // should reset contracts
       return
     }
+
+    trackUser(address)
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
-    ethereumModule.web3.eth.getBlockNumber().then((blockNumber: number) => {
-      ethereumModule.setBlockNumber(blockNumber)
-      if (localStorage.getItem("latestWithdrawalBlock")) {
-        const value = localStorage.getItem("latestWithdrawalBlock")
-        // @ts-ignore
-        const block = JSON.parse(value)
-        console.log("Setting the latest withdrawal block", block)
-        ethereumModule.setLatestWithdrawalBlock(block)
-      }
-      ethereumModule.web3.eth.subscribe("newBlockHeaders", (error, event) => {
-        if (!error) {
-          console.log("Setting the latest block", event.number)
-          ethereumModule.setBlockNumber(event.number)
-          // If a claimed withdrawal receipt exists...
-          if (ethereumModule.state.latestWithdrawalBlock && ethereumModule.state.latestWithdrawalBlock > 0) {
-            // ...check if it has expired
-            const threshold = (ethereumModule.state.latestWithdrawalBlock + 15)
-            if (threshold <= event.number) {
-              ethereumModule.setClaimedReceiptHasExpired(true)
-              ethereumModule.setLatestWithdrawalBlock(0)
-              localStorage.removeItem("latestWithdrawalBlock")
-              return
-            }
-            console.log("Remaining blocks until cooldown complete: ", threshold - event.number)
-          }
-        }
-        console.log("Error parding block headers: ", error)
-      })
-    })
+    ethereumModule.pollLastBlockNumber()
   }
+
+}
+
+function trackUser(address: string) {
+  // @ts-ignore
+  if (typeof analytics === "undefined") return
+  const ref = dposModule.getReferrer()
+  // @ts-ignore
+  analytics.identify(address, {
+    provider: ref,
+  })
 }

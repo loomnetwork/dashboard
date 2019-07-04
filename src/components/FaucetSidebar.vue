@@ -1,6 +1,8 @@
 <template>
   <nav id="faucet-sidebar" vertical class="navbar-side">
-    <header>Staking</header>
+    <header>
+      <h6 class="rmv-spacing">Staking</h6>
+    </header>
     <b-nav class="staking" vertical>
       <b-nav-item
         v-if="false"
@@ -17,7 +19,9 @@
       >{{ $t(menu.text) }}</b-nav-item>
     </b-nav>
     <section>
-      <header>Plasma Wallet</header>
+      <header>
+        <h6 class="rmv-spacing">Plasma Wallet</h6>
+      </header>
       <b-nav vertical>
         <b-nav-item
           v-for="(menu, index) in menus.wallet"
@@ -29,7 +33,9 @@
       </b-nav>
     </section>
     <section class="developer-menu">
-      <header>Developers</header>
+      <header>
+        <h6 class="rmv-spacing">Developers</h6>
+      </header>
       <b-nav vertical>
         <b-nav-item
           v-for="(menu, index) in menus.dev"
@@ -42,7 +48,9 @@
       </b-nav>
     </section>
     <section>
-      <header>Help</header>
+      <header>
+        <h6 class="rmv-spacing">Help</h6>
+      </header>
       <b-nav vertical>
         <b-nav-item
           v-for="(menu, index) in menus.help"
@@ -104,6 +112,10 @@ export default class FaucetSidebar extends Vue {
         text: "components.faucet_sidebar.deploy_to_plasmachain",
         name: "dev-deploy",
       },
+      {
+        to: "/validator-management",
+        text: "Validator Management"
+      },
       // {
       //   to: "/",
       //   text: "components.faucet_sidebar.transfer_gateway",
@@ -140,10 +152,10 @@ export default class FaucetSidebar extends Vue {
   background-color: #ffffff;
   z-index: 100;
   position: relative;
-  border-right: 2px solid #f2f1f3;
   height: 100%;
   min-width: 245px;
   padding-top: 24px;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
 
   section {
     padding: 10px 0;
@@ -152,15 +164,13 @@ export default class FaucetSidebar extends Vue {
   header {
     font-weight: 300;
     font-size: 1.1rem;
-    border-bottom: 1px solid #ccc;
-    margin: 5px 20px;
+    margin: 0 20px;
     padding: 0 0 5px;
   }
   a {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.8);
     margin: 0 20px;
-    padding: 0.5rem 0;
     &.router-active {
       border-left: 5px solid #5756e6;
       padding-left: 10px;
@@ -189,4 +199,9 @@ export default class FaucetSidebar extends Vue {
 .login-link {
   color: #007bff;
 }
+
+.router .nav-link {
+  padding: 0.3rem 0;
+}
+
 </style>

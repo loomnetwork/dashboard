@@ -2,12 +2,15 @@ import BN from "bn.js"
 
 import Web3 from "web3"
 
-import { Gateway } from "./contracts/Gateway"
-import ERC20GatewayABI from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
+import GatewayABI_v1 from "./contracts/Gateway_v1.json"
+import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
 
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
+import ERC20GatewayABI_v1 from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
 import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
-import GatewayABI from "loom-js/dist/mainnet-contracts/Gateway.json"
+
+// these are v2 types
+import { Gateway } from "./contracts/Gateway"
+import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
@@ -25,6 +28,7 @@ import { AbiItem } from "web3-utils"
 
 import debug from "debug"
 import { tokenService } from "@/services/TokenService"
+import { i18n } from "@/i18n"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -70,6 +74,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
       receipt.tokenContract.local.toString(),
       tokenAddress,
     )
+
     let tx
     // multisig
     if (this.vmc) {
@@ -86,11 +91,6 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
         .send({ from: localAddress })
     }
 
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
-    localStorage.setItem(
-      "latestWithdrawalBlock",
-      JSON.stringify(tx.blockNumber),
-    )
     ethereumModule.setLatestWithdrawalBlock(tx.blockNumber)
 
     return tx
@@ -155,20 +155,22 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   multisig: boolean,
 ) {
-  const ERC20GW_ABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI
+  const ERC20GatewayABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
+  const GatewayABI: AbiItem[] = multisig ? GatewayABI_v2 : GatewayABI_v1
+  // @ts-ignore
   const loomGateway = new web3.eth.Contract(
-    ERC20GW_ABI,
+    ERC20GatewayABI,
     addresses.loomGateway,
   ) as ERC20Gateway_v2
   log("loom gateway initialized")
-  const mainGateway = new web3.eth.Contract(
+  // @ts-ignore
+  const mainGateway: Gateway = new web3.eth.Contract(
     GatewayABI as AbiItem[],
     addresses.mainGateway,
   )
   log("main gateway initialized")
-  let vmcContract = null
+  let vmcContract: any = null
   if (multisig) {
-    log("Assuming multisig gateways")
     const vmcAddress = await loomGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
@@ -259,9 +261,14 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       await gateway.deposit(weiAmount, context.rootState.ethereum.address)
       feedbackModule.endTask()
     } catch (e) {
-      console.error(e)
       feedbackModule.endTask()
-      feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+      if ("imToken" in window) {
+        console.log("imToken error", e)
+        feedbackModule.showInfo("Please track the transaction on your wallet")
+      } else {
+        console.error(e)
+        feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+      }
     }
     return
   }
@@ -281,6 +288,13 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       })
       fb.showLoadingBar(false)
     } catch (err) {
+      if ("imToken" in window) {
+        console.log("imToken error", err)
+        fb.showInfo("Please track deposit approval the transaction on your wallet.")
+      } else {
+        console.error(err)
+        fb.showError("Deposit approval failed.")
+      }
       console.log(err)
       fb.showLoadingBar(false)
       return
@@ -297,16 +311,16 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           context.rootState.ethereum.address,
         )
         fb.showLoadingBar(false)
-        fb.showAlert({
-          title: "Deposit successful",
-          message: "components.gateway.deposit.confirmed",
-        })
+        fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
       } catch (err) {
         fb.showLoadingBar(false)
-        fb.showAlert({
-          title: "Deposit failed",
-          message: "components.gateway.deposit.failure",
-        })
+        if ("imToken" in window) {
+          console.log("imToken error", err)
+          fb.showInfo("Please track the transaction on your wallet")
+        } else {
+          console.error(err)
+          fb.showError(i18n.t("components.gateway.deposit.failure").toString())
+        }
       }
     },
   })
@@ -341,12 +355,20 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const gateway = service().get(token)
   fb.showLoadingBar(true)
   try {
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     await gateway.withdraw(receipt)
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
-    console.log(err)
-    fb.showError("Withdraw failed, please try again or contact support.")
+    // imToken throws even if transaction succeeds
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+    if ("imToken" in window) {
+      console.log("imToken error", err, err.hash, "x", err.transactionHash)
+    } else {
+      console.log(err)
+      fb.showError("Withdraw failed, please try again or contact support.")
+    }
   }
+  localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
   fb.showLoadingBar(false)
 }
 

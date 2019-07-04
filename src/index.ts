@@ -39,7 +39,11 @@ durationFormatSetup(moment)
 
 import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
-import { isMobile } from "./utils";
+import { isMobile } from "./utils"
+import production from "./config/production"
+import stage from "./config/stage"
+import dev from "./config/dev"
+import local from "./config/local"
 
 // tslint:disable-next-line: no-var-requires
 require("./assets/scss/main.scss")
@@ -84,10 +88,25 @@ export default new Vue({
   store,
   i18n,
   render: (h) => h(App),
-  mounted() {
+  async beforeMount() {
+
+    // set available envs
+    if (window.location.host === "dashboard.dappchains.com" || window.location.host === "wallet.loomx.io") {
+      dashboardStore.setEnvs([production])
+      await dashboardStore.setEnv(production)
+    } else {
+      console.log("multiple envs")
+      dashboardStore.setEnvs([production, stage, dev])
+      // default
+      await dashboardStore.setEnv(stage)
+    }
+
+    // do not auto connect if mobile or more than one environement config is present
+    if (!isMobile() ||
+      this.$store.state.envs.length > 1) return
+
     document.dispatchEvent(new Event("render-event"))
 
-    if (!isMobile()) return
     // @ts-ignore
     if ((window.web3 && window.web3.currentProvider.isTrust) ||
       // @ts-ignore

@@ -8,7 +8,7 @@
     "user_denied_sign_tx": "User denied message signature",
     "deployer_already_exists": "Deployer alrready exists.",
     "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
-    "add_deployer_addr_success_tx": "Add deployer address successful.",
+    "add_deployer_addr_success_tx": "Deployer address added successfully.",
     "add_key_err_tx": "Error Adding a key: {msg}",
     "copy_addr_success_tx": "Address copied to clipboard",
     "copy_addr_err_tx": "Somehow copy didn't work...sorry",
@@ -26,7 +26,8 @@
     "invalid_addr": "Invalid receiver address",
     "amount_input_should_less": "Invalid amount. should be less than {amount}",
     "amount_input_should_more": "Invalid amount. should be more than {amount}",
-    "awaiting_transaction": "Awaiting transaction confirmation"
+    "awaiting_transaction": "Awaiting transaction confirmation",
+    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
   },
   "transfer_all": "All ({amount} LOOM)",
   "views": {

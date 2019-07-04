@@ -19,8 +19,8 @@
         <dt>{{ $t('views.validator_detail.timelock_tier') }}</dt>
         <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
         <dt v-if="delegation.locked">Unlock time</dt>
-        <dt v-else>Unlocked since</dt>
-        <dd>{{delegation.lockTime | date('seconds')}}</dd>
+        <dt v-else-if="delegation.lockTime > 0">Unlocked since</dt>
+        <dd v-if="delegation.lockTime > 0">{{delegation.lockTime | date('seconds')}}</dd>
       </dl>
       <footer class="actions">
         <b-button-group style="display: flex;">

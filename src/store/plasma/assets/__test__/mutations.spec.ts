@@ -81,7 +81,7 @@ describe("Game Assets, Mutations", () => {
   })
 
   it("setCardContract by random environment", () => {
-    const randomEnv = envName[Math.floor(Math.random() * envName.length - 1) + 1]
+    const randomEnv = envName[Math.floor(Math.random() * (envName.length - 1)) + 1]
     // Card contract
     contract = {
       jsonInterface: MigratedZBGCardJSON.abi,

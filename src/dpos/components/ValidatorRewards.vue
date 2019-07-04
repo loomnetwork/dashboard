@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div>
   <b-card no-body title="Rewards" class="mb-4">
     <b-list-group flush>
       <b-list-group-item class="rewards">
@@ -44,7 +44,7 @@
       @click="claimRewards"
       :disabled="hasRewardsUnclaimed === false"
     >{{ $t('views.rewards.claim_reward') }}</b-button>
-  </main>
+  </div>
 </template>
 
 <script lang="ts">

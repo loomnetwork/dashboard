@@ -5,8 +5,23 @@
       <hr>
       <b-card-body v-if="!validator">
         No associated validator found.  But you can becoming a new validator!
-        <b-button variant="primary" style="float:right;">Check out</b-button>
+        <b-button variant="primary" style="float:right;" @click="showInfo = true">Check out</b-button>
       </b-card-body>
+        <b-list-group class="validator-info" v-if="showInfo && !validator">
+          <b-list-group-item>
+            <h5>Become a validator</h5>
+            <ul>
+              <li>Fill out this <a :href="formLink" target="_blank">form</a>.</li>
+              <li>More detail? Check out this <a :href="guideLink" target="_blank">link</a>.</li>
+            </ul>
+          </b-list-group-item>
+          <b-list-group-item>
+            <h5>Setup a node</h5>
+            <ul>
+              <li>Check out this <a :href="setupLink" target="_blank">link</a>.</li>
+            </ul>
+          </b-list-group-item>
+        </b-list-group>
       <b-card-header class="validator-head" v-if="validator">
         <div>
           <h2>{{ validator.name }}</h2>
@@ -74,11 +89,13 @@ import { formatToLoomAddress } from "@/utils"
 @Component
 export default class ValidatorExtendedDetail extends Vue{
 
-  @Prop(String) userAddress!: string
+  formLink = "https://docs.google.com/forms/d/e/1FAIpQLSeNOYyBKwvYVWc-jQ3-cb-8g22GffQ24vvxe0LwS5xUKp43Rg/viewform"
+  guideLink = "https://loomx.io/developers/en/validator.html"
+  setupLink = "https://loomx.io/developers/en/jump-start-plasma.html"
 
-  mounted() {
-    console.log("SEND userADDRESS!!!", this.userAddress)
-  }
+  showInfo = false
+
+  @Prop(String) userAddress!: string
   
   get state(): HasDPOSState {
     return this.$store.state
@@ -89,7 +106,6 @@ export default class ValidatorExtendedDetail extends Vue{
   }
   
   get validator() {
-    console.log("SEND userADDRESS", this.userAddress)
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress
       //return validator.addr === this.plasmaAddress 
@@ -175,6 +191,10 @@ dl {
     color: rgba(110,110,110, 0.68);
     margin-right: 2.5%;
   }
+}
+
+.validator-info {
+  margin-top: 2%;
 }
 
 </style>

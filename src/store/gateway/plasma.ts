@@ -1,23 +1,22 @@
 import {
   TransferGateway,
   LoomCoinTransferGateway,
-  Coin,
+  BinanceTransferGateway,
 } from "loom-js/dist/contracts"
-import { Address, CryptoUtils, Client, Contract } from "loom-js"
+import { Address, Client, Contract } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import BN from "bn.js"
 import { Funds } from "@/types"
 import { ActionContext, PlasmaGatewayAdapter } from "./types"
 import { gatewayModule } from "@/store/gateway"
-import { timer, of, interval } from "rxjs"
+import { interval } from "rxjs"
 
 import { filter, tap, switchMap, take } from "rxjs/operators"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import Web3 from "web3"
-import { ethereumModule } from "../ethereum"
 import { feedbackModule as feedback } from "@/feedback/store"
-import { BinanceLoomCoinTransferGateway } from "./binance"
+import { BinanceGatewayAdapter } from "./binance"
 import { tokenService } from "@/services/TokenService"
 
 import debug from "debug"
@@ -81,7 +80,7 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
   withdraw(amount: BN) {
     const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
     const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
-    console.log("TransferGateway withdrawERC20Async", this.token, `default:${plasmaTokenAddrStr}`)
+    log("TransferGateway withdrawERC20Async", this.token, `default:${plasmaTokenAddrStr}`)
     return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
   }
 }
@@ -100,9 +99,9 @@ export async function init(
     mapping.from,
   )
   // todo: add binance loom adapter
-  const binanceLoomGateway = await BinanceLoomCoinTransferGateway.createAsync()
+  const binanceGateway = await BinanceTransferGateway.createAsync(client, mapping.from)
 
-  instance = new PlasmaGateways(ethereumMainGateway, ethereumLoomGateway, binanceLoomGateway, plasmaWeb3, mapping)
+  instance = new PlasmaGateways(ethereumMainGateway, ethereumLoomGateway, binanceGateway, plasmaWeb3, mapping)
 
   return instance
 }
@@ -119,7 +118,7 @@ class PlasmaGateways {
   constructor(
     readonly ethereumMainGateway: TransferGateway,
     readonly ethereumLoomGateway: LoomCoinTransferGateway,
-    readonly binanceLoomGateway: BinanceLoomCoinTransferGateway,
+    readonly binanceGateway: BinanceTransferGateway,
     readonly web3: Web3,
     readonly mapping: IAddressMapping,
   ) { }
@@ -130,8 +129,8 @@ class PlasmaGateways {
 
   // add chain payload
   get(chain: string, symbol: string): PlasmaGatewayAdapter {
-    const chains = this.chains.get(chain)
-    const adapter = chains!.get(symbol)
+    const chainAdapters = this.chains.get(chain)
+    const adapter = chainAdapters!.get(symbol)
 
     if (adapter === undefined) {
       throw new Error("No gateway for " + symbol)
@@ -156,6 +155,12 @@ class PlasmaGateways {
           this.mapping,
         )
         break
+
+      // temp
+      case "BNB_DEX":
+        if (chain === "binance") {
+          adapter = new BinanceGatewayAdapter(this.binanceGateway)
+        }
       // case "tron":
 
       // break;
@@ -200,9 +205,16 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
 
   if (receipt) {
-    console.log("Setting pre-existing receipt")
-
-    const pastWithdrawals =  await gatewayModule.checkIfPastWithdrawalEventExists()
+    log("Setting pre-existing receipt")
+    // binance
+    if (chain === "binance") {
+      feedback.showAlert({
+        title: "Withdrawal ongoing",
+        message: "A withdrwal is still being processed. Please try again later.",
+      })
+      return
+    }
+    // ethereum, if pending etherum withdraw TX (confirmations less that 10)
     if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
       feedback.endTask()
       feedback.showAlert({
@@ -227,6 +239,12 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     })
     feedback.setStep("Depositing to Plasmachain Gateway...")
     await gateway.withdraw(weiAmount)
+    // for binance no more steps are involved
+    if (chain === "binance") {
+      feedback.endTask()
+      feedback.showInfo("Withdrawal request sent. Your binance account will receive the funds in a moment.")
+      return
+    }
     feedback.setStep("Awaiting Oracle signature...")
     receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
@@ -252,13 +270,8 @@ export function pollReceipt(chain: string, symbol: string) {
 async function refreshPendingReceipt(chain: string, symbol: string) {
   const gateway = service().get(chain, symbol)
   const receipt = await gateway.withdrawalReceipt()
-  console.log("receipt", symbol, receipt)
+  log("receipt", symbol, receipt)
   return receipt
-}
-
-async function next() {
-  gatewayModule.incrementWithdrawStateIdx()
-  gatewayModule.setWithdrawStateAsCompleted()
 }
 
 /* #endregion */

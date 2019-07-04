@@ -4,7 +4,7 @@ import { BareActionContext } from "vuex-typex"
 import { HasEthereumState } from "../ethereum/types"
 import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
 import BN from "bn.js"
-import { Contract } from "loom-js"
+import { Contract, Address } from "loom-js"
 
 export declare type ChainName = "ethereum" | "binance" | "tron"
 
@@ -24,7 +24,7 @@ export interface GatewayConfig {
 export interface GatewayState extends GatewayConfig {
   mapping: IAddressMapping | null
   pendingTransactions: any[]
-  withdrawalReceipts: IWithdrawalReceipt | null
+  withdrawalReceipts: WithdrawalReceipt | null
   showDepositForm: boolean
   showDepositApproved: boolean
   showDepositConfirmed: boolean
@@ -67,6 +67,11 @@ export declare type ActionContext = BareActionContext<
 export interface PlasmaGatewayAdapter {
   token: string
   contract: Contract | any
-  withdraw(amount: BN)
+  withdraw(amount: BN, recipient?: Address)
   withdrawalReceipt(): Promise<IWithdrawalReceipt | null>
+}
+
+export interface WithdrawalReceipt extends IWithdrawalReceipt {
+  chain: string
+  symbol: string
 }

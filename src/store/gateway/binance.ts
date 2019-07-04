@@ -6,40 +6,26 @@ import { timer } from "rxjs"
 // import { BinanceLoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { PlasmaGatewayAdapter } from "./types"
 import { Address, Contract } from "loom-js"
+import { BinanceTransferGateway } from "loom-js/dist/contracts"
+import { tokenService } from "@/services/TokenService"
 
-/**
- * temporary stub for BinanceLoomCoinTransferGateway
- */
-export class BinanceLoomCoinTransferGateway {
-  static async createAsync() {
-    await timer(2000).toPromise()
-    return new BinanceLoomCoinTransferGateway()
-  }
-  async withdrawLoomCoinAsync(amount: BN, recipient: Address): Promise<void> {
-    await timer(2000).toPromise()
-  }
-  async withdrawalReceipt() {
-    await timer(2000).toPromise()
-    return null
-  }
-}
-
-export class BinanceLoomGatewayAdapter implements PlasmaGatewayAdapter {
+export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   chain = "binance"
-  token = "LOOM"
+  token = "BNB"
   constructor(
-    private vmc: ValidatorManagerContract,
-    public readonly contract: BinanceLoomCoinTransferGateway,
-    readonly binanceRecipient: Address,
+    public readonly contract: BinanceTransferGateway,
   ) { }
   deposit(amount: BN, binanceRecipient: Address) {
     // no deposit
     return
   }
   withdraw(amount: BN) {
-    return this.contract.withdrawLoomCoinAsync(amount, this.binanceRecipient)
+    const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
+    const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
+
+    return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
   }
   withdrawalReceipt() {
-    return this.contract.withdrawalReceipt()
+    return this.contract.withdrawalReceiptAsync(this.contract.caller)
   }
 }

@@ -29,6 +29,10 @@ export default {
     chains: ["ethereum"],
     multisig: false,
     checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
+    binance: {
+      gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",
+      fee: 37500,
+    },
   },
   disabled: [],
   chains: ["ethereum", "binance"],

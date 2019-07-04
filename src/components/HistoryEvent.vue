@@ -91,12 +91,15 @@ ul {
   font-size: 12px;
 }
 .transaction-hash {
-  font-size: 9px;
+  font-size: 12px;
   position: absolute;
   bottom: 10px;
   right: 10px;
+  left: 10px;
   font-family: Monaco;
   max-width: 475px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: block;

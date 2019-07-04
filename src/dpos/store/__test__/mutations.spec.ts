@@ -11,7 +11,7 @@ import localConfig from "../../../config/local"
 import { expect } from "chai"
 import { DPOS3 } from "loom-js/dist/contracts"
 
-describe.only("DPOS store, Mutations", () => {
+describe("DPOS store, Mutations", () => {
   describe("setConfig", () => {
     let state: DPOSState
     let config: DPOSConfig

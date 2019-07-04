@@ -52,6 +52,8 @@ class TokenService {
         decimals: data.decimal,
       }),
     )
+    // hack until it's updated in loomauth
+    this.symbols.find((data) => data.symbol === "BNB")!.decimals = 8
     console.log("tokens registery loaded")
   }
   /**

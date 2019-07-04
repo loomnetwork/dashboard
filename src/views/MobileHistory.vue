@@ -21,7 +21,7 @@
       <section v-if="visible === 'plasma'">
         <div class="events">
           <virtual-list :size="110" :remain="5">
-            <article v-for="(event, id) in state.plasma.history" :key="id" class="event">
+            <article v-for="(event, id) in plasmaHistory" :key="id" class="event">
               <h5 class="type">{{ $t( "events." + event.type) }}</h5>
               <ul>
                 <li class="block">Block # {{event.blockNumber}}</li>
@@ -45,7 +45,7 @@
       <section v-else-if="visible === 'ethereum'">
         <div class="events">
           <virtual-list :size="110" :remain="5">
-            <history-event v-for="(item,i) in state.ethereum.history" :key="i" :event="item"></history-event>
+            <history-event v-for="(item,i) in ethereumHistory" :key="i" :event="item"></history-event>
           </virtual-list>
         </div>
         <div v-if="state.ethereum.history.length == 0">
@@ -83,6 +83,16 @@ export default class History extends Vue {
   
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get plasmaHistory() {
+    const plasmaHistory = this.state.plasma.history.filter(history => history.amount > 0)
+    return plasmaHistory
+  }
+
+  get ethereumHistory() {
+    const ethereumHistory = this.state.ethereum.history.filter(history => history.amount > 0)
+    return ethereumHistory
   }
 
   async mounted() {

@@ -1,4 +1,5 @@
 <template>
+  <div>
   <b-card no-body title="Rewards" class="mb-4">
     <b-list-group flush>
       <b-list-group-item class="rewards">
@@ -36,16 +37,28 @@
       </b-list-group-item>
     </b-list-group>
   </b-card>
+  <b-button
+      id="claim-rewards"
+      class="px-5 py-2"
+      variant="primary"
+      @click="claimRewards"
+      :disabled="hasRewardsUnclaimed === false"
+    >{{ $t('views.rewards.claim_reward') }}</b-button>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { dposModule } from "../dpos/store"
+import { dposModule } from "@/dpos/store"
 import { ZERO } from "@/utils"
-import { HasDPOSState } from '../dpos/store/types';
+import { HasDPOSState } from '@/dpos/store/types';
+
 
 @Component
 export default class ValidatorRewards extends Vue {
+
+  claimRewards = dposModule.claimRewards
+
   get rewardsUnclaimed() {
     return dposModule.rewardsUnclaimedTotal()
   }
@@ -81,6 +94,10 @@ h6 {
   padding-top: 1.25rem;
   padding-bottom: 0;
   margin: 0;
+}
+
+#claim-rewards {
+  float: right;
 }
 
 </style>

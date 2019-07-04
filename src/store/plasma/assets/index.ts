@@ -77,7 +77,7 @@ export const assetsModule = {
   transferCards: builder.dispatch(transferCards),
 }
 
-async function checkCardBalance(context: AssetsContext) {
+export async function checkCardBalance(context: AssetsContext) {
   const account = context.rootState.plasma.address
   const caller = await plasmaModule.getCallerAddress()
 

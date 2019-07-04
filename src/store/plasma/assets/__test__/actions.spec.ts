@@ -1,67 +1,95 @@
 import "mocha"
-import sinon from 'sinon';
-import { feedbackModuleStub, plasmaModuleStub } from '@/dpos/store/__test__/_helpers';
-import { Address } from 'loom-js';
-import { AssetsState } from '../types';
-import Web3 from "web3"
+import sinon from "sinon"
+import { feedbackModuleStub, plasmaModuleStub } from "@/dpos/store/__test__/_helpers"
+import { Address } from "loom-js"
+import { AssetsState } from "../types"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
-import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
-import packAddresses from "@/data/ZBGPackAddresses.json"
 import { Contract } from "web3-eth-contract"
-import { TransactionObject } from "@/contracts/types/web3-contracts/types"
-import { assetsModule, transferCards } from '..';
+import { assetsModule, checkCardBalance, transferCards } from ".."
 
-const initialState = (): AssetsState => {
-  return {
-    packsContract: {},
-    cardContract: null,
-    cardBalance: [],
-    packBalance: [],
-    cardToTransferSelected: {
-      id: "0",
-      amount: 0,
-      display_name: "default",
-      image: "default",
-      title: "default",
-      variant: "default",
-      variation: "default",
-      mould_type: "default",
-      element: "default",
-      originalID: "default",
+const state: AssetsState = {
+  packsContract: {},
+  cardContract: {
+    methods: {
+      batchTransferFrom: () => {},
+      tokensOwned: () => {},
     },
-    packToTransferSelected: {
-      type: "Booster",
-      amount: 0,
-    },
-    allCardsToTransferSelected: {
-      edition: "none",
-      cards: [],
-      amount: 0,
-    },
-  }
+  } as Contract as MigratedZBGCard,
+  cardBalance: [],
+  packBalance: [],
+  cardToTransferSelected: {
+    id: "0",
+    amount: 0,
+    display_name: "default",
+    image: "default",
+    title: "default",
+    variant: "default",
+    variation: "default",
+    mould_type: "default",
+    element: "default",
+    originalID: "default",
+  },
+  packToTransferSelected: {
+    type: "Booster",
+    amount: 0,
+  },
+  allCardsToTransferSelected: {
+    edition: "none",
+    cards: [],
+    amount: 0,
+  },
+}
+
+const address = Address.fromString("default:0x" + "".padEnd(40, "0"))
+const addressString = address.local.toString()
+const rootState = {
+  plasma: {
+    address: addressString,
+  },
 }
 
 describe("Transfers assets", () => {
+  describe("checking card balance", () => {
+    const tokensOwnedStub = sinon.stub(state.cardContract!.methods, "tokensOwned")
+    const callStub = sinon.stub().returns({
+      balances: ["1", "2", "3"],
+      indexes: ["270", "430", "1410"],
+    })
+    const setCardBalanceStub = sinon.stub(assetsModule, "setCardBalance")
+
+    before(async () => {
+      plasmaModuleStub.getCallerAddress.reset()
+      plasmaModuleStub.getCallerAddress.resolves(address)
+      // @ts-ignore
+      tokensOwnedStub.returns({
+        call: callStub,
+      })
+      // @ts-ignore
+      await checkCardBalance({ ...{state}, ...{rootState} })
+    })
+
+    it("calls plasmaModule.getCallerAddress", () => {
+      sinon.assert.calledOnce(plasmaModuleStub.getCallerAddress)
+    })
+    it("calls cardContract.tokensOwned", () => {
+      sinon.assert.calledOnce(tokensOwnedStub)
+      sinon.assert.calledWith(tokensOwnedStub, rootState.plasma.address)
+    })
+    it("calls TransactionObject.call", () => {
+      sinon.assert.calledOnce(callStub)
+      sinon.assert.calledWith(callStub, { from: addressString })
+    })
+    it("calls assetsModule.setCardBalanceStub", () => {
+      sinon.assert.calledOnce(setCardBalanceStub)
+    })
+  })
+
   describe("transfering cards success", () => {
-    const address = Address.fromString("default:0x" + "".padEnd(40, "0"))
-    const addressString = address.local.toString()
     const cardIds = ["0"]
     const amounts = [1]
     const receiver = addressString
 
-    const state = initialState()
-    const rootState = {
-      plasma: {
-        address: addressString,
-      },
-    }
-    state.cardContract = {
-      methods: {
-        batchTransferFrom: () => {}
-      }
-    } as Contract as MigratedZBGCard
-
-    const batchTransferFromStub = sinon.stub(state.cardContract.methods, "batchTransferFrom")
+    const batchTransferFromStub = sinon.stub(state.cardContract!.methods, "batchTransferFrom")
     const sendStub = sinon.stub().returns({ transactionHash: "xxx" })
     const checkCardBalanceStub = sinon.stub(assetsModule, "checkCardBalance")
 
@@ -80,11 +108,11 @@ describe("Transfers assets", () => {
     it("calls plasmaModule.getCallerAddress", () => {
       sinon.assert.calledOnce(plasmaModuleStub.getCallerAddress)
     })
-    it("calls batchTransferFrom", () => {
+    it("calls cardContract.batchTransferFrom", () => {
       sinon.assert.calledOnce(batchTransferFromStub)
       sinon.assert.calledWith(batchTransferFromStub, addressString, receiver, cardIds, amounts)
     })
-    it("calls send", () => {
+    it("calls TransactionObject.send", () => {
       sinon.assert.calledOnce(sendStub)
       sinon.assert.calledWith(sendStub, { from: addressString })
     })

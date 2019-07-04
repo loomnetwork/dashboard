@@ -190,7 +190,7 @@ class PlasmaGateways {
  */
 
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
-  const { chain, symbol, weiAmount } = funds
+  const { chain, symbol, weiAmount, recepient } = funds
   const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
   try {
@@ -238,7 +238,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       ...funds, to: (gateway.contract as Contract).address.local.toString(),
     })
     feedback.setStep("Depositing to Plasmachain Gateway...")
-    await gateway.withdraw(weiAmount)
+    await gateway.withdraw(weiAmount, recepient)
     // for binance no more steps are involved
     if (chain === "binance") {
       feedback.endTask()

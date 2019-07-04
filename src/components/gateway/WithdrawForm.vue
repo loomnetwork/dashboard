@@ -18,6 +18,11 @@
         @isError="errorHandler"
       />
     </div>
+    <div v-if="token === 'BNB'">
+      <h6>Recepient</h6>
+      <h6>Your address on Binance chain (DEX)</h6>
+      <input type="text" v-model="recepient">
+    </div>
     <template slot="modal-footer">
       <b-btn @click="close()">Cancel</b-btn>
       <span style="flex:1"></span>
@@ -46,6 +51,7 @@ import { gatewayReactions } from "../../store/gateway/reactions"
 import AmountInput from "@/components/AmountInput.vue"
 import { plasmaWithdraw } from "../../store/gateway/plasma"
 import { setShowWithdrawProgress } from "../../store/gateway/mutations"
+import { LocalAddress, Address } from 'loom-js';
 
 @Component({
   components: {
@@ -60,6 +66,7 @@ export default class WithdrawForm extends Vue {
   weiAmount: BN = new BN(0)
   min = new BN(1)
   amountIsValid: boolean = false
+  recepient = ""
 
   setShowWithdrawForm = gatewayModule.setShowWithdrawForm
   setShowWithdrawProgress = gatewayModule.setShowWithdrawProgress
@@ -102,10 +109,13 @@ export default class WithdrawForm extends Vue {
 
     // TODO: Cache transactions
     // const txObj = this.state.gateway.pendingTransactions[0]
+    const recepientAddr = new Address("binance", LocalAddress.fromHexString(this.recepient))
+
     const payload: Funds = {
       chain: "ethereum",
       symbol: this.transferRequest.token,
       weiAmount: this.weiAmount,
+      recepient: recepientAddr,
     }
 
     this.beginWithdrawal(payload)

@@ -1,5 +1,5 @@
 import BN from "bn.js"
-import { Client, DPOSUserV3 } from "loom-js"
+import { Client, DPOSUserV3, Address } from "loom-js"
 import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
 import { Contract } from "web3-eth-contract"
 import { HasDPOSState, DPOSConfig } from "@/dpos/store/types"
@@ -36,6 +36,7 @@ export interface Funds {
   chain: string
   symbol: string
   weiAmount: BN
+  recepient?: Address
 }
 
 export interface Transfer extends Funds {

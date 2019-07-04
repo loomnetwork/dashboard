@@ -140,7 +140,6 @@ export default class WithdrawForm extends Vue {
       const tmp = this.decodeAddress(this.recepient)
       address = new Address("binance", new LocalAddress(tmp))
     }
-
     const payload: Funds = {
       chain: this.transferRequest.chain,
       symbol: this.transferRequest.token,

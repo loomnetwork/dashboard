@@ -157,9 +157,10 @@ class PlasmaGateways {
         break
 
       // temp
-      case "BNB_DEX":
+      case "BNB":
         if (chain === "binance") {
           adapter = new BinanceGatewayAdapter(this.binanceGateway)
+          break
         }
       // case "tron":
 
@@ -175,9 +176,13 @@ class PlasmaGateways {
         break
     }
 
-    const tmp = this.adapters.set(symbol, adapter)
-    this.chains.set(chain, tmp)
-    // this.adapters.set(symbol, adapter)
+    this.adapters.set(symbol, adapter)
+    if (!this.chains.has(chain)) {
+      this.chains.set(chain, new Map())
+    }
+    // @ts-ignore
+    this.chains.get(chain).set(symbol, adapter)
+
   }
 }
 

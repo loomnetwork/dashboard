@@ -4,29 +4,45 @@
       <h1>Validator Management</h1>
     </header>
     <Account class="account"/>
-    <validator-extended-detail :userAddress="exampleAddr" class="validator"></validator-extended-detail>
-    <rewards></rewards> 
+    <b-button variant="outline-primary" style="margin-top: 2%;" @click="example">View Example</b-button>
+    <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
+    <validator-rewards class="reward"></validator-rewards> 
   </main>
 </template>
 
 <script lang="ts">
 import { Component, Watch, Vue } from "vue-property-decorator"
+import { DashboardState } from "@/types"
 import Account from "@/components/Account.vue"
 import Rewards from "@/dpos/components/Rewards.vue"
 import ValidatorExtendedDetail from "@/dpos/components/ValidatorExtendedDetail.vue"
+import ValidatorRewards from "@/dpos/components/ValidatorRewards.vue"
 
 @Component({
   components: {
     Account,
     Rewards,
     ValidatorExtendedDetail,
+    ValidatorRewards
   },
 })
 
 export default class ValidatorManagement extends Vue {
 
-  // exampleAddr = "0x2a3a7c850586d4f80a12ac1952f88b1b69ef48e1"
-  exampleAddr = "NO"
+  plasmaAddr = this.state.plasma.address
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
+  get userAddress() {
+    return this.plasmaAddr
+  }
+
+  example() {
+    this.plasmaAddr = "0x69c48768dbac492908161be787b7a5658192df35"
+  }
+  // exampleAddr = "NO"
   
 }
 </script>
@@ -45,6 +61,10 @@ export default class ValidatorManagement extends Vue {
   }
 
   .validator {
+    margin-top: 2%;
+  }
+
+  .reward {
     margin-top: 2%;
   }
   

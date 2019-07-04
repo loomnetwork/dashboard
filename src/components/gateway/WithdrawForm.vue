@@ -7,26 +7,27 @@
     id="deposit-approval-success"
     :title="'Withdraw ' + token"
   >
+    <div v-if="fee.amount">
+      <p>Transfer to {{transferRequest.chain}} requires a fee of {{fee.amount|tokenAmount(fee.decimals)}}</p>
+    </div>
     <div>
-      <h6>Token type: {{ token }}</h6>
-      <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+      <h6>Your balance: {{ userBalance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
       <amount-input
         :min="min"
         :max="userBalance"
-        :symbol="token"
+        :symbol="transferRequest.token"
+        :decimals="tokenInfo.decimals"
         :round="false"
         v-model="weiAmount"
         @isError="errorHandler"
       />
     </div>
-    <div v-if="token === 'BNB'" class="mt-3">
-      <h6>Recepient</h6>
-      <h6>Your address on Binance chain (DEX)</h6>
+    <div v-if="transferRequest.chain === 'binance'" class="mt-3">
+      <h6>Recepient on {{transferRequest.chain}}</h6>
       <input-address
         v-model="recepient"
-        chain="binance"
-        :blacklist="[ownAddress]"
-        :placeholder="'Binance (DEX) address'"
+        :chain="transferRequest.chain"
+        :placeholder="transferRequest.chain + ' address'"
         @isValid="isValidAddressFormat"
       />
     </div>
@@ -47,21 +48,22 @@
 import Vue from "vue"
 import BN from "bn.js"
 import bech32 from "bech32"
-import { Component, Prop } from "vue-property-decorator"
+import { Component, Prop, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { formatTokenAmount } from "@/filters"
 import { formatToCrypto, formatToLoomAddress } from "@/utils"
-import { DashboardState, Funds } from "../../types"
-import { gatewayModule } from "../../store/gateway"
-import { gatewayReactions } from "../../store/gateway/reactions"
+import { DashboardState, Funds } from "@/types"
+import { gatewayModule } from "@/store/gateway"
+import { gatewayReactions } from "@/store/gateway/reactions"
 
 import AmountInput from "@/components/AmountInput.vue"
 import InputAddress from "../InputAddress.vue"
-import { plasmaWithdraw } from "../../store/gateway/plasma"
-import { setShowWithdrawProgress } from "../../store/gateway/mutations"
-import { LocalAddress, Address, CryptoUtils } from 'loom-js';
-import { AddressInfo } from 'net';
+import { setShowWithdrawProgress } from "@/store/gateway/mutations"
+import { LocalAddress, Address } from "loom-js"
+
+import * as plasmaGateways from "@/store/gateway/plasma"
+import { tokenService, TokenData } from "@/services/TokenService"
 
 @Component({
   components: {
@@ -69,7 +71,6 @@ import { AddressInfo } from 'net';
     InputAddress,
   },
 })
-
 export default class WithdrawForm extends Vue {
 
   @Prop({ required: true }) token!: string // prettier-ignore
@@ -80,9 +81,10 @@ export default class WithdrawForm extends Vue {
   isValidAddress: Address | null = null
   recepient = ""
 
-  setShowWithdrawForm = gatewayModule.setShowWithdrawForm
-  setShowWithdrawProgress = gatewayModule.setShowWithdrawProgress
-  beginWithdrawal = gatewayModule.plasmaWithdraw
+  tokenInfo!: TokenData
+
+  // Avoid null bindings by having a NO_FEE value
+  fee: { token: string, amount: BN, decimals: number } | {} = {}
 
   get state(): DashboardState {
     return this.$store.state
@@ -92,19 +94,15 @@ export default class WithdrawForm extends Vue {
     return this.state.plasma.coins[this.token].balance
   }
 
-  get ownAddress() {
-    return formatToLoomAddress(this.state.plasma.address.toLowerCase())
-  }
-
   get transferRequest() {
     return this.state.gateway.transferRequest
   }
 
   get visible() {
-    return this.transferRequest.type === "WITHDRAW"
-      && this.transferRequest.token !== ""
-      && (this.transferRequest.chain === "ethereum"
-      || this.transferRequest.chain === "binance")
+    const { type, token, chain } = this.transferRequest
+    return type === "WITHDRAW"
+      && token !== ""
+      && (chain === "ethereum" || chain === "binance")
   }
 
   set visible(value) {
@@ -130,24 +128,38 @@ export default class WithdrawForm extends Vue {
     return Buffer.from(bech32.fromWords(decodeAddress.words))
   }
 
+  @Watch("visible")
+  refreshData(visible: boolean) {
+    if (!visible) return
+    const { chain, token } = this.transferRequest
+    const fee = plasmaGateways.service().get(chain, token).fee
+    if (fee) {
+      const { decimals } = tokenService.getTokenbySymbol(token)
+      this.fee = { ...fee, decimals }
+    } else {
+      this.fee = {}
+    }
+    this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
+
+  }
+
   async requestWithdrawHandler(e) {
     e.preventDefault()
 
-    // TODO: Cache transactions
-    // const txObj = this.state.gateway.pendingTransactions[0]
-    let address = new Address("", new LocalAddress(new Uint8Array()))
+    const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"
+    let recepient
     if (this.isValidAddress && this.recepient) {
       const tmp = this.decodeAddress(this.recepient)
-      address = new Address("binance", new LocalAddress(tmp))
+      recepient = new Address(targetChainId, new LocalAddress(tmp))
     }
     const payload: Funds = {
       chain: this.transferRequest.chain,
       symbol: this.transferRequest.token,
       weiAmount: this.weiAmount,
-      recepient: address,
+      recepient,
     }
 
-    this.beginWithdrawal(payload)
+    gatewayModule.plasmaWithdraw(payload)
     this.close()
   }
 }

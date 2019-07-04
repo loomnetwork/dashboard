@@ -7,7 +7,7 @@ import { Address, Client, Contract } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 import BN from "bn.js"
-import { Funds } from "@/types"
+import { Funds, Transfer } from "@/types"
 import { ActionContext, PlasmaGatewayAdapter } from "./types"
 import { gatewayModule } from "@/store/gateway"
 import { interval } from "rxjs"
@@ -21,6 +21,7 @@ import { tokenService } from "@/services/TokenService"
 
 import debug from "debug"
 import { plasmaModule } from "../plasma"
+import { TransferRequest } from "../plasma/types"
 
 const log = debug("dash.gateway.plasma")
 
@@ -159,7 +160,10 @@ class PlasmaGateways {
       // temp
       case "BNB":
         if (chain === "binance") {
-          adapter = new BinanceGatewayAdapter(this.binanceGateway)
+          adapter = new BinanceGatewayAdapter(this.binanceGateway, {
+            token: "BNB",
+            amount: new BN(37500),
+          })
           log("added BNB adapter")
           break
         }
@@ -196,6 +200,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount, recepient } = funds
   const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
+
   try {
     feedback.setTask("withdraw")
     feedback.setStep("Checking for pre-existing receipts...")
@@ -236,13 +241,20 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     return
   }
 
+  const transfer = {
+    ...funds,
+    to: (gateway.contract as Contract).address.local.toString(),
+    fee: gateway.fee,
+  } as TransferRequest
+
   try {
-    await plasmaModule.approve({
-      ...funds, to: (gateway.contract as Contract).address.local.toString(),
-    })
+    const approved = await plasmaModule.approve(transfer)
+    if (approved === false) {
+      return
+    }
     feedback.setStep("Depositing to Plasmachain Gateway...")
     await gateway.withdraw(weiAmount, recepient)
-    // for binance no more steps are involved
+    // For binance no more steps are required
     if (chain === "binance") {
       feedback.endTask()
       feedback.showInfo("Withdrawal request sent. Your binance account will receive the funds in a moment.")

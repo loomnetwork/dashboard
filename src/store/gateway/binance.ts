@@ -15,21 +15,24 @@ const log = debug("dash.gateway.binance")
 
 export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   chain = "binance"
-  token = "BNB"
+  token = "BNB" // tmp
   constructor(
     public readonly contract: BinanceTransferGateway,
+    public readonly fee: {
+      token: "BNB"
+      amount: BN,
+    },
   ) { }
   deposit() {
+    console.warn("go to binance.com to make deposits from binance")
     // no deposit
     return
   }
   withdraw(amount: BN, recipient: Address) {
     const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
-    const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
-
-    log("binance.withdraw", amount.toString(), plasmaTokenAddr.toString())
-    log("recipient", recipient.toString())
-    log("caller", this.contract.caller.toString())
+    // @ts-ignore
+    const chainId = this.contract._client.chainId
+    const plasmaTokenAddr = Address.fromString(`${chainId}:${plasmaTokenAddrStr}`)
 
     return this.contract.withdrawToken(amount, plasmaTokenAddr, recipient)
   }

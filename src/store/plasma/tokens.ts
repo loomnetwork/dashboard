@@ -231,9 +231,24 @@ export async function approve(
   context: PlasmaContext,
   payload: TransferRequest,
 ): Promise<boolean> {
-  const { symbol, weiAmount, to } = payload
+  const { symbol, to, fee } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
+  let weiAmount = payload.weiAmount
+
+  // If the transfer requires a fee, approve that also
+  if (fee !== undefined) {
+    // Same token do one approval
+    if (fee.token === symbol) {
+      weiAmount = weiAmount.add(fee.amount)
+    } else {
+      // Approve fee token first
+      const feeApproved = await approve(context, { symbol: fee.token, weiAmount: fee.amount, to })
+      if (!feeApproved) {
+        return false
+      }
+    }
+  }
 
   if (weiAmount.gt(balance)) {
     // TODO: fix error message

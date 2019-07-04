@@ -65,6 +65,14 @@ export declare type ActionContext = BareActionContext<
 >
 
 export interface PlasmaGatewayAdapter {
+  /**
+   * Holds fee information if the target chain
+   * requires fees to be paid (on plasma chain)
+   */
+  fee?: {
+    token: string
+    amount: BN,
+  }
   token: string
   contract: Contract | any
   withdraw(amount: BN, recipient?: Address)

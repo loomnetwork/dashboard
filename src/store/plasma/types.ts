@@ -60,6 +60,10 @@ export interface TransferRequest {
   symbol: string
   weiAmount: BN
   to: string
+  fee?: {
+    token: string
+    amount: BN,
+  }
 }
 
 export interface PackDetail {

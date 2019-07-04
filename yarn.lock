@@ -2721,6 +2721,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bech32@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/bech32/-/bech32-1.1.3.tgz#bd47a8986bbb3eec34a56a097a84b8d3e9a2dfcd"
+
 bfj@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/bfj/-/bfj-6.1.1.tgz#05a3b7784fbd72cfa3c22e56002ef99336516c48"
@@ -7518,7 +7522,6 @@ lolex@^4.0.1:
 loom-js@1.56.0:
   version "1.56.0"
   resolved "https://registry.npmjs.org/loom-js/-/loom-js-1.56.0.tgz#f508daa36a4aa93041c61a80cdd695fea725216c"
-  integrity sha512-weUKgtxJkJhgnHh9SR6cbyV/2wLb5IO6RrxIizzu4HGys4eLJT3DbIwR7Ub2Z/fAyuKymhYC0CgmBimUxkyAEw==
   dependencies:
     abi-decoder "^1.2.0"
     axios "^0.18.0"

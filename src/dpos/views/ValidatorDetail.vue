@@ -21,16 +21,16 @@
         >{{validator.description}}</p>
         <a :href="validator.website | url" target="_blank">
           {{validator.website | domain}}
-          <fa icon="external-link-alt"/>
+          <fa icon="external-link-alt" />
         </a>
       </header>
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
         <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
         <dt>Delegators Stake</dt>
-        <dd>{{validator.stakedAmount | tokenAmount}}</dd>
+        <dd>{{validator.stakedAmount | tokenAmount(18,0)}}</dd>
         <dt>Total Staked</dt>
-        <dd>{{validator.delegationTotal | tokenAmount}}</dd>
+        <dd>{{validator.stakedAmount.add(validator.whitelistAmount) | tokenAmount(18,0)}}</dd>
         <dt>Fee</dt>
         <dd>{{validator.fee}}</dd>
       </dl>
@@ -39,13 +39,13 @@
       <b-card-body>
         <h6 v-if="!validator.isBootstrap">{{ $t('My stakes') }}</h6>
       </b-card-body>
-      <delegations-list :delegations="delegations"/>
+      <delegations-list :delegations="delegations" />
       <p
         class="no-stakes"
         v-if="validator.isBootstrap === false && validator.delegations.length === 0"
       >
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}
-        <br>
+        <br />
       </p>
 
       <div class="button-container" v-if="!validator.isBootstrap">

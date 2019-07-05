@@ -187,13 +187,15 @@ export default class FirstPage extends Vue {
     return this.$state.gateway.maybeRelentlessUser
   }
 
+  get loomGamesUrl() {
+    return this.$state.plasma.loomGamesEndpoint
+  }
+ 
   set maybeRelentlessUser(val) {
     if (val === false) {
       gatewayModule.setMaybeRelentlessUser(val)
     }
   }
-
-  loomGamesUrl = this.$state.plasma.loomGamesEndpoint
 
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode

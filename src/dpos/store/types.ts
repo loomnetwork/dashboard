@@ -88,7 +88,6 @@ export class Validator implements IValidator, ICandidate {
     if (this.totalStaked.isZero()) {
       this.totalStaked = v.whitelistAmount
     }
-    v.delegationTotal = v.delegationTotal.sub(v.whitelistAmount)
   }
 }
 

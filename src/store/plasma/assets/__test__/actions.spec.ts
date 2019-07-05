@@ -1,20 +1,16 @@
 import "mocha"
+import { expect } from "chai"
 import sinon from "sinon"
 import { feedbackModuleStub, plasmaModuleStub } from "@/dpos/store/__test__/_helpers"
 import { Address } from "loom-js"
 import { AssetsState } from "../types"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 import { Contract } from "web3-eth-contract"
-import { assetsModule, checkCardBalance, transferCards, transferPacks } from ".."
+import { assetsModule, checkCardBalance, checkPackBalance, transferCards, transferPacks } from ".."
+import { PACKS_NAME } from "../reactions"
 
 const state: AssetsState = {
-  packsContract: {
-    booster: {
-      methods: {
-        transfer: Function(),
-      },
-    },
-  },
+  packsContract: {},
   cardContract: {
     methods: {
       batchTransferFrom: Function(),
@@ -45,6 +41,15 @@ const state: AssetsState = {
     amount: 0,
   },
 }
+
+PACKS_NAME.forEach((type) => {
+  state.packsContract[type] = {
+    methods: {
+      transfer: Function(),
+      balanceOf: Function(),
+    },
+  }
+})
 
 const address = Address.fromString("default:0x" + "".padEnd(40, "0"))
 const addressString = address.local.toString()
@@ -136,6 +141,44 @@ describe("Transfers assets", () => {
         feedbackModuleStub.endTask,
         feedbackModuleStub.showSuccess,
       )
+    })
+  })
+
+  describe("checking pack balance", () => {
+    const balanceOfStubs = []
+    const callStub = sinon.stub().returns({})
+    const setPackBalanceStub = sinon.stub(assetsModule, "setPackBalance")
+
+    before(async () => {
+      plasmaModuleStub.getCallerAddress.reset()
+      plasmaModuleStub.getCallerAddress.resolves(address)
+      PACKS_NAME.forEach((type) => {
+        balanceOfStubs[type] = sinon.stub(state.packsContract[type].methods, "balanceOf")
+        balanceOfStubs[type].returns({
+          call: callStub,
+        })
+      })
+      // @ts-ignore
+      await checkPackBalance({ ...{state}, ...{rootState} })
+    })
+
+    it("calls plasmaModule.getCallerAddress", () => {
+      sinon.assert.calledOnce(plasmaModuleStub.getCallerAddress)
+    })
+    it("calls packsContract.balanceOf of each type", () => {
+      PACKS_NAME.forEach((type) => {
+        sinon.assert.calledOnce(balanceOfStubs[type])
+        sinon.assert.calledWith(balanceOfStubs[type], rootState.plasma.address)
+      })
+    })
+    it("calls .call", () => {
+      PACKS_NAME.forEach((type) => {
+        sinon.assert.calledWith(callStub, { from: addressString })
+      })
+      expect(callStub.callCount).to.equal(PACKS_NAME.length)
+    })
+    it("calls assetsModule.setCardBalanceStub", () => {
+      sinon.assert.calledOnce(setPackBalanceStub)
     })
   })
 

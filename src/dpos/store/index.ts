@@ -13,6 +13,7 @@ import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, LocalAddress } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
+import { formatTokenAmount } from '@/filters';
 
 const log = debug("dash.dpos")
 
@@ -140,8 +141,7 @@ export async function refreshValidators(ctx: ActionContext) {
     .filter((n) => n.name === "")
     .forEach((n) => (n.name = n.addr.replace("0x", "loom")))
 
-  ctx.state.validators = nodes
-  log("setValidators", nodes)
+  ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
 }
 
 /**

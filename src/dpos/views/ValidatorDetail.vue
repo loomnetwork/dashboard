@@ -29,7 +29,7 @@
         <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
         <dt>Delegators Stake</dt>
         <dd>{{validator.stakedAmount | tokenAmount}}</dd>
-        <dt>Total Staked</dt>
+        <dt>Locked Token Weighted Stake</dt>
         <dd>{{validator.delegationTotal | tokenAmount}}</dd>
         <dt>Fee</dt>
         <dd>{{validator.fee}}</dd>

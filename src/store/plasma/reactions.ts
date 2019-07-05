@@ -71,6 +71,7 @@ async function resetLoomContract(store: Store<DashboardState>) {
   state.coins.LOOM = {
     balance: new BN("0"),
     loading: true,
+    decimals: 18,
   }
   plasmaModule.refreshBalance("LOOM")
 }
@@ -83,11 +84,12 @@ async function resetEthContract(store: Store<DashboardState>) {
   state.coins.ETH = {
     balance: new BN("0"),
     loading: true,
+    decimals: 18,
   }
   plasmaModule.refreshBalance("ETH")
 }
 
-async function resetERC20Contracts(store: Store<DashboardState>) {}
+async function resetERC20Contracts(store: Store<DashboardState>) { }
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {
   const state = store.state.plasma

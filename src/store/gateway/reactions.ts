@@ -75,12 +75,15 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.subscribeAction({
     after(action) {
       if (/^plasma.+addToken$/.test(action.type)) {
+        // TDODO check if token is mapped in ethereum gateway
         ethereumModule.initERC20(action.payload)
         const ethereumGateways = EthereumGateways.service()
         const ethTokenAddress = tokenService.getTokenAddressBySymbol(action.payload, "ethereum")
         const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
+        // tmp
+        const chain = action.payload === "BNB" ? "binance" : "ethereum"
         // @ts-ignore
-        PlasmaGateways.service().add("ethereum", action.payload, adapter!.contract._address)
+        PlasmaGateways.service().add(chain, action.payload, adapter!.contract._address)
       }
     },
   })

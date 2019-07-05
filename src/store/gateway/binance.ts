@@ -6,40 +6,37 @@ import { timer } from "rxjs"
 // import { BinanceLoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { PlasmaGatewayAdapter } from "./types"
 import { Address, Contract } from "loom-js"
+import { BinanceTransferGateway } from "loom-js/dist/contracts"
+import { tokenService } from "@/services/TokenService"
 
-/**
- * temporary stub for BinanceLoomCoinTransferGateway
- */
-export class BinanceLoomCoinTransferGateway {
-  static async createAsync() {
-    await timer(2000).toPromise()
-    return new BinanceLoomCoinTransferGateway()
-  }
-  async withdrawLoomCoinAsync(amount: BN, recipient: Address): Promise<void> {
-    await timer(2000).toPromise()
-  }
-  async withdrawalReceipt() {
-    await timer(2000).toPromise()
-    return null
-  }
-}
+import debug from "debug"
 
-export class BinanceLoomGatewayAdapter implements PlasmaGatewayAdapter {
+const log = debug("dash.gateway.binance")
+
+export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   chain = "binance"
-  token = "LOOM"
+  token = "BNB" // tmp
   constructor(
-    private vmc: ValidatorManagerContract,
-    public readonly contract: BinanceLoomCoinTransferGateway,
-    readonly binanceRecipient: Address,
+    public readonly contract: BinanceTransferGateway,
+    public readonly fee: {
+      token: "BNB"
+      amount: BN,
+    },
   ) { }
-  deposit(amount: BN, binanceRecipient: Address) {
+  deposit() {
+    console.warn("go to binance.com to make deposits from binance")
     // no deposit
     return
   }
-  withdraw(amount: BN) {
-    return this.contract.withdrawLoomCoinAsync(amount, this.binanceRecipient)
+  withdraw(amount: BN, recipient: Address) {
+    const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
+    // @ts-ignore
+    const chainId = this.contract._client.chainId
+    const plasmaTokenAddr = Address.fromString(`${chainId}:${plasmaTokenAddrStr}`)
+
+    return this.contract.withdrawToken(amount, plasmaTokenAddr, recipient)
   }
   withdrawalReceipt() {
-    return this.contract.withdrawalReceipt()
+    return this.contract.withdrawalReceiptAsync(this.contract.caller)
   }
 }

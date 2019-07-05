@@ -6,7 +6,6 @@
           id="input-amount"
           v-model="amount"
           :type="'number'"
-          :decimal="decimal"
           placeholder="Enter amount"
           aria-describedby="input-live-help input-live-feedback"
           @keyup="validateAmount"
@@ -14,7 +13,11 @@
         <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>
+        <b-button
+          variant="outline-primary"
+          @click="setAllAmount"
+          style="min-width:100px"
+        >All {{decimals}}</b-button>
       </b-col>
     </b-row>
   </div>
@@ -42,7 +45,7 @@ export default class AmountInput extends Vue {
   @Prop(String) symbol!: string
   @Prop({ default: true }) round!: boolean
 
-  @Prop({ default: 18 }) decimal!: number
+  @Prop({ default: 18 }) decimals!: number
   /**
    * User input is in token
    */
@@ -52,7 +55,7 @@ export default class AmountInput extends Vue {
   // Call this function when amount changed. emits valud in WEI
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-    const amountBN = parseToWei(this.amount.toString(), this.decimal)
+    const amountBN = parseToWei(this.amount.toString(), this.decimals)
     this.$emit("input", amountBN)
   }
 
@@ -74,14 +77,20 @@ export default class AmountInput extends Vue {
       this.$emit("isError", true)
       return
     }
-    const amountBN = parseToWei("" + amount, this.decimal)
+    const amountBN = parseToWei("" + amount, this.decimals)
     const max = this.max
     const min = this.min
     if (amountBN.gt(max)) {
-      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: formatTokenAmount(max) }).toString()
+      this.errorMsg = this.$t(
+        "messages.amount_input_should_less",
+        { amount: formatTokenAmount(max, this.decimals) }
+      ).toString()
       this.$emit("isError", true)
     } else if (amountBN.lt(min)) {
-      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: formatTokenAmount(min) }).toString()
+      this.errorMsg = this.$t(
+        "messages.amount_input_should_more",
+        { amount: formatTokenAmount(min, this.decimals) }
+      ).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""

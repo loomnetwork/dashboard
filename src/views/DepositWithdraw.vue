@@ -8,8 +8,12 @@
       Check your token balances
       <hr>
       <div class="helpAlert">
-        <p><b>Deposit</b> : Deposit to Plasmachain from Ethereuem</p>
-        <p><b>Withdraw</b> : Withdraw to Ethereum </p>
+        <p>
+          <b>Deposit</b> : Deposit to Plasmachain from Ethereuem
+        </p>
+        <p>
+          <b>Withdraw</b> : Withdraw to Ethereum
+        </p>
         <b>Transfer</b> : Transfer tokens to other PlasmaChain accounts
       </div>
     </b-alert>
@@ -21,7 +25,9 @@
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
           <label class="symbol">{{symbol}}</label>
-          <span class="balance">{{plasma.coins[symbol].balance | tokenAmount}}</span>
+          <span
+            class="balance"
+          >{{plasma.coins[symbol].balance | tokenAmount(plasma.coins[symbol].decimals)}}</span>
           <b-button-group class="actions">
             <b-button
               class="button"
@@ -36,13 +42,6 @@
               @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
               <span>Withdraw</span>
-              <!-- <b-spinner
-                v-if="!pastTxHasExpired"
-                variant="primary"
-                label="Spinning"
-                class="ml-2"
-                small
-              /> -->
             </b-button>
             <b-button
               class="button"
@@ -135,7 +134,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   get currentBlockNumber(): number {
-   return ethereumModule.state.blockNumber
+    return ethereumModule.state.blockNumber
   }
 
   get latestWithdrawalBlock(): number {
@@ -182,7 +181,7 @@ export default class DepositWithdraw extends Vue {
    * set selected token to component state
    * then show selectChain modal
    */
-requestCrossChainTranfer(type: string, token: string) {
+  requestCrossChainTranfer(type: string, token: string) {
     this.selectChainModalType = type
     this.selectedToken = token
     console.log("dss", this.state.chains)

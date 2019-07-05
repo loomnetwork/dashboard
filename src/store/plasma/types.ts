@@ -51,7 +51,7 @@ export enum PlasmaTokenKind {
 }
 
 export interface BalanceInfo {
-  decimals?: number
+  decimals: number
   balance: BN
   loading: boolean
 }
@@ -60,6 +60,10 @@ export interface TransferRequest {
   symbol: string
   weiAmount: BN
   to: string
+  fee?: {
+    token: string
+    amount: BN,
+  }
 }
 
 export interface PackDetail {

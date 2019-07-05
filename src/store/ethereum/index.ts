@@ -58,6 +58,7 @@ const initialState: EthereumState = {
     LOOM: {
       balance: ZERO,
       loading: true,
+      decimals: 18,
     },
   },
   contracts: {},
@@ -187,12 +188,14 @@ function clearWalletType(state: EthereumState) {
  */
 export async function refreshBalance(context: ActionContext, symbol: string) {
   if (!(symbol in context.state.coins)) {
+    const info = tokenService.getTokenbySymbol(symbol)
     context.state.coins = Object.assign(
       context.state.coins,
       {
         [symbol]: {
           balance: ZERO,
           loading: true,
+          decimals: info.decimals,
         },
       },
     )

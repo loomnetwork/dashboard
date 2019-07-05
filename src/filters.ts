@@ -104,7 +104,7 @@ export function formatUrl(domainOrUrl: string) {
     : "https://" + domainOrUrl
 }
 
-export function formatTokenAmount(wei: BN, decimals = 18) {
+export function formatTokenAmount(wei: BN, decimals = 18, precision?: number) {
   if (!wei) return wei
   const c = new BigNumber(wei.toString()).dividedBy(10 ** decimals)
   return (c.integerValue().eq(c)) ? c.toFormat(0) :

@@ -5,14 +5,20 @@ import { Address } from "loom-js"
 import { AssetsState } from "../types"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 import { Contract } from "web3-eth-contract"
-import { assetsModule, checkCardBalance, transferCards } from ".."
+import { assetsModule, checkCardBalance, transferCards, transferPacks } from ".."
 
 const state: AssetsState = {
-  packsContract: {},
+  packsContract: {
+    booster: {
+      methods: {
+        transfer: Function(),
+      },
+    },
+  },
   cardContract: {
     methods: {
-      batchTransferFrom: () => {},
-      tokensOwned: () => {},
+      batchTransferFrom: Function(),
+      tokensOwned: Function(),
     },
   } as Contract as MigratedZBGCard,
   cardBalance: [],
@@ -127,6 +133,55 @@ describe("Transfers assets", () => {
         batchTransferFromStub,
         sendStub,
         checkCardBalanceStub,
+        feedbackModuleStub.endTask,
+        feedbackModuleStub.showSuccess,
+      )
+    })
+  })
+
+  describe("transfering packs success", () => {
+    const packType = "booster"
+    const amount = 1
+    const receiver = addressString
+
+    const transferStub = sinon.stub(state.packsContract[packType].methods, "transfer")
+    const sendStub = sinon.stub().returns({})
+    const checkPackBalanceStub = sinon.stub(assetsModule, "checkPackBalance")
+
+    before(async () => {
+      plasmaModuleStub.getCallerAddress.reset()
+      plasmaModuleStub.getCallerAddress.resolves(address)
+      // @ts-ignore
+      transferStub.returns({
+        send: sendStub,
+      })
+      checkPackBalanceStub.resolves()
+      // @ts-ignore
+      await transferPacks({ state }, { packType, amount, receiver })
+    })
+
+    it("calls plasmaModule.getCallerAddress", () => {
+      sinon.assert.calledOnce(plasmaModuleStub.getCallerAddress)
+    })
+    it("calls cardContract.batchTransferFrom", () => {
+      sinon.assert.calledOnce(transferStub)
+      sinon.assert.calledWith(transferStub, receiver, amount)
+    })
+    it("calls TransactionObject.send", () => {
+      sinon.assert.calledOnce(sendStub)
+      sinon.assert.calledWith(sendStub, { from: addressString })
+    })
+    it("calls assetsModule.checkCardBalance", () => {
+      sinon.assert.calledOnce(checkPackBalanceStub)
+    })
+    it("notifies feedback modules", () => {
+      sinon.assert.callOrder(
+        feedbackModuleStub.setTask,
+        feedbackModuleStub.setStep,
+        plasmaModuleStub.getCallerAddress,
+        transferStub,
+        sendStub,
+        checkPackBalanceStub,
         feedbackModuleStub.endTask,
         feedbackModuleStub.showSuccess,
       )

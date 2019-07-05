@@ -158,7 +158,7 @@ export async function transferCards(
   }
 }
 
-async function transferPacks(
+export async function transferPacks(
   context: AssetsContext,
   payload: {
     packType: string

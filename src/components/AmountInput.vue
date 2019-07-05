@@ -13,11 +13,7 @@
         <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button
-          variant="outline-primary"
-          @click="setAllAmount"
-          style="min-width:100px"
-        >All {{decimals}}</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>
       </b-col>
     </b-row>
   </div>
@@ -67,19 +63,19 @@ export default class AmountInput extends Vue {
 
   validateAmount() {
     const amount = Number(this.amount)
+    const amountBN = parseToWei("" + amount, this.decimals)
+    const max = this.max
+    const min = this.min
     if (!amount) {
       this.errorMsg = "Please enter a valid amount"
       this.$emit("isError", true)
       return
     }
-    if (this.round && Number.isInteger(amount) === false) {
+    if (this.round && Number.isInteger(amount) === false && !amountBN.eq(max)) {
       this.errorMsg = "Only round amounts allowed"
       this.$emit("isError", true)
       return
     }
-    const amountBN = parseToWei("" + amount, this.decimals)
-    const max = this.max
-    const min = this.min
     if (amountBN.gt(max)) {
       this.errorMsg = this.$t(
         "messages.amount_input_should_less",

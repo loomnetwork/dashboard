@@ -11,11 +11,11 @@
         >
           <h6>
             Next election in:
-            <election-timer/>
+            <election-timer />
           </h6>
           <h6>
             Total staked amount
-            <h5 class="highlight">{{totalStaked | tokenAmount}} LOOM</h5>
+            <h5 class="highlight">{{totalStaked | tokenAmount(18,0)}} LOOM</h5>
           </h6>
         </b-card>
         <div class="content">
@@ -93,8 +93,8 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "totalStaked", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass:"align-right-td" },
-  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass:"align-right-td" },
+  { key: "totalStaked", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass: "align-right-td" },
+  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass: "align-right-td" },
   ]
 
   get state(): HasDPOSState {
@@ -114,10 +114,10 @@ export default class ValidatorList extends Vue {
       return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
     return storeValidators.map((validator) => ({
-        name: validator.name,
-        active: validator.active,
-        totalStaked: formatTokenAmount(validator.totalStaked),
-        fee: validator.fee
+      name: validator.name,
+      active: validator.active,
+      totalStaked: formatTokenAmount(validator.totalStaked, 18, 0),
+      fee: validator.fee,
     }))
   }
   /**
@@ -136,7 +136,7 @@ export default class ValidatorList extends Vue {
 <style lang="scss">
 tr {
   &:hover {
-    background-color: #5756e60F;
+    background-color: #5756e60f;
     cursor: pointer;
   }
 }

@@ -77,7 +77,7 @@ export const assetsModule = {
   transferCards: builder.dispatch(transferCards),
 }
 
-async function checkCardBalance(context: AssetsContext) {
+export async function checkCardBalance(context: AssetsContext) {
   const account = context.rootState.plasma.address
   const caller = await plasmaModule.getCallerAddress()
 
@@ -108,7 +108,7 @@ async function checkPackBalance(context: AssetsContext) {
   assetsModule.setPackBalance(packs)
 }
 
-async function transferCards(
+export async function transferCards(
   context: AssetsContext,
   payload: {
     cardIds: string[]

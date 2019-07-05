@@ -13,11 +13,7 @@
         <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button
-          variant="outline-primary"
-          @click="setAllAmount"
-          style="min-width:100px"
-        >All {{decimals}}</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>
       </b-col>
     </b-row>
   </div>
@@ -75,7 +71,7 @@ export default class AmountInput extends Vue {
       this.$emit("isError", true)
       return
     }
-    if (this.round && Number.isInteger(amount) === false && amountBN !== max) {
+    if (this.round && Number.isInteger(amount) === false && !amountBN.eq(max)) {
       this.errorMsg = "Only round amounts allowed"
       this.$emit("isError", true)
       return

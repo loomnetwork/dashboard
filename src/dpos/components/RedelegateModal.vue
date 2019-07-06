@@ -100,7 +100,7 @@ export default class RedelegateModal extends Vue {
     if (!this.visible) return []
     return this.validators.filter((validator) =>
       !validator.isBootstrap &&
-      this.delegation!.validator !== validator,
+      this.delegation!.validator.addr !== validator.addr,
     )
   }
 

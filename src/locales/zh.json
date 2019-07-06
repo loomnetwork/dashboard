@@ -223,13 +223,13 @@
     "gateway": {
       "complete_deposit": "完成存入",
       "approval": {
-        "sending": "Sending approval request...",
-        "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
-        "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
-        "failure": "Failed sending deposit approval request..."
+        "sending": "正在发送批准请求……",
+        "sent": "批准请求已成功发送。一旦确认你将被要求完成此笔存入。",
+        "success": "已确认批准此笔存入。点击完成存入。",
+        "failure": "批准请求发送失败……"
       },
       "deposit": {
-        "sending": "Sending deposit request...",
+        "sending": "正在发送存入请求……",
         "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
         "view_confirmation": "View confirmations",

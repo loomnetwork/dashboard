@@ -18,15 +18,15 @@
     "undelegate_err_tx": "Failed to undelegate",
     "init_DposUser_err_tx": "Error initDposUser",
     "switch_dpouser_err_tx": "Error initDposUser",
-    "select_path_err_tx": "Can't connect to your wallet. Please try again.",
-    "load_wallet_err_tx": "Error loading your wallet accounts. Please try again.",
-    "copied_tx": "Copied to clipboard",
-    "receiver_addr_err_tx": "Invalid receiver address",
-    "invalid_amount": "Invalid amount",
-    "invalid_addr": "Invalid receiver address",
-    "amount_input_should_less": "Invalid amount. should be less than {amount}",
-    "amount_input_should_more": "Invalid amount. should be more than {amount}",
-    "awaiting_transaction": "Awaiting transaction confirmation",
+    "select_path_err_tx": "无法连接到你的钱包。请重试。",
+    "load_wallet_err_tx": "加载你的钱包账户出错。请重试。",
+    "copied_tx": "复制到剪贴板",
+    "receiver_addr_err_tx": "无效的接收人地址",
+    "invalid_amount": "无效的数量",
+    "invalid_addr": "无效的接收人地址",
+    "amount_input_should_less": "无效的数量。应该少于 {amount}",
+    "amount_input_should_more": "无效的数量。应该多于 {amount}",
+    "awaiting_transaction": "等待交易确认",
     "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
   },
   "transfer_all": "All ({amount} LOOM)",
@@ -226,7 +226,7 @@
         "sending": "正在发送批准请求……",
         "sent": "批准请求已成功发送。一旦确认你将被要求完成此笔存入。",
         "success": "已确认批准此笔存入。点击完成存入。",
-        "failure": "批准请求发送失败……"
+        "failure": "存入批准请求发送失败……"
       },
       "deposit": {
         "sending": "正在发送存入请求……",

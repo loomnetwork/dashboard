@@ -211,17 +211,17 @@
       "rewards": "奖励",
       "history": "历史记录",
       "deposit_withdraw": "Deposit/Withdraw",
-      "faq": "F.A.Q",
+      "faq": "常见问题",
       "account_explorer": "Account Explorer",
-      "game_assets": "Game Assets",
-      "block_explorer": "Block Explorer",
-      "deploy_to_plasmachain": "Deploy to Plasmachain",
-      "transfer_gateway": "Transfer Gateway",
-      "validator_management": "Validator Management",
-      "feedback_form": "Contact Support"
+      "game_assets": "游戏资产",
+      "block_explorer": "区块浏览器",
+      "deploy_to_plasmachain": "部署到 PlasmaChain",
+      "transfer_gateway": "转移网关",
+      "validator_management": "验证者管理",
+      "feedback_form": "联系客服"
     },
     "gateway": {
-      "complete_deposit": "Complete deposit",
+      "complete_deposit": "完成存入",
       "approval": {
         "sending": "Sending approval request...",
         "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",

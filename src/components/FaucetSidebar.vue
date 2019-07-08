@@ -113,6 +113,10 @@ export default class FaucetSidebar extends Vue {
         name: "dev-deploy",
       },
       // {
+      //   to: "/validator-management",
+      //   text: "Validator Management"
+      // },
+      // {
       //   to: "/",
       //   text: "components.faucet_sidebar.transfer_gateway",
       // },
@@ -199,5 +203,4 @@ export default class FaucetSidebar extends Vue {
 .router .nav-link {
   padding: 0.3rem 0;
 }
-
 </style>

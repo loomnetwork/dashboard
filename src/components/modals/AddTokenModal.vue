@@ -15,18 +15,22 @@
         id="input-with-list"
         placeholder="Search"
       ></b-form-input>
-      <datalist id="token-symbol">
-        <option v-for="token in filteredSymbols" :value="token" :key="token">{{ token }}</option>
-      </datalist>
-      <b-card v-if="selectedToken">
-        <b-button type="button" variant="primary" @click="addToken">Add</b-button>
-      </b-card>
+      <div class="virtual-list mt-3">
+        <virtual-list :size="30" :remain="8">
+          <option v-for="token in filteredSymbols"
+                  @click="addToken(token)"
+                  class="list-item"
+                  :value="token"
+                  :key="token">{{ token }}</option>
+        </virtual-list>
+      </div>
     </b-card>
   </b-modal>
 </template>
 
 <script lang="ts">
 import { Component, Watch, Vue, Prop, Provide } from "vue-property-decorator"
+import VirtualList from "vue-virtual-scroll-list"
 import Toptokens from "@/data/topTokensSymbol.json"
 import { PlasmaState } from "../../store/plasma/types"
 import { plasmaModule } from "../../store/plasma"
@@ -34,8 +38,11 @@ import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { tokenService } from "@/services/TokenService"
 
-@Component
-
+@Component({
+  components: {
+    VirtualList,
+  }
+})
 export default class AddTokenModal extends Vue {
   selectedToken: string = "LOOM"
   filteredSymbols: string[] = []
@@ -67,13 +74,21 @@ export default class AddTokenModal extends Vue {
       .filter((token) => (token.toLowerCase().includes(filter) || filter === ""))
   }
 
-  addToken() {
-    plasmaModule.addToken(this.selectedToken)
+  addToken(token) {
+    plasmaModule.addToken(token)
     this.$root.$emit("bv::hide::modal", "add-token-modal")
     this.$emit("refreshTokenList")
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+  .virtual-list {
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+  }
+  .list-item {
+    border-bottom: 1px solid #ced4da;
+    padding: 8px 12px;
+  }
 </style>

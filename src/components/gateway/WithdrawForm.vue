@@ -20,10 +20,10 @@
           :decimals="tokenInfo.decimals"
           :round="false"
           v-model="weiAmount"
-          @isError="errorHandler"
+          @isError="setAmountIsError"
         />
       </div>
-      <div v-if="transferRequest.chain === 'binance'" class="mt-3">
+      <div v-if="requireRecipient" class="mt-3">
         <h6>Recepient on {{transferRequest.chain}}</h6>
         <input-address
           v-model="recepient"
@@ -40,7 +40,7 @@
         class="ml-2"
         @click="requestWithdrawal"
         variant="primary"
-        :disabled="amountIsValid"
+        :disabled="validInput === false"
       >Withdraw</b-btn>
     </template>
   </b-modal>
@@ -54,7 +54,7 @@ import { Component, Prop, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { formatTokenAmount } from "@/filters"
-import { formatToCrypto, formatToLoomAddress } from "@/utils"
+import { formatToCrypto, formatToLoomAddress, ZERO } from "@/utils"
 import { DashboardState, Funds } from "@/types"
 import { gatewayModule } from "@/store/gateway"
 import { gatewayReactions } from "@/store/gateway/reactions"
@@ -77,11 +77,11 @@ export default class WithdrawForm extends Vue {
 
   @Prop({ required: true }) token!: string // prettier-ignore
 
-  weiAmount: BN = new BN(0)
+  weiAmount: BN = ZERO
   min = new BN(1)
   max!: BN
   amountIsValid: boolean = false
-  isValidAddress: Address | null = null
+  isValidAddress: boolean = false
   recepient = ""
 
   tokenInfo!: TokenData
@@ -91,6 +91,10 @@ export default class WithdrawForm extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get requireRecipient(): boolean {
+    return this.transferRequest.chain === "binance"
   }
 
   get balance() {
@@ -111,7 +115,15 @@ export default class WithdrawForm extends Vue {
   set visible(value) {
     if (value === false) {
       gatewayModule.clearTransferRequest()
+      this.reset()
     }
+  }
+
+  reset() {
+    this.amountIsValid = false
+    this.isValidAddress = false
+    this.weiAmount = ZERO
+    this.recepient = ""
   }
 
   isValidAddressFormat(isValid) {
@@ -122,13 +134,17 @@ export default class WithdrawForm extends Vue {
     this.visible = false
   }
 
-  errorHandler(isValid: boolean) {
-    this.amountIsValid = isValid
+  setAmountIsError(isError: boolean) {
+    this.amountIsValid = !isError
   }
 
   decodeAddress(value) {
     const decodeAddress = bech32.decode(value)
     return Buffer.from(bech32.fromWords(decodeAddress.words))
+  }
+
+  get validInput() {
+    return this.amountIsValid && (this.requireRecipient === false || this.isValidAddress)
   }
 
   @Watch("visible")

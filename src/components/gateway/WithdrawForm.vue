@@ -38,7 +38,7 @@
       <span style="flex:1"></span>
       <b-btn
         class="ml-2"
-        @click="requestWithdrawHandler"
+        @click="requestWithdrawal"
         variant="primary"
         :disabled="amountIsValid"
       >Withdraw</b-btn>
@@ -151,7 +151,7 @@ export default class WithdrawForm extends Vue {
 
   }
 
-  async requestWithdrawHandler(e) {
+  async requestWithdrawal(e) {
     e.preventDefault()
 
     const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"

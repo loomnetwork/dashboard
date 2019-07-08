@@ -23,6 +23,7 @@ import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired }
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
+import { timer, Observable, Subscription } from "rxjs"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -335,20 +336,15 @@ export function clearERC20() {
   erc20Contracts.clear()
 }
 
-let pollingBlockNumber = -1
+let pollingBlockNumber: Subscription | null = null
 
 export function pollLastBlockNumber(context: ActionContext) {
-
-  if (pollingBlockNumber > -1) {
-    clearInterval(pollingBlockNumber)
+  if (pollingBlockNumber != null) {
+    pollingBlockNumber.unsubscribe()
   }
-
-  pollingBlockNumber = window.setInterval(async () => {
+  pollingBlockNumber = timer(0, 15000).subscribe(async () => {
     const blockNumber = await web3!.eth.getBlockNumber()
     log("blockNumber", blockNumber)
-    console.log("=================")
-    console.log(blockNumber)
     setBlockNumber(context.state, blockNumber)
-  }, 15000)
-
+  })
 }

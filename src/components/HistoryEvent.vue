@@ -50,7 +50,7 @@ export default class HistoryEvent extends Vue {
   }
 
   get showSpinner() {
-    return this.confirmations < 11
+    return this.ethereum.blockNumber > 0 && this.confirmations < 11
   }
 
 }

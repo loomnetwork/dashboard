@@ -388,36 +388,28 @@ export async function refreshEthereumHistory(context: ActionContext) {
   }
 
   // @ts-ignore
-  loomGateway.getPastEvents(
-    "LoomCoinReceived",
-    options,
-    (e, results) => {
-      const entries = results.reverse().map((entry) => ({
-        type: "ERC20Received",
-        blockNumber: entry.blockNumber,
-        transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.value),
-        token: "LOOM",
-      }))
-      ethereum.history.push(...entries)
-    })
+  const results1 = await loomGateway.getPastEvents("LoomCoinReceived", options)
+  const entries1 = results1.reverse().map((entry) => ({
+    type: "ERC20Received",
+    blockNumber: entry.blockNumber,
+    transactionHash: entry.transactionHash,
+    amount: new BN(entry.returnValues.value),
+    token: "LOOM",
+  }))
+
+  ethereum.history.push(...entries1)
 
   // @ts-ignore
-  loomGateway.getPastEvents(
-    "TokenWithdrawn",
-    options,
-    (e, results) => {
-      console.log(results)
-      const entries = results.reverse().map((entry) => ({
-        type: "TokenWithdrawn",
-        blockNumber: entry.blockNumber,
-        transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.value),
-        token: "LOOM",
-      }))
-      ethereum.history.push(...entries)
-      console.log("ENTRIES", results)
-    })
+  const results2 = await loomGateway.getPastEvents("TokenWithdrawn", options)
+  const entries2 = results2.reverse().map((entry) => ({
+    type: "TokenWithdrawn",
+    blockNumber: entry.blockNumber,
+    transactionHash: entry.transactionHash,
+    amount: new BN(entry.returnValues.value),
+    token: "LOOM",
+  }))
+
+  ethereum.history.push(...entries2)
 
 }
 

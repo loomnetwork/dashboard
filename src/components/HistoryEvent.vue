@@ -1,8 +1,8 @@
 <template>
-  <section class="event deposit" :class="{pending: confirmations < 11 }">
+  <section class="event deposit" :class="{pending: showSpinner }">
     <h5 class="type">{{ $t("events." + event.type) }}</h5>
     <ul>
-      <li v-if="confirmations < 11" class="confirmations">
+      <li v-if="showSpinner" class="confirmations">
         <b-spinner variant="primary"></b-spinner>
         {{confirmations}} Confirmations
       </li>
@@ -47,6 +47,10 @@ export default class HistoryEvent extends Vue {
 
   get confirmations() {
     return this.ethereum.blockNumber - this.event.blockNumber + 1
+  }
+
+  get showSpinner() {
+    return this.confirmations < 11
   }
 
 }

@@ -206,24 +206,27 @@ async function refreshHistory(context: PlasmaContext) {
   const indexerUrl = context.state.historyUrl.replace("{address}", address.toString())
 
   // `${dappChainEventUrl}/eth:${currentMetamaskAddress}?sort=-block_height`,
-  Axios.get(indexerUrl)
-    .then((response) => {
-      context.state.history = (response.data.txs || [])
-        .map((item) => {
-          const tokenInfo = tokenService.tokenFromAddress(
-            item.token_contract.replace("eth:", "").toLowerCase(),
-            "ethereum")
-          const token = tokenInfo ? tokenInfo.symbol : "Unknown token"
-          console.log(item)
-          return {
-            type: item.topic,
-            amount: new BN(item.token_amount || "0"),
-            token,
-            blockNumber: item.block_height,
-          }
-        })
+
+  try {
+    const response = await Axios.get(indexerUrl)
+    context.state.history = (response.data.txs || [])
+    .map((item) => {
+      const tokenInfo = tokenService.tokenFromAddress(
+        item.token_contract.replace("eth:", "").toLowerCase(),
+        "ethereum")
+      const token = tokenInfo ? tokenInfo.symbol : "Unknown token"
+      console.log(item)
+      return {
+        type: item.topic,
+        amount: new BN(item.token_amount || "0"),
+        token,
+        blockNumber: item.block_height,
+      }
     })
-    .catch((e) => console.error("Error loading plasma history. " + e.message))
+  } catch (e) {
+    console.error("Error loading plasma history. " + e.message)
+  }
+
   // example entry
   // {
   //   "id": 5640,

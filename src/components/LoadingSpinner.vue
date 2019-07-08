@@ -1,9 +1,9 @@
 <template>
-  <div v-if="showBackdrop" class="loading-backdrop">
+  <div class="loading-backdrop" :class="[showBackdrop ? 'with-backdrop' : '']">
     <div class="gif-container">
       <img src="../assets/loomy-running.gif" class="looping-loomy mb-2" alt="loomy">
       <h6 class="loading-text">{{ $t('components.loading_spinner.please_be_patient_loomy_is') }}</h6>
-      <small>{{ $t('components.loading_spinner.this_could_take_several_minutes') }}</small>
+      <small>{{ message || $t('components.loading_spinner.this_could_take_several_minutes') }}</small>
     </div>
   </div>
 </template>
@@ -15,6 +15,7 @@ import { Component, Watch } from "vue-property-decorator"
 @Component({
   props: {
     showBackdrop: Boolean,
+    message: String,
   },
 })
 export default class LoadingSpinner extends Vue {
@@ -24,7 +25,7 @@ export default class LoadingSpinner extends Vue {
 <style scoped lang="scss">
 
 .loading-backdrop {
-  position: fixed;
+  position: absolute;
   display: flex;
   align-content: center;
   justify-content: center;
@@ -32,10 +33,14 @@ export default class LoadingSpinner extends Vue {
   left: 0px;
   bottom: 0px;
   right: 0px;
+  z-index: 9999;
+}
+
+.with-backdrop {
+  position: fixed !important;
   width: 100vw;
   height: 100vh;
   background-color: rgb(255, 255, 255);
-  z-index: 9999;
 }
 
 @keyframes lds-dual-ring {

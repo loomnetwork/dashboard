@@ -19,7 +19,15 @@
       </b-button-group>
 
       <section v-if="visible === 'plasma'">
-        <div class="events">
+        <div v-if="plasmaHistory && plasmaHistory.length === 0">
+          <p>No activity detected.</p>
+          <small>
+            Or head over to the
+            <router-link to="/validators">validators page</router-link>to get started
+          </small>
+        </div>        
+        <div v-else class="events list-wrapper">
+          <loading-spinner v-if="loadingTally === 2" :showBackdrop="false"></loading-spinner>
           <virtual-list :size="110" :remain="5">
             <article v-for="(event, id) in plasmaHistory" :key="id" class="event">
               <h5 class="type">{{ $t( "events." + event.type) }}</h5>
@@ -33,26 +41,19 @@
             </article>            
           </virtual-list>          
         </div>
-
-        <div v-if="state.plasma.history.length === 0">
-          <p>No activity detected.</p>
-          <small>
-            Or head over to the
-            <router-link to="/validators">validators page</router-link>to get started
-          </small>
-        </div>
       </section>
-      <section v-else-if="visible === 'ethereum'">
-        <div class="events">
-          <virtual-list :size="110" :remain="5">
-            <history-event v-for="(item,i) in ethereumHistory" :key="i" :event="item"></history-event>
-          </virtual-list>
-        </div>
-        <div v-if="state.ethereum.history.length == 0">
+      <section v-else-if="visible === 'ethereum'" class="list-wrapper">
+        <div v-if="ethereumHistory && ethereumHistory.length === 0">
           <p>
             No activity detected.
             <a>Deposit funds to the PlasmaChain</a>
           </p>
+        </div>        
+        <div v-else class="events list-wrapper">
+          <loading-spinner v-if="loadingTally >= 1" :showBackdrop="false"></loading-spinner>
+          <virtual-list :size="110" :remain="5">
+            <history-event v-for="(item,i) in ethereumHistory" :key="i" :event="item"></history-event>
+          </virtual-list>
         </div>
       </section>
     </div>
@@ -64,44 +65,63 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import HistoryEvent from "../components/HistoryEvent.vue"
+import LoadingSpinner from "../components/LoadingSpinner.vue"
 import VirtualList from "vue-virtual-scroll-list"
+import Web3 from "web3"
 
 import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
 import { gatewayModule } from "../store/gateway"
 import { plasmaModule } from "../store/plasma"
+import { ethereumModule } from "../store/ethereum"
 
 @Component({
   components: {
     HistoryEvent,
     VirtualList,
+    LoadingSpinner,
   },
 })
 export default class History extends Vue {
 
-  visible = "plasma"
-  
+  visible = ""
+  loadingTally = 2
+  plasmaHistory: any[] | null = null
+  ethereumHistory: any[] | null = null
+
+  setBlockNumber = ethereumModule.setBlockNumber
+
   get state(): DashboardState {
     return this.$store.state
   }
 
-  get plasmaHistory() {
-    const plasmaHistory = this.state.plasma.history.filter(history => history.amount > 0)
-    return plasmaHistory
-  }
-
-  get ethereumHistory() {
-    const ethereumHistory = this.state.ethereum.history.filter(history => history.amount > 0)
-    return ethereumHistory
-  }
-
   async mounted() {
-    gatewayModule.refreshEthereumHistory()
-    plasmaModule.refreshHistory()
+    this.visible = "plasma"
+    if (!this.state.ethereum.blockNumber) await this.refreshBlockNumber()
+    await this.setPlasmaHistory()
+    await this.setEthereumHistory()
   }
 
   fetchProps(idx) {
     return this.state.ethereum.history[idx]
+  }
+
+  async setPlasmaHistory() {
+    await plasmaModule.refreshHistory()
+    this.plasmaHistory = this.state.plasma.history.filter((history) => history.amount > 0)
+    this.loadingTally--
+  }
+
+  async setEthereumHistory() {
+    await gatewayModule.refreshEthereumHistory()
+    this.ethereumHistory = this.state.ethereum.history.filter((history) => history.amount > 0)
+    this.loadingTally--
+  }
+
+  async refreshBlockNumber() {
+    const web3: Web3 = ethereumModule.web3!
+    const blockNumber = await web3!.eth.getBlockNumber()
+    this.setBlockNumber(blockNumber)
   }
 
 }
@@ -173,5 +193,9 @@ export default class History extends Vue {
       width: 16px;
     }
   }
+}
+.list-wrapper {
+  position: relative;
+  min-height: 280px;
 }
 </style>

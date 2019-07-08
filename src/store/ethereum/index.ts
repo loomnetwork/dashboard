@@ -346,6 +346,8 @@ export function pollLastBlockNumber(context: ActionContext) {
   pollingBlockNumber = window.setInterval(async () => {
     const blockNumber = await web3!.eth.getBlockNumber()
     log("blockNumber", blockNumber)
+    console.log("=================")
+    console.log(blockNumber)
     setBlockNumber(context.state, blockNumber)
   }, 15000)
 

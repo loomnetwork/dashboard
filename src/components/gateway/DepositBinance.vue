@@ -14,7 +14,10 @@
       <div class="content" v-if="step === 1">
         <div class="description">
           Please go to
-          <a :href="`https://binance.org/en/balances`" target="_blank">https://binance.org/en/balances</a> and fill in the form as shown below.
+          <a
+            :href="`https://binance.org/en/balances`"
+            target="_blank"
+          >https://binance.org/en/balances</a> and fill in the form as shown below.
         </div>
         <div class="deposit-form">
           <p>Send Asset</p>
@@ -24,7 +27,7 @@
           </div>
           <p>Select Asset</p>
           <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
-          <p>Gateway Address</p>
+          <p>To Address</p>
           <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled></b-form-input>
           <p>Amount to send</p>
           <b-form-input placeholder="Amount" value="enter the deposit amount " disabled></b-form-input>
@@ -47,8 +50,9 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { capitalize, formatToLoomAddress } from "@/utils"
-import { DashboardState } from "../../types"
-import { gatewayModule } from "../../store/gateway"
+import { DashboardState } from "@/types"
+import { gatewayModule } from "@/store/gateway"
+import { tokenService } from "@/services/TokenService"
 
 @Component
 export default class DepositBinance extends Vue {
@@ -61,10 +65,9 @@ export default class DepositBinance extends Vue {
       options: [
         { value: token, text: token, disabled: true },
       ],
-      gateway: "<plasma account on binance>",
+      gateway: tokenService.getTokenbySymbol(token).binance,
       memo: formatToLoomAddress(this.state.plasma.address),
     }
-
   }
 
   get state(): DashboardState {

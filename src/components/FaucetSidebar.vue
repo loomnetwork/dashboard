@@ -113,6 +113,10 @@ export default class FaucetSidebar extends Vue {
         name: "dev-deploy",
       },
       {
+        to: "/transfer-gateway",
+        text: "Transfer Gateway",
+      },
+      {
         to: "/validator-management",
         text: "Validator Management"
       },

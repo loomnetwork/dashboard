@@ -11,9 +11,9 @@ import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
-import { Address, LocalAddress } from "loom-js"
+import { Address, LocalAddress, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
-import { formatTokenAmount } from '@/filters';
+import { formatTokenAmount } from "@/filters"
 
 const log = debug("dash.dpos")
 
@@ -250,7 +250,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
       delegation.validator.address,
       delegation.amount,
       delegation.lockTimeTier,
-      delegation.referrer,
+      // delegation.referrer,
     )
     feedback.endTask()
   } catch (error) {
@@ -381,4 +381,13 @@ async function claimRewards(context: ActionContext) {
     feedback.endTask()
     feedback.showError("Error while claiming rewards. Please contact support.")
   }
+}
+
+/**
+ * NOTE: make sure candiate.pubKey corresponds to rootState.plasma.address
+ * @param context
+ * @param candidate
+ */
+export function registerCandidate(context: ActionContext, candidate: ICandidate) {
+  // CryptoUtils.Uint8ArrayToB64(candidate.address.local.bytes)
 }

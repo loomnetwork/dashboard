@@ -48,6 +48,7 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { capitalize, formatToLoomAddress } from "@/utils"
 import { DashboardState } from "../../types"
+import { gatewayModule } from "../../store/gateway"
 
 @Component
 export default class DepositBinance extends Vue {
@@ -60,7 +61,7 @@ export default class DepositBinance extends Vue {
       options: [
         { value: token, text: token, disabled: true },
       ],
-      gateway: "<plasma account on binanxe>",
+      gateway: "<plasma account on binance>",
       memo: formatToLoomAddress(this.state.plasma.address),
     }
 
@@ -78,6 +79,13 @@ export default class DepositBinance extends Vue {
     return this.transferRequest.chain === "binance"
       && this.transferRequest.type === "DEPOSIT"
   }
+
+  set visible(value) {
+    if (value === false) {
+      gatewayModule.clearTransferRequest()
+    }
+  }
+
   get title() {
     return this.step === 4 ? "Success" : "Deposit to Plasmachain from Binance"
   }

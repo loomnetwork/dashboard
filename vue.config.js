@@ -21,7 +21,7 @@ module.exports = {
   },
   runtimeCompiler: true,
   devServer: {
-    https: false,
+    https: true,
     disableHostCheck: true
   },
   configureWebpack: config => {

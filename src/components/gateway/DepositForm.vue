@@ -14,7 +14,7 @@
     <div v-if="!status">
       <form>
         <h6>Token type: {{ token }}</h6>
-        <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+        <h6>Your token balance: {{ userBalance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="userBalance"
@@ -54,14 +54,15 @@ import { ethers } from "ethers"
 import BN from "bn.js"
 import { formatToCrypto, parseToWei } from "@/utils"
 import { formatTokenAmount } from "@/filters"
-import { DashboardState } from "../../types"
+import { DashboardState } from "@/types"
 
 import { Funds } from "@/types"
 
-import { gatewayModule } from "../../store/gateway"
+import { gatewayModule } from "@/store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { gatewayReactions } from "../../store/gateway/reactions"
-import { ethereumModule } from '../../store/ethereum';
+import { gatewayReactions } from "@/store/gateway/reactions"
+import { ethereumModule } from "@/store/ethereum"
+import { tokenService } from "@/services/TokenService"
 
 @Component({
   components: {

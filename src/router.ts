@@ -15,6 +15,7 @@ import AddKey from "@/whitelist/views/AddKey.vue"
 import DepositWithdraw from "./views/DepositWithdraw.vue"
 import FeedbackForm from "./views/FeedbackForm.vue"
 import ValidatorManagement from "./dpos/views/ValidatorManagement.vue"
+import TransferGateway from "./views/TransferGateway.vue"
 import { plasmaModule } from "./store/plasma"
 
 Vue.use(VueRouter)
@@ -111,6 +112,11 @@ const router = new VueRouter({
       name: "validatorManagement",
       component: ValidatorManagement,
       beforeEnter: requireAccount,
+    },
+    {
+      path: "/transfer-gateway",
+      name: "transferGateway",
+      component: TransferGateway,
     },
     {
       path: "/",

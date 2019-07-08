@@ -91,7 +91,7 @@ describe("Delegating", () => {
       const d = state.delegation!
       sinon.assert.calledOnce(dpos3Stub.delegateAsync)
       sinon.assert.calledWith(dpos3Stub.delegateAsync,
-        d.validator.address, d.amount, d.lockTimeTier, d.referrer)
+        d.validator.address, d.amount, d.lockTimeTier /*, d.referrer */)
     })
 
     it("notifies feedback module", () => {

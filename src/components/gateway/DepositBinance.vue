@@ -14,7 +14,7 @@
       <div class="content" v-if="step === 1">
         <div class="description">
           Please go to
-          <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form as showm below.
+          <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form as shown below.
         </div>
         <div class="deposit-form">
           <p>Send Asset</p>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="content" v-else-if="step === 2">
-        <p>Once the transaction is processed on binance, your blance on plasmachain will be updated.</p>
+        <p>Once the transaction is processed on binance, your balance on plasmachain will be updated.</p>
       </div>
     </div>
     <div slot="modal-footer" class="w-100 space-between">

@@ -14,7 +14,7 @@
       <div class="content" v-if="step === 1">
         <div class="description">
           Please go to
-          <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form as shown below.
+          <a :href="`https://binance.org/en/balances`" target="_blank">https://binance.org/en/balances</a> and fill in the form as shown below.
         </div>
         <div class="deposit-form">
           <p>Send Asset</p>

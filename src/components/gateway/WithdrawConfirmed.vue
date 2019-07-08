@@ -55,7 +55,7 @@ export default class WithdrawConfirmed extends Vue {
   get amount(): BN | undefined | "" {
     if (!this.receipt) return ""
     // @ts-ignore
-    return formatTokenAmount(this.receipt.tokenAmount)
+    return formatTokenAmount(this.receipt.tokenAmount, tokenService.getTokenbySymbol(this.symbol).decimals)
   }
 
   get state(): DashboardState {

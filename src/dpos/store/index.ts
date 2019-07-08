@@ -13,7 +13,7 @@ import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, LocalAddress } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
-import { formatTokenAmount } from '@/filters';
+import { formatTokenAmount } from "@/filters";
 
 const log = debug("dash.dpos")
 
@@ -250,7 +250,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
       delegation.validator.address,
       delegation.amount,
       delegation.lockTimeTier,
-      delegation.referrer,
+      // delegation.referrer,
     )
     feedback.endTask()
   } catch (error) {

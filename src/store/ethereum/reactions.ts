@@ -16,9 +16,9 @@ export function ethereumReactions(store: Store<DashboardState>) {
     }
 
     trackUser(address)
+    ethereumModule.pollLastBlockNumber()
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
-    ethereumModule.pollLastBlockNumber()
   }
 
 }

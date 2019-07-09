@@ -114,6 +114,8 @@ export default class DepositWithdraw extends Vue {
   selectChainModalType: string = ""
   coins = this.plasma.coins
 
+  refreshTimer: number | null = null
+
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
 
@@ -162,6 +164,27 @@ export default class DepositWithdraw extends Vue {
     if (this.$route.query.depositCoin === "LOOM") {
       this.selectedToken = "LOOM"
       this.setShowDepositForm(true)
+    }
+
+    this.setRefreshTimer()
+
+  }
+
+  setRefreshTimer() {
+    if (this.refreshTimer === null) {
+      this.refreshTimer = window.setInterval(() => {
+        this.filteredSymbols.forEach(async (symbol) => {
+          console.log("Refreshing balance token:", symbol)
+          await this.refreshBalance(symbol)
+        })
+      }, 15 * 1000)
+    }
+  }
+
+  beforeDestroy() {
+    if (this.refreshTimer !== null) {
+      clearInterval(this.refreshTimer)
+      this.refreshTimer = null
     }
   }
 

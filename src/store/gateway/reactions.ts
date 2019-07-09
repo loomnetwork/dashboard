@@ -78,12 +78,21 @@ export function gatewayReactions(store: Store<DashboardState>) {
         // TDODO check if token is mapped in ethereum gateway
         ethereumModule.initERC20(action.payload)
         const ethereumGateways = EthereumGateways.service()
-        const ethTokenAddress = tokenService.getTokenAddressBySymbol(action.payload, "ethereum")
+        const tokenInfo = tokenService.getTokenbySymbol(action.payload)
+        const ethTokenAddress = tokenInfo.ethereum
         const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
-        // tmp
-        const chain = action.payload === "BNB" ? "binance" : "ethereum"
+        let chain = ""
+        if (tokenInfo.ethereum) {
+          chain = "ethereum" // "action.payload === "BNB" ? "binance" : "ethereum"
+          // @ts-ignore
+          // PlasmaGateways.service().add(chain, action.payload, adapter!.contract._address)
+        } else if (tokenInfo.binance) {
+          chain = "binance" // "action.payload === "BNB" ? "binance" : "ethereum"
+        }
         // @ts-ignore
         PlasmaGateways.service().add(chain, action.payload, adapter!.contract._address)
+        // XXX dont refresh all allowances, just the current token
+        gatewayModule.refreshAllowances()
       }
     },
   })

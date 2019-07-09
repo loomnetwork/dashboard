@@ -6,7 +6,7 @@
     </header>
     <b-alert fade :show="showHelp">
       Check your token balances
-      <hr>
+      <hr />
       <div class="helpAlert">
         <p>
           <b>Deposit</b> : Deposit to Plasmachain from Ethereuem
@@ -17,7 +17,7 @@
         <b>Transfer</b> : Transfer tokens to other PlasmaChain accounts
       </div>
     </b-alert>
-    <Account/>
+    <Account />
     <b-card class="balances" no-body>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
         <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
@@ -27,14 +27,18 @@
           <label class="symbol">{{symbol}}</label>
           <span
             class="balance"
-          >{{plasma.coins[symbol].balance | tokenAmount(plasma.coins[symbol].decimals)}}</span>
+          >{{plasma.coins[symbol].balance | tokenAmount(plasma.coins[symbol].decimals, 3)}}</span>
           <b-button-group class="actions">
             <b-button
+              style="display:flex"
               class="button"
               variant="outline-primary"
               :disabled="disableDeposit"
               @click="requestCrossChainTranfer(DEPOSIT, symbol)"
-            >Deposit</b-button>
+            >
+              Deposit
+              <b-badge variant="warning" v-if="symbol in ethereumAllowances">!</b-badge>
+            </b-button>
             <b-button
               class="button"
               variant="outline-primary"
@@ -56,12 +60,12 @@
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken"/>
-    <add-token-modal @refreshTokenList="filterTokens"/>
-    <DepositForm :token="selectedToken"/>
-    <WithdrawForm :token="selectedToken"/>
-    <SelectChainModal/>
-    <DepositBinance/>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken" />
+    <add-token-modal @refreshTokenList="filterTokens" />
+    <DepositForm :token="selectedToken" />
+    <WithdrawForm :token="selectedToken" />
+    <SelectChainModal />
+    <DepositBinance />
   </main>
 </template>
 
@@ -82,7 +86,7 @@ import { PlasmaState } from "@/store/plasma/types"
 import { gatewayModule } from "@/store/gateway"
 import { plasmaModule } from "@/store/plasma"
 
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule } from "@/feedback/store"
@@ -116,6 +120,8 @@ export default class DepositWithdraw extends Vue {
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
+
+  ethereumAllowances: { [symbol: string]: { token: TokenData, amount: BN } } = {}
 
   get state(): DashboardState {
     return this.$store.state
@@ -175,6 +181,15 @@ export default class DepositWithdraw extends Vue {
 
     this.filteredSymbols = tokenSymbols
       .filter((symbol) => (filter === "" || symbol.includes(filter)))
+  }
+
+  @Watch("state.gateway.ethereumAllowances")
+  onDepositAllowanceChange(allowances: Array<{ token: TokenData, amount: BN }>) {
+    console.log("onDepositAllowanceChange")
+    this.ethereumAllowances = allowances.reduce((obj, entry) => {
+      obj[entry.token.symbol] = entry
+      return obj
+    }, {})
   }
 
   /**
@@ -249,6 +264,7 @@ export default class DepositWithdraw extends Vue {
     .balance {
       flex: 1;
       text-align: right;
+      font-variant-numeric: tabular-nums;
     }
     .actions {
       flex: 1;

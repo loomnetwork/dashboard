@@ -27,8 +27,11 @@ import { ethers } from "ethers"
 import { AbiItem } from "web3-utils"
 
 import debug from "debug"
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import { i18n } from "@/i18n"
+import { ZERO } from "@/utils"
+import { from } from "rxjs"
+import { concatMap, filter, mergeMap, scan, toArray, tap } from "rxjs/operators"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -244,6 +247,28 @@ class EthereumGateways {
     this.adapters.set(token, adapter)
     return adapter
   }
+}
+
+export async function refreshAllowances(context: ActionContext) {
+  const coins = context.rootState.ethereum.coins
+  const gateways = service()
+  const allowances = from(Object.keys(coins))
+    .pipe(
+      // no allowance for eth
+      filter((symbol) => symbol !== "ETH"),
+      tap(log),
+      mergeMap(async (symbol) => {
+        // @ts-ignore
+        const spender = gateways.get(symbol).contract._address
+        const amount = await ethereumModule.allowance({ symbol, spender })
+        return { token: tokenService.getTokenbySymbol(symbol), amount }
+      }),
+      filter((allowance) => allowance.amount.gt(ZERO)),
+      toArray(),
+    ).toPromise()
+
+  context.state.ethereumAllowances = await allowances
+  log("allowances", context.state.ethereumAllowances)
 }
 
 /**

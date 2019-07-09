@@ -3,7 +3,7 @@
  */
 
 import { plasmaModule } from "@/store/plasma"
-import { ZERO } from "@/utils"
+import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
@@ -14,6 +14,7 @@ import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, LocalAddress, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 import { formatTokenAmount } from "@/filters"
+import { ethereumModule } from "@/store/ethereum"
 
 const log = debug("dash.dpos")
 
@@ -47,6 +48,8 @@ const dposModule = {
   refreshElectionTime: builder.dispatch(refreshElectionTime),
   refreshValidators: builder.dispatch(refreshValidators),
   refreshDelegations: builder.dispatch(refreshDelegations),
+
+  registerCandidate: builder.dispatch(registerCandidate),
 }
 
 // vuex module as a service
@@ -388,6 +391,43 @@ async function claimRewards(context: ActionContext) {
  * @param context
  * @param candidate
  */
-export function registerCandidate(context: ActionContext, candidate: ICandidate) {
-  // CryptoUtils.Uint8ArrayToB64(candidate.address.local.bytes)
+export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
+  const balance = context.rootState.plasma.coins.LOOM.balance
+  const weiAmount = parseToWei("1240000")
+
+  if (balance.lt(weiAmount)) {
+    feedback.showError("Insufficient funds.")
+    return
+  }
+
+  const symbol = "LOOM"
+  const addressString = candidate.address.local.toString()
+  const allowance = await ethereumModule.allowance({ symbol, spender: addressString })
+
+  if (allowance.lt(weiAmount)) {
+    try {
+      await ethereumModule.approve({
+        to: addressString,
+        ...{ chain: candidate.address.chainId, symbol, weiAmount },
+      })
+    } catch (err) {
+        feedback.showError("Approval failed.")
+        return
+    }
+  }
+
+  try {
+    await context.state.contract!.registerCandidateAsync(
+      CryptoUtils.Uint8ArrayToB64(candidate.address.local.bytes),
+      candidate.fee,
+      candidate.name,
+      candidate.description,
+      candidate.website,
+      candidate.whitelistLocktimeTier,
+    )
+
+    feedback.showSuccess("Registered success.")
+  } catch (err) {
+    feedback.showError("Error while registering. Please contact support.")
+  }
 }

@@ -375,50 +375,40 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
 export async function refreshEthereumHistory(context: ActionContext) {
   const ethereum = context.rootState.ethereum
   const cached = ethereum.history
-  const { mainGateway, loomGateway } = service()
-
+  const { loomGateway } = service()
   const fromBlock = cached.length ? cached[0].blockNumber : 0
-
-  const options = {
-    filter: {
-      from: ethereum.address,
-    },
+  const address = ethereum.address
+  const range = {
     fromBlock,
     toBlock: "latest",
   }
+  const logToHistory = (items, type, token, valueField) => {
+    log("logToHistory", type, token, items)
+    for (const item of items) {
+      const entry = Object.freeze({
+        type,
+        blockNumber: item.blockNumber,
+        transactionHash: item.transactionHash,
+        amount: new BN(item.returnValues[valueField]),
+        token: token || "other",
+      })
+      ethereum.history.push(entry)
+    }
+  }
+  const p1 = loomGateway
+    // @ts-ignore
+    .getPastEvents("LoomCoinReceived", { filter: { from: address }, ...range })
+    .then((results) => logToHistory(results, "ERC20Received", "LOOM", "amount"))
+    .catch((e) => console.error("error loading LoomCoinReceived", e.message))
 
-  // @ts-ignore
-  loomGateway.getPastEvents(
-    "LoomCoinReceived",
-    options,
-    (e, results) => {
-      const entries = results.reverse().map((entry) => ({
-        type: "ERC20Received",
-        blockNumber: entry.blockNumber,
-        transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.value),
-        token: "LOOM",
-      }))
-      ethereum.history.push(...entries)
-    })
+  const p2 = loomGateway
+    // @ts-ignore
+    .getPastEvents("TokenWithdrawn", { filter: { owner: address }, ...range })
+    .then((results) => logToHistory(results, "TokenWithdrawn", "LOOM", "value"))
+    .catch((e) => console.error("error loading TokenWithdrawn", e.message))
 
-  // @ts-ignore
-  loomGateway.getPastEvents(
-    "TokenWithdrawn",
-    options,
-    (e, results) => {
-      console.log(results)
-      const entries = results.reverse().map((entry) => ({
-        type: "TokenWithdrawn",
-        blockNumber: entry.blockNumber,
-        transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.value),
-        token: "LOOM",
-      }))
-      ethereum.history.push(...entries)
-      console.log("ENTRIES", results)
-    })
-
+  await Promise.all(([p1, p2]))
+  ethereum.history.sort((a, b) => b.blockNumber - a.blockNumber)
 }
 
 /**

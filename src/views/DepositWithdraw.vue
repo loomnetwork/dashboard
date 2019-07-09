@@ -19,6 +19,12 @@
     </b-alert>
     <Account />
     <b-card class="balances" no-body>
+      <b-card-header class="custom-card-header d-flex justify-content-between">
+        <h5>Tokens</h5>
+        <a @click="refreshAllTokens">
+          <fa :icon="['fas', 'sync']" class="refresh-icon"/>
+        </a>
+      </b-card-header>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
         <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
       </b-card-body>
@@ -90,6 +96,7 @@ import { tokenService, TokenData } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule } from "@/feedback/store"
+import { Subscription, timer } from "rxjs"
 
 @Component({
   components: {
@@ -117,6 +124,8 @@ export default class DepositWithdraw extends Vue {
   refreshBalance = plasmaModule.refreshBalance
   selectChainModalType: string = ""
   coins = this.plasma.coins
+
+  refreshTimer: Subscription | null = null
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
@@ -169,6 +178,27 @@ export default class DepositWithdraw extends Vue {
       this.selectedToken = "LOOM"
       this.setShowDepositForm(true)
     }
+
+    this.setRefreshTimer()
+
+  }
+
+  setRefreshTimer() {
+    this.refreshTimer = timer(0, 15000).subscribe(() => {
+      this.refreshAllTokens()
+    })
+  }
+
+  refreshAllTokens() {
+    this.filteredSymbols.forEach(async (symbol) => {
+      await this.refreshBalance(symbol)
+    })
+  }
+
+  beforeDestroy() {
+    if (this.refreshTimer != null) {
+      this.refreshTimer.unsubscribe()
+    }
   }
 
   @Watch("inputFilter")
@@ -200,7 +230,9 @@ export default class DepositWithdraw extends Vue {
     this.selectChainModalType = type
     this.selectedToken = token
     console.log("dss", this.state.chains)
-    const chain = this.state.chains.length === 1 ? this.state.chains[0] : ""
+    // Check if these token has a binance
+    const binanceAddr = tokenService.getTokenbySymbol(token).binance
+    const chain = binanceAddr ? "" : this.state.chains[0]
     gatewayModule.setTransferRequest({ chain, type, token })
   }
 
@@ -244,7 +276,6 @@ export default class DepositWithdraw extends Vue {
 
 .card.balances {
   margin: 16px auto;
-  max-width: 600px;
   .list-group-item {
     display: flex;
     flex-wrap: wrap;
@@ -292,3 +323,4 @@ export default class DepositWithdraw extends Vue {
   }
 }
 </style>
+

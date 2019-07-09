@@ -92,6 +92,7 @@ import { tokenService } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule } from "@/feedback/store"
+import { Subscription, timer } from "rxjs"
 
 @Component({
   components: {
@@ -120,7 +121,7 @@ export default class DepositWithdraw extends Vue {
   selectChainModalType: string = ""
   coins = this.plasma.coins
 
-  refreshTimer: number | null = null
+  refreshTimer: Subscription | null = null
 
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
@@ -177,11 +178,9 @@ export default class DepositWithdraw extends Vue {
   }
 
   setRefreshTimer() {
-    if (this.refreshTimer === null) {
-      this.refreshTimer = window.setInterval(() => {
-        this.refreshAllTokens()
-      }, 15 * 1000)
-    }
+    this.refreshTimer = timer(0, 15000).subscribe(() => {
+      this.refreshAllTokens()
+    })
   }
 
   refreshAllTokens() {
@@ -191,9 +190,8 @@ export default class DepositWithdraw extends Vue {
   }
 
   beforeDestroy() {
-    if (this.refreshTimer !== null) {
-      clearInterval(this.refreshTimer)
-      this.refreshTimer = null
+    if (this.refreshTimer != null) {
+      this.refreshTimer.unsubscribe()
     }
   }
 

@@ -19,6 +19,12 @@
     </b-alert>
     <Account/>
     <b-card class="balances" no-body>
+      <b-card-header class="custom-card-header d-flex justify-content-between">
+        <h5>Tokens</h5>
+        <a @click="refreshAllTokens">
+          <fa :icon="['fas', 'sync']" class="refresh-icon"/>
+        </a>
+      </b-card-header>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
         <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
       </b-card-body>
@@ -173,12 +179,15 @@ export default class DepositWithdraw extends Vue {
   setRefreshTimer() {
     if (this.refreshTimer === null) {
       this.refreshTimer = window.setInterval(() => {
-        this.filteredSymbols.forEach(async (symbol) => {
-          console.log("Refreshing balance token:", symbol)
-          await this.refreshBalance(symbol)
-        })
+        this.refreshAllTokens()
       }, 15 * 1000)
     }
+  }
+
+  refreshAllTokens() {
+    this.filteredSymbols.forEach(async (symbol) => {
+      await this.refreshBalance(symbol)
+    })
   }
 
   beforeDestroy() {
@@ -252,7 +261,6 @@ export default class DepositWithdraw extends Vue {
 
 .card.balances {
   margin: 16px auto;
-  max-width: 600px;
   .list-group-item {
     display: flex;
     flex-wrap: wrap;
@@ -299,3 +307,4 @@ export default class DepositWithdraw extends Vue {
   }
 }
 </style>
+

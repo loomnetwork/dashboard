@@ -17,11 +17,11 @@
       ></b-form-input>
       <div class="virtual-list mt-3">
         <virtual-list :size="30" :remain="8">
-          <option v-for="token in filteredSymbols"
+          <div v-for="token in filteredSymbols"
                   @click="addToken(token)"
                   class="list-item"
                   :value="token"
-                  :key="token">{{ token }}</option>
+                  :key="token">{{ token }}</div>
         </virtual-list>
       </div>
     </b-card>

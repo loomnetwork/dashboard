@@ -176,7 +176,7 @@ export default class DepositWithdraw extends Vue {
     this.filteredSymbols = tokenSymbols
       .filter((symbol) => (filter === "" || symbol.includes(filter)))
   }
-
+  
   /**
    * set selected token to component state
    * then show selectChain modal
@@ -185,7 +185,9 @@ export default class DepositWithdraw extends Vue {
     this.selectChainModalType = type
     this.selectedToken = token
     console.log("dss", this.state.chains)
-    const chain = this.state.chains.length === 1 ? this.state.chains[0] : ""
+    // Check if these token has a binance
+    const binanceAddr = tokenService.getTokenbySymbol(token).binance
+    const chain = binanceAddr ? "" : this.state.chains[0]
     gatewayModule.setTransferRequest({ chain, type, token })
   }
 

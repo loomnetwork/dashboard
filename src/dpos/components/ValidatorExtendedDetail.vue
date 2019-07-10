@@ -11,9 +11,10 @@
           <b-list-group-item>
             <h5>Become a validator</h5>
             <ul>
-              <li>Fill out this <a :href="formLink" target="_blank">form</a>.</li>
+              <li>Filled out and submit the form below.</li>
               <li>More detail? Check out this <a :href="guideLink" target="_blank">link</a>.</li>
             </ul>
+            <register-candidate-form class="mb-2"/>
           </b-list-group-item>
           <b-list-group-item>
             <h5>Setup a node</h5>
@@ -85,9 +86,16 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { formatTokenAmount } from "@/filters"
 import { TextDecoder } from 'util';
 import { formatToLoomAddress } from "@/utils"
+import BN from "bn.js"
+import { dposModule } from "../store"
+import RegisterCandidateForm from "./RegisterCandidateForm.vue"
 
-@Component
-export default class ValidatorExtendedDetail extends Vue{
+@Component({
+  components: {
+    RegisterCandidateForm,
+  },
+})
+export default class ValidatorExtendedDetail extends Vue {
 
   formLink = "https://docs.google.com/forms/d/e/1FAIpQLSeNOYyBKwvYVWc-jQ3-cb-8g22GffQ24vvxe0LwS5xUKp43Rg/viewform"
   guideLink = "https://loomx.io/developers/en/validator.html"
@@ -96,7 +104,7 @@ export default class ValidatorExtendedDetail extends Vue{
   showInfo = false
 
   @Prop(String) userAddress!: string
-  
+
   get state(): HasDPOSState {
     return this.$store.state
   }
@@ -104,7 +112,7 @@ export default class ValidatorExtendedDetail extends Vue{
   get plasmaAddress() {
     return this.state.plasma.address
   }
-  
+
   get validator() {
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress

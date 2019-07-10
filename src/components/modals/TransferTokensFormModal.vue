@@ -15,6 +15,7 @@
           :min="min"
           :max="balance"
           :round="false"
+          :decimals="tokenDecimals"
           :symbol="token"
           v-model="transferWeiAmount"
           @isError="onAmountError"

@@ -5,6 +5,7 @@ import { HasEthereumState } from "../ethereum/types"
 import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
 import BN from "bn.js"
 import { Contract, Address } from "loom-js"
+import { TokenData } from "@/services/TokenService"
 
 export declare type ChainName = "ethereum" | "binance" | "tron"
 
@@ -23,6 +24,7 @@ export interface GatewayConfig {
  */
 export interface GatewayState extends GatewayConfig {
   mapping: IAddressMapping | null
+  ethereumAllowances: Array<{ token: TokenData, amount: BN }>
   pendingTransactions: any[]
   withdrawalReceipts: IWithdrawalReceipt | WithdrawalReceipt | null
   showDepositForm: boolean

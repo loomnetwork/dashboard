@@ -282,7 +282,7 @@
         "enter_pin_code": "あなたのledgerでPINコードを入力し、Ethereumアプリにログインして下さい。"
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your ethereum account."
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
       }
     },
     "blockExplorer": {

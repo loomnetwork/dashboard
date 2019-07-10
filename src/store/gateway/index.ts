@@ -67,6 +67,10 @@ export const gatewayModule = {
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
+  refreshWithdrawalReceipt: builder.dispatch(PlasmaGateways.refreshWithdrawalReceipt),
+
+  // binance
+  binanceResubmitWithdrawal: builder.dispatch(PlasmaGateways.binanceResubmitWithdrawal),
 
   // mapper
   loadMapping: builder.dispatch(Mapper.loadMapping),

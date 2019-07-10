@@ -13,11 +13,15 @@
     <b-card class="mapped-card">
       <b-card-header class="debug-mapped-contract d-flex justify-content-between">
         <h5 class="col-5">Debug Mapped Contract</h5>
-        <b-input placeholder="Token name" style="text-align: right;" class="col-4"></b-input>
-        <b-button style="float:right;" class="col-2">View Logs</b-button>
+        <b-input-group>
+          <b-form-input type="text" placeholder="Token name" style="text-align: right;"></b-form-input>
+          <b-input-group-append>
+            <b-button>View Logs</b-button>
+          </b-input-group-append>
+        </b-input-group>
       </b-card-header>
     </b-card>
-    <b-table responsive :items="items" :fields="fields" class="mapped-table"></b-table>
+    <b-table responsive :items="tokenMapLog" :fields="tokenMappingFields" class="mapped-table"></b-table>
     </div>
   </main>
 </template>
@@ -25,18 +29,58 @@
 <script lang="ts">
 import { Component, Watch, Vue } from "vue-property-decorator"
 import { DashboardState } from "@/types"
+import { PlasmaState, PlasmaTokenKind } from "@/store/plasma/types"
+import { formatTokenAmount } from "@/filters"
+import Axios from 'axios';
 
 @Component({
   components: {
+    
   },
 })
 
 export default class TransferGateway extends Vue {
-  fields = ['id', 'created_at', 'token_owner', 'token_kind', 'token_amount', 'topic', 'error_message']
-  items = [
-    { id: '4681', created_at: '2019-04-24T05:23:39Z', token_owner:"eth:0x91A31A1C5197DD101e91B0747B02560f41E2f532", token_kind:"LOOMCOIN", token_amount:"875", topic:"event:MainnetDepositEvent" },
-    { id: '4701', created_at: '2019-04-24T05:23:39Z', token_owner:"eth:0x91A31A1C5197DD101e91B0747B02560f41E2f532", token_kind:"LOOMCOIN", token_amount:"150", topic:"event:MainnetDepositEvent" },
+
+  tokenMappingFields = [{ key: "id", label: "Id" },
+  { key: "createdAt", label: "Created At" },
+  { key: "tokenOwner", label: "Token Owner"},
+  { key: "tokenKind", label: "Token Kind"},
+  { key: "tokenAmount", label: "Token Amount", formatter: value => { return formatTokenAmount(value, 18, 0) }},
+  { key: "topic", label: "Topic"}
   ]
+
+  jimboAddr = "eth:0xd54549ECa78920EBb72f560b4979cf803C6C41a3"
+
+  tokenMapLog: any[] | null = []
+
+  get $state() { return (this.$store.state as DashboardState) }
+
+  get historyUrl() {
+    return this.$state.plasma.historyUrl
+  }
+
+  get tokenMap() {
+    console.log("TOKEN!!", this.tokenHistory())
+    return tokenHistory() 
+  }
+
+  async mounted() {
+    const indexerUrl = this.historyUrl.replace("{address}", this.jimboAddr)
+    let response = await Axios.get(indexerUrl).then((response) => {
+      return response.data.txs.filter((item) => /^event\:Mainnet/.test(item.topic))
+      .map((item) => {
+        this.tokenMapLog.push({
+          id: item.id,
+          createdAt: item.created_at,
+          tokenOwner: item.token_owner,
+          tokenKind: item.token_kind,
+          tokenAmount: item.token_amount,
+          topic: item.topic,
+        })
+      })
+    })
+  }
+
 }
 </script>
 
@@ -73,5 +117,3 @@ export default class TransferGateway extends Vue {
 
   }
 </style>
-
-

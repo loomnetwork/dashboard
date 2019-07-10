@@ -37,7 +37,7 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
     const chainId = this.contract._client.chainId
     const plasmaTokenAddr = Address.fromString(`${chainId}:${plasmaTokenAddrStr}`)
 
-    return this.contract.withdrawToken(amount, plasmaTokenAddr, recipient)
+    return this.contract.withdrawTokenAsync(amount, plasmaTokenAddr, recipient)
   }
   withdrawalReceipt() {
     return this.contract.withdrawalReceiptAsync(this.mapping.to)

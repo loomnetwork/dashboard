@@ -10,6 +10,7 @@ import { BinanceTransferGateway } from "loom-js/dist/contracts"
 import { tokenService } from "@/services/TokenService"
 
 import debug from "debug"
+import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 
 const log = debug("dash.gateway.binance")
 
@@ -18,6 +19,7 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   token = "BNB" // tmp
   constructor(
     public readonly contract: BinanceTransferGateway,
+    readonly mapping: IAddressMapping,
     public readonly fee: {
       token: "BNB"
       amount: BN,
@@ -29,6 +31,7 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
     return
   }
   withdraw(amount: BN, recipient: Address) {
+    log("withdraw", amount.toString(), recipient)
     const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
     // @ts-ignore
     const chainId = this.contract._client.chainId
@@ -37,6 +40,6 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
     return this.contract.withdrawToken(amount, plasmaTokenAddr, recipient)
   }
   withdrawalReceipt() {
-    return this.contract.withdrawalReceiptAsync(this.contract.caller)
+    return this.contract.withdrawalReceiptAsync(this.mapping.to)
   }
 }

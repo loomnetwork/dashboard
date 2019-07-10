@@ -3,7 +3,7 @@ import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { DashboardState, Funds } from "@/types"
 import BN from "bn.js"
 import debug from "debug"
-import { Address } from "loom-js"
+import { Address, LocalAddress } from "loom-js"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { Store } from "vuex"
 import { EventLog } from "web3-core"
@@ -81,18 +81,18 @@ export function gatewayReactions(store: Store<DashboardState>) {
         const tokenInfo = tokenService.getTokenbySymbol(action.payload)
         const ethTokenAddress = tokenInfo.ethereum
         const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
-        let chain = ""
         if (tokenInfo.ethereum) {
-          chain = "ethereum" // "action.payload === "BNB" ? "binance" : "ethereum"
           // @ts-ignore
-          // PlasmaGateways.service().add(chain, action.payload, adapter!.contract._address)
-        } else if (tokenInfo.binance) {
-          chain = "binance" // "action.payload === "BNB" ? "binance" : "ethereum"
+          const ethGatewayAddr = Address.fromString("eth:" + adapter!.contract._address)
+          PlasmaGateways.service().add("ethereum", action.payload, ethGatewayAddr)
         }
-        // @ts-ignore
-        PlasmaGateways.service().add(chain, action.payload, adapter!.contract._address)
+        if (tokenInfo.binance) {
+          PlasmaGateways.service().add("binance", action.payload)
+          gatewayModule.refreshWithdrawalReceipt({ chain: "binance", symbol: tokenInfo.symbol })
+        }
         // XXX dont refresh all allowances, just the current token
         gatewayModule.refreshAllowances()
+
       }
     },
   })
@@ -153,7 +153,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
       return
     }
 
-    // TODO: Add support for multiple tokens
     receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
     // @ts-ignore
     if (receipt || !pastWithdrawalExist) {

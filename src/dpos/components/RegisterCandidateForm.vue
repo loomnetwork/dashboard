@@ -59,7 +59,6 @@ export default class RegisterCandidateForm extends Vue {
 
   onSubmit(evt) {
     evt.preventDefault()
-    console.log(this.form)
     const candidate = {
         address: Address.fromString(this.$store.state.plasma.chainId + ":" + this.$store.state.plasma.address),
         pubKey: new Uint8Array(),
@@ -74,7 +73,6 @@ export default class RegisterCandidateForm extends Vue {
         description: this.form.description,
         website: this.form.website,
     }
-    console.log(candidate)
     dposModule.registerCandidate(candidate)
   }
 

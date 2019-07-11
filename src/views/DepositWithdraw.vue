@@ -22,7 +22,7 @@
       <b-card-header class="custom-card-header d-flex justify-content-between">
         <h5>Tokens</h5>
         <a @click="refreshAllTokens">
-          <fa :icon="['fas', 'sync']" class="refresh-icon"/>
+          <fa :icon="['fas', 'sync']" class="refresh-icon" />
         </a>
       </b-card-header>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
@@ -229,11 +229,13 @@ export default class DepositWithdraw extends Vue {
   requestCrossChainTranfer(type: string, token: string) {
     this.selectChainModalType = type
     this.selectedToken = token
-    console.log("dss", this.state.chains)
     // Check if these token has a binance
-    const binanceAddr = tokenService.getTokenbySymbol(token).binance
-    const chain = binanceAddr ? "" : this.state.chains[0]
-    gatewayModule.setTransferRequest({ chain, type, token })
+    const tokenInfo = tokenService.getTokenbySymbol(token)
+    const possibleChains = this.state.chains.filter((chain) => !!tokenInfo[chain])
+    const chain = (possibleChains.length === 1) ?
+      possibleChains[0] : ""
+
+    gatewayModule.setTransferRequest({ chain: possibleChains[0], type, token })
   }
 
   requestSwap(token: string) {

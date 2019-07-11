@@ -400,15 +400,15 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
     return
   }
 
-  const symbol = "LOOM"
+  const token = "LOOM"
   const addressString = candidate.address.local.toString()
-  const allowance = await ethereumModule.allowance({ symbol, spender: addressString })
+  const allowance = await plasmaModule.allowance({ token, spender: addressString })
 
   if (allowance.lt(weiAmount)) {
     try {
-      await ethereumModule.approve({
+      await plasmaModule.approve({
         to: addressString,
-        ...{ chain: candidate.address.chainId, symbol, weiAmount },
+        ...{ chain: candidate.address.chainId, symbol: token, weiAmount },
       })
     } catch (err) {
         feedback.showError("Approval failed.")
@@ -426,7 +426,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
       candidate.whitelistLocktimeTier,
     )
 
-    feedback.showSuccess("Registered success.")
+    feedback.showSuccess("Successfully registered.")
   } catch (err) {
     feedback.showError("Error while registering. Please contact support.")
   }

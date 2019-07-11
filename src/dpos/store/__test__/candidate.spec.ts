@@ -1,14 +1,19 @@
 import "mocha"
 import sinon from "sinon"
 import { ZERO, parseToWei } from "@/utils"
-import { emptyValidator, feedbackModuleStub, ethereumModuleStub } from "./_helpers"
+import { emptyValidator, feedbackModuleStub, plasmaModuleStub } from "./_helpers"
 import { defaultState } from "../helpers"
 import { ICandidate } from "loom-js/dist/contracts/dpos3"
 import { DPOS3 } from "loom-js/dist/contracts"
 import { registerCandidate } from ".."
-import { CryptoUtils } from "loom-js"
+import { Address, CryptoUtils } from "loom-js"
 
 const rootState = {
+  dpos: {
+    contract: {
+      address: Address.fromString("default:0x" + "".padEnd(40, "0")),
+    },
+  },
   plasma: {
     coins: {
       LOOM: {
@@ -20,21 +25,22 @@ const rootState = {
 
 describe("Validator Management", () => {
 
-  describe.only("action registerCandidate", () => {
+  describe("action registerCandidate", () => {
     const state = defaultState()
     const candidate: ICandidate = emptyValidator()
-    const weiAmount = parseToWei("1240000")
-    const symbol = "LOOM"
-    const address = candidate.address.local.toString()
+    const weiAmount = parseToWei("1250000")
+    const token = "LOOM"
+    const address = rootState.dpos.contract.address.local.toString()
     const dpos3Stub = sinon.createStubInstance(DPOS3)
     // @ts-ignore
     state.contract = dpos3Stub
 
     before(() => {
-      ethereumModuleStub.allowance.resolves(parseToWei("100"))
+      plasmaModuleStub.approve.reset()
+      plasmaModuleStub.allowance.resolves(parseToWei("100"))
     })
 
-    it.skip("Checks account balance >= 1.24M LOOM")
+    it.skip("Checks account balance >= 1.25M LOOM")
     it("Fails with feedback notification if insufficient funds", async () => {
       // @ts-ignore
       await registerCandidate({ ...{ state }, ...{rootState} }, candidate)
@@ -45,22 +51,17 @@ describe("Validator Management", () => {
       rootState.plasma.coins.LOOM.balance = weiAmount
       // @ts-ignore
       await registerCandidate({ ...{ state }, ...{rootState} }, candidate)
-      sinon.assert.calledOnce(ethereumModuleStub.allowance)
-      sinon.assert.calledWith(ethereumModuleStub.allowance, { symbol, spender: address })
+      sinon.assert.calledOnce(plasmaModuleStub.allowance)
+      sinon.assert.calledWith(plasmaModuleStub.allowance, { token, spender: address })
     })
     it("Asks for approval if insufficient allowance", () => {
-      sinon.assert.calledOnce(ethereumModuleStub.approve)
-      sinon.assert.calledWith(ethereumModuleStub.approve,
-        {
-          to: address,
-          ...{ chain: candidate.address.chainId, symbol, weiAmount },
-        },
-      )
+      sinon.assert.calledOnce(plasmaModuleStub.approve)
+      sinon.assert.calledWith(plasmaModuleStub.approve, { symbol: token, weiAmount, to: address })
     })
     it("calls DPOS3.regesterCandidateAsync", () => {
       sinon.assert.calledOnce(dpos3Stub.registerCandidateAsync)
       sinon.assert.calledWith(dpos3Stub.registerCandidateAsync,
-        CryptoUtils.Uint8ArrayToB64(candidate.address.local.bytes),
+        CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
         candidate.fee,
         candidate.name,
         candidate.description,

@@ -65,8 +65,8 @@ describe("Delegating", () => {
 
     before(() => {
       state = defaultState()
+      plasmaModuleStub.approve.reset()
       plasmaModuleStub.approve.resolves(true)
-      dpos3Stub.delegateAsync.resolves()
       // @ts-ignore
       state.contract = dpos3Stub
       state.contract!.address = Address.fromString(":0x".padEnd(44, "0"))
@@ -91,7 +91,7 @@ describe("Delegating", () => {
       const d = state.delegation!
       sinon.assert.calledOnce(dpos3Stub.delegateAsync)
       sinon.assert.calledWith(dpos3Stub.delegateAsync,
-        d.validator.address, d.amount, d.lockTimeTier, d.referrer)
+        d.validator.address, d.amount, d.lockTimeTier)
     })
 
     it("notifies feedback module", () => {

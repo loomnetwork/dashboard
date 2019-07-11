@@ -5,9 +5,9 @@
     no-close-on-esc
     hide-header-close
     id="deposit-approval-success"
-    :title="'Withdraw ' + token"
+    :title="'Withdraw ' + token + ' to ' + transferRequest.chain"
   >
-    <div v-if="visible">
+    <div v-if="visible && tokenInfo">
       <div v-if="fee.amount">
         <p>Transfer to {{transferRequest.chain}} requires a fee of {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}</p>
       </div>
@@ -84,7 +84,7 @@ export default class WithdrawForm extends Vue {
   isValidAddress: boolean = false
   recepient = ""
 
-  tokenInfo!: TokenData
+  tokenInfo: TokenData | null = null
 
   // Avoid null bindings by having a NO_FEE value
   fee: { token: string, amount: BN, decimals: number } | {} = {}

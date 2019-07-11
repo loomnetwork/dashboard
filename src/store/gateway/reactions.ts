@@ -75,18 +75,19 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.subscribeAction({
     after(action) {
       if (/^plasma.+addToken$/.test(action.type)) {
-        // TDODO check if token is mapped in ethereum gateway
-        ethereumModule.initERC20(action.payload)
-        const ethereumGateways = EthereumGateways.service()
         const tokenInfo = tokenService.getTokenbySymbol(action.payload)
-        const ethTokenAddress = tokenInfo.ethereum
-        const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
         if (tokenInfo.ethereum) {
+          ethereumModule.initERC20(action.payload)
+          const ethereumGateways = EthereumGateways.service()
+          log("adding gateway for %s to ethereum", tokenInfo.symbol)
+          const etherumTokenAddress = tokenInfo.ethereum
+          const adapter = ethereumGateways.add(action.payload, etherumTokenAddress)
           // @ts-ignore
           const ethGatewayAddr = Address.fromString("eth:" + adapter!.contract._address)
           PlasmaGateways.service().add("ethereum", action.payload, ethGatewayAddr)
         }
         if (tokenInfo.binance) {
+          log("adding gateway for %s to binance", tokenInfo.symbol)
           PlasmaGateways.service().add("binance", action.payload)
           gatewayModule.refreshWithdrawalReceipt({ chain: "binance", symbol: tokenInfo.symbol })
         }

@@ -57,7 +57,10 @@ class TokenService {
     // hack until it's updated in loomauth
     const BNB = this.symbols.find((data) => data.symbol === "BNB")!
     BNB.decimals = 8
-    // keep the dirt at the lowest end possible...
+    // disable ethereun
+    BNB.ethereum = ""
+
+    // hack BNB data until we set the right vslues in loomauth token data
     switch (BNB.plasma) {
       // asia1
       case "0xb6f5558ed8fd604dcda28514c4fb39af935c48e9":

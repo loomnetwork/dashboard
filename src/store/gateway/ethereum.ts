@@ -227,7 +227,7 @@ class EthereumGateways {
   add(token: string, tokenAddress: string) {
     if (this.adapters.has(token)) {
       console.warn(token + " token gateway adapter already set.")
-      return
+      return this.adapters.get(token)
     }
     const { vmc, mainGateway, loomGateway, web3 } = this
     let adapter: EthereumGatewayAdapter

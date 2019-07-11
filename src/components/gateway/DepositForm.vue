@@ -10,7 +10,7 @@
     no-close-on-backdrop
     hide-header-close
   >
-    <template slot="modal-title">Deposit {{ token }}</template>
+    <template slot="modal-title">Deposit {{ token }} from {{transferRequest.chain}}</template>
     <div v-if="!status">
       <form>
         <h6

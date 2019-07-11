@@ -10,7 +10,7 @@
     :hide-header-close="step === 3"
   >
     <!-- <template slot="modal-title">Deposit</template> -->
-    <div class="deposit-container">
+    <div class="deposit-container" v-if="visible">
       <div class="content" v-if="step === 1">
         <div class="description">
           Please go to

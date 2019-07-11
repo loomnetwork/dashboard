@@ -1,6 +1,14 @@
 <template>
   <b-card bg-variant="light">
     <b-form @submit="onSubmit">
+      <b-form-group label="Public Key" label-for="input-pubkey">
+        <b-form-input
+          id="input-pubkey"
+          v-model="form.pubKey"
+          required
+        ></b-form-input>
+      </b-form-group>
+
       <b-form-group label="Validator Name" label-for="input-name">
         <b-form-input
           id="input-name"
@@ -42,15 +50,17 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import { Address } from "loom-js"
+import { Address, CryptoUtils } from "loom-js"
 import { formatToLoomAddress, ZERO, parseToWei } from "../../utils"
 import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
 import { dposModule } from "../store"
+import BN from "bn.js"
 
 @Component
 export default class RegisterCandidateForm extends Vue {
 
   form = {
+    pubKey: "",
     name: "",
     description: "",
     website: "",
@@ -61,12 +71,12 @@ export default class RegisterCandidateForm extends Vue {
     evt.preventDefault()
     const candidate = {
         address: Address.fromString(this.$store.state.plasma.chainId + ":" + this.$store.state.plasma.address),
-        pubKey: new Uint8Array(),
+        pubKey: CryptoUtils.B64ToUint8Array(this.form.pubKey),
         delegationTotal: ZERO,
         slashPercentage: ZERO,
         whitelistAmount: ZERO,
         whitelistLocktimeTier: LocktimeTier.TIER_ONE,
-        fee: parseToWei(this.form.fee.toString()),
+        fee: new BN(this.form.fee),
         newFee: ZERO,
         candidateState: CandidateState.REGISTERED,
         name: this.form.name,

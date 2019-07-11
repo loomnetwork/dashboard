@@ -393,7 +393,7 @@ async function claimRewards(context: ActionContext) {
  */
 export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
   const balance = context.rootState.plasma.coins.LOOM.balance
-  const weiAmount = parseToWei("1240000")
+  const weiAmount = parseToWei("1250000")
 
   if (balance.lt(weiAmount)) {
     feedback.showError("Insufficient funds.")
@@ -401,24 +401,22 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
   }
 
   const token = "LOOM"
-  const addressString = candidate.address.local.toString()
+  const addressString = context.rootState.dpos.contract!.address.local.toString()
   const allowance = await plasmaModule.allowance({ token, spender: addressString })
 
   if (allowance.lt(weiAmount)) {
     try {
-      await plasmaModule.approve({
-        to: addressString,
-        ...{ chain: candidate.address.chainId, symbol: token, weiAmount },
-      })
+      await plasmaModule.approve({ symbol: token, weiAmount, to: addressString })
     } catch (err) {
-        feedback.showError("Approval failed.")
-        return
+      console.error(err)
+      feedback.showError("Approval failed.")
+      return
     }
   }
 
   try {
     await context.state.contract!.registerCandidateAsync(
-      CryptoUtils.Uint8ArrayToB64(candidate.address.local.bytes),
+      CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
       candidate.fee,
       candidate.name,
       candidate.description,
@@ -428,6 +426,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
 
     feedback.showSuccess("Successfully registered.")
   } catch (err) {
+    console.error(err)
     feedback.showError("Error while registering. Please contact support.")
   }
 }

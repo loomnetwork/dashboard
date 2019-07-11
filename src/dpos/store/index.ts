@@ -13,7 +13,8 @@ import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, LocalAddress } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
-import { formatTokenAmount } from "@/filters";
+import { formatTokenAmount } from "@/filters"
+import Raven from "raven-js"
 
 const log = debug("dash.dpos")
 
@@ -228,9 +229,6 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
-  const ref = getReferrer()
-  delegation.referrer = ref === "metamask" ? "" : ref
-
   feedback.setTask("Delegate")
 
   const approved = await plasmaModule.approve({
@@ -256,7 +254,16 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Unexpected error while delegating, please contact support.")
+    Raven.setUserContext({
+      eth: context.state.contract!.caller.local.toString(),
+      delegations: JSON.stringify({
+        amount: delegation.amount.toString(),
+        lockTimeTier: delegation.lockTimeTier,
+        validator: delegation.validator.address.local.toString(),
+      }),
+    })
     console.error(error)
+    Raven.captureException(error)
   }
 }
 

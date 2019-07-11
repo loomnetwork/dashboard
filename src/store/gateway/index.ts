@@ -41,6 +41,10 @@ function initialState(): GatewayState {
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
     checkMarketplaceURL: "",
+    gateways: {
+      ethereum: null,
+      plasma: null,
+    },
   }
 }
 
@@ -59,6 +63,7 @@ export const gatewayModule = {
   checkIfPastWithdrawalEventExists: builder.read(checkIfPastWithdrawalEventExists),
 
   // gateway
+  initEthereumGateways: builder.dispatch(EthereumGateways.initEthereumGateways),
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),

@@ -14,10 +14,14 @@ import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { Funds } from "@/types"
+
+import Storage from "@/services/storage"
+
+import {EthereumGatewayAdapter } from "@/store/gateway/types"
 import { ethereumModule } from "../ethereum"
 import { feedbackModule as fb, feedbackModule } from "@/feedback/store"
 
-import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+import { ActionContext, WithdrawalReceiptsV2, Gateways } from "./types"
 // XXX
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
@@ -29,22 +33,12 @@ import { AbiItem } from "web3-utils"
 import debug from "debug"
 import { tokenService } from "@/services/TokenService"
 import { i18n } from "@/i18n"
+import { doesNotReject } from "assert"
+import { DOMAIN_NETWORK_ID } from "@/utils.js"
 
 const log = debug("dash.gateway.ethereum")
 
-/**
- * each token has specic methods for deposit and withdraw (and specific contract in case of loom coin)
- * EthereumGatewayAdapter is a simple abstraction to make those APIs uniform
- */
-interface EthereumGatewayAdapter {
-  token: string
-  contract: ERC20Gateway_v2 | Gateway
-
-  deposit(amount: BN, address: string)
-  withdraw(receipt: IWithdrawalReceipt)
-}
-
-class ERC20GatewayAdapter implements EthereumGatewayAdapter {
+export class ERC20GatewayAdapter implements EthereumGatewayAdapter {
   constructor(
     private vmc: ValidatorManagerContract | null,
     readonly contract: ERC20Gateway_v2 | Gateway,
@@ -149,12 +143,14 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
   }
 }
 
-let instance: EthereumGateways | null = null
-export async function init(
-  web3: Web3,
-  addresses: { mainGateway: string; loomGateway: string },
-  multisig: boolean,
-) {
+export async function initEthereumGateways(
+  context: ActionContext,
+  payload: {
+    web3: Web3,
+    addresses: { mainGateway: string; loomGateway: string },
+    multisig: boolean,
+  }) {
+  const { web3, addresses, multisig } = payload
   const ERC20GatewayABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
   const GatewayABI: AbiItem[] = multisig ? GatewayABI_v2 : GatewayABI_v1
   // @ts-ignore
@@ -181,18 +177,14 @@ export async function init(
   } else {
     log("Assuming oracle sig gateways")
   }
-  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
-  return instance
-}
-
-export function service() {
-  return instance!
+  const instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
+  context.state.gateways.ethereum = instance
 }
 
 /**
  * A service to make interactions with ethereum gateways easier
  */
-class EthereumGateways {
+export class EthereumGateways implements Gateways {
   private adapters = new Map<string, EthereumGatewayAdapter>()
 
   /**
@@ -253,7 +245,7 @@ class EthereumGateways {
  */
 export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
-  const gateway = service().get(funds.symbol)
+  const gateway = context.state.gateways.ethereum!.get(symbol)
   if (funds.symbol === "ETH") {
     feedbackModule.setTask("ETH deposit")
     feedbackModule.setStep("Depositing ETH")
@@ -351,16 +343,15 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     }
     token = tokenInfo.symbol
   }
-
-  const gateway = service().get(token)
+  const gateway = context.state.gateways.ethereum!.get(token)
   fb.showLoadingBar(true)
   try {
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
+    Storage.set("pendingWithdrawal", true)
     await gateway.withdraw(receipt)
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
     // imToken throws even if transaction succeeds
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+    Storage.set("pendingWithdrawal", false)
     if ("imToken" in window) {
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {
@@ -368,14 +359,14 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       fb.showError("Withdraw failed, please try again or contact support.")
     }
   }
-  localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+  Storage.set("pendingWithdrawal", false)
   fb.showLoadingBar(false)
 }
 
 export async function refreshEthereumHistory(context: ActionContext) {
   const ethereum = context.rootState.ethereum
   const cached = ethereum.history
-  const { loomGateway } = service()
+  const { loomGateway } = context.state.gateways.ethereum!
   const fromBlock = cached.length ? cached[0].blockNumber : 0
   const address = ethereum.address
   const range = {

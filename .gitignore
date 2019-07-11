@@ -28,3 +28,6 @@ migrations
 
 # the google sheet key
 ZBBattleGround-card-sheet-key.json
+
+.nyc_output/
+coverage/

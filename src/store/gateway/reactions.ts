@@ -42,7 +42,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         await initializeGateways(mapping, store.state.gateway.multisig)
 
         const plasmaGateways = PlasmaGateways.service()
-        const ethereumGateways = EthereumGateways.service()
+        const ethereumGateways = store.state.gateway.gateways.ethereum!
 
         // Listen to approval & deposit events
         listenToDepositApproval(
@@ -77,7 +77,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
       if (/^plasma.+addToken$/.test(action.type)) {
         // TDODO check if token is mapped in ethereum gateway
         ethereumModule.initERC20(action.payload)
-        const ethereumGateways = EthereumGateways.service()
+        const ethereumGateways = store.state.gateway.gateways.ethereum!
         const ethTokenAddress = tokenService.getTokenAddressBySymbol(action.payload, "ethereum")
         const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
         // tmp
@@ -89,16 +89,18 @@ export function gatewayReactions(store: Store<DashboardState>) {
   })
 
   async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
+    const web3 = ethereumModule.web3
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
     }
     try {
-      const ethereumGateway = await EthereumGateways.init(
-        ethereumModule.web3,
+      await gatewayModule.initEthereumGateways({
+        web3,
         addresses,
         multisig,
-      )
+      })
+      const ethereumGateway = gatewayModule.state.gateways.ethereum!
       const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
       ethereumGateway.add("LOOM", loomAddr)
       ethereumGateway.add("ETH", "") // Ether does not have a contract address

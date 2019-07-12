@@ -70,15 +70,16 @@ export default class TransferGateway extends Vue {
   tokenMappingFields = [{ key: "id", label: "Id"},
   { key: "created_at", label: "Created At" },
   { key: "token_owner", label: "Token Owner"},
-  { key: "token_kind", label: "Token Kind", formatter: value => { return _.invert(TransferGatewayTokenKind)[value] }},
+  { key: "token_kind", label: "Token Kind", formatter: value => { return this.getKeyByValue(TransferGatewayTokenKind, value) }},
   { key: "token_amount", label: "Token Amount", formatter: value => { return formatTokenAmount(value, 18, 0) }, tdClass: "align-right-td"},
   { key: "topic", label: "Topic"}
   ]
 
   viewerAddress: string = ""
-  CHAIN = "plasma"
 
-  tokenMapData: Object = {}
+  tokenMapData: Object = {
+    total: 0
+  }
 
   notFound: boolean = false
   isBusy: boolean = false
@@ -102,7 +103,9 @@ export default class TransferGateway extends Vue {
   async getLogs(address: string, page: number) {
     this.isBusy = true
     this.viewerAddress = address
-    this.tokenMapData = await this.getContractLogs({contractAddress: this.viewerAddress, page: page}).then(this.isBusy = false)
+    this.tokenMapData = await this.getContractLogs({contractAddress: this.viewerAddress, page: page})
+
+    this.isBusy = false
     // when didnt get any record => display 'not found'
     this.tokenMapData.total === 0 ? this.notFound = true : this.notFound = false
   }
@@ -115,7 +118,7 @@ export default class TransferGateway extends Vue {
       }
       //
       else {
-        this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), this.CHAIN)
+        this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
         this.getLogs(this.viewerAddress, 1)
       }
     } else {
@@ -126,6 +129,10 @@ export default class TransferGateway extends Vue {
   pageChange(page) {
     this.currentPage = page
     this.getLogs(this.viewerAddress, page)
+  }
+
+  getKeyByValue(obj, value) {
+    return Object.keys(obj).find(key => obj[key] === value);
   }
 
 }

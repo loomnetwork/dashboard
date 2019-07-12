@@ -33,6 +33,7 @@ export default {
       gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",
       fee: 37500,
     },
+    tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
   },
   disabled: [],
   chains: ["ethereum", "binance"],

@@ -246,6 +246,10 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   }
 
   try {
+    // console.log("JUST CONTRACT!", contract)
+    // console.log("DELEGATE CONTRACT!", contract.address.local.toString())
+    // console.log("VALIDATOR ADDRESS", delegation.validator.address.toString())
+
     feedback.setStep("Delegating...")
     await context.state.contract!.delegateAsync(
       delegation.validator.address,

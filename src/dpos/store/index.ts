@@ -3,7 +3,7 @@
  */
 
 import { plasmaModule } from "@/store/plasma"
-import { ZERO } from "@/utils"
+import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
@@ -11,9 +11,10 @@ import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
-import { Address, LocalAddress } from "loom-js"
+import { Address, LocalAddress, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 import { formatTokenAmount } from "@/filters"
+import { ethereumModule } from "@/store/ethereum"
 import Raven from "raven-js"
 
 const log = debug("dash.dpos")
@@ -48,6 +49,8 @@ const dposModule = {
   refreshElectionTime: builder.dispatch(refreshElectionTime),
   refreshValidators: builder.dispatch(refreshValidators),
   refreshDelegations: builder.dispatch(refreshDelegations),
+
+  registerCandidate: builder.dispatch(registerCandidate),
 }
 
 // vuex module as a service
@@ -387,5 +390,50 @@ async function claimRewards(context: ActionContext) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while claiming rewards. Please contact support.")
+  }
+}
+
+/**
+ * NOTE: make sure candiate.pubKey corresponds to rootState.plasma.address
+ * @param context
+ * @param candidate
+ */
+export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
+  const balance = context.rootState.plasma.coins.LOOM.balance
+  const weiAmount = parseToWei("1250000")
+
+  if (balance.lt(weiAmount)) {
+    feedback.showError("Insufficient funds.")
+    return
+  }
+
+  const token = "LOOM"
+  const addressString = context.rootState.dpos.contract!.address.local.toString()
+  const allowance = await plasmaModule.allowance({ token, spender: addressString })
+
+  if (allowance.lt(weiAmount)) {
+    try {
+      await plasmaModule.approve({ symbol: token, weiAmount, to: addressString })
+    } catch (err) {
+      console.error(err)
+      feedback.showError("Approval failed.")
+      return
+    }
+  }
+
+  try {
+    await context.state.contract!.registerCandidateAsync(
+      CryptoUtils.Uint8ArrayToB64(candidate.pubKey),
+      candidate.fee,
+      candidate.name,
+      candidate.description,
+      candidate.website,
+      candidate.whitelistLocktimeTier,
+    )
+
+    feedback.showSuccess("Successfully registered.")
+  } catch (err) {
+    console.error(err)
+    feedback.showError("Error while registering. Please contact support.")
   }
 }

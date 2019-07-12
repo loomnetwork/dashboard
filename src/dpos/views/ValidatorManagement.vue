@@ -4,7 +4,6 @@
       <h1>Validator Management</h1>
     </header>
     <Account class="account"/>
-    <b-button variant="outline-primary" style="margin-top: 2%;" @click="example">View Example</b-button>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
     <validator-rewards class="reward"></validator-rewards> 
   </main>
@@ -29,20 +28,13 @@ import ValidatorRewards from "@/dpos/components/ValidatorRewards.vue"
 
 export default class ValidatorManagement extends Vue {
 
-  plasmaAddr = this.state.plasma.address
-
   get state(): DashboardState {
     return this.$store.state
   }
 
   get userAddress() {
-    return this.plasmaAddr
+    return this.state.plasma.address
   }
-
-  example() {
-    this.plasmaAddr = "0x69c48768dbac492908161be787b7a5658192df35"
-  }
-  // exampleAddr = "NO"
   
 }
 </script>

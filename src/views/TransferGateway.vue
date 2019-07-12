@@ -81,7 +81,6 @@ export default class TransferGateway extends Vue {
   tokenMapData: Object = {}
 
   notFound: boolean = false
-
   isBusy: boolean = false
 
   tokenName = ""
@@ -89,35 +88,44 @@ export default class TransferGateway extends Vue {
   currentPage = 1
 
   getContractLogs = gatewayModule.getTokenContractLogs
-
-  exampleAddress = "0xA4E8C3eC456107ea67D3075bf9e3df3a75823Db0"
-
-  searchETH = "NOT FOUND"
-  searchPLASMA = "NOT FOUND"
+  LOOMCOIN_ADDR = "0xA4E8C3eC456107ea67D3075bf9e3df3a75823Db0"
 
   get $state() { return (this.$store.state as DashboardState) }
 
-  async mounted() {
-    // start with 'LOOM' token 
-    this.viewerAddress = tokenService.getTokenAddressBySymbol("LOOM", this.CHAIN)
-    this.tokenMapData = await this.getContractLogs({contractAddress: this.exampleAddress, page: 1})
+  mounted() {
+    // start with 'LOOMCOIN' token 
+    // just for example ( will be delete later )
+    this.viewerAddress = this.LOOMCOIN_ADDR
+    this.getLogs(this.viewerAddress, 1)
+  }
+
+  async getLogs(address: string, page: number) {
+    this.isBusy = true
+    this.viewerAddress = address
+    this.tokenMapData = await this.getContractLogs({contractAddress: this.viewerAddress, page: page}).then(this.isBusy = false)
+    // when didnt get any record => display 'not found'
+    this.tokenMapData.total === 0 ? this.notFound = true : this.notFound = false
   }
 
   viewLogs() {
-    /// if blank => show not found
     if (this.tokenName) {
-      console.log(tokenService.tokenFromAddress(this.tokenName, "ethereum"))
-      // this.searchETH = "ETH:"+tokenService.getTokenAddressBySymbol(this.tokenName, this.PLASMA_CHAIN)
-      // this.searchPLASMA = "PLASMA:"+tokenService.getTokenAddressBySymbol(this.tokenName, this.PLASMA_CHAIN)
-      // this.isBusy = !this.isBusy
+      // this will be delete after
+      if (this.tokenName.toUpperCase() == "LOOMCOIN") { 
+        this.getLogs(this.LOOMCOIN_ADDR, 1)
+      }
+      //
+      else {
+        this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), this.CHAIN)
+        this.getLogs(this.viewerAddress, 1)
+      }
     } else {
-      this.notFound = !this.notFound
+      this.notFound = true
     }
   }
 
-  async pageChange(page) {
+  pageChange(page) {
     this.currentPage = page
-    this.tokenMapData = await this.getContractLogs({contractAddress: this.exampleAddress, page: page})
+    this.getLogs(this.viewerAddress, page)
   }
 
 }

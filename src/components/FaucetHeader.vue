@@ -141,10 +141,10 @@ const MENU = {
       to: "/",
       text: "components.faucet_sidebar.transfer_gateway",
     },
-    {
-      to: "/",
-      text: "components.faucet_sidebar.validator_management",
-    },
+    // {
+    //   to: "/",
+    //   text: "components.faucet_sidebar.validator_management",
+    // },
   ],
   help: [
     {

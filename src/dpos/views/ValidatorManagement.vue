@@ -5,7 +5,7 @@
     </header>
     <Account class="account"/>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
-    <validator-rewards class="reward"></validator-rewards> 
+    <validator-rewards class="reward" v-if="isValidator"></validator-rewards> 
   </main>
 </template>
 
@@ -22,7 +22,7 @@ import ValidatorRewards from "@/dpos/components/ValidatorRewards.vue"
     Account,
     Rewards,
     ValidatorExtendedDetail,
-    ValidatorRewards
+    ValidatorRewards,
   },
 })
 
@@ -35,7 +35,11 @@ export default class ValidatorManagement extends Vue {
   get userAddress() {
     return this.state.plasma.address
   }
-  
+
+  get isValidator() {
+    const isValidator = this.state.dpos.validators.find((validator) => validator.addr === this.userAddress)
+    return isValidator ? true : false
+  }
 }
 </script>
 

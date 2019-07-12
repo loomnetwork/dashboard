@@ -9,7 +9,7 @@
     no-close-on-backdrop
     no-close-on-esc
   >
-    <h6>Select a validator : {{ validatorSelected }}</h6>
+    <h6>Select a validator :</h6>
     <b-list-group class="mb-4">
       <b-list-group-item
         class="flex-column align-items-start"
@@ -61,9 +61,7 @@ export default class RedelegateModal extends Vue {
   set visible(val: boolean) {
     // clear
     if (val === false) {
-      dposModule.clearRequest()
-      this.errorMsg = ""
-      this.itemSelected = -1
+      this.resetModal()
     }
   }
 
@@ -93,7 +91,7 @@ export default class RedelegateModal extends Vue {
     // for now redelegate all
     delegation.updateAmount = delegation.amount
     dposModule.redelegate(delegation)
-    dposModule.clearRequest()
+    this.resetModal()
   }
 
   get items() {
@@ -110,6 +108,12 @@ export default class RedelegateModal extends Vue {
     this.delegation!.updateValidator = validator
     this.itemSelected = index
     this.$forceUpdate()
+  }
+
+  resetModal() {
+    dposModule.clearRequest()
+    this.errorMsg = ""
+    this.itemSelected = -1
   }
 }
 </script>

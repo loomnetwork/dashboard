@@ -9,8 +9,9 @@
     no-close-on-backdrop
     no-close-on-esc
   >
-    <h6>Select a validator : {{ validatorSelected }}</h6>
-    <b-list-group class="mb-4">
+    <h6>Select a validator:</h6>
+    <b-input placeholder="Search..." type="search" @input="onInput" class="mb-2"></b-input>
+    <b-list-group flush class="mb-4">
       <b-list-group-item
         class="flex-column align-items-start"
         v-for="(validator, index) in items" :key="index"
@@ -26,6 +27,9 @@
           <small>Total staked: {{ validator.totalStaked | tokenAmount }}</small>
         </span>
       </b-list-group-item>
+      <div v-if="items.length === 0" class="not-found">
+        No validator found.
+      </div>
     </b-list-group>
     <strong v-if="errorMsg" class="error-message mb-4">{{ errorMsg }}</strong>
     <footer class="row">
@@ -52,6 +56,13 @@ import { Validator } from "@/dpos/store/types"
 export default class RedelegateModal extends Vue {
   errorMsg = ""
   itemSelected = -1
+  items: Validator[] = []
+
+  mounted() {
+    this.$root.$on("bv::modal::show", () => {
+      this.onInput("")
+    })
+  }
 
   get visible() {
     const dpos = this.state.dpos
@@ -61,9 +72,7 @@ export default class RedelegateModal extends Vue {
   set visible(val: boolean) {
     // clear
     if (val === false) {
-      dposModule.clearRequest()
-      this.errorMsg = ""
-      this.itemSelected = -1
+      this.resetModal()
     }
   }
 
@@ -93,15 +102,30 @@ export default class RedelegateModal extends Vue {
     // for now redelegate all
     delegation.updateAmount = delegation.amount
     dposModule.redelegate(delegation)
-    dposModule.clearRequest()
+    this.resetModal()
   }
 
-  get items() {
+  onInput(value) {
     if (!this.visible) return []
-    return this.validators.filter((validator) =>
-      !validator.isBootstrap &&
-      this.delegation!.validator.addr !== validator.addr,
-    )
+    const validators = this.validators
+    const origin = this.delegation!.validator.addr
+    const str = value.toLowerCase()
+    if (value.length > 0) {
+      this.items = validators.filter((validator) =>
+        !validator.isBootstrap &&
+        origin !== validator.addr &&
+        validator.name.toLowerCase().includes(str),
+      ).sort((a, b) => {
+        return a.name.localeCompare(b.name)
+      })
+    } else {
+      this.items = validators.filter((validator) =>
+        !validator.isBootstrap &&
+        origin !== validator.addr,
+      ).sort((a, b) => {
+        return a.name.localeCompare(b.name)
+      })
+    }
   }
 
   onItemClicked(validator, index) {
@@ -110,6 +134,12 @@ export default class RedelegateModal extends Vue {
     this.delegation!.updateValidator = validator
     this.itemSelected = index
     this.$forceUpdate()
+  }
+
+  resetModal() {
+    dposModule.clearRequest()
+    this.errorMsg = ""
+    this.itemSelected = -1
   }
 }
 </script>
@@ -126,64 +156,23 @@ export default class RedelegateModal extends Vue {
   display: block;
 }
 
-.dropdown-container {
-  width: 100%;
-  .v-autocomplete {
-    width: 100%;
-    input {
-      width: 100%;
-      border: 2px solid #f2f1f3;
-      padding: 4px 12px;
-    }
-  }
-  .v-autocomplete-list {
-    width: 100%;
-    max-height: 240px;
-    overflow-y: auto;
-    z-index: 9;
-    background-color: #ffffff;
-    border: 2px solid #f2f1f3;
-    .v-autocomplete-list-item {
-      cursor: pointer;
-      padding: 6px 12px;
-      border-bottom: 2px solid #f2f1f3;
-      text-align: center;
-      &:last-child {
-        border-bottom: none;
-      }
-      &:hover {
-        background-color: #eeeeee;
-      }
-    }
-  }
-}
-
-.delegations-list-item {
-  cursor: pointer;
-}
-
-.delegations-list-item:hover {
-  background-color: #007bff;
-  color: #ffffff;
-}
-
-.active-delegations-list-item {
-  background-color: #007bff;
-  color: #ffffff;
-}
-
-.disabled-delegations-list-item {
-  opacity: 0.5;
-  pointer-events: none !important;
-  cursor: not-allowed;
-}
-
 .list-group {
-  max-height: 400px;
-  overflow-y: scroll;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .list-group-item {
   cursor: pointer;
+
+  &:first-of-type {
+    border-top: 0;
+  }
+}
+
+.not-found {
+  cursor: default;
+  text-align: center;
+  padding: 0.75rem;
 }
 </style>

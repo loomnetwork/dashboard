@@ -77,9 +77,7 @@ export default class TransferGateway extends Vue {
 
   viewerAddress: string = ""
 
-  tokenMapData: Object = {
-    total: 0
-  }
+  tokenMapData: any
 
   notFound: boolean = false
   isBusy: boolean = false

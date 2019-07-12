@@ -124,12 +124,9 @@ async function checkIfPastWithdrawalEventExists() {
 }
 
 async function getTokenContractLogs(context: ActionContext, payload: {contractAddress: string, page: number} ) {
-  let tokenMapLogs: object[] = []
   let indexerUrl = context.state.tokenContractLogsURL.replace("{address}", payload.contractAddress)
   indexerUrl += `?page=${payload.page}`
 
-  await Axios.get(indexerUrl).then((response) => {
-    tokenMapLogs = response.data
-  })
-  return tokenMapLogs
+  const response = await Axios.get(indexerUrl)
+  return response.data
 }

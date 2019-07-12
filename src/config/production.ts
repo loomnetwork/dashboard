@@ -35,6 +35,7 @@ export default {
     chains: ["ethereum"],
     multisig: false,
     checkMarketplaceURL: "https://auth.loom.games/wallet/address?address={address}&wallet=eth",
+    tokenContractLogsURL: "https://api.loom.games/plasma/tokencontract/eth:{address}",
   },
   coinDataUrl: "https://auth.loom.games/wallet/tokens",
   disabled: ["transfer-asset", "binance"],

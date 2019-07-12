@@ -12,6 +12,9 @@ import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
 import * as mutations from "./mutations"
 import { ethereumModule } from "../ethereum"
+import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
+import { ActionContext } from "./types"
+import Axios from "axios"
 
 const log = debug("dash.gateway")
 
@@ -42,6 +45,7 @@ function initialState(): GatewayState {
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
     checkMarketplaceURL: "",
+    tokenContractLogsURL: "",
   }
 }
 
@@ -58,6 +62,8 @@ export const gatewayModule = {
 
   withdrawalInProgress: builder.read(withdrawalInProgress),
   checkIfPastWithdrawalEventExists: builder.read(checkIfPastWithdrawalEventExists),
+
+  getTokenContractLogs: builder.dispatch(getTokenContractLogs),
 
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
@@ -115,4 +121,15 @@ async function checkIfPastWithdrawalEventExists() {
   }) ? true : JSON.parse(
     localStorage.getItem("pendingWithdrawal") || "false",
   ) ? true : false
+}
+
+async function getTokenContractLogs(context: ActionContext, payload: {contractAddress: string, page: number} ) {
+  let tokenMapLogs: object[] = []
+  let indexerUrl = context.state.tokenContractLogsURL.replace("{address}", payload.contractAddress)
+  if (payload.page) { indexerUrl += `?page=${payload.page}` }
+
+  await Axios.get(indexerUrl).then((response) => {
+    tokenMapLogs = response.data
+  })
+  return tokenMapLogs
 }

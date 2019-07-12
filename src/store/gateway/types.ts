@@ -18,6 +18,7 @@ export interface GatewayConfig {
   multisig: boolean
   chains: string[]
   checkMarketplaceURL: string
+  tokenContractLogsURL: string
 }
 /**
  * Gateway state

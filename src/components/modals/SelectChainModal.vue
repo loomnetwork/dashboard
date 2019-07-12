@@ -6,7 +6,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </template>
-    <b-form-group label="From">
+    <b-form-group :label="label">
       <div class="button-group">
         <div class="chain-option" v-for="chain in chains" :key="chain" @click="onSelect(chain)">
           <p>{{ chain | capitalizeWord }}</p>
@@ -39,6 +39,16 @@ export default class SelectChainModal extends Vue {
     return this.transferRequest.type !== "" && this.transferRequest.chain === ""
   }
 
+  set visible(value) {
+    if (value === false) {
+      this.resetModal()
+    }
+  }
+
+  get label() {
+    return this.transferRequest.type === "DEPOSIT" ? "From" : "To"
+  }
+
   get title() {
     if (this.transferRequest.type) {
       return capitalize(this.transferRequest.type.toLowerCase())
@@ -60,6 +70,7 @@ export default class SelectChainModal extends Vue {
       token: this.transferRequest.token,
     })
   }
+
   resetModal() {
     gatewayModule.clearTransferRequest()
   }

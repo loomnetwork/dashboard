@@ -51,10 +51,12 @@ const initialState: PlasmaState = {
     LOOM: {
       balance: new BN("0"),
       loading: false,
+      decimals: 18,
     },
     ETH: {
       balance: new BN("0"),
       loading: false,
+      decimals: 18,
     },
     // bnb: {
     //   balance: new BN("0"),

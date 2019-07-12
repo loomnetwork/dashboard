@@ -31,5 +31,10 @@ export default {
     chains: ["ethereum", "binance"],
     multisig: true,
     checkMarketplaceURL: "https://stage-auth.loom.games/wallet/address?address={address}&wallet=eth",
+    binance: {
+      gatewayAccount: "",
+      fee: 37500,
+    },
+    tokenContractLogsURL: "https://stage-api.loom.games/plasma/tokencontract/eth:{address}",
   },
 } as DashboardConfig

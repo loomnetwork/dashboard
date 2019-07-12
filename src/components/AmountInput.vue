@@ -6,7 +6,6 @@
           id="input-amount"
           v-model="amount"
           :type="'number'"
-          :decimal="decimal"
           placeholder="Enter amount"
           aria-describedby="input-live-help input-live-feedback"
           @keyup="validateAmount"
@@ -26,6 +25,7 @@ import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
 import { parseToWei } from "@/utils"
 import BigNumber from "bignumber.js"
+import { tokenService } from '../services/TokenService';
 
 @Component
 export default class AmountInput extends Vue {
@@ -42,7 +42,7 @@ export default class AmountInput extends Vue {
   @Prop(String) symbol!: string
   @Prop({ default: true }) round!: boolean
 
-  @Prop({ default: 18 }) decimal!: number
+  @Prop({ default: 18 }) decimals!: number
   /**
    * User input is in token
    */
@@ -52,7 +52,7 @@ export default class AmountInput extends Vue {
   // Call this function when amount changed. emits valud in WEI
   @Watch("amount")
   onAmountChanged(newVal, oldVal) {
-    const amountBN = parseToWei(this.amount.toString(), this.decimal)
+    const amountBN = parseToWei(this.amount.toString(), this.decimals)
     this.$emit("input", amountBN)
   }
 
@@ -63,25 +63,33 @@ export default class AmountInput extends Vue {
   }
 
   validateAmount() {
+    this.decimals = tokenService.getTokenbySymbol(this.symbol).decimals
     const amount = Number(this.amount)
+    const amountBN = parseToWei("" + amount, this.decimals)
+    const max = this.max
+    const min = this.min
+    
     if (!amount) {
       this.errorMsg = "Please enter a valid amount"
       this.$emit("isError", true)
       return
     }
-    if (this.round && Number.isInteger(amount) === false) {
+    if (this.round && Number.isInteger(amount) === false && !amountBN.eq(max)) {
       this.errorMsg = "Only round amounts allowed"
       this.$emit("isError", true)
       return
     }
-    const amountBN = parseToWei("" + amount, this.decimal)
-    const max = this.max
-    const min = this.min
     if (amountBN.gt(max)) {
-      this.errorMsg = this.$t("messages.amount_input_should_less", { amount: formatTokenAmount(max) }).toString()
+      this.errorMsg = this.$t(
+        "messages.amount_input_should_less",
+        { amount: formatTokenAmount(max, this.decimals) }
+      ).toString()
       this.$emit("isError", true)
     } else if (amountBN.lt(min)) {
-      this.errorMsg = this.$t("messages.amount_input_should_more", { amount: formatTokenAmount(min) }).toString()
+      this.errorMsg = this.$t(
+        "messages.amount_input_should_more",
+        { amount: formatTokenAmount(min, this.decimals) }
+      ).toString()
       this.$emit("isError", true)
     } else {
       this.errorMsg = ""
@@ -91,16 +99,10 @@ export default class AmountInput extends Vue {
 
   // Button Action
   setAllAmount() {
-    // todo fix this mess
-    this.amount = Number(
-      this.max.toString().padStart(19, "0")
-        .replace(/(\d{18})$/, ".$1")
-        .replace(/(\.\d{6})\d*$/, "$1")
-    )
+    // @ts-ignore
+    this.amount = formatTokenAmount(this.max, this.decimals)
     this.errorMsg = ""
     this.$emit("isError", false)
-    this.$emit("input", this.max)
-
   }
 
 }

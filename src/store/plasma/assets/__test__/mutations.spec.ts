@@ -41,7 +41,7 @@ const initialState = (): AssetsState => {
   }
 }
 
-describe.only("Game Assets, Mutations", () => {
+describe("Game Assets, Mutations", () => {
   let gameAssetState: AssetsState
   let packType: String[]
   let contract: Contract
@@ -81,11 +81,11 @@ describe.only("Game Assets, Mutations", () => {
   })
 
   it("setCardContract by random environment", () => {
-    const randomEnv = envName[Math.floor(Math.random() * envName.length)]
+    const randomEnv = envName[Math.floor(Math.random() * (envName.length - 1)) + 1]
     // Card contract
     contract = {
       jsonInterface: MigratedZBGCardJSON.abi,
-      address: packAddresses[randomEnv].address,
+      address: MigratedZBGCardJSON.networks[randomEnv].address,
     }
     mutations.setCardContract(gameAssetState, contract as MigratedZBGCard)
     expect(gameAssetState.cardContract).to.eql(contract)

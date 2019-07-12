@@ -6,29 +6,45 @@
     </header>
     <b-alert fade :show="showHelp">
       Check your token balances
-      <hr>
+      <hr />
       <div class="helpAlert">
-        <p><b>Deposit</b> : Deposit to Plasmachain from Ethereuem</p>
-        <p><b>Withdraw</b> : Withdraw to Ethereum </p>
+        <p>
+          <b>Deposit</b> : Deposit to Plasmachain from Ethereuem
+        </p>
+        <p>
+          <b>Withdraw</b> : Withdraw to Ethereum
+        </p>
         <b>Transfer</b> : Transfer tokens to other PlasmaChain accounts
       </div>
     </b-alert>
-    <Account/>
+    <Account />
     <b-card class="balances" no-body>
+      <b-card-header class="custom-card-header d-flex justify-content-between">
+        <h5>Tokens</h5>
+        <a @click="refreshAllTokens">
+          <fa :icon="['fas', 'sync']" class="refresh-icon" />
+        </a>
+      </b-card-header>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
         <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
           <label class="symbol">{{symbol}}</label>
-          <span class="balance">{{plasma.coins[symbol].balance | tokenAmount}}</span>
+          <span
+            class="balance"
+          >{{plasma.coins[symbol].balance | tokenAmount(plasma.coins[symbol].decimals, 3)}}</span>
           <b-button-group class="actions">
             <b-button
+              style="display:flex"
               class="button"
               variant="outline-primary"
               :disabled="disableDeposit"
               @click="requestCrossChainTranfer(DEPOSIT, symbol)"
-            >Deposit</b-button>
+            >
+              Deposit
+              <b-badge variant="warning" v-if="symbol in ethereumAllowances">!</b-badge>
+            </b-button>
             <b-button
               class="button"
               variant="outline-primary"
@@ -36,13 +52,6 @@
               @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
               <span>Withdraw</span>
-              <!-- <b-spinner
-                v-if="!pastTxHasExpired"
-                variant="primary"
-                label="Spinning"
-                class="ml-2"
-                small
-              /> -->
             </b-button>
             <b-button
               class="button"
@@ -57,12 +66,12 @@
         <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
       </b-card-footer>
     </b-card>
-    <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken"/>
-    <add-token-modal @refreshTokenList="filterTokens"/>
-    <DepositForm :token="selectedToken"/>
-    <WithdrawForm :token="selectedToken"/>
-    <SelectChainModal/>
-    <DepositBinance/>
+    <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken" />
+    <add-token-modal @refreshTokenList="filterTokens" />
+    <DepositForm :token="selectedToken" />
+    <WithdrawForm :token="selectedToken" />
+    <SelectChainModal />
+    <DepositBinance />
   </main>
 </template>
 
@@ -83,10 +92,11 @@ import { PlasmaState } from "@/store/plasma/types"
 import { gatewayModule } from "@/store/gateway"
 import { plasmaModule } from "@/store/plasma"
 
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import { getWalletFromLocalStorage } from "../utils"
 import { ethereumModule } from "@/store/ethereum"
 import { feedbackModule } from "@/feedback/store"
+import { Subscription, timer } from "rxjs"
 
 @Component({
   components: {
@@ -115,8 +125,12 @@ export default class DepositWithdraw extends Vue {
   selectChainModalType: string = ""
   coins = this.plasma.coins
 
+  refreshTimer: Subscription | null = null
+
   // get the full list from state or somewhere else
   filteredSymbols: string[] = []
+
+  ethereumAllowances: { [symbol: string]: { token: TokenData, amount: BN } } = {}
 
   get state(): DashboardState {
     return this.$store.state
@@ -135,7 +149,7 @@ export default class DepositWithdraw extends Vue {
   }
 
   get currentBlockNumber(): number {
-   return ethereumModule.state.blockNumber
+    return ethereumModule.state.blockNumber
   }
 
   get latestWithdrawalBlock(): number {
@@ -164,6 +178,27 @@ export default class DepositWithdraw extends Vue {
       this.selectedToken = "LOOM"
       this.setShowDepositForm(true)
     }
+
+    this.setRefreshTimer()
+
+  }
+
+  setRefreshTimer() {
+    this.refreshTimer = timer(0, 15000).subscribe(() => {
+      this.refreshAllTokens()
+    })
+  }
+
+  refreshAllTokens() {
+    this.filteredSymbols.forEach(async (symbol) => {
+      await this.refreshBalance(symbol)
+    })
+  }
+
+  beforeDestroy() {
+    if (this.refreshTimer != null) {
+      this.refreshTimer.unsubscribe()
+    }
   }
 
   @Watch("inputFilter")
@@ -178,16 +213,29 @@ export default class DepositWithdraw extends Vue {
       .filter((symbol) => (filter === "" || symbol.includes(filter)))
   }
 
+  @Watch("state.gateway.ethereumAllowances")
+  onDepositAllowanceChange(allowances: Array<{ token: TokenData, amount: BN }>) {
+    console.log("onDepositAllowanceChange")
+    this.ethereumAllowances = allowances.reduce((obj, entry) => {
+      obj[entry.token.symbol] = entry
+      return obj
+    }, {})
+  }
+
   /**
    * set selected token to component state
    * then show selectChain modal
    */
-requestCrossChainTranfer(type: string, token: string) {
+  requestCrossChainTranfer(type: string, token: string) {
     this.selectChainModalType = type
     this.selectedToken = token
-    console.log("dss", this.state.chains)
-    const chain = this.state.chains.length === 1 ? this.state.chains[0] : ""
-    gatewayModule.setTransferRequest({ chain, type, token })
+    // Check if these token has a binance
+    const tokenInfo = tokenService.getTokenbySymbol(token)
+    const possibleChains = this.state.chains.filter((chain) => !!tokenInfo[chain])
+    const chain = (possibleChains.length === 1) ?
+      possibleChains[0] : ""
+
+    gatewayModule.setTransferRequest({ chain: possibleChains[0], type, token })
   }
 
   requestSwap(token: string) {
@@ -230,7 +278,6 @@ requestCrossChainTranfer(type: string, token: string) {
 
 .card.balances {
   margin: 16px auto;
-  max-width: 600px;
   .list-group-item {
     display: flex;
     flex-wrap: wrap;
@@ -250,6 +297,7 @@ requestCrossChainTranfer(type: string, token: string) {
     .balance {
       flex: 1;
       text-align: right;
+      font-variant-numeric: tabular-nums;
     }
     .actions {
       flex: 1;
@@ -277,3 +325,4 @@ requestCrossChainTranfer(type: string, token: string) {
   }
 }
 </style>
+

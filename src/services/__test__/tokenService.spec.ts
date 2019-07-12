@@ -17,11 +17,11 @@ const ETH_CHAIN = "ethereum"
 const PLASMA_CHAIN = "plasma"
 
 const isAddress = (address: string) => {
-  return  /^(0x)[a-fA-F0-9]{40}$/.test(address)
+  return /^(0x)[a-fA-F0-9]{40}$/.test(address)
 }
 
 const isString = (str: string) => {
-  return typeof(str) === "string" && str.length > 0
+  return typeof (str) === "string" && str.length > 0
 }
 
 describe("TokenService", () => {
@@ -45,9 +45,10 @@ describe("TokenService", () => {
     })
     it("Should get TokenData that contain symbol ETH", () => {
       const eth_token: TokenData = {
-        symbol : "ETH",
+        symbol: "ETH",
         ethereum: "0x".padEnd(42, "0"),
         plasma: "0x".padEnd(42, "0"),
+        binance: "",
         decimals: 18,
       }
       const actualToken: TokenData = tokenService.getTokenbySymbol(eth_token.symbol)
@@ -133,9 +134,10 @@ describe("TokenService", () => {
     })
     it("Should get TokenData that contain symbol ETH", () => {
       const eth_token: TokenData = {
-        symbol : "ETH",
+        symbol: "ETH",
         ethereum: "0x".padEnd(42, "0"),
         plasma: "0x".padEnd(42, "0"),
+        binance: "",
         decimals: 18,
       }
       const actualToken = tokenService.getTokenbySymbol(eth_token.symbol)
@@ -199,13 +201,5 @@ describe("TokenService", () => {
       expect(tokenService.tokenFromAddress(invalidAddress, ETH_CHAIN)).to.be.null
     })
   })
-
-  // Local coinDataUrl now is empty, will be test later
-  describe.skip("TokenService on Local Env", () => {
-
-  })
-
-  // Develop coinDataUrl now is empty, will be test later
-  describe.skip("TokenService on Develop Env", () => {})
 
 })

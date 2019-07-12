@@ -262,7 +262,7 @@ export default class FaucetHeader extends Vue {
 }
 
 .refresh-icon {
-  color: #6eb1ff;
+  color: #007bff;
   &:hover {
     transform: rotate(360deg);
     transition: all 0.5s;

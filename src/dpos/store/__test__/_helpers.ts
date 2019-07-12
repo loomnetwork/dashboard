@@ -5,6 +5,7 @@ import { feedbackModule } from "@/feedback/store"
 import sinon from "sinon"
 import { plasmaModule } from "@/store/plasma"
 import { dposModule } from ".."
+import { ethereumModule } from "@/store/ethereum"
 import { dposUtils } from "../reactions"
 
 export function emptyValidator() {
@@ -32,5 +33,7 @@ export const feedbackModuleStub = sinon.stub(feedbackModule)
 export const plasmaModuleStub = sinon.stub(plasmaModule)
 
 export const dposModuleStub = sinon.stub(dposModule)
+
+export const ethereumModuleStub = sinon.stub(ethereumModule)
 
 export const dposUtilsStub = sinon.stub(dposUtils)

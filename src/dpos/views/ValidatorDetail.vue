@@ -218,16 +218,4 @@ main.validator {
   }
 }
 
-.loading-backdrop {
-  position: absolute;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 9999;
-}
 </style>

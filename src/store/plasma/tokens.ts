@@ -235,6 +235,7 @@ export async function approve(
   const { symbol, to, fee } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
+  const token = tokenService.getTokenbySymbol(symbol)
   let weiAmount = payload.weiAmount
 
   // If the transfer requires a fee, approve that also
@@ -262,7 +263,7 @@ export async function approve(
   const approvalAmount = weiAmount.sub(currentAllowance)
   // to do approve allowance - weiAmount
   feedbackModule.setStep(
-    "Approving spending of " + formatTokenAmount(approvalAmount) + " " + payload.symbol,
+    "Approving spending of " + formatTokenAmount(approvalAmount, token.decimals) + " " + payload.symbol,
   )
   try {
     await adapter.approve(to, approvalAmount)
@@ -292,13 +293,14 @@ export async function transfer(
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
+  const token = tokenService.getTokenbySymbol(symbol)
   if (weiAmount.gt(balance)) {
     throw new Error("plasma.transfer.balance.low")
   }
 
   // plasmaModule.refreshBalance(payload.symbol)
   feedbackModule.setStep(
-    `Transfering ${formatTokenAmount(weiAmount)} ${symbol}`,
+    `Transfering ${formatTokenAmount(weiAmount, token.decimals)} ${symbol}`,
   )
   return await adapter.transfer(to, weiAmount)
 }

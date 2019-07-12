@@ -39,6 +39,12 @@ export default class SelectChainModal extends Vue {
     return this.transferRequest.type !== "" && this.transferRequest.chain === ""
   }
 
+  set visible(value) {
+    if (value === false) {
+      this.resetModal()
+    }
+  }
+
   get label() {
     return this.transferRequest.type === "DEPOSIT" ? "From" : "To"
   }
@@ -64,6 +70,7 @@ export default class SelectChainModal extends Vue {
       token: this.transferRequest.token,
     })
   }
+
   resetModal() {
     gatewayModule.clearTransferRequest()
   }

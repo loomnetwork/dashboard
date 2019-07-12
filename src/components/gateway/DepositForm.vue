@@ -10,11 +10,13 @@
     no-close-on-backdrop
     hide-header-close
   >
-    <template slot="modal-title">Deposit {{ token }}</template>
+    <template slot="modal-title">Deposit {{ token }} from {{transferRequest.chain}}</template>
     <div v-if="!status">
       <form>
-        <h6>Token type: {{ token }}</h6>
-        <h6>Your token balance: {{ userBalance | tokenAmount}} {{ token }}</h6>
+        <h6
+          v-if="allowance !== ZERO"
+        >Amount approved : {{allowance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
+        <h6>Your token balance: {{ userBalance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="userBalance"
@@ -52,16 +54,17 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 import BN from "bn.js"
-import { formatToCrypto, parseToWei } from "@/utils"
+import { formatToCrypto, parseToWei, ZERO } from "@/utils"
 import { formatTokenAmount } from "@/filters"
-import { DashboardState } from "../../types"
+import { DashboardState } from "@/types"
 
 import { Funds } from "@/types"
 
-import { gatewayModule } from "../../store/gateway"
+import { gatewayModule } from "@/store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { gatewayReactions } from "../../store/gateway/reactions"
-import { ethereumModule } from '../../store/ethereum';
+import { gatewayReactions } from "@/store/gateway/reactions"
+import { ethereumModule } from "@/store/ethereum"
+import { tokenService } from "@/services/TokenService"
 
 @Component({
   components: {
@@ -69,6 +72,8 @@ import { ethereumModule } from '../../store/ethereum';
   },
 })
 export default class DepositForm extends Vue {
+
+  ZERO = ZERO
 
   @Prop({ required: true }) token!: string // prettier-ignore
 
@@ -115,6 +120,16 @@ export default class DepositForm extends Vue {
     return this.state.gateway.showDepositForm
   }
 
+  get allowance(): BN {
+    const symbol = this.transferRequest.token
+    if ("ETH" === symbol) {
+      return ZERO
+    } else {
+      const allowance = this.state.gateway.ethereumAllowances.find(a => a.token.symbol === symbol)
+      return allowance ? allowance.amount : ZERO
+    }
+  }
+
   errorHandler(val) {
     this.hasErrors = val
   }
@@ -124,8 +139,14 @@ export default class DepositForm extends Vue {
   }
 
   @Watch("visible")
-  refreshBalance(value: boolean) {
-    if (value) ethereumModule.refreshBalance(this.transferRequest.token)
+  refreshBalance(show: boolean) {
+    if (show) {
+      ethereumModule.refreshBalance(this.transferRequest.token)
+
+      if (this.allowance !== ZERO) {
+        this.transferAmount = this.allowance
+      }
+    }
   }
 
   async sendApproval(bvModalEvt) {

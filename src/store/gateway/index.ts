@@ -22,6 +22,7 @@ function initialState(): GatewayState {
     mapping: null,
     withdrawalReceipts: null,
     pendingTransactions: [],
+    ethereumAllowances: [],
     showDepositForm: false,
     showDepositApproved: false,
     showDepositConfirmed: false,
@@ -62,9 +63,14 @@ export const gatewayModule = {
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
+  refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
+  refreshWithdrawalReceipt: builder.dispatch(PlasmaGateways.refreshWithdrawalReceipt),
+
+  // binance
+  binanceResubmitWithdrawal: builder.dispatch(PlasmaGateways.binanceResubmitWithdrawal),
 
   // mapper
   loadMapping: builder.dispatch(Mapper.loadMapping),
@@ -105,7 +111,7 @@ async function checkIfPastWithdrawalEventExists() {
   await gatewayModule.refreshEthereumHistory()
   return ethereumModule.state.history.find((event) => {
     return (event.event === "TokenWithdrawn" &&
-    (event.blockNumber + 15) >= ethereumModule.state.blockNumber)
+      (event.blockNumber + 15) >= ethereumModule.state.blockNumber)
   }) ? true : JSON.parse(
     localStorage.getItem("pendingWithdrawal") || "false",
   ) ? true : false

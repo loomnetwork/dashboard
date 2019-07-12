@@ -149,9 +149,7 @@
             </template>
           </b-modal>          
 
-          <ChainSelector style="width: 250px; margin: 0 auto;"
-                         class="connection-status"
-                         v-if="showChainSelector"/>
+          <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"/>
         </div>
       </main>
     </div>
@@ -192,7 +190,7 @@ export default class FirstPage extends Vue {
   get loomGamesUrl() {
     return this.$state.plasma.loomGamesEndpoint
   }
-
+ 
   set maybeRelentlessUser(val) {
     if (val === false) {
       gatewayModule.setMaybeRelentlessUser(val)
@@ -224,10 +222,6 @@ export default class FirstPage extends Vue {
   */
   get metamaskInstalled() {
     return MetaMaskAdapter.detect()
-  }
-
-  get showChainSelector() {
-    return !(window.location.host === "dashboard.dappchains.com" || window.location.host === "wallet.loomx.io")
   }
 
 }

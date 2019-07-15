@@ -3,7 +3,7 @@ import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { DashboardState, Funds } from "@/types"
 import BN from "bn.js"
 import debug from "debug"
-import { Address, LocalAddress } from "loom-js"
+import { Address } from "loom-js"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { Store } from "vuex"
 import { EventLog } from "web3-core"
@@ -14,7 +14,7 @@ import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
-import { feedbackModule } from "@/feedback/store"
+import * as Sentry from "@sentry/browser"
 
 const log = debug("dash.gateway")
 
@@ -38,10 +38,13 @@ export function gatewayReactions(store: Store<DashboardState>) {
       } else if (mapping.to.isEmpty()) {
         await gatewayModule.checkRelentlessUser(mapping.from.local.toString().toLowerCase())
       } else if (mapping.to!.isEmpty() === false) {
+
+        Sentry.setExtra(mapping.from.chainId, mapping.from.local.toString())
+        Sentry.setExtra(mapping.to.chainId, mapping.to.local.toString())
+
         await setPlasmaAccount(mapping)
         await initializeGateways(mapping, store.state.gateway.multisig)
 
-        const plasmaGateways = PlasmaGateways.service()
         const ethereumGateways = EthereumGateways.service()
 
         // Listen to approval & deposit events
@@ -149,7 +152,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
     // @ts-ignore
     if (receipt && !pastWithdrawalExist) {
-      console.info("Setting unclaimed receipt")
       gatewayModule.setWithdrawalReceipts(receipt)
       return
     }
@@ -202,6 +204,10 @@ function listenToDepositApproval(
       fromBlock: "latest",
     },
     (error, event) => {
+      if (error) {
+        console.log(error)
+        return
+      }
       log(
         `transfer ${event.returnValues.value.toString()}
        tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
@@ -227,6 +233,10 @@ function listenToDeposit(account: string, gw: ERC20Gateway_v2, loom: ERC20) {
       fromBlock: "latest",
     },
     (error, event) => {
+      if (error) {
+        console.log(error)
+        return
+      }
       log(
         `transfer ${event.returnValues.value.toString()}
        tokens from ${event.returnValues.from} to ${event.returnValues.to}`,

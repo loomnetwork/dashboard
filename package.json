@@ -7,7 +7,6 @@
     "build": "vue-cli-service build",
     "test": "NODE_ENV=test ./node_modules/.bin/nyc vue-cli-service test:unit  src/**/*.spec.ts",
     "lint": "vue-cli-service lint",
-    "format": "./node_modules/.bin/eslint --fix src/**/*.ts",
     "test:unit": "vue-cli-service test:unit src/**/*.spec.ts"
   },
   "dependencies": {
@@ -99,6 +98,7 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-plugin-html": "^5.0.3",
     "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^3.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
@@ -115,5 +115,10 @@
     "typescript": "^3.4.3",
     "wait-for-expect": "^1.1.0",
     "window-mock": "^0.0.13"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn lint && yarn test"
+    }
   }
 }

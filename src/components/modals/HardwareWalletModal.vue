@@ -164,8 +164,8 @@ export default class HardwareWalletModal extends Vue {
     )
     engine.start()
     // @ts-ignore
-    //const web3account = (await .web3!.eth.getAccounts())[0]
-    //console.assert(web3account === selectedAddress,
+    // const web3account = (await .web3!.eth.getAccounts())[0]
+    // console.assert(web3account === selectedAddress,
     //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
 
     // @ts-ignore
@@ -248,7 +248,7 @@ export default class HardwareWalletModal extends Vue {
     // await this.setWeb3Instance()
     try {
       this.loading = true
-      //this.infura = new Web3(new Web3.providers.HttpProvider(this.state.ethereum.endpoint))
+      // this.infura = new Web3(new Web3.providers.HttpProvider(this.state.ethereum.endpoint))
       this.infura = new Web3(web3Provider)
       this.hdWallet = await createWallet()
     } catch (err) {

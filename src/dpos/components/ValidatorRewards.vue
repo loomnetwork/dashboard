@@ -51,7 +51,7 @@
 import { Component, Vue } from "vue-property-decorator"
 import { dposModule } from "@/dpos/store"
 import { ZERO } from "@/utils"
-import { HasDPOSState } from '@/dpos/store/types';
+import { HasDPOSState } from "@/dpos/store/types"
 
 
 @Component

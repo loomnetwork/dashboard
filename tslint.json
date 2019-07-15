@@ -7,7 +7,7 @@
     "exclude": [
       "node_modules/**",
       "**/*.json",
-      "src/components/blockExplorer/pbs/*.js"
+      "src/components/blockExplorer/pbs/*.*"
     ]
   },
   "rules": {

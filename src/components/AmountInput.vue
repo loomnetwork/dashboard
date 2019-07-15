@@ -25,7 +25,7 @@ import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
 import { parseToWei } from "@/utils"
 import BigNumber from "bignumber.js"
-import { tokenService } from '../services/TokenService';
+import { tokenService } from "../services/TokenService"
 
 @Component
 export default class AmountInput extends Vue {
@@ -68,7 +68,7 @@ export default class AmountInput extends Vue {
     const amountBN = parseToWei("" + amount, this.decimals)
     const max = this.max
     const min = this.min
-    
+
     if (!amount) {
       this.errorMsg = "Please enter a valid amount"
       this.$emit("isError", true)
@@ -82,13 +82,13 @@ export default class AmountInput extends Vue {
     if (amountBN.gt(max)) {
       this.errorMsg = this.$t(
         "messages.amount_input_should_less",
-        { amount: formatTokenAmount(max, this.decimals) }
+        { amount: formatTokenAmount(max, this.decimals) },
       ).toString()
       this.$emit("isError", true)
     } else if (amountBN.lt(min)) {
       this.errorMsg = this.$t(
         "messages.amount_input_should_more",
-        { amount: formatTokenAmount(min, this.decimals) }
+        { amount: formatTokenAmount(min, this.decimals) },
       ).toString()
       this.$emit("isError", true)
     } else {

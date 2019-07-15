@@ -96,7 +96,7 @@ import { Component } from "vue-property-decorator"
 import { plasmaModule } from "@/store/plasma"
 import { BModal } from "bootstrap-vue"
 import { feedbackModule } from "@/feedback/store"
-import { whiteListModule } from "../../whitelist/store";
+import { whiteListModule } from "../../whitelist/store"
 
 @Component({
 })

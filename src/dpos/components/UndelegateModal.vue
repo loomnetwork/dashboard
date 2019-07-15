@@ -18,7 +18,6 @@
           :max="delegation.amount"
           v-model="delegation.updateAmount"
           :symbol="token"
-          @isError="errorHandler"
         />
       </div>
     </b-form-group>
@@ -42,7 +41,7 @@ import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState, DPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
-import AmountInput from "@/components/AmountInput.vue";
+import AmountInput from "@/components/AmountInput.vue"
 const MULTIPLIER = new BN("10").pow(new BN("18"))
 
 @Component({
@@ -90,10 +89,6 @@ export default class DelegateModal extends Vue {
   get isAmountValid() {
     const d = this.delegation
     return d && d.updateAmount.gt(ZERO) && d.updateAmount.lte(d.amount)
-  }
-
-  errorHandler() {
-
   }
 
   cancel() {

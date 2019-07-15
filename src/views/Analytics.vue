@@ -22,7 +22,7 @@ import Chart from "chart.js"
 import { Component } from "vue-property-decorator"
 
 import { DashboardState } from "../types"
-import { timer } from 'rxjs';
+import { timer } from "rxjs"
 
 @Component
 export default class Analytics extends Vue {

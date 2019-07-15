@@ -12,7 +12,7 @@
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
 import { feedbackModule } from "@/feedback/store"
-import { isAfter } from 'date-fns';
+import { isAfter } from "date-fns"
 
 @Component
 export default class FeedbackAlert extends Vue {

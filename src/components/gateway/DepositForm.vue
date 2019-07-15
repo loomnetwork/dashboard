@@ -125,7 +125,7 @@ export default class DepositForm extends Vue {
     if ("ETH" === symbol) {
       return ZERO
     } else {
-      const allowance = this.state.gateway.ethereumAllowances.find(a => a.token.symbol === symbol)
+      const allowance = this.state.gateway.ethereumAllowances.find((a) => a.token.symbol === symbol)
       return allowance ? allowance.amount : ZERO
     }
   }

@@ -118,7 +118,7 @@ export default class FaucetSidebar extends Vue {
       },
       {
         to: "/validator-management",
-        text: "Validator Management"
+        text: "Validator Management",
       },
     ],
     help: [
@@ -130,7 +130,7 @@ export default class FaucetSidebar extends Vue {
         to: "/feedback",
         text: "components.faucet_sidebar.feedback_form",
       },
-    ]
+    ],
   }
 
   get state(): DashboardState {

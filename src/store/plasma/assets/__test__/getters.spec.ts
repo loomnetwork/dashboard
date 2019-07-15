@@ -41,7 +41,7 @@ const initialState = (): AssetsState => {
 
 describe("Game Assets, Getters", () => {
   let gameAssetState: AssetsState
-  let packType: String[]
+  let packType: string[]
   let contract: Contract
   const envName = ["local", "asia1", "us1", "plasma"]
 

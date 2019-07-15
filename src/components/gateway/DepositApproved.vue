@@ -48,8 +48,8 @@ import { Component } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { DashboardState } from "@/types"
-import { gatewayModule } from '@/store/gateway'
-import { gatewayReactions } from '@/store/gateway/reactions'
+import { gatewayModule } from "@/store/gateway"
+import { gatewayReactions } from "@/store/gateway/reactions"
 
 @Component
 export default class DepositApproved extends Vue {

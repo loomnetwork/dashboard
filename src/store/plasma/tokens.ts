@@ -1,7 +1,6 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { ERC20 } from "./web3-contracts/ERC20"
-import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import {
   PlasmaContext,
   TransferRequest,
@@ -10,7 +9,7 @@ import {
 } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
-const ERC20ABI = require("loom-js/dist/mainnet-contracts/ERC20.json")
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
 import { tokenService } from "@/services/TokenService"

@@ -147,7 +147,7 @@ async function changeIdentity(
   if (signer === null) {
     // reset client middleware
     ctx.state.client!.txMiddleware = []
-    createDefaultTxMiddleware(
+    ctx.state.client!.txMiddleware = createDefaultTxMiddleware(
       client,
       CryptoUtils.B64ToUint8Array(ctx.state.appId.private),
     )

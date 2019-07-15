@@ -297,7 +297,6 @@ export function initERC20(context: ActionContext, symbol: string) {
   if (contractAddr === undefined) {
     throw new Error("Could not find contract address for " + symbol)
   }
-  const web3: Web3 = ethereumModule.web3!
   // @ts-ignore
   const contract = new web3.eth.Contract(ERC20ABI, contractAddr) as ERC20
   erc20Contracts.set(symbol, contract)

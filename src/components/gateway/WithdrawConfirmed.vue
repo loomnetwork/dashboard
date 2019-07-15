@@ -27,9 +27,9 @@ import { Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
-import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
-import { tokenService } from '../../services/TokenService';
-import { formatTokenAmount } from '../../filters';
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { tokenService } from "../../services/TokenService"
+import { formatTokenAmount } from "../../filters"
 
 @Component
 export default class WithdrawConfirmed extends Vue {
@@ -84,9 +84,9 @@ export default class WithdrawConfirmed extends Vue {
     if (receipt === null) return
     const chainId = receipt.tokenContract.chainId
     const chainMappings = {
-      binance: 'binance',
-      eth: 'ethereum',
-      tron: 'tron'
+      binance: "binance",
+      eth: "ethereum",
+      tron: "tron",
     }
     const chain = chainMappings[chainId]
     const contractAddress = receipt.tokenContract.local
@@ -96,7 +96,7 @@ export default class WithdrawConfirmed extends Vue {
 
     if (chain === "binance") {
       // for binance the token symbol is stored in the address
-      const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join('')
+      const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join("")
       tokenInfo = tokenService.getTokenbySymbol(symbol)
     } else {
       tokenInfo = tokenService.tokenFromAddress(contractAddrStr, chain)

@@ -80,11 +80,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue"
 import { Component, Watch, Prop } from "vue-property-decorator"
 import { HasDPOSState } from "@/dpos/store/types"
 import { formatTokenAmount } from "@/filters"
-import { TextDecoder } from 'util';
+import { TextDecoder } from "util"
 import { formatToLoomAddress } from "@/utils"
 import BN from "bn.js"
 import { dposModule } from "../store"
@@ -116,14 +116,14 @@ export default class ValidatorExtendedDetail extends Vue {
   get validator() {
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress
-      //return validator.addr === this.plasmaAddress 
+      // return validator.addr === this.plasmaAddress
     })
     // console.log("validator ADDR", myValidator!.addr)
     return myValidator ? myValidator : false
   }
 
   decodeUint8Array(key: Uint8Array) {
-    return Buffer.from(key).toString('hex')
+    return Buffer.from(key).toString("hex")
   }
 
 }

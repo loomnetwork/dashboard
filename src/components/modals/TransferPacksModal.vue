@@ -81,8 +81,8 @@ export default class TransferPacksModal extends Vue {
   }
 
   transferPacksHandler() {
-    // @ts-ignore
-    if (parseInt(this.amountToTransfer, 10) > parseInt(this.packToTransfer!.amount, 10) || parseInt(this.amountToTransfer, 10) % 1 !== 0) {
+    if (parseInt("" + this.amountToTransfer, 10) > parseInt("" + this.packToTransfer!.amount, 10) ||
+      parseInt("" + this.amountToTransfer, 10) % 1 !== 0) {
       this.showError(this.$t("messages.invalid_amount").toString())
       return
     }

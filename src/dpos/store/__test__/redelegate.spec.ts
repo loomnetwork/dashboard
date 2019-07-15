@@ -11,6 +11,7 @@ import { DPOSState, Delegation, Validator } from "../types"
 import BN from "bn.js"
 import sinon from "sinon"
 import { emptyValidator, feedbackModuleStub } from "./_helpers"
+import { noop } from "rxjs"
 
 function dummyDelegation(validator) {
   return fromIDelegation({
@@ -103,8 +104,8 @@ describe("Redelegation", () => {
         isBootstrap: false,
         active: true,
         addr: "",
-        setCandidateData: () => {},
-        setValidatorData: () => {},
+        setCandidateData: noop,
+        setValidatorData: noop,
       }
       // @ts-ignore
       redelegate({

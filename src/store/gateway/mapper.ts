@@ -9,7 +9,6 @@ import {
   CryptoUtils,
   EthersSigner,
   LocalAddress,
-  createDefaultTxMiddleware,
 } from "loom-js"
 import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
 import { ActionContext } from "./types"
@@ -17,7 +16,6 @@ import { createDefaultClient } from "loom-js/dist/helpers"
 import { feedbackModule } from "@/feedback/store"
 
 import axios from "axios"
-import { state } from "../common"
 
 const log = debug("dash.mapper")
 

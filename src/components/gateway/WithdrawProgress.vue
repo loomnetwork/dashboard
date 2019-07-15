@@ -17,8 +17,8 @@
       >
         <li v-for="(stage, idx) in visibleStates" :key="`stage-${idx}`" class="mb-3 pt-3">
           <div class="icon-container mr-2">
-            <Checkmark v-if="stage.isComplete"/>
-            <b-spinner variant="primary" label="Spinning" v-else/>
+            <Checkmark v-if="stage.isComplete" />
+            <b-spinner variant="primary" label="Spinning" v-else />
           </div>
           <span>{{stage.text}}</span>
         </li>
@@ -38,12 +38,11 @@ import { Component, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { formatToCrypto } from "@/utils"
-import { DashboardState } from "../../types"
-import { gatewayModule } from "../../store/gateway"
-import { gatewayReactions } from "../../store/gateway/reactions"
-import { setShowWithdrawProgress, incrementWithdrawStateIdx } from "../../store/gateway/mutations"
+import { DashboardState } from "@/types"
+import { gatewayModule } from "@/store/gateway"
 
 import Checkmark from "@/components/Checkmark.vue"
+import { noop } from "vue-class-component/lib/util"
 
 @Component({
   components: {
@@ -56,9 +55,8 @@ export default class WithdrawProgress extends Vue {
   states = this.state.gateway.withdrawStates
   withdrawStateIdx = this.state.gateway.withdrawStateIdx
   setShowWithdrawProgress = gatewayModule.setShowWithdrawProgress
-  incrementWithdrawStateIdx = gatewayModule.incrementWithdrawStateIdx
   setWithdrawStateAsCompleted = gatewayModule.setWithdrawStateAsCompleted
-  stateGenerator = () => { }
+  stateGenerator = noop
 
   mounted() {
     this.stateGenerator = this.createGenerator()

@@ -7,6 +7,8 @@ const TerserPlugin = require("terser-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const webpack = require("webpack")
 const baseUrl = "/"
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { DuplicatesPlugin } = require("inspectpack/plugin");
 
 module.exports = {
   //publicPath: baseUrl,
@@ -28,7 +30,11 @@ module.exports = {
     console.log("nodeenv:", process.env.NODE_ENV)
 
     // https://github.com/sindresorhus/got/issues/345
-    let plugins = [new webpack.IgnorePlugin(/^electron$/)]
+    let plugins = [
+      new webpack.IgnorePlugin(/^electron$/),
+      // new DuplicatesPlugin(),
+      // new BundleAnalyzerPlugin(),
+    ]
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -66,8 +72,13 @@ module.exports = {
       }
       config.target = "node"
     }
-
     return {
+      resolve: {
+        alias: {
+          // bn is used by many dependencies so bundle gets bloated with dupe bn code
+          "bn.js": path.resolve(__dirname, "node_modules/bn.js/lib/bn.js"),
+        }
+      },
       plugins: plugins
     }
   },

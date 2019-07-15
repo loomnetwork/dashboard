@@ -1,7 +1,6 @@
 /* eslint-disable no-undef  */
 // PlasmaChain Delegators
 import BootstrapVue from "bootstrap-vue"
-import VueAwesomeSwiper from "vue-awesome-swiper"
 import VueProgressBar from "vue-progressbar"
 import Raven from "raven-js"
 import RavenVue from "raven-js/plugins/vue"
@@ -20,7 +19,6 @@ import Autocomplete from "v-autocomplete"
 import "v-autocomplete/dist/v-autocomplete.css"
 import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import "swiper/dist/css/swiper.css"
 import "animate.css/animate.css"
 
 import { i18n } from "./i18n"
@@ -57,7 +55,6 @@ const log = (message = "", object) => {
 
 Vue.use(VueProgressBar, progressBarOptions)
 Vue.use(BootstrapVue)
-Vue.use(VueAwesomeSwiper, {})
 Vue.use(Autocomplete)
 Vue.use(Progress)
 Vue.use(VueClipboard)

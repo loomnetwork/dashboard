@@ -6,7 +6,6 @@ import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import packAddresses from "@/data/ZBGPackAddresses.json"
 import { AssetsState } from "../types"
 import { PACKS_NAME } from "@/store/plasma/assets/reactions"
-import * as mutations from "../mutations"
 import { expect } from "chai"
 import * as getters from "../getters"
 
@@ -59,7 +58,7 @@ describe("Game Assets, Getters", () => {
       jsonInterface: BoosterPackJSON.abi,
       address: packAddresses[randomEnv][randomPack],
     }
-    mutations.setPacksContract(gameAssetState, {name: randomPack, contract})
+    gameAssetState.packsContract[randomPack] = contract
     const packsInstance = getters.getPacksInstance(gameAssetState)
     expect(gameAssetState.packsContract).to.eql(packsInstance)
     // console.log(packsInstance)
@@ -74,7 +73,7 @@ describe("Game Assets, Getters", () => {
       jsonInterface: MigratedZBGCardJSON.abi,
       address: MigratedZBGCardJSON.networks[randomEnv].address,
     }
-    mutations.setCardContract(gameAssetState, contract as MigratedZBGCard)
+    gameAssetState.cardContract = (contract as MigratedZBGCard)
     const cardInstance = getters.getCardInstance(gameAssetState)
     expect(gameAssetState.cardContract).to.eql(cardInstance)
   })

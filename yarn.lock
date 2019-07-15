@@ -3250,7 +3250,7 @@ chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@^2.0.0, chalk@^2.0.1, chalk@^2.3.0, chalk@^2.4.1, chalk@^2.4.2:
+chalk@^2.0.0, chalk@^2.0.1, chalk@^2.3.0, chalk@^2.4.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   dependencies:
@@ -4278,10 +4278,6 @@ des.js@^1.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
 
-desandro-matches-selector@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/desandro-matches-selector/-/desandro-matches-selector-2.0.2.tgz#717beed4dc13e7d8f3762f707a6d58a6774218e1"
-
 destroy@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
@@ -5071,10 +5067,6 @@ ethjs-util@0.1.6, ethjs-util@^0.1.3:
     is-hex-prefixed "1.0.0"
     strip-hex-prefix "1.0.0"
 
-ev-emitter@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a"
-
 event-pubsub@4.3.0:
   version "4.3.0"
   resolved "https://registry.npmjs.org/event-pubsub/-/event-pubsub-4.3.0.tgz#f68d816bc29f1ec02c539dc58c8dd40ce72cb36e"
@@ -5475,12 +5467,6 @@ find-up@^4.0.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-fizzy-ui-utils@^2.0.0, fizzy-ui-utils@^2.0.4:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/fizzy-ui-utils/-/fizzy-ui-utils-2.0.7.tgz#7df45dcc4eb374a08b65d39bb9a4beedf7330505"
-  dependencies:
-    desandro-matches-selector "^2.0.0"
-
 flat@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npmjs.org/flat/-/flat-4.1.0.tgz#090bec8b05e39cba309747f1d588f04dbaf98db2"
@@ -5559,6 +5545,11 @@ form-data@~2.3.2:
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
+
+fp-ts@^1.0.0, fp-ts@^1.0.1:
+  version "1.19.4"
+  resolved "https://registry.npmjs.org/fp-ts/-/fp-ts-1.19.4.tgz#258ac247b79ac0ea82a91b31b665a93f735e7636"
+  integrity sha512-/gCyXWxe2ncEeXqKqVUOVRDQvN8UVDfPgRsP2coix8YvVNgaxppRiQQ6wZsEuouL0EQFK0yXrqRgzO/NBowMvA==
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -5705,10 +5696,6 @@ get-func-name@^2.0.0:
 get-prototype-of@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/get-prototype-of/-/get-prototype-of-0.0.0.tgz#98772bd10716d16deb4b322516c469efca28ac44"
-
-get-size@^2.0.0, get-size@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/get-size/-/get-size-2.0.3.tgz#54a1d0256b20ea7ac646516756202769941ad2ef"
 
 get-stdin@^4.0.1:
   version "4.0.1"
@@ -6361,6 +6348,18 @@ ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.npmjs.org/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
 
+inspectpack@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/inspectpack/-/inspectpack-4.2.1.tgz#8e1893feb5293458c9d587cb2a8ec70be2e79dd4"
+  integrity sha512-3kraYZ9tfxNYXzBsRTNvluj1oJKlJ6wkD+TZ6Vk9CNI1SZcQ5H/9yskuq1Yzha1Cn/wEX/Qw+g+tSLIP5iGXhg==
+  dependencies:
+    chalk "^2.4.0"
+    io-ts "^1.0.5"
+    io-ts-reporters "^0.0.20"
+    pify "^3.0.0"
+    semver-compare "^1.0.0"
+    yargs "^11.0.0"
+
 internal-ip@^4.3.0:
   version "4.3.0"
   resolved "https://registry.npmjs.org/internal-ip/-/internal-ip-4.3.0.tgz#845452baad9d2ca3b69c635a137acb9a0dad0907"
@@ -6385,6 +6384,21 @@ invert-kv@^1.0.0:
 invert-kv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
+
+io-ts-reporters@^0.0.20:
+  version "0.0.20"
+  resolved "https://registry.npmjs.org/io-ts-reporters/-/io-ts-reporters-0.0.20.tgz#2b8cbb6a2bc4562dae6917a3a413fa2c9851a644"
+  integrity sha512-ZGyPkto96U8exipqA915ZqxIJsaFLavgZIQOEgg4Pa8qgq1Hl9ZKBtN708ZXPzlAGR/jxofrD4QNT8SHowIDVA==
+  dependencies:
+    fp-ts "^1.0.1"
+    io-ts "^1.0.2"
+
+io-ts@^1.0.2, io-ts@^1.0.5:
+  version "1.10.4"
+  resolved "https://registry.npmjs.org/io-ts/-/io-ts-1.10.4.tgz#cd5401b138de88e4f920adbcb7026e2d1967e6e2"
+  integrity sha512-b23PteSnYXSONJ6JQXRAlvJhuw8KOtkqa87W4wDtvMrud/DTJd5X+NpOOI+O/zZwVq6v0VLAaJ+1EDViKEuN9g==
+  dependencies:
+    fp-ts "^1.0.0"
 
 ip-regex@^2.1.0:
   version "2.1.0"
@@ -6681,16 +6695,6 @@ isobject@^2.0.0:
 isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
-
-isotope-layout@^3.0.1:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/isotope-layout/-/isotope-layout-3.0.6.tgz#d5636ec74d68e7e88fa5166fe6396858db00f432"
-  dependencies:
-    desandro-matches-selector "^2.0.0"
-    fizzy-ui-utils "^2.0.4"
-    get-size "^2.0.0"
-    masonry-layout "^4.1.0"
-    outlayer "^2.1.0"
 
 isstream@~0.1.2:
   version "0.1.2"
@@ -7316,7 +7320,7 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4, lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@~4.17.10:
+lodash@4, lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@~4.17.10:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -7448,13 +7452,6 @@ map-visit@^1.0.0:
   resolved "https://registry.npmjs.org/map-visit/-/map-visit-1.0.0.tgz#ecdca8f13144e660f1b5bd41f12f3479d98dfb8f"
   dependencies:
     object-visit "^1.0.0"
-
-masonry-layout@^4.1.0:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/masonry-layout/-/masonry-layout-4.2.2.tgz#d57b44af13e601bfcdc423f1dd8348b5524de348"
-  dependencies:
-    get-size "^2.0.2"
-    outlayer "^2.1.0"
 
 "match-stream@>= 0.0.2 < 1":
   version "0.0.2"
@@ -8441,14 +8438,6 @@ osenv@0, osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
-
-outlayer@^2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/outlayer/-/outlayer-2.1.1.tgz#29863b6de10ea5dadfffcadfa0d728907387e9a2"
-  dependencies:
-    ev-emitter "^1.0.0"
-    fizzy-ui-utils "^2.0.0"
-    get-size "^2.0.2"
 
 "over@>= 0.0.5 < 1":
   version "0.0.5"
@@ -10749,7 +10738,7 @@ swarm-js@0.1.37:
     tar.gz "^1.0.5"
     xhr-request-promise "^0.1.2"
 
-swiper@^4.0.7, swiper@^4.3.5:
+swiper@^4.3.5:
   version "4.4.6"
   resolved "https://registry.yarnpkg.com/swiper/-/swiper-4.4.6.tgz#0dfa9d66e39811c73e96ea55cea61047a4091667"
   dependencies:
@@ -11512,13 +11501,6 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-awesome-swiper@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/vue-awesome-swiper/-/vue-awesome-swiper-3.1.3.tgz#05500b501ffb3fec9bf7eb9985bcf4ae8360ed9e"
-  dependencies:
-    object-assign "^4.1.1"
-    swiper "^4.0.7"
-
 vue-chartjs@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-3.4.0.tgz#669e4453be0676605fc9290b3b581867ccd15c88"
@@ -11612,13 +11594,6 @@ vue@^2.3.3:
 vue@^2.5.16:
   version "2.6.10"
   resolved "https://registry.npmjs.org/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
-
-vueisotope@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/vueisotope/-/vueisotope-3.1.2.tgz#df9d3e32d9770ff97a409d6baca68ec830f03ae7"
-  dependencies:
-    isotope-layout "^3.0.1"
-    lodash "^4.13.1"
 
 vuex-class@^0.3.1:
   version "0.3.2"
@@ -12182,7 +12157,7 @@ webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
 
-webpack-bundle-analyzer@^3.3.0:
+webpack-bundle-analyzer@^3.3.0, webpack-bundle-analyzer@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/webpack-bundle-analyzer/-/webpack-bundle-analyzer-3.3.2.tgz#3da733a900f515914e729fcebcd4c40dde71fc6f"
   dependencies:

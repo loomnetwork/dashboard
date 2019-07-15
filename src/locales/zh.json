@@ -1,4 +1,35 @@
 {
+  "messages": {
+    "user_denied_tx": "You denied the transaction",
+    "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
+    "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
+    "transfer_card_err_tx": "Error Transferring cards: {msg}",
+    "transfer_pack_err_tx": "Error Transferring packs: {msg}",
+    "user_denied_sign_tx": "User denied message signature",
+    "deployer_already_exists": "Deployer alrready exists.",
+    "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
+    "add_deployer_addr_success_tx": "Deployer address added successfully.",
+    "add_key_err_tx": "Error Adding a key: {msg}",
+    "copy_addr_success_tx": "Address copied to clipboard",
+    "copy_addr_err_tx": "Somehow copy didn't work...sorry",
+    "redelegate_success_tx": "Success redelegating stake",
+    "redelegate_err_tx": "Failed to redelegate stake",
+    "delegate_err_tx": "Error delegating",
+    "undelegate_err_tx": "Failed to undelegate",
+    "init_DposUser_err_tx": "Error initDposUser",
+    "switch_dpouser_err_tx": "Error initDposUser",
+    "select_path_err_tx": "无法连接到你的钱包。请重试。",
+    "load_wallet_err_tx": "加载你的钱包账户出错。请重试。",
+    "copied_tx": "复制到剪贴板",
+    "receiver_addr_err_tx": "无效的接收人地址",
+    "invalid_amount": "无效的数量",
+    "invalid_addr": "无效的接收人地址",
+    "amount_input_should_less": "无效的数量。应该少于 {amount}",
+    "amount_input_should_more": "无效的数量。应该多于 {amount}",
+    "awaiting_transaction": "等待交易确认",
+    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
+  },
+  "transfer_all": "All ({amount} LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -101,7 +132,8 @@
       "tokens_pending_deposit": "你有一笔{pendingDepositAmount} 个代币的待处理存款。必须完成此笔存款后才可以进行下一笔。",
       "tokens_pending_withdraw": "你有一笔{pendingWithdrawAmount} 个代币的待处理取款。必须完成此笔取款后才可以进行下一笔。",
       "reclaim_deposit": "取回存款代币",
-      "complete_withdraw": "完成取款"
+      "complete_withdraw": "完成取款",
+      "pending_withdrawal": "Withdrawal pending"
     },
     "my_delegations": {
       "no_delegations": "暂无委托"
@@ -124,7 +156,10 @@
       "updated_amount_loom": "{updatedAmount} 个LOOM",
       "timelock_tier": "可选的计时锁定：",
       "timelock": "计时锁定：",
-      "unlocked": "已解除锁定"
+      "unlocked": "已解除锁定",
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "连接到管理面板节点时出错。请稍后再查看。",
@@ -169,10 +204,37 @@
       "block_explorer": "区块浏览器"
     },
     "faucet_sidebar": {
+      "analytics": "Analytics",
+      "validators": "Validators",
       "my_account": "我的账户",
       "my_delegations": "我的委托",
       "rewards": "奖励",
-      "history": "历史记录"
+      "history": "历史记录",
+      "deposit_withdraw": "Deposit/Withdraw",
+      "faq": "常见问题",
+      "account_explorer": "Account Explorer",
+      "game_assets": "游戏资产",
+      "block_explorer": "区块浏览器",
+      "deploy_to_plasmachain": "部署到 PlasmaChain",
+      "transfer_gateway": "转移网关",
+      "validator_management": "验证者管理",
+      "feedback_form": "联系客服"
+    },
+    "gateway": {
+      "complete_deposit": "完成存入",
+      "approval": {
+        "sending": "正在发送批准请求……",
+        "sent": "批准请求已成功发送。一旦确认你将被要求完成此笔存入。",
+        "success": "已确认批准此笔存入。点击完成存入。",
+        "failure": "存入批准请求发送失败……"
+      },
+      "deposit": {
+        "sending": "正在发送存入请求……",
+        "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
+        "view_confirmation": "View confirmations",
+        "failure": "Deposit failed..."
+      }
     },
     "layout": {
       "metamask_changed": "你刚刚切换了MetaMask帐户。 为避免任何意外行为，应用程序将重新加载",
@@ -183,7 +245,7 @@
       "but_your_current_account_address": "但你当前的以太坊账户地址是：",
       "please_change_your_metamask_account": "请更改你的以太坊帐户",
       "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
-      "sign_wallet": "在你的{walletType} 上，签名以确认你的以太坊身份。（不需要gas）",
+      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": " 你选择的账户已映射。请选择新帐户。"
     },
     "loading_spinner": {
@@ -207,7 +269,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "注意：这12个单词可以帮助你在丢失或损坏的情况下恢复你的钱包。",
-        "you_must_create_a_backup_nbsp": "你必须创建一个备份！&nbsp;",
+        "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "写下来或打印出来，并保存在安全的地方。",
         "without_it_you_will_not": "没有它的话，一旦出现问题，你将无法恢复你的代币。",
         "copy_to_clipboard": "复制到剪贴板"
@@ -218,6 +280,9 @@
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "解锁硬件钱包",
         "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。"
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
       }
     },
     "blockExplorer": {
@@ -251,5 +316,13 @@
         "pending": "待处理"
       }
     }
+  },
+  "events": {
+    "ERC20Received": "Deposit",
+    "event:MainnetDepositEvent": "Deposit",
+    "event:MainnetWithdrawalEvent": "Withdrawal",
+    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "event:TokenWithdrawalSigned": "Withdrawal signed",
+    "TokenWithdrawn": "Token Withdrawn"
   }
 }

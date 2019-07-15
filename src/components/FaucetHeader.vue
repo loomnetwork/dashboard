@@ -141,10 +141,10 @@ const MENU = {
       to: "/",
       text: "components.faucet_sidebar.transfer_gateway",
     },
-    {
-      to: "/",
-      text: "components.faucet_sidebar.validator_management",
-    },
+    // {
+    //   to: "/",
+    //   text: "components.faucet_sidebar.validator_management",
+    // },
   ],
   help: [
     {
@@ -262,7 +262,7 @@ export default class FaucetHeader extends Vue {
 }
 
 .refresh-icon {
-  color: #6eb1ff;
+  color: #007bff;
   &:hover {
     transform: rotate(360deg);
     transition: all 0.5s;

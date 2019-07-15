@@ -139,20 +139,26 @@ class PlasmaGateways {
     return adapter
   }
 
-  add(chain: string, symbol: string, srcChainGateway: Address) {
+  /**
+   *
+   * @param chain
+   * @param symbol
+   * @param srcChainGateway required if srcChain has a gateway contract deployed
+   */
+  add(chain: string, symbol: string, srcChainGateway?: Address) {
     let adapter: PlasmaGatewayAdapter
     switch (symbol) {
       case "LOOM":
         adapter = new LoomGatewayAdapter(
           this.ethereumLoomGateway,
-          srcChainGateway,
+          srcChainGateway!,
           this.mapping,
         )
         break
       case "ETH":
         adapter = new EthGatewayAdapter(
           this.ethereumMainGateway,
-          srcChainGateway,
+          srcChainGateway!,
           this.mapping,
         )
         break
@@ -160,7 +166,7 @@ class PlasmaGateways {
       // temp
       case "BNB":
         if (chain === "binance") {
-          adapter = new BinanceGatewayAdapter(this.binanceGateway, {
+          adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
             token: "BNB",
             amount: new BN(37500),
           })
@@ -171,7 +177,7 @@ class PlasmaGateways {
       default:
         adapter = new ERC20GatewayAdapter(
           this.ethereumMainGateway,
-          srcChainGateway,
+          srcChainGateway!,
           symbol,
           this.mapping,
         )
@@ -200,6 +206,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount, recepient } = funds
   const gateway = service().get(chain, symbol)
   let receipt: IWithdrawalReceipt | null
+  log("plasmaWithdraw", chain, symbol)
 
   try {
     feedback.setTask("withdraw")
@@ -272,6 +279,21 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
 }
 
+export async function binanceResubmitWithdrawal(context: ActionContext) {
+  const gateway = service().binanceGateway
+  feedback.setTask("withdraw")
+  try {
+    feedback.setStep("Completing withdrawal to binance...")
+    await gateway.resubmitWithdrawalAsync()
+
+  } catch (error) {
+    feedback.endTask()
+    feedback.showError("Withdraw failed, please try again.")
+    throw new Error(error)
+  }
+  feedback.endTask()
+}
+
 export function pollReceipt(chain: string, symbol: string) {
   return interval(2000)
     .pipe(
@@ -280,6 +302,16 @@ export function pollReceipt(chain: string, symbol: string) {
       take(1),
     )
     .toPromise()
+}
+
+export async function refreshWithdrawalReceipt(
+  context: ActionContext, { chain, symbol }: { chain: string, symbol: string }) {
+  const receipt = await refreshPendingReceipt(chain, symbol)
+  log("refreshWithdrawalReceipt", chain, symbol, receipt)
+  // @ts-ignore
+  if (receipt !== null) {
+    context.state.withdrawalReceipts = receipt
+  }
 }
 
 async function refreshPendingReceipt(chain: string, symbol: string) {

@@ -8,13 +8,14 @@
   >
     <b-card>
       <h6>Token type: {{ token }}</h6>
-      <h6>Your token balance: {{ balance | tokenAmount}} {{ token }}</h6>
+      <h6>Your token balance: {{ balance | tokenAmount(tokenDecimals)}} {{ token }}</h6>
       <div class="input-section">
-        <span>Amount: (max: {{ balance | tokenAmount}} )</span>
+        <span>Amount: (max: {{ balance | tokenAmount(tokenDecimals)}} )</span>
         <amount-input
           :min="min"
           :max="balance"
           :round="false"
+          :decimals="tokenDecimals"
           :symbol="token"
           v-model="transferWeiAmount"
           @isError="onAmountError"
@@ -38,15 +39,16 @@
 <script lang="ts">
 
 import { Component, Watch, Vue, Prop } from "vue-property-decorator"
-import { PlasmaState } from "../../store/plasma/types"
+import { PlasmaState } from "@/store/plasma/types"
 import { DashboardState } from "@/types"
-import { plasmaModule } from "../../store/plasma"
+import { plasmaModule } from "@/store/plasma"
 import AmountInput from "@/components/AmountInput.vue"
 import BN from "bn.js"
 import { toBigNumber, ZERO } from "@/utils"
-import { BigNumber } from "bignumber.js";
+import { BigNumber } from "bignumber.js"
 import { formatTokenAmount } from "@/filters"
 import InputAddress from "../InputAddress.vue"
+import { tokenService } from "@/services/TokenService"
 
 @Component({
   components: {
@@ -76,6 +78,10 @@ export default class TransferTokensFormModal extends Vue {
   get balance() {
     const balance = this.state.plasma.coins[this.token].balance
     return balance
+  }
+
+  get tokenDecimals() {
+    return this.state.plasma.coins[this.token].decimals
   }
 
   get valid() {

@@ -31,6 +31,7 @@ export interface TokenData {
   symbol: string
   ethereum: string
   plasma: string
+  binance: string
   decimals: number
 }
 
@@ -50,11 +51,30 @@ class TokenService {
         ethereum: data.address.toLowerCase(),
         plasma: data.plasma_addr.toLowerCase(),
         decimals: data.decimal,
+        binance: "",
       }),
     )
     // hack until it's updated in loomauth
-    this.symbols.find((data) => data.symbol === "BNB")!.decimals = 8
-    console.log("tokens registery loaded")
+    const BNB = this.symbols.find((data) => data.symbol === "BNB")!
+    BNB.decimals = 8
+    // disable ethereun
+    BNB.ethereum = ""
+
+    // hack BNB data until we set the right vslues in loomauth token data
+    switch (BNB.plasma) {
+      // asia1
+      case "0xb6f5558ed8fd604dcda28514c4fb39af935c48e9":
+        BNB.binance = "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq"
+        break
+      // us1
+      case "0x6080fcced27a1e0bf15e5e3ac32e3755e19bd4d9":
+        BNB.binance = "tbnb1kzsnp502agsuqw5e8kdh0v2csg4elgaxc4gvxz"
+        break
+      // plasma: not on prod yed
+      // case "":
+      //   BNB.binance = ""
+      //   break
+    }
   }
   /**
    *

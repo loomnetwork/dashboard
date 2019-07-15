@@ -27,8 +27,11 @@ import { ethers } from "ethers"
 import { AbiItem } from "web3-utils"
 
 import debug from "debug"
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import { i18n } from "@/i18n"
+import { ZERO } from "@/utils"
+import { from } from "rxjs"
+import { concatMap, filter, mergeMap, scan, toArray, tap } from "rxjs/operators"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -224,7 +227,7 @@ class EthereumGateways {
   add(token: string, tokenAddress: string) {
     if (this.adapters.has(token)) {
       console.warn(token + " token gateway adapter already set.")
-      return
+      return this.adapters.get(token)
     }
     const { vmc, mainGateway, loomGateway, web3 } = this
     let adapter: EthereumGatewayAdapter
@@ -244,6 +247,28 @@ class EthereumGateways {
     this.adapters.set(token, adapter)
     return adapter
   }
+}
+
+export async function refreshAllowances(context: ActionContext) {
+  const coins = context.rootState.ethereum.coins
+  const gateways = service()
+  const allowances = from(Object.keys(coins))
+    .pipe(
+      // no allowance for eth
+      filter((symbol) => symbol !== "ETH"),
+      tap(log),
+      mergeMap(async (symbol) => {
+        // @ts-ignore
+        const spender = gateways.get(symbol).contract._address
+        const amount = await ethereumModule.allowance({ symbol, spender })
+        return { token: tokenService.getTokenbySymbol(symbol), amount }
+      }),
+      filter((allowance) => allowance.amount.gt(ZERO)),
+      toArray(),
+    ).toPromise()
+
+  context.state.ethereumAllowances = await allowances
+  log("allowances", context.state.ethereumAllowances)
 }
 
 /**
@@ -355,8 +380,8 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const gateway = service().get(token)
   fb.showLoadingBar(true)
   try {
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     await gateway.withdraw(receipt)
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
     // imToken throws even if transaction succeeds
@@ -375,50 +400,40 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
 export async function refreshEthereumHistory(context: ActionContext) {
   const ethereum = context.rootState.ethereum
   const cached = ethereum.history
-  const { mainGateway, loomGateway } = service()
-
+  const { loomGateway } = service()
   const fromBlock = cached.length ? cached[0].blockNumber : 0
-
-  const options = {
-    filter: {
-      from: ethereum.address,
-    },
+  const address = ethereum.address
+  const range = {
     fromBlock,
     toBlock: "latest",
   }
+  const logToHistory = (items, type, token, valueField) => {
+    log("logToHistory", type, token, items)
+    for (const item of items) {
+      const entry = Object.freeze({
+        type,
+        blockNumber: item.blockNumber,
+        transactionHash: item.transactionHash,
+        amount: new BN(item.returnValues[valueField]),
+        token: token || "other",
+      })
+      ethereum.history.push(entry)
+    }
+  }
+  const p1 = loomGateway
+    // @ts-ignore
+    .getPastEvents("LoomCoinReceived", { filter: { from: address }, ...range })
+    .then((results) => logToHistory(results, "ERC20Received", "LOOM", "amount"))
+    .catch((e) => console.error("error loading LoomCoinReceived", e.message))
 
-  // @ts-ignore
-  loomGateway.getPastEvents(
-    "LoomCoinReceived",
-    options,
-    (e, results) => {
-      const entries = results.reverse().map((entry) => ({
-        type: "ERC20Received",
-        blockNumber: entry.blockNumber,
-        transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.value),
-        token: "LOOM",
-      }))
-      ethereum.history.push(...entries)
-    })
+  const p2 = loomGateway
+    // @ts-ignore
+    .getPastEvents("TokenWithdrawn", { filter: { owner: address }, ...range })
+    .then((results) => logToHistory(results, "TokenWithdrawn", "LOOM", "value"))
+    .catch((e) => console.error("error loading TokenWithdrawn", e.message))
 
-  // @ts-ignore
-  loomGateway.getPastEvents(
-    "TokenWithdrawn",
-    options,
-    (e, results) => {
-      console.log(results)
-      const entries = results.reverse().map((entry) => ({
-        type: "TokenWithdrawn",
-        blockNumber: entry.blockNumber,
-        transactionHash: entry.transactionHash,
-        amount: new BN(entry.returnValues.value),
-        token: "LOOM",
-      }))
-      ethereum.history.push(...entries)
-      console.log("ENTRIES", results)
-    })
-
+  await Promise.all(([p1, p2]))
+  ethereum.history.sort((a, b) => b.blockNumber - a.blockNumber)
 }
 
 /**

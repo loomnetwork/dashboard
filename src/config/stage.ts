@@ -35,5 +35,6 @@ export default {
       gatewayAccount: "",
       fee: 37500,
     },
+    tokenContractLogsURL: "https://stage-api.loom.games/plasma/tokencontract/eth:{address}",
   },
 } as DashboardConfig

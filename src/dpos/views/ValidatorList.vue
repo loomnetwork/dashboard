@@ -11,11 +11,11 @@
         >
           <h6>
             Next election in:
-            <election-timer/>
+            <election-timer />
           </h6>
           <h6>
             Total staked amount
-            <h5 class="highlight">{{totalStaked | tokenAmount}} LOOM</h5>
+            <h5 class="highlight">{{totalStaked | tokenAmount(18,0)}} LOOM</h5>
           </h6>
         </b-card>
         <div class="content">
@@ -52,6 +52,7 @@
               :items="validators"
               :fields="validatorFields"
               :sort-desc="false"
+              :sort-compare="sortCompare"
               @row-clicked="showValidatorDetail"
             >
               <template slot="active" slot-scope="data">{{ data.item.active ? "Active" : "" }}</template>
@@ -72,6 +73,7 @@ import { CryptoUtils, LocalAddress } from "loom-js"
 import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from '../../utils';
 import { formatTokenAmount } from "@/filters"
+import BN from "bn.js"
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -93,8 +95,8 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "totalStaked", sortable: true, label: "Total Staked", thClass: "align-center-th", tdClass:"align-right-td" },
-  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass:"align-right-td" },
+  { key: "totalStaked", sortable: true, label: "Total Staked", formatter: value => { return formatTokenAmount(value, 18, 0) }, thClass: "align-center-th", tdClass: "align-right-td" },
+  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass: "align-right-td" },
   ]
 
   get state(): HasDPOSState {
@@ -114,10 +116,10 @@ export default class ValidatorList extends Vue {
       return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
     return storeValidators.map((validator) => ({
-        name: validator.name,
-        active: validator.active,
-        totalStaked: formatTokenAmount(validator.totalStaked),
-        fee: validator.fee
+      name: validator.name,
+      active: validator.active,
+      totalStaked: validator.totalStaked,
+      fee: validator.fee,
     }))
   }
   /**
@@ -130,13 +132,46 @@ export default class ValidatorList extends Vue {
   showValidatorDetail(record, index) {
     this.$router.push(`/validator/${encodeURIComponent(record.name)}`)
   }
+
+  sortCompare(aRow, bRow, key) {
+    const a = aRow[key] // or use Lodash _.get()
+    const b = bRow[key]
+    if (
+      (typeof a === "number" && typeof b === "number") ||
+      (a instanceof Date && b instanceof Date)
+    ) {
+      // If both compared fields are native numbers or both are dates
+      return a < b ? -1 : a > b ? 1 : 0
+    } else if (a instanceof BN && b instanceof BN) {
+      return a.lt(b) ? -1 : a.gt(b) ? 1 : 0
+    } else {
+      // Otherwise stringify the field data and use String.prototype.localeCompare
+      return this.toString(a).localeCompare(this.toString(b), undefined, {
+        numeric: true,
+      })
+    }
+  }
+
+  // Helper function to stringify the values of an Object
+  toString(value) {
+    if (value === null || typeof value === "undefined") {
+      return ""
+    } else if (value instanceof Object) {
+      return Object.keys(value)
+        .sort()
+        .map((key) => this.toString(value[key]))
+        .join(" ")
+    } else {
+      return String(value)
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 tr {
   &:hover {
-    background-color: #5756e60F;
+    background-color: #5756e60f;
     cursor: pointer;
   }
 }

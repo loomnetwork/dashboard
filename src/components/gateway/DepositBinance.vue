@@ -10,11 +10,14 @@
     :hide-header-close="step === 3"
   >
     <!-- <template slot="modal-title">Deposit</template> -->
-    <div class="deposit-container">
+    <div class="deposit-container" v-if="visible">
       <div class="content" v-if="step === 1">
         <div class="description">
           Please go to
-          <a :href="`https://binance.org/en/balances`">https://binance.org/en/balances</a> and fill in the form as showm below.
+          <a
+            :href="`https://binance.org/en/balances`"
+            target="_blank"
+          >https://binance.org/en/balances</a> and fill in the form as shown below.
         </div>
         <div class="deposit-form">
           <p>Send Asset</p>
@@ -24,7 +27,7 @@
           </div>
           <p>Select Asset</p>
           <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
-          <p>Gateway Address</p>
+          <p>To Address</p>
           <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled></b-form-input>
           <p>Amount to send</p>
           <b-form-input placeholder="Amount" value="enter the deposit amount " disabled></b-form-input>
@@ -33,7 +36,7 @@
         </div>
       </div>
       <div class="content" v-else-if="step === 2">
-        <p>Once the transaction is processed on binance, your blance on plasmachain will be updated.</p>
+        <p>Once the transaction is processed on binance, your balance on plasmachain will be updated.</p>
       </div>
     </div>
     <div slot="modal-footer" class="w-100 space-between">
@@ -47,7 +50,9 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { capitalize, formatToLoomAddress } from "@/utils"
-import { DashboardState } from "../../types"
+import { DashboardState } from "@/types"
+import { gatewayModule } from "@/store/gateway"
+import { tokenService } from "@/services/TokenService"
 
 @Component
 export default class DepositBinance extends Vue {
@@ -60,10 +65,9 @@ export default class DepositBinance extends Vue {
       options: [
         { value: token, text: token, disabled: true },
       ],
-      gateway: "<plasma account on binanxe>",
+      gateway: tokenService.getTokenbySymbol(token).binance,
       memo: formatToLoomAddress(this.state.plasma.address),
     }
-
   }
 
   get state(): DashboardState {
@@ -78,6 +82,13 @@ export default class DepositBinance extends Vue {
     return this.transferRequest.chain === "binance"
       && this.transferRequest.type === "DEPOSIT"
   }
+
+  set visible(value) {
+    if (value === false) {
+      gatewayModule.clearTransferRequest()
+    }
+  }
+
   get title() {
     return this.step === 4 ? "Success" : "Deposit to Plasmachain from Binance"
   }

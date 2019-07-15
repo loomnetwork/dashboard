@@ -22,6 +22,8 @@ stages:
 branches:
   only:
     - develop
+    - staging
+    - master
 
 jobs:
   include:

@@ -1,10 +1,8 @@
 <template>
-  <b-alert
-    :show="show"
-    :variant="type"
-    dismissible
-    fade
-  >{{ message }}</b-alert>
+  <b-alert :show="show" :variant="type" fade>
+    {{ message }}
+    <b-button-close @click="close"/>
+  </b-alert>
 </template>
 <script lang="ts">
 import Vue from "vue"
@@ -13,7 +11,7 @@ import { feedbackModule } from "@/feedback/store"
 
 @Component
 export default class FeedbackNotification extends Vue {
-  
+
   get message() {
     return this.$store.state.feedback.notification.message
   }
@@ -24,6 +22,10 @@ export default class FeedbackNotification extends Vue {
 
   get type() {
     return this.$store.state.feedback.notification.type
+  }
+
+  close() {
+    this.$store.state.feedback.notification.message = ""
   }
 }
 </script>

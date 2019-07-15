@@ -37,7 +37,7 @@
     "ethers": "^4.0.27",
     "google-protobuf": "^3.6.0",
     "js-sha256": "^0.9.0",
-    "loom-js": "1.56.0",
+    "loom-js": "1.57.1",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
     "protoc": "^1.0.3",

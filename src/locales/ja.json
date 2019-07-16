@@ -1,6 +1,6 @@
 {
   "messages": {
-    "user_denied_tx": "You denied the transaction",
+    "user_denied_tx": "トランザクションを拒否しました",
     "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
     "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
     "transfer_card_err_tx": "Error Transferring cards: {msg}",

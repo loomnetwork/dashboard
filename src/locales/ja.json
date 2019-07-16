@@ -14,8 +14,8 @@
     "copy_addr_err_tx": "Somehow copy didn't work...sorry",
     "redelegate_success_tx": "Success redelegating stake",
     "redelegate_err_tx": "Failed to redelegate stake",
-    "delegate_err_tx": "Error delegating",
-    "undelegate_err_tx": "Failed to undelegate",
+    "delegate_err_tx": "デリゲートのエラー",
+    "undelegate_err_tx": "デリゲートの終了に失敗しました",
     "init_DposUser_err_tx": "Error initDposUser",
     "switch_dpouser_err_tx": "Error initDposUser",
     "select_path_err_tx": "Can't connect to your wallet. Please try again.",
@@ -224,12 +224,12 @@
       "complete_deposit": "デポジットを完了",
       "approval": {
         "sending": "承認リクエストを送信中...",
-        "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
-        "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
-        "failure": "Failed sending deposit approval request..."
+        "sent": "承認リクエストの送信に成功しました。承認された後、デポジットを完了するよう確認があります。",
+        "success": "デポジットが承認されました。デポジットを完了をクリックして続行してください。",
+        "failure": "デポジット承認リクエストの送信に失敗しました..."
       },
       "deposit": {
-        "sending": "Sending deposit request...",
+        "sending": "デポジットリクエストを送信中...",
         "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
         "view_confirmation": "View confirmations",

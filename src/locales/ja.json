@@ -27,7 +27,7 @@
     "amount_input_should_less": "無効な数量です。{amount}以下にしてください。",
     "amount_input_should_more": "無効な数量です。{amount}以上にしてください。",
     "awaiting_transaction": "トランザクションの承認待ちです",
-    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
+    "metamask_hardware_wizard": "MetaMaskで \"ハードウェアウォレットに接続\"をクリックして接続し、最適なウォレットを選択してください。"
   },
   "transfer_all": "({amount} LOOM) 全て",
   "views": {
@@ -212,7 +212,7 @@
       "history": "履歴",
       "deposit_withdraw": "入金/出金",
       "faq": "よくある質問",
-      "account_explorer": "Account Explorer",
+      "account_explorer": "アカウントエクスプロラー",
       "game_assets": "ゲームアセット",
       "block_explorer": "Block Explorer",
       "deploy_to_plasmachain": "PlasmaChainへのデプロイ",
@@ -230,10 +230,10 @@
       },
       "deposit": {
         "sending": "デポジットリクエストを送信中...",
-        "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
-        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
-        "view_confirmation": "View confirmations",
-        "failure": "Deposit failed..."
+        "sent": "デポジットトランザクションの送信に成功しました。承認後にお知らせします。",
+        "confirmed": "デポジットが承認されました。10回承認された後にPlasma残高が更新されます。",
+        "view_confirmation": "承認を見る",
+        "failure": "デポジットに失敗しました..."
       }
     },
     "layout": {
@@ -245,7 +245,7 @@
       "but_your_current_account_address": "しかし現在あなたのEthereumアカウントアドレスは:",
       "please_change_your_metamask_account": "Ethereumのアカウントを変更してください",
       "please_check_your_metamask_account": "Ethereumのアカウントやネットワークをチェックしてください",
-      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
+      "sign_wallet": "ご自分のウォレットを使ってメッセージに署名し、Ethereum本人確認を行なってください。(ガスは必要ありません)",
       "already_mapped": "選択したアカウントはすでにマッピング済みです。新しいアカウントを選択して下さい。"
     },
     "loading_spinner": {
@@ -282,7 +282,7 @@
         "enter_pin_code": "あなたのledgerでPINコードを入力し、Ethereumアプリにログインして下さい。"
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
+        "confirm_withdrawl": "{amount} {token} がPlasmachainから引き出されました。{chain}アカウントへの資金の移転を行うには、完了をクリックしてください。"
       }
     },
     "blockExplorer": {

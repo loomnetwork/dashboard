@@ -33,7 +33,7 @@ module.exports = {
     let plugins = [
       new webpack.IgnorePlugin(/^electron$/),
       // new DuplicatesPlugin(),
-      // new BundleAnalyzerPlugin(),
+      new BundleAnalyzerPlugin(),
     ]
     config.optimization = {
       minimizer: [
@@ -75,9 +75,15 @@ module.exports = {
     return {
       resolve: {
         alias: {
-          // bn is used by many dependencies so bundle gets bloated with dupe bn code
           "bn.js": path.resolve(__dirname, "node_modules/bn.js/lib/bn.js"),
+          "web3-core": path.resolve(__dirname, "node_modules/web3-core"),
+          "web3-core-method": path.resolve(__dirname, "node_modules/web3-core-method"),
+          "web3-core-helpers": path.resolve(__dirname, "node_modules/web3-core-helpers"),
+          "web3-eth-accounts": path.resolve(__dirname, "node_modules/web3-eth-accounts"),
         }
+      },
+      externals: {
+        "shelljs": "shelljs"
       },
       plugins: plugins
     }

@@ -2,10 +2,8 @@
 import * as Sentry from "@sentry/browser"
 import * as SentryIntegrations from "@sentry/integrations"
 import BootstrapVue from "bootstrap-vue"
-import VueProgressBar from "vue-progressbar"
 import Vue from "vue"
 import { sync } from "vuex-router-sync"
-import Progress from "vue-multiple-progress"
 import VueClipboard from "vue-clipboard2"
 
 import FontAwesome from "@fortawesome/fontawesome"
@@ -52,10 +50,8 @@ const log = (message = "", object) => {
 
 // Object.defineProperty(Vue.prototype, '$log', { value: log })
 
-Vue.use(VueProgressBar, progressBarOptions)
 Vue.use(BootstrapVue)
 Vue.use(Autocomplete)
-Vue.use(Progress)
 Vue.use(VueClipboard)
 
 FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)

@@ -33,7 +33,7 @@ module.exports = {
     let plugins = [
       new webpack.IgnorePlugin(/^electron$/),
       // new DuplicatesPlugin(),
-      new BundleAnalyzerPlugin(),
+      // new BundleAnalyzerPlugin(),
     ]
     config.optimization = {
       minimizer: [

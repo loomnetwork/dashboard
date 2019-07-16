@@ -1,14 +1,14 @@
 {
   "messages": {
     "user_denied_tx": "トランザクションを拒否しました",
-    "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
-    "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
-    "transfer_card_err_tx": "Error Transferring cards: {msg}",
-    "transfer_pack_err_tx": "Error Transferring packs: {msg}",
-    "user_denied_sign_tx": "User denied message signature",
-    "deployer_already_exists": "Deployer alrready exists.",
-    "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
-    "add_deployer_addr_success_tx": "Deployer address added successfully.",
+    "transfer_card_success_tx": "カードの移転は成功しました。Tx: {transactionHash}",
+    "transfer_pack_success_tx": "パックの移転は成功しました。Tx: {transactionHash}",
+    "transfer_card_err_tx": "カードの移転エラーです: {msg}",
+    "transfer_pack_err_tx": "パックの移転エラーです: {msg}",
+    "user_denied_sign_tx": "ユーザーはメッセージの署名を拒否しました",
+    "deployer_already_exists": "デプロイヤーはすでに存在しています。",
+    "transaction_apprv_err_tx": "トランザクションの承認エラー: {msg}",
+    "add_deployer_addr_success_tx": "デプロイヤーのアドレス追加に成功しました。",
     "add_key_err_tx": "Error Adding a key: {msg}",
     "copy_addr_success_tx": "Address copied to clipboard",
     "copy_addr_err_tx": "Somehow copy didn't work...sorry",
@@ -29,7 +29,7 @@
     "awaiting_transaction": "Awaiting transaction confirmation",
     "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
   },
-  "transfer_all": "All ({amount} LOOM)",
+  "transfer_all": "({amount} LOOM) 全て",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -133,7 +133,7 @@
       "tokens_pending_withdraw": "{pendingWithdrawAmount} トークンの出金が未処理です。まずこの出金を完了してから、他の処理を行なって下さい。",
       "reclaim_deposit": "デポジットしたトークンを払い戻す",
       "complete_withdraw": "出金完了",
-      "pending_withdrawal": "Withdrawal pending"
+      "pending_withdrawal": "出金は保留中です"
     },
     "my_delegations": {
       "no_delegations": "委任はありません"
@@ -157,9 +157,9 @@
       "timelock_tier": "タイムロックを選択:",
       "timelock": "タイムロック:",
       "unlocked": "アンロック済み",
-      "no_stakes": "You have not yet staked with {name}",
-      "stake_tokens": "Stake tokens",
-      "consolidate": "Consolidate"
+      "no_stakes": "まだ {name} へステークしていません",
+      "stake_tokens": "トークンをステーク",
+      "consolidate": "１つにまとめる"
     },
     "validator_list": {
       "no_validators_available_please_try": "ダッシュ ボードのノードへの接続中にエラーが発生しました。後ほど再度確認してください。",
@@ -204,26 +204,26 @@
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
-      "analytics": "Analytics",
+      "analytics": "アナリティクス",
       "validators": "バリデーター",
       "my_account": "マイアカウント",
       "my_delegations": "委任について",
       "rewards": "報酬",
       "history": "履歴",
-      "deposit_withdraw": "Deposit/Withdraw",
-      "faq": "F.A.Q",
+      "deposit_withdraw": "入金/出金",
+      "faq": "よくある質問",
       "account_explorer": "Account Explorer",
-      "game_assets": "Game Assets",
+      "game_assets": "ゲームアセット",
       "block_explorer": "Block Explorer",
-      "deploy_to_plasmachain": "Deploy to Plasmachain",
-      "transfer_gateway": "Transfer Gateway",
-      "validator_management": "Validator Management",
-      "feedback_form": "Contact Support"
+      "deploy_to_plasmachain": "PlasmaChainへのデプロイ",
+      "transfer_gateway": "トランスファーゲートウェイ",
+      "validator_management": "バリデーター管理",
+      "feedback_form": "サポートへ連絡"
     },
     "gateway": {
-      "complete_deposit": "Complete deposit",
+      "complete_deposit": "デポジットを完了",
       "approval": {
-        "sending": "Sending approval request...",
+        "sending": "承認リクエストを送信中...",
         "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
         "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
         "failure": "Failed sending deposit approval request..."

@@ -113,6 +113,7 @@ import { plasmaModule } from "../store/plasma"
 import { dposModule } from "@/dpos/store"
 import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 import Delegations from "@/dpos/components/Delegations.vue"
+import { Subscription, timer } from "rxjs"
 
 const log = debug("mobileaccount")
 
@@ -137,6 +138,8 @@ export default class MobileAccount extends Vue {
   withdrawLimit = 0
 
   showRefreshSpinner = false
+
+  refreshTimer: Subscription | null = null
 
   get delegations() { return this.state.dpos.delegations }
 
@@ -169,6 +172,17 @@ export default class MobileAccount extends Vue {
     plasmaModule.refreshBalance("LOOM")
   }
 
+  mounted() {
+   this.refreshTimer = timer(0, 15000).subscribe(() => {
+     this.refresh()
+   })
+  }
+
+  beforeDestroy() {
+    if (this.refreshTimer != null) {
+      this.refreshTimer.unsubscribe()
+    }
+  }
 }
 </script>
 

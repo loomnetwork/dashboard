@@ -14,9 +14,9 @@
     <b-list-group flush class="mb-4">
       <b-list-group-item
         class="flex-column align-items-start"
-        v-for="(validator, index) in items" :key="index"
-        :class="{active: index === itemSelected}"
-        @click="onItemClicked(validator, index)"
+        v-for="validator in items" :key="validator.name"
+        :class="{active: validator.name === itemSelected}"
+        @click="onItemClicked(validator)"
       >
         <div class="d-flex w-100 justify-content-between">
           <h6 class="mb-1">{{ validator.name }}</h6>
@@ -55,7 +55,7 @@ import { Validator } from "@/dpos/store/types"
 @Component
 export default class RedelegateModal extends Vue {
   errorMsg = ""
-  itemSelected = -1
+  itemSelected = ""
   items: Validator[] = []
 
   mounted() {
@@ -115,31 +115,33 @@ export default class RedelegateModal extends Vue {
         !validator.isBootstrap &&
         origin !== validator.addr &&
         validator.name.toLowerCase().includes(str),
-      ).sort((a, b) => {
-        return a.name.localeCompare(b.name)
-      })
+      )
     } else {
       this.items = validators.filter((validator) =>
         !validator.isBootstrap &&
         origin !== validator.addr,
-      ).sort((a, b) => {
-        return a.name.localeCompare(b.name)
-      })
+      )
+    }
+    this.items.sort((a, b) => a.name.localeCompare(b.name))
+
+    if (!this.items.map((validator) => validator.name).includes(this.itemSelected)) {
+      this.delegation!.updateValidator = undefined
+      this.itemSelected = ""
     }
   }
 
-  onItemClicked(validator, index) {
+  onItemClicked(validator) {
     if (!this.visible) return
     this.errorMsg = ""
     this.delegation!.updateValidator = validator
-    this.itemSelected = index
+    this.itemSelected = validator.name
     this.$forceUpdate()
   }
 
   resetModal() {
     dposModule.clearRequest()
     this.errorMsg = ""
-    this.itemSelected = -1
+    this.itemSelected = ""
   }
 }
 </script>

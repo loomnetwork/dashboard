@@ -12,8 +12,9 @@ import {
 } from "loom-js"
 import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
 import { ActionContext } from "./types"
-import { createDefaultClient } from "loom-js/dist/helpers"
+import { createDefaultClient, createDefaultEthSignClientAsync } from "loom-js/dist/helpers"
 import { feedbackModule } from "@/feedback/store"
+import * as Sentry from "@sentry/browser"
 
 import axios from "axios"
 
@@ -55,7 +56,7 @@ export async function loadMapping(context: ActionContext, address: string) {
   }
 }
 
-export async function createMapping(context: ActionContext) {
+export async function createMapping(context: ActionContext, privateKey: string) {
   const { rootState, state } = context
   // create a temporary client for new napping
   // const client = getRequired(rootState.plasma.client, "plasma client")
@@ -64,7 +65,11 @@ export async function createMapping(context: ActionContext) {
   const ethAddress = getRequired(state.mapping, "mapping").from
   // @ts-ignore, bignumber changed between version
   const ethSigner = new EthersSigner(signer)
-  const plasmaId = generateNewId(context.rootState.plasma.chainId)
+  const plasmaId = privateKey === "" ?
+    generateNewId(context.rootState.plasma.chainId) :
+    idFromPrivateKey(privateKey)
+
+  state.requireMapping = false
   console.log("caller", caller)
 
   const { address, client } = createDefaultClient(
@@ -72,48 +77,71 @@ export async function createMapping(context: ActionContext) {
     rootState.plasma.endpoint,
     rootState.plasma.chainId,
   )
+  feedbackModule.setStep("Creating a new mapping from ethereum account")
   const mapper = await AddressMapper.createAsync(client, address)
   try {
-    feedbackModule.setStep("Creating a new mapping from ethereum account")
     await mapper.addIdentityMappingAsync(
       ethAddress,
       plasmaId.address,
       ethSigner,
     )
-    console.error("addIdentityMappingAsync ok  ")
+    log("addIdentityMappingAsync ok  ")
     loadMapping(context, rootState.ethereum.address)
   } catch (e) {
-    console.error(e)
-    console.error(
-      "could not get mapping after creating a new identity" +
-      ethAddress +
-      plasmaId.address,
-    )
-    // feedback.showError("mapper.errors.create", e.message,{ethereum:ethAddress, plasma:plasmaId.address})
+    if (e.message.includes("identity mapping already exists")) {
+      state.requireMapping = true
+      feedbackModule.showError("The supplied key is already mapped.")
+    } else {
+      feedbackModule.showError("Unexpected error while adding account mapping.")
+
+      console.error(e)
+      console.error(
+        "could not get mapping after creating a new identity" +
+        ethAddress +
+        plasmaId.address,
+      )
+      Sentry.withScope((scope) => {
+        scope.setExtra("ethereum", ethAddress.toString())
+        scope.setExtra("plasma", plasmaId.address.toString())
+        Sentry.captureException(e)
+      })
+      // feedback.showError("mapper.errors.create", e.message,{ethereum:ethAddress, plasma:plasmaId.address})
+    }
+
   } finally {
     client.disconnect()
   }
 }
 
-function generateNewId(chainId = "default") {
+export function generateNewId(chainId = "default") {
   const privateKey = CryptoUtils.generatePrivateKey()
   const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
   const address = new Address(chainId, LocalAddress.fromPublicKey(publicKey))
   return { address, privateKey, publicKey }
 }
 
+export function idFromPrivateKey(pk: string, chainId = "default") {
+  const privateKey = CryptoUtils.B64ToUint8Array(pk)
+  const publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+  const address = new Address(chainId, LocalAddress.fromPublicKey(publicKey))
+  return { address, privateKey, publicKey }
+}
+
+/**
+ * Check if user already have mapping on relentless, return in valid_address
+ * if valid_address = false, There is a possibility that users have logged in marketplace with wallet before.
+ * otherwise, it's assume that user is newcomer so new mapping will be create
+ */
 export async function checkRelentlessUser(context: ActionContext, address: string) {
-  /* Check if user already have mapping, return in valid_address
-    if valid_address = false, There is a possibility that users have logged in marketplace with wallet before.
-    otherwise, it's assume that user is newcomer so new mapping will be create
-  */
 
   // https://dev-auth.loom.games always return 'valid_address' as true no matter what address is
   // So url will be change later
   const checkURL = context.state.checkMarketplaceURL.replace("{address}", address)
   await axios.get(checkURL).then((response) => {
-    console.log("RESPONSE Valid_address = ", response.data.valid_address)
     context.state.maybeRelentlessUser = !response.data.valid_address
-
+    if (!context.state.maybeRelentlessUser) {
+      context.state.requireMapping = true
+    }
+    log("maybeRelentlessUser", context.state.maybeRelentlessUser)
   })
 }

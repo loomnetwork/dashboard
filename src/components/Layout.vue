@@ -58,12 +58,13 @@
     <undelegate-modal></undelegate-modal>
 
     <!-- gateway -->
-    <DepositApproved/>
-    <DepositConfirmed/>
-    <progress-modal/>
-    <WithdrawProgress/>
-    <WithdrawConfirmed/>
-    <feedback-alert/>
+    <DepositApproved />
+    <DepositConfirmed />
+    <progress-modal />
+    <WithdrawProgress />
+    <WithdrawConfirmed />
+    <feedback-alert />
+    <AccountMappingModal />
   </div>
 </template>
 
@@ -86,6 +87,8 @@ import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
 import { DashboardState } from "@/types"
 
+import AccountMappingModal from "@/components/modals/AccountMappingModal.vue"
+
 @Component({
   components: {
     FaucetHeader,
@@ -101,6 +104,7 @@ import { DashboardState } from "@/types"
     UndelegateModal,
     WithdrawProgress,
     WithdrawConfirmed,
+    AccountMappingModal,
   },
   props: {
     data: Object,

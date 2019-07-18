@@ -231,7 +231,7 @@ export default class DepositWithdraw extends Vue {
     this.selectedToken = token
     // Check if these token has a binance
     const tokenInfo = tokenService.getTokenbySymbol(token)
-    const possibleChains = this.state.chains.filter((chain) => !!tokenInfo[chain])
+    const possibleChains = this.state.chains.filter((chainId) => !!tokenInfo[chainId])
     const chain = (possibleChains.length === 1) ?
       possibleChains[0] : ""
 

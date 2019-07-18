@@ -33,8 +33,8 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
   const updateValidatorAddr = d.updateValidator
   let updateValidator: Validator | undefined
   if (updateValidatorAddr !== undefined) {
-    const addr = updateValidatorAddr.local.toString()
-    updateValidator = validators.find((v) => v.address.local.toString() === addr)!
+    const updateAddr = updateValidatorAddr.local.toString()
+    updateValidator = validators.find((v) => v.address.local.toString() === updateAddr)!
   }
   const locked = d.lockTime * 1000 > Date.now()
   const pending = d.state !== DelegationState.BONDED

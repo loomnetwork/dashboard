@@ -4,48 +4,56 @@
       <h1>Transfer Gateway</h1>
     </header>
     <div>
-    <b-card>
-      <b-card-header class="connect-new-contract d-flex justify-content-between">
-        <h5>Connect New Contracts</h5>
-        <b-button variant="primary" style="float:right;">View Documentations</b-button>
-      </b-card-header>     
-    </b-card>
-    <b-card class="mapped-card">
-      <b-card-header class="debug-mapped-contract d-flex justify-content-between">
-        <h5 class="col-5">Debug Mapped Contract</h5>
-        <b-input-group>
-          <b-form-input v-model="tokenName" type="text" placeholder="Token name" style="text-align: right;"></b-form-input>
-          <b-input-group-append>
-            <b-button @click="viewLogs">View Logs</b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </b-card-header>
-    </b-card>
+      <b-card>
+        <b-card-header class="connect-new-contract d-flex justify-content-between">
+          <h5>Connect New Contracts</h5>
+          <b-button variant="primary" style="float:right;">View Documentations</b-button>
+        </b-card-header>
+      </b-card>
+      <b-card class="mapped-card">
+        <b-card-header class="debug-mapped-contract d-flex justify-content-between">
+          <h5 class="col-5">Debug Mapped Contract</h5>
+          <b-input-group>
+            <b-form-input
+              v-model="tokenName"
+              type="text"
+              placeholder="Token name"
+              style="text-align: right;"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button @click="viewLogs">View Logs</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-card-header>
+      </b-card>
 
-    <div v-if="notFound" class="not-found"><h1 style="text-align:center;">Token not found ಠ_ಠ</h1></div>
-    <div v-else>
-      <b-table     
-        striped 
-        responsive
-        sort-by.sync="id"
-        :busy="isBusy" 
-        :items="tokenMapData.txs" 
-        :fields="tokenMappingFields"
-        class="mapped-table">
+      <div v-if="notFound" class="not-found">
+        <h1 style="text-align:center;">No event found on this token</h1>
+      </div>
+      <div v-else>
+        <b-table
+          striped
+          responsive
+          sort-by.sync="id"
+          :busy="isBusy"
+          :items="tokenMapData.txs"
+          :fields="tokenMappingFields"
+          class="mapped-table"
+        >
           <div slot="table-busy" class="text-center my-2">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong>Loading...</strong>
-        </div>
-      </b-table>
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="tokenMapData.total"
-        :per-page="tokenMapData.limit"
-        @change="pageChange"
-        align="center"
-        class="mapped-pagination">
-      </b-pagination>
-    </div>
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Loading...</strong>
+          </div>
+        </b-table>
+        <b-pagination
+          v-model="currentPage"
+          :total-rows="tokenMapData.total"
+          :per-page="tokenMapData.limit"
+          @change="pageChange"
+          align="center"
+          class="mapped-pagination"
+        ></b-pagination>
+      </div>
     </div>
   </main>
 </template>
@@ -55,24 +63,31 @@ import { Component, Watch, Vue } from "vue-property-decorator"
 import { DashboardState } from "@/types"
 import { formatTokenAmount } from "@/filters"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
-import { gatewayModule } from '@/store/gateway'
+import { gatewayModule } from "@/store/gateway"
 import { tokenService } from "@/services/TokenService"
-import Axios from 'axios';
+import Axios from "axios"
 
 @Component({
   components: {
-    
+
   },
 })
 
 export default class TransferGateway extends Vue {
 
-  tokenMappingFields = [{ key: "id", label: "Id"},
+  tokenMappingFields = [{ key: "id", label: "Id" },
   { key: "created_at", label: "Created At" },
-  { key: "token_owner", label: "Token Owner"},
-  { key: "token_kind", label: "Token Kind", formatter: value => { return this.getKeyByValue(TransferGatewayTokenKind, value) }},
-  { key: "token_amount", label: "Token Amount", formatter: value => { return formatTokenAmount(value, 18, 0) }, tdClass: "align-right-td"},
-  { key: "topic", label: "Topic"}
+  { key: "token_owner", label: "Token Owner" },
+  {
+    key: "token_kind",
+    label: "Token Kind",
+    formatter: (value) => this.getKeyByValue(TransferGatewayTokenKind, value)  },
+  {
+    key: "token_amount",
+    label: "Token Amount",
+    formatter: (value) => formatTokenAmount(value, 18, 0),
+    tdClass: "align-right-td"  },
+  { key: "topic", label: "Topic" },
   ]
 
   viewerAddress: string = ""
@@ -92,7 +107,7 @@ export default class TransferGateway extends Vue {
   get $state() { return (this.$store.state as DashboardState) }
 
   mounted() {
-    // start with 'LOOMCOIN' token 
+    // start with 'LOOMCOIN' token
     // just for example ( will be delete later )
     this.viewerAddress = this.LOOMCOIN_ADDR
     this.getLogs(this.viewerAddress, 1)
@@ -101,7 +116,7 @@ export default class TransferGateway extends Vue {
   async getLogs(address: string, page: number) {
     this.isBusy = true
     this.viewerAddress = address
-    this.tokenMapData = await this.getContractLogs({contractAddress: this.viewerAddress, page: page})
+    this.tokenMapData = await this.getContractLogs({ contractAddress: this.viewerAddress, page })
 
     this.isBusy = false
     // when didnt get any record => display 'not found'
@@ -111,11 +126,9 @@ export default class TransferGateway extends Vue {
   viewLogs() {
     if (this.tokenName) {
       // this will be delete after
-      if (this.tokenName.toUpperCase() == "LOOMCOIN") { 
+      if (this.tokenName.toUpperCase() === "LOOMCOIN") {
         this.getLogs(this.LOOMCOIN_ADDR, 1)
-      }
-      //
-      else {
+      } else {
         this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
         this.getLogs(this.viewerAddress, 1)
       }
@@ -130,14 +143,14 @@ export default class TransferGateway extends Vue {
   }
 
   getKeyByValue(obj, value) {
-    return Object.keys(obj).find(key => obj[key] === value);
+    return Object.keys(obj).find((key) => obj[key] === value)
   }
 
 }
 </script>
 
 <style lang="scss">
-  main.transfer-gateway {
+main.transfer-gateway {
   header > h1 {
     color: #5246d5;
     font-size: 1.35em;
@@ -155,8 +168,7 @@ export default class TransferGateway extends Vue {
     background-color: #ffffff;
   }
 
-  .mapped-pagination
-  .mapped-table,
+  .mapped-pagination .mapped-table,
   .mapped-card {
     margin-top: 2%;
     margin-bottom: 2%;
@@ -164,13 +176,12 @@ export default class TransferGateway extends Vue {
 
   .not-found {
     margin-top: 26%;
-    -webkit-user-select: none
+    -webkit-user-select: none;
   }
 
   .align-right-td {
     text-align: right;
     padding-right: 3%;
   }
-
-  }
+}
 </style>

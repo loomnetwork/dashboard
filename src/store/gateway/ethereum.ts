@@ -380,8 +380,8 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const gateway = service().get(token)
   fb.showLoadingBar(true)
   try {
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     await gateway.withdraw(receipt)
+    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
     fb.showSuccess("Withdrawal complete!")
   } catch (err) {
     // imToken throws even if transaction succeeds

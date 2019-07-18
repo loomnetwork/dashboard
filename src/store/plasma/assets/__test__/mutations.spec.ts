@@ -43,7 +43,7 @@ const initialState = (): AssetsState => {
 
 describe("Game Assets, Mutations", () => {
   let gameAssetState: AssetsState
-  let packType: String[]
+  let packType: string[]
   let contract: Contract
   const envName = ["local", "asia1", "us1", "plasma"]
   const exCard: CardDetail = {
@@ -76,8 +76,8 @@ describe("Game Assets, Mutations", () => {
       jsonInterface: BoosterPackJSON.abi,
       address: packAddresses[randomEnv][randomPack],
     }
-    mutations.setPacksContract(gameAssetState, {name: randomPack, contract})
-    expect(gameAssetState.packsContract).to.eql({[randomPack]: contract})
+    mutations.setPacksContract(gameAssetState, { name: randomPack, contract })
+    expect(gameAssetState.packsContract).to.eql({ [randomPack]: contract })
   })
 
   it("setCardContract by random environment", () => {

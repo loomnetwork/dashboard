@@ -7,7 +7,6 @@
     "build": "vue-cli-service build",
     "test": "NODE_ENV=test ./node_modules/.bin/nyc vue-cli-service test:unit  src/**/*.spec.ts",
     "lint": "vue-cli-service lint",
-    "format": "./node_modules/.bin/eslint --fix src/**/*.ts",
     "test:unit": "vue-cli-service test:unit src/**/*.spec.ts"
   },
   "dependencies": {
@@ -19,7 +18,8 @@
     "@ledgerhq/hw-app-eth": "4.48.0",
     "@ledgerhq/hw-transport-u2f": "4.46.0",
     "@ledgerhq/web3-subprovider": "^4.62.0",
-    "@sentry/browser": "^4.6.1",
+    "@sentry/browser": "^5.5.0",
+    "@sentry/integrations": "^5.5.0",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "add": "^2.0.6",
     "animate.css": "^3.7.0",
@@ -41,7 +41,6 @@
     "moment": "^2.24.0",
     "moment-duration-format": "^2.2.2",
     "protoc": "^1.0.3",
-    "raven-js": "^3.27.0",
     "rxjs": "^6.5.2",
     "sass-loader": "^7.0.3",
     "swiper": "^4.3.5",
@@ -50,7 +49,6 @@
     "tslib": "^1.10.0",
     "v-autocomplete": "^1.8.2",
     "vue": "^2.5.16",
-    "vue-awesome-swiper": "^3.1.3",
     "vue-chartjs": "^3.3.2",
     "vue-class-component": "^7.1.0",
     "vue-clipboard2": "^0.2.1",
@@ -62,7 +60,6 @@
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.16",
     "vue-virtual-scroll-list": "^1.3.9",
-    "vueisotope": "^3.1.2",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.1",
     "vuex-router-sync": "^5.0.0",
@@ -75,7 +72,7 @@
   },
   "devDependencies": {
     "@prerenderer/renderer-jsdom": "^0.2.0",
-    "@sentry/webpack-plugin": "^1.6.2",
+    "@sentry/webpack-plugin": "^1.7.0",
     "@types/bip39": "^2.4.2",
     "@types/bn.js": "^4.11.5",
     "@types/chai": "^4.1.7",
@@ -99,6 +96,8 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-plugin-html": "^5.0.3",
     "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^3.0.0",
+    "inspectpack": "^4.2.1",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
@@ -107,13 +106,19 @@
     "nyc": "^14.1.1",
     "prerender-spa-plugin": "^3.3.0",
     "prettier": "^1.18.2",
-    "sentry-testkit": "^2.1.0",
+    "sentry-testkit": "^2.2.1",
     "sinon": "^7.3.2",
     "ts-node": "^8.2.0",
     "tslint-config-prettier": "^1.18.0",
     "typechain": "^0.3.14",
     "typescript": "^3.4.3",
     "wait-for-expect": "^1.1.0",
+    "webpack-bundle-analyzer": "^3.3.2",
     "window-mock": "^0.0.13"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn lint && yarn test"
+    }
   }
 }

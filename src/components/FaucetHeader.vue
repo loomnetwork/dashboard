@@ -155,7 +155,7 @@ const MENU = {
       to: "/feedback",
       text: "components.faucet_sidebar.feedback_form",
     },
-  ]
+  ],
 }
 
 @Component({

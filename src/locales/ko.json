@@ -1,4 +1,35 @@
 {
+  "messages": {
+    "user_denied_tx": "트랜잭션을 거절했습니다",
+    "transfer_card_success_tx": "카드를 성공적으로 전송했습니다. Tx: {transactionHash}",
+    "transfer_pack_success_tx": "팩을 성공적으로 전송했습니다. Tx: {transactionHash}",
+    "transfer_card_err_tx": "카드 전송 중 에러가 발생했습니다: {msg}",
+    "transfer_pack_err_tx": "팩 전송 중 에러가 발생했습니다: {msg}",
+    "user_denied_sign_tx": "사용자가 메세지 서명을 거절했습니다",
+    "deployer_already_exists": "Deployer alrready exists.",
+    "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
+    "add_deployer_addr_success_tx": "Deployer address added successfully.",
+    "add_key_err_tx": "키 추가 중 에러가 발생했습니다: {msg}",
+    "copy_addr_success_tx": "주소가 클립보드에 복사되었습니다.",
+    "copy_addr_err_tx": "Somehow copy didn't work...sorry",
+    "redelegate_success_tx": "Success redelegating stake",
+    "redelegate_err_tx": "재위임에 실패하였습니다",
+    "delegate_err_tx": "위임 중 에러가 발생했습니다",
+    "undelegate_err_tx": "Failed to undelegate",
+    "init_DposUser_err_tx": "Error initDposUser",
+    "switch_dpouser_err_tx": "Error initDposUser",
+    "select_path_err_tx": "Can't connect to your wallet. Please try again.",
+    "load_wallet_err_tx": "Error loading your wallet accounts. Please try again.",
+    "copied_tx": "Copied to clipboard",
+    "receiver_addr_err_tx": "Invalid receiver address",
+    "invalid_amount": "Invalid amount",
+    "invalid_addr": "Invalid receiver address",
+    "amount_input_should_less": "Invalid amount. should be less than {amount}",
+    "amount_input_should_more": "Invalid amount. should be more than {amount}",
+    "awaiting_transaction": "Awaiting transaction confirmation",
+    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
+  },
+  "transfer_all": "All ({amount} LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -101,7 +132,8 @@
       "tokens_pending_deposit": "입금 처리 중인 {pendingDepositAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 입금을 완료해주세요.",
       "tokens_pending_withdraw": "출금 처리 중인 {pendingWithdrawAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 출금을 완료해주세요.",
       "reclaim_deposit": "예치된 토큰 회수하기",
-      "complete_withdraw": "출금 완료"
+      "complete_withdraw": "출금 완료",
+      "pending_withdrawal": "Withdrawal pending"
     },
     "my_delegations": {
       "no_delegations": "위임 내역 없음"
@@ -124,7 +156,10 @@
       "updated_amount_loom": "{updatedAmount} LOOM",
       "timelock_tier": "선택 가능한 락업 기간:",
       "timelock": "락업 기간:",
-      "unlocked": "잠금 해제됨"
+      "unlocked": "잠금 해제됨",
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
@@ -169,10 +204,37 @@
       "block_explorer": "블록 탐색기"
     },
     "faucet_sidebar": {
+      "analytics": "Analytics",
+      "validators": "Validators",
       "my_account": "내 계정",
       "my_delegations": "내 위임",
       "rewards": "보상",
-      "history": "거래 내역"
+      "history": "거래 내역",
+      "deposit_withdraw": "Deposit/Withdraw",
+      "faq": "F.A.Q",
+      "account_explorer": "Account Explorer",
+      "game_assets": "Game Assets",
+      "block_explorer": "Block Explorer",
+      "deploy_to_plasmachain": "Deploy to Plasmachain",
+      "transfer_gateway": "Transfer Gateway",
+      "validator_management": "Validator Management",
+      "feedback_form": "Contact Support"
+    },
+    "gateway": {
+      "complete_deposit": "Complete deposit",
+      "approval": {
+        "sending": "Sending approval request...",
+        "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
+        "failure": "Failed sending deposit approval request..."
+      },
+      "deposit": {
+        "sending": "Sending deposit request...",
+        "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
+        "view_confirmation": "View confirmations",
+        "failure": "입금에 실패하였습니다..."
+      }
     },
     "layout": {
       "metamask_changed": "MetaMask 계정을 전환했습니다. 예기치 않은 오류를 방지하기 위해 앱을 재시작합니다.",
@@ -183,7 +245,7 @@
       "but_your_current_account_address": "하지만 당신의 현재 이더리움 계정 주소는 다음과 같습니다: ",
       "please_change_your_metamask_account": "이더리움 계좌를 변경해주세요.",
       "please_check_your_metamask_account": "이더리움 계좌 및(또는) 네트워크를 확인해주세요.",
-      "sign_wallet": "당신의 {walletType}에서, 이더리움 계좌를 확인하기 위해 메시지에 서명하세요. (가스 비용 없음)",
+      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요."
     },
     "loading_spinner": {
@@ -207,7 +269,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "주의: 지갑 분실 또는 파손 시에 이 12개의 단어로 복구할 수 있습니다.",
-        "you_must_create_a_backup_nbsp": "백업을 꼭 해두셔야 합니다!&nbsp;",
+        "you_must_create_a_backup_nbsp": "백업을 꼭 해두셔야 합니다!",
         "write_or_print_it_out": "적어두거나 인쇄하여 안전한 곳에 보관하세요.",
         "without_it_you_will_not": "이 시드가 없으면 문제가 생겼을 때 여러분의 토큰을 복구할 수 없습니다.",
         "copy_to_clipboard": "클립보드에 복사"
@@ -218,6 +280,9 @@
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "하드웨어 지갑 잠금해제",
         "enter_pin_code": "여러분의 장부에서 핀 코드를 입력하여 이더리움 앱에 로그인하세요."
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
       }
     },
     "blockExplorer": {
@@ -251,5 +316,13 @@
         "pending": "처리 중"
       }
     }
+  },
+  "events": {
+    "ERC20Received": "Deposit",
+    "event:MainnetDepositEvent": "Deposit",
+    "event:MainnetWithdrawalEvent": "Withdrawal",
+    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "event:TokenWithdrawalSigned": "Withdrawal signed",
+    "TokenWithdrawn": "출금한 토큰"
   }
 }

@@ -2,7 +2,7 @@ import { CommonState } from "./types"
 import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
 
-export const state: CommonState = {
+export const commonState: CommonState = {
   route: null,
   tiers: [],
   errorMsg: null,
@@ -13,7 +13,7 @@ export const state: CommonState = {
   userTiers: 0,
 }
 
-const builder = getStoreBuilder<DashboardState>().module("common", state)
+const builder = getStoreBuilder<DashboardState>().module("common", commonState)
 const stateGetter = builder.state()
 
 const CommonTypedStore = {

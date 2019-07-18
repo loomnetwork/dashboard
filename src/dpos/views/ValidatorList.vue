@@ -71,7 +71,7 @@ import LoadingSpinner from "../components/LoadingSpinner.vue"
 import ElectionTimer from "../components/ElectionTimer.vue"
 import { CryptoUtils, LocalAddress } from "loom-js"
 import { HasDPOSState } from "@/dpos/store/types"
-import { ZERO } from '../../utils';
+import { ZERO } from "../../utils"
 import { formatTokenAmount } from "@/filters"
 import BN from "bn.js"
 
@@ -88,14 +88,21 @@ function random() {
 }
 
 @Component({
-  components: { ElectionTimer }
+  components: { ElectionTimer },
 })
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "totalStaked", sortable: true, label: "Total Staked", formatter: value => { return formatTokenAmount(value, 18, 0) }, thClass: "align-center-th", tdClass: "align-right-td" },
+  {
+    key: "totalStaked",
+    sortable: true,
+    label: "Total Staked",
+    formatter: (value) => formatTokenAmount(value, 18, 0),
+    thClass: "align-center-th",
+    tdClass: "align-right-td",
+  },
   { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass: "align-right-td" },
   ]
 
@@ -105,7 +112,7 @@ export default class ValidatorList extends Vue {
 
   get totalStaked() {
     // ignore bootstrap node
-    const filtered = this.state.dpos.validators.filter(v => !v.isBootstrap)
+    const filtered = this.state.dpos.validators.filter((v) => !v.isBootstrap)
     return filtered.reduce((sum, v) => sum.add(v.totalStaked), ZERO)
   }
 

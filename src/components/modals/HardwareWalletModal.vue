@@ -14,7 +14,7 @@
       >Please make sure your Ledger is connected, unlocked and then go tho ethereum app.</b-alert>
       <b-alert :show="!!errorMsg">{{errorMsg}}</b-alert>
       <div v-if="!hdWallet && ledgerLocked === false">
-        <b-spinner label="Loading accoumt"/>Initializing. Please wait...
+        <b-spinner label="Loading" />Initializing. Please wait...
       </div>
       <b-form-select class="mb-2" :value="null" :options="paths" v-model="selectedPath">
         <option slot="first" :value="null">Select a path</option>
@@ -32,7 +32,7 @@
         </b-list-group-item>
         <b-list-group-item class="load-more" @click="loadMore" v-if="!loadingAccounts">Load more</b-list-group-item>
         <b-list-group-item class="loading" v-else>
-          <b-spinner label="Loading accoumt"/>
+          <b-spinner label="Loading" />
         </b-list-group-item>
       </b-list-group>
 
@@ -164,8 +164,8 @@ export default class HardwareWalletModal extends Vue {
     )
     engine.start()
     // @ts-ignore
-    //const web3account = (await .web3!.eth.getAccounts())[0]
-    //console.assert(web3account === selectedAddress,
+    // const web3account = (await .web3!.eth.getAccounts())[0]
+    // console.assert(web3account === selectedAddress,
     //  `Expected web3 to be initialized with ${selectedAddress} but got ${web3account}`)
 
     // @ts-ignore
@@ -239,11 +239,17 @@ export default class HardwareWalletModal extends Vue {
   async onToggle(visible) {
     if (visible === false) return
 
+    const endpoint = ethereumModule.state.endpoint
+    const web3Provider = /^ws/.test(endpoint) ?
+      new Web3.providers.WebsocketProvider(endpoint) :
+      new Web3.providers.HttpProvider(endpoint)
+
     console.log("visible")
     // await this.setWeb3Instance()
     try {
       this.loading = true
-      this.infura = new Web3(new Web3.providers.HttpProvider(this.state.ethereum.endpoint))
+      // this.infura = new Web3(new Web3.providers.HttpProvider(this.state.ethereum.endpoint))
+      this.infura = new Web3(web3Provider)
       this.hdWallet = await createWallet()
     } catch (err) {
       console.error(err)

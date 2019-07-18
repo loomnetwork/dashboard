@@ -40,7 +40,7 @@ import { DashboardState } from "@/types"
 import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
-import { ZERO } from '../../utils';
+import { ZERO } from "../../utils"
 
 @Component
 export default class Rewards extends Vue {

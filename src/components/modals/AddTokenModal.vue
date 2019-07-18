@@ -41,7 +41,7 @@ import { tokenService } from "@/services/TokenService"
 @Component({
   components: {
     VirtualList,
-  }
+  },
 })
 export default class AddTokenModal extends Vue {
   selectedToken: string = "LOOM"

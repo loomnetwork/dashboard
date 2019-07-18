@@ -6,7 +6,6 @@ import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { Transfer } from "@/types"
 import BN from "bn.js"
 import debug from "debug"
-import { ethers } from "ethers"
 import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import Web3 from "web3"
@@ -23,7 +22,7 @@ import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired }
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
-import { timer, Observable, Subscription } from "rxjs"
+import { timer, Subscription } from "rxjs"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -163,10 +162,12 @@ async function setProvider(context: ActionContext, p: provider) {
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
-  web3 = new Web3(
-    new Web3.providers.WebsocketProvider("wss://.infura.io/ws"),
-  )
-  // Signer is not used in explore mode
+  const endpoint = context.state.endpoint
+  const web3Provider = /^ws/.test(endpoint) ?
+    new Web3.providers.WebsocketProvider(endpoint) :
+    new Web3.providers.HttpProvider(endpoint)
+
+  web3 = new Web3(web3Provider)
   context.state.signer = null
   context.state.address = address
 }
@@ -296,7 +297,6 @@ export function initERC20(context: ActionContext, symbol: string) {
   if (contractAddr === undefined) {
     throw new Error("Could not find contract address for " + symbol)
   }
-  const web3: Web3 = ethereumModule.web3!
   // @ts-ignore
   const contract = new web3.eth.Contract(ERC20ABI, contractAddr) as ERC20
   erc20Contracts.set(symbol, contract)

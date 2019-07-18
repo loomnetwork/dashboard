@@ -3,26 +3,26 @@
     <transfer-cards-modal ref="transferModalConfig"></transfer-cards-modal>
     <transfer-all-cards-modal ref="transferAllCardsModalConfig"></transfer-all-cards-modal>
     <b-card-header>
-      <h4 class="card-title">{{$t('My Cards')}}</h4>
+      <h4 class="card-title">{{ $t('components.gameAsset.cards.my_cards') }}</h4>
       <b-dropdown :text="editionFilterText" variant="outline-info">
-        <b-dropdown-item-button @click="edition = null">All editions</b-dropdown-item-button>
+        <b-dropdown-item-button @click="edition = null">{{ $t('components.gameAsset.cards.all_edition') }}</b-dropdown-item-button>
         <b-dropdown-item-button
           v-for="option in editions"
           :key="option.name"
           @click="edition = option"
-        >{{option.name}} Edition ({{option.amount}})</b-dropdown-item-button>
+        >{{option.name}} {{ $t('components.gameAsset.cards.edition') }} ({{option.amount}})</b-dropdown-item-button>
       </b-dropdown>
     </b-card-header>
     <b-card-body v-if="filteredCards.length > 7 || inputFilter !== ''">
       <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
     </b-card-body>
-    <b-card-body v-if="filteredCards.length === 0">No cards to show</b-card-body>
+    <b-card-body v-if="filteredCards.length === 0">{{ $t('components.gameAsset.cards.no_card') }}</b-card-body>
     <b-list-group flush>
       <b-list-group-item v-for="card in filteredCards" :key="card.id">
         <label class="name">#{{card.id}} - {{card.display_name}}</label>
         <span class="balance">
           x {{card.amount}}
-          <small>card(s)</small>
+          <small>{{ $t('components.gameAsset.cards.amount') }}</small>
         </span>
         <b-button-group class="actions">
           <b-button
@@ -30,7 +30,7 @@
             size="sm"
             variant="outline-primary"
             @click="openTransferCardsModal(card)"
-          >Transfer</b-button>
+          >{{ $t('components.gameAsset.cards.transfer') }}</b-button>
         </b-button-group>
       </b-list-group-item>
     </b-list-group>
@@ -39,7 +39,7 @@
         type="button"
         variant="outline-danger"
         @click="openBatchTransferCardsModal"
-      >Transfer all cards in {{editionFilterText}}</b-button>
+      >{{ $t('components.gameAsset.cards.transfer_all') }} {{editionFilterText}}</b-button>
     </b-card-footer>
   </b-card>
 </template>
@@ -76,8 +76,8 @@ export default class Cards extends Vue {
   get editionFilterText() {
     console.log(this.edition)
     return this.edition ?
-      `${this.edition.name} edition (${this.edition.amount})` :
-      `All editions (${this.userCardsAmount})`
+      `${this.edition.name} ${this.$t('components.gameAsset.cards.edition')} (${this.edition.amount})` :
+      `${this.$t('components.gameAsset.cards.all_edition')} (${this.userCardsAmount})`
   }
 
   get filteredCards() {

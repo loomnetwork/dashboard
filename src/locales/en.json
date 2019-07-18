@@ -329,6 +329,21 @@
         "most_old": "Most old",
         "pending": "Pending"
       }
+    },
+    "gameAssets" : {
+      "cards": {
+        "my_cards": "My Cards",
+        "edition": "Edition",
+        "all_edition": "All edition",
+        "no_card": "No cards to show",
+        "amount": "card(s)",
+        "transfer": "Transfer",
+        "transfer_all": "Transfer all cards in"
+      },
+      "packs": {
+        "my_packs": "My Packs",
+        "transfer": "Transfer"
+      }
     }
   },
   "events": {

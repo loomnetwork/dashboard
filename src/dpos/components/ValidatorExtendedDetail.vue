@@ -85,8 +85,6 @@
             <dl>
               <dt>Delegation total</dt>
               <dd>{{ validator.delegationTotal | tokenAmount }}</dd>
-              <dt>Total staked</dt>
-              <dd>{{ validator.totalStaked | tokenAmount }}</dd>
               <dt>Staked amount</dt>
               <dd>{{ validator.stakedAmount | tokenAmount }}</dd>
               <dt>Whitelist amount</dt>

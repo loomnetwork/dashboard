@@ -28,7 +28,7 @@
       </b-card>
 
       <div v-if="notFound" class="not-found">
-        <h1 style="text-align:center;">Token not found ಠ_ಠ</h1>
+        <h1 style="text-align:center;">No event found on this token</h1>
       </div>
       <div v-else>
         <b-table

@@ -10,13 +10,13 @@
       id="gdelegation-amount-input"
       :label="$t('components.modals.faucet_delegate_modal.amount')"
       label-for="delegation-amount-input"
-      :description="'Your balance is ' + balance + ' LOOM'"
+      :description="$t('components.modals.faucet_delegate_modal.your_balance', { amount: balance })"
     >
       <b-form-input
         id="delegation-amount-input"
         v-model.number="delegationAmount"
         required
-        placeholder="Enter amount"
+        :placeholder="$t('components.modals.faucet_delegate_modal.enter_amount')"
         :state="isAmountValid"
         inputmode="numeric"
         pattern="[0-9]*"
@@ -43,9 +43,9 @@
               :class="{selected: i === delegation.lockTimeTier}"
             >
               <input type="radio" v-model="delegation.lockTimeTier" :value="i">
-              <strong>Locktime</strong>
+              <strong>{{ $t('components.modals.faucet_delegate_modal.locktime') }}</strong>
               <div>{{ locktimeTiers[i] }}</div>
-              <strong>Bonuses</strong>
+              <strong>{{ $t('components.modals.faucet_delegate_modal.bonuses') }}</strong>
               <div class="fee">{{ bonusTiers[i] }}</div>
               <div class="spec">({{ calcReceiveAmount(i) }} LOOM)</div>
             </label>
@@ -54,14 +54,14 @@
       </b-row>
     </b-container>
     <div slot="modal-footer" class="w-100">
-      <b-button @click="cancel">Cancel</b-button>
+      <b-button @click="cancel">{{ $t('components.modals.faucet_delegate_modal.cancel') }}</b-button>
       <b-button
         v-if="!loading"
         style="width: 160px; float: right;"
         variant="primary"
         :disabled="delegation.lockTimeTier < 0 || !isAmountValid"
         @click="delegate"
-      >{{$t("delegate")}}</b-button>
+      >{{ $t('components.modals.faucet_delegate_modal.delegate') }}</b-button>
     </div>
   </b-modal>
 </template>

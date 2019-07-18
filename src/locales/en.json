@@ -259,6 +259,12 @@
       },
       "faucet_delegate_modal": {
         "amount": "Amount:",
+        "locktime": "Locktime",
+        "bonuses": "Bonuses",
+        "delegate": "Delegate",
+        "cancel": "Cancel",
+        "your_balance": "Your balance is {amount} LOOM",
+        "enter_amount": "Enter amount",
         "locktime_bonuses": "Locktime / Bonuses:",
         "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period."
@@ -283,6 +289,14 @@
       },
       "confirm_withdrawal_modal": {
         "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
+      },
+      "faucet_redelegate_modal": {
+        "select_validator": "Select a validator :",
+        "fee": "Fee:",
+        "total_stake": "Total Staked:",
+        "redelegate": "Redelegate",
+        "target_error": "Please select a target validator",
+        "same_target_error": "Cannot redelegate to the same validator"
       }
     },
     "blockExplorer": {

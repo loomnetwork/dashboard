@@ -9,7 +9,7 @@
     no-close-on-backdrop
     no-close-on-esc
   >
-    <h6>Select a validator:</h6>
+    <h6>{{ $t('components.modals.faucet_redelegate_modal.select_validator') }} {{ validatorSelected }}</h6>
     <b-input placeholder="Search..." type="search" @input="onInput" class="mb-2"></b-input>
     <b-list-group flush class="mb-4">
       <b-list-group-item
@@ -20,11 +20,11 @@
       >
         <div class="d-flex w-100 justify-content-between">
           <h6 class="mb-1">{{ validator.name }}</h6>
-          <small>Fee: {{ validator.fee }}%</small>
+          <small>{{ $t('components.modals.faucet_redelegate_modal.fee') }} {{ validator.fee }}%</small>
         </div>
 
         <span>
-          <small>Total staked: {{ validator.totalStaked | tokenAmount }}</small>
+          <small>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }} {{ validator.totalStaked | tokenAmount }}</small>
         </span>
       </b-list-group-item>
       <div v-if="items.length === 0" class="not-found">
@@ -39,7 +39,7 @@
           class="px-5 py-2"
           variant="primary"
           @click="redelegate"
-        >Redelegate</b-button>
+        >{{ $t('components.modals.faucet_redelegate_modal.redelegate') }}</b-button>
       </div>
     </footer>
   </b-modal>
@@ -92,11 +92,11 @@ export default class RedelegateModal extends Vue {
     this.errorMsg = ""
     const delegation = this.delegation!
     if (delegation.updateValidator === undefined) {
-      this.errorMsg = "Please select a target validator"
+      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.target_error')
       return
     }
     if (delegation.validator === delegation.updateValidator) {
-      this.errorMsg = "Cannot redelegate to the same validator"
+      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.same_target_error')
       return
     }
     // for now redelegate all

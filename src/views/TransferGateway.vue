@@ -28,7 +28,7 @@
       </b-card>
 
       <div v-if="notFound" class="not-found">
-        <h1 style="text-align:center;">No event found on this token</h1>
+        <h1 style="text-align:center;">{{ notFoundMsg }}</h1>
       </div>
       <div v-else>
         <b-table
@@ -95,12 +95,14 @@ export default class TransferGateway extends Vue {
   tokenMapData: any = null
 
   notFound: boolean = false
+  notFoundMsg: string = ""
   isBusy: boolean = false
 
   tokenName = ""
 
   currentPage = 1
 
+  LOOM_TOKEN = ["LOOMCOIN", "LOOM"]
   getContractLogs = gatewayModule.getTokenContractLogs
   LOOMCOIN_ADDR = "0xA4E8C3eC456107ea67D3075bf9e3df3a75823Db0"
 
@@ -120,20 +122,26 @@ export default class TransferGateway extends Vue {
 
     this.isBusy = false
     // when didnt get any record => display 'not found'
-    this.tokenMapData.total === 0 ? this.notFound = true : this.notFound = false
+    if (this.tokenMapData.total === 0) {
+      this.notFound = true
+      this.notFoundMsg = "No event found on this token"
+    } else { 
+      this.notFound = false
+    }
   }
 
   viewLogs() {
-    if (this.tokenName) {
-      // this will be delete after
-      if (this.tokenName.toUpperCase() === "LOOMCOIN") {
-        this.getLogs(this.LOOMCOIN_ADDR, 1)
-      } else {
+    // this will be delete after
+    if (this.LOOM_TOKEN.includes(this.tokenName.toUpperCase())) {
+      this.getLogs(this.LOOMCOIN_ADDR, 1)
+    } else {
+      try {
         this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
         this.getLogs(this.viewerAddress, 1)
-      }
-    } else {
-      this.notFound = true
+      } catch (e) {
+        this.notFound = true
+        this.notFoundMsg = `Token ${this.tokenName} not found`
+      } 
     }
   }
 

@@ -4,7 +4,8 @@ import { BareActionContext } from "vuex-typex"
 import { HasEthereumState } from "../ethereum/types"
 import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
 import BN from "bn.js"
-import { Contract } from "loom-js"
+import { Contract, Address } from "loom-js"
+import { TokenData } from "@/services/TokenService"
 
 export declare type ChainName = "ethereum" | "binance" | "tron"
 
@@ -17,14 +18,16 @@ export interface GatewayConfig {
   multisig: boolean
   chains: string[]
   checkMarketplaceURL: string
+  tokenContractLogsURL: string
 }
 /**
  * Gateway state
  */
 export interface GatewayState extends GatewayConfig {
   mapping: IAddressMapping | null
+  ethereumAllowances: Array<{ token: TokenData, amount: BN }>
   pendingTransactions: any[]
-  withdrawalReceipts: IWithdrawalReceipt | null
+  withdrawalReceipts: IWithdrawalReceipt | WithdrawalReceipt | null
   showDepositForm: boolean
   showDepositApproved: boolean
   showDepositConfirmed: boolean
@@ -34,6 +37,7 @@ export interface GatewayState extends GatewayConfig {
   withdrawStateIdx: number
   transferRequest: TransferRequest
   maybeRelentlessUser: boolean | null
+  requireMapping: boolean
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {
@@ -65,8 +69,21 @@ export declare type ActionContext = BareActionContext<
 >
 
 export interface PlasmaGatewayAdapter {
+  /**
+   * Holds fee information if the target chain
+   * requires fees to be paid (on plasma chain)
+   */
+  fee?: {
+    token: string
+    amount: BN,
+  }
   token: string
   contract: Contract | any
-  withdraw(amount: BN)
+  withdraw(amount: BN, recipient?: Address)
   withdrawalReceipt(): Promise<IWithdrawalReceipt | null>
+}
+
+export interface WithdrawalReceipt extends IWithdrawalReceipt {
+  chain: string
+  symbol: string
 }

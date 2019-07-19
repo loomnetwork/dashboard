@@ -12,6 +12,9 @@ import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
 import * as mutations from "./mutations"
 import { ethereumModule } from "../ethereum"
+import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
+import { ActionContext } from "./types"
+import Axios from "axios"
 
 const log = debug("dash.gateway")
 
@@ -22,6 +25,7 @@ function initialState(): GatewayState {
     mapping: null,
     withdrawalReceipts: null,
     pendingTransactions: [],
+    ethereumAllowances: [],
     showDepositForm: false,
     showDepositApproved: false,
     showDepositConfirmed: false,
@@ -40,7 +44,9 @@ function initialState(): GatewayState {
     ],
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
+    requireMapping: false,
     checkMarketplaceURL: "",
+    tokenContractLogsURL: "",
   }
 }
 
@@ -58,19 +64,29 @@ export const gatewayModule = {
   withdrawalInProgress: builder.read(withdrawalInProgress),
   checkIfPastWithdrawalEventExists: builder.read(checkIfPastWithdrawalEventExists),
 
+  getTokenContractLogs: builder.dispatch(getTokenContractLogs),
+
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
+  refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
+  refreshWithdrawalReceipt: builder.dispatch(PlasmaGateways.refreshWithdrawalReceipt),
+
+  // binance
+  binanceResubmitWithdrawal: builder.dispatch(PlasmaGateways.binanceResubmitWithdrawal),
 
   // mapper
   loadMapping: builder.dispatch(Mapper.loadMapping),
   createMapping: builder.dispatch(Mapper.createMapping),
   setMaybeRelentlessUser: builder.commit(mutations.setMaybeRelentlessUser),
   checkRelentlessUser: builder.dispatch(Mapper.checkRelentlessUser),
+
+  // helper
+  generateNewId: Mapper.generateNewId,
 
   // mutations
   setConfig: builder.commit(mutations.setConfig),
@@ -105,8 +121,16 @@ async function checkIfPastWithdrawalEventExists() {
   await gatewayModule.refreshEthereumHistory()
   return ethereumModule.state.history.find((event) => {
     return (event.event === "TokenWithdrawn" &&
-    (event.blockNumber + 15) >= ethereumModule.state.blockNumber)
+      (event.blockNumber + 15) >= ethereumModule.state.blockNumber)
   }) ? true : JSON.parse(
     localStorage.getItem("pendingWithdrawal") || "false",
   ) ? true : false
+}
+
+async function getTokenContractLogs(context: ActionContext, payload: { contractAddress: string, page: number }) {
+  let indexerUrl = context.state.tokenContractLogsURL.replace("{address}", payload.contractAddress)
+  indexerUrl += `?page=${payload.page}`
+
+  const response = await Axios.get(indexerUrl)
+  return response.data
 }

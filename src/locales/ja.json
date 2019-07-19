@@ -1,4 +1,35 @@
 {
+  "messages": {
+    "user_denied_tx": "You denied the transaction",
+    "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
+    "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
+    "transfer_card_err_tx": "Error Transferring cards: {msg}",
+    "transfer_pack_err_tx": "Error Transferring packs: {msg}",
+    "user_denied_sign_tx": "User denied message signature",
+    "deployer_already_exists": "Deployer alrready exists.",
+    "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
+    "add_deployer_addr_success_tx": "Deployer address added successfully.",
+    "add_key_err_tx": "Error Adding a key: {msg}",
+    "copy_addr_success_tx": "Address copied to clipboard",
+    "copy_addr_err_tx": "Somehow copy didn't work...sorry",
+    "redelegate_success_tx": "Success redelegating stake",
+    "redelegate_err_tx": "Failed to redelegate stake",
+    "delegate_err_tx": "Error delegating",
+    "undelegate_err_tx": "Failed to undelegate",
+    "init_DposUser_err_tx": "Error initDposUser",
+    "switch_dpouser_err_tx": "Error initDposUser",
+    "select_path_err_tx": "Can't connect to your wallet. Please try again.",
+    "load_wallet_err_tx": "Error loading your wallet accounts. Please try again.",
+    "copied_tx": "Copied to clipboard",
+    "receiver_addr_err_tx": "Invalid receiver address",
+    "invalid_amount": "Invalid amount",
+    "invalid_addr": "Invalid receiver address",
+    "amount_input_should_less": "Invalid amount. should be less than {amount}",
+    "amount_input_should_more": "Invalid amount. should be more than {amount}",
+    "awaiting_transaction": "Awaiting transaction confirmation",
+    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
+  },
+  "transfer_all": "All ({amount} LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -101,7 +132,8 @@
       "tokens_pending_deposit": "{pendingDepositAmount} トークンのデポジットが未処理です。まずこのデポジットを完了してから、他の処理を行なって下さい。",
       "tokens_pending_withdraw": "{pendingWithdrawAmount} トークンの出金が未処理です。まずこの出金を完了してから、他の処理を行なって下さい。",
       "reclaim_deposit": "デポジットしたトークンを払い戻す",
-      "complete_withdraw": "出金完了"
+      "complete_withdraw": "出金完了",
+      "pending_withdrawal": "Withdrawal pending"
     },
     "my_delegations": {
       "no_delegations": "委任はありません"
@@ -124,7 +156,10 @@
       "updated_amount_loom": "{updatedAmount} LOOM",
       "timelock_tier": "タイムロックを選択:",
       "timelock": "タイムロック:",
-      "unlocked": "アンロック済み"
+      "unlocked": "アンロック済み",
+      "no_stakes": "You have not yet staked with {name}",
+      "stake_tokens": "Stake tokens",
+      "consolidate": "Consolidate"
     },
     "validator_list": {
       "no_validators_available_please_try": "ダッシュ ボードのノードへの接続中にエラーが発生しました。後ほど再度確認してください。",
@@ -169,10 +204,37 @@
       "block_explorer": "Block Explorer"
     },
     "faucet_sidebar": {
+      "analytics": "Analytics",
+      "validators": "Validators",
       "my_account": "マイアカウント",
       "my_delegations": "委任について",
       "rewards": "報酬",
-      "history": "履歴"
+      "history": "履歴",
+      "deposit_withdraw": "Deposit/Withdraw",
+      "faq": "F.A.Q",
+      "account_explorer": "Account Explorer",
+      "game_assets": "Game Assets",
+      "block_explorer": "Block Explorer",
+      "deploy_to_plasmachain": "Deploy to Plasmachain",
+      "transfer_gateway": "Transfer Gateway",
+      "validator_management": "Validator Management",
+      "feedback_form": "Contact Support"
+    },
+    "gateway": {
+      "complete_deposit": "Complete deposit",
+      "approval": {
+        "sending": "Sending approval request...",
+        "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
+        "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
+        "failure": "Failed sending deposit approval request..."
+      },
+      "deposit": {
+        "sending": "Sending deposit request...",
+        "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
+        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
+        "view_confirmation": "View confirmations",
+        "failure": "Deposit failed..."
+      }
     },
     "layout": {
       "metamask_changed": "MetaMaskアカウントが切り替わりました。予期せぬ動作を避けるため、このアプリはリロードを行います。",
@@ -183,7 +245,7 @@
       "but_your_current_account_address": "しかし現在あなたのEthereumアカウントアドレスは:",
       "please_change_your_metamask_account": "Ethereumのアカウントを変更してください",
       "please_check_your_metamask_account": "Ethereumのアカウントやネットワークをチェックしてください",
-      "sign_wallet": "{walletType} 上で本人確認のために署名を行なって下さい。(ガスはかかりません)",
+      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
       "already_mapped": "選択したアカウントはすでにマッピング済みです。新しいアカウントを選択して下さい。"
     },
     "loading_spinner": {
@@ -207,7 +269,7 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "注: 紛失や破損の際に、この12単語でウォレットを回復することができます。",
-        "you_must_create_a_backup_nbsp": "バックアップの作成が必須です!&nbsp;",
+        "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "メモか印刷をして、安全な場所で保管してください。",
         "without_it_you_will_not": "これを失くすと、万一の場合にトークンを回復することができません。",
         "copy_to_clipboard": "クリップボードにコピー"
@@ -218,6 +280,9 @@
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "ハードウェアウォレットをアンロック",
         "enter_pin_code": "あなたのledgerでPINコードを入力し、Ethereumアプリにログインして下さい。"
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
       }
     },
     "blockExplorer": {
@@ -251,5 +316,13 @@
         "pending": "未処理"
       }
     }
+  },
+  "events": {
+    "ERC20Received": "Deposit",
+    "event:MainnetDepositEvent": "Deposit",
+    "event:MainnetWithdrawalEvent": "Withdrawal",
+    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "event:TokenWithdrawalSigned": "Withdrawal signed",
+    "TokenWithdrawn": "Token Withdrawn"
   }
 }

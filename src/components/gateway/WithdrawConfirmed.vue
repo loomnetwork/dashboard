@@ -3,7 +3,7 @@
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
-          <p>{{$t("components.modals.confirm_withdrawal_modal.confirm_withdrawl", {amount, token: this.symbol})}}</p>
+          <p>{{$t("components.modals.confirm_withdrawal_modal.confirm_withdrawl", {chain,amount, token: this.symbol})}}</p>
         </div>
       </b-container>
     </section>
@@ -27,24 +27,26 @@ import { Component, Watch } from "vue-property-decorator"
 import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
-import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
-import { tokenService } from '../../services/TokenService';
-import { formatTokenAmount } from '../../filters';
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { tokenService } from "../../services/TokenService"
+import { formatTokenAmount } from "../../filters"
 
 @Component
 export default class WithdrawConfirmed extends Vue {
 
   status = "default"
   symbol = ""
-  setShowDepositConfirmed = gatewayModule.setShowDepositConfirmed
-  setWithdrawalReceipts = gatewayModule.setWithdrawalReceipts
-  completeWithdrawal = gatewayModule.ethereumWithdraw
-  showSuccess = feedbackModule.showSuccess
-  showError = feedbackModule.showError
-  setShowLoadingBar = feedbackModule.showLoadingBar
+  chain = ""
 
   completeWithdrawalHandler() {
-    this.completeWithdrawal(this.symbol)
+    if (this.chain === "ethereum") {
+      gatewayModule.ethereumWithdraw(this.symbol)
+    } else if (this.chain === "binance") {
+      // retry withdraw for binance
+      gatewayModule.binanceResubmitWithdrawal()
+    } else {
+      console.error("complete withdrawal unimplemented for chain" + this.chain)
+    }
     this.close()
   }
 
@@ -55,7 +57,7 @@ export default class WithdrawConfirmed extends Vue {
   get amount(): BN | undefined | "" {
     if (!this.receipt) return ""
     // @ts-ignore
-    return formatTokenAmount(this.receipt.tokenAmount)
+    return formatTokenAmount(this.receipt.tokenAmount, tokenService.getTokenbySymbol(this.symbol).decimals)
   }
 
   get state(): DashboardState {
@@ -80,13 +82,30 @@ export default class WithdrawConfirmed extends Vue {
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
     if (receipt === null) return
+    const chainId = receipt.tokenContract.chainId
+    const chainMappings = {
+      binance: "binance",
+      eth: "ethereum",
+      tron: "tron",
+    }
+    const chain = chainMappings[chainId]
+    const contractAddress = receipt.tokenContract.local
+    const contractAddrStr = contractAddress.toString().toLowerCase()
 
-    const contractAddress = receipt.tokenContract.local.toString().toLowerCase()
-    const tokenInfo = tokenService.tokenFromAddress(contractAddress, "ethereum")
+    let tokenInfo
+
+    if (chain === "binance") {
+      // for binance the token symbol is stored in the address
+      const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join("")
+      tokenInfo = tokenService.getTokenbySymbol(symbol)
+    } else {
+      tokenInfo = tokenService.tokenFromAddress(contractAddrStr, chain)
+    }
 
     if (tokenInfo !== null) {
       this.symbol = tokenInfo.symbol
-    } else if (contractAddress === this.state.ethereum.contracts.mainGateway.toLowerCase()) {
+      this.chain = chain
+    } else if (contractAddrStr === this.state.ethereum.contracts.mainGateway.toLowerCase()) {
       this.symbol = "ETH"
     } else {
       console.error("unknown token contract ", contractAddress)
@@ -94,7 +113,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   close() {
-    this.setWithdrawalReceipts(null)
+    gatewayModule.setWithdrawalReceipts(null)
   }
 
 }

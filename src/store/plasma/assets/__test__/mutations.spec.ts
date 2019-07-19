@@ -41,9 +41,9 @@ const initialState = (): AssetsState => {
   }
 }
 
-describe.only("Game Assets, Mutations", () => {
+describe("Game Assets, Mutations", () => {
   let gameAssetState: AssetsState
-  let packType: String[]
+  let packType: string[]
   let contract: Contract
   const envName = ["local", "asia1", "us1", "plasma"]
   const exCard: CardDetail = {
@@ -76,16 +76,16 @@ describe.only("Game Assets, Mutations", () => {
       jsonInterface: BoosterPackJSON.abi,
       address: packAddresses[randomEnv][randomPack],
     }
-    mutations.setPacksContract(gameAssetState, {name: randomPack, contract})
-    expect(gameAssetState.packsContract).to.eql({[randomPack]: contract})
+    mutations.setPacksContract(gameAssetState, { name: randomPack, contract })
+    expect(gameAssetState.packsContract).to.eql({ [randomPack]: contract })
   })
 
   it("setCardContract by random environment", () => {
-    const randomEnv = envName[Math.floor(Math.random() * envName.length)]
+    const randomEnv = envName[Math.floor(Math.random() * (envName.length - 1)) + 1]
     // Card contract
     contract = {
       jsonInterface: MigratedZBGCardJSON.abi,
-      address: packAddresses[randomEnv].address,
+      address: MigratedZBGCardJSON.networks[randomEnv].address,
     }
     mutations.setCardContract(gameAssetState, contract as MigratedZBGCard)
     expect(gameAssetState.cardContract).to.eql(contract)

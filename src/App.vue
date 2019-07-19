@@ -36,9 +36,11 @@ button {
   .modal-dialog {
     max-width: 100vw;
     margin: 0;
-
     > .modal-content {
+      border-radius: 0;
+      border: 0;
       max-width: 100vw;
+      height: 100vh;
     }
   }
 }
@@ -67,4 +69,10 @@ main.container {
     font-size: 1.2rem;
   }
 }
+
+.card {
+  border: none;
+  box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
+}
+
 </style>

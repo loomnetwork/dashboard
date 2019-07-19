@@ -66,9 +66,7 @@ describe("DPOS store, Mutations", () => {
   describe("setElectionTime", () => {
     let state: DPOSState
     // 'time' measure in second
-    let time: BN
     let electionTime: any
-    const dpos3Stub = sinon.createStubInstance(DPOS3)
 
     before(async () => {
       state = defaultState()
@@ -76,21 +74,16 @@ describe("DPOS store, Mutations", () => {
     })
 
     it("Election Time should be a next 2 minutes", () => {
-      const nowTime = new Date(Date.now())
       // set next election time to be a next 2 minutes
-      time = new BN(120)
-      dpos3Stub.getTimeUntilElectionAsync.resolves(time)
-      electionTime = Date.now() + time.toNumber() * 1000
-      setElectionTime(state, new Date(electionTime))
-      expect(state.electionTime.getMinutes() - nowTime.getMinutes()).to.equals(2)
+      electionTime = new Date(Date.now() + (120 * 1000))
+      setElectionTime(state, electionTime)
+      expect(state.electionTime).to.equals(electionTime)
     })
 
     it("Election time loading in state should be FALSE after set election time", () => {
-      time = new BN(0)
-      dpos3Stub.getTimeUntilElectionAsync.resolves(time)
-      electionTime = Date.now() + time.toNumber() * 1000
-      setElectionTime(state, new Date(electionTime))
-    // tslint:disable-next-line: no-unused-expression
+      electionTime = new Date(Date.now() + (120 * 1000))
+      setElectionTime(state, electionTime)
+      // tslint:disable-next-line: no-unused-expression
       expect(state.loading.electionTime).to.false
     })
   })

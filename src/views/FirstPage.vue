@@ -3,7 +3,7 @@
   <div class>
     <div class="pt-3">
       <main>
-        <hardware-wallet-modal ref="hardwareWalletConfigRef"/>
+        <hardware-wallet-modal ref="hardwareWalletConfigRef" />
         <div class="container-fluid mb-5 rmv-padding">
           <b-modal
             no-close-on-esc
@@ -17,9 +17,9 @@
               <h3>Are you from Relentless Marketplace ?</h3>
               <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
               <div class="linking-div">
-                <img src="../assets/images/relentless.png">
+                <img src="../assets/images/relentless.png" />
                 <i style="font-size:56px;" class="fa">&#8651;</i>
-                <loom-icon width="56px" height="56px" :color="'#6eccd8'"/>
+                <loom-icon width="56px" height="56px" :color="'#6eccd8'" />
               </div>
               <div class="linking-div-choice">
                 <b-button block variant="outline-primary" :href="loomGamesUrl">Link my account</b-button>
@@ -54,9 +54,9 @@
                   @click="setWallet('metamask')"
                 >
                   <div>
-                    <img src="../assets/metamask_logo.png">
+                    <img src="../assets/metamask_logo.png" />
                     <span>Metamask</span>
-                  </div>                  
+                  </div>
                 </b-card>
               </div>
               <div class="col-sm-12">
@@ -66,11 +66,11 @@
                   @click="setWallet('ledger')"
                 >
                   <div>
-                    <img src="../assets/ledger_logo.svg">
+                    <img src="../assets/ledger_logo.svg" />
                     <span>Ledger (Legacy)</span>
                   </div>
                 </b-card>
-              </div>              
+              </div>
               <div class="col-sm-12">
                 <b-card
                   id="ledger-button"
@@ -78,7 +78,7 @@
                   @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                 >
                   <div>
-                    <img src="../assets/ledger_logo.svg">
+                    <img src="../assets/ledger_logo.svg" />
                     <span>Ledger (via Metamask)</span>
                   </div>
                 </b-card>
@@ -91,7 +91,7 @@
                   @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                 >
                   <div>
-                    <img src="../assets/metamask_logo.png">
+                    <img src="../assets/metamask_logo.png" />
                     <span>Trezor (via Metamask)</span>
                   </div>
                 </b-card>
@@ -103,16 +103,16 @@
                   @click="addressModalShow = !addressModalShow"
                 >
                   <div>
-                    <fa icon="search" class="search-icon"/>
+                    <fa icon="search" class="search-icon" />
                     <span>Explore</span>
-                  </div>                
+                  </div>
                 </b-card>
               </div>
             </div>
           </b-card>
 
           <b-card v-if="!metamaskInstalled" class="metamask-suggest">
-            <img id="metamask-mini-icon" src="../assets/metamask_logo.png">
+            <img id="metamask-mini-icon" src="../assets/metamask_logo.png" />
             <b-card-text class="text-inline">
               Looks like you don't have
               <font id="orange">Metamask</font> extension
@@ -132,24 +132,21 @@
             </div>
           </b-modal>
 
-
-          <b-modal id="metmask-hardware-wizard"  title="Hardware wallets">
+          <b-modal id="metmask-hardware-wizard" title="Hardware wallets">
             <div>
               <div class="wizard-img-container mb-3">
-                <img class="wizard-img" src="../assets/metamask-hardware-screencap.png" alt="">
+                <img class="wizard-img" src="../assets/metamask-hardware-screencap.png" alt />
               </div>
-              <p>
-                {{$t("messages.metamask_hardware_wizard")}}
-              </p>
+              <p>{{$t("messages.metamask_hardware_wizard")}}</p>
             </div>
             <template slot="modal-footer">
               <div>
                 <b-btn @click="setWallet('metamask')">Next</b-btn>
               </div>
             </template>
-          </b-modal>          
+          </b-modal>
 
-          <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status"/>
+          <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
       </main>
     </div>
@@ -186,14 +183,15 @@ export default class FirstPage extends Vue {
   get maybeRelentlessUser() {
     return this.$state.gateway.maybeRelentlessUser
   }
-
   set maybeRelentlessUser(val) {
     if (val === false) {
       gatewayModule.setMaybeRelentlessUser(val)
     }
   }
 
-  loomGamesUrl = this.$state.plasma.loomGamesEndpoint
+  get loomGamesUrl() {
+    return this.$state.plasma.loomGamesEndpoint
+  }
 
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
@@ -253,7 +251,6 @@ export default class FirstPage extends Vue {
     }
   }
 }
-
 
 .wizard-img-container {
   background-color: #6f6f6f;
@@ -386,7 +383,7 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
     .card-body {
-      padding: .5rem .8rem;
+      padding: 0.5rem 0.8rem;
     }
     .search-icon {
       margin-right: 6px;

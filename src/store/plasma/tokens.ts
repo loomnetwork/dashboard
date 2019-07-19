@@ -1,7 +1,6 @@
 import { Address } from "loom-js"
 import { Coin, EthCoin } from "loom-js/dist/contracts"
 import { ERC20 } from "./web3-contracts/ERC20"
-import ERC20abi from "loom-js/dist/mainnet-contracts/ERC20.json"
 import {
   PlasmaContext,
   TransferRequest,
@@ -10,7 +9,7 @@ import {
 } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
-const ERC20ABI = require("loom-js/dist/mainnet-contracts/ERC20.json")
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
 import { tokenService } from "@/services/TokenService"
@@ -166,23 +165,24 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
     throw new Error("Could not find token symbol " + tokenSymbol)
   }
   const address = tokenService.getTokenAddressBySymbol(symbol, chain)
-  if (!(symbol in state.coins)) {
-    state.coins[token.symbol] = {
-      decimals: token.decimals,
-      balance: new BN("0"),
-      loading: true,
-    }
-    state.coins = Object.assign({}, state.coins)
-    log("add token state ", state.coins)
-    let contract
-    try {
-      contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
-      await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
-    } catch (error) {
-      console.error("error ", error)
-    }
-    setNewTokenToLocalStorage(symbol)
+  if (symbol in state.coins) {
+    return
   }
+  state.coins[token.symbol] = {
+    decimals: token.decimals,
+    balance: new BN("0"),
+    loading: true,
+  }
+  state.coins = Object.assign({}, state.coins)
+  log("add token state ", state.coins)
+  let contract
+  try {
+    contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
+    await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
+  } catch (error) {
+    console.error("error ", error)
+  }
+  setNewTokenToLocalStorage(symbol)
 }
 
 /**
@@ -231,9 +231,25 @@ export async function approve(
   context: PlasmaContext,
   payload: TransferRequest,
 ): Promise<boolean> {
-  const { symbol, weiAmount, to } = payload
+  const { symbol, to, fee } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
+  const token = tokenService.getTokenbySymbol(symbol)
+  let weiAmount = payload.weiAmount
+
+  // If the transfer requires a fee, approve that also
+  if (fee !== undefined) {
+    // Same token do one approval
+    if (fee.token === symbol) {
+      weiAmount = weiAmount.add(fee.amount)
+    } else {
+      // Approve fee token first
+      const feeApproved = await approve(context, { symbol: fee.token, weiAmount: fee.amount, to })
+      if (!feeApproved) {
+        return false
+      }
+    }
+  }
 
   if (weiAmount.gt(balance)) {
     // TODO: fix error message
@@ -246,7 +262,7 @@ export async function approve(
   const approvalAmount = weiAmount.sub(currentAllowance)
   // to do approve allowance - weiAmount
   feedbackModule.setStep(
-    "Approving spending of " + formatTokenAmount(approvalAmount) + " " + payload.symbol,
+    "Approving spending of " + formatTokenAmount(approvalAmount, token.decimals) + " " + payload.symbol,
   )
   try {
     await adapter.approve(to, approvalAmount)
@@ -276,13 +292,14 @@ export async function transfer(
   const { symbol, weiAmount, to } = payload
   const adapter = getAdapter(symbol)
   const balance = context.state.coins[symbol].balance
+  const token = tokenService.getTokenbySymbol(symbol)
   if (weiAmount.gt(balance)) {
     throw new Error("plasma.transfer.balance.low")
   }
 
   // plasmaModule.refreshBalance(payload.symbol)
   feedbackModule.setStep(
-    `Transfering ${formatTokenAmount(weiAmount)} ${symbol}`,
+    `Transfering ${formatTokenAmount(weiAmount, token.decimals)} ${symbol}`,
   )
   return await adapter.transfer(to, weiAmount)
 }

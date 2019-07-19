@@ -14,7 +14,7 @@ import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
-import { feedbackModule } from "@/feedback/store"
+import * as Sentry from "@sentry/browser"
 
 const log = debug("dash.gateway")
 
@@ -38,10 +38,13 @@ export function gatewayReactions(store: Store<DashboardState>) {
       } else if (mapping.to.isEmpty()) {
         await gatewayModule.checkRelentlessUser(mapping.from.local.toString().toLowerCase())
       } else if (mapping.to!.isEmpty() === false) {
+
+        Sentry.setExtra(mapping.from.chainId, mapping.from.local.toString())
+        Sentry.setExtra(mapping.to.chainId, mapping.to.local.toString())
+
         await setPlasmaAccount(mapping)
         await initializeGateways(mapping, store.state.gateway.multisig)
 
-        const plasmaGateways = PlasmaGateways.service()
         const ethereumGateways = EthereumGateways.service()
 
         // Listen to approval & deposit events
@@ -62,25 +65,38 @@ export function gatewayReactions(store: Store<DashboardState>) {
     },
   )
 
-  store.watch(
-    (s) => s.gateway.maybeRelentlessUser,
-    async (maybeRelentlessUser) => {
-      if (maybeRelentlessUser === false) {
-        // User agree to create a new mapping
-        await gatewayModule.createMapping()
-      }
-    },
-  )
+  // store.watch(
+  //   (s) => s.gateway.maybeRelentlessUser,
+  //   async (maybeRelentlessUser) => {
+  //     if (maybeRelentlessUser === false) {
+  //       // User agree to create a new mapping
+  //       await gatewayModule.createMapping()
+  //     }
+  //   },
+  // )
 
   store.subscribeAction({
     after(action) {
       if (/^plasma.+addToken$/.test(action.type)) {
-        ethereumModule.initERC20(action.payload)
-        const ethereumGateways = EthereumGateways.service()
-        const ethTokenAddress = tokenService.getTokenAddressBySymbol(action.payload, "ethereum")
-        const adapter = ethereumGateways.add(action.payload, ethTokenAddress)
-        // @ts-ignore
-        PlasmaGateways.service().add("ethereum", action.payload, adapter!.contract._address)
+        const tokenInfo = tokenService.getTokenbySymbol(action.payload)
+        if (tokenInfo.ethereum) {
+          ethereumModule.initERC20(action.payload)
+          const ethereumGateways = EthereumGateways.service()
+          log("adding gateway for %s to ethereum", tokenInfo.symbol)
+          const etherumTokenAddress = tokenInfo.ethereum
+          const adapter = ethereumGateways.add(action.payload, etherumTokenAddress)
+          // @ts-ignore
+          const ethGatewayAddr = Address.fromString("eth:" + adapter!.contract._address)
+          PlasmaGateways.service().add("ethereum", action.payload, ethGatewayAddr)
+        }
+        if (tokenInfo.binance) {
+          log("adding gateway for %s to binance", tokenInfo.symbol)
+          PlasmaGateways.service().add("binance", action.payload)
+          gatewayModule.refreshWithdrawalReceipt({ chain: "binance", symbol: tokenInfo.symbol })
+        }
+        // XXX dont refresh all allowances, just the current token
+        gatewayModule.refreshAllowances()
+
       }
     },
   })
@@ -136,12 +152,10 @@ export function gatewayReactions(store: Store<DashboardState>) {
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
     // @ts-ignore
     if (receipt && !pastWithdrawalExist) {
-      console.info("Setting unclaimed receipt")
       gatewayModule.setWithdrawalReceipts(receipt)
       return
     }
 
-    // TODO: Add support for multiple tokens
     receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
     // @ts-ignore
     if (receipt || !pastWithdrawalExist) {
@@ -190,6 +204,10 @@ function listenToDepositApproval(
       fromBlock: "latest",
     },
     (error, event) => {
+      if (error) {
+        console.log(error)
+        return
+      }
       log(
         `transfer ${event.returnValues.value.toString()}
        tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
@@ -215,6 +233,10 @@ function listenToDeposit(account: string, gw: ERC20Gateway_v2, loom: ERC20) {
       fromBlock: "latest",
     },
     (error, event) => {
+      if (error) {
+        console.log(error)
+        return
+      }
       log(
         `transfer ${event.returnValues.value.toString()}
        tokens from ${event.returnValues.from} to ${event.returnValues.to}`,

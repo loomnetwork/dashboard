@@ -51,10 +51,12 @@ const initialState: PlasmaState = {
     LOOM: {
       balance: new BN("0"),
       loading: false,
+      decimals: 18,
     },
     ETH: {
       balance: new BN("0"),
       loading: false,
+      decimals: 18,
     },
     // bnb: {
     //   balance: new BN("0"),
@@ -145,7 +147,7 @@ async function changeIdentity(
   if (signer === null) {
     // reset client middleware
     ctx.state.client!.txMiddleware = []
-    createDefaultTxMiddleware(
+    ctx.state.client!.txMiddleware = createDefaultTxMiddleware(
       client,
       CryptoUtils.B64ToUint8Array(ctx.state.appId.private),
     )

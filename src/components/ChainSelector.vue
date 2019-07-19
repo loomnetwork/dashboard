@@ -25,7 +25,7 @@ export default class ChainSelector extends Vue {
 
 </script>
 <template>
-  <div id="chain-selector" v-if="envs.length > 0">
+  <div id="chain-selector" v-if="envs.length > 1">
     <b-form-select v-model="env" size="sm" class="mt-3">
       <option v-for="env in envs" :value="env" :key="env.name">{{env.name}}</option>
     </b-form-select>

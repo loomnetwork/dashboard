@@ -38,10 +38,12 @@ export interface EthereumState extends EthereumConfig {
     LOOM: {
       balance: BN
       loading: boolean,
+      decimals: number,
     }
     [coinSymbol: string]: {
       balance: BN
       loading: boolean,
+      decimals: number,
     },
   },
   blockNumber: number,

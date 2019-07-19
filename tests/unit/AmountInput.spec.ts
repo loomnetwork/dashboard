@@ -81,7 +81,7 @@ describe("AmountInput: Invalid amount cases", () => {
     // @ts-ignore
     wrapper.vm.validateAmount()
     expect(wrapper.find(".error").text()).to.equal(
-      i18n.t("messages.amount_input_should_more", { amount: formatTokenAmount(MIN) }).toString()
+      i18n.t("messages.amount_input_should_more", { amount: formatTokenAmount(MIN) }).toString(),
     )
   })
 
@@ -90,7 +90,7 @@ describe("AmountInput: Invalid amount cases", () => {
     // @ts-ignore
     wrapper.vm.validateAmount()
     expect(wrapper.find(".error").text()).to.equal(
-      i18n.t("messages.amount_input_should_less", { amount: formatTokenAmount(MAX) }).toString()
+      i18n.t("messages.amount_input_should_less", { amount: formatTokenAmount(MAX) }).toString(),
     )
   })
 

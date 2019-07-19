@@ -6,6 +6,7 @@ import { DashboardState } from "@/types"
 import { dposUtils, dposReactions } from "../reactions"
 import { DPOS3 } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
+import lolex from "lolex"
 
 import sinon from "sinon"
 import { now, nowStub, dposUtilsStub, dposModuleStub, plasmaModuleStub } from "./_helpers"
@@ -55,8 +56,10 @@ describe("Reactions", () => {
     const date = new Date()
     const getTimeStub = sinon.stub(date, "getTime")
     const time = 10000
+    let clock
 
     before(() => {
+      clock = lolex.install()
       dposModuleStub.refreshElectionTime.reset()
       dposUtilsStub.scheduleElectionTimeCall.restore()
 
@@ -65,12 +68,14 @@ describe("Reactions", () => {
 
       dposUtils.scheduleElectionTimeCall()
     })
+    after(() => {
+      clock.uninstall()
+    })
 
     it("refresh election time after delay", () => {
       const delay = Math.max(time - now, 10000)
-      setTimeout(() => {
-        sinon.assert.calledOnce(dposModuleStub.refreshElectionTime)
-      }, delay)
+      clock.tick(delay)
+      sinon.assert.calledOnce(dposModuleStub.refreshElectionTime)
     })
   })
 

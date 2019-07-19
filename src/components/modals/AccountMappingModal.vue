@@ -26,8 +26,13 @@
       </b-form-group>
       <div v-if="mappingChoice === 'existing'">
         <div class="mb-2">
-          <label style="margin:0">Ethereum address</label>
+          <label style="margin:0">Ethereum address</label><br>
           <code>{{$store.state.ethereum.address}}</code>
+        </div>
+        <div class="mb-2">
+          <label style="margin:0">Loom address</label><br>
+          <code v-if="!isPKValid">-</code>
+          <code v-else>{{loomAddress | loomAddress}}</code>
         </div>
         <b-form-input
           id="input-formatter"
@@ -49,10 +54,10 @@
 <script lang="ts">
 import { Component, Watch, Vue, Prop, Provide } from "vue-property-decorator"
 import InputAddress from "@/components/InputAddress.vue"
-import { gatewayModule } from '../../store/gateway';
-import { DashboardState } from '../../types';
-import { Address } from 'loom-js';
-import { formatFromLoomAddress } from '../../utils';
+import { gatewayModule } from "../../store/gateway"
+import { DashboardState } from "../../types"
+import { Address, CryptoUtils, LocalAddress } from "loom-js"
+import { formatFromLoomAddress } from "../../utils"
 
 @Component({
   components: {
@@ -100,6 +105,11 @@ export default class AccountMappingModal extends Vue {
     }
   }
 
-
+  get loomAddress() {
+    const pk = CryptoUtils.B64ToUint8Array(this.privateKey)
+    const pubKey = CryptoUtils.publicKeyFromPrivateKey(pk)
+    const address = LocalAddress.fromPublicKey(pubKey).toString()
+    return address
+  }
 }
 </script>

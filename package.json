@@ -101,6 +101,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
+    "lolex": "^4.1.0",
     "mocha": "^6.1.4",
     "node-sass": "^4.9.0",
     "nyc": "^14.1.1",

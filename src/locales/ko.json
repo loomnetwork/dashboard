@@ -7,7 +7,7 @@
     "transfer_pack_err_tx": "팩 전송 중 에러가 발생했습니다: {msg}",
     "user_denied_sign_tx": "사용자가 메세지 서명을 거절했습니다",
     "deployer_already_exists": "Deployer alrready exists.",
-    "transaction_apprv_err_tx": "Error Approving Transaction: {msg}",
+    "transaction_apprv_err_tx": "트랜잭션 승인 중 에러가 발생했습니다: {msg}",
     "add_deployer_addr_success_tx": "Deployer address added successfully.",
     "add_key_err_tx": "키 추가 중 에러가 발생했습니다: {msg}",
     "copy_addr_success_tx": "주소가 클립보드에 복사되었습니다.",
@@ -205,31 +205,31 @@
     },
     "faucet_sidebar": {
       "analytics": "Analytics",
-      "validators": "Validators",
+      "validators": "검증자",
       "my_account": "내 계정",
       "my_delegations": "내 위임",
       "rewards": "보상",
       "history": "거래 내역",
-      "deposit_withdraw": "Deposit/Withdraw",
-      "faq": "F.A.Q",
-      "account_explorer": "Account Explorer",
-      "game_assets": "Game Assets",
-      "block_explorer": "Block Explorer",
-      "deploy_to_plasmachain": "Deploy to Plasmachain",
-      "transfer_gateway": "Transfer Gateway",
-      "validator_management": "Validator Management",
-      "feedback_form": "Contact Support"
+      "deposit_withdraw": "입금/인출",
+      "faq": "자주 묻는 질문",
+      "account_explorer": "계정 탐색기",
+      "game_assets": "게임 자산",
+      "block_explorer": "블록 탐색기",
+      "deploy_to_plasmachain": "플라즈마체인에 배포하기",
+      "transfer_gateway": "전송 게이트웨이",
+      "validator_management": "검증자 관리",
+      "feedback_form": "고객센터에 문의하기"
     },
     "gateway": {
-      "complete_deposit": "Complete deposit",
+      "complete_deposit": "입금 완료하기",
       "approval": {
-        "sending": "Sending approval request...",
+        "sending": "승인 요청 전송 중...",
         "sent": "Approval request sent successfully. You will be asked to complete the deposit once it is confirmed.",
         "success": "The deposit approval has been confirmed. Click complete deposit to continue.",
         "failure": "Failed sending deposit approval request..."
       },
       "deposit": {
-        "sending": "Sending deposit request...",
+        "sending": "입금 요청 전송 중...",
         "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
         "view_confirmation": "View confirmations",
@@ -318,10 +318,10 @@
     }
   },
   "events": {
-    "ERC20Received": "Deposit",
-    "event:MainnetDepositEvent": "Deposit",
-    "event:MainnetWithdrawalEvent": "Withdrawal",
-    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "ERC20Received": "입금",
+    "event:MainnetDepositEvent": "입금",
+    "event:MainnetWithdrawalEvent": "인출",
+    "event:WithdrawLoomCoin": "인출 (LOOM)",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
     "TokenWithdrawn": "출금한 토큰"
   }

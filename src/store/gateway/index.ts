@@ -44,6 +44,7 @@ function initialState(): GatewayState {
     ],
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
+    requireMapping: false,
     checkMarketplaceURL: "",
     tokenContractLogsURL: "",
   }
@@ -84,6 +85,9 @@ export const gatewayModule = {
   setMaybeRelentlessUser: builder.commit(mutations.setMaybeRelentlessUser),
   checkRelentlessUser: builder.dispatch(Mapper.checkRelentlessUser),
 
+  // helper
+  generateNewId: Mapper.generateNewId,
+
   // mutations
   setConfig: builder.commit(mutations.setConfig),
   setShowDepositForm: builder.commit(mutations.setShowDepositForm),
@@ -123,7 +127,7 @@ async function checkIfPastWithdrawalEventExists() {
   ) ? true : false
 }
 
-async function getTokenContractLogs(context: ActionContext, payload: {contractAddress: string, page: number} ) {
+async function getTokenContractLogs(context: ActionContext, payload: { contractAddress: string, page: number }) {
   let indexerUrl = context.state.tokenContractLogsURL.replace("{address}", payload.contractAddress)
   indexerUrl += `?page=${payload.page}`
 

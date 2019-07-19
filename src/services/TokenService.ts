@@ -60,7 +60,7 @@ class TokenService {
     // disable ethereun
     BNB.ethereum = ""
 
-    // hack BNB data until we set the right vslues in loomauth token data
+    // Hack BNB data until we set the right vqlues in loomauth token data
     switch (BNB.plasma) {
       // asia1
       case "0xb6f5558ed8fd604dcda28514c4fb39af935c48e9":
@@ -70,10 +70,11 @@ class TokenService {
       case "0x6080fcced27a1e0bf15e5e3ac32e3755e19bd4d9":
         BNB.binance = "tbnb1kzsnp502agsuqw5e8kdh0v2csg4elgaxc4gvxz"
         break
-      // plasma: not on prod yed
-      // case "":
-      //   BNB.binance = ""
-      //   break
+      // prod (loomaauth tokens endpoint still not up to date)
+      default:
+        BNB.plasma = "0xf37d4c3d2eea80a6b7c45d77f3093d797e3da124"
+        BNB.binance = "bnb17mxq8p5jmw27dtt6s92fd35yltdml6snw3r98t"
+        break
     }
   }
   /**

@@ -27,7 +27,8 @@ export default class InputAddress extends Vue {
 
   patterns = {
     loom: /^loom[a-fA-F0-9]{40}$/,
-    binance: /^[\w0-9]{43}$/,
+    // todo disable t on prod
+    binance: /^t?[\w0-9]{42}$/,
     any: /^(0x|loom)[a-fA-F0-9]{40}$/,
   }
 

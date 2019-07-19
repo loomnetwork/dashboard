@@ -44,7 +44,8 @@ class TokenService {
   async setBaseURL(url: string) {
     this.baseURL = url
     const result = await axios.get(this.baseURL)
-    this.symbols = result.data.tokens.map(
+    this.symbols = result.data.tokens.filter((data) => data.symbol !== "BNB")
+    .map(
       (data): TokenData => ({
         symbol: data.symbol,
         ethereum: data.address.toLowerCase(),

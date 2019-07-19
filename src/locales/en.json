@@ -234,6 +234,28 @@
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
         "view_confirmation": "View confirmations",
         "failure": "Deposit failed..."
+      },
+      "deposit_binance": {
+        "title_deposit": "Deposit to Plasmachain from Binance",
+        "title_success": "Success",
+        "description": "Please go to {link} and fill in the form as show below.",
+        "binance_link": "https://binance.org/en/balances",
+        "send_asset": "Send Asset",
+        "select_asset": "Select Asset",
+        "to_address": "To Address",
+        "send_amount": "Amount to send",
+        "memo": "Memo",
+        "send_amount_placeholder": "Enter the deposit amount",
+        "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
+        "next": "Next",
+        "close": "Close",
+        "back": "Back",
+        "cancel": "Cancel"
+      },
+      "deposit_form": {
+        "title": "Deposit {token} from {chain}",
+        "amount_approved": "Amount approved : ",
+        "balance": "Your token balance : "
       }
     },
     "layout": {
@@ -353,5 +375,12 @@
     "event:WithdrawLoomCoin": "Withdraw (LOOM)",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
     "TokenWithdrawn": "Token Withdrawn"
+  },
+  "regular_modal": {
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }

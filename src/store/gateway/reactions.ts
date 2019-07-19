@@ -65,15 +65,15 @@ export function gatewayReactions(store: Store<DashboardState>) {
     },
   )
 
-  store.watch(
-    (s) => s.gateway.maybeRelentlessUser,
-    async (maybeRelentlessUser) => {
-      if (maybeRelentlessUser === false) {
-        // User agree to create a new mapping
-        await gatewayModule.createMapping()
-      }
-    },
-  )
+  // store.watch(
+  //   (s) => s.gateway.maybeRelentlessUser,
+  //   async (maybeRelentlessUser) => {
+  //     if (maybeRelentlessUser === false) {
+  //       // User agree to create a new mapping
+  //       await gatewayModule.createMapping()
+  //     }
+  //   },
+  // )
 
   store.subscribeAction({
     after(action) {

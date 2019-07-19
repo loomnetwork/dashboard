@@ -38,6 +38,6 @@ export default {
     tokenContractLogsURL: "https://api.loom.games/plasma/tokencontract/eth:{address}",
   },
   coinDataUrl: "https://auth.loom.games/wallet/tokens",
-  disabled: ["transfer-asset", "binance"],
-  chains: ["ethereum"],
+  disabled: [],
+  chains: ["ethereum", "binance"],
 } as DashboardConfig

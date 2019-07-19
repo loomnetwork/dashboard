@@ -66,9 +66,7 @@ describe("DPOS store, Mutations", () => {
   describe("setElectionTime", () => {
     let state: DPOSState
     // 'time' measure in second
-    let time: BN
     let electionTime: any
-    const dpos3Stub = sinon.createStubInstance(DPOS3)
 
     before(async () => {
       state = defaultState()

@@ -37,6 +37,7 @@ export interface GatewayState extends GatewayConfig {
   withdrawStateIdx: number
   transferRequest: TransferRequest
   maybeRelentlessUser: boolean | null
+  requireMapping: boolean
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

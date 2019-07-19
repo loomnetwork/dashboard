@@ -26,13 +26,13 @@
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableDeposit"
+              :disabled="(symbol === 'BNB') || disableDeposit"
               @click="requestCrossChainTranfer(DEPOSIT, symbol)"
             >Deposit</b-button>
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
+              :disabled="(symbol === 'BNB') || disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
               <span>Withdraw</span>
@@ -47,7 +47,7 @@
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
+              :disabled="(symbol === 'BNB') || disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestSwap(symbol)"
             >Transfer</b-button>
           </b-button-group>

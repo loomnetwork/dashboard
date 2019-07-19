@@ -158,8 +158,8 @@
       "timelock": "락업 기간:",
       "unlocked": "잠금 해제됨",
       "no_stakes": "You have not yet staked with {name}",
-      "stake_tokens": "Stake tokens",
-      "consolidate": "Consolidate"
+      "stake_tokens": "토큰 스테이크하기",
+      "consolidate": "하나로 통합하기"
     },
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
@@ -204,7 +204,7 @@
       "block_explorer": "블록 탐색기"
     },
     "faucet_sidebar": {
-      "analytics": "Analytics",
+      "analytics": "분석",
       "validators": "검증자",
       "my_account": "내 계정",
       "my_delegations": "내 위임",

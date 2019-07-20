@@ -178,8 +178,6 @@ export async function refreshDelegations(context: ActionContext) {
     .filter((d) => d.index === 0)
     .map((item) => fromIDelegation(item, state.validators))
 
-  // .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
-
   state.rewards = rewards
   log("rewards", rewards.toString())
   state.loading.delegations = false
@@ -244,10 +242,6 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   }
 
   try {
-    // console.log("JUST CONTRACT!", contract)
-    // console.log("DELEGATE CONTRACT!", contract.address.local.toString())
-    // console.log("VALIDATOR ADDRESS", delegation.validator.address.toString())
-
     feedback.setStep("Delegating...")
     await context.state.contract!.delegateAsync(
       delegation.validator.address,
@@ -259,6 +253,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Unexpected error while delegating, please contact support.")
+    console.error(error)
     Sentry.withScope((scope) => {
       scope.setExtra("delegations", {
         delegations: JSON.stringify({
@@ -269,7 +264,6 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
       })
       Sentry.captureException(error)
     })
-    console.error(error)
   }
 }
 

@@ -320,6 +320,17 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while redelegating. Please contact support")
+    Sentry.withScope((scope) => {
+      scope.setExtra("redelegations", {
+        redelegations: JSON.stringify({
+          validator: delegation.validator.address.local.toString(),
+          updateValidator: delegation.updateValidator!.address,
+          updateAmount: delegation.updateAmount,
+          index: delegation.index,
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 
@@ -332,7 +343,14 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while redelegating. Please contact support.")
-  }
+    Sentry.withScope((scope) => {
+      scope.setExtra("consolidate", {
+        consolidate: JSON.stringify({
+          validator: validator.address.local.toString(),
+        }),
+      })
+      Sentry.captureException(error)
+  })
 }
 
 /**
@@ -343,7 +361,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - index is the delegation index in the source validator
  *  - updateAmount is the amount to un-delegate
  */
-export async function undelegate(context: ActionContext, delegation: Delegation) {
+  export async function undelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask("Undelegating")
   feedback.setStep("Undelegating from " + delegation.validator.name)
   try {
@@ -356,6 +374,15 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while undelegating. Please contact support.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("undelegations", {
+        undelegations: JSON.stringify({
+          validator: delegation.validator.address.local.toString(),
+          updateAmount: delegation.updateAmount,
+          index: delegation.index,
+        }),
+      })
+    })
   }
 }
 
@@ -363,7 +390,7 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-async function claimRewards(context: ActionContext) {
+  async function claimRewards(context: ActionContext) {
   const contract = context.state.contract!
   // limbo context.rootState.plasma.chainId
   const limboValidator = Address.fromString(
@@ -395,7 +422,7 @@ async function claimRewards(context: ActionContext) {
  * @param context
  * @param candidate
  */
-export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
+  export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
   const balance = context.rootState.plasma.coins.LOOM.balance
   const weiAmount = parseToWei("1250000")
 

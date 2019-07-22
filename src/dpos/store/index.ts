@@ -350,7 +350,8 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
         }),
       })
       Sentry.captureException(error)
-  })
+    })
+  }
 }
 
 /**
@@ -361,7 +362,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - index is the delegation index in the source validator
  *  - updateAmount is the amount to un-delegate
  */
-  export async function undelegate(context: ActionContext, delegation: Delegation) {
+export async function undelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask("Undelegating")
   feedback.setStep("Undelegating from " + delegation.validator.name)
   try {
@@ -390,7 +391,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  * withdraw from gateway to ethereum account
  * @param symbol
  */
-  async function claimRewards(context: ActionContext) {
+async function claimRewards(context: ActionContext) {
   const contract = context.state.contract!
   // limbo context.rootState.plasma.chainId
   const limboValidator = Address.fromString(
@@ -422,7 +423,7 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  * @param context
  * @param candidate
  */
-  export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
+export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
   const balance = context.rootState.plasma.coins.LOOM.balance
   const weiAmount = parseToWei("1250000")
 

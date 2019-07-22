@@ -320,6 +320,17 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while redelegating. Please contact support")
+    Sentry.withScope((scope) => {
+      scope.setExtra("redelegations", {
+        redelegations: JSON.stringify({
+          validator: delegation.validator.address.local.toString(),
+          updateValidator: delegation.updateValidator!.address.local.toString(),
+          updateAmount: delegation.updateAmount.toString(),
+          index: delegation.index,
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 
@@ -332,6 +343,14 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while redelegating. Please contact support.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("consolidate", {
+        consolidate: JSON.stringify({
+          validator: validator.address.local.toString(),
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 
@@ -356,6 +375,16 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while undelegating. Please contact support.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("undelegations", {
+        undelegations: JSON.stringify({
+          validator: delegation.validator.address.local.toString(),
+          updateAmount: delegation.updateAmount.toString(),
+          index: delegation.index,
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 

@@ -63,18 +63,6 @@
                 <b-card
                   id="ledger-button"
                   class="wallet-selection-card text-center mb-3"
-                  @click="setWallet('ledger')"
-                >
-                  <div>
-                    <img src="../assets/ledger_logo.svg" />
-                    <span>Ledger (Legacy)</span>
-                  </div>
-                </b-card>
-              </div>
-              <div class="col-sm-12">
-                <b-card
-                  id="ledger-button"
-                  class="wallet-selection-card text-center mb-3"
                   @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                 >
                   <div>
@@ -96,6 +84,18 @@
                   </div>
                 </b-card>
               </div>
+              <div class="col-sm-12">
+                <b-card
+                  id="ledger-button"
+                  class="wallet-selection-card text-center mb-3"
+                  @click="setWallet('ledger')"
+                >
+                  <div>
+                    <img src="../assets/ledger_logo.svg" />
+                    <span>Ledger (Legacy)</span>
+                  </div>
+                </b-card>
+              </div>              
               <div class="col-sm-12">
                 <b-card
                   id="explore-button"

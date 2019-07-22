@@ -7,7 +7,7 @@
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
         <dd>
-          <b-spinner v-if="delegation.pending" type="border" small/>
+          <b-spinner v-if="delegation.pending" type="border" small />
           {{delegation.state | delegationState}}
         </dd>
         <dt>{{ $t('views.validator_detail.amount_delegated') }}</dt>
@@ -44,7 +44,8 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 import { DPOSState, HasDPOSState, Delegation } from "@/dpos/store/types"
 import { Store } from "vuex"
 import { dposModule } from "@/dpos/store"
-import { ZERO } from "../../utils"
+import { ZERO } from "@/utils"
+import { plasmaModule } from "@/store/plasma"
 
 @Component
 export default class DelegationsList extends Vue {
@@ -63,11 +64,17 @@ export default class DelegationsList extends Vue {
     return (this.$store as Store<HasDPOSState>).state.dpos
   }
 
-  requestRedelegation(delegation: Delegation) {
+  async requestRedelegation(delegation: Delegation) {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
     dposModule.requestRedelegation(delegation)
   }
 
-  requestUndelegation(delegation) {
+  async requestUndelegation(delegation) {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
     dposModule.requestUndelegation(delegation)
   }
 }

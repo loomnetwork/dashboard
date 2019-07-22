@@ -44,11 +44,11 @@ import { DashboardState } from "@/types"
 import { plasmaModule } from "@/store/plasma"
 import AmountInput from "@/components/AmountInput.vue"
 import BN from "bn.js"
-import { toBigNumber, ZERO } from "@/utils"
 import { BigNumber } from "bignumber.js"
 import { formatTokenAmount } from "@/filters"
 import InputAddress from "../InputAddress.vue"
 import { tokenService } from "@/services/TokenService"
+import { ZERO } from "@/utils"
 
 @Component({
   components: {

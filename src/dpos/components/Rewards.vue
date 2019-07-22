@@ -2,7 +2,7 @@
   <b-card title="Rewards" class="mb-4">
     <div class="mb-4">
       <div v-if="state.dpos.loading.delegations">
-        <b-spinner variant="primary" label="Spinning"/>
+        <b-spinner variant="primary" label="Spinning" />
       </div>
       <div v-else-if="hasRewardsUnclaimed">
         <h6>{{ $t('views.rewards.unclaimed_rewards') }}</h6>
@@ -41,6 +41,7 @@ import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
+import { plasmaModule } from '../../store/plasma';
 
 @Component
 export default class Rewards extends Vue {
@@ -48,7 +49,6 @@ export default class Rewards extends Vue {
   hideTooltip = false
   pollInterval = null
 
-  claimRewards = dposModule.claimRewards
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -67,6 +67,13 @@ export default class Rewards extends Vue {
   }
   get hasRewardsBeingClaimed() {
     return this.rewardsBeingClaimed.gt(ZERO)
+  }
+
+  async claimRewards() {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
+    dposModule.claimRewards()
   }
 
 }

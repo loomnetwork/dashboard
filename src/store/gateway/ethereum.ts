@@ -32,6 +32,7 @@ import { i18n } from "@/i18n"
 import { ZERO } from "@/utils"
 import { from } from "rxjs"
 import { concatMap, filter, mergeMap, scan, toArray, tap } from "rxjs/operators"
+import * as Sentry from "@sentry/browser"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -293,6 +294,16 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       } else {
         console.error(e)
         feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+        Sentry.withScope((scope) => {
+          scope.setExtra("ethereumDeposit", {
+            funds: JSON.stringify({
+              chain,
+              symbol,
+              amount: weiAmount.toString(),
+            }),
+          })
+          Sentry.captureException(e)
+        })
       }
     }
     return
@@ -322,6 +333,18 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       }
       console.log(err)
       fb.showLoadingBar(false)
+      Sentry.withScope((scope) => {
+        scope.setExtra("ethereumDeposit", {
+          funds: JSON.stringify({
+            chain,
+            symbol,
+            amount: weiAmount.toString(),
+          }),
+          // @ts-ignore
+          spender: JSON.stringify(gateway.contract._address.toString()),
+        })
+        Sentry.captureException(err)
+      })
       return
     }
   }
@@ -346,6 +369,16 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           console.error(err)
           fb.showError(i18n.t("components.gateway.deposit.failure").toString())
         }
+        Sentry.withScope((scope) => {
+          scope.setExtra("ethereumDeposit", {
+            funds: JSON.stringify({
+              chain,
+              symbol,
+              amount: weiAmount.toString(),
+            }),
+          })
+          Sentry.captureException(err)
+        })
       }
     },
   })
@@ -392,6 +425,18 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       console.log(err)
       fb.showError("Withdraw failed, please try again or contact support.")
     }
+    Sentry.withScope((scope) => {
+      scope.setExtra("ethereumWithdraw", {
+        receipt: JSON.stringify({
+          tokenOwner: receipt.tokenOwner.local.toString(),
+          tokenContract: receipt.tokenContract.local.toString(),
+          tokenId: receipt.tokenId!.toString(),
+          tokenAmount: receipt.tokenAmount!.toString(),
+          signatures: receipt.oracleSignature,
+        }),
+      })
+      Sentry.captureException(err)
+    })
   }
   localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
   fb.showLoadingBar(false)

@@ -1,17 +1,8 @@
 import { DelegationState, LocktimeTier } from "loom-js/dist/proto/dposv3_pb"
 import Vue from "vue"
 import BN from "bn.js"
-import { formatToCrypto, formatToLoomAddress } from "./utils"
-import { ethers } from "ethers"
+import { formatToLoomAddress } from "./utils"
 import BigNumber from "bignumber.js"
-
-// https://github.com/palantir/blueprint/issues/959#issuecomment-335965129\
-// const durationFormat = require("moment-duration-format")
-// let moment = require("moment");
-// if ("default" in moment) {
-//     moment = moment["default"];
-// }
-// durationFormat(moment)
 
 const delegationStateText = ["Bonding", "Bonded", "Unbonding", "Redelegating"]
 const lockTimeTierText = ["2 weeks", "3 months", "6 months", "1 year"]
@@ -64,10 +55,6 @@ export function readableDateTime(timestamp) {
   console.log("date", timestamp)
   return new Date(timestamp * 1000).toLocaleDateString()
 }
-
-// export function formatTokenAmounts(wei: BN) {
-//     return formatToCrypto(wei.toString())
-// }
 
 /**
  * For some validator website property contains a domain

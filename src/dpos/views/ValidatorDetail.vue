@@ -1,5 +1,10 @@
 <template>
-  <main class="validator">
+  <loading-spinner
+    v-if="isLoading"
+    :showBackdrop="false"
+    message="Loading validators....">
+  </loading-spinner>
+  <main v-else class="validator">
     <header>
       <h1>
         <router-link
@@ -75,18 +80,21 @@ import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import SuccessModal from "@/components/modals/SuccessModal.vue"
 import DelegateModal from "@/dpos/components/DelegateModal.vue"
+import LoadingSpinner from "@/components/LoadingSpinner.vue"
 
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
 import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
+import { plasmaModule } from '../../store/plasma';
 
 @Component({
   components: {
     SuccessModal,
     DelegateModal,
     DelegationsList,
+    LoadingSpinner,
   },
 })
 export default class ValidatorDetail extends Vue {
@@ -96,20 +104,22 @@ export default class ValidatorDetail extends Vue {
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
 
-  consolidate = dposModule.consolidate
-
   get state(): HasDPOSState {
     return this.$store.state
   }
+
   get validatorName() {
     return this.$route.params.index
   }
 
+  get isLoading() {
+    return this.state.dpos.validators.length === 0 ? true : false
+  }
+  
   get userIsLoggedIn() { return this.state.plasma.address !== "" }
 
   get validator() {
     const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
-    // todo add state.loadingValidators:boolean
     if (validator === undefined) {
       this.$router.push("../validators")
     }
@@ -125,8 +135,18 @@ export default class ValidatorDetail extends Vue {
     return 1 < this.delegations.filter((d) => !d.locked).length
   }
 
-  requestDelegation() {
+  async requestDelegation() {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
     dposModule.requestDelegation(this.validator!)
+  }
+
+  async consolidate(validator) {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
+    dposModule.consolidate(validator)
   }
 
 }
@@ -216,6 +236,6 @@ main.validator {
       }
     }
   }
-}
 
+}
 </style>

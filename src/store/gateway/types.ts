@@ -29,10 +29,7 @@ export interface GatewayState extends GatewayConfig {
   pendingTransactions: any[]
   withdrawalReceipts: IWithdrawalReceipt | WithdrawalReceipt | null
   showDepositForm: boolean
-  showDepositApproved: boolean
-  showDepositConfirmed: boolean
   showWithdrawForm: boolean
-  showWithdrawProgress: boolean
   withdrawStates: WithdrawState[]
   withdrawStateIdx: number
   transferRequest: TransferRequest

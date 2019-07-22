@@ -78,7 +78,6 @@ export default class DepositForm extends Vue {
   @Prop({ required: true }) token!: string // prettier-ignore
 
   setShowDepositForm = gatewayModule.setShowDepositForm
-  setShowDepositApproved = gatewayModule.setShowDepositApproved
 
   // vue returns either number or empty string for input number
   min = new BN(1)

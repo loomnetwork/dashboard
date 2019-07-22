@@ -283,7 +283,6 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
           chain,
           symbol,
           amount: weiAmount.toString(),
-          receipt,
         }),
       })
       Sentry.captureException(error)

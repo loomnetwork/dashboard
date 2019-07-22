@@ -279,7 +279,7 @@ export async function approve(
     }
     Sentry.withScope((scope) => {
       scope.setExtra("approve", {
-        withdraw: JSON.stringify({
+        approval: JSON.stringify({
           symbol,
           to,
           fee,

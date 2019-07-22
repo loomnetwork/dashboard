@@ -296,11 +296,12 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
         feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
         Sentry.withScope((scope) => {
           scope.setExtra("ethereumDeposit", {
-            deposit: JSON.stringify({
+            funds: JSON.stringify({
               chain,
               symbol,
               amount: weiAmount.toString(),
             }),
+            depositAddress: JSON.stringify(context.rootState.ethereum.address.toString()),
           })
           Sentry.captureException(e)
         })
@@ -335,11 +336,13 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       fb.showLoadingBar(false)
       Sentry.withScope((scope) => {
         scope.setExtra("ethereumDeposit", {
-          deposit: JSON.stringify({
+          funds: JSON.stringify({
             chain,
             symbol,
             amount: weiAmount.toString(),
           }),
+          // @ts-ignore
+          spender: JSON.stringify(gateway.contract._address.toString()),
         })
         Sentry.captureException(err)
       })
@@ -369,7 +372,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
         }
         Sentry.withScope((scope) => {
           scope.setExtra("ethereumDeposit", {
-            deposit: JSON.stringify({
+            funds: JSON.stringify({
               chain,
               symbol,
               amount: weiAmount.toString(),
@@ -425,8 +428,12 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     }
     Sentry.withScope((scope) => {
       scope.setExtra("ethereumWirhdraw", {
-        deposit: JSON.stringify({
-          receipt,
+        receipt: JSON.stringify({
+          tokenOwner: receipt.tokenOwner.local.toString(),
+          tokenContract: receipt.tokenContract.local.toString(),
+          tokenId: receipt.tokenId!.toString(),
+          tokenAmount: receipt.tokenAmount!.toString(),
+          signatures: receipt.oracleSignature,
         }),
       })
       Sentry.captureException(err)

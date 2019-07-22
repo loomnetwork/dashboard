@@ -81,6 +81,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
+import { plasmaModule } from '../../store/plasma';
 
 @Component({
   components: {
@@ -95,8 +96,6 @@ export default class ValidatorDetail extends Vue {
   lockDays = [14, 90, 180, 365]
 
   states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
-
-  consolidate = dposModule.consolidate
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -125,8 +124,18 @@ export default class ValidatorDetail extends Vue {
     return 1 < this.delegations.filter((d) => !d.locked).length
   }
 
-  requestDelegation() {
+  async requestDelegation() {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
     dposModule.requestDelegation(this.validator!)
+  }
+
+  async consolidate(validator) {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
+    dposModule.consolidate(validator)
   }
 
 }
@@ -217,5 +226,4 @@ main.validator {
     }
   }
 }
-
 </style>

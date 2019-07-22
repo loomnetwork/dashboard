@@ -383,6 +383,7 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
           index: delegation.index,
         }),
       })
+      Sentry.captureException(error)
     })
   }
 }

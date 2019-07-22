@@ -61,6 +61,10 @@ describe("DPoS state", () => {
       expect(state.validators[0].stakedAmount).to.equal(delegation.delegationTotal)
     })
 
+    it("loadingValidators should be true", () => {
+      expect(state.loadingValidators).to.equal(true)
+    })
+
     it.skip("sets bootstrap validators following addresses state.bootstrapNodes")
     it.skip("sets delegations amounts correctly")
 

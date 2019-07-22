@@ -324,7 +324,7 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
       scope.setExtra("redelegations", {
         redelegations: JSON.stringify({
           validator: delegation.validator.address.local.toString(),
-          updateValidator: delegation.updateValidator!.address,
+          updateValidator: delegation.updateValidator!.address.local.toString(),
           updateAmount: delegation.updateAmount,
           index: delegation.index,
         }),

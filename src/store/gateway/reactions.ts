@@ -214,7 +214,6 @@ function listenToDepositApproval(
       )
       const payload = formatTxFromEvent(event)
       // TODO: Uncomments if using Ethers
-      // gatewayModule.setShowDepositApproved(true)
       gatewayModule.setPendingTransactions(payload)
       // TODO: Clear specific hash
       // gatewayModule.clearPendingTransactions()
@@ -243,8 +242,6 @@ function listenToDeposit(account: string, gw: ERC20Gateway_v2, loom: ERC20) {
       )
       const payload = formatTxFromEvent(event)
       // TODO: Uncomments if using Ethers
-      // gatewayModule.setShowDepositApproved(false)
-      // gatewayModule.setShowDepositConfirmed(true)
       gatewayModule.setPendingTransactions(payload)
       // TODO: Clear specific hash
       // gatewayModule.clearPendingTransactions()

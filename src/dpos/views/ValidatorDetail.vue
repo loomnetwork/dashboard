@@ -228,7 +228,6 @@ main.validator {
     }
   }
 
-  [v-cloak] { display: none }
 }
 
 </style>

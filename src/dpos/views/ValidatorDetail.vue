@@ -114,7 +114,6 @@ export default class ValidatorDetail extends Vue {
   }
 
   get isLoading() {
-    console.log("length", this.state.dpos.validators.length)
     return this.state.dpos.validators.length === 0 ? true : false
   }
   

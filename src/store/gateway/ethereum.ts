@@ -427,7 +427,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       fb.showError("Withdraw failed, please try again or contact support.")
     }
     Sentry.withScope((scope) => {
-      scope.setExtra("ethereumWirhdraw", {
+      scope.setExtra("ethereumWithdraw", {
         receipt: JSON.stringify({
           tokenOwner: receipt.tokenOwner.local.toString(),
           tokenContract: receipt.tokenContract.local.toString(),

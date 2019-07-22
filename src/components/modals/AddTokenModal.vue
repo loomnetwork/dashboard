@@ -2,18 +2,18 @@
   <b-modal
     id="add-token-modal"
     ref="modalRef"
-    title="Add New Token"
+    :title="$t('components.modals.add_token_modal.add_new')"
     hide-footer
     @show="resetModal"
     @hide="resetModal"
   >
     <b-card>
-      <h6>Token Symbol</h6>
+      <h6>{{ $t('components.modals.add_token_modal.token_symbol') }}</h6>
       <b-form-input
         v-model="selectedToken"
         list="token-symbol"
         id="input-with-list"
-        placeholder="Search"
+        :placeholder="$t('components.modals.add_token_modal.search')"
       ></b-form-input>
       <div class="virtual-list mt-3">
         <virtual-list :size="30" :remain="8">

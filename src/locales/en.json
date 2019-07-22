@@ -300,14 +300,20 @@
         "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "Write or print it out and keep in a safe place.",
         "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
-        "copy_to_clipboard": "Copy to Clipboard"
+        "copy_to_clipboard": "Copy to Clipboard",
+        "create_account": "Create Account"
       },
       "success_modal": {
         "success": "Success"
       },
       "hardware_wallet_modal": {
         "unlock_hardware_wallet": "Unlock Hardware wallet",
-        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app."
+        "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app.",
+        "ledger_locked": "Please make sure your Ledger is connected, unlocked and then go tho ethereum app.",
+        "initializing": "Initializing. Please wait...",
+        "select_path": "Select a path",
+        "load_more": "Load more",
+        "use_account": "Use account"
       },
       "confirm_withdrawal_modal": {
         "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
@@ -319,6 +325,18 @@
         "redelegate": "Redelegate",
         "target_error": "Please select a target validator",
         "same_target_error": "Cannot redelegate to the same validator"
+      },
+      "account_mapping_modal": {
+        "description": "This is the first time you are accessing the dashboard with this account.",
+        "choose": "Choose weither to map to a new loom account or an existing one.",
+        "map_to": "Map to an existing loom account",
+        "new_account": "Create a new account",
+        "input_help": "The private key is used to sign the mapping and is then discarded."
+      },
+      "add_token_modal": {
+        "add_new" : "Add New Token",
+        "token_symbol": "Token Symbol",
+        "search": "Search"
       }
     },
     "blockExplorer": {
@@ -381,6 +399,7 @@
     "back": "Back",
     "close": "Close",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "continue": "Continue"
   }
 }

@@ -37,6 +37,7 @@ export interface DPOSState extends DPOSConfig {
   // when user is requesting an action
   intent: "" | "delegate" | "redelegate" | "undelegate"
   delegation: Delegation | null
+  loadingValidators: boolean
 }
 
 /**

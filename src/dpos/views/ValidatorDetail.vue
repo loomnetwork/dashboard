@@ -110,8 +110,10 @@ export default class ValidatorDetail extends Vue {
   get validator() {
     const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
     // todo add state.loadingValidators:boolean
-    if (validator === undefined) {
-      this.$router.push("../validators")
+    if (this.state.dpos.loadingValidators) {
+      if (validator === undefined) {
+        this.$router.push("../validators")
+      }
     }
     return validator
   }

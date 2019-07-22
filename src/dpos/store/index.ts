@@ -106,6 +106,8 @@ export async function refreshValidators(ctx: ActionContext) {
     contract.getAllDelegations(),
   ])
   //
+  ctx.state.loadingValidators = true
+
   const nodes = candidates.map((c) => {
     const node = new Validator()
     node.setCandidateData(c)

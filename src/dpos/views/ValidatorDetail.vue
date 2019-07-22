@@ -1,5 +1,10 @@
 <template>
-  <main class="validator">
+  <loading-spinner
+    v-if="isLoading"
+    :showBackdrop="false"
+    message="Loading validators....">
+  </loading-spinner>
+  <main v-else class="validator">
     <header>
       <h1>
         <router-link
@@ -75,6 +80,7 @@ import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
 import SuccessModal from "@/components/modals/SuccessModal.vue"
 import DelegateModal from "@/dpos/components/DelegateModal.vue"
+import LoadingSpinner from "@/components/LoadingSpinner.vue"
 
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
@@ -88,6 +94,7 @@ import { plasmaModule } from '../../store/plasma';
     SuccessModal,
     DelegateModal,
     DelegationsList,
+    LoadingSpinner,
   },
 })
 export default class ValidatorDetail extends Vue {
@@ -100,15 +107,19 @@ export default class ValidatorDetail extends Vue {
   get state(): HasDPOSState {
     return this.$store.state
   }
+
   get validatorName() {
     return this.$route.params.index
   }
 
+  get isLoading() {
+    return this.state.dpos.validators.length === 0 ? true : false
+  }
+  
   get userIsLoggedIn() { return this.state.plasma.address !== "" }
 
   get validator() {
     const validator = this.state.dpos.validators.find((v) => v.name === this.validatorName)
-    // todo add state.loadingValidators:boolean
     if (validator === undefined) {
       this.$router.push("../validators")
     }
@@ -225,5 +236,6 @@ main.validator {
       }
     }
   }
+
 }
 </style>

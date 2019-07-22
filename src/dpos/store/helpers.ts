@@ -20,7 +20,6 @@ export function defaultState(): DPOSState {
 
     intent: "",
     delegation: null,
-    loadingValidators: false,
   }
 }
 

@@ -216,6 +216,16 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     console.error(err)
     feedback.endTask()
     feedback.showError("Withdraw failed, please try again.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("plasmaWithdraw", {
+        deposit: JSON.stringify({
+          chain,
+          symbol,
+          amount: weiAmount.toString(),
+        }),
+      })
+      Sentry.captureException(err)
+    })
     throw err
   }
 
@@ -275,6 +285,17 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     console.error(error)
     feedback.endTask()
     feedback.showError("Withdraw failed, please try again.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("plasmaWithdraw", {
+        deposit: JSON.stringify({
+          chain,
+          symbol,
+          amount: weiAmount.toString(),
+          receipt,
+        }),
+      })
+      Sentry.captureException(error)
+    })
     throw new Error(error)
   }
 }

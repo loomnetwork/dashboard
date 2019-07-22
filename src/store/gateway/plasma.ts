@@ -22,6 +22,7 @@ import { tokenService } from "@/services/TokenService"
 import debug from "debug"
 import { plasmaModule } from "../plasma"
 import { TransferRequest } from "../plasma/types"
+import * as Sentry from "@sentry/browser"
 
 const log = debug("dash.gateway.plasma")
 
@@ -216,16 +217,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     console.error(err)
     feedback.endTask()
     feedback.showError("Withdraw failed, please try again.")
-    Sentry.withScope((scope) => {
-      scope.setExtra("plasmaWithdraw", {
-        deposit: JSON.stringify({
-          chain,
-          symbol,
-          amount: weiAmount.toString(),
-        }),
-      })
-      Sentry.captureException(err)
-    })
+    Sentry.captureException(err)
     throw err
   }
 
@@ -287,7 +279,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     feedback.showError("Withdraw failed, please try again.")
     Sentry.withScope((scope) => {
       scope.setExtra("plasmaWithdraw", {
-        deposit: JSON.stringify({
+        withdraw: JSON.stringify({
           chain,
           symbol,
           amount: weiAmount.toString(),

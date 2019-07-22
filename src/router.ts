@@ -22,7 +22,7 @@ Vue.use(VueRouter)
 
 function requireAccount(to, from, next) {
   if (plasmaModule.state.address === "") {
-    next("/login")
+    next("/login?redirect=" + to.path)
   } else {
     next()
   }

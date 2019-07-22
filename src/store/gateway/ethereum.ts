@@ -301,7 +301,6 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
               symbol,
               amount: weiAmount.toString(),
             }),
-            depositAddress: JSON.stringify(context.rootState.ethereum.address.toString()),
           })
           Sentry.captureException(e)
         })

@@ -305,7 +305,6 @@ export async function transfer(
   const balance = context.state.coins[symbol].balance
   const token = tokenService.getTokenbySymbol(symbol)
   if (weiAmount.gt(balance)) {
-    Sentry.captureException(new Error("plasma.transfer.balance.low"))
     throw new Error("plasma.transfer.balance.low")
   }
 

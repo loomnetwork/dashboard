@@ -16,7 +16,7 @@ import { tokenService } from "@/services/TokenService"
 import { feedbackModule } from "@/feedback/store"
 import { i18n } from "@/i18n"
 import { formatTokenAmount } from "@/filters"
-
+import * as Sentry from "@sentry/browser"
 const log = debug("plasma")
 
 const contracts = new Map<string, ContractAdapter>()
@@ -277,6 +277,17 @@ export async function approve(
           .toString(),
       )
     }
+    Sentry.withScope((scope) => {
+      scope.setExtra("approve", {
+        withdraw: JSON.stringify({
+          symbol,
+          to,
+          fee,
+          approvalAmount,
+        }),
+      })
+      Sentry.captureException(error)
+    })
     return false
   }
 }
@@ -294,6 +305,7 @@ export async function transfer(
   const balance = context.state.coins[symbol].balance
   const token = tokenService.getTokenbySymbol(symbol)
   if (weiAmount.gt(balance)) {
+    Sentry.captureException(new Error("plasma.transfer.balance.low"))
     throw new Error("plasma.transfer.balance.low")
   }
 

@@ -80,7 +80,7 @@ export function modifyRPCSigner(signer: ethers.Signer): ethers.Signer {
       } else {
         feedbackModule.showError(
           i18n
-            .t("messages.transaction_apprv_err_tx", { msg: error.message })
+            .t("messages.transaction_apprv_err_tx", { msg: e.message })
             .toString(),
         )
         feedbackModule.endTask()

@@ -26,6 +26,12 @@
           </b-input-group>
         </b-card-header>
       </b-card>
+      <mapped-token-address
+        :token="showTokenName"
+        :ethAddress="ethContractAddress"
+        :plasmaAddress="viewerAddress"
+        class="mt-5 mb-4"
+      />
 
       <div v-if="notFound" class="not-found">
         <h1 style="text-align:center;">{{ notFoundMsg }}</h1>
@@ -66,10 +72,12 @@ import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb
 import { gatewayModule } from "@/store/gateway"
 import { tokenService } from "@/services/TokenService"
 import Axios from "axios"
+import MappedTokenAddress from "@/components/MappedTokenAddress.vue"
+import { feedbackModule } from "../feedback/store"
 
 @Component({
   components: {
-
+    MappedTokenAddress,
   },
 })
 
@@ -91,6 +99,7 @@ export default class TransferGateway extends Vue {
   ]
 
   viewerAddress: string = ""
+  ethContractAddress: string = ""
 
   tokenMapData: any = null
 
@@ -99,6 +108,7 @@ export default class TransferGateway extends Vue {
   isBusy: boolean = false
 
   tokenName = ""
+  showTokenName = ""
 
   currentPage = 1
 
@@ -112,12 +122,12 @@ export default class TransferGateway extends Vue {
     // start with 'LOOMCOIN' token
     // just for example ( will be delete later )
     this.viewerAddress = this.LOOMCOIN_ADDR
+    this.showTokenName = "LOOM"
     this.getLogs(this.viewerAddress, 1)
   }
 
   async getLogs(address: string, page: number) {
     this.isBusy = true
-    this.viewerAddress = address
     this.tokenMapData = await this.getContractLogs({ contractAddress: this.viewerAddress, page })
 
     this.isBusy = false
@@ -125,7 +135,7 @@ export default class TransferGateway extends Vue {
     if (this.tokenMapData.total === 0) {
       this.notFound = true
       this.notFoundMsg = "No event found on this token"
-    } else { 
+    } else {
       this.notFound = false
     }
   }
@@ -133,16 +143,22 @@ export default class TransferGateway extends Vue {
   viewLogs() {
     // this will be delete after
     if (this.LOOM_TOKEN.includes(this.tokenName.toUpperCase())) {
+      this.viewerAddress = this.LOOMCOIN_ADDR
+      this.ethContractAddress = ""
       this.getLogs(this.LOOMCOIN_ADDR, 1)
     } else {
       try {
         this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
+        this.ethContractAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "ethereum")
         this.getLogs(this.viewerAddress, 1)
       } catch (e) {
+        this.viewerAddress = ""
+        this.ethContractAddress = ""
         this.notFound = true
         this.notFoundMsg = `Token ${this.tokenName} not found`
-      } 
+      }
     }
+    this.showTokenName = this.tokenName
   }
 
   pageChange(page) {
@@ -153,7 +169,6 @@ export default class TransferGateway extends Vue {
   getKeyByValue(obj, value) {
     return Object.keys(obj).find((key) => obj[key] === value)
   }
-
 }
 </script>
 

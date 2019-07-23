@@ -232,7 +232,6 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       return
     }
     // ethereum, if pending etherum withdraw TX (confirmations less that 10)
-    await gatewayModule.checkIfPastWithdrawalEventExists()
     if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
       feedback.endTask()
       feedback.showAlert({

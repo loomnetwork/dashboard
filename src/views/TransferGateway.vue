@@ -126,7 +126,7 @@ export default class TransferGateway extends Vue {
     if (this.tokenMapData.total === 0) {
       this.notFound = true
       this.notFoundMsg = "No event found on this token"
-    } else { 
+    } else {
       this.notFound = false
     }
   }
@@ -145,7 +145,7 @@ export default class TransferGateway extends Vue {
           this.notFound = true
           this.notFoundMsg = `Token ${this.tokenName} not found`
         }
-      } 
+      }
     }
   }
 

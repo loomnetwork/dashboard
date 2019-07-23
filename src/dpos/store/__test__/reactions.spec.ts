@@ -7,9 +7,11 @@ import { dposUtils, dposReactions } from "../reactions"
 import { DPOS3 } from "loom-js/dist/contracts/dpos3"
 import { Address } from "loom-js"
 import lolex from "lolex"
-
+import { contracts as plasmaTokenContracts } from "@/store/plasma/tokens"
+import { CoinAdapter } from "@/store/plasma/tokens"
 import sinon from "sinon"
 import { now, nowStub, dposUtilsStub, dposModuleStub, plasmaModuleStub } from "./_helpers"
+import { Coin } from "loom-js/dist/contracts"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -90,7 +92,7 @@ describe("Reactions", () => {
     })
 
     it("does not refreshes DPoS Account State if state.plasma.address is not set", async () => {
-      store.state.plasma.address = ""
+      plasmaTokenContracts.clear()
       await dposUtils.refreshDPoSState()
 
       sinon.assert.calledOnce(dposModuleStub.refreshValidators)
@@ -99,11 +101,14 @@ describe("Reactions", () => {
     it("refreshes DPoS Account State if state.plasma.address is set", async () => {
       // store.state.plasma.address = "0x0000000000000000000000000000000000000000"
       sinon.stub(store.state.plasma, "address").value("0x0000000000000000000000000000000000000000")
+      const stubContract = sinon.createStubInstance(CoinAdapter)
+      plasmaTokenContracts.set("LOOM", stubContract)
       // dposModuleStub.refreshValidators.resolves()
       await dposUtils.refreshDPoSState()
       console.log(dposUtilsStub.refreshDPoSUserState.callCount)
       sinon.assert.calledOnce(dposModuleStub.refreshValidators)
-      sinon.assert.calledOnce(dposUtilsStub.refreshDPoSUserState) // no idea why it's not being called
+      sinon.assert.calledOnce(dposUtilsStub.refreshDPoSUserState)
+      plasmaTokenContracts.clear()
     })
   })
 

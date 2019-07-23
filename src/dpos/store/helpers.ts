@@ -20,6 +20,7 @@ export function defaultState(): DPOSState {
 
     intent: "",
     delegation: null,
+    analyticsData: null,
   }
 }
 

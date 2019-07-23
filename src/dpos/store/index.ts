@@ -6,6 +6,7 @@ import { plasmaModule } from "@/store/plasma"
 import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
+import Axios from "axios"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState } from "./helpers"
@@ -30,8 +31,8 @@ const dposModule = {
   getReferrer: builder.read(getReferrer),
 
   setConfig: builder.commit(mutations.setConfig),
-
   setElectionTime: builder.commit(mutations.setElectionTime),
+  setAnalyticsData: builder.commit(mutations.setAnalyticsData),
 
   requestDelegation: builder.commit(requestDelegation),
   requestRedelegation: builder.commit(requestRedelegation),
@@ -49,6 +50,8 @@ const dposModule = {
   refreshDelegations: builder.dispatch(refreshDelegations),
 
   registerCandidate: builder.dispatch(registerCandidate),
+  fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
+
 }
 
 // vuex module as a service
@@ -465,4 +468,13 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
     console.error(err)
     feedback.showError("Error while registering. Please contact support.")
   }
+}
+
+export function fetchAnalyticsData(context: ActionContext) {
+  // TODO: Uncomment to use .env
+  // let url = process.env.VUE_APP_ANALYTICS_URL
+  // let dataPromise = await axios.get(url + "/delegation/total?from_date&to_date")
+  const url = "//dev-api.loom.games"
+  const response = Axios.get(url + "/delegation/total?from_date&to_date")
+  dposModule.setAnalyticsData(response)
 }

@@ -119,6 +119,11 @@ const router = new VueRouter({
       component: TransferGateway,
     },
     {
+      path: "/analytics",
+      name: "analytics",
+      component: Analytics,
+    },
+    {
       path: "/",
       redirect: "/login",
     },

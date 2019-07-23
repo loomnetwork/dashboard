@@ -36,7 +36,8 @@ export interface DPOSState extends DPOSConfig {
   rewards: Delegation[]
   // when user is requesting an action
   intent: "" | "delegate" | "redelegate" | "undelegate"
-  delegation: Delegation | null
+  delegation: Delegation | null,
+  analyticsData: object | null,
 }
 
 /**

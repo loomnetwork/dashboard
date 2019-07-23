@@ -32,17 +32,17 @@ export default class Analytics extends Vue {
     return this.$store.state
   }
 
-  async mounted() {
-    // @ts-ignore
-    const data = this.state.dpos.analyticsData!.data
-    if (!data) await dposModule.fetchAnalyticsData()
+  async beforeMount() {
+    if (!this.state.dpos.analyticsData) await dposModule.fetchAnalyticsData()
+    const data = this.state.dpos.analyticsData
+    console.log("data", data)
     const ctx = document.getElementById("pieChart")
     const ctx2 = document.getElementById("barChart")
+    // @ts-ignore
     const totalTiers = data[0].tiers
     const tierAmount: any[] = []
     const tiers = { zero: "2 weeks", one: "3 months", two: "6 months", three: "1 year" }
     const tierKeys: any[] = []
-
     // tslint
     for (const key of Object.keys(totalTiers)) {
       tierKeys.push(tiers[key])
@@ -51,7 +51,8 @@ export default class Analytics extends Vue {
       }
     }
 
-    const timeIntervalChunks = data.filter((x, idx) => idx % 10 === 0).map((item) => {
+    const timeIntervalChunks = data!.filter((x, idx) => idx % 10 === 0).map((item) => {
+      // @ts-ignore
       const int = parseInt(item.delegationTotal, 10)
       return (int / 10 ** 18)
     })
@@ -104,6 +105,7 @@ export default class Analytics extends Vue {
 
     const pieChart = new Chart(ctx, config)
     const barChart = new Chart(ctx2, config2)
+
   }
 
   randomScalingFactor() {

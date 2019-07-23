@@ -23,6 +23,7 @@ export default {
   },
   dpos: {
     bootstrapNodes: [],
+    analyticsUrl: "//dev-api.loom.games",
   },
   gateway: {
     chains: ["ethereum"],

@@ -29,6 +29,7 @@ describe("DPOS store, Mutations", () => {
     it("bootstrapNodes state array should have a member [stage]", () => {
       config = {
         bootstrapNodes: bootStrapNodes.stageNode,
+        analyticsUrl: "",
       }
       setConfig(state, config)
       // tslint:disable-next-line: no-unused-expression
@@ -38,6 +39,7 @@ describe("DPOS store, Mutations", () => {
     it("bootstrapNodes state array should have a member [production]", () => {
       config = {
         bootstrapNodes: bootStrapNodes.prodNode,
+        analyticsUrl: "",
       }
       setConfig(state, config)
       // tslint:disable-next-line: no-unused-expression
@@ -47,6 +49,7 @@ describe("DPOS store, Mutations", () => {
     it("bootstrapNodes state array should empty [develop]", () => {
       config = {
         bootstrapNodes: bootStrapNodes.devNode,
+        analyticsUrl: "",
       }
       setConfig(state, config)
       // tslint:disable-next-line: no-unused-expression
@@ -56,6 +59,7 @@ describe("DPOS store, Mutations", () => {
     it("bootstrapNodes state array should empty [local]", () => {
       config = {
         bootstrapNodes: bootStrapNodes.localNode,
+        analyticsUrl: "",
       }
       setConfig(state, config)
       // tslint:disable-next-line: no-unused-expression

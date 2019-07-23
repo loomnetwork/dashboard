@@ -20,6 +20,7 @@ export interface HasDPOSState extends HasPlasmaState {
 
 export interface DPOSConfig {
   bootstrapNodes: string[]
+  analyticsUrl: string
 }
 
 export interface DPOSState extends DPOSConfig {
@@ -37,7 +38,7 @@ export interface DPOSState extends DPOSConfig {
   // when user is requesting an action
   intent: "" | "delegate" | "redelegate" | "undelegate"
   delegation: Delegation | null,
-  analyticsData: object | null,
+  analyticsData: [] | null,
 }
 
 /**

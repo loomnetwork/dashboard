@@ -3,6 +3,7 @@ import BN from "bn.js"
 
 export function setConfig(state: DPOSState, config: DPOSConfig) {
   state.bootstrapNodes = config.bootstrapNodes.map((a) => a.toLowerCase())
+  state.analyticsUrl = config.analyticsUrl
 }
 
 export function setElectionTime(state: DPOSState, electionTime: Date) {
@@ -10,6 +11,6 @@ export function setElectionTime(state: DPOSState, electionTime: Date) {
   state.loading.electionTime = false
 }
 
-export function setAnalyticsData(state: DPOSState, payload: object) {
+export function setAnalyticsData(state: DPOSState, payload: []) {
   state.analyticsData = payload
 }

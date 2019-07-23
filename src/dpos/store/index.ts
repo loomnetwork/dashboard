@@ -470,11 +470,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
   }
 }
 
-export function fetchAnalyticsData(context: ActionContext) {
-  // TODO: Uncomment to use .env
-  // let url = process.env.VUE_APP_ANALYTICS_URL
-  // let dataPromise = await axios.get(url + "/delegation/total?from_date&to_date")
-  const url = "//dev-api.loom.games"
-  const response = Axios.get(url + "/delegation/total?from_date&to_date")
-  dposModule.setAnalyticsData(response)
+export async function fetchAnalyticsData(context: ActionContext) {
+  const response = await Axios.get(context.rootState.dpos.analyticsUrl + "/delegation/total?from_date&to_date")
+  dposModule.setAnalyticsData(response.data.data)
 }

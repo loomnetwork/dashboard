@@ -23,6 +23,7 @@ export default {
   },
   dpos: {
     bootstrapNodes: [],
+    analyticsUrl: "//dev-api.loom.games",
   },
   coinDataUrl: "https://dev-auth.loom.games/wallet/tokens",
   gateway: {

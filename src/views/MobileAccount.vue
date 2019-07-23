@@ -164,7 +164,7 @@ export default class MobileAccount extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #mobile-account {
   padding-top: 1.5rem;
   padding-bottom: 5.5rem;

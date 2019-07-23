@@ -270,12 +270,14 @@ export async function approve(
   } catch (error) {
     if (error.message.includes("User denied message")) {
       feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
+      feedbackModule.endTask()
     } else {
       feedbackModule.showError(
         i18n
           .t("messages.transaction_apprv_err_tx", { msg: error.message })
           .toString(),
       )
+      feedbackModule.endTask()
     }
     Sentry.withScope((scope) => {
       scope.setExtra("approve", {

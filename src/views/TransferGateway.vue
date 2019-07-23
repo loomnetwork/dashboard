@@ -27,6 +27,10 @@
           </b-input-group>
         </b-card-header>
       </b-card>
+      <mapped-token-address
+        :tokenData="tokenData"
+        class="mt-5 mb-4"
+      />
 
       <div v-if="notFound" class="not-found">
         <h1 style="text-align:center;">{{ notFoundMsg }}</h1>
@@ -65,12 +69,14 @@ import { DashboardState } from "@/types"
 import { formatTokenAmount } from "@/filters"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { gatewayModule } from "@/store/gateway"
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import Axios from "axios"
+import MappedTokenAddress from "@/components/MappedTokenAddress.vue"
+import { feedbackModule } from "../feedback/store"
 
 @Component({
   components: {
-
+    MappedTokenAddress,
   },
 })
 
@@ -91,7 +97,13 @@ export default class TransferGateway extends Vue {
   { key: "topic", label: "Topic" },
   ]
 
-  viewerAddress: string = ""
+  tokenData: TokenData = {
+    symbol: "",
+    ethereum: "",
+    plasma: "",
+    binance: "",
+    decimals: 0,
+  }
 
   tokenMapData: any = null
 
@@ -112,14 +124,14 @@ export default class TransferGateway extends Vue {
   mounted() {
     // start with 'LOOMCOIN' token
     // just for example ( will be delete later )
-    this.viewerAddress = this.LOOMCOIN_ADDR
-    this.getLogs(this.viewerAddress, 1)
+    this.tokenData.symbol = "LOOM"
+    this.tokenData.plasma = this.LOOMCOIN_ADDR
+    this.getLogs(this.LOOMCOIN_ADDR, 1)
   }
 
   async getLogs(address: string, page: number) {
     this.isBusy = true
-    this.viewerAddress = address
-    this.tokenMapData = await this.getContractLogs({ contractAddress: this.viewerAddress, page })
+    this.tokenMapData = await this.getContractLogs({ contractAddress: this.tokenData.plasma, page })
 
     this.isBusy = false
     // when didnt get any record => display 'not found'
@@ -132,32 +144,36 @@ export default class TransferGateway extends Vue {
   }
 
   viewLogs() {
-    console.log("VIEWLOGS!!")
+    if (this.tokenName) {
+      return
+    }
     // this will be delete after
     if (this.LOOM_TOKEN.includes(this.tokenName.toUpperCase())) {
+      this.tokenData.plasma = this.LOOMCOIN_ADDR
+      this.tokenData.ethereum = ""
       this.getLogs(this.LOOMCOIN_ADDR, 1)
     } else {
       try {
-        this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
-        this.getLogs(this.viewerAddress, 1)
+        this.tokenData = tokenService.getTokenbySymbol(this.tokenName.toUpperCase())
+        this.getLogs(this.tokenData.ethereum, 1)
       } catch (e) {
-        if (this.tokenName) {
-          this.notFound = true
-          this.notFoundMsg = `Token ${this.tokenName} not found`
-        }
+        this.tokenData.plasma = ""
+        this.tokenData.ethereum = ""
+        this.notFound = true
+        this.notFoundMsg = `Token ${this.tokenName} not found`
       }
     }
+    this.tokenData.symbol = this.tokenName.toUpperCase()
   }
 
   pageChange(page) {
     this.currentPage = page
-    this.getLogs(this.viewerAddress, page)
+    this.getLogs(this.tokenData.plasma, page)
   }
 
   getKeyByValue(obj, value) {
     return Object.keys(obj).find((key) => obj[key] === value)
   }
-
 }
 </script>
 

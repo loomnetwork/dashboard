@@ -62,7 +62,6 @@ const dashboardStore = {
     state.envs = envs
   }),
 }
-
 const store: Store<DashboardState> = builder.vuexStore({
   plugins: [plugin],
 })

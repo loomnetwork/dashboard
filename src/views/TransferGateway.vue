@@ -150,7 +150,7 @@ export default class TransferGateway extends Vue {
       try {
         this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
         this.ethContractAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "ethereum")
-        this.getLogs(this.viewerAddress, 1)
+        this.getLogs(this.ethContractAddress, 1)
       } catch (e) {
         this.viewerAddress = ""
         this.ethContractAddress = ""

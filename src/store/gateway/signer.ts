@@ -7,6 +7,7 @@ import {
 import { ethers } from "ethers"
 import { PlasmaSigner } from "../plasma/types"
 import { feedbackModule } from "@/feedback/store"
+import { i18n } from "@/i18n"
 
 /**
  *
@@ -45,7 +46,18 @@ function initSignedEthMiddleware(signer: ethers.Signer): SignedEthTxMiddleware {
       feedbackModule.showInfo("")
       return res
     } catch (e) {
-      feedbackModule.showInfo("")
+      if (e.message.includes("User denied message")) {
+        feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
+        e.handled = true
+        feedbackModule.endTask()
+      } else {
+        feedbackModule.showError(
+          i18n
+            .t("messages.transaction_apprv_err_tx", { msg: e.message })
+            .toString(),
+        )
+        feedbackModule.endTask()
+      }
       throw e
     }
   }
@@ -61,7 +73,18 @@ export function modifyRPCSigner(signer: ethers.Signer): ethers.Signer {
       feedbackModule.showInfo("")
       return res
     } catch (e) {
-      feedbackModule.showInfo("")
+      if (e.message.includes("User denied message")) {
+        feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
+        e.handled = true
+        feedbackModule.endTask()
+      } else {
+        feedbackModule.showError(
+          i18n
+            .t("messages.transaction_apprv_err_tx", { msg: error.message })
+            .toString(),
+        )
+        feedbackModule.endTask()
+      }
       throw e
     }
   }

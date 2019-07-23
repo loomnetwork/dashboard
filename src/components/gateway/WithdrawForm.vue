@@ -181,7 +181,6 @@ export default class WithdrawForm extends Vue {
       weiAmount: this.weiAmount,
       recepient,
     }
-
     gatewayModule.plasmaWithdraw(payload)
     this.close()
   }

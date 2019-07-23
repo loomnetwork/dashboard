@@ -216,18 +216,19 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   } catch (err) {
     console.error(err)
     feedback.endTask()
-    feedback.showError("Withdraw failed, please try again.")
+    feedback.showError(" failed, to get receipt")
     Sentry.captureException(err)
-    throw err
+    return
   }
 
   if (receipt) {
     log("Setting pre-existing receipt")
     // binance
     if (chain === "binance") {
+      feedback.endTask()
       feedback.showAlert({
         title: "Withdrawal ongoing",
-        message: "A withdrwal is still being processed. Please try again later.",
+        message: "A withdrawal is still being processed. Please try again later.",
       })
       return
     }
@@ -275,6 +276,10 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     feedback.endTask()
   } catch (error) {
     console.error(error)
+    console.log(error, error.handled)
+    if (error.handled) {
+      return
+    }
     feedback.endTask()
     feedback.showError("Withdraw failed, please try again.")
     Sentry.withScope((scope) => {
@@ -287,7 +292,6 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       })
       Sentry.captureException(error)
     })
-    throw new Error(error)
   }
 }
 
@@ -299,9 +303,9 @@ export async function binanceResubmitWithdrawal(context: ActionContext) {
     await gateway.resubmitWithdrawalAsync()
 
   } catch (error) {
+    console.error(error)
     feedback.endTask()
     feedback.showError("Withdraw failed, please try again.")
-    throw new Error(error)
   }
   feedback.endTask()
 }

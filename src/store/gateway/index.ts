@@ -44,6 +44,10 @@ function initialState(): GatewayState {
     requireMapping: false,
     checkMarketplaceURL: "",
     tokenContractLogsURL: "",
+    ethereumMappings: {
+      confirmed: [],
+      pending: [],
+    },
   }
 }
 
@@ -68,6 +72,7 @@ export const gatewayModule = {
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
+  loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,

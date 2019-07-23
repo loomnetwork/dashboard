@@ -295,6 +295,16 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   }
 }
 
+export async function loadTokenMappings(context: ActionContext, chain: string) {
+  if (chain === "ethereum") {
+    const gateway = service().ethereumMainGateway
+    context.state.ethereumMappings = await gateway.listContractMappingsAsync()
+  } else if (chain === "binance") {
+    const gateway = service().binanceGateway
+    context.state.ethereumMappings = await gateway.listContractMappingsAsync()
+  }
+}
+
 export async function binanceResubmitWithdrawal(context: ActionContext) {
   const gateway = service().binanceGateway
   feedback.setTask("withdraw")

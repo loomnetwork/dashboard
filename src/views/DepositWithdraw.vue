@@ -226,7 +226,10 @@ export default class DepositWithdraw extends Vue {
    * set selected token to component state
    * then show selectChain modal
    */
-  requestCrossChainTranfer(type: string, token: string) {
+  async requestCrossChainTranfer(type: string, token: string) {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
     this.selectChainModalType = type
     this.selectedToken = token
     // Check if these token has a binance
@@ -238,7 +241,10 @@ export default class DepositWithdraw extends Vue {
     gatewayModule.setTransferRequest({ chain: possibleChains[0], type, token })
   }
 
-  requestSwap(token: string) {
+  async requestSwap(token: string) {
+    if (! await plasmaModule.signerIsSet()) {
+      return
+    }
     this.selectedToken = token
     this.$root.$emit("bv::show::modal", "transfer-tokens-form-modal")
   }

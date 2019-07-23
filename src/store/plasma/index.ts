@@ -82,6 +82,7 @@ export const plasmaModule = {
 
   changeIdentity: builder.dispatch(changeIdentity),
   getCallerAddress: builder.dispatch(getCallerAddress),
+  signerIsSet: builder.dispatch(signerIsSet),
 
   // Coins
   addToken: builder.dispatch(Tokens.addToken),
@@ -125,6 +126,19 @@ function getAddress(state: PlasmaState): Address {
 function createClient(env: { chainId: string; endpoint: string }) {
   const { writer, reader } = setupProtocolsFromEndpoint(env.endpoint)
   return new Client(env.chainId, writer, reader)
+}
+
+/**
+ * checks if signer is set, if not  show an alert to tell the user they should
+ * connect their wallet first
+ * @returns true if signer is set false otherwise
+ */
+function signerIsSet(contex: PlasmaContext) {
+  if (contex.state.signer !== null) return true
+  if (window.confirm("You need to connect your wallet first. Connect now?")) {
+    window.location.reload()
+  }
+  return false
 }
 
 /**

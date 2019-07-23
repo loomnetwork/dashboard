@@ -100,12 +100,14 @@ export async function refreshValidators(ctx: ActionContext) {
   const contract = ctx.state.contract!
   log("getValidatorsAsync")
   // Get all validators, candidates and delegations
+  ctx.state.loading.validators = true
   const [validators, candidates, delegations] = await Promise.all([
     contract.getValidatorsAsync(),
     contract.getCandidatesAsync(),
     contract.getAllDelegations(),
   ])
   //
+
   const nodes = candidates.map((c) => {
     const node = new Validator()
     node.setCandidateData(c)
@@ -144,6 +146,7 @@ export async function refreshValidators(ctx: ActionContext) {
     .forEach((n) => (n.name = n.addr.replace("0x", "loom")))
 
   ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
+  ctx.state.loading.validators = false
 }
 
 /**

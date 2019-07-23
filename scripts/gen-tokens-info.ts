@@ -42,9 +42,9 @@ function generate(config) {
                 console.log("mappings loaded for " + config.name)
                 client.disconnect()
             }),
-            mergeMap((mappings) => mappings.confirmed.slice(3, 4)),
+            mergeMap((mappings) => mappings.confirmed),
             map((mapping) => ({ mapping, provider })),
-            concatMap(tokenInfo),
+            mergeMap(tokenInfo, 2),
             toArray(),
             switchMap((x) => {
                 console.log("saving file for env", x)

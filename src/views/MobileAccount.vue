@@ -1,13 +1,13 @@
 <template>
   <div id="mobile-account">
-    <account-info/>
+    <account-info />
     <b-card title="Balance" class="mb-4" no-body>
       <b-card-header class="custom-card-header d-flex justify-content-between">
         <h4>Balance</h4>
         <a v-if="!showRefreshSpinner" @click="refresh">
-          <fa :icon="['fas', 'sync']" class="refresh-icon"/>
+          <fa :icon="['fas', 'sync']" class="refresh-icon" />
         </a>
-        <b-spinner v-else type="border" small/>
+        <b-spinner v-else type="border" small />
       </b-card-header>
       <b-card-body>
         <b-card
@@ -39,7 +39,7 @@
             </h5>
           </div>
           <div v-if="state.ethereum.coins.LOOM.loading">
-            <b-spinner variant="primary" label="Spinning"/>
+            <b-spinner variant="primary" label="Spinning" />
           </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>
           <div>
@@ -54,12 +54,10 @@
             </h5>
           </div>
           <div v-if="state.plasma.coins.LOOM.loading">
-            <b-spinner variant="primary" label="Spinning"/>
+            <b-spinner variant="primary" label="Spinning" />
           </div>
           <b-link href="#" class="card-link">
-            <router-link to="/wallet">
-              Deposit/Withdraw
-            </router-link>
+            <router-link to="/wallet">Deposit/Withdraw</router-link>
           </b-link>
           <b-modal
             id="wait-tx"
@@ -74,7 +72,7 @@
 
     <b-card title="Election Cycle" class="mb-4">
       <h6>Time left</h6>
-      <election-timer/>
+      <election-timer />
     </b-card>
 
     <rewards></rewards>
@@ -83,7 +81,7 @@
       <b-card-body>
         <h4 class="card-title" style="margin: 0;">Delegations</h4>
       </b-card-body>
-      <delegations :delegations="delegations" show-validator/>
+      <delegations :delegations="delegations" show-validator />
     </b-card>
 
     <pre>
@@ -147,35 +145,15 @@ export default class MobileAccount extends Vue {
     this.$root.$emit("bv::toggle::collapse", "accordion" + idx)
   }
 
-  // async completeDeposit() {
-  //   const dposUser = await this.dposUser!
-  //   this.setGatewayBusy(true)
-  //   this.setShowLoadingSpinner(true)
-  //   const tokens = new BN(this.currentAllowance)
-  //   const weiAmount = new BN(tokens, "ether"), 10)
-  //   try {
-  //     await dposUser.ethereumGateway.functions.depositERC20(
-  //       weiAmount.toString(),
-  //       dposUser.ethereumLoom.address,
-  //     )
-  //     this.currentAllowance = 0
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  //   this.$emit("refreshBalances")
-  //   this.setGatewayBusy(false)
-  //   this.setShowLoadingSpinner(false)
-  // }
-
   refresh() {
     ethereumModule.refreshBalance("LOOM")
     plasmaModule.refreshBalance("LOOM")
   }
 
   mounted() {
-   this.refreshTimer = timer(0, 15000).subscribe(() => {
-     this.refresh()
-   })
+    this.refreshTimer = timer(0, 15000).subscribe(() => {
+      this.refresh()
+    })
   }
 
   beforeDestroy() {
@@ -186,7 +164,7 @@ export default class MobileAccount extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #mobile-account {
   padding-top: 1.5rem;
   padding-bottom: 5.5rem;

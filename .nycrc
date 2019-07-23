@@ -19,5 +19,5 @@
     "cache": true,
     "all": true,
     "sourceMap": false,
-    "instrument": false
+    "instrument": true
 }

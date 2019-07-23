@@ -2,10 +2,8 @@
 import * as Sentry from "@sentry/browser"
 import * as SentryIntegrations from "@sentry/integrations"
 import BootstrapVue from "bootstrap-vue"
-import VueProgressBar from "vue-progressbar"
 import Vue from "vue"
 import { sync } from "vuex-router-sync"
-import Progress from "vue-multiple-progress"
 import VueClipboard from "vue-clipboard2"
 
 import FontAwesome from "@fortawesome/fontawesome"
@@ -25,8 +23,6 @@ import App from "./App.vue"
 import router from "./router"
 import { store, dashboardStore } from "./store"
 
-import debug from "debug"
-
 import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
 import { isMobile } from "./utils"
@@ -38,24 +34,8 @@ import local from "./config/local"
 // tslint:disable-next-line: no-var-requires
 require("./assets/scss/main.scss")
 
-const progressBarOptions = {
-  color: "#52c3ff",
-  failedColor: "#874b4b",
-  thickness: "4px",
-  autoFinish: false,
-}
-
-const debugMode = process.env.NODE_ENV !== "production"
-const log = (message = "", object) => {
-  if (debugMode) console.log(message, object)
-}
-
-// Object.defineProperty(Vue.prototype, '$log', { value: log })
-
-Vue.use(VueProgressBar, progressBarOptions)
 Vue.use(BootstrapVue)
 Vue.use(Autocomplete)
-Vue.use(Progress)
 Vue.use(VueClipboard)
 
 FontAwesome.library.add(BrandsFontAwesome, SolidFontAwesome, RegularFontAwesome)
@@ -104,15 +84,10 @@ export default new Vue({
   },
 }).$mount("#app")
 
-// set available envs
-// if (window.location.host === "dashboard.dappchains.com") {
-//   Raven.config("https://46e40f8393dc4d63833d13c06c9fe267@sentry.io/1279387")
-//     .addPlugin(RavenVue, Vue)
-//     .install()
-// }
 // todo should store key/project elsewhere (vault?)
 Sentry.init({
   dsn: process.env.NODE_ENV === "production" ? "https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913" : undefined,
+  environment: window.location.hostname,
   integrations: [new SentryIntegrations.Vue({
     Vue,
     attachProps: true,

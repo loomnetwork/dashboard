@@ -58,10 +58,7 @@
     <undelegate-modal></undelegate-modal>
 
     <!-- gateway -->
-    <DepositApproved />
-    <DepositConfirmed />
     <progress-modal />
-    <WithdrawProgress />
     <WithdrawConfirmed />
     <feedback-alert />
     <AccountMappingModal />
@@ -79,9 +76,6 @@ import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue
 import ProgressModal from "@/feedback/components/ProgressModal.vue"
 import FeedbackAlert from "@/feedback/components/FeedbackAlert.vue"
 
-import DepositApproved from "@/components/gateway/DepositApproved.vue"
-import DepositConfirmed from "@/components/gateway/DepositConfirmed.vue"
-import WithdrawProgress from "@/components/gateway/WithdrawProgress.vue"
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
 import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
@@ -95,14 +89,11 @@ import AccountMappingModal from "@/components/modals/AccountMappingModal.vue"
     FaucetSidebar,
     FaucetFooter,
     LoadingSpinner,
-    DepositApproved,
-    DepositConfirmed,
     FeedbackNotification,
     ProgressModal,
     FeedbackAlert,
     RedelegateModal,
     UndelegateModal,
-    WithdrawProgress,
     WithdrawConfirmed,
     AccountMappingModal,
   },

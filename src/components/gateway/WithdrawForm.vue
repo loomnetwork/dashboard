@@ -61,7 +61,6 @@ import { gatewayReactions } from "@/store/gateway/reactions"
 
 import AmountInput from "@/components/AmountInput.vue"
 import InputAddress from "../InputAddress.vue"
-import { setShowWithdrawProgress } from "@/store/gateway/mutations"
 import { LocalAddress, Address } from "loom-js"
 
 import * as plasmaGateways from "@/store/gateway/plasma"
@@ -182,7 +181,6 @@ export default class WithdrawForm extends Vue {
       weiAmount: this.weiAmount,
       recepient,
     }
-
     gatewayModule.plasmaWithdraw(payload)
     this.close()
   }

@@ -13,7 +13,8 @@
       <b-card class="mapped-card">
         <b-card-header class="debug-mapped-contract d-flex justify-content-between">
           <h5 class="col-5">Debug Mapped Contract</h5>
-          <b-input-group>
+          <b-input-group
+            v-on:keyup.enter="viewLogs">
             <b-form-input
               v-model="tokenName"
               type="text"
@@ -131,6 +132,7 @@ export default class TransferGateway extends Vue {
   }
 
   viewLogs() {
+    console.log("VIEWLOGS!!")
     // this will be delete after
     if (this.LOOM_TOKEN.includes(this.tokenName.toUpperCase())) {
       this.getLogs(this.LOOMCOIN_ADDR, 1)
@@ -139,8 +141,10 @@ export default class TransferGateway extends Vue {
         this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
         this.getLogs(this.viewerAddress, 1)
       } catch (e) {
-        this.notFound = true
-        this.notFoundMsg = `Token ${this.tokenName} not found`
+        if (this.tokenName) {
+          this.notFound = true
+          this.notFoundMsg = `Token ${this.tokenName} not found`
+        }
       } 
     }
   }

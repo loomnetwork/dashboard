@@ -100,12 +100,14 @@ export async function refreshValidators(ctx: ActionContext) {
   const contract = ctx.state.contract!
   log("getValidatorsAsync")
   // Get all validators, candidates and delegations
+  ctx.state.loading.validators = true
   const [validators, candidates, delegations] = await Promise.all([
     contract.getValidatorsAsync(),
     contract.getCandidatesAsync(),
     contract.getAllDelegations(),
   ])
   //
+
   const nodes = candidates.map((c) => {
     const node = new Validator()
     node.setCandidateData(c)
@@ -144,6 +146,7 @@ export async function refreshValidators(ctx: ActionContext) {
     .forEach((n) => (n.name = n.addr.replace("0x", "loom")))
 
   ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
+  ctx.state.loading.validators = false
 }
 
 /**
@@ -177,8 +180,6 @@ export async function refreshDelegations(context: ActionContext) {
   const rewards = response.delegationsArray
     .filter((d) => d.index === 0)
     .map((item) => fromIDelegation(item, state.validators))
-
-  // .reduce((sum: BN, d) => sum.add(d.amount), ZERO)
 
   state.rewards = rewards
   log("rewards", rewards.toString())
@@ -244,10 +245,6 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   }
 
   try {
-    // console.log("JUST CONTRACT!", contract)
-    // console.log("DELEGATE CONTRACT!", contract.address.local.toString())
-    // console.log("VALIDATOR ADDRESS", delegation.validator.address.toString())
-
     feedback.setStep("Delegating...")
     await context.state.contract!.delegateAsync(
       delegation.validator.address,
@@ -259,6 +256,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Unexpected error while delegating, please contact support.")
+    console.error(error)
     Sentry.withScope((scope) => {
       scope.setExtra("delegations", {
         delegations: JSON.stringify({
@@ -269,7 +267,6 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
       })
       Sentry.captureException(error)
     })
-    console.error(error)
   }
 }
 
@@ -326,6 +323,17 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while redelegating. Please contact support")
+    Sentry.withScope((scope) => {
+      scope.setExtra("redelegations", {
+        redelegations: JSON.stringify({
+          validator: delegation.validator.address.local.toString(),
+          updateValidator: delegation.updateValidator!.address.local.toString(),
+          updateAmount: delegation.updateAmount.toString(),
+          index: delegation.index,
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 
@@ -338,6 +346,14 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while redelegating. Please contact support.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("consolidate", {
+        consolidate: JSON.stringify({
+          validator: validator.address.local.toString(),
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 
@@ -362,6 +378,16 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
   } catch (error) {
     feedback.endTask()
     feedback.showError("Error while undelegating. Please contact support.")
+    Sentry.withScope((scope) => {
+      scope.setExtra("undelegations", {
+        undelegations: JSON.stringify({
+          validator: delegation.validator.address.local.toString(),
+          updateAmount: delegation.updateAmount.toString(),
+          index: delegation.index,
+        }),
+      })
+      Sentry.captureException(error)
+    })
   }
 }
 

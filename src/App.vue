@@ -15,8 +15,14 @@ export default {
   },
   watch: {
     "$store.state.plasma.address"(address) {
+      const target = this.$route.query.redirect
+      const hasRoute = this.$router.options.routes.some(r => r.path === target)
       if (address !== "") {
-        this.$router.push("/account")
+        if (hasRoute && !["/login", "/"].includes(target)) {
+          this.$router.push(target)
+        } else {
+          this.$router.push("/account")
+        }
       } else {
         this.$router.router.push("/")
       }

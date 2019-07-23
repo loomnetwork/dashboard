@@ -147,6 +147,7 @@
             </template>
           </b-modal>
           <b-popover
+            class="popover"
             target="ledger-card"
             title="Now deprecated"
             triggers="hover"
@@ -297,6 +298,12 @@ export default class FirstPage extends Vue {
         height: 56px;
       }
     }
+  }
+}
+
+.popover {
+  h3 {
+    color: gray;
   }
 }
 

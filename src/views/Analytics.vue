@@ -23,7 +23,8 @@ import { Component } from "vue-property-decorator"
 
 import { DashboardState } from "../types"
 import { timer } from "rxjs"
-import { dposModule } from "../dpos/store";
+import { dposModule } from "../dpos/store"
+import BigNumber from "bignumber.js"
 
 @Component
 export default class Analytics extends Vue {
@@ -34,16 +35,13 @@ export default class Analytics extends Vue {
 
   async beforeMount() {
     if (!this.state.dpos.analyticsData) await dposModule.fetchAnalyticsData()
-    const data = this.state.dpos.analyticsData
-    console.log("data", data)
+    const data = this.state.dpos.analyticsData!
     const ctx = document.getElementById("pieChart")
     const ctx2 = document.getElementById("barChart")
-    // @ts-ignore
     const totalTiers = data[0].tiers
     const tierAmount: any[] = []
     const tiers = { zero: "2 weeks", one: "3 months", two: "6 months", three: "1 year" }
     const tierKeys: any[] = []
-    // tslint
     for (const key of Object.keys(totalTiers)) {
       tierKeys.push(tiers[key])
       if (totalTiers.hasOwnProperty(key)) {
@@ -51,10 +49,12 @@ export default class Analytics extends Vue {
       }
     }
 
-    const timeIntervalChunks = data!.filter((x, idx) => idx % 10 === 0).map((item) => {
-      // @ts-ignore
-      const int = parseInt(item.delegationTotal, 10)
-      return (int / 10 ** 18)
+    const timeIntervalChunks = data!.filter((x, idx) => idx % 10 === 0).map((item: any) => {
+      const bn = new BigNumber(item.delegationTotal)
+      return {
+        y: bn.dividedBy(10 ** 18),
+        x: new Date(item.updated_at as string),
+      }
     })
 
     const config = {
@@ -83,23 +83,27 @@ export default class Analytics extends Vue {
         datasets: [{
           data: timeIntervalChunks,
           backgroundColor: [
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
-            "rgba(255, 99, 132, 1)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
+            "rgba(3, 169, 244, 0.5)",
           ],
           label: "Amount of LOOM staked",
         }],
-        labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       },
       options: {
         responsive: true,
+        scales: {
+          xAxes: [{
+            type: "time",
+          }],
+        },
       },
     }
 

@@ -113,12 +113,18 @@ function withdrawalInProgress() {
 
 async function checkIfPastWithdrawalEventExists() {
   await gatewayModule.refreshEthereumHistory()
-  return ethereumModule.state.history.find((event) => {
-    return (event.event === "TokenWithdrawn" &&
-      (event.blockNumber + 15) >= ethereumModule.state.blockNumber)
-  }) ? true : JSON.parse(
+  const history = ethereumModule.state.history
+  const blockNumber = ethereumModule.state.blockNumber
+  //  check if there is a withdrawal event in the history that has yet to expire
+  // (block number is less then the current blocknumber + 15 confirmations)
+  const notExpired = history.find((event) => {
+    return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) <= blockNumber)
+  })
+  const inLocalStorage = JSON.parse(
     localStorage.getItem("pendingWithdrawal") || "false",
-  ) ? true : false
+  )
+  if (notExpired || inLocalStorage) return true
+  return false
 }
 
 async function getTokenContractLogs(context: ActionContext, payload: { contractAddress: string, page: number }) {

@@ -147,7 +147,6 @@
             </template>
           </b-modal>
           <b-popover
-            show
             target="ledger-card"
             title="Now deprecated"
             triggers="hover"
@@ -282,6 +281,7 @@ export default class FirstPage extends Vue {
     }
   }
 }
+
 </style>
 
 
@@ -455,6 +455,7 @@ export default class FirstPage extends Vue {
 #orange {
   color: #f29040;
 }
+
 </style>
 <style>
 body {

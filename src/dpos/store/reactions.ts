@@ -5,7 +5,7 @@
 import { Store } from "vuex"
 import { dposModule } from "."
 import { plasmaModule } from "@/store/plasma"
-
+import { contracts as plasmaTokenContracts } from "@/store/plasma/tokens"
 import debug from "debug"
 import { DPOS3 } from "loom-js/dist/contracts"
 import { DashboardState } from "@/types"
@@ -110,7 +110,7 @@ async function refreshDPoSState() {
 
 function refreshDPoSUserState() {
   log("refreshDPoSUserState")
-  if ("LOOM" in plasmaModule.state.coins) {
+  if (plasmaTokenContracts.has("LOOM")) {
     plasmaModule.refreshBalance("LOOM")
   }
   dposModule.refreshDelegations()

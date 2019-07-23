@@ -19,7 +19,7 @@ import { formatTokenAmount } from "@/filters"
 import * as Sentry from "@sentry/browser"
 const log = debug("plasma")
 
-const contracts = new Map<string, ContractAdapter>()
+export const contracts = new Map<string, ContractAdapter>()
 
 export function resetContracts() {
   contracts.clear()

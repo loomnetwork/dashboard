@@ -2,23 +2,23 @@
   <b-container class="mt-5 mb-4">
     <b-row class="mb-2">
       <b-col>
-        <h5>{{ token }}</h5>
+        <h5>{{ tokenData.symbol }}</h5>
       </b-col>
     </b-row>
     <b-row>
       <b-col class="account">
         <label>Ethereum</label>
         <address @click="copyEthereum">
-          <span v-if="!ethAddress" class="highlight">-</span>
-          <span v-else class="highlight">{{ ethAddress }}</span>
+          <span v-if="!tokenData.ethereum" class="highlight">-</span>
+          <span v-else class="highlight">{{ tokenData.ethereum }}</span>
           <fa icon="paste"/>
         </address>
       </b-col>
       <b-col class="account">
         <label>Plasma</label>
         <address @click="copyPlasma">
-          <span v-if="!plasmaAddress" class="highlight">-</span>
-          <span v-else class="highlight">{{ plasmaAddress }}</span>
+          <span v-if="!tokenData.plasma" class="highlight">-</span>
+          <span v-else class="highlight">{{ tokenData.plasma }}</span>
           <fa icon="paste"/>
         </address>
       </b-col>
@@ -29,23 +29,22 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Prop } from "vue-property-decorator"
+import { TokenData } from "../services/TokenService"
 import { feedbackModule } from "../feedback/store"
 
 @Component
 export default class MappedTokenAddress extends Vue {
-  @Prop(String) token!: string
-  @Prop(String) ethAddress!: string
-  @Prop(String) plasmaAddress!: string
+  @Prop() tokenData!: TokenData
 
   copyEthereum() {
-    this.$copyText(this.ethAddress).then(() =>
+    this.$copyText(this.tokenData.ethereum).then(() =>
       feedbackModule.showSuccess("Ethereum address copied."),
       console.error,
     )
   }
 
   copyPlasma() {
-    this.$copyText(this.plasmaAddress).then(() =>
+    this.$copyText(this.tokenData.plasma).then(() =>
       feedbackModule.showSuccess("Plasma address copied."),
       console.error,
     )

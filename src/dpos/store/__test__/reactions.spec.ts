@@ -98,7 +98,7 @@ describe("Reactions", () => {
       sinon.assert.calledOnce(dposModuleStub.refreshValidators)
       sinon.assert.notCalled(dposUtilsStub.refreshDPoSUserState)
     })
-    it("refreshes DPoS Account State if state.plasma.address is set", async () => {
+    it("refreshes DPoS Account State if LOOM contract ready", async () => {
       // store.state.plasma.address = "0x0000000000000000000000000000000000000000"
       sinon.stub(store.state.plasma, "address").value("0x0000000000000000000000000000000000000000")
       const stubContract = sinon.createStubInstance(CoinAdapter)
@@ -115,8 +115,13 @@ describe("Reactions", () => {
   describe("Refresh DPoS user state", () => {
     before(async () => {
       dposUtilsStub.refreshDPoSUserState.restore()
-
+      const stubContract = sinon.createStubInstance(CoinAdapter)
+      plasmaTokenContracts.set("LOOM", stubContract)
       await dposUtils.refreshDPoSUserState()
+    })
+
+    after(() => {
+      plasmaTokenContracts.clear()
     })
 
     it("calls plasmaModule.refreshBalance", () => {

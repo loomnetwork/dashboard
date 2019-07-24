@@ -1,0 +1,17 @@
+[
+  {
+    "chains": {
+      "plasma": "0xf37d4c3d2eea80a6b7c45d77f3093d797e3da124",
+      "binance": "0x0000000000000000000000000000000000424e42"
+    }
+  },
+  {
+    "symbol": "BNB",
+    "name": "BNB",
+    "decimals": 18,
+    "chains": {
+      "plasma": "0xcf2851b1ad63d093238ea296524be8d7cd920e0b",
+      "ethereum": "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+    }
+  }
+]

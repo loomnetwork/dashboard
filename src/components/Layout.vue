@@ -43,7 +43,7 @@
       <div class="d-block text-center">
         <p>{{ $t('components.layout.metamask_changed')}}</p>
       </div>
-      <b-button class="mt-2" variant="primary" block @click="">OK</b-button>
+      <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
     </b-modal>
     <transition
       name="router-anim"

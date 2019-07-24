@@ -35,7 +35,7 @@
     <b-modal
       id="metamaskChangeDialog"
       no-close-on-backdrop
-      hider-header
+      hide-header
       hide-footer
       centered
       v-model="metamaskChangeAlert"
@@ -82,6 +82,7 @@ import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
 import { DashboardState } from "@/types"
 
 import AccountMappingModal from "@/components/modals/AccountMappingModal.vue"
+import { ethereumModule } from "../store/ethereum"
 
 @Component({
   components: {
@@ -111,35 +112,14 @@ export default class Layout extends Vue {
 
   get networkId() { return this.s.plasma.networkId }
 
-  metamaskChangeAlert = false
-
   async mounted() {
-    if ("ethereum" in window) {
-      // @ts-ignore
-      window.ethereum.on("accountsChanged", (accounts) => {
-        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove.
-        // @ts-ignore
-        if (window.resolvingMismatchedReceipt) {
-          return
-        }
-
-        if (this.$store.state.ethereum.address &&
-          this.$store.state.ethereum.address !== accounts[0]) {
-          // Remove any reference to past withdrawals as
-          // it is bound to a specific address
-          localStorage.removeItem("lastWithdrawTime")
-          this.metamaskChangeAlert = true
-          // @ts-ignore
-          window.ethereum.removeAllListeners()
-        }
-
-      })
-    }
-
     this.$root.$on("logout", () => {
       this.restart()
     })
+  }
 
+  get metamaskChangeAlert() {
+    return ethereumModule.state.metamaskChangeAlert
   }
 
   restart() {

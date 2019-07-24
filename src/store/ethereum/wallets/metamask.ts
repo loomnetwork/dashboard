@@ -9,6 +9,7 @@ import { ethers } from "ethers"
 import { WalletType } from "../types"
 import { provider } from "web3-providers"
 import { feedbackModule } from "@/feedback/store"
+import { ethereumModule } from ".."
 
 export const MetaMaskAdapter: WalletType = {
   id: "netamask",
@@ -51,6 +52,27 @@ async function getCurrentApi(): Promise<provider> {
     await window.ethereum.enable()
     // @ts-ignore
     // return new ethers.providers.Web3Provider(window.ethereum)
+
+    // @ts-ignore
+    window.ethereum.on("accountsChanged", (accounts) => {
+      // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove.
+      // @ts-ignore
+      if (window.resolvingMismatchedReceipt) {
+        return
+      }
+
+      if (ethereumModule.state.address &&
+        ethereumModule.state.address.toLowerCase() !== accounts[0]) {
+        // Remove any reference to past withdrawals as
+        // it is bound to a specific address
+        localStorage.removeItem("lastWithdrawTime")
+        ethereumModule.state.metamaskChangeAlert = true
+        // @ts-ignore
+        window.ethereum.removeAllListeners()
+      }
+    })
+
+    // @ts-ignore
     return window.ethereum
   } catch (err) {
     feedbackModule.endTask()

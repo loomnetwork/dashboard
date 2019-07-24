@@ -50,7 +50,8 @@ export interface EthereumState extends EthereumConfig {
   // TODO move to gateway module
   latestWithdrawalBlock: number,
   claimedReceiptHasExpired: boolean,
-  history: any[]
+  history: any[],
+  metamaskChangeAlert: boolean,
 }
 
 export interface WalletType {

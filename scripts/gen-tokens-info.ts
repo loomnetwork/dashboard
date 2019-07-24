@@ -5,13 +5,13 @@ import stage from "../src/config/stage"
 import dev from "../src/config/dev"
 
 import { createDefaultClient } from "loom-js/dist/helpers"
-import { TransferGateway } from "loom-js/dist/contracts"
+import { TransferGateway, BinanceTransferGateway } from "loom-js/dist/contracts"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 // @ts-ignore
 import ERC20_ABI from "./ERC20_frag.json"
 import { ethers } from "ethers"
 
-import { from } from "rxjs"
+import { from, combineLatest } from "rxjs"
 import { concatMap, map, toArray, switchMap, mergeMap, tap } from "rxjs/operators"
 
 import fs from "fs"
@@ -36,15 +36,10 @@ function generate(config) {
         config.plasma.chainId,
     )
     const provider = new ethers.providers.JsonRpcProvider(config.ethereum.endpoint)
-    return from(loadMappings(client, address))
+    const ethereum = from(loadEthereumMappings(client, address))
         .pipe(
-            tap(() => {
-                console.log("mappings loaded for " + config.name)
-                client.disconnect()
-            }),
             mergeMap((mappings) => mappings.confirmed),
-            map((mapping) => ({ mapping, provider })),
-            mergeMap(tokenInfo, 2),
+            mergeMap((mapping) => ethereumTokenInfo(mapping, provider), 2),
             toArray(),
             switchMap((x) => {
                 console.log("saving file for env", x)
@@ -53,20 +48,43 @@ function generate(config) {
             }),
         ).toPromise()
 
+    const binance = from(loadBinanceMappings(client, address))
+        .pipe(
+            mergeMap((mappings) => mappings.confirmed),
+            mergeMap((mapping) => ethereumTokenInfo(mapping, provider), 2),
+            toArray(),
+            switchMap((x) => {
+                console.log("saving file for env", x)
+                fs.writeFileSync(__dirname + "/" + config.name, JSON.stringify(x))
+                return config.name
+            }),
+        ).toPromise()
+
+    return combineLatest(ethereum, binance)
+        .pipe(
+            map(([tokens, binanceMappings]) => {
+                addBinance(tokens, binanceMappings)
+            }),
+        )
 }
 
-async function loadMappings(client: Client, address: Address) {
+async function loadEthereumMappings(client: Client, address: Address) {
     const gateway = await TransferGateway.createAsync(client, address)
     const mappings = await gateway.listContractMappingsAsync()
     return mappings
 }
 
-async function tokenInfo(
-    { mapping, provider }: { mapping: IAddressMapping, provider: ethers.providers.Provider },
+async function loadBinanceMappings(client: Client, address: Address) {
+    const gateway = await BinanceTransferGateway.createAsync(client, address)
+    const mappings = await gateway.listContractMappingsAsync()
+    return mappings
+}
+
+async function ethereumTokenInfo(mapping: IAddressMapping, provider: ethers.providers.Provider,
 ) {
     const chains = {
-        plasma: mapping.from.local.toString(),
-        ethereum: mapping.to.local.toString(),
+        plasma: mapping.from.local.toString().toLowerCase(),
+        ethereum: mapping.to.local.toString().toLowerCase(),
     }
     console.log("token info", chains)
     const info: any = {}
@@ -92,4 +110,20 @@ async function tokenInfo(
     }
     info.chains = chains
     return info
+}
+
+function binanceTokenInfo() {
+
+}
+
+function addBinance(tokens: any[], bnbMappings: Array<{ plasma: string, binance: string }>) {
+    // filter out binanceOnlyTokens
+    const binanceOnly = bnbMappings.filter((bnbMapping) => {
+        const token = tokens.find((t) => t.chains.plasma === bnbMapping.plasma)
+        if (token) {
+            token.chains.binance = bnbMapping.binance
+            return false
+        }
+        return true
+    })
 }

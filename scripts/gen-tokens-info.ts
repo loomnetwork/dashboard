@@ -1,6 +1,7 @@
 import { Client, CryptoUtils, Address } from "loom-js"
 
 import production from "../src/config/production"
+import extDev from "../src/config/ext-dev"
 import stage from "../src/config/stage"
 import dev from "../src/config/dev"
 

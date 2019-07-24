@@ -30,15 +30,13 @@
                     class="validator-card-mobile mb-3"
                     no-body>
               <div class="copy-wrapper">
-                <h6>{{validator.name}}</h6>
+                <h6>
+                  <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
+                  {{validator.name}}
+                </h6>
               </div>
               <div class="copy-wrapper"><label>Fee</label> <strong>{{validator.fee}}</strong></div>
               <div class="copy-wrapper"><label>Stake</label> <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong></div>
-              <div class="copy-wrapper"
-                   :class="{ 'active': validator.Status === 'Active'}">
-                <label>Status</label>
-                <strong>{{validator.status ? "Active" : "Inactive"}}</strong>
-              </div>
             </b-card>
           </template>
           <template v-else>
@@ -260,6 +258,17 @@ main.validators {
       overflow: hidden;
       text-overflow: ellipsis;      
       font-size: 20px;
+      .active-symbol {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 3px;
+        border-radius: 50%;
+        background-color: #ec1d05;
+        &.active {
+          background-color: #3bef3b;
+        }
+      }
     }
   }
 }

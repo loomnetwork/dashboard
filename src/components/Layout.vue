@@ -124,7 +124,7 @@ export default class Layout extends Vue {
         }
 
         if (this.$store.state.ethereum.address &&
-          this.$store.state.ethereum.address !== accounts[0]) {
+          this.$store.state.ethereum.address.toLowerCase() !== accounts[0]) {
           // Remove any reference to past withdrawals as
           // it is bound to a specific address
           localStorage.removeItem("lastWithdrawTime")

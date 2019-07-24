@@ -1,11 +1,11 @@
 import { DashboardConfig } from "@/types"
 
 export default {
-  name: "dev",
+  name: "ext-dev",
   plasma: {
-    networkId: "asia1",
-    chainId: "asia1",
-    endpoint: "wss://test-z-asia1.dappchains.com",
+    networkId: "extdev-plasma-us1",
+    chainId: "extdev-plasma-us1",
+    endpoint: "wss://extdev-plasma-us1.dappchains.com",
     blockExplorer: "http://asia1-blockexplorer.devdc.io",
     loomGamesEndpoint: "https://stage.loom.games/en/dpos-link",
     historyUrl: "http://dev-api.loom.games/plasma/address/eth:{address}?sort=-block_height",
@@ -17,8 +17,8 @@ export default {
     endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
-      mainGateway: "0xe57e0793f953684bc9d2ef3d795408afb4a100c3",
-      loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
+      loomGateway: "0xc5d1847a03da59407f27f8fe7981d240bff2dfd3",
+      mainGateway: "0xb73C9506cb7f4139A4D6Ac81DF1e5b6756Fab7A2",
     },
   },
   dpos: {

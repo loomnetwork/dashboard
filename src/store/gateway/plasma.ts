@@ -104,7 +104,6 @@ export async function init(
   const binanceGateway = await BinanceTransferGateway.createAsync(client, mapping.from)
 
   instance = new PlasmaGateways(ethereumMainGateway, ethereumLoomGateway, binanceGateway, plasmaWeb3, mapping)
-
   return instance
 }
 

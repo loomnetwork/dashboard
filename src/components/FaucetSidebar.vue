@@ -90,10 +90,10 @@ export default class FaucetSidebar extends Vue {
         to: "/history",
         text: "components.faucet_sidebar.history",
       },
-      {
-        to: "/analytics",
-        text: "components.faucet_sidebar.analytics",
-      },
+      // {
+      //   to: "/analytics",
+      //   text: "components.faucet_sidebar.analytics",
+      // },
     ],
     wallet: [
       {

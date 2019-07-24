@@ -106,7 +106,7 @@ class TokenService {
     if (data === undefined) {
       throw new Error("Unknown token " + coinSymbol)
     }
-    return data
+    return Object.assign({}, data)
   }
 
   tokenFromAddress(

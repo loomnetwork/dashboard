@@ -6,30 +6,30 @@
     "transfer_card_err_tx": "카드 전송 중 에러가 발생했습니다: {msg}",
     "transfer_pack_err_tx": "팩 전송 중 에러가 발생했습니다: {msg}",
     "user_denied_sign_tx": "사용자가 메세지 서명을 거절했습니다",
-    "deployer_already_exists": "Deployer alrready exists.",
+    "deployer_already_exists": "이미 존재하는 배포자입니다.",
     "transaction_apprv_err_tx": "트랜잭션 승인 중 에러가 발생했습니다: {msg}",
-    "add_deployer_addr_success_tx": "Deployer address added successfully.",
+    "add_deployer_addr_success_tx": "배포자 주소가 성공적으로 추가되었습니다.",
     "add_key_err_tx": "키 추가 중 에러가 발생했습니다: {msg}",
     "copy_addr_success_tx": "주소가 클립보드에 복사되었습니다.",
-    "copy_addr_err_tx": "Somehow copy didn't work...sorry",
-    "redelegate_success_tx": "Success redelegating stake",
+    "copy_addr_err_tx": "죄송하지만, 복사되지 않았습니다...",
+    "redelegate_success_tx": "재위임이 성공적으로 완료되었습니다.",
     "redelegate_err_tx": "재위임에 실패하였습니다",
     "delegate_err_tx": "위임 중 에러가 발생했습니다",
-    "undelegate_err_tx": "Failed to undelegate",
-    "init_DposUser_err_tx": "Error initDposUser",
-    "switch_dpouser_err_tx": "Error initDposUser",
-    "select_path_err_tx": "Can't connect to your wallet. Please try again.",
-    "load_wallet_err_tx": "Error loading your wallet accounts. Please try again.",
-    "copied_tx": "Copied to clipboard",
-    "receiver_addr_err_tx": "Invalid receiver address",
-    "invalid_amount": "Invalid amount",
-    "invalid_addr": "Invalid receiver address",
-    "amount_input_should_less": "Invalid amount. should be less than {amount}",
-    "amount_input_should_more": "Invalid amount. should be more than {amount}",
-    "awaiting_transaction": "Awaiting transaction confirmation",
+    "undelegate_err_tx": "위임 취소에 실패하였습니다.",
+    "init_DposUser_err_tx": "initDposUser 에러",
+    "switch_dpouser_err_tx": "initDposUser 에러",
+    "select_path_err_tx": "지갑에 연결할 수 없습니다. 다시 시도해주세요.",
+    "load_wallet_err_tx": "지갑 계정을 불러오는 중 문제가 발생했습니다. 다시 시도해주세요.",
+    "copied_tx": "클립보드에 복사되었습니다.",
+    "receiver_addr_err_tx": "유효하지 않은 수신자 주소입니다.",
+    "invalid_amount": "유효하지 않은 숫자입니다.",
+    "invalid_addr": "유효하지 않은 수신자 주소입니다.",
+    "amount_input_should_less": "유효하지 않은 숫자입니다. {amount}보다 적어야 합니다.",
+    "amount_input_should_more": "유효하지 않은 숫자입니다. {amount}보다 많아야 합니다.",
+    "awaiting_transaction": "트랜잭션 확인을 기다리는 중입니다.",
     "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
   },
-  "transfer_all": "All ({amount} LOOM)",
+  "transfer_all": "모두 전송 ({amount} LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -133,7 +133,7 @@
       "tokens_pending_withdraw": "출금 처리 중인 {pendingWithdrawAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 출금을 완료해주세요.",
       "reclaim_deposit": "예치된 토큰 회수하기",
       "complete_withdraw": "출금 완료",
-      "pending_withdrawal": "Withdrawal pending"
+      "pending_withdrawal": "인출 진행 중"
     },
     "my_delegations": {
       "no_delegations": "위임 내역 없음"
@@ -157,7 +157,7 @@
       "timelock_tier": "선택 가능한 락업 기간:",
       "timelock": "락업 기간:",
       "unlocked": "잠금 해제됨",
-      "no_stakes": "You have not yet staked with {name}",
+      "no_stakes": "아직 {name}에 스테이킹하지 않았습니다.",
       "stake_tokens": "토큰 스테이크하기",
       "consolidate": "하나로 통합하기"
     },
@@ -322,7 +322,7 @@
     "event:MainnetDepositEvent": "입금",
     "event:MainnetWithdrawalEvent": "인출",
     "event:WithdrawLoomCoin": "인출 (LOOM)",
-    "event:TokenWithdrawalSigned": "Withdrawal signed",
+    "event:TokenWithdrawalSigned": "서명된 인출",
     "TokenWithdrawn": "출금한 토큰"
   }
 }

@@ -67,6 +67,7 @@ const initialState: EthereumState = {
   latestWithdrawalBlock: 0,
   claimedReceiptHasExpired: false,
   history: [],
+  metamaskChangeAlert: false,
 }
 
 // web3 instance

@@ -49,6 +49,7 @@
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
+                <hr>
                 <b-nav-item v-for="(menu, index) in menus.wallet" :key="index+'w'">
                   <h5>
                     <router-link
@@ -57,6 +58,7 @@
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
+                <hr>
                 <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
                   <h5>
                     <router-link
@@ -65,6 +67,7 @@
                     >{{ $t(menu.text) }}</router-link>
                   </h5>
                 </b-nav-item>
+                <hr>
                 <b-nav-item v-for="(menu, index) in menus.help" :key="index+'h'">
                   <h5>
                     <router-link
@@ -303,6 +306,10 @@ a.hover-warning:hover {
   }
   li {
     list-style: none;
+  }
+  hr {
+    margin: 0.25rem 0rem;
+    border-top: 1px solid #f8f9fa;
   }
 }
 

@@ -100,7 +100,6 @@ import { DashboardState } from "../types"
 import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
-
 const MENU = {
   staking: [
     {
@@ -201,8 +200,6 @@ export default class FaucetHeader extends Vue {
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
-
-
   get menus() {
     return {
       staking: MENU.staking,
@@ -257,32 +254,12 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-.rmv-margin {
-  margin: 0;
-}
-
 .refresh-icon {
   color: #007bff;
   &:hover {
     transform: rotate(360deg);
     transition: all 0.5s;
   }
-}
-
-#countdown-container {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  margin-right: auto;
-}
-
-.sign-out-link {
-  color: #007bff !important;
-}
-
-.sub-menu-links {
-  display: flex;
-  margin-left: auto;
 }
 
 .connection-status {
@@ -306,57 +283,8 @@ a.hover-warning:hover {
   z-index: 10100;
 }
 
-.cf:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.top-nav {
-  background-color: #ffffff !important;
-  background-image: initial !important;
-  border-bottom: 2px solid #f2f1f3;
-  .col {
-    padding: 0px;
-    ul {
-      li {
-        a {
-          span {
-            color: #495057;
-          }
-        }
-      }
-    }
-  }
-}
-
 .ensure-padded {
   padding: 0 15px !important;
-}
-
-#balance {
-  padding: 6px 0;
-  position: relative;
-}
-
-.metamask-status {
-  position: relative;
-  bottom: 2px;
-  background-color: #0dcd9b;
-  color: #fff;
-  font-size: 12px;
-  font-style: normal;
-  border-radius: 5px;
-  padding: 2px 6px;
-  font-weight: bold;
-}
-
-.metamask-status-error {
-  background-color: #e62e2e;
-}
-
-.add-border-left {
-  border-left: 2px solid #f2f1f3;
 }
 
 .navbar-toggler {

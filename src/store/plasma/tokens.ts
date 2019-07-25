@@ -19,7 +19,7 @@ import { formatTokenAmount } from "@/filters"
 import * as Sentry from "@sentry/browser"
 const log = debug("plasma")
 
-const contracts = new Map<string, ContractAdapter>()
+export const contracts = new Map<string, ContractAdapter>()
 
 export function resetContracts() {
   contracts.clear()
@@ -66,7 +66,7 @@ export function getAdapter(tokenSymbol: string): ContractAdapter {
   return adapter
 }
 
-interface ContractAdapter {
+export interface ContractAdapter {
   readonly contractAddress
   allowance(account: string, spender: string): Promise<BN>
   balanceOf(account: string): Promise<BN>
@@ -76,7 +76,7 @@ interface ContractAdapter {
   transfer(to: string, amount: BN): Promise<any>
 }
 
-class CoinAdapter implements ContractAdapter {
+export class CoinAdapter implements ContractAdapter {
   get contractAddress() {
     return this.contract.address.local.toString().toLocaleLowerCase()
   }
@@ -270,12 +270,14 @@ export async function approve(
   } catch (error) {
     if (error.message.includes("User denied message")) {
       feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
+      feedbackModule.endTask()
     } else {
       feedbackModule.showError(
         i18n
           .t("messages.transaction_apprv_err_tx", { msg: error.message })
           .toString(),
       )
+      feedbackModule.endTask()
     }
     Sentry.withScope((scope) => {
       scope.setExtra("approve", {

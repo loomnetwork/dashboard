@@ -1,11 +1,24 @@
 <template>
-  <b-container class="mt-5 mb-4">
-    <b-row class="mb-2">
+  <b-container class="mb-4">
+    <b-row class="mt-3 mb-2">
       <b-col>
-        <h5>{{ tokenData.symbol }}</h5>
+        <h2>{{ tokenData.symbol }}</h2>
+      </b-col>
+      <b-col>
+        <b-button-group class="chain-tabs">
+          <b-button 
+          variant="outline-primary"
+          :class="{active: chainTabs ==='ethereum'}"
+          @click="toggleChains('ethereum')">
+          Ethereum</b-button>
+          <b-button 
+          variant="outline-primary"
+          :class="{active: chainTabs ==='binance'}"
+          @click="toggleChains('binance')">Binance</b-button>
+        </b-button-group>
       </b-col>
     </b-row>
-    <b-row>
+    <b-row class="mt-4">
       <b-col class="account">
         <label>Ethereum</label>
         <address @click="copyEthereum">
@@ -23,6 +36,7 @@
         </address>
       </b-col>
     </b-row>
+    
   </b-container>
 </template>
 
@@ -36,6 +50,12 @@ import { feedbackModule } from "../feedback/store"
 export default class MappedTokenAddress extends Vue {
   @Prop() tokenData!: TokenData
 
+  chainTabs: "ethereum" | "binance" | "" = ""
+
+  mounted() {
+    this.chainTabs = "ethereum"
+  }
+
   copyEthereum() {
     this.$copyText(this.tokenData.ethereum).then(() =>
       feedbackModule.showSuccess("Ethereum address copied."),
@@ -48,6 +68,11 @@ export default class MappedTokenAddress extends Vue {
       feedbackModule.showSuccess("Plasma address copied."),
       console.error,
     )
+  }
+
+  toggleChains(value) {
+    this.chainTabs = value;
+    this.$emit('toggleChain', this.chainTabs)
   }
 }
 </script>
@@ -113,5 +138,11 @@ a.explorer {
   a.explorer {
     flex: 1;
   }
+}
+
+.chain-tabs {
+  
+  float: right;
+  padding-right: 3.75rem;
 }
 </style>

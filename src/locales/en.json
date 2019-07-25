@@ -316,7 +316,11 @@
         "use_account": "Use account"
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
+        "error": "An error occurred, please try again.",
+        "complete": "Complete withdraw",
+        "status_failed": "Withdrawal failed",
+        "status_confirmed": "Withdraw to gateway confirmed"
       },
       "faucet_redelegate_modal": {
         "select_validator": "Select a validator :",
@@ -337,6 +341,13 @@
         "add_new" : "Add New Token",
         "token_symbol": "Token Symbol",
         "search": "Search"
+      },
+      "withdraw_form_modal" : {
+        "title": "Withdraw {token} to {chain}",
+        "transfer_fee": "Transfer to {chain} requires a fee of ",
+        "balance": "Your balance : ",
+        "recipient": "Recipient on {chain}",
+        "withdraw": "Withdraw"
       }
     },
     "blockExplorer": {

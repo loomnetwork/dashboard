@@ -6,7 +6,7 @@ import stage from "../src/config/stage"
 import dev from "../src/config/dev"
 
 import { createDefaultClient } from "loom-js/dist/helpers"
-import { TransferGateway, BinanceTransferGateway } from "loom-js/dist/contracts"
+import { TransferGateway, LoomCoinTransferGateway, BinanceTransferGateway } from "loom-js/dist/contracts"
 // @ts-ignore
 import ERC20_ABI from "./ERC20_frag.json"
 import { ethers } from "ethers"
@@ -16,7 +16,7 @@ import { concatMap, map, toArray, switchMap, mergeMap, tap, filter } from "rxjs/
 
 import fs from "fs"
 
-const envs = [production] // , stage, exDev]
+const envs = [extDev] // , stage, exDev]
 
 interface Mapping {
     plasma: string,
@@ -42,6 +42,17 @@ function generate(config) {
         config.plasma.chainId,
     )
     const provider = new ethers.providers.JsonRpcProvider(config.ethereum.endpoint)
+
+    const loom = from(loadLoomMappings(client, address))
+        .pipe(
+            mergeMap((mappings) => mappings.confirmed),
+            map(({ from, to }) => ({
+                plasma: (from.chainId === "eth" ? to : from).local.toString().toLocaleLowerCase(),
+                ethereum: (from.chainId === "eth" ? from : to).local.toString().toLocaleLowerCase(),
+            })),
+            toArray<Mapping>(),
+        )
+
     const ethereum = from(loadEthereumMappings(client, address))
         .pipe(
             mergeMap((mappings) => mappings.confirmed),
@@ -49,7 +60,6 @@ function generate(config) {
                 plasma: (from.chainId === "eth" ? to : from).local.toString().toLocaleLowerCase(),
                 ethereum: (from.chainId === "eth" ? from : to).local.toString().toLocaleLowerCase(),
             })),
-            filter((x) => x.plasma === "0xcf2851b1ad63d093238ea296524be8d7cd920e0b"),
             toArray<Mapping>(),
         )
 
@@ -63,7 +73,7 @@ function generate(config) {
             toArray<Mapping>(),
         )
 
-    return zip(ethereum, binance)
+    return zip(ethereum, loom, binance)
         .pipe(
             tap(() => client.disconnect()),
             map(mergeMappings),
@@ -77,6 +87,12 @@ function generate(config) {
             }),
         ).toPromise()
     // mergeMap((mapping) => ethereumTokenInfo(mapping, provider), 2),
+}
+
+async function loadLoomMappings(client: Client, address: Address) {
+    const gateway = await LoomCoinTransferGateway.createAsync(client, address)
+    const mappings = await gateway.listContractMappingsAsync()
+    return mappings
 }
 
 async function loadEthereumMappings(client: Client, address: Address) {
@@ -101,7 +117,6 @@ async function ethereumTokenInfo(mapping: Mapping, provider: ethers.providers.Pr
     if (!chains.ethereum) {
         return { chains }
     }
-
     const erc20 = new ethers.Contract(chains.ethereum, ERC20_ABI, provider)
     try {
         info.symbol = await erc20.functions.symbol()

@@ -102,6 +102,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
   })
 
   async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
+
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
@@ -112,7 +113,9 @@ export function gatewayReactions(store: Store<DashboardState>) {
         addresses,
         multisig,
       )
-      const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
+
+      const loomAddr = store.state.env === "ext-dev" ? "0x493640B5BEFB0962CE0932653987C41aA3608bd0"
+                                           : tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
       ethereumGateway.add("LOOM", loomAddr)
       ethereumGateway.add("ETH", "") // Ether does not have a contract address
     } catch (error) {

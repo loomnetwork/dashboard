@@ -76,65 +76,67 @@ import { DashboardState } from "../types"
 export default class FaucetSidebar extends Vue {
 
   // we coud bind menu to this
-  menus = {
-    staking: [
-      {
-        to: "/validators",
-        text: "components.faucet_sidebar.validators",
-      },
-      {
-        to: "/account",
-        text: "components.faucet_sidebar.my_account",
-      },
-      {
-        to: "/history",
-        text: "components.faucet_sidebar.history",
-      },
-      // {
-      //   to: "/analytics",
-      //   text: "components.faucet_sidebar.analytics",
-      // },
-    ],
-    wallet: [
-      {
-        to: "/wallet",
-        text: "components.faucet_sidebar.deposit_withdraw",
-      },
-      {
-        to: "/game-assets",
-        text: "components.faucet_sidebar.game_assets",
-        name: "transfer-asset",
-      },
-    ],
-    dev: [
-      {
-        href: this.state.plasma.blockExplorer,
-        text: "components.faucet_sidebar.block_explorer",
-      },
-      {
-        to: "/add-key",
-        text: "components.faucet_sidebar.deploy_to_plasmachain",
-        name: "dev-deploy",
-      },
-      {
-        to: "/transfer-gateway",
-        text: "Transfer Gateway",
-      },
-      {
-        to: "/validator-management",
-        text: "Validator Management",
-      },
-    ],
-    help: [
-      {
-        to: "/faq",
-        text: "components.faucet_sidebar.faq",
-      },
-      {
-        to: "/feedback",
-        text: "components.faucet_sidebar.feedback_form",
-      },
-    ],
+  get menus() {
+    return {
+      staking: [
+        {
+          to: "/validators",
+          text: "components.faucet_sidebar.validators",
+        },
+        {
+          to: "/account",
+          text: "components.faucet_sidebar.my_account",
+        },
+        {
+          to: "/history",
+          text: "components.faucet_sidebar.history",
+        },
+        // {
+        //   to: "/analytics",
+        //   text: "components.faucet_sidebar.analytics",
+        // },
+      ],
+      wallet: [
+        {
+          to: "/wallet",
+          text: "components.faucet_sidebar.deposit_withdraw",
+        },
+        {
+          to: "/game-assets",
+          text: "components.faucet_sidebar.game_assets",
+          name: "transfer-asset",
+        },
+      ],
+      dev: [
+        {
+          href: this.state.plasma.blockExplorer,
+          text: "components.faucet_sidebar.block_explorer",
+        },
+        {
+          to: "/add-key",
+          text: "components.faucet_sidebar.deploy_to_plasmachain",
+          name: "dev-deploy",
+        },
+        {
+          to: "/transfer-gateway",
+          text: "Transfer Gateway",
+        },
+        {
+          to: "/validator-management",
+          text: "Validator Management",
+        },
+      ],
+      help: [
+        {
+          to: "/faq",
+          text: "components.faucet_sidebar.faq",
+        },
+        {
+          to: "/feedback",
+          text: "components.faucet_sidebar.feedback_form",
+        },
+      ],
+    }
   }
 
   get state(): DashboardState {

@@ -1,9 +1,16 @@
 <template>
   <div id="layout" class="d-flex flex-column">
     <div
-      v-if="networkId !== 'plasma'"
-      style="background: #FFC107;padding: 0 16px;"
-    >Network: {{networkId}}</div>
+      v-if="networkId !== 'plasma' || metamaskNetwork === 'Rinkeby'"
+      style="background: #FFC107; padding: 0 16px;"
+    >
+      <span v-if="networkId !== 'plasma'">
+        Network: {{networkId}}
+      </span>
+      <span v-if="metamaskNetwork === 'Rinkeby'" style="float: right;">
+        You're on {{metamaskNetwork}} Network
+      </span>
+    </div>
     <faucet-header></faucet-header>
     <div class="content">
       <div class="d-none d-lg-block">
@@ -103,6 +110,7 @@ import { ethereumModule } from "../store/ethereum"
   },
 })
 export default class Layout extends Vue {
+  metamaskNetwork
 
   // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
@@ -113,6 +121,8 @@ export default class Layout extends Vue {
   get networkId() { return this.s.plasma.networkId }
 
   async mounted() {
+    this.metamaskNetwork = this.getMetamaskNetwork()
+
     this.$root.$on("logout", () => {
       this.restart()
     })
@@ -126,6 +136,34 @@ export default class Layout extends Vue {
     window.location.reload(true)
   }
 
+  async getMetamaskNetwork() {
+    try {
+      // @ts-ignore
+      await window.web3.version.getNetwork((err, networkId) => {
+        switch (networkId) {
+          case "1":
+            this.metamaskNetwork = "Main"
+            break
+          case "3":
+            this.metamaskNetwork = "Ropsten"
+            break
+          case "4":
+            this.metamaskNetwork = "Rinkeby"
+            break
+          case "5":
+            this.metamaskNetwork = "Goerli"
+            break
+          case "42":
+            this.metamaskNetwork = "Kovan"
+            break
+          default:
+            this.metamaskNetwork = "Unknown"
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
 }
 </script>
 

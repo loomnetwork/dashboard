@@ -123,12 +123,15 @@ async function checkIfPastWithdrawalEventExists() {
   //  check if there is a withdrawal event in the history that has yet to expire
   // (block number is less then the current blocknumber + 15 confirmations)
   const notExpired = history.find((event) => {
-    return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) <= blockNumber)
+    return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) >= blockNumber)
   })
   const inLocalStorage = JSON.parse(
     localStorage.getItem("pendingWithdrawal") || "false",
   )
-  if (notExpired || inLocalStorage) return true
+  if (notExpired!! || inLocalStorage) {
+    console.info("Remaining blocks until expiry", blockNumber - notExpired.blockNumber)
+    return true
+  }
   return false
 }
 

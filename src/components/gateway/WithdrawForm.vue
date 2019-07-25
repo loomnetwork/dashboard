@@ -5,14 +5,14 @@
     no-close-on-esc
     hide-header-close
     id="deposit-approval-success"
-    :title="$t('components.modals.withdraw_form_modal.title', { token: token, chain: transferRequest.chain })"
+    :title="$t('components.gateway.withdraw_form_modal.title', { token: token, chain: transferRequest.chain })"
   >
     <div v-if="visible && tokenInfo">
       <div v-if="fee.amount">
-        <p>{{ $t('components.modals.withdraw_form_modal.transfer_fee', { chain: transferRequest.chain }) }} {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}</p>
+        <p>{{ $t('components.gateway.withdraw_form_modal.transfer_fee', { chain: transferRequest.chain }) }} {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}</p>
       </div>
       <div>
-        <h6>{{ $t('components.modals.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
+        <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="max"
@@ -24,7 +24,7 @@
         />
       </div>
       <div v-if="requireRecipient" class="mt-3">
-        <h6>{{ $t('components.modals.withdraw_form_modal.recipient', { chain: transferRequest.chain }) }}</h6>
+        <h6>{{ $t('components.gateway.withdraw_form_modal.recipient', { chain: transferRequest.chain }) }}</h6>
         <input-address
           v-model="recepient"
           :chain="transferRequest.chain"
@@ -41,7 +41,7 @@
         @click="requestWithdrawal"
         variant="primary"
         :disabled="validInput === false"
-      >{{ $t('components.modals.withdraw_form_modal.withdraw') }}</b-btn>
+      >{{ $t('components.gateway.withdraw_form_modal.withdraw') }}</b-btn>
     </template>
   </b-modal>
 </template>

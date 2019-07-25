@@ -256,6 +256,20 @@
         "title": "Deposit {token} from {chain}",
         "amount_approved": "Amount approved : ",
         "balance": "Your token balance : "
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
+        "error": "An error occurred, please try again.",
+        "complete": "Complete withdraw",
+        "status_failed": "Withdrawal failed",
+        "status_confirmed": "Withdraw to gateway confirmed"
+      },
+      "withdraw_form_modal" : {
+        "title": "Withdraw {token} to {chain}",
+        "transfer_fee": "Transfer to {chain} requires a fee of ",
+        "balance": "Your balance : ",
+        "recipient": "Recipient on {chain}",
+        "withdraw": "Withdraw"
       }
     },
     "layout": {
@@ -301,7 +315,8 @@
         "write_or_print_it_out": "Write or print it out and keep in a safe place.",
         "without_it_you_will_not": "Without it you will not be able to recover your tokens if something goes wrong.",
         "copy_to_clipboard": "Copy to Clipboard",
-        "create_account": "Create Account"
+        "create_account": "Create Account",
+        "confirm_mnemonic": "I keep these seed phrase and public address somewhere safe."
       },
       "success_modal": {
         "success": "Success"
@@ -314,13 +329,6 @@
         "select_path": "Select a path",
         "load_more": "Load more",
         "use_account": "Use account"
-      },
-      "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
-        "error": "An error occurred, please try again.",
-        "complete": "Complete withdraw",
-        "status_failed": "Withdrawal failed",
-        "status_confirmed": "Withdraw to gateway confirmed"
       },
       "faucet_redelegate_modal": {
         "select_validator": "Select a validator :",
@@ -342,12 +350,41 @@
         "token_symbol": "Token Symbol",
         "search": "Search"
       },
-      "withdraw_form_modal" : {
-        "title": "Withdraw {token} to {chain}",
-        "transfer_fee": "Transfer to {chain} requires a fee of ",
-        "balance": "Your balance : ",
-        "recipient": "Recipient on {chain}",
-        "withdraw": "Withdraw"
+      "transfer_all_cards": {
+        "title": "Transfer All Cards",
+        "this_will_transfer": "This will transfer all of your {edition} edition cards.",
+        "amount": "Amount : ",
+        "receiver_address": "Receiver Loom Address:",
+        "confirm_transfer": "I confirm that i want to transfer {amount} cards to {receiverAddress} address.",
+        "transfer_all": "Transfer All"
+      },
+      "transfer_cards_modal": {
+        "title": "Transfer Cards",
+        "card_id": "Card Id: ",
+        "name": "Name: ",
+        "variation": "Variation: ",
+        "your_exist_card": "Your existing card: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address:",
+        "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
+        "transfer": "Transfer"
+      },
+      "transfer_packs_modal": {
+        "title": "Transfer Packs",
+        "pack_type": "Pack Type",
+        "your_exist_pack": "Your existing pack: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address: ",
+        "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
+        "transfer": "Transfer"
+      },
+      "transfer_token_form_modal": {
+        "title": "Transfer Token",
+        "token_type": "Token Type: ",
+        "balance": "Your token balance: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address: ",
+        "transfer": "Transfer"
       }
     },
     "blockExplorer": {
@@ -381,7 +418,7 @@
         "pending": "Pending"
       }
     },
-    "gameAssets" : {
+    "gameAsset" : {
       "cards": {
         "my_cards": "My Cards",
         "edition": "Edition",
@@ -411,6 +448,7 @@
     "close": "Close",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "continue": "Continue"
+    "continue": "Continue",
+    "done": "Done"
   }
 }

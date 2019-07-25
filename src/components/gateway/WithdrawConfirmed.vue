@@ -3,19 +3,19 @@
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
-          <p>{{$t("components.modals.confirm_withdrawal_modal.confirm_withdrawl", {chain,amount, token: this.symbol})}}</p>
+          <p>{{$t("components.gateway.confirm_withdrawal_modal.confirm_withdrawl", {chain,amount, token: this.symbol})}}</p>
         </div>
       </b-container>
     </section>
     <section v-if="status === 'error'">
       <b-container fluid>
         <div class="lead">
-          <p>{{$t("components.modals.confirm_withdrawal_modal.error")}}</p>
+          <p>{{$t("components.gateway.confirm_withdrawal_modal.error")}}</p>
         </div>
       </b-container>
     </section>
     <template slot="modal-footer" v-if="status === 'default'">
-      <b-btn @click="completeWithdrawalHandler" variant="primary">{{$t("components.modals.confirm_withdrawal_modal.complete")}}</b-btn>
+      <b-btn @click="completeWithdrawalHandler" variant="primary">{{$t("components.gateway.confirm_withdrawal_modal.complete")}}</b-btn>
     </template>
   </b-modal>
 </template>
@@ -66,7 +66,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get title() {
-    return status === "error" ? this.$t('components.modals.confirm_withdrawal_modal.status_failed') : this.$t('components.modals.confirm_withdrawal_modal.status_confirmed')
+    return status === "error" ? this.$t('components.gateway.confirm_withdrawal_modal.status_failed') : this.$t('components.modals.confirm_withdrawal_modal.status_confirmed')
   }
 
   get visible() {

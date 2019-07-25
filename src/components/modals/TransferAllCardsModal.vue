@@ -2,17 +2,18 @@
   <b-modal
     id="transfer-all-cards-modal"
     ref="modalRef"
-    title="Transfer All Cards"
+    :title="$t('components.modals.transfer_all_cards.title')"
     hide-footer
     centered
     @show="resetModal()"
   >
     <b-container fluid>
       <h6>
-        This will transfer all of your
-        <strong>{{cardsToTransfer.edition}}</strong> edition cards.
+        <i18n path="components.modals.transfer_all_cards.this_will_transfer">
+          <strong place="edition">{{ cardsToTransfer.edition }}</strong>
+        </i18n>
       </h6>
-      <h6>Amount: {{cardsToTransfer.amount}}</h6>Receiver Loom Address:
+      <h6>{{ $t('components.modals.transfer_all_cards.amount') }} {{cardsToTransfer.amount}}</h6>{{ $t('components.modals.transfer_all_cards.receiver_address') }}
       <input-address
         v-model="receiverAddress"
         chain="loom"
@@ -25,13 +26,13 @@
         v-model="confirmCards"
         name="confirmCards"
         v-show="receiverAddress"
-      >I confirm that i want to transfer {{cardsToTransfer.amount}} cards to {{receiverAddress}} address.</b-form-checkbox>
+      >{{ $t('components.modals.transfer_all_cards.receiver_address', { amount: cardsToTransfer.amount, receiverAddress: receiverAddress}) }}</b-form-checkbox>
       <b-button
         class="my-2"
         type="button"
         @click="transferAllCardsHandler()"
         :disabled="!receiverAddress || !confirmCards || !isValidAddress"
-      >Transfer All</b-button>
+      >{{ $t('components.modals.transfer_all_cards.transfer_all') }}</b-button>
     </b-container>
   </b-modal>
 </template>

@@ -2,22 +2,22 @@
   <b-modal
     id="transfer-packs-modal"
     ref="modalRef"
-    title="Transfer Packs"
+    :title="$t('components.modals.transfer_packs_modal.title')"
     hide-footer
     centered
     @show="resetModal()"
   >
     <b-container fluid>
-      <h6>Pack type: {{packToTransfer.type}}</h6>
-      <h6>Your existing pack: {{packToTransfer.amount}}</h6>
-      Amount: (max: {{packToTransfer.amount}})
+      <h6>{{ $t('components.modals.transfer_packs_modal.pack_type') }} {{packToTransfer.type}}</h6>
+      <h6>{{ $t('components.modals.transfer_packs_modal.your_exist_pack') }} {{packToTransfer.amount}}</h6>
+      {{ $t('components.modals.transfer_packs_modal.amount', {amount: packToTransfer.amount}) }})
       <b-input
         class="my-2"
         type="number"
         v-model="amountToTransfer"
         :max="packToTransfer.amount"
         :min="1"
-      ></b-input>Receiver Loom Address:
+      ></b-input>{{ $t('components.modals.transfer_packs_modal.receiver_address') }}
       <input-address
         v-model="receiverAddress"
         chain="loom"
@@ -31,13 +31,13 @@
         v-model="confirmPack"
         name="confirmPack"
         v-show="amountToTransfer && receiverAddress"
-      >I confirm to transfer {{amountToTransfer}} packs to {{receiverAddress}} address.</b-form-checkbox>
+      >{{ $t('components.modals.transfer_packs_modal.receiver_address', { amount: amountToTransfer, receiverAddress: receiverAddress}) }}</b-form-checkbox>
       <b-button
         class="my-2"
         type="button"
         @click="transferPacksHandler()"
         :disabled=" !receiverAddress || !amountToTransfer || amountToTransfer >  parseInt(packToTransfer.amount) || amountToTransfer <= 0 || !confirmPack || !isValidAddress"
-      >Transfer</b-button>
+      >{{ $t('components.modals.transfer_packs_modal.transfer') }}</b-button>
     </b-container>
   </b-modal>
 </template>

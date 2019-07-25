@@ -79,13 +79,13 @@
         id="confirmMnemonic"
         v-model="confirmMnemonic"
         name="confirmMnemonic"
-      >I keep these seed phrase and public address somewhere safe.</b-form-checkbox>
+      >{{ $t('components.modals.seed_phrase_modal.confirm_mnemonic') }}</b-form-checkbox>
       <b-button
         type="button"
         @click="closeModal()"
         class="input-group-text"
         :disabled="!confirmMnemonic"
-      >DONE</b-button>
+      >{{ $t('regular_modal.done') }}</b-button>
     </b-container>
   </b-modal>
 </template>

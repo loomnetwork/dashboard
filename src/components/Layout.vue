@@ -137,28 +137,32 @@ export default class Layout extends Vue {
   }
 
   async getMetamaskNetwork() {
-    // @ts-ignore
-    await window.web3.version.getNetwork((err, networkId) => {
-      switch (networkId) {
-        case "1":
-          this.metamaskNetwork = "Main"
-          break
-        case "3":
-          this.metamaskNetwork = "Ropsten"
-          break
-        case "4":
-          this.metamaskNetwork = "Rinkeby"
-          break
-        case "5":
-          this.metamaskNetwork = "Goerli"
-          break
-        case "42":
-          this.metamaskNetwork = "Kovan"
-          break
-        default:
-          this.metamaskNetwork = "Unknown"
-      }
-    })
+    try {
+      // @ts-ignore
+      await window.web3.version.getNetwork((err, networkId) => {
+        switch (networkId) {
+          case "1":
+            this.metamaskNetwork = "Main"
+            break
+          case "3":
+            this.metamaskNetwork = "Ropsten"
+            break
+          case "4":
+            this.metamaskNetwork = "Rinkeby"
+            break
+          case "5":
+            this.metamaskNetwork = "Goerli"
+            break
+          case "42":
+            this.metamaskNetwork = "Kovan"
+            break
+          default:
+            this.metamaskNetwork = "Unknown"
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
 </script>

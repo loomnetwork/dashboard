@@ -36,8 +36,13 @@ export interface TokenData {
 }
 
 class TokenService {
+  env: string = ""
   baseURL: string = ""
   symbols: TokenData[] = []
+
+  setEnv(env: string) {
+    this.env = env
+  }
 
   /**
    * should call this method after service class created
@@ -86,6 +91,7 @@ class TokenService {
     coinSymbol: string,
     chain: "ethereum" | "plasma",
   ): string {
+    if (this.env === "ext-dev" && coinSymbol === "LOOM") return "0x493640B5BEFB0962CE0932653987C41aA3608bd0"
     const data = this.getTokenbySymbol(coinSymbol)
     return data[chain.toLowerCase()]
   }

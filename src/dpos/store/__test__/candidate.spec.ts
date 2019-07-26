@@ -27,6 +27,7 @@ describe("Validator Management", () => {
 
   describe("action registerCandidate", () => {
     const state = defaultState()
+    // @ts-ignore
     const candidate: ICandidate = emptyValidator()
     const weiAmount = parseToWei("1250000")
     const token = "LOOM"
@@ -43,14 +44,14 @@ describe("Validator Management", () => {
     it.skip("Checks account balance >= 1.25M LOOM")
     it("Fails with feedback notification if insufficient funds", async () => {
       // @ts-ignore
-      await registerCandidate({ ...{ state }, ...{rootState} }, candidate)
+      await registerCandidate({ ...{ state }, ...{ rootState } }, candidate)
       sinon.assert.calledOnce(feedbackModuleStub.showError)
       sinon.assert.calledWith(feedbackModuleStub.showError, "Insufficient funds.")
     })
     it("Checks account allowance", async () => {
       rootState.plasma.coins.LOOM.balance = weiAmount
       // @ts-ignore
-      await registerCandidate({ ...{ state }, ...{rootState} }, candidate)
+      await registerCandidate({ ...{ state }, ...{ rootState } }, candidate)
       sinon.assert.calledOnce(plasmaModuleStub.allowance)
       sinon.assert.calledWith(plasmaModuleStub.allowance, { token, spender: address })
     })
@@ -58,7 +59,7 @@ describe("Validator Management", () => {
       sinon.assert.calledOnce(plasmaModuleStub.approve)
       sinon.assert.calledWith(plasmaModuleStub.approve, { symbol: token, weiAmount, to: address })
     })
-    it("calls DPOS3.regesterCandidateAsync", () => {
+    it("calls DPOS3.registerCandidateAsync", () => {
       sinon.assert.calledOnce(dpos3Stub.registerCandidateAsync)
       sinon.assert.calledWith(dpos3Stub.registerCandidateAsync,
         CryptoUtils.Uint8ArrayToB64(candidate.pubKey),

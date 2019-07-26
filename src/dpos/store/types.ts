@@ -60,6 +60,8 @@ export class Validator implements IValidator, ICandidate {
   delegationTotal = ZERO
   whitelistAmount = ZERO
   whitelistLocktimeTier: LocktimeTier = -1
+  recentlyMissedBlocks = 0
+  missedBlocks: number[] = []
 
   /**
    * amount staked by others
@@ -84,6 +86,19 @@ export class Validator implements IValidator, ICandidate {
   }
   setValidatorData(v: IValidator) {
     Object.assign(this, v)
+    const bits = BigInt(this.recentlyMissedBlocks)
+    this.missedBlocks = [
+      // tslint:disable-next-line: no-bitwise
+      bits & BigInt(65535),
+      // tslint:disable-next-line: no-bitwise
+      (bits >> BigInt(16)) & BigInt(0xFFFF),
+      // tslint:disable-next-line: no-bitwise
+      (bits >> BigInt(32)) & BigInt(0xFFFF),
+      // tslint:disable-next-line: no-bitwise
+      (bits >> BigInt(48)) & BigInt(0xFFFF),
+    ].map(Number)
+    // just reusit for the sum
+    this.recentlyMissedBlocks = this.missedBlocks.reduce((a, b) => a + b, 0)
     // if node has validator info then its active
     this.active = true
     // default value for nodes without delegations

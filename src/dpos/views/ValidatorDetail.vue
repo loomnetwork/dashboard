@@ -87,7 +87,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
-import { plasmaModule } from '../../store/plasma';
+import { plasmaModule } from "../../store/plasma"
 
 @Component({
   components: {
@@ -115,7 +115,7 @@ export default class ValidatorDetail extends Vue {
   get isLoading() {
     return this.state.dpos.validators.length === 0 ? true : false
   }
-  
+
   get userIsLoggedIn() { return this.state.plasma.address !== "" }
 
   get validator() {

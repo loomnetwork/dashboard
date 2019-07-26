@@ -7,6 +7,7 @@ import { plasmaModule } from "@/store/plasma"
 import { dposModule } from ".."
 import { ethereumModule } from "@/store/ethereum"
 import { dposUtils } from "../reactions"
+import { IValidator } from "loom-js/dist/contracts/dpos3"
 
 export function emptyValidator() {
     return {
@@ -15,6 +16,7 @@ export function emptyValidator() {
         delegationTotal: ZERO,
         slashPercentage: ZERO,
         whitelistAmount: ZERO,
+        recentlyMissedBlocks: 0,
         whitelistLocktimeTier: LocktimeTier.TIER_ONE,
         fee: ZERO,
         newFee: ZERO,

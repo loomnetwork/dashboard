@@ -16,6 +16,7 @@ describe("DPoS state", () => {
   describe("refreshValidators", () => {
     const dpos3Stub = sinon.createStubInstance(DPOS3)
     const validator: IValidator = emptyValidator()
+    // @ts-ignore
     const candidate: ICandidate = emptyValidator()
     const delegation: ICandidateDelegations = {
       delegationTotal: new BN(100),

@@ -390,7 +390,6 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
  */
 export async function ethereumWithdraw(context: ActionContext, token_: string) {
   const receipt = context.state.withdrawalReceipts
-  debugger
   if (receipt === null || receipt === undefined) {
     console.error("no withdraw receipt in state")
     return
@@ -498,7 +497,6 @@ async function decodeSig(
   gatewayContract: Gateway | ERC20Gateway_v2,
   ethereumVMC: ValidatorManagerContract,
 ) {
-  debugger
   const hash = await createWithdrawalHash(receipt, gatewayContract)
   const validators = await ethereumVMC!.methods.getValidators().call()
   const { vs, rs, ss, valIndexes } = parseSigs(

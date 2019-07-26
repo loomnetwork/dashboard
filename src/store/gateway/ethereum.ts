@@ -33,6 +33,7 @@ import { ZERO } from "@/utils"
 import { from } from "rxjs"
 import { concatMap, filter, mergeMap, scan, toArray, tap } from "rxjs/operators"
 import * as Sentry from "@sentry/browser"
+import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -525,11 +526,14 @@ async function createWithdrawalHash(
   // @ts-ignore
   const gatewayAddress = gatewayContract._address
   const amount = receipt.value.isZero() ? receipt.tokenAmount!.toString() : receipt.value.toString()
-  const amountHashed = ethers.utils.solidityKeccak256(
-    ["uint256", "address"],
-    [amount, tokenAddress],
-  )
-
+  const amountHashed = receipt.tokenKind === TransferGatewayTokenKind.ETH
+                       ? ethers.utils.solidityKeccak256(
+                        ["uint256"],
+                        [amount],
+                       ) : ethers.utils.solidityKeccak256(
+                        ["uint256", "address"],
+                        [amount, tokenAddress],
+                       )
   const prefix = WithdrawalPrefixes[receipt.tokenKind]
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)

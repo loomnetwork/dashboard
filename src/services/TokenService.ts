@@ -106,7 +106,7 @@ class TokenService {
     if (data === undefined) {
       throw new Error("Unknown token " + coinSymbol)
     }
-    return data
+    return Object.assign({}, data)
   }
 
   tokenFromAddress(
@@ -116,7 +116,7 @@ class TokenService {
     const info = this.symbols.find((token) => token[chain] === address.toLocaleLowerCase())
     if (info === undefined) {
       console.warn(
-        `No knwon token contract matches address ${address} on ${chain}`,
+        `No known token contract matches address ${address} on ${chain}`,
       )
       return null
     } else {

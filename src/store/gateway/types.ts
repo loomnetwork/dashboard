@@ -35,6 +35,10 @@ export interface GatewayState extends GatewayConfig {
   transferRequest: TransferRequest
   maybeRelentlessUser: boolean | null
   requireMapping: boolean
+  ethereumMappings: {
+    confirmed: IAddressMapping[],
+    pending: IAddressMapping[],
+  }
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

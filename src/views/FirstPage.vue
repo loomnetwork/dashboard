@@ -90,10 +90,11 @@
                   class="wallet-selection-card text-center mb-3"
                   @click="setWallet('ledger')"
                 >
-                  <div>
+                  <div id="ledger-card">
                     <img src="../assets/ledger_logo.svg" />
                     <span>Ledger (Legacy)</span>
                   </div>
+
                 </b-card>
               </div>              
               <div class="col-sm-12">
@@ -145,9 +146,15 @@
               </div>
             </template>
           </b-modal>
-
+          <b-popover
+            class="popover"
+            target="ledger-card"
+            title="Now deprecated"
+            triggers="hover"
+          >We recommend using <strong>Ledger (via Metamask)</strong> instead.</b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
+
       </main>
     </div>
   </div>
@@ -275,6 +282,7 @@ export default class FirstPage extends Vue {
     }
   }
 }
+
 </style>
 
 
@@ -290,6 +298,12 @@ export default class FirstPage extends Vue {
         height: 56px;
       }
     }
+  }
+}
+
+.popover {
+  h3 {
+    color: gray;
   }
 }
 
@@ -448,6 +462,7 @@ export default class FirstPage extends Vue {
 #orange {
   color: #f29040;
 }
+
 </style>
 <style>
 body {

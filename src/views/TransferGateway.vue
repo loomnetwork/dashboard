@@ -5,15 +5,23 @@
     </header>
     <div>
       <b-card>
-        <b-card-header class="connect-new-contract d-flex justify-content-between">
+        <b-row>
+          <b-col class="card-label">
           <h5>Connect New Contracts</h5>
+          </b-col>
+          <b-col>
           <b-button variant="primary" style="float:right;">View Documentations</b-button>
-        </b-card-header>
+          </b-col>
+        </b-row>
       </b-card>
       <b-card class="mapped-card">
-        <b-card-header class="debug-mapped-contract d-flex justify-content-between">
-          <h5 class="col-5">Debug Mapped Contract</h5>
-          <b-input-group>
+        <b-row>
+          <b-col class="card-label">
+          <h5>Debug Mapped Contract</h5>
+          </b-col>
+          <b-col>
+          <b-input-group
+            v-on:keyup.enter="viewLogs">
             <b-form-input
               v-model="tokenName"
               type="text"
@@ -24,14 +32,18 @@
               <b-button @click="viewLogs">View Logs</b-button>
             </b-input-group-append>
           </b-input-group>
-        </b-card-header>
+          </b-col>
+        </b-row>
       </b-card>
-
-      <div v-if="notFound" class="not-found">
-        <h1 style="text-align:center;">{{ notFoundMsg }}</h1>
-      </div>
-      <div v-else>
+      <b-card class="mapped-card-table">
+      <mapped-token-address
+        v-if="showResult.tokenAddress"
+        :tokenData="tokenData"
+        @toggleChain="switchChain"
+        class="ml-4 mb-4"
+      />
         <b-table
+          v-if="showResult.table"
           striped
           responsive
           sort-by.sync="id"
@@ -46,6 +58,7 @@
           </div>
         </b-table>
         <b-pagination
+          v-if="showResult.table"
           v-model="currentPage"
           :total-rows="tokenMapData.total"
           :per-page="tokenMapData.limit"
@@ -53,7 +66,11 @@
           align="center"
           class="mapped-pagination"
         ></b-pagination>
+        <div v-if="showResult.notFound" class="not-found">
+        <h1 style="text-align:center;">{{ showResult.message }}</h1>
       </div>
+      </b-card>
+      
     </div>
   </main>
 </template>
@@ -64,12 +81,16 @@ import { DashboardState } from "@/types"
 import { formatTokenAmount } from "@/filters"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { gatewayModule } from "@/store/gateway"
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import Axios from "axios"
+import MappedTokenAddress from "@/components/MappedTokenAddress.vue"
+import { feedbackModule } from "../feedback/store"
+import { NOTFOUND } from 'dns';
+import { check } from 'ethers/utils/wordlist';
 
 @Component({
   components: {
-
+    MappedTokenAddress,
   },
 })
 
@@ -81,6 +102,7 @@ export default class TransferGateway extends Vue {
   {
     key: "token_kind",
     label: "Token Kind",
+    tdClass: "align-center-td",
     formatter: (value) => this.getKeyByValue(TransferGatewayTokenKind, value)  },
   {
     key: "token_amount",
@@ -90,75 +112,116 @@ export default class TransferGateway extends Vue {
   { key: "topic", label: "Topic" },
   ]
 
-  viewerAddress: string = ""
+  tokenData: TokenData = {
+    symbol: "",
+    ethereum: "",
+    plasma: "",
+    binance: "",
+    decimals: 0,
+  }
+
+  showResult = {
+    tokenAddress: true,
+    table: true,
+    notFound: false,
+    message: ""
+  }
 
   tokenMapData: any = null
-
-  notFound: boolean = false
-  notFoundMsg: string = ""
   isBusy: boolean = false
 
   tokenName = ""
-
   currentPage = 1
 
-  LOOM_TOKEN = ["LOOMCOIN", "LOOM"]
+  onChain = "ethereum"
+
   getContractLogs = gatewayModule.getTokenContractLogs
-  LOOMCOIN_ADDR = "0xA4E8C3eC456107ea67D3075bf9e3df3a75823Db0"
 
   get $state() { return (this.$store.state as DashboardState) }
 
   mounted() {
-    // start with 'LOOMCOIN' token
-    // just for example ( will be delete later )
-    this.viewerAddress = this.LOOMCOIN_ADDR
-    this.getLogs(this.viewerAddress, 1)
+    // start with "LOOM" token
+    this.tokenData = tokenService.getTokenbySymbol("LOOM")
+    this.checkChain(this.onChain)
   }
 
   async getLogs(address: string, page: number) {
     this.isBusy = true
-    this.viewerAddress = address
-    this.tokenMapData = await this.getContractLogs({ contractAddress: this.viewerAddress, page })
+    this.tokenMapData = await this.getContractLogs({ contractAddress: address, page }) 
 
     this.isBusy = false
     // when didnt get any record => display 'not found'
     if (this.tokenMapData.total === 0) {
-      this.notFound = true
-      this.notFoundMsg = "No event found on this token"
+      this.setShowResult("NO_EVENT")
     } else {
-      this.notFound = false
+      this.setShowResult()
     }
   }
 
   viewLogs() {
-    // this will be delete after
-    if (this.LOOM_TOKEN.includes(this.tokenName.toUpperCase())) {
-      this.getLogs(this.LOOMCOIN_ADDR, 1)
-    } else {
-      try {
-        this.viewerAddress = tokenService.getTokenAddressBySymbol(this.tokenName.toUpperCase(), "plasma")
-        this.getLogs(this.viewerAddress, 1)
-      } catch (e) {
-        this.notFound = true
-        this.notFoundMsg = `Token ${this.tokenName} not found`
-      }
+    if (!this.tokenName) {
+      return
     }
+    try {
+      this.tokenData = tokenService.getTokenbySymbol(this.tokenName.toUpperCase())
+      console.log(this.tokenData)
+      this.checkChain(this.onChain)
+      this.setShowResult()
+    } catch (e) {
+      console.log(e)
+      this.tokenData.ethereum = ""
+      this.tokenData.plasma = ""
+      this.setShowResult("NO_TOKEN")
+    }
+    this.tokenData.symbol = this.tokenName.toUpperCase()
   }
 
   pageChange(page) {
     this.currentPage = page
-    this.getLogs(this.viewerAddress, page)
+    this.checkChain(this.onChain)
   }
 
   getKeyByValue(obj, value) {
     return Object.keys(obj).find((key) => obj[key] === value)
   }
 
+  checkChain(chain) {
+    // if user click binance chain, use plasma address (just for now)
+    if (this.onChain  === "ethereum") {
+      this.getLogs(this.tokenData.ethereum, 1)
+    } else if (this.onChain  === "binance") {
+      this.getLogs(this.tokenData.plasma, 1)
+    }
+  }
+  
+  switchChain(value) {
+    this.onChain = value
+    this.checkChain(value)
+  }
+
+  setShowResult(msg?: string) {
+    if (msg) {
+      this.showResult.table = false
+      this.showResult.notFound = true
+      if (msg === "NO_EVENT") {
+        this.showResult.tokenAddress = true
+        this.showResult.message = "No event found on this chain / token"
+      } else if (msg === "NO_TOKEN") {
+        this.showResult.tokenAddress = false
+        this.showResult.message = `Token ${this.tokenName} not found`
+      }
+    } else {
+      this.showResult.table = true
+      this.showResult.tokenAddress = true
+      this.showResult.notFound = false
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 main.transfer-gateway {
+
   header > h1 {
     color: #5246d5;
     font-size: 1.35em;
@@ -176,20 +239,39 @@ main.transfer-gateway {
     background-color: #ffffff;
   }
 
-  .mapped-pagination .mapped-table,
+  .mapped-pagination, .mapped-table,
   .mapped-card {
     margin-top: 2%;
     margin-bottom: 2%;
   }
 
   .not-found {
-    margin-top: 26%;
+    margin: 10% 0;
     -webkit-user-select: none;
   }
 
   .align-right-td {
     text-align: right;
-    padding-right: 3%;
+    padding-right: 1.5%;
+  }
+
+  .align-center-td {
+    text-align: center;
+  }
+
+  .card-label {
+    margin-top: 0.5%;
+    margin-left: 2%;
+  }
+
+  .mapped-table {
+    font-size: 14px;
+  }
+
+  .mapped-card-table {
+    .card-body {
+      padding: 1.25rem 0 1.25rem 0;
+    }
   }
 }
 </style>

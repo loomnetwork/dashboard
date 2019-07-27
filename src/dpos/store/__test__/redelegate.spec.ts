@@ -85,6 +85,7 @@ describe("Redelegation", () => {
       // @ts-ignore
       state.contract = dpos3Stub
       state.delegation = dummyDelegation(emptyValidator())
+      // @ts-ignore
       state.delegation.updateValidator = {
         address: Address.fromString("default:0x" + "".padEnd(40, "0")),
         pubKey: new Uint8Array(),
@@ -92,6 +93,7 @@ describe("Redelegation", () => {
         slashPercentage: ZERO,
         whitelistAmount: ZERO,
         whitelistLocktimeTier: LocktimeTier.TIER_ONE,
+        recentlyMissedBlocks: 0,
         fee: ZERO,
         newFee: ZERO,
         candidateState: CandidateState.REGISTERED,

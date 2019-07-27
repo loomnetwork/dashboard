@@ -39,6 +39,7 @@ export default class WithdrawConfirmed extends Vue {
   chain = ""
 
   completeWithdrawalHandler() {
+
     if (this.chain === "ethereum") {
       gatewayModule.ethereumWithdraw(this.symbol)
     } else if (this.chain === "binance") {
@@ -88,6 +89,7 @@ export default class WithdrawConfirmed extends Vue {
       eth: "ethereum",
       tron: "tron",
     }
+
     const chain = chainMappings[chainId]
     const contractAddress = receipt.tokenContract.local
     const contractAddrStr = contractAddress.toString().toLowerCase()
@@ -110,6 +112,9 @@ export default class WithdrawConfirmed extends Vue {
     } else {
       console.error("unknown token contract ", contractAddress)
     }
+
+    this.chain = chain
+
   }
 
   close() {

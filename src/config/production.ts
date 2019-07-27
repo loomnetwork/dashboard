@@ -30,6 +30,7 @@ export default {
       "0x4a1b8b15e50ce63cc6f65603ea79be09206cae70",
       "0x0ce7b61c97a6d5083356f115288f9266553e191e",
     ],
+    analyticsUrl: "https://api.loom.games",
   },
   gateway: {
     chains: ["ethereum"],

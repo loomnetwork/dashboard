@@ -136,7 +136,7 @@ function createClient(env: { chainId: string; endpoint: string }) {
 function signerIsSet(contex: PlasmaContext) {
   if (contex.state.signer !== null) return true
   if (window.confirm("You need to connect your wallet first. Connect now?")) {
-    window.location.reload()
+    window.location.assign("/")
   }
   return false
 }

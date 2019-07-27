@@ -41,36 +41,48 @@
                     >{{ $t('components.faucet_sidebar.analytics') }}</router-link>
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.staking" :key="index+'s'">
-                  <h5>
-                    <router-link
-                      :to="menu.to"
-                      class="router text-light hover-warning"
-                    >{{ $t(menu.text) }}</router-link>
+                <b-nav-item
+                  v-for="(menu, index) in menus.staking"
+                  :key="index+'s'"
+                  :to="menu.to"
+                  class="router"
+                >
+                  <h5 class="text-light hover-warning">
+                    {{ $t(menu.text) }}
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.wallet" :key="index+'w'">
-                  <h5>
-                    <router-link
-                      :to="menu.to"
-                      class="router text-light hover-warning"
-                    >{{ $t(menu.text) }}</router-link>
+                <hr>
+                <b-nav-item
+                  v-for="(menu, index) in menus.wallet"
+                  :key="index+'w'"
+                  :to="menu.to"
+                  class="router"
+                >
+                  <h5 class="text-light hover-warning">
+                    {{ $t(menu.text) }}
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.dev" :key="index+'d'">
-                  <h5>
-                    <router-link
-                      :to="menu.to"
-                      class="router text-light hover-warning"
-                    >{{ $t(menu.text) }}</router-link>
+                <hr>
+                <b-nav-item
+                  v-for="(menu, index) in menus.dev"
+                  :key="index+'d'"
+                  :to="menu.to"
+                  :href="menu.href"
+                  class="router"
+                >
+                  <h5 class="text-light hover-warning">
+                    {{ $t(menu.text) }}
                   </h5>
                 </b-nav-item>
-                <b-nav-item v-for="(menu, index) in menus.help" :key="index+'h'">
-                  <h5>
-                    <router-link
-                      :to="menu.to"
-                      class="router text-light hover-warning"
-                    >{{ $t(menu.text) }}</router-link>
+                <hr>
+                <b-nav-item
+                  v-for="(menu, index) in menus.help"
+                  :key="index+'h'"
+                  :to="menu.to"
+                  class="router"
+                >
+                  <h5 class="text-light hover-warning">
+                    {{ $t(menu.text) }}
                   </h5>
                 </b-nav-item>
                 <LangSwitcher/>
@@ -100,64 +112,6 @@ import { DashboardState } from "../types"
 import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 
-
-const MENU = {
-  staking: [
-    {
-      to: "/validators",
-      text: "components.faucet_sidebar.validators",
-    },
-    {
-      to: "/account",
-      text: "components.faucet_sidebar.my_account",
-    },
-    {
-      to: "/history",
-      text: "components.faucet_sidebar.history",
-    },
-  ],
-  wallet: [
-    {
-      to: "/wallet",
-      text: "components.faucet_sidebar.deposit_withdraw",
-    },
-    {
-      to: "/game-assets",
-      text: "components.faucet_sidebar.game_assets",
-      name: "transfer-asset",
-    },
-  ],
-  dev: [
-    {
-      to: "/",
-      text: "components.faucet_sidebar.block_explorer",
-    },
-    {
-      to: "/add-key",
-      text: "components.faucet_sidebar.deploy_to_plasmachain",
-      name: "dev-deploy",
-    },
-    {
-      to: "/",
-      text: "components.faucet_sidebar.transfer_gateway",
-    },
-    // {
-    //   to: "/",
-    //   text: "components.faucet_sidebar.validator_management",
-    // },
-  ],
-  help: [
-    {
-      to: "/faq",
-      text: "components.faucet_sidebar.faq",
-    },
-    {
-      to: "/feedback",
-      text: "components.faucet_sidebar.feedback_form",
-    },
-  ],
-}
-
 @Component({
   components: {
     ChainSelector,
@@ -165,32 +119,6 @@ const MENU = {
     LoomIcon,
     LoadingBar,
     FeedbackNotification,
-  },
-  props: {
-    hideDashboard: {
-      type: Boolean,
-      default: false,
-    },
-    hideWallet: {
-      type: Boolean,
-      default: true,
-    },
-    hideValidators: {
-      type: Boolean,
-      default: false,
-    },
-    hideMyStaking: {
-      type: Boolean,
-      default: true,
-    },
-    hideBlockExplorer: {
-      type: Boolean,
-      default: false,
-    },
-    hideLogOut: {
-      type: Boolean,
-      default: false,
-    },
   },
 })
 export default class FaucetHeader extends Vue {
@@ -201,14 +129,66 @@ export default class FaucetHeader extends Vue {
   electionCycleTimer = undefined
   showRefreshSpinner = false
 
-
-
   get menus() {
     return {
-      staking: MENU.staking,
-      wallet: MENU.wallet,
-      dev: MENU.dev,
-      help: MENU.help,
+      staking: [
+        {
+          to: "/validators",
+          text: "components.faucet_sidebar.validators",
+        },
+        {
+          to: "/account",
+          text: "components.faucet_sidebar.my_account",
+        },
+        {
+          to: "/history",
+          text: "components.faucet_sidebar.history",
+        },
+        // {
+        //   to: "/analytics",
+        //   text: "components.faucet_sidebar.analytics",
+        // },
+      ],
+      wallet: [
+        {
+          to: "/wallet",
+          text: "components.faucet_sidebar.deposit_withdraw",
+        },
+        {
+          to: "/game-assets",
+          text: "components.faucet_sidebar.game_assets",
+          name: "transfer-asset",
+        },
+      ],
+      dev: [
+        {
+          href: this.state.plasma.blockExplorer,
+          text: "components.faucet_sidebar.block_explorer",
+        },
+        {
+          to: "/add-key",
+          text: "components.faucet_sidebar.deploy_to_plasmachain",
+          name: "dev-deploy",
+        },
+        {
+          to: "/transfer-gateway",
+          text: "Transfer Gateway",
+        },
+        {
+          to: "/validator-management",
+          text: "Validator Management",
+        },
+      ],
+      help: [
+        {
+          to: "/faq",
+          text: "components.faucet_sidebar.faq",
+        },
+        {
+          to: "/feedback",
+          text: "components.faucet_sidebar.feedback_form",
+        },
+      ],
     }
   }
 
@@ -257,10 +237,6 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-.rmv-margin {
-  margin: 0;
-}
-
 .refresh-icon {
   color: #007bff;
   &:hover {
@@ -269,28 +245,12 @@ export default class FaucetHeader extends Vue {
   }
 }
 
-#countdown-container {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  margin-right: auto;
-}
-
-.sign-out-link {
-  color: #007bff !important;
-}
-
-.sub-menu-links {
-  display: flex;
-  margin-left: auto;
-}
-
 .connection-status {
   width: 200px;
   flex: none;
 }
 
-a.hover-warning:hover {
+h5.hover-warning:hover {
   text-decoration: none;
   color: #f0ad4e !important;
 }
@@ -306,57 +266,8 @@ a.hover-warning:hover {
   z-index: 10100;
 }
 
-.cf:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.top-nav {
-  background-color: #ffffff !important;
-  background-image: initial !important;
-  border-bottom: 2px solid #f2f1f3;
-  .col {
-    padding: 0px;
-    ul {
-      li {
-        a {
-          span {
-            color: #495057;
-          }
-        }
-      }
-    }
-  }
-}
-
 .ensure-padded {
   padding: 0 15px !important;
-}
-
-#balance {
-  padding: 6px 0;
-  position: relative;
-}
-
-.metamask-status {
-  position: relative;
-  bottom: 2px;
-  background-color: #0dcd9b;
-  color: #fff;
-  font-size: 12px;
-  font-style: normal;
-  border-radius: 5px;
-  padding: 2px 6px;
-  font-weight: bold;
-}
-
-.metamask-status-error {
-  background-color: #e62e2e;
-}
-
-.add-border-left {
-  border-left: 2px solid #f2f1f3;
 }
 
 .navbar-toggler {
@@ -375,6 +286,10 @@ a.hover-warning:hover {
   }
   li {
     list-style: none;
+  }
+  hr {
+    margin: 0.25rem 0rem;
+    border-top: 1px solid #f8f9fa;
   }
 }
 

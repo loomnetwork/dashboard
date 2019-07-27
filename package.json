@@ -8,7 +8,7 @@
     "test": "NODE_ENV=test ./node_modules/.bin/nyc vue-cli-service test:unit  src/**/*.spec.ts",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit src/**/*.spec.ts",
-    "tokens": "ts-node --compiler-options '{\"noImplicitAny\": false, \"module\": \"commonjs\" }' ./scripts/gen-tokens-info.ts"
+    "tokens": "ts-node --compiler-options '{\"noImplicitAny\": false, \"module\": \"commonjs\" }'  --project tsconfig.json ./scripts/gen-tokens-info.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.3",

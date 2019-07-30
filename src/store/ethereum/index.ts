@@ -23,6 +23,7 @@ import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
+import { TestWalletAdapter } from "./wallets/test-wallet"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -32,6 +33,7 @@ const ZERO = new BN("0")
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["ledger", LedgerAdapter],
+  ["test_wallet", TestWalletAdapter],
 ])
 
 const initialState: EthereumState = {
@@ -132,7 +134,7 @@ function getERC20(token: string) {
 async function setWalletType(context: ActionContext, walletType: string) {
   const wallet = wallets.get(walletType)
   if (wallet === undefined) {
-    console.error("unsuported wallet type " + walletType)
+    console.error("unsupported wallet type " + walletType)
     // to do tell the user about the error
     return
   }

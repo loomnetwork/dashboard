@@ -154,7 +154,7 @@
           >We recommend using <strong>Ledger (via Metamask)</strong> instead.</b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
-
+      <b-button @click="testPortis">Portis Test</b-button>
       </main>
     </div>
   </div>
@@ -174,6 +174,7 @@ import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from "../feedback/store"
 
+import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 
 @Component({
@@ -214,6 +215,10 @@ export default class FirstPage extends Vue {
 
   onClose() {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
+  }
+
+  testPortis() {
+    PortisAdapter.createProvider()
   }
 
   /* For Chrome & Firefox Browser

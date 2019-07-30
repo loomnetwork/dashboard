@@ -150,6 +150,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
     let receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
+
     // @ts-ignore
     if (receipt && !pastWithdrawalExist) {
       gatewayModule.setWithdrawalReceipts(receipt)

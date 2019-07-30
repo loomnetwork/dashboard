@@ -20,29 +20,31 @@
         </b-card>
         <div class="content">
           <template v-if="isSmallDevice">
-            <b-list-group>
-              <b-list-group-item
-                v-for="validator in validators"
-                :key="validator.name"
-                :disabled="!!validator.isBootstrap"
-                @click="showValidatorDetail(validator)"
-              >
-                <h6>{{validator.name}}</h6>
-                <div class="fee">
-                  <label>Fee</label>
-                  {{validator.fees}}
-                </div>
-                <div class="stakes">
-                  <label>Stake</label>
-                  <span>{{validator.totalStaked}}</span>
-                </div>
-                <div
-                  v-if="!isSmallDevice"
-                  class="status"
-                  :class="{ 'active': validator.Status === 'Active'}"
-                >{{validator.status}}</div>
-              </b-list-group-item>
-            </b-list-group>
+            <div class="py-3"></div>
+
+            <b-card
+              v-for="validator in validators"
+              :key="validator.name"
+              :disabled="!!validator.isBootstrap"
+              @click="showValidatorDetail(validator)"
+              class="validator-card-mobile mb-3"
+              no-body
+            >
+              <div class="copy-wrapper">
+                <h6>
+                  <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
+                  {{validator.name}}
+                </h6>
+              </div>
+              <div class="copy-wrapper">
+                <label>Fee</label>
+                <strong>{{validator.fee}}</strong>
+              </div>
+              <div class="copy-wrapper">
+                <label>Stake</label>
+                <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
+              </div>
+            </b-card>
           </template>
           <template v-else>
             <b-table
@@ -95,6 +97,7 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
+  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
   {
     key: "totalStaked",
     sortable: true,
@@ -122,12 +125,7 @@ export default class ValidatorList extends Vue {
       const bValue = b.isBootstrap ? 0 : random() * 10000
       return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
-    return storeValidators.map((validator) => ({
-      name: validator.name,
-      active: validator.active,
-      totalStaked: validator.totalStaked,
-      fee: validator.fee,
-    }))
+    return storeValidators
   }
   /**
    * adds class bootstrap node if is bootstrap
@@ -248,6 +246,33 @@ main.validators {
   .align-right-td {
     text-align: right;
     padding-right: 3%;
+  }
+}
+
+.validator-card-mobile {
+  padding: 12px 6px;
+  border-left: 6px solid #00bcd4 !important;
+  .copy-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 12px;
+    h6 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 20px;
+      .active-symbol {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-right: 3px;
+        border-radius: 50%;
+        background-color: #ec1d05;
+        &.active {
+          background-color: #3bef3b;
+        }
+      }
+    }
   }
 }
 </style>

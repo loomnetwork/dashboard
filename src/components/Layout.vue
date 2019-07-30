@@ -1,9 +1,16 @@
 <template>
   <div id="layout" class="d-flex flex-column">
     <div
-      v-if="networkId !== 'plasma'"
-      style="background: #FFC107;padding: 0 16px;"
-    >Network: {{networkId}}</div>
+      v-if="networkId !== 'plasma' || metamaskNetwork === 'Rinkeby'"
+      style="background: #FFC107; padding: 0 16px;"
+    >
+      <span v-if="networkId !== 'plasma'">
+        Network: {{networkId}}
+      </span>
+      <span v-if="metamaskNetwork === 'Rinkeby'" style="float: right;">
+        You're on {{metamaskNetwork}} Network
+      </span>
+    </div>
     <faucet-header></faucet-header>
     <div class="content">
       <div class="d-none d-lg-block">
@@ -35,7 +42,7 @@
     <b-modal
       id="metamaskChangeDialog"
       no-close-on-backdrop
-      hider-header
+      hide-header
       hide-footer
       centered
       v-model="metamaskChangeAlert"
@@ -82,6 +89,7 @@ import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
 import { DashboardState } from "@/types"
 
 import AccountMappingModal from "@/components/modals/AccountMappingModal.vue"
+import { ethereumModule } from "../store/ethereum"
 
 @Component({
   components: {
@@ -102,6 +110,7 @@ import AccountMappingModal from "@/components/modals/AccountMappingModal.vue"
   },
 })
 export default class Layout extends Vue {
+  metamaskNetwork
 
   // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
@@ -111,41 +120,50 @@ export default class Layout extends Vue {
 
   get networkId() { return this.s.plasma.networkId }
 
-  metamaskChangeAlert = false
-
   async mounted() {
-    if ("ethereum" in window) {
-      // @ts-ignore
-      window.ethereum.on("accountsChanged", (accounts) => {
-        // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove.
-        // @ts-ignore
-        if (window.resolvingMismatchedReceipt) {
-          return
-        }
-
-        if (this.$store.state.ethereum.address &&
-          this.$store.state.ethereum.address !== accounts[0]) {
-          // Remove any reference to past withdrawals as
-          // it is bound to a specific address
-          localStorage.removeItem("lastWithdrawTime")
-          this.metamaskChangeAlert = true
-          // @ts-ignore
-          window.ethereum.removeAllListeners()
-        }
-
-      })
-    }
+    this.metamaskNetwork = this.getMetamaskNetwork()
 
     this.$root.$on("logout", () => {
       this.restart()
     })
+  }
 
+  get metamaskChangeAlert() {
+    return ethereumModule.state.metamaskChangeAlert
   }
 
   restart() {
     window.location.reload(true)
   }
 
+  async getMetamaskNetwork() {
+    try {
+      // @ts-ignore
+      await window.web3.version.getNetwork((err, networkId) => {
+        switch (networkId) {
+          case "1":
+            this.metamaskNetwork = "Main"
+            break
+          case "3":
+            this.metamaskNetwork = "Ropsten"
+            break
+          case "4":
+            this.metamaskNetwork = "Rinkeby"
+            break
+          case "5":
+            this.metamaskNetwork = "Goerli"
+            break
+          case "42":
+            this.metamaskNetwork = "Kovan"
+            break
+          default:
+            this.metamaskNetwork = "Unknown"
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
 }
 </script>
 

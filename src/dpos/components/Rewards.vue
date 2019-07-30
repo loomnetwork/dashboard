@@ -41,7 +41,7 @@ import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
-import { plasmaModule } from '../../store/plasma';
+import { plasmaModule } from "../../store/plasma"
 
 @Component
 export default class Rewards extends Vue {

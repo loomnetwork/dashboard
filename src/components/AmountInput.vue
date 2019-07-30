@@ -100,7 +100,7 @@ export default class AmountInput extends Vue {
   // Button Action
   setAllAmount() {
     // @ts-ignore
-    this.amount = formatTokenAmount(this.max, this.decimals)
+    this.amount = new BigNumber(this.max.toString()).div(10 ** this.decimals).toFixed()
     this.errorMsg = ""
     this.$emit("isError", false)
   }

@@ -1,9 +1,5 @@
 <template>
-  <loading-spinner
-    v-if="isLoading"
-    :showBackdrop="false"
-    message="Loading validators....">
-  </loading-spinner>
+  <loading-spinner v-if="isLoading" :showBackdrop="false" message="Loading validators...."></loading-spinner>
   <main v-else class="validator">
     <header>
       <h1>
@@ -32,6 +28,11 @@
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
         <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
+        <dt>Recently Missed Blocks</dt>
+        <dd>
+          {{ validator.recentlyMissedBlocks }}
+          <small>{{ validator.missedBlocks }}</small>
+        </dd>
         <dt>Delegators Stake</dt>
         <dd>{{validator.stakedAmount | tokenAmount(18,0)}}</dd>
         <dt>Total Staked</dt>
@@ -87,7 +88,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
-import { plasmaModule } from '../../store/plasma';
+import { plasmaModule } from "../../store/plasma"
 
 @Component({
   components: {
@@ -115,7 +116,7 @@ export default class ValidatorDetail extends Vue {
   get isLoading() {
     return this.state.dpos.validators.length === 0 ? true : false
   }
-  
+
   get userIsLoggedIn() { return this.state.plasma.address !== "" }
 
   get validator() {
@@ -236,6 +237,5 @@ main.validator {
       }
     }
   }
-
 }
 </style>

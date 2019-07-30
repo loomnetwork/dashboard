@@ -44,6 +44,10 @@ function initialState(): GatewayState {
     requireMapping: false,
     checkMarketplaceURL: "",
     tokenContractLogsURL: "",
+    ethereumMappings: {
+      confirmed: [],
+      pending: [],
+    },
   }
 }
 
@@ -68,6 +72,7 @@ export const gatewayModule = {
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
+  loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),
 
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
@@ -118,12 +123,15 @@ async function checkIfPastWithdrawalEventExists() {
   //  check if there is a withdrawal event in the history that has yet to expire
   // (block number is less then the current blocknumber + 15 confirmations)
   const notExpired = history.find((event) => {
-    return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) <= blockNumber)
+    return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) >= blockNumber)
   })
   const inLocalStorage = JSON.parse(
     localStorage.getItem("pendingWithdrawal") || "false",
   )
-  if (notExpired || inLocalStorage) return true
+  if (notExpired!! || inLocalStorage) {
+    console.info("Remaining blocks until expiry", blockNumber - notExpired.blockNumber)
+    return true
+  }
   return false
 }
 

@@ -5,8 +5,8 @@
  */
 
 import { WalletType } from "../types"
-import Web3 from "web3"
 import { ethereumModule } from ".."
+import PrivateKeyProvider from "truffle-privatekey-provider"
 
 export const TestWalletAdapter: WalletType = {
   id: "test_wallet",
@@ -16,26 +16,14 @@ export const TestWalletAdapter: WalletType = {
   desktop: true,
   mobile: false,
   detect() {
-    return isCurrentApi() || isLegacyApi()
+    return true
   },
   async createProvider() {
-    const web3 = new Web3(new Web3.providers.HttpProvider(ethereumModule.state.endpoint))
-    const account = web3.eth.accounts
-      .privateKeyToAccount("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709")
+    const provider = new PrivateKeyProvider(
+      "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
+      ethereumModule.state.endpoint)
 
-    web3.eth.accounts.wallet.add(account)
-    web3.eth.defaultAccount = account.address
-
-    return web3.currentProvider
+    return provider
   },
 }
 
-function isLegacyApi() {
-  // @ts-ignore
-  return "web3" in window
-}
-
-function isCurrentApi() {
-  // @ts-ignore
-  return "ethereum" in window
-}

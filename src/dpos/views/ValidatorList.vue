@@ -97,7 +97,7 @@ export default class ValidatorList extends Vue {
 
   validatorFields = [{ key: "name", sortable: true, label: "Name" },
   { key: "active", sortable: true, label: "Active" },
-  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
+//  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
   {
     key: "totalStaked",
     sortable: true,

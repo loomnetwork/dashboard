@@ -7,6 +7,9 @@ import { ZERO } from "@/utils"
 import BN from "bn.js"
 import { Address, LocalAddress } from "loom-js"
 import { DPOS3, ICandidate, IValidator } from "loom-js/dist/contracts/dpos3"
+
+import bigInt from "big-integer"
+
 import {
   CandidateState,
   DelegationState,
@@ -86,17 +89,17 @@ export class Validator implements IValidator, ICandidate {
   }
   setValidatorData(v: IValidator) {
     Object.assign(this, v)
-    const bits = BigInt(this.recentlyMissedBlocks)
+    const bits = bigInt(this.recentlyMissedBlocks)
     this.missedBlocks = [
       // tslint:disable-next-line: no-bitwise
-      bits & BigInt(65535),
+      bits.shiftRight(0xFFFF),
       // tslint:disable-next-line: no-bitwise
-      (bits >> BigInt(16)) & BigInt(0xFFFF),
+      (bits.shiftRight(16)).and(0xFFFF),
       // tslint:disable-next-line: no-bitwise
-      (bits >> BigInt(32)) & BigInt(0xFFFF),
+      (bits.shiftRight(32)).and(0xFFFF),
       // tslint:disable-next-line: no-bitwise
-      (bits >> BigInt(48)) & BigInt(0xFFFF),
-    ].map(Number)
+      (bits.shiftRight(48)).and(0xFFFF),
+    ].map(v => v.toJSNumber())
     // just reusit for the sum
     this.recentlyMissedBlocks = this.missedBlocks.reduce((a, b) => a + b, 0)
     // if node has validator info then its active

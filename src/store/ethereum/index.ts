@@ -1,6 +1,7 @@
 /**
  * @module dpos-dashboard.ethereum
  */
+import * as Sentry from "@sentry/browser"
 
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { Transfer } from "@/types"
@@ -144,8 +145,10 @@ async function setWalletType(context: ActionContext, walletType: string) {
     await wallet
       .createProvider()
       .then(async (web3provider) => await setProvider(context, web3provider))
-      .catch((e) => {
-        console.error(e)
+      .catch((error) => {
+        Sentry.captureException(error)
+        console.error(error)
+        feedbackModule.showError("There seems to be a problem conneting to your wallet. Please contact support.")
       })
   } else {
     context.state.walletType = walletType

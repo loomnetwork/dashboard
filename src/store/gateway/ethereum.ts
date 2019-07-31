@@ -34,6 +34,7 @@ import { from } from "rxjs"
 import { concatMap, filter, mergeMap, scan, toArray, tap } from "rxjs/operators"
 import * as Sentry from "@sentry/browser"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
+import { PlasmaTokenKind } from "../plasma/types"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -446,9 +447,58 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
 export async function refreshEthereumHistory(context: ActionContext) {
   const ethereum = context.rootState.ethereum
   const cached = ethereum.history
-  const { loomGateway } = service()
+  const { loomGateway, mainGateway } = service()
   const fromBlock = cached.length ? cached[0].blockNumber : 0
   const address = ethereum.address
+  const range = {
+    fromBlock,
+    toBlock: "latest",
+  }
+  // const logToHistory = (items, type, token, valueField) => {
+  //   log("logToHistory", type, token, items)
+  //   for (const item of items) {
+  //     const entry = Object.freeze({
+  //       type,
+  //       blockNumber: item.blockNumber,
+  //       transactionHash: item.transactionHash,
+  //       amount: new BN(item.returnValues[valueField]),
+  //       token: token || "other",
+  //     })
+  //     ethereum.history.push(entry)
+  //   }
+  // }
+  // const p1 = loomGateway
+  //   // @ts-ignore
+  //   .getPastEvents("LoomCoinReceived", { filter: { from: address }, ...range })
+  //   .then((results) => logToHistory(results, "ERC20Received", "LOOM", "amount"))
+  //   .catch((e) => console.error("error loading LoomCoinReceived", e.message))
+
+  // const p2 = loomGateway
+  //   // @ts-ignore
+  //   .getPastEvents("TokenWithdrawn", { filter: { owner: address }, ...range })
+  //   .then((results) => logToHistory(results, "TokenWithdrawn", "LOOM", "value"))
+  //   .catch((e) => console.error("error loading TokenWithdrawn", e.message))
+
+  const coins = Object.keys(context.rootState.ethereum.coins)
+  coins.forEach(async (symbol) => {
+    switch (symbol) {
+      case PlasmaTokenKind.ETH:
+        await logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn")
+      case PlasmaTokenKind.LOOMCOIN:
+        await logEvents(address, loomGateway, symbol, "LoomCoinReceived", "TokenWithdrawn")
+      default:
+        await logEvents(address, mainGateway, symbol, "ERC20Received", "TokenWithdrawn")
+    }
+  })
+
+  ethereum.history.sort((a, b) => b.blockNumber - a.blockNumber)
+}
+
+// Loom -> erc20recieved, tokenwiethdrawn
+
+async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) {
+  const cached = ethereumModule.state.history
+  const fromBlock = cached.length ? cached[0].blockNumber : 0
   const range = {
     fromBlock,
     toBlock: "latest",
@@ -463,23 +513,22 @@ export async function refreshEthereumHistory(context: ActionContext) {
         amount: new BN(item.returnValues[valueField]),
         token: token || "other",
       })
-      ethereum.history.push(entry)
+      ethereumModule.state.history.push(entry)
     }
   }
-  const p1 = loomGateway
-    // @ts-ignore
-    .getPastEvents("LoomCoinReceived", { filter: { from: address }, ...range })
-    .then((results) => logToHistory(results, "ERC20Received", "LOOM", "amount"))
-    .catch((e) => console.error("error loading LoomCoinReceived", e.message))
+  const p1 = gateway
+  // @ts-ignore
+  .getPastEvents(depositEvent, { filter: { from: address }, ...range })
+  .then((results) => logToHistory(results, depositEvent, symbol, "amount"))
+  .catch((e) => console.error("error loading LoomCoinReceived", e.message))
 
-  const p2 = loomGateway
+  const p2 = gateway
     // @ts-ignore
-    .getPastEvents("TokenWithdrawn", { filter: { owner: address }, ...range })
-    .then((results) => logToHistory(results, "TokenWithdrawn", "LOOM", "value"))
+    .getPastEvents(withdrawEvent, { filter: { owner: address }, ...range })
+    .then((results) => logToHistory(results, withdrawEvent, symbol, "value"))
     .catch((e) => console.error("error loading TokenWithdrawn", e.message))
-
+  debugger
   await Promise.all(([p1, p2]))
-  ethereum.history.sort((a, b) => b.blockNumber - a.blockNumber)
 }
 
 /**

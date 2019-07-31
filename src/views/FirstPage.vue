@@ -103,13 +103,13 @@
                   class="wallet-selection-card text-center"
                   @click="setWallet('portis')"
                 >
-                  <div>
+                  <div class="ml-1">
                     <img src="../assets/portis_icon.svg" />
-                    <span>Portis Wallet</span>
+                    <span>Portis</span>
                   </div>
                 </b-card>
               </div>
-              <div class="col-sm-12">
+              <div class="col-sm-12 mb-3">
                 <b-card
                   id="fortmatic-button"
                   class="wallet-selection-card text-center"
@@ -117,7 +117,7 @@
                 >
                   <div>
                     <img src="../assets/fortmatic-icon.svg" />
-                    <span>Fortmatic Wallet</span>
+                    <span>Fortmatic</span>
                   </div>
                 </b-card>
               </div>           

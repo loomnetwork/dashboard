@@ -527,7 +527,7 @@ async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) 
     .getPastEvents(withdrawEvent, { filter: { owner: address }, ...range })
     .then((results) => logToHistory(results, withdrawEvent, symbol, "value"))
     .catch((e) => console.error("error loading TokenWithdrawn", e.message))
-  debugger
+    
   await Promise.all(([p1, p2]))
 }
 

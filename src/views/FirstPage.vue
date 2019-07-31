@@ -109,6 +109,19 @@
                   </div>
                 </b-card>
               </div>
+              <b-card-title class="mt-3 ml-3" style="color:grey;"> Still on developing </b-card-title>
+              <div class="col-sm-12">
+                <b-card
+                  id="portis-button"
+                  class="wallet-selection-card text-center"
+                  @click="testPortis"
+                >
+                  <div>
+                    <img src="../assets/portis_icon.svg" />
+                    <span>Portis Wallet (rinkeby)</span>
+                  </div>
+                </b-card>
+              </div>
             </div>
           </b-card>
 
@@ -154,7 +167,6 @@
           >We recommend using <strong>Ledger (via Metamask)</strong> instead.</b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
-      <b-button @click="testPortis">Portis Test</b-button>
       </main>
     </div>
   </div>
@@ -218,7 +230,8 @@ export default class FirstPage extends Vue {
   }
 
   testPortis() {
-    PortisAdapter.createProvider()
+    this.$router.push("/portis-wallet")
+    // PortisAdapter.createProvider()
   }
 
   /* For Chrome & Firefox Browser

@@ -29,13 +29,13 @@
       </form>
     </div>
     <div v-else-if="status === 'sending'">
-      <p class="lead">{{ $t("components.gateway.approval.sending") }}</p>
+      <p class="lead">{{ $t('components.gateway.approval.sending') }}</p>
     </div>
     <div v-else-if="status === 'failed'">
-      <p class="lead">{{ $t("components.gateway.approval.failure") }}</p>
+      <p class="lead">{{ $t('components.gateway.approval.failure') }}</p>
     </div>
     <div v-else-if="status === 'sent'">
-      <p class="lead">{{ $t("components.gateway.approval.sent") }}</p>
+      <p class="lead">{{ $t('components.gateway.approval.sent') }}</p>
     </div>
     <template slot="modal-footer">
       <div v-if="!status">

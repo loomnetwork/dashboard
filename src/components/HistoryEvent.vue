@@ -4,9 +4,9 @@
     <ul>
       <li v-if="showSpinner" class="confirmations">
         <b-spinner variant="primary"></b-spinner>
-        {{confirmations}} Confirmations
+        {{confirmations}} {{ $t('components.history_event.confirmations') }}
       </li>
-      <li class="block">Block # {{event.blockNumber}}</li>
+      <li class="block">{{ $t('components.history_event.block_no') }} {{event.blockNumber}}</li>
       <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
     </ul>
     <a class="transaction-hash" :href="etherScanUrl" target="_blank">{{event.transactionHash}}</a>

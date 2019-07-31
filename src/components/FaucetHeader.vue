@@ -22,7 +22,7 @@
         <b-navbar toggleable="lg" type="dark">
           <div class="container d-flex justify-content-between ensure-padded">
             <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
-              <strong>Back</strong>
+              <strong>{{ $t('components.faucet_header.back') }}</strong>
             </a>
 
             <b-navbar-brand href="#">
@@ -88,7 +88,7 @@
                 <LangSwitcher/>
                 <b-nav-item v-if="!!state.plasma.address">
                   <h5>
-                    <a @click="logout" class="router text-light hover-warning">Sign out</a>
+                    <a @click="logout" class="router text-light hover-warning">{{ $t('components.faucet_header.sign_out') }}</a>
                   </h5>
                 </b-nav-item>
               </b-navbar-nav>
@@ -172,11 +172,11 @@ export default class FaucetHeader extends Vue {
         },
         {
           to: "/transfer-gateway",
-          text: "Transfer Gateway",
+          text: "components.faucet_sidebar.transfer_gateway",
         },
         {
           to: "/validator-management",
-          text: "Validator Management",
+          text: "components.faucet_sidebar.validator_management",
         },
       ],
       help: [

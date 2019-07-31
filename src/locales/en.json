@@ -26,8 +26,12 @@
     "invalid_addr": "Invalid receiver address",
     "amount_input_should_less": "Invalid amount. should be less than {amount}",
     "amount_input_should_more": "Invalid amount. should be more than {amount}",
+    "amount_input_invalid_amount": "Please enter a valid amount",
+    "amount_input_only_round_amount": "Only round amounts allowed",
     "awaiting_transaction": "Awaiting transaction confirmation",
-    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
+    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice.",
+    "input_address_cant_transfer_own": "Cannot transfer to own address.",
+    "input_address_invalid_chain": "Invalid {chain} address."
   },
   "transfer_all": "All ({amount} LOOM)",
   "views": {
@@ -167,6 +171,15 @@
     }
   },
   "components": {
+    "account": {
+      "account": "Account",
+      "show_etherscan": "Show in EtherScan",
+      "show_block_explorer": "Show in Block Explorer"
+    },
+    "amount_input": {
+      "enter_amount": "Enter amount",
+      "all": "All"
+    },
     "faucet_footer": {
       "loom_network": "Loom Network",
       "eth_fiddle": "EthFiddle",
@@ -201,7 +214,9 @@
       "my_staking": "My Staking",
       "my_stakes": "My Stakes",
       "status": "Status",
-      "block_explorer": "Block Explorer"
+      "block_explorer": "Block Explorer",
+      "back": "Back",
+      "sign_out": "Sign out"
     },
     "faucet_sidebar": {
       "analytics": "Analytics",
@@ -211,6 +226,7 @@
       "rewards": "Rewards",
       "history": "History",
       "deposit_withdraw": "Deposit/Withdraw",
+      "staking": "Staking",
       "faq": "F.A.Q",
       "account_explorer": "Account Explorer",
       "game_assets": "Game Assets",
@@ -218,7 +234,14 @@
       "deploy_to_plasmachain": "Deploy to Plasmachain",
       "transfer_gateway": "Transfer Gateway",
       "validator_management": "Validator Management",
-      "feedback_form": "Contact Support"
+      "feedback_form": "Contact Support",
+      "plasma_wallet": "Plasma Wallet",
+      "developers": "Developers",
+      "help": "Help"
+    },
+    "history_event": {
+      "confirmations": "Confirmations",
+      "block_no": "Block # "
     },
     "gateway": {
       "complete_deposit": "Complete deposit",
@@ -273,6 +296,9 @@
       }
     },
     "layout": {
+      "network": "Network: ",
+      "sign_wallet_title": "Sign Your wallet",
+      "account_mapped_title": "Account Mapped",
       "metamask_changed": "You have just switched your metamask account. To avoid any unexpected behaviour the app is going to reload",
       "metamask_error": "Metamask error!?",
       "please_enable_metamask_or_switch": "Please enable Metamask or switch to a supported browser",
@@ -282,7 +308,9 @@
       "please_change_your_metamask_account": "Please change your Ethereum account",
       "please_check_your_metamask_account": "Please check your Ethereum account and/or network",
       "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
-      "already_mapped": " Your selected accout is already mapped. Please select new account."
+      "already_mapped": " Your selected accout is already mapped. Please select new account.",
+      "your_wallet_connected_to": "Your wallet is connected to {network}.",
+      "please_change_to": "Please change to {network}."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
@@ -450,5 +478,9 @@
     "confirm": "Confirm",
     "continue": "Continue",
     "done": "Done"
+  },
+  "feedback_msg": {
+    "eth_addr_copied": "Ethereum address copied.",
+    "plasma_addr_copied": "Plasma address copied."
   }
 }

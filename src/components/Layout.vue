@@ -1,15 +1,15 @@
 <template>
   <div id="layout" class="d-flex flex-column">
     <div v-if="networkId && networkId !== 'plasma'" style="background: #FFC107; padding: 0 16px;">
-      <span>Network: {{networkId}}</span>
+      <span>{{ $t('components.layout.network') }} {{networkId}}</span>
     </div>
     <div
       v-if="metamaskNetwork && (metamaskNetwork != s.ethereum.networkId)"
       style="background: #FF9800;padding: 16px 16px;"
     >
       <span>
-        Your wallet is connected to {{ethereumNets[metamaskNetwork]}}.
-        Please change to {{s.ethereum.networkName}}.
+        {{ $t('components.layout.your_wallet_connected_to', { network: ethereumNets[metamaskNetwork] }) }}
+        {{ $t('components.layout.please_change_to', { network: s.ethereum.networkName }) }}
       </span>
     </div>
     <faucet-header></faucet-header>
@@ -21,14 +21,14 @@
         <div class="inner-container container">
           <b-modal
             id="sign-wallet-modal"
-            title="Sign Your wallet"
+            :title="$t('components.layout.sign_wallet_title')"
             hide-footer
             centered
             no-close-on-backdrop
           >{{ $t('components.layout.sign_wallet') }}</b-modal>
           <b-modal
             id="already-mapped"
-            title="Account Mapped"
+            title="$t('components.layout.account_mapped')"
             hide-footer
             centered
             no-close-on-backdrop

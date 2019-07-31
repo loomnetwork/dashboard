@@ -92,14 +92,14 @@ export class Validator implements IValidator, ICandidate {
     const bits = bigInt(this.recentlyMissedBlocks)
     this.missedBlocks = [
       // tslint:disable-next-line: no-bitwise
-      bits.shiftRight(0xFFFF),
+      bits.and(0xFFFF),
       // tslint:disable-next-line: no-bitwise
       (bits.shiftRight(16)).and(0xFFFF),
       // tslint:disable-next-line: no-bitwise
       (bits.shiftRight(32)).and(0xFFFF),
       // tslint:disable-next-line: no-bitwise
       (bits.shiftRight(48)).and(0xFFFF),
-    ].map(v => v.toJSNumber())
+    ].map((b) => b.toJSNumber())
     // just reusit for the sum
     this.recentlyMissedBlocks = this.missedBlocks.reduce((a, b) => a + b, 0)
     // if node has validator info then its active

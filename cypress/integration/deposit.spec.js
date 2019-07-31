@@ -45,4 +45,33 @@ describe('Deposit Test', () => {
       })
     })
   })
+
+  it('Depositing 0.1 ETH', () => {
+    cy.contains('.symbol', 'ETH')
+      .parent()
+      .as('token')
+
+    cy.get('@token')
+      .find('.balance')
+      .first()
+      .as('balance')
+
+    cy.get('@balance').then(($span) => {
+      const expectedBalance = parseFloat($span.text()) + 0.1
+
+      cy.get('@token')
+        .contains('Deposit').click()
+
+      cy.get('input').type('0.1')
+
+      cy.contains('Confirm').click()
+
+      cy.wait(300000)
+
+      cy.get('@balance').then(($span) => {
+        const actualBalance = parseFloat($span.text())
+        expect(actualBalance).to.equal(expectedBalance)
+      })
+    })
+  })
 })

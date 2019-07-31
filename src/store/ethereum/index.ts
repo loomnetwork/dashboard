@@ -24,6 +24,7 @@ import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
 import { PortisAdapter } from './wallets/portis';
+import { FortmaticAdapter } from './wallets/fortmatic';
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -34,6 +35,7 @@ const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["ledger", LedgerAdapter],
   ["portis", PortisAdapter],
+  ["fortmatic", FortmaticAdapter],
 ])
 
 const initialState: EthereumState = {

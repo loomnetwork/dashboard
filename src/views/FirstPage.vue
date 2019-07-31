@@ -96,7 +96,31 @@
                   </div>
 
                 </b-card>
-              </div>              
+              </div>   
+              <div class="col-sm-12 mb-3">
+                <b-card
+                  id="portis-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('portis')"
+                >
+                  <div>
+                    <img src="../assets/portis_icon.svg" />
+                    <span>Portis Wallet</span>
+                  </div>
+                </b-card>
+              </div>
+              <div class="col-sm-12">
+                <b-card
+                  id="fortmatic-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('fortmatic')"
+                >
+                  <div>
+                    <img src="../assets/fortmatic-icon.svg" />
+                    <span>Fortmatic Wallet</span>
+                  </div>
+                </b-card>
+              </div>           
               <div class="col-sm-12">
                 <b-card
                   id="explore-button"
@@ -109,19 +133,7 @@
                   </div>
                 </b-card>
               </div>
-              <b-card-title class="mt-3 ml-3" style="color:grey;"> Still on developing </b-card-title>
-              <div class="col-sm-12">
-                <b-card
-                  id="portis-button"
-                  class="wallet-selection-card text-center"
-                  @click="setWallet('portis')"
-                >
-                  <div>
-                    <img src="../assets/portis_icon.svg" />
-                    <span>Portis Wallet (rinkeby)</span>
-                  </div>
-                </b-card>
-              </div>
+
             </div>
           </b-card>
 

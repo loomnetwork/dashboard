@@ -25,7 +25,7 @@ import { store, dashboardStore } from "./store"
 
 import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
-import { isMobile } from "./utils"
+import { isMobile, detectedWallet } from "./utils"
 import production from "./config/production"
 import stage from "./config/stage"
 import dev from "./config/dev"
@@ -93,3 +93,5 @@ Sentry.init({
     attachProps: true,
   })],
 })
+
+Sentry.setTag("wallet", detectedWallet())

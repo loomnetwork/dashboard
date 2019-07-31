@@ -4,8 +4,6 @@
  * @preferred
  */
 
-import { ethers } from "ethers"
-
 import { WalletType } from "../types"
 import { provider } from "web3-providers"
 import { feedbackModule } from "@/feedback/store"

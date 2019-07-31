@@ -114,7 +114,7 @@
                 <b-card
                   id="portis-button"
                   class="wallet-selection-card text-center"
-                  @click="testPortis"
+                  @click="setWallet('portis')"
                 >
                   <div>
                     <img src="../assets/portis_icon.svg" />
@@ -227,11 +227,6 @@ export default class FirstPage extends Vue {
 
   onClose() {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
-  }
-
-  testPortis() {
-    this.$router.push("/portis-wallet")
-    // PortisAdapter.createProvider()
   }
 
   /* For Chrome & Firefox Browser

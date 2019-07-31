@@ -23,6 +23,7 @@ import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
+import { PortisAdapter } from './wallets/portis';
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -32,6 +33,7 @@ const ZERO = new BN("0")
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["ledger", LedgerAdapter],
+  ["portis", PortisAdapter],
 ])
 
 const initialState: EthereumState = {

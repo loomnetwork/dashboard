@@ -27,6 +27,7 @@ import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
 import { isMobile, detectedWallet } from "./utils"
 import production from "./config/production"
+import extDev from "./config/ext-dev"
 import stage from "./config/stage"
 import dev from "./config/dev"
 import local from "./config/local"
@@ -59,7 +60,7 @@ export default new Vue({
       await dashboardStore.setEnv(production)
     } else {
       console.log("multiple envs")
-      dashboardStore.setEnvs([production, stage, dev])
+      dashboardStore.setEnvs([production, extDev, stage, dev])
       // default
       await dashboardStore.setEnv(stage)
     }

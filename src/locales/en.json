@@ -31,7 +31,8 @@
     "awaiting_transaction": "Awaiting transaction confirmation",
     "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice.",
     "input_address_cant_transfer_own": "Cannot transfer to own address.",
-    "input_address_invalid_chain": "Invalid {chain} address."
+    "input_address_invalid_chain": "Invalid {chain} address.",
+    "error_try_again": "An error occurred, please try again."
   },
   "transfer_all": "All ({amount} LOOM)",
   "views": {
@@ -56,7 +57,26 @@
       "returning_user": "Returning User",
       "sign_out": "Sign out",
       "create_account": "Create Account",
-      "restore_account": "Restore Account"
+      "restore_account": "Restore Account",
+      "ask_from_relentless_marketplace": "Are you from Relentless Marketplace ?",
+      "if_from_relentless_marketplace": "If you are, looks like you have to link your marketplace account to this dashboard account",
+      "link_my_account": "Link my account",
+      "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
+      "you_sure": "Are you sure ?",
+      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
+      "create_new_account": "Create new account",
+      "select_wallet": "Select wallet",
+      "wallets" : {
+        "metamask": "Metamask",
+        "ledger_via_metamask": "Ledger (via Metamask)",
+        "trezor_via_metamask": "Trezor (via Metamask)",
+        "ledger_legacy": "Ledger (Legacy)",
+        "explore": "Explore"
+      },
+      "no_metamask": "Looks like you don't have {metamask} extension",
+      "get_one": "Get one here!",
+      "now_deprecated": "Now deprecated",
+      "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
     },
     "help": {
       "what_is_plasma_chain": "What is PlasmaChain?",
@@ -107,7 +127,13 @@
       "are_there_any_ways_to": "Are there any ways to lose some of my delegated tokens?",
       "yes_if_the_protocol_rules": "Yes. If the protocol rules are not followed, a validator can be ‘slashed’. This means they will forfeit a portion of their staked tokens, including the tokens that have been delegated to their pool. Slashing helps deter malicious behavior and maintain a system whereby everyone is playing by the same rules. It is designed to make dishonest and faulty behavior more costly than it’s worth. For instance, submitting an invalid block, attempting a double spend, and/or experiencing downtime will all lead to slashing. We will be publishing a detailed breakdown of slashing conditions as they are finalized.",
       "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
-      "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network."
+      "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network.",
+      "check_your_balance": "Check your token balances",
+      "deposit_to_plasmachain": "Deposit to Plasmachain from Ethereum",
+      "withdraw_to_ethereum": "Withdraw to Ethereum",
+      "transfer_token": "Transfer tokens to other PlasmaChain accounts",
+      "check_your_asset": "Check your Relentless assets (more coming soon)",
+      "transfer_asset_to_other": "Transfer assets to other addresses"  
     },
     "history": {
       "your_history": "Your History",
@@ -187,6 +213,15 @@
       "total_staked_amount": "Total staked amount",
       "stake": "Stake",
       "name": "Name"
+    },
+    "analytics": {
+      "total_amount_staked": "Total amount staked",
+      "tier_distribution": "Tier distribution"
+    },
+    "deposit_withdraw": {
+      "wallet": "Wallet",
+      "tokens": "Tokens",
+      "add_token": "Add token"
     }
   },
   "components": {
@@ -373,6 +408,7 @@
         "success": "Success"
       },
       "hardware_wallet_modal": {
+        "hardware_wallet": "Hardware wallets",
         "unlock_hardware_wallet": "Unlock Hardware wallet",
         "enter_pin_code": "On your leadger, Please enter your pin code and login to the Ethereum app.",
         "ledger_locked": "Please make sure your Ledger is connected, unlocked and then go tho ethereum app.",

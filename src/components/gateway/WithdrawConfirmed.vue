@@ -10,7 +10,7 @@
     <section v-if="status === 'error'">
       <b-container fluid>
         <div class="lead">
-          <p>{{$t('components.gateway.confirm_withdrawal_modal.error')}}</p>
+          <p>{{$t('messages.error_try_again')}}</p>
         </div>
       </b-container>
     </section>

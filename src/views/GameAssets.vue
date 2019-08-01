@@ -1,13 +1,13 @@
 <template>
   <main class="container">
     <header>
-      <h1>Game Assets</h1>
+      <h1>{{ $t('components.faucet_sidebar.game_assets') }}</h1>
       <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
     <b-alert :show="showHelp" fade>
-      Check your Relentless assets (more coming soon)
+      {{ $t('views.help.check_your_asset') }}
       <hr>
-      <span><b>Transfer</b> : Transfer assets to other addresses </span>
+      <span><b>{{ $t('components.gameAsset.cards.transfer') }}</b> : {{ $t('views.help.transfer_asset_to_other') }} </span>
     </b-alert>
     <Account/>
     <section>

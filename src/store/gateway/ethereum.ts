@@ -450,35 +450,6 @@ export async function refreshEthereumHistory(context: ActionContext) {
   const { loomGateway, mainGateway } = service()
   const fromBlock = cached.length ? cached[0].blockNumber : 0
   const address = ethereum.address
-  const range = {
-    fromBlock,
-    toBlock: "latest",
-  }
-  // const logToHistory = (items, type, token, valueField) => {
-  //   log("logToHistory", type, token, items)
-  //   for (const item of items) {
-  //     const entry = Object.freeze({
-  //       type,
-  //       blockNumber: item.blockNumber,
-  //       transactionHash: item.transactionHash,
-  //       amount: new BN(item.returnValues[valueField]),
-  //       token: token || "other",
-  //     })
-  //     ethereum.history.push(entry)
-  //   }
-  // }
-  // const p1 = loomGateway
-  //   // @ts-ignore
-  //   .getPastEvents("LoomCoinReceived", { filter: { from: address }, ...range })
-  //   .then((results) => logToHistory(results, "ERC20Received", "LOOM", "amount"))
-  //   .catch((e) => console.error("error loading LoomCoinReceived", e.message))
-
-  // const p2 = loomGateway
-  //   // @ts-ignore
-  //   .getPastEvents("TokenWithdrawn", { filter: { owner: address }, ...range })
-  //   .then((results) => logToHistory(results, "TokenWithdrawn", "LOOM", "value"))
-  //   .catch((e) => console.error("error loading TokenWithdrawn", e.message))
-
   const coins = Object.keys(context.rootState.ethereum.coins)
   coins.forEach(async (symbol) => {
     switch (symbol) {
@@ -527,7 +498,7 @@ async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) 
     .getPastEvents(withdrawEvent, { filter: { owner: address }, ...range })
     .then((results) => logToHistory(results, withdrawEvent, symbol, "value"))
     .catch((e) => console.error("error loading TokenWithdrawn", e.message))
-    
+
   await Promise.all(([p1, p2]))
 }
 

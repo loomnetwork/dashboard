@@ -19,7 +19,6 @@ describe('Withdrawal Test', () => {
       .first()
       .as('balance')
 
-    let aaa
     cy.get('@balance').then(($span) => {
       const expectedBalance = parseFloat($span.text()) - 1
       cy.wrap(expectedBalance).as('expectedBalance')

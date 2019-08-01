@@ -87,12 +87,7 @@ export default class DelegateModal extends Vue {
   loading = false
   okTitle = "Delegate"
 
-  locktimeTiers = [
-    "2 weeks",
-    "3 months",
-    "6 months",
-    "1 year",
-  ]
+  locktimeTiers: any[] = []
 
   bonusTiers = [
     "5%",
@@ -110,6 +105,15 @@ export default class DelegateModal extends Vue {
 
   minAmount = new BN("1")
   minLockTimeTier = 0
+
+  created() {
+    this.locktimeTiers = [
+      this.$t('components.modals.faucet_delegate_modal.two_weeks').toString(),
+      this.$t('components.modals.faucet_delegate_modal.three_months').toString(),
+      this.$t('components.modals.faucet_delegate_modal.six_months').toString(),
+      this.$t('components.modals.faucet_delegate_modal.one_year').toString(),
+    ]
+  }
 
   get state(): HasDPOSState {
     return this.$store.state

@@ -1,46 +1,45 @@
 <template>
   <div>
     <b-card>
-      <b-card-title>Validator Associated</b-card-title>
+      <b-card-title>{{ $t('components.validator_extended_detail.validator_associated') }}</b-card-title>
       <hr />
       <b-card-body v-if="!validator">
-        <p>
-          This account (
-          <code>{{plasmaAddress}}</code>) is not a validator account.
-        </p>
-        <h4>Becoming a validator</h4>
-        <p>
-          Please follow the
-          <a :href="guideLink" target="_blank">Validators guide</a>.
-        </p>
-        <h4>Registering as a validator</h4>
-        <p>
-          If your Validator node is up and running and its loom address is
-          <code>{{plasmaAddress}}</code>,
-          <br />register your account using the form bellow
-        </p>
-        <h5>Whitelist amount</h5>
-        <p>Before proceeding make sure you have the necessary amount for whitelisting (1.25M LOOM).</p>
-        <b-button variant="primary" @click="showInfo = true">Register validator</b-button>
+        <i18n tag="p" path="components.validator_extended_detail.not_validator_account">
+          <code place="address">{{ plasmaAddress }}</code>
+        </i18n>
+        <h4>{{ $t('components.validator_extended_detail.become_validator') }}</h4>
+        <i18n tag="p" path="components.validator_extended_detail.follow_guide">
+          <a place="link" :href="guideLink" target="_blank">{{ $t('components.validator_extended_detail.validator_guide') }}</a>
+        </i18n>
+        <h4>{{ $t('components.validator_extended_detail.register_as_validator') }}</h4>
+        <i18n tag="p" path="components.validator_extended_detail.register_as_validator_description">
+          <code place="address">{{ plasmaAddress }}</code>
+        </i18n>
+        <p>{{ $t('components.validator_extended_detail.use_form_below') }}</p>
+        <h5>{{ $t('components.validator_extended_detail.whitelist_amount') }}</h5>
+        <p>{{ $t('components.validator_extended_detail.whitelist_amount_description') }}</p>
+        <b-button variant="primary" @click="showInfo = true">{{ $t('components.validator_extended_detail.register_amount') }}</b-button>
       </b-card-body>
       <b-list-group class="validator-info" v-if="showInfo && !validator">
         <b-list-group-item>
-          <h5>Register this account as a validator {{plasmaAddress}}</h5>
+          <h5>{{ $t('components.validator_extended_detail.register_this_account_as_a_validator', { address: plasmaAddress }) }}</h5>
           <ul>
-            <li>Filled out and submit the form below.</li>
+            <li>{{ $t('components.validator_extended_detail.filled_out_form') }}</li>
             <li>
-              More detail? Check out this
-              <a :href="guideLink" target="_blank">link</a>.
+              <i18n path="components.validator_extended_detail.more_detail">
+                <a place="link" :href="guideLink" target="_blank">{{ $t('components.validator_extended_detail.link') }}</a>
+              </i18n>
             </li>
           </ul>
           <register-candidate-form class="mb-2" />
         </b-list-group-item>
         <b-list-group-item>
-          <h5>Setup a node</h5>
+          <h5>{{ $t('components.validator_extended_detail.setup_node') }}</h5>
           <ul>
             <li>
-              Check out this
-              <a :href="setupLink" target="_blank">link</a>.
+              <i18n path="components.validator_extended_detail.check_out">
+                <a place="link" :href="setupLink" target="_blank">{{ $t('components.validator_extended_detail.link') }}</a>
+              </i18n>
             </li>
           </ul>
         </b-list-group-item>
@@ -61,35 +60,35 @@
         <b-card-text>
           <p>{{ validator.description }}</p>
           <div class="public-key">
-            <p>Public key</p>
+            <p>{{ $t('components.validator_extended_detail.public_key') }}</p>
             <span>{{ decodeUint8Array(validator.pubKey) }}</span>
           </div>
         </b-card-text>
         <b-row>
           <b-col cols="4">
             <dl>
-              <dt>Fee</dt>
+              <dt>{{ $t('components.validator_extended_detail.fee') }}</dt>
               <dd>{{ validator.fee }}</dd>
-              <dt>New fee</dt>
+              <dt>{{ $t('components.validator_extended_detail.new_fee') }}</dt>
               <dd>{{ validator.newFee }}</dd>
-              <dt>Candidate state</dt>
+              <dt>{{ $t('components.validator_extended_detail.candidate_state') }}</dt>
               <dd>{{ validator.candidateState }}</dd>
-              <dt>Max referral %</dt>
+              <dt>{{ $t('components.validator_extended_detail.max_referral_percentage') }}</dt>
               <dd>{{ validator.maxReferralPercentage }} %</dd>
-              <dt>Slash %</dt>
+              <dt>{{ $t('components.validator_extended_detail.slash_percentage') }}</dt>
               <dd>{{ validator.slashPercentage }} %</dd>
             </dl>
           </b-col>
           <b-col cols="1"></b-col>
           <b-col cols="7">
             <dl>
-              <dt>Delegation total</dt>
+              <dt>{{ $t('components.validator_extended_detail.delegation_total') }}</dt>
               <dd>{{ validator.delegationTotal | tokenAmount }}</dd>
-              <dt>Staked amount</dt>
+              <dt>{{ $t('components.validator_extended_detail.staked_amount') }}</dt>
               <dd>{{ validator.stakedAmount | tokenAmount }}</dd>
-              <dt>Whitelist amount</dt>
+              <dt>{{ $t('components.validator_extended_detail.whitelist_amount') }}t</dt>
               <dd>{{ validator.whitelistAmount | tokenAmount }}</dd>
-              <dt>Whitelist locktime tier</dt>
+              <dt>{{ $t('components.validator_extended_detail.whitelist_locktime_tier') }}</dt>
               <dd>{{ validator.whitelistLocktimeTier }}</dd>
             </dl>
           </b-col>

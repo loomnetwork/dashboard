@@ -41,11 +41,11 @@
       <div v-if="!status">
         <b-btn @click="close()" class="mr-2">Cancel</b-btn>
         <span style="flex:1"></span>
-        <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">{{ $t("regular_modal.confirm") }}</b-btn>
+        <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">{{ $t("button.confirm") }}</b-btn>
       </div>
       <div v-else>
         <span style="flex:1"></span>
-        <b-btn @click="close">{{ $t("regular_modal.close") }}</b-btn>
+        <b-btn @click="close">{{ $t("button.close") }}</b-btn>
       </div>
     </template>
   </b-modal>

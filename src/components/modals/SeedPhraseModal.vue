@@ -85,7 +85,7 @@
         @click="closeModal()"
         class="input-group-text"
         :disabled="!confirmMnemonic"
-      >{{ $t('regular_modal.done') }}</b-button>
+      >{{ $t('button.done') }}</b-button>
     </b-container>
   </b-modal>
 </template>

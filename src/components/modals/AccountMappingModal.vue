@@ -47,7 +47,7 @@
       </div>
     </div>
     <template slot="modal-footer">
-      <b-button variant="primary" @click="createMapping" :disabled="validInput === false">{{ $t('regular_modal.continue') }}</b-button>
+      <b-button variant="primary" @click="createMapping" :disabled="validInput === false">{{ $t('button.continue') }}</b-button>
     </template>
   </b-modal>
 </template>

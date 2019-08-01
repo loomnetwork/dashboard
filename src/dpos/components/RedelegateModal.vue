@@ -3,7 +3,7 @@
     lazy
     id="redelegate-modal"
     ref="modalRef"
-    title="Redelegate"
+    :title="$t('components.modals.faucet_redelegate_modal.redelegate')"
     v-model="visible"
     hide-footer
     no-close-on-backdrop
@@ -28,7 +28,7 @@
         </span>
       </b-list-group-item>
       <div v-if="items.length === 0" class="not-found">
-        No validator found.
+        {{ $t('components.modals.faucet_redelegate_modal.no_validator') }}
       </div>
     </b-list-group>
     <strong v-if="errorMsg" class="error-message mb-4">{{ errorMsg }}</strong>
@@ -92,11 +92,11 @@ export default class RedelegateModal extends Vue {
     this.errorMsg = ""
     const delegation = this.delegation!
     if (delegation.updateValidator === undefined) {
-      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.target_error')
+      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.target_error').toString()
       return
     }
     if (delegation.validator === delegation.updateValidator) {
-      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.same_target_error')
+      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.same_target_error').toString()
       return
     }
     // for now redelegate all

@@ -323,6 +323,7 @@
     "event:MainnetWithdrawalEvent": "인출",
     "event:WithdrawLoomCoin": "인출 (LOOM)",
     "event:TokenWithdrawalSigned": "서명된 인출",
-    "TokenWithdrawn": "출금한 토큰"
+    "TokenWithdrawn": "출금한 토큰",
+    "ETHReceived": "Deposit (ETH)"
   }
 }

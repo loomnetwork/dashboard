@@ -1,10 +1,5 @@
-import { ethers } from "ethers"
-
-import { WalletType } from "../types"
-
-import Fortmatic from 'fortmatic';
-// Works for web3 1.0 and pre-1.0 versions
-import Web3 from 'web3';
+import { WalletType, EthereumConfig } from "../types"
+import Fortmatic from "fortmatic"
 
 export const FortmaticAdapter: WalletType = {
   id: "fortmatic",
@@ -16,9 +11,13 @@ export const FortmaticAdapter: WalletType = {
   detect() {
     return true
   },
-  async createProvider() {
+  async createProvider(config: EthereumConfig) {
+    const net = config.networkId === "1" ? "mainnet" : "rinkeby"
+    const key = config.formaticKey
     // dappID and network will be change later
-    const fm = new Fortmatic("pk_test_58DB7D96C460470B", "rinkeby")
-    return fm.getProvider()
+    const fm = new Fortmatic(key, net)
+    const provider = fm.getProvider()
+    await provider.enable()
+    return provider
   },
 }

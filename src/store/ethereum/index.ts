@@ -23,8 +23,8 @@ import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
-import { PortisAdapter } from './wallets/portis';
-import { FortmaticAdapter } from './wallets/fortmatic';
+import { PortisAdapter } from "./wallets/portis";
+import { FortmaticAdapter } from "./wallets/fortmatic";
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -146,7 +146,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
     feedbackModule.setStep("Connecting wallet")
 
     await wallet
-      .createProvider()
+      .createProvider(context.state)
       .then(async (web3provider) => await setProvider(context, web3provider))
       .catch((e) => {
         console.error(e)

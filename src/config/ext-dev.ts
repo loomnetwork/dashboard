@@ -20,6 +20,8 @@ export default {
       mainGateway: "0xe57e0793f953684bc9d2ef3d795408afb4a100c3",
       loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
     },
+    portisKey: "10589118-6329-43a0-818c-93800c206786",
+    formaticKey: "pk_test_58DB7D96C460470B",
   },
   dpos: {
     bootstrapNodes: [],

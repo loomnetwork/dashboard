@@ -32,7 +32,9 @@
     "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice.",
     "input_address_cant_transfer_own": "Cannot transfer to own address.",
     "input_address_invalid_chain": "Invalid {chain} address.",
-    "error_try_again": "An error occurred, please try again."
+    "error_try_again": "An error occurred, please try again.",
+    "no_event_found": "No event found on this chain or token",
+    "no_token_found": "Token {tokenName} not found"
   },
   "transfer_all": "All ({amount} LOOM)",
   "views": {
@@ -140,7 +142,11 @@
       "sort_by": "Sort by:",
       "item_1": "Item 1",
       "item_2": "Item 2",
-      "home": "Home"
+      "home": "Home",
+      "no_activity": "No activity detected.",
+      "or_head_to_validators_page": "Or head over to the {page} to get started",
+      "validators_page": "Validators page",
+      "funds_to_plasma": "Deposit funds to the PlasmaChain"
     },
     "my_account": {
       "my_address": "My Address",
@@ -222,6 +228,29 @@
       "wallet": "Wallet",
       "tokens": "Tokens",
       "add_token": "Add token"
+    },
+    "mobile_account": {
+      "warning": "Warning",
+      "loom_awaiting_transfer": "LOOM awaiting transfer to plasmachain account.",
+      "resume_deposit": "Resume Deposit",
+      "election_cycle": "Election Cycle",
+      "time_left": "Time left",
+      "delegations": "Delegations"
+    },
+    "transfer_gateway": {
+      "connect_new_contracts": "Connect New Contracts",
+      "view_docs": "View Documentations",
+      "debug_mapped_contract": "Debug Mapped Contract",
+      "view_logs": "View Logs",
+      "loading": "Loading...",
+      "fields" : {
+        "id": "Id",
+        "created_at": "Created At",
+        "token_owner": "Token Owner",
+        "token_kind": "Token Kind",
+        "token_amount": "Token Amount",
+        "topic": "Topic"
+      }
     }
   },
   "components": {

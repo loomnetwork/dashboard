@@ -1,23 +1,23 @@
 <template>
   <main class="transfer-gateway">
     <header>
-      <h1>Transfer Gateway</h1>
+      <h1>{{ $t('components.faucet_sidebar.transfer_gateway') }}</h1>
     </header>
     <div>
       <b-card>
         <b-row>
           <b-col class="card-label">
-          <h5>Connect New Contracts</h5>
+          <h5>{{ $t('views.transfer_gateway.connect_new_contracts') }}</h5>
           </b-col>
           <b-col>
-          <b-button variant="primary" style="float:right;">View Documentations</b-button>
+          <b-button variant="primary" style="float:right;">{{ $t('views.transfer_gateway.view_docs') }}</b-button>
           </b-col>
         </b-row>
       </b-card>
       <b-card class="mapped-card">
         <b-row>
           <b-col class="card-label">
-          <h5>Debug Mapped Contract</h5>
+          <h5>{{ $t('views.transfer_gateway.debug_mapped_contract') }}</h5>
           </b-col>
           <b-col>
           <b-input-group
@@ -29,7 +29,7 @@
               style="text-align: right;"
             ></b-form-input>
             <b-input-group-append>
-              <b-button @click="viewLogs">View Logs</b-button>
+              <b-button @click="viewLogs">{{ $t('views.transfer_gateway.view_logs') }}</b-button>
             </b-input-group-append>
           </b-input-group>
           </b-col>
@@ -54,7 +54,7 @@
         >
           <div slot="table-busy" class="text-center my-2">
             <b-spinner class="align-middle"></b-spinner>
-            <strong>Loading...</strong>
+            <strong>{{ $t('views.transfer_gateway.loading') }}</strong>
           </div>
         </b-table>
         <b-pagination
@@ -96,21 +96,26 @@ import { check } from 'ethers/utils/wordlist';
 
 export default class TransferGateway extends Vue {
 
-  tokenMappingFields = [{ key: "id", label: "Id" },
-  { key: "created_at", label: "Created At" },
-  { key: "token_owner", label: "Token Owner" },
-  {
-    key: "token_kind",
-    label: "Token Kind",
-    tdClass: "align-center-td",
-    formatter: (value) => this.getKeyByValue(TransferGatewayTokenKind, value)  },
-  {
-    key: "token_amount",
-    label: "Token Amount",
-    formatter: (value) => formatTokenAmount(value, 18, 0),
-    tdClass: "align-right-td"  },
-  { key: "topic", label: "Topic" },
-  ]
+  tokenMappingFields: any[] = []
+
+  created() {
+    this.tokenMappingFields = [{ key: "id", label: this.$t('views.transfer_gateway.fields.id') },
+    { key: "created_at", label: this.$t('views.transfer_gateway.fields.created_at') },
+    { key: "token_owner", label: this.$t('views.transfer_gateway.fields.token_owner') },
+    {
+      key: "token_kind",
+      label: this.$t('views.transfer_gateway.fields.token_kind'),
+      tdClass: "align-center-td",
+      formatter: (value) => this.getKeyByValue(TransferGatewayTokenKind, value)  },
+    {
+      key: "token_amount",
+      label: this.$t('views.transfer_gateway.fields.token_amount'),
+      formatter: (value) => formatTokenAmount(value, 18, 0),
+      tdClass: "align-right-td"  },
+    { key: "topic", label: this.$t('views.transfer_gateway.fields.topic') },
+    ]
+  }
+
 
   tokenData: TokenData = {
     symbol: "",
@@ -205,10 +210,10 @@ export default class TransferGateway extends Vue {
       this.showResult.notFound = true
       if (msg === "NO_EVENT") {
         this.showResult.tokenAddress = true
-        this.showResult.message = "No event found on this chain / token"
+        this.showResult.message = this.$t('messages.no_event_found').toString()
       } else if (msg === "NO_TOKEN") {
         this.showResult.tokenAddress = false
-        this.showResult.message = `Token ${this.tokenName} not found`
+        this.showResult.message = this.$t('messages.no_token_found', {tokenName: this.tokenName }).toString()
       }
     } else {
       this.showResult.table = true

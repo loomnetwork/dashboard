@@ -21,28 +21,32 @@ describe('Deposit Test', () => {
 
     cy.get('@balance').then(($span) => {
       const expectedBalance = parseFloat($span.text()) + 0.1
+      cy.wrap(expectedBalance).as('expectedBalance')
+    })
 
-      cy.get('@token')
-        .contains('Deposit').click()
-  
-      cy.get('input').type('0.1')
+    cy.get('@token')
+      .contains('Deposit').click()
 
-      cy.contains('Confirm').click()
+    cy.get('input').type('0.1')
 
-      cy.contains('OK').click()
+    cy.contains('Confirm').click()
 
-      cy.wait(300000)
+    cy.contains('OK').click()
 
-      cy.get('#faucet-header')
-        .should(
-          'contain',
-          "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations."
-        )
+    cy.wait(300000)
 
-      cy.get('@balance').then(($span) => {
-        const actualBalance = parseFloat($span.text())
-        expect(actualBalance).to.equal(expectedBalance)
-      })
+    cy.get('#faucet-header')
+      .should(
+        'contain',
+        "The deposit has been confirmed. " +
+        "Your plasma balance will be updated after 10 confirmations."
+      )
+
+    cy.get('.close').click()
+
+    cy.get('@balance').then(($span) => {
+      const actualBalance = parseFloat($span.text())
+      cy.get('@expectedBalance').should('eq', actualBalance)
     })
   })
 
@@ -58,20 +62,21 @@ describe('Deposit Test', () => {
 
     cy.get('@balance').then(($span) => {
       const expectedBalance = parseFloat($span.text()) + 0.1
+      cy.wrap(expectedBalance).as('expectedBalance')
+    })
 
-      cy.get('@token')
-        .contains('Deposit').click()
+    cy.get('@token')
+      .contains('Deposit').click()
 
-      cy.get('input').type('0.1')
+    cy.get('input').type('0.1')
 
-      cy.contains('Confirm').click()
+    cy.contains('Confirm').click()
 
-      cy.wait(300000)
+    cy.wait(300000)
 
-      cy.get('@balance').then(($span) => {
-        const actualBalance = parseFloat($span.text())
-        expect(actualBalance).to.equal(expectedBalance)
-      })
+    cy.get('@balance').then(($span) => {
+      const actualBalance = parseFloat($span.text())
+      cy.get('@expectedBalance').should('eq', actualBalance)
     })
   })
 })

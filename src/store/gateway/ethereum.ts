@@ -465,8 +465,6 @@ export async function refreshEthereumHistory(context: ActionContext) {
   ethereum.history.sort((a, b) => b.blockNumber - a.blockNumber)
 }
 
-// Loom -> erc20recieved, tokenwiethdrawn
-
 async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) {
   const cached = ethereumModule.state.history
   const fromBlock = cached.length ? cached[0].blockNumber : 0

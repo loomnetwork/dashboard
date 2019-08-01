@@ -1,5 +1,5 @@
 <template>
-  <loading-spinner v-if="isLoading" :showBackdrop="false" message="Loading validators...."></loading-spinner>
+  <loading-spinner v-if="isLoading" :showBackdrop="false" :message="$t('views.validator_detail.loading_validators')"></loading-spinner>
   <main v-else class="validator">
     <header>
       <h1>
@@ -27,7 +27,7 @@
       </header>
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
-        <dd>{{validator.active ? "Active" : "Inactive"}}</dd>
+        <dd>{{validator.active ? $t('views.validator_detail.active') : $t('views.validator_detail.inactive')}}</dd>
         <!--
         <dt>Recently Missed Blocks</dt>
         <dd>
@@ -35,17 +35,17 @@
           <small>{{ validator.missedBlocks }}</small>
         </dd>
         -->
-        <dt>Delegators Stake</dt>
+        <dt>{{ $t('views.validator_detail.delegator_stake') }}</dt>
         <dd>{{validator.stakedAmount | tokenAmount(18,0)}}</dd>
-        <dt>Total Staked</dt>
+        <dt>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }}</dt>
         <dd>{{validator.stakedAmount.add(validator.whitelistAmount) | tokenAmount(18,0)}}</dd>
-        <dt>Fee</dt>
+        <dt>{{ $t('components.validator_extended_detail.fee') }}</dt>
         <dd>{{validator.fee}}</dd>
       </dl>
     </section>
     <b-card tag="section" v-if="!!state.plasma.address" class="user-stakes" no-body>
       <b-card-body>
-        <h6 v-if="!validator.isBootstrap">{{ $t('My stakes') }}</h6>
+        <h6 v-if="!validator.isBootstrap">{{ $t('views.validator_detail.my_stake') }}</h6>
       </b-card-body>
       <delegations-list :delegations="delegations" />
       <p
@@ -57,7 +57,7 @@
       </p>
 
       <div class="button-container" v-if="!validator.isBootstrap">
-        <b-button class="stake mr-3" @click="requestDelegation()">{{ $t("Stake tokens") }}</b-button>
+        <b-button class="stake mr-3" @click="requestDelegation()">{{ $t('views.validator_detail.stake_tokens') }}</b-button>
         <b-button
           class="consolidate"
           v-if="canConsolidate"
@@ -105,7 +105,15 @@ export default class ValidatorDetail extends Vue {
 
   lockDays = [14, 90, 180, 365]
 
-  states = ["Bonding", "Bonded", "Unbounding", "Redelegating"]
+  states: any[] = []
+
+  created() {
+    this.states = [
+      this.$t('views.validator_detail.states.bonding').toString(), 
+      this.$t('views.validator_detail.states.bonded').toString(), 
+      this.$t('views.validator_detail.states.unbounding').toString(), 
+      this.$t('views.validator_detail.states.redelegating').toString()]
+  }
 
   get state(): HasDPOSState {
     return this.$store.state

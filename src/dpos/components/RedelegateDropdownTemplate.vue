@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-xs-12">
 
-        {{ $t('components.modals.faucet_redelegate_modal.total_stake') }}
+        {{ $t('components.modals.faucet_redelegate_modal.total_stake') }}:
         <strong>
           <abbr>{{item.totalStaked | tokenAmount}}</abbr>
         </strong>

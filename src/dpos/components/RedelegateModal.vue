@@ -24,7 +24,7 @@
         </div>
 
         <span>
-          <small>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }} {{ validator.totalStaked | tokenAmount }}</small>
+          <small>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }}: {{ validator.totalStaked | tokenAmount }}</small>
         </span>
       </b-list-group-item>
       <div v-if="items.length === 0" class="not-found">

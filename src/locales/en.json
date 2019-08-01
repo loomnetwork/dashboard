@@ -167,11 +167,26 @@
       "unlocked": "Unlocked",
       "no_stakes": "You have not yet staked with {name}",
       "stake_tokens": "Stake tokens",
-      "consolidate": "Consolidate"
+      "consolidate": "Consolidate",
+      "loading_validators": "Loading validators....",
+      "delegator_stake": "Delegators Stake",
+      "active": "Active",
+      "inactive": "Inactive",
+      "my_stake": "My stakes",
+      "states": {
+        "bonding": "Bonding",
+        "bonded": "Bonded",
+        "unbonding": "Unbounding",
+        "redelegating": "Redelegating"
+      }
     },
     "validator_list": {
       "no_validators_available_please_try": "Error connecting to dashboard node. Please check back later.",
-      "validators": "Validators"
+      "validators": "Validators",
+      "next_election_in": "Next election in:",
+      "total_staked_amount": "Total staked amount",
+      "stake": "Stake",
+      "name": "Name"
     }
   },
   "components": {
@@ -369,7 +384,7 @@
       "faucet_redelegate_modal": {
         "select_validator": "Select a validator :",
         "fee": "Fee:",
-        "total_stake": "Total Staked:",
+        "total_stake": "Total Staked",
         "redelegate": "Redelegate",
         "target_error": "Please select a target validator",
         "same_target_error": "Cannot redelegate to the same validator",

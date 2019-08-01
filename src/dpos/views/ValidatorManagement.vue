@@ -1,7 +1,7 @@
 <template>
   <main class="validatorMgmt">
     <header>
-      <h1>Validator Management</h1>
+      <h1>{{ $t('components.faucet_sidebar.validator_management') }}</h1>
     </header>
     <Account class="account"/>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>

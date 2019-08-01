@@ -323,6 +323,7 @@
     "event:MainnetWithdrawalEvent": "Withdrawal",
     "event:WithdrawLoomCoin": "Withdraw (LOOM)",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
-    "TokenWithdrawn": "Token Withdrawn"
+    "TokenWithdrawn": "Token Withdrawn",
+    "ETHReceived": "Deposit (ETH)"
   }
 }

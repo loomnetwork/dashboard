@@ -19,7 +19,8 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
-import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired, setUserData } from "./mutations"
+import { getUserData } from "./getters"
+import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired, setUserData, addUserData, deleteUserData } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
@@ -100,8 +101,12 @@ export const ethereumModule = {
 
   getERC20,
 
+  getUserData: builder.commit(getUserData),
+
   setConfig: builder.commit(setConfig),
+  addUserData: builder.commit(addUserData),
   setUserData: builder.commit(setUserData),
+  removeUserData: builder.commit(deleteUserData),
 
   refreshBalance: builder.dispatch(refreshBalance),
   approve: builder.dispatch(approve),

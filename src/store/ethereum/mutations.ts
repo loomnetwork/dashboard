@@ -2,6 +2,10 @@ import { EthereumState } from "./types"
 import BN from "bn.js"
 import { Funds } from "@/types"
 
+function fetchUserData(address: string) {
+  return JSON.parse(localStorage.getItem(address) || "{}")
+}
+
 export function setBalance(state: EthereumState, funds: Funds) {
   state.balances[funds.symbol] = funds.weiAmount
 }
@@ -20,7 +24,20 @@ export function setClaimedReceiptHasExpired(state: EthereumState, payload: boole
 
 export function setUserData(state: EthereumState, address: string) {
   const tmp = new Object()
-  const cache = JSON.parse(localStorage.getItem(address) || "{}")
-  tmp[address] = cache
-  state.userData = tmp
+  const cache = fetchUserData(address)
+  state.userData = Object.assign(tmp, cache)
+}
+
+export function addUserData(state: EthereumState, payload: {[key: string]: any}) {
+  let cache = fetchUserData(state.address)
+  cache = Object.assign(cache, payload)
+  state.userData = cache
+  localStorage.setItem(state.address, JSON.stringify(state.userData))
+}
+
+export function deleteUserData(state: EthereumState, key: string) {
+  const cache = fetchUserData(state.address)
+  if (cache[key]) delete cache[key]
+  state.userData = cache
+  localStorage.setItem(state.address, JSON.stringify(state.userData))
 }

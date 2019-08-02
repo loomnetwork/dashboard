@@ -135,7 +135,9 @@
       "withdraw_to_ethereum": "Withdraw to Ethereum",
       "transfer_token": "Transfer tokens to other PlasmaChain accounts",
       "check_your_asset": "Check your Relentless assets (more coming soon)",
-      "transfer_asset_to_other": "Transfer assets to other addresses"  
+      "transfer_asset_to_other": "Transfer assets to other addresses",
+      "in_order_to_deploy_contract": "In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.",
+      "adding_key_requires": "Adding a key requires you to stake tokens."
     },
     "history": {
       "your_history": "Your History",
@@ -251,6 +253,25 @@
         "token_amount": "Token Amount",
         "topic": "Topic"
       }
+    },
+    "add_key": {
+      "deployer_public_keys": "Deployer Public Keys",
+      "add_new_key": "Add New Key",
+      "no_deployer_address": "You have no deployer address yet. Use the form below to add one",
+      "no_contract": "No contract deployed",
+      "low_balance": "LOOM balance low.",
+      "whitelisting_require": "Whitelisting keys requires at least {amount} LOOM. Your balance is {balance} LOOM",
+      "deposit_more": "Deposit more LOOM to Plasmachain",
+      "generate_new": "Generate New Key",
+      "your_loom_address": "Your Loom Public Address",
+      "use_exist_or_create": "Use an existing address or creare a new one by clicking on generate new key",
+      "select_tier": "Select a tier",
+      "in_order_to_deploy": "In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.",
+      "tier": "Tier",
+      "limited_offer": "Limited time offer",
+      "coming_soon": "Coming soon",
+      "add_key": "Add key",
+      "your_balance": "Your balance : {amount} LOOM"
     }
   },
   "components": {
@@ -609,6 +630,9 @@
   },
   "feedback_msg": {
     "eth_addr_copied": "Ethereum address copied.",
-    "plasma_addr_copied": "Plasma address copied."
+    "plasma_addr_copied": "Plasma address copied.",
+    "balance_not_enough": "Your balance isn't enough. Please deposit first.",
+    "address_existed": "This address is already exists in your deployer list.",
+    "address_copied": "Address copied."
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <header>
-      <h1>Deploy to Plasmachain</h1>
+      <h1>{{ $t('components.faucet_sidebar.deploy_to_plasmachain') }}</h1>
       <b-button
         class="help"
         :class="{active:showHelp}"
@@ -13,15 +13,15 @@
     </header>
     <section>
       <b-alert fade :show="showHelp">
-        <h5>Deployer Public Keys</h5>
-        <p>In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.</p>
+        <h5>{{ $t('views.add_key.deployer_public_keys') }}</h5>
+        <p>{{ $t('views.help.in_order_to_deploy_contract')}}</p>
         <hr>
-        <h5>Add New Key</h5>
-        <p>Adding a key requires you to stake tokens.</p>
+        <h5>{{ $t('views.add_key.add_new_key') }}</h5>
+        <p>{{ $t('views.help.adding_key_requires')}}</p>
       </b-alert>
       <b-card class="deployer-keys mb-4" no-body>
         <header>
-          <b-card-title>Deployer Public Keys</b-card-title>
+          <b-card-title>{{ $t('views.add_key.deployer_public_keys') }}</b-card-title>
           <b-button-group size="sm">
             <b-button
               variant="outline-primary"
@@ -39,7 +39,7 @@
           <p
             v-if="publicKeys.length === 0"
             class="mt-3"
-          >You have no deployer address yet. Use the form bellow to add one</p>
+          >{{ $t('views.add_key.no_deployer_address') }}</p>
         </b-card-body>
         <b-list-group class="deployer-keys" flush>
           <b-list-group-item v-for="pk in publicKeys" :key="pk.hex" class="flex-column">
@@ -49,14 +49,14 @@
                 <fa icon="paste" @click="copyAddress(pk.hex)" class="icon-copy"/>
               </address>
               <div class="key" v-else>{{pk.base64}}</div>
-              <b-badge variant="success">Tier {{pk.tier + 1}}</b-badge>
+              <b-badge variant="success">{{ $t('views.add_key.tier') }} {{pk.tier + 1}}</b-badge>
             </div>
             <b-collapse :id="pk.hex">
               <div class="collapse-content">
                 <p v-for="(addr, index) in deployedContract[pk.hex]" :key="addr">
                   {{ index + 1 + ') ' + addr }}
                 </p>
-                <p v-if="deployedContract[pk.hex].length === 0">No contract deployed</p>
+                <p v-if="deployedContract[pk.hex].length === 0">{{ $t('views.add_key.no_contract') }}</p>
               </div>
             </b-collapse>
           </b-list-group-item>
@@ -64,28 +64,31 @@
       </b-card>
 
       <b-alert variant="warning" :show="balanceTooLow" style="max-width: 600px;">
-        <h5 class="alert-heading">LOOM balance low.</h5>
-        <p>Whitelisting keys requires at least {{tiers[0].fee | tokenAmount}} LOOM. Your balance is {{ loomBalance }} LOOM</p>
+        <h5 class="alert-heading">{{ $t('views.add_key.low_balance') }}</h5>
+        <i18n tag="p" path="views.add_key.whitelisting_require">
+          <b place="amount">{{tiers[0].fee | tokenAmount}}</b>
+          <b place="balance">{{ loomBalance }}</b>
+        </i18n>
         <footer style="display: flex;justify-content: flex-end;">
-          <b-button variant="primary" @click="goDeposit">Deposit more LOOM to Plasmachain</b-button>
+          <b-button variant="primary" @click="goDeposit">{{ $t('views.add_key.deposit_more') }}</b-button>
         </footer>
       </b-alert>
 
       <!-- Add new key section -->
       <b-card class="my-5 add-key-form" style="max-width: 600px;" no-body>
-        <b-card-header>Add New Key</b-card-header>
+        <b-card-header>{{ $t('views.add_key.add_new_key') }}</b-card-header>
 
         <b-card-body>
           <p
             @click.stop.prevent="showSeedPhraseModal"
             class="text-right text-link"
             style="position: absolute;right: 20px;"
-          >Generate New Key</p>
+          >{{ $t('views.add_key.generate_new') }}</p>
           <b-form-group
             id="da-input-group"
-            label="Your Loom Public Address"
+            :label="$t('views.add_key.your_loom_address')"
             label-for="deployer-address-input"
-            description="Use an existing address or creare a new one by clicking on generate new key"
+            :description="$t('views.add_key.use_exist_or_create')"
           >
             <input-address
               id="deployer-address-input"
@@ -96,9 +99,9 @@
             />
           </b-form-group>
           <b-form-group
-            label="Select a tier"
+            :label="$t('views.add_key.select_tier')"
             label-for="whitelist-tier-input"
-            description="In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators."
+            :description="$t('views.add_key.in_order_to_deploy')"
           >
             <div class="tier-options">
               <label
@@ -108,26 +111,26 @@
                 :class="{selected: tier === tierSelected}"
               >
                 <input type="radio" v-model="tierSelected" :value="tier">
-                <strong>Tier {{tier.tierId +1}}</strong>
-                <div class="spec">1 year</div>
+                <strong>{{ $t('views.add_key.tier') }} {{tier.tierId +1}}</strong>
+                <div class="spec">{{ $t('components.modals.faucet_delegate_modal.one_year') }}</div>
                 <div class="fee">{{tier.fee | tokenAmount}} LOOM</div>
                 <div class="fee" style="border: 11px solid;border-radius: 12px;border-width: 0px 2px;width: 95px;margin: 0 auto;">
                   <span style="text-decoration: line-through;display: block;">$499</span>
                   <big style="font-weight:bold">$99</big>
                 </div>
-                <div class="spec" style="color:red; text-transform:uppercase"><strong>Limited time offer</strong></div>
+                <div class="spec" style="color:red; text-transform:uppercase"><strong>{{ $t('views.add_key.limited_offer') }}</strong></div>
       
               </label>
               <label class="radio tier disabled" v-for="i in [1,2,3]" :key="i">
                 <input type="radio" disabled v-model="tierSelected" :value="-1">
-                <div class="spec">Coming soon</div>
+                <div class="spec">{{ $t('views.add_key.coming_soon') }}</div>
               </label>
             </div>
           </b-form-group>
           <div class="balance">
-            <span>Your balance: {{ loomBalance }} LOOM</span>
+            <span>{{ $t('views.add_key.your_balance', { amount: loomBalance }) }}</span>
             <router-link to="/wallet">
-              <b-button variant="outline-primary">Deposit</b-button>
+              <b-button variant="outline-primary">{{ $t('views.my_account.deposit') }}</b-button>
             </router-link>
           </div>
         </b-card-body>
@@ -139,7 +142,7 @@
             :disabled="Object.keys(tierSelected).length == 0 || !newPublicAddress || !isValidAddress"
             v-model="loomAddress"
             size="lg"
-          >Add Key</b-button>
+          >{{ $t('views.add_key.add_key') }}</b-button>
         </b-card-footer>
       </b-card>
     </section>
@@ -219,13 +222,15 @@ export default class AddKey extends Vue {
 
   async addKey(tier: ITier) {
     if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance)) {
-      this.showError("Your balance isn't enough. Please deposit first.")
+      this.showError(this.$t('feedback_msg.balance_not_enough').toString())
+      // this.showError("Your balance isn't enough. Please deposit first.")
       return
     }
 
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     if (this.publicKeys.filter((address) => address.hex === loomAddress).length > 0) {
-      this.showError("This address is already exists in your deployer list.")
+      this.showError(this.$t('feedback_msg.address_existed').toString())
+      // this.showError("This address is already exists in your deployer list.")
       return
     }
 
@@ -249,7 +254,7 @@ export default class AddKey extends Vue {
 
   copyAddress(hex: string) {
     this.$copyText(formatToLoomAddress(hex)).then(() =>
-      feedbackModule.showSuccess("Address copied."),
+      feedbackModule.showSuccess(this.$t('feedback_msg.address_copied').toString()),
       console.error,
     )
   }

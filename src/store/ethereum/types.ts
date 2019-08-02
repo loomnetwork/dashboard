@@ -12,6 +12,8 @@ export interface EthereumConfig {
   endpoint: string
   blockExplorer: string
   contracts: { [name: string]: string }
+  formaticKey?: string
+  portisKey?: string
 }
 
 // Interface for application stores than include EthereumState
@@ -63,7 +65,7 @@ export interface WalletType {
   desktop: boolean
   mobile: boolean
   // createProvider(): Promise<ethers.providers.Web3Provider>
-  createProvider(): Promise<provider>
+  createProvider(config: EthereumConfig): Promise<provider>
 }
 
 export interface MultiAccountWallet {

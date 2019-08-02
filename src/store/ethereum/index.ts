@@ -24,6 +24,8 @@ import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
+import { PortisAdapter } from "./wallets/portis";
+import { FortmaticAdapter } from "./wallets/fortmatic";
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -33,6 +35,8 @@ const ZERO = new BN("0")
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["ledger", LedgerAdapter],
+  ["portis", PortisAdapter],
+  ["fortmatic", FortmaticAdapter],
 ])
 
 const initialState: EthereumState = {
@@ -143,7 +147,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
     feedbackModule.setStep("Connecting wallet")
 
     await wallet
-      .createProvider()
+      .createProvider(context.state)
       .then(async (web3provider) => await setProvider(context, web3provider))
       .catch((error) => {
         Sentry.captureException(error)

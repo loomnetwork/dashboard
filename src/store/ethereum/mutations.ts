@@ -17,3 +17,10 @@ export function setLatestWithdrawalBlock(state: EthereumState, payload: number) 
 export function setClaimedReceiptHasExpired(state: EthereumState, payload: boolean) {
   state.claimedReceiptHasExpired = payload
 }
+
+export function setUserData(state: EthereumState, address: string) {
+  const tmp = new Object()
+  const cache = JSON.parse(localStorage.getItem(address) || "{}")
+  tmp[address] = cache
+  state.userData = tmp
+}

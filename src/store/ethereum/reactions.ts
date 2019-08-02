@@ -16,7 +16,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
     }
 
     trackUser(address)
-    ethereumModule.setUserData(address)
+    ethereumModule.initUserData(address)
     ethereumModule.pollLastBlockNumber()
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")

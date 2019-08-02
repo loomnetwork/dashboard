@@ -22,13 +22,13 @@ export function setClaimedReceiptHasExpired(state: EthereumState, payload: boole
   state.claimedReceiptHasExpired = payload
 }
 
-export function setUserData(state: EthereumState, address: string) {
+export function initUserData(state: EthereumState, address: string) {
   const tmp = new Object()
   const cache = fetchUserData(address)
   state.userData = Object.assign(tmp, cache)
 }
 
-export function addUserData(state: EthereumState, payload: {[key: string]: any}) {
+export function setUserData(state: EthereumState, payload: {[key: string]: any}) {
   let cache = fetchUserData(state.address)
   cache = Object.assign(cache, payload)
   state.userData = cache

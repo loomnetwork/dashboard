@@ -246,7 +246,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     }
 
     feedback.endTask()
-    feedback.showInfo("Withdrawal already in progress.")
+    feedback.showInfo(i18n.t("feedback_msg.info.withdrawal_in_progress").toString())
     gatewayModule.setWithdrawalReceipts(null)
     setTimeout(() => {
       gatewayModule.setWithdrawalReceipts(receipt)
@@ -270,7 +270,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     // For binance no more steps are required
     if (chain === "binance") {
       feedback.endTask()
-      feedback.showInfo("Withdrawal request sent. Your binance account will receive the funds in a moment.")
+      feedback.showInfo(i18n.t("feedback_msg.info.withdrawal_request_sent").toString())
       return
     }
     feedback.setStep(i18n.t("feedback_msg.step.awaiting_oracle").toString())

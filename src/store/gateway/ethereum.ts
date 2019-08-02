@@ -291,7 +291,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       feedbackModule.endTask()
       if ("imToken" in window) {
         console.log("imToken error", e)
-        feedbackModule.showInfo("Please track the transaction on your wallet")
+        feedbackModule.showInfo(i18n.t("feedback_msg.info.please_track_transaction").toString())
       } else {
         console.error(e)
         feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
@@ -327,7 +327,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     } catch (err) {
       if ("imToken" in window) {
         console.log("imToken error", err)
-        fb.showInfo("Please track deposit approval the transaction on your wallet.")
+        fb.showInfo(i18n.t("feedback_msg.info.please_track_deposit_approval").toString())
       } else {
         console.error(err)
         fb.showError("Deposit approval failed.")
@@ -365,7 +365,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
         fb.showLoadingBar(false)
         if ("imToken" in window) {
           console.log("imToken error", err)
-          fb.showInfo("Please track the transaction on your wallet")
+          fb.showInfo(i18n.t("feedback_msg.info.please_track_transaction").toString())
         } else {
           console.error(err)
           fb.showError(i18n.t("components.gateway.deposit.failure").toString())

@@ -673,7 +673,12 @@
       "err_while_claiming": "Error while claiming rewards. Please contact support."
     },
     "info": {
-      "reward_claimed": "Rewards succesfully claimed."
+      "reward_claimed": "Rewards succesfully claimed.",
+      "please_track_transaction": "Please track the transaction on your wallet",
+      "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
+      "withdrawal_in_progress": "Withdrawal already in progress.",
+      "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
+      "please_sign_tx": "Please sign the tx using your wallet."
     },
     "eth_addr_copied": "Ethereum address copied.",
     "plasma_addr_copied": "Plasma address copied.",

@@ -670,7 +670,17 @@
     "error": {
       "err_while_redelegate": "Error while redelegating. Please contact support.",
       "err_while_undelegate": "Error while undelegating. Please contact support.",
-      "err_while_claiming": "Error while claiming rewards. Please contact support."
+      "err_while_claiming": "Error while claiming rewards. Please contact support.",
+      "err_while_delegate": "Unexpected error while delegating, please contact support.",
+      "insufficient_funds": "Insufficient funds.",
+      "approval_failed": "Approval failed.",
+      "err_while_register": "Error while registering. Please contact support.",
+      "could_not_deposit_eth": "Could not deposit ETH, please make sure you pay enough gas for the transaction.",
+      "deposit_approval_failed": "Deposit approval failed.",
+      "withdraw_failed": "Withdraw failed, please try again or contact support.",
+      "supplied_key_already_mapped": "The supplied key is already mapped.",
+      "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
+      "failed_to_get_receipt": "Failed to get receipt"
     },
     "info": {
       "reward_claimed": "Rewards succesfully claimed.",

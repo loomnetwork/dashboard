@@ -219,7 +219,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   } catch (err) {
     console.error(err)
     feedback.endTask()
-    feedback.showError(" failed, to get receipt")
+    feedback.showError(i18n.t("feedback_msg.error.failed_to_get_receipt").toString())
     Sentry.captureException(err)
     return
   }
@@ -284,7 +284,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       return
     }
     feedback.endTask()
-    feedback.showError("Withdraw failed, please try again.")
+    feedback.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
     Sentry.withScope((scope) => {
       scope.setExtra("plasmaWithdraw", {
         withdraw: JSON.stringify({
@@ -318,7 +318,7 @@ export async function binanceResubmitWithdrawal(context: ActionContext) {
   } catch (error) {
     console.error(error)
     feedback.endTask()
-    feedback.showError("Withdraw failed, please try again.")
+    feedback.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
   }
   feedback.endTask()
 }

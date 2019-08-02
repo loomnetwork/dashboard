@@ -91,9 +91,9 @@ export async function createMapping(context: ActionContext, privateKey: string) 
   } catch (e) {
     if (e.message.includes("identity mapping already exists")) {
       state.requireMapping = true
-      feedbackModule.showError("The supplied key is already mapped.")
+      feedbackModule.showError(i18n.t("feedback_msg.error.supplied_key_already_mapped").toString())
     } else {
-      feedbackModule.showError("Unexpected error while adding account mapping.")
+      feedbackModule.showError(i18n.t("feedback_msg.error.unexpected_error_while_add_account").toString())
 
       console.error(e)
       console.error(

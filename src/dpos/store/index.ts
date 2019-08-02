@@ -259,7 +259,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Unexpected error while delegating, please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_delegate").toString())
     console.error(error)
     Sentry.withScope((scope) => {
       scope.setExtra("delegations", {
@@ -436,7 +436,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
   const weiAmount = parseToWei("1250000")
 
   if (balance.lt(weiAmount)) {
-    feedback.showError("Insufficient funds.")
+    feedback.showError(i18n.t("feedback_msg.error.insufficient_funds").toString())
     return
   }
 
@@ -449,7 +449,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
       await plasmaModule.approve({ symbol: token, weiAmount, to: addressString })
     } catch (err) {
       console.error(err)
-      feedback.showError("Approval failed.")
+      feedback.showError(i18n.t("feedback_msg.error.approval_failed").toString())
       return
     }
   }
@@ -467,7 +467,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
     feedback.showSuccess(i18n.t("feedback_msg.success.register_success").toString())
   } catch (err) {
     console.error(err)
-    feedback.showError("Error while registering. Please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_register").toString())
   }
 }
 

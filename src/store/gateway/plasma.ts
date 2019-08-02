@@ -265,7 +265,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     if (approved === false) {
       return
     }
-    feedback.setStep("Depositing to Plasmachain Gateway...")
+    feedback.setStep(i18n.t("feedback_msg.step.depositing_to_plasma").toString())
     await gateway.withdraw(weiAmount, recepient)
     // For binance no more steps are required
     if (chain === "binance") {
@@ -273,7 +273,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       feedback.showInfo("Withdrawal request sent. Your binance account will receive the funds in a moment.")
       return
     }
-    feedback.setStep("Awaiting Oracle signature...")
+    feedback.setStep(i18n.t("feedback_msg.step.awaiting_oracle").toString())
     receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
     feedback.endTask()
@@ -312,7 +312,7 @@ export async function binanceResubmitWithdrawal(context: ActionContext) {
   const gateway = service().binanceGateway
   feedback.setTask(i18n.t("feedback_msg.task.withdraw").toString())
   try {
-    feedback.setStep("Completing withdrawal to binance...")
+    feedback.setStep(i18n.t("feedback_msg.step.complete_withdrawal_binance").toString())
     await gateway.resubmitWithdrawalAsync()
 
   } catch (error) {

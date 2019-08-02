@@ -249,7 +249,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   }
 
   try {
-    feedback.setStep("Delegating...")
+    feedback.setStep(i18n.t("feedback_msg.step.delegating").toString())
     await context.state.contract!.delegateAsync(
       delegation.validator.address,
       delegation.amount,

@@ -644,6 +644,7 @@
       "new_key": "New key"
     },
     "step": {
+      "delegating": "Delegating...",
       "scheduling_redelgate": "Scheduling redelegation...",
       "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
       "undelegating_from": "Undelegating from ",
@@ -651,7 +652,20 @@
       "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
       "claiming_reward": "Claiming rewards...",
       "depositing_eth": "Depositing ETH",
-      "checking_receipt": "Checking for pre-existing receipts..."
+      "checking_receipt": "Checking for pre-existing receipts...",
+      "check_account_mapping": "Checking account mapping",
+      "create_new_mapping": "Creating a new mapping from ethereum account",
+      "depositing_to_plasma": "Depositing to Plasmachain Gateway...",
+      "awaiting_oracle": "Awaiting Oracle signature...",
+      "complete_withdrawal_binance": "Completing withdrawal to binance...",
+      "transfering_card": "Transfering cards",
+      "transfering_pack": "Transfering packs",
+      "refresh_balance": "Refreshing balance",
+      "connecting_plasma": "Connecting to Plasmachain",
+      "adding_new_deployer": "Adding new deployer",
+      "generating_new_key": "Generating new key",
+      "approving_spending": "Approving spending of {tokenAmount} {symbol}",
+      "transfering_token": "Transfering {tokenAmount} {symbol}"
     },
     "error": {
       "err_while_redelegate": "Error while redelegating. Please contact support.",

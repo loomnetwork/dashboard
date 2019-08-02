@@ -117,7 +117,7 @@ export async function transferCards(
   },
 ) {
   feedbackModule.setTask(i18n.t("feedback_msg.task.batch_transfer").toString())
-  feedbackModule.setStep("Transfering cards")
+  feedbackModule.setStep(i18n.t("feedback_msg.step.transfering_card").toString())
   log("transferCards payload", payload)
   try {
     // caller address is either eth if eth signer is there or plasma address i
@@ -169,7 +169,7 @@ export async function transferPacks(
   log("transferPacks payload", payload)
   try {
     feedbackModule.setTask(i18n.t("feedback_msg.task.pack_transfer").toString())
-    feedbackModule.setStep("Transfering packs")
+    feedbackModule.setStep(i18n.t("feedback_msg.step.transfering_pack").toString())
     const ethAddress = await plasmaModule.getCallerAddress()
     const ethAddressString = ethAddress.local.toString()
     const receiver = formatFromLoomAddress(payload.receiver)
@@ -177,7 +177,7 @@ export async function transferPacks(
       .transfer(receiver, payload.amount)
       .send({ from: ethAddressString })
     log("transfer packs result", result)
-    feedbackModule.setStep("Refreshing balance")
+    feedbackModule.setStep(i18n.t("feedback_msg.step.refresh_balance").toString())
     await assetsModule.checkPackBalance()
 
     feedbackModule.endTask()

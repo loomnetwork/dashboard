@@ -120,7 +120,7 @@ async function addDeployer(
 
   let result
   try {
-    feedbackModule.setStep("Adding new deployer")
+    feedbackModule.setStep(i18n.t("feedback_msg.step.adding_new_deployer").toString())
     // TODO: update this if we have more tier: pass tier
     result = await userDeployerWhitelist.addDeployerAsync(deployAddress)
     log("addDeployerAsync result", result)
@@ -218,7 +218,7 @@ function formatDeployersAddress(
  */
 async function generateSeeds(context: WhiteListContext) {
   feedbackModule.setTask(i18n.t("feedback_msg.task.new_key").toString())
-  feedbackModule.setStep("Generating new key")
+  feedbackModule.setStep(i18n.t("feedback_msg.step.generating_new_key").toString())
 
   const mnemonic = generateMnemonic()
   const seed = mnemonicToSeedSync(mnemonic)

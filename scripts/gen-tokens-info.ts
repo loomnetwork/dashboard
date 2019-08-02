@@ -1,7 +1,6 @@
 import { Client, CryptoUtils, Address, LoomProvider } from "loom-js"
 
 import production from "../src/config/production"
-import extDev from "../src/config/ext-dev"
 import stage from "../src/config/stage"
 import dev from "../src/config/dev"
 
@@ -26,8 +25,8 @@ const ERC20GatewayABI_v1 = require("loom-js/dist/mainnet-contracts/ERC20Gateway.
 const envName = process.argv[2]
 
 const envs = envName === undefined ?
-    [production, stage, dev, extDev] :
-    [production, stage, dev, extDev].filter((env) => env.name === envName)
+    [production, stage, dev] :
+    [production, stage, dev].filter((env) => env.name === envName)
 
 from(envs)
     .pipe(concatMap(generate))
@@ -139,7 +138,6 @@ async function loadBinanceMappings(client: Client, address: Address) {
 }
 
 function mergeMappings(byChain: Mapping[][]) {
-    return []
     return byChain.reduce((joined, chainMappings) => {
         if (!joined) return chainMappings
         chainMappings.forEach((mapping) => {

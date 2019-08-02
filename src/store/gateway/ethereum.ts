@@ -282,8 +282,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
   if (funds.symbol === "ETH") {
-    feedbackModule.setTask("ETH deposit")
-    feedbackModule.setStep("Depositing ETH")
+    feedbackModule.setTask(i18n.t("feedback_msg.task.eth_deposit").toString())
+    feedbackModule.setStep(i18n.t("feedback_msg.step.depositing_eth").toString())
     try {
       await gateway.deposit(weiAmount, context.rootState.ethereum.address)
       feedbackModule.endTask()

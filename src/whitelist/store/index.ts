@@ -104,7 +104,7 @@ async function addDeployer(
     context.rootState.plasma.client!.chainId,
     LocalAddress.fromHexString(payload.deployer),
   )
-  feedbackModule.setTask("Adding deployer key")
+  feedbackModule.setTask(i18n.t("feedback_msg.task.adding_deployer").toString())
   try {
     const contractAddress = userDeployerWhitelist.address.local.toString()
     const approvedResult = await plasmaModule.approve({
@@ -217,7 +217,7 @@ function formatDeployersAddress(
  * @param context
  */
 async function generateSeeds(context: WhiteListContext) {
-  feedbackModule.setTask("New key")
+  feedbackModule.setTask(i18n.t("feedback_msg.task.new_key").toString())
   feedbackModule.setStep("Generating new key")
 
   const mnemonic = generateMnemonic()

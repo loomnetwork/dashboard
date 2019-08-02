@@ -8,7 +8,7 @@ import { CardDetail, PackDetail } from "../types"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { PACKS_NAME } from "./reactions"
 import { plasmaModule } from ".."
-import { i18n } from "../../../i18n"
+import { i18n } from "@/i18n"
 import debug from "debug"
 import { feedbackModule } from "@/feedback/store"
 const log = debug("assets")
@@ -116,7 +116,7 @@ export async function transferCards(
     receiver: string,
   },
 ) {
-  feedbackModule.setTask("Batch transfer")
+  feedbackModule.setTask(i18n.t("feedback_msg.task.batch_transfer").toString())
   feedbackModule.setStep("Transfering cards")
   log("transferCards payload", payload)
   try {
@@ -168,7 +168,7 @@ export async function transferPacks(
 ) {
   log("transferPacks payload", payload)
   try {
-    feedbackModule.setTask("Pack transfer")
+    feedbackModule.setTask(i18n.t("feedback_msg.task.pack_transfer").toString())
     feedbackModule.setStep("Transfering packs")
     const ethAddress = await plasmaModule.getCallerAddress()
     const ethAddressString = ethAddress.local.toString()

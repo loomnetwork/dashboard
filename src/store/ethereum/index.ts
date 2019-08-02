@@ -23,6 +23,7 @@ import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
+import { i18n } from "@/i18n"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -138,8 +139,8 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
   context.state.walletType = walletType
   if (wallet.isMultiAccount === false) {
-    feedbackModule.setTask("Connecting wallet")
-    feedbackModule.setStep("Connecting wallet")
+    feedbackModule.setTask(i18n.t("feedback_msg.task.connect_wallet").toString())
+    feedbackModule.setStep(i18n.t("feedback_msg.task.connect_wallet").toString())
 
     await wallet
       .createProvider()

@@ -629,10 +629,43 @@
     "submit": "Submit"
   },
   "feedback_msg": {
+    "task": {
+      "delegate": "Delegate",
+      "connect_wallet": "Connecting wallet",
+      "redelegating": "Redelegating",
+      "consolidating": "Consolidating",
+      "undelegating": "Undelegating",
+      "claiming_reward": "Claiming rewards",
+      "eth_deposit": "ETH Deposit",
+      "withdraw": "withdraw",
+      "batch_transfer": "Batch Transfer",
+      "pack_transfer": "Pack transfer",
+      "adding_deployer": "Adding deployer key",
+      "new_key": "New key"
+    },
+    "step": {
+      "scheduling_redelgate": "Scheduling redelegation...",
+      "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
+      "undelegating_from": "Undelegating from ",
+      "checking_reward": "Checking rewards...",
+      "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
+      "claiming_reward": "Claiming rewards...",
+      "depositing_eth": "Depositing ETH",
+      "checking_receipt": "Checking for pre-existing receipts..."
+    },
+    "error": {
+      "err_while_redelegate": "Error while redelegating. Please contact support.",
+      "err_while_undelegate": "Error while undelegating. Please contact support.",
+      "err_while_claiming": "Error while claiming rewards. Please contact support."
+    },
+    "info": {
+      "reward_claimed": "Rewards succesfully claimed."
+    },
     "eth_addr_copied": "Ethereum address copied.",
     "plasma_addr_copied": "Plasma address copied.",
     "balance_not_enough": "Your balance isn't enough. Please deposit first.",
     "address_existed": "This address is already exists in your deployer list.",
-    "address_copied": "Address copied."
+    "address_copied": "Address copied.",
+    "delegate": "Delegate"
   }
 }

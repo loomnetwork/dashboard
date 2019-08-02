@@ -24,6 +24,8 @@ import { plasmaModule } from "../plasma"
 import { TransferRequest } from "../plasma/types"
 import * as Sentry from "@sentry/browser"
 
+import { i18n } from "@/i18n"
+
 const log = debug("dash.gateway.plasma")
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
@@ -211,8 +213,8 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   log("plasmaWithdraw", chain, symbol)
 
   try {
-    feedback.setTask("withdraw")
-    feedback.setStep("Checking for pre-existing receipts...")
+    feedback.setTask(i18n.t("feedback_msg.task.withdraw").toString())
+    feedback.setStep(i18n.t("feedback_msg.step.checking_receipt").toString())
     receipt = await gateway.withdrawalReceipt()
   } catch (err) {
     console.error(err)
@@ -308,7 +310,7 @@ export async function loadTokenMappings(context: ActionContext, chain: string) {
 
 export async function binanceResubmitWithdrawal(context: ActionContext) {
   const gateway = service().binanceGateway
-  feedback.setTask("withdraw")
+  feedback.setTask(i18n.t("feedback_msg.task.withdraw").toString())
   try {
     feedback.setStep("Completing withdrawal to binance...")
     await gateway.resubmitWithdrawalAsync()

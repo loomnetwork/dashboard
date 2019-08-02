@@ -230,8 +230,8 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     if (chain === "binance") {
       feedback.endTask()
       feedback.showAlert({
-        title: "Withdrawal ongoing",
-        message: "A withdrawal is still being processed. Please try again later.",
+        title: i18n.t("feedback_msg.alert.title.withdraw_ongoing").toString(),
+        message: i18n.t("feedback_msg.alert.message.withdraw_in_process").toString(),
       })
       return
     }
@@ -239,8 +239,8 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
       feedback.endTask()
       feedback.showAlert({
-        title: "Withdrawal ongoing",
-        message: "An existing withdrawal is currently being processed. Please try again later.",
+        title: i18n.t("feedback_msg.alert.title.withdraw_ongoing").toString(),
+        message: i18n.t("feedback_msg.alert.message.existing_withdraw_being_process").toString(),
       })
       return
     }

@@ -324,6 +324,6 @@
     "event:WithdrawLoomCoin": "인출 (LOOM)",
     "event:TokenWithdrawalSigned": "서명된 인출",
     "TokenWithdrawn": "출금한 토큰",
-    "ETHReceived": "Deposit (ETH)"
+    "ETHReceived": "입금 (ETH)"
   }
 }

@@ -19,7 +19,6 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
-import { getUserData } from "./getters"
 import {
   setBlockNumber,
   setLatestWithdrawalBlock,
@@ -77,7 +76,9 @@ const initialState: EthereumState = {
   claimedReceiptHasExpired: false,
   history: [],
   metamaskChangeAlert: false,
-  userData: {},
+  userData: {
+    pendingWithdrawal: false,
+  },
 }
 
 // web3 instance
@@ -107,9 +108,6 @@ export const ethereumModule = {
   },
 
   getERC20,
-
-  getUserData: builder.commit(getUserData),
-
   setConfig: builder.commit(setConfig),
   setUserData: builder.commit(setUserData),
   initUserData: builder.commit(initUserData),

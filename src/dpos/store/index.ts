@@ -464,7 +464,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
       candidate.whitelistLocktimeTier,
     )
 
-    feedback.showSuccess("Successfully registered.")
+    feedback.showSuccess(i18n.t("feedback_msg.success.register_success").toString())
   } catch (err) {
     console.error(err)
     feedback.showError("Error while registering. Please contact support.")

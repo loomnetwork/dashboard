@@ -19,7 +19,14 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
-import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired } from "./mutations"
+import {
+  setBlockNumber,
+  setLatestWithdrawalBlock,
+  setClaimedReceiptHasExpired,
+  initUserData,
+  setUserData,
+  deleteUserData,
+} from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
@@ -73,6 +80,9 @@ const initialState: EthereumState = {
   claimedReceiptHasExpired: false,
   history: [],
   metamaskChangeAlert: false,
+  userData: {
+    pendingWithdrawal: false,
+  },
 }
 
 // web3 instance
@@ -102,8 +112,10 @@ export const ethereumModule = {
   },
 
   getERC20,
-
   setConfig: builder.commit(setConfig),
+  setUserData: builder.commit(setUserData),
+  initUserData: builder.commit(initUserData),
+  removeUserData: builder.commit(deleteUserData),
 
   refreshBalance: builder.dispatch(refreshBalance),
   approve: builder.dispatch(approve),

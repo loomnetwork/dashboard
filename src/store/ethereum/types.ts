@@ -54,6 +54,9 @@ export interface EthereumState extends EthereumConfig {
   claimedReceiptHasExpired: boolean,
   history: any[],
   metamaskChangeAlert: boolean,
+  userData: {
+    pendingWithdrawal: boolean,
+  },
 }
 
 export interface WalletType {

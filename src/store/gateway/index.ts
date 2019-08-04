@@ -125,11 +125,8 @@ async function checkIfPastWithdrawalEventExists() {
   const notExpired = history.find((event) => {
     return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) >= blockNumber)
   })
-  const inLocalStorage = JSON.parse(
-    localStorage.getItem("pendingWithdrawal") || "false",
-  )
+  const inLocalStorage = ethereumModule.state.userData.pendingWithdrawal
   if (notExpired!! || inLocalStorage) {
-    console.info("Remaining blocks until expiry", blockNumber - notExpired.blockNumber)
     return true
   }
   return false

@@ -416,11 +416,11 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   fb.showLoadingBar(true)
   try {
     await gateway.withdraw(receipt)
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(true))
+    ethereumModule.setUserData({pendingWithdrawal: true})
     fb.showSuccess("Transaction sent successfully.")
   } catch (err) {
     // imToken throws even if transaction succeeds
-    localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+    ethereumModule.setUserData({pendingWithdrawal: false})
     if ("imToken" in window) {
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {
@@ -440,7 +440,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       Sentry.captureException(err)
     })
   }
-  localStorage.setItem("pendingWithdrawal", JSON.stringify(false))
+  ethereumModule.setUserData({pendingWithdrawal: false})
   fb.showLoadingBar(false)
 }
 

@@ -13,36 +13,34 @@
     <div class="deposit-container" v-if="visible">
       <div class="content" v-if="step === 1">
         <div class="description">
-          Please go to
-          <a
-            :href="`https://binance.org/en/balances`"
-            target="_blank"
-          >https://binance.org/en/balances</a> and fill in the form as shown below.
+          <i18n path="components.gateway.deposit_binance.description">
+            <a place="link" :href="$t('components.gateway.deposit_binance.binance_link')" target="_blank">{{ $t('components.gateway.deposit_binance.binance_link') }}</a>
+          </i18n>
         </div>
         <div class="deposit-form">
-          <p>Send Asset</p>
+          <p>{{ $t('components.gateway.deposit_binance.send_asset') }}</p>
           <div class="flex-row my-4">
             <div class="yellow-line"></div>
             <div class="gray-line"></div>
           </div>
-          <p>Select Asset</p>
+          <p>{{ $t('components.gateway.deposit_binance.select_asset') }}</p>
           <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
-          <p>To Address</p>
-          <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled></b-form-input>
-          <p>Amount to send</p>
-          <b-form-input placeholder="Amount" value="enter the deposit amount " disabled></b-form-input>
-          <p>Memo</p>
-          <b-form-textarea rows="3" placeholder="Memo text" disabled v-model="form.memo"></b-form-textarea>
+          <p>{{ $t('components.gateway.deposit_binance.to_address') }}</p>
+          <b-form-input :placeholder="$t('input_placeholder.gateway_addr')" :value="form.gateway" disabled></b-form-input>
+          <p>{{ $t('components.gateway.deposit_binance.send_amount') }}</p>
+          <b-form-input :placeholder="$t('input_placeholder.amount')" :value="$t('components.gateway.deposit_binance.send_amount_placeholder')" disabled></b-form-input>
+          <p>{{ $t('components.gateway.deposit_binance.memo') }}</p>
+          <b-form-textarea rows="3" :placeholder="$t('input_placeholder.memo')" disabled v-model="form.memo"></b-form-textarea>
         </div>
       </div>
       <div class="content" v-else-if="step === 2">
-        <p>Once the transaction is processed on binance, your balance on plasmachain will be updated.</p>
+        <p>{{ $t('components.gateway.deposit_binance.deposit_message') }}</p>
       </div>
     </div>
     <div slot="modal-footer" class="w-100 space-between">
       <b-button @click="onBack">{{ backButtonText }}</b-button>
-      <b-button :class="{ hide: step >= 2 }" variant="primary" @click="onNext">Next</b-button>
-      <b-button :class="{ hide: step < 2 }" variant="primary" @click="visible = false">Close</b-button>
+      <b-button :class="{ hide: step >= 2 }" variant="primary" @click="onNext">{{ $t('components.gateway.deposit_binance.next') }}</b-button>
+      <b-button :class="{ hide: step < 2 }" variant="primary" @click="visible = false">{{ $t('components.gateway.deposit_binance.close') }}</b-button>
     </div>
   </b-modal>
 </template>
@@ -90,11 +88,11 @@ export default class DepositBinance extends Vue {
   }
 
   get title() {
-    return this.step === 4 ? "Success" : "Deposit to Plasmachain from Binance"
+    return this.step === 4 ? this.$t("components.gateway.deposit_binance.title_success") : this.$t("components.gateway.deposit_binance.title_deposit")
   }
 
   get backButtonText() {
-    return this.step === 1 ? "Cancel" : "Back"
+    return this.step === 1 ? this.$t("components.gateway.deposit_binance.cancel") : this.$t("components.gateway.deposit_binance.back")
   }
   onBack() {
     if (this.step === 1) {

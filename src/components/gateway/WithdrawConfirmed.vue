@@ -3,19 +3,19 @@
     <section v-if="status === 'default'">
       <b-container fluid>
         <div class="lead">
-          <p>{{$t("components.modals.confirm_withdrawal_modal.confirm_withdrawl", {chain,amount, token: this.symbol})}}</p>
+          <p>{{$t('components.gateway.confirm_withdrawal_modal.confirm_withdrawl', {chain,amount, token: this.symbol})}}</p>
         </div>
       </b-container>
     </section>
     <section v-if="status === 'error'">
       <b-container fluid>
         <div class="lead">
-          <p>An error occurred, please try again.</p>
+          <p>{{$t('messages.error_try_again')}}</p>
         </div>
       </b-container>
     </section>
     <template slot="modal-footer" v-if="status === 'default'">
-      <b-btn @click="completeWithdrawalHandler" variant="primary">Complete withdraw</b-btn>
+      <b-btn @click="completeWithdrawalHandler" variant="primary">{{$t('components.gateway.confirm_withdrawal_modal.complete')}}</b-btn>
     </template>
   </b-modal>
 </template>
@@ -65,8 +65,8 @@ export default class WithdrawConfirmed extends Vue {
     return this.$store.state
   }
 
-  get title(): string {
-    return status === "error" ? "Withdrawal failed" : "Withdraw to gateway confirmed"
+  get title() {
+    return status === "error" ? this.$t("components.gateway.confirm_withdrawal_modal.status_failed") : this.$t("components.gateway.confirm_withdrawal_modal.status_confirmed")
   }
 
   get visible() {

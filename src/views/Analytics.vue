@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row px-3 py-4">
       <div class="col-md-6 mb-4">
-        <b-card title="Total amount staked">
+        <b-card :title="$t('views.analytics.total_amount_staked')">
           <canvas id="barChart" width="300" height="300"></canvas>
         </b-card>
       </div>
       <div class="col-md-6 mb-4">
-        <b-card title="Tier distribution">
+        <b-card :title="$t('views.analytics.tier_distribution')">
           <canvas id="pieChart" width="300" height="300"></canvas>
         </b-card>
       </div>

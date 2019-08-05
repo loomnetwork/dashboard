@@ -1,6 +1,6 @@
 <template>
   <b-card class="mb-1">
-    <b-card-title>Account</b-card-title>
+    <b-card-title>{{ $t('components.account.account') }}</b-card-title>
     <div class="account ethereum">
       <label>Ethereum</label>
       <address @click="copyEthereum">
@@ -8,7 +8,7 @@
         <fa icon="paste"/>
       </address>
       <a a class="explorer" :href="etherScanUrl" target="_blank">
-        Show in EtherScan
+        {{ $t('components.account.show_etherscan') }}
         <fa icon="external-link-alt"/>
       </a>
     </div>
@@ -19,7 +19,7 @@
         <fa icon="paste"/>
       </address>
       <a class="explorer" :href="loomScanUrl" target="_blank">
-        Show in Block Explorer
+        {{ $t('components.account.show_block_explorer') }}
         <fa icon="external-link-alt"/>
       </a>
     </div>
@@ -53,14 +53,14 @@ export default class Account extends Vue {
 
   copyEthereum() {
     this.$copyText(this.ethAccount).then(() =>
-      feedbackModule.showSuccess("Ethereum address copied."),
+      feedbackModule.showSuccess(this.$t("feedback_msg.success.eth_addr_copied").toString()),
       console.error,
     )
   }
 
   copyPlasma() {
     this.$copyText(formatToLoomAddress(this.plasmaAccount)).then(() =>
-      feedbackModule.showSuccess("Plasma address copied."),
+      feedbackModule.showSuccess(this.$t("feedback_msg.success.plasma_addr_copied").toString()),
       console.error,
     )
   }

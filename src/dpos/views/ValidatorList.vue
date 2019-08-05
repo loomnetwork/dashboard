@@ -10,11 +10,11 @@
           style="justify-content: space-around;flex-direction: row;text-align: center;align-items: flex-end;padding-top: 5px;"
         >
           <h6>
-            Next election in:
+            {{ $t('views.validator_list.next_election_in') }}
             <election-timer />
           </h6>
           <h6>
-            Total staked amount
+            {{ $t('views.validator_list.total_staked_amount') }}
             <h5 class="highlight">{{totalStaked | tokenAmount(18,0)}} LOOM</h5>
           </h6>
         </b-card>
@@ -37,11 +37,11 @@
                 </h6>
               </div>
               <div class="copy-wrapper">
-                <label>Fee</label>
+                <label>{{ $t('components.validator_extended_detail.fee') }}</label>
                 <strong>{{validator.fee}}</strong>
               </div>
               <div class="copy-wrapper">
-                <label>Stake</label>
+                <label>{{ $t('views.validator_list.stake') }}</label>
                 <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
               </div>
             </b-card>
@@ -57,7 +57,7 @@
               :sort-compare="sortCompare"
               @row-clicked="showValidatorDetail"
             >
-              <template slot="active" slot-scope="data">{{ data.item.active ? "Active" : "" }}</template>
+              <template slot="active" slot-scope="data">{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
             </b-table>
           </template>
         </div>
@@ -95,19 +95,23 @@ function random() {
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
 
-  validatorFields = [{ key: "name", sortable: true, label: "Name" },
-  { key: "active", sortable: true, label: "Active" },
-//  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
-  {
-    key: "totalStaked",
-    sortable: true,
-    label: "Total Staked",
-    formatter: (value) => formatTokenAmount(value, 18, 0),
-    thClass: "align-center-th",
-    tdClass: "align-right-td",
-  },
-  { key: "fee", sortable: true, label: "Fee", thClass: "align-center-th", tdClass: "align-right-td" },
-  ]
+  validatorFields: any[] = []
+
+  created() {
+    this.validatorFields = [{ key: "name", sortable: true, label: this.$t("views.validator_list.name") },
+      { key: "active", sortable: true, label: this.$t("views.validator_detail.active") },
+      //  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
+      {
+        key: "totalStaked",
+        sortable: true,
+        label: this.$t("components.modals.faucet_redelegate_modal.total_stake"),
+        formatter: (value) => formatTokenAmount(value, 18, 0),
+        thClass: "align-center-th",
+        tdClass: "align-right-td",
+      },
+      { key: "fee", sortable: true, label: this.$t("components.validator_extended_detail.fee"), thClass: "align-center-th", tdClass: "align-right-td" },
+    ]
+  }
 
   get state(): HasDPOSState {
     return this.$store.state

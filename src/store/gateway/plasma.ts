@@ -24,6 +24,8 @@ import { plasmaModule } from "../plasma"
 import { TransferRequest } from "../plasma/types"
 import * as Sentry from "@sentry/browser"
 
+import { i18n } from "@/i18n"
+
 const log = debug("dash.gateway.plasma")
 
 class LoomGatewayAdapter implements PlasmaGatewayAdapter {
@@ -211,13 +213,13 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   log("plasmaWithdraw", chain, symbol)
 
   try {
-    feedback.setTask("withdraw")
-    feedback.setStep("Checking for pre-existing receipts...")
+    feedback.setTask(i18n.t("feedback_msg.task.withdraw").toString())
+    feedback.setStep(i18n.t("feedback_msg.step.checking_receipt").toString())
     receipt = await gateway.withdrawalReceipt()
   } catch (err) {
     console.error(err)
     feedback.endTask()
-    feedback.showError(" failed, to get receipt")
+    feedback.showError(i18n.t("feedback_msg.error.failed_to_get_receipt").toString())
     Sentry.captureException(err)
     return
   }
@@ -228,8 +230,8 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     if (chain === "binance") {
       feedback.endTask()
       feedback.showAlert({
-        title: "Withdrawal ongoing",
-        message: "A withdrawal is still being processed. Please try again later.",
+        title: i18n.t("feedback_msg.alert.title.withdraw_ongoing").toString(),
+        message: i18n.t("feedback_msg.alert.message.withdraw_in_process").toString(),
       })
       return
     }
@@ -237,14 +239,14 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     if (await gatewayModule.checkIfPastWithdrawalEventExists()) {
       feedback.endTask()
       feedback.showAlert({
-        title: "Withdrawal ongoing",
-        message: "An existing withdrawal is currently being processed. Please try again later.",
+        title: i18n.t("feedback_msg.alert.title.withdraw_ongoing").toString(),
+        message: i18n.t("feedback_msg.alert.message.existing_withdraw_being_process").toString(),
       })
       return
     }
 
     feedback.endTask()
-    feedback.showInfo("Withdrawal already in progress.")
+    feedback.showInfo(i18n.t("feedback_msg.info.withdrawal_in_progress").toString())
     gatewayModule.setWithdrawalReceipts(null)
     setTimeout(() => {
       gatewayModule.setWithdrawalReceipts(receipt)
@@ -263,15 +265,15 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     if (approved === false) {
       return
     }
-    feedback.setStep("Depositing to Plasmachain Gateway...")
+    feedback.setStep(i18n.t("feedback_msg.step.depositing_to_plasma").toString())
     await gateway.withdraw(weiAmount, recepient)
     // For binance no more steps are required
     if (chain === "binance") {
       feedback.endTask()
-      feedback.showInfo("Withdrawal request sent. Your binance account will receive the funds in a moment.")
+      feedback.showInfo(i18n.t("feedback_msg.info.withdrawal_request_sent").toString())
       return
     }
-    feedback.setStep("Awaiting Oracle signature...")
+    feedback.setStep(i18n.t("feedback_msg.step.awaiting_oracle").toString())
     receipt = await gatewayModule.pollReceipt(chain, symbol)
     gatewayModule.setWithdrawalReceipts(receipt)
     feedback.endTask()
@@ -282,7 +284,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       return
     }
     feedback.endTask()
-    feedback.showError("Withdraw failed, please try again.")
+    feedback.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
     Sentry.withScope((scope) => {
       scope.setExtra("plasmaWithdraw", {
         withdraw: JSON.stringify({
@@ -308,15 +310,15 @@ export async function loadTokenMappings(context: ActionContext, chain: string) {
 
 export async function binanceResubmitWithdrawal(context: ActionContext) {
   const gateway = service().binanceGateway
-  feedback.setTask("withdraw")
+  feedback.setTask(i18n.t("feedback_msg.task.withdraw").toString())
   try {
-    feedback.setStep("Completing withdrawal to binance...")
+    feedback.setStep(i18n.t("feedback_msg.step.complete_withdrawal_binance").toString())
     await gateway.resubmitWithdrawalAsync()
 
   } catch (error) {
     console.error(error)
     feedback.endTask()
-    feedback.showError("Withdraw failed, please try again.")
+    feedback.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
   }
   feedback.endTask()
 }

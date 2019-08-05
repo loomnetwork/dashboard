@@ -9,20 +9,20 @@
   >
     <div>
       <p>
-        This is the first time you are accessing the dashboard with this account.
-        <br />Choose weither to map to a new loom account or an existing one.
+        {{ $t('components.modals.account_mapping_modal.description') }}
+        <br />{{ $t('components.modals.account_mapping_modal.choose') }}
       </p>
       <b-form-group>
         <b-form-radio
           v-model="mappingChoice"
           name="mapping-existing"
           value="existing"
-        >Map to an existing loom account</b-form-radio>
+        >{{ $t('components.modals.account_mapping_modal.map_to') }}</b-form-radio>
         <b-form-radio
           v-model="mappingChoice"
           name="mapping-choice"
           value="generate"
-        >Create a new account</b-form-radio>
+        >{{ $t('components.modals.account_mapping_modal.new_account') }}</b-form-radio>
       </b-form-group>
       <div v-if="mappingChoice === 'existing'">
         <div class="mb-2">
@@ -37,17 +37,17 @@
         <b-form-input
           id="input-formatter"
           v-model="privateKey"
-          placeholder="Loom private key (base64)"
+          :placeholder="$t('input_placeholder.loom_private_base64')"
           aria-describedby="input-formatter-help"
           :state="isPKValid"
         ></b-form-input>
         <b-form-text
           id="input-formatter-help"
-        >The private key is used to sign the mapping and is then discarded.</b-form-text>
+        >{{ $t('components.modals.account_mapping_modal.input_help') }}</b-form-text>
       </div>
     </div>
     <template slot="modal-footer">
-      <b-button variant="primary" @click="createMapping" :disabled="validInput === false">Continue</b-button>
+      <b-button variant="primary" @click="createMapping" :disabled="validInput === false">{{ $t('button.continue') }}</b-button>
     </template>
   </b-modal>
 </template>

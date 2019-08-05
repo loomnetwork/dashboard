@@ -321,9 +321,10 @@
     "ERC20Received": "입금",
     "event:MainnetDepositEvent": "입금",
     "event:MainnetWithdrawalEvent": "인출",
-    "event:WithdrawLoomCoin": "인출 (LOOM)",
+    "event:WithdrawLoomCoin": "Withdrawal",
     "event:TokenWithdrawalSigned": "서명된 인출",
-    "TokenWithdrawn": "출금한 토큰",
-    "ETHReceived": "입금 (ETH)"
+    "TokenWithdrawn": "Withdrawal",
+    "LoomCoinReceived": "Deposit",
+    "ETHReceived": "Deposit"
   }
 }

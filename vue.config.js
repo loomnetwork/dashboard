@@ -72,6 +72,16 @@ module.exports = {
       }
       config.target = "node"
     }
+
+    plugins.push(
+      new CopyPlugin([
+        {
+          from: "src/assets/tokens/",
+          to: "tokens"
+        }
+      ])
+    )
+
     return {
       resolve: {
         alias: {

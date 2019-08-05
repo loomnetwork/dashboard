@@ -48,8 +48,7 @@ const builder = getStoreBuilder<DashboardState>()
 
 const dashboardStore = {
   setEnv: builder.dispatch(async function setEnv(context, env: DashboardConfig) {
-    tokenService.setEnv(env.name)
-    await tokenService.setBaseURL(env.coinDataUrl)
+    await tokenService.load(env.coinDataUrl)
     context.state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)

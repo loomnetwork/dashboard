@@ -70,6 +70,7 @@ export const gatewayModule = {
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
+  checkTxStatus: builder.dispatch(EthereumGateways.checkTxStatus),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
   loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),

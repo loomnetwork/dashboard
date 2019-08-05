@@ -34,7 +34,8 @@
     "input_address_invalid_chain": "Invalid {chain} address.",
     "error_try_again": "An error occurred, please try again.",
     "no_event_found": "No event found on this chain or token",
-    "no_token_found": "Token {tokenName} not found"
+    "no_token_found": "Token {tokenName} not found",
+    "transaction_out_of_gas": "Transaction out of gas. Consider increasing the gas limit"
   },
   "transfer_all": "All ({amount} LOOM)",
   "views": {

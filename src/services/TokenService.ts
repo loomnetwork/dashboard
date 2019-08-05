@@ -66,6 +66,12 @@ class TokenService {
     // disable ethereun
     BNB.ethereum = ""
 
+    // keep OLD_BNB until people with stuck receipts on ethereum gateway
+    // complete their withdrawals
+    const OLD_BNB = { ...BNB }
+    OLD_BNB.symbol = "ETHBNB"
+    this.symbols.push(OLD_BNB)
+
     // Hack BNB data until we set the right vqlues in loomauth token data
     switch (BNB.plasma) {
       // asia1

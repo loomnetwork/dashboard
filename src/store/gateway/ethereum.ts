@@ -386,8 +386,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
  * Check status of tx via etherscan api
  * @param {*} address
  */
-export async function checkTxStatus(context: ActionContext, tx: string, production = false) {
-  const api = production ? "//api.etherscan.io/api" : "//api-rinkeby.etherscan.io/api"
+export async function checkTxStatus(context: ActionContext, tx: string) {
+  const api = context.rootState.env === "production" ? "//api.etherscan.io/api" : "//api-rinkeby.etherscan.io/api"
   return Axios
     .get(`${api}?module=transaction&action=getstatus&txhash=${tx}`)
     .then((response) => {

@@ -26,13 +26,14 @@ import {
   initUserData,
   setUserData,
   deleteUserData,
+  clearHistory,
 } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
-import { PortisAdapter } from "./wallets/portis";
-import { FortmaticAdapter } from "./wallets/fortmatic";
+import { PortisAdapter } from "./wallets/portis"
+import { FortmaticAdapter } from "./wallets/fortmatic"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -131,6 +132,7 @@ export const ethereumModule = {
   initERC20: builder.dispatch(initERC20),
   clearERC20: builder.dispatch(clearERC20),
 
+  clearHistory: builder.commit(clearHistory),
   setBlockNumber: builder.commit(setBlockNumber),
   pollLastBlockNumber: builder.dispatch(pollLastBlockNumber),
 

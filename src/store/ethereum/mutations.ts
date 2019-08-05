@@ -41,3 +41,7 @@ export function deleteUserData(state: EthereumState, key: string) {
   state.userData = cache
   localStorage.setItem(state.address, JSON.stringify(state.userData))
 }
+
+export function clearHistory(state: EthereumState) {
+  state.history = []
+}

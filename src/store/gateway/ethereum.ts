@@ -283,8 +283,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount } = funds
   const gateway = service().get(funds.symbol)
   if (funds.symbol === "ETH") {
-    feedbackModule.setTask("ETH deposit")
-    feedbackModule.setStep("Depositing ETH")
+    feedbackModule.setTask(i18n.t("feedback_msg.task.eth_deposit").toString())
+    feedbackModule.setStep(i18n.t("feedback_msg.step.depositing_eth").toString())
     try {
       await gateway.deposit(weiAmount, context.rootState.ethereum.address)
       feedbackModule.endTask()
@@ -292,10 +292,10 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       feedbackModule.endTask()
       if ("imToken" in window) {
         console.log("imToken error", e)
-        feedbackModule.showInfo("Please track the transaction on your wallet")
+        feedbackModule.showInfo(i18n.t("feedback_msg.info.please_track_transaction").toString())
       } else {
         console.error(e)
-        feedbackModule.showError("Could not deposit ETH, please make sure you pay enough gas for the transaction.")
+        feedbackModule.showError(i18n.t("feedback_msg.error.could_not_deposit_eth").toString())
         Sentry.withScope((scope) => {
           scope.setExtra("ethereumDeposit", {
             funds: JSON.stringify({
@@ -328,10 +328,10 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     } catch (err) {
       if ("imToken" in window) {
         console.log("imToken error", err)
-        fb.showInfo("Please track deposit approval the transaction on your wallet.")
+        fb.showInfo(i18n.t("feedback_msg.info.please_track_deposit_approval").toString())
       } else {
         console.error(err)
-        fb.showError("Deposit approval failed.")
+        fb.showError(i18n.t("feedback_msg.error.deposit_approval_failed").toString())
       }
       console.log(err)
       fb.showLoadingBar(false)
@@ -351,8 +351,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     }
   }
   fb.requireConfirmation({
-    title: "Complete deposit",
-    message: "Please sign click confirm to complete your deposit.",
+    title: i18n.t("feedback_msg.require_confirmation.title.complete_deposit"),
+    message: i18n.t("feedback_msg.require_confirmation.message.please_sign_click"),
     onConfirm: async () => {
       try {
         fb.showLoadingBar(true)
@@ -366,7 +366,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
         fb.showLoadingBar(false)
         if ("imToken" in window) {
           console.log("imToken error", err)
-          fb.showInfo("Please track the transaction on your wallet")
+          fb.showInfo(i18n.t("feedback_msg.info.please_track_transaction").toString())
         } else {
           console.error(err)
           fb.showError(i18n.t("components.gateway.deposit.failure").toString())
@@ -406,7 +406,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     const tokenInfo = tokenService.tokenFromAddress(tokenAddress, "ethereum")
     if (tokenInfo === null) {
       console.error("token contract address in receipt unknown ", tokenInfo)
-      fb.showError("Withdraw failed, please try again or contact support.")
+      fb.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
       return
     }
     token = tokenInfo.symbol
@@ -417,7 +417,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   try {
     await gateway.withdraw(receipt)
     ethereumModule.setUserData({pendingWithdrawal: true})
-    fb.showSuccess("Transaction sent successfully.")
+    fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
   } catch (err) {
     // imToken throws even if transaction succeeds
     ethereumModule.setUserData({pendingWithdrawal: false})
@@ -425,7 +425,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {
       console.log(err)
-      fb.showError("Withdraw failed, please try again or contact support.")
+      fb.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
     }
     Sentry.withScope((scope) => {
       scope.setExtra("ethereumWithdraw", {

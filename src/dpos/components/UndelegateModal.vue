@@ -4,11 +4,11 @@
     id="faucet-delegate-modal"
     ok-only
     hide-header-close
-    title="Undelegate"
+    :title="$t('components.modals.faucet_undelegate_modal.undelegate')"
   >
     <b-form-group
       v-if="delegation"
-      id="gdelegation-amount-input"
+      id="delegation-amount-input"
       :label="$t('components.modals.faucet_delegate_modal.amount')"
       label-for="delegation-amount-input"
     >
@@ -23,13 +23,13 @@
     </b-form-group>
 
     <div slot="modal-footer" class="w-100">
-      <b-button @click="cancel">{{$t("cancel")}}</b-button>
+      <b-button @click="cancel">{{$t("button.cancel")}}</b-button>
       <b-button
         style="width: 160px; float: right;"
         variant="primary"
         :disabled="!isAmountValid"
         @click="undelegate"
-      >{{$t("undelegate")}}</b-button>
+      >{{$t('components.modals.faucet_undelegate_modal.undelegate')}}</b-button>
     </div>
   </b-modal>
 </template>

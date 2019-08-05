@@ -3,7 +3,7 @@
   <b-card no-body title="Rewards" class="mb-4">
     <b-list-group flush>
       <b-list-group-item class="rewards">
-        <h4>Rewards</h4>
+        <h4>{{ $t('views.rewards.rewards') }}</h4>
       </b-list-group-item>
       <!-- <b-list-group-item variant="secondary">
         <div class="d-flex w-100 justify-content-between space">
@@ -31,7 +31,7 @@
       </b-list-group-item> -->
       <b-list-group-item variant="secondary">
         <div class="d-flex w-100 justify-content-between">
-          <h6>Total</h6>
+          <h6>{{ $t('views.rewards.total') }}</h6>
           <span>{{rewardsUnclaimed | tokenAmount}} LOOM</span>
         </div>
       </b-list-group-item>

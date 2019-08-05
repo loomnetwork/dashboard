@@ -7,8 +7,8 @@
       :state="this.value.length === 0 ? null : isValidAddress"
       class="my-2"
     ></b-form-input>
-    <p v-if="isBlacklisted" style :key="value" class="error">Cannot transfer to own address.</p>
-    <p v-else-if="!isValidAddress" style :key="value" class="error">Invalid {{ chain }} address.</p>
+    <p v-if="isBlacklisted" style :key="value" class="error">{{ $t('messages.input_address_cant_transfer_own') }}</p>
+    <p v-else-if="!isValidAddress" style :key="value" class="error">{{ $t('messages.input_address_invalid_chain', { chain: chain }) }}</p>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <main class="container py-4">
     <header>
-      <h1>History</h1>
+      <h1>{{ $t('views.my_account.history') }}</h1>
       <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
     <div style="max-width: 620px;margin:0 auto">
@@ -20,10 +20,11 @@
 
       <section v-if="visible === 'plasma'">
         <div v-if="plasmaHistory && plasmaHistory.length === 0">
-          <p>No activity detected.</p>
+          <p>{{ $t('views.history.no_activity') }}</p>
           <small>
-            Or head over to the
-            <router-link to="/validators">validators page</router-link>to get started
+            <i18n path="views.history.or_head_to_validators_page">
+              <router-link to="/validators" place="page">{{ $t('views.history.validators_page') }}</router-link>
+            </i18n>
           </small>
         </div>
         <div v-else class="events list-wrapper">
@@ -32,7 +33,7 @@
             <article v-for="(event, id) in plasmaHistory" :key="id" class="event">
               <h5 class="type">{{ $t( "events." + event.type) }}</h5>
               <ul>
-                <li class="block">Block # {{event.blockNumber}}</li>
+                <li class="block">{{ $t('components.history_event.block_no') }} {{event.blockNumber}}</li>
                 <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
               </ul>
               <!--
@@ -45,8 +46,8 @@
       <section v-else-if="visible === 'ethereum'" class="list-wrapper">
         <div v-if="ethereumHistory && ethereumHistory.length === 0">
           <p>
-            No activity detected.
-            <a>Deposit funds to the PlasmaChain</a>
+            {{ $t('views.history.no_activity') }}
+            <a>{{ $t('views.history.funds_to_plasma') }}</a>
           </p>
         </div>
         <div v-else class="events list-wrapper">

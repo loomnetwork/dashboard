@@ -1,32 +1,32 @@
 <template>
   <main class="container">
     <header>
-      <h1>Wallet</h1>
+      <h1>{{ $t('views.deposit_withdraw.wallet' )}}</h1>
       <b-button class="help" variant="outline-info" pill size="sm" @click="showHelp =!showHelp">?</b-button>
     </header>
     <b-alert fade :show="showHelp">
-      Check your token balances
+      {{ $t('views.help.check_your_balance' )}}
       <hr />
       <div class="helpAlert">
         <p>
-          <b>Deposit</b> : Deposit to Plasmachain from Ethereuem
+          <b>{{ $t('views.my_account.deposit' )}}</b> : {{ $t('views.help.deposit_to_plasmachain' )}}
         </p>
         <p>
-          <b>Withdraw</b> : Withdraw to Ethereum
+          <b>{{ $t('views.my_account.withdraw' )}}</b> : {{ $t('views.help.withdraw_to_ethereum' )}}
         </p>
-        <b>Transfer</b> : Transfer tokens to other PlasmaChain accounts
+        <b>{{ $t('components.gameAsset.cards.transfer' )}}</b> : {{ $t('views.help.transfer_token' )}}
       </div>
     </b-alert>
     <Account />
     <b-card class="balances" no-body>
       <b-card-header class="custom-card-header d-flex justify-content-between">
-        <h5>Tokens</h5>
+        <h5>{{ $t('views.deposit_withdraw.tokens' )}}</h5>
         <a @click="refreshAllTokens">
           <fa :icon="['fas', 'sync']" class="refresh-icon" />
         </a>
       </b-card-header>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
-        <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
+        <b-form-input v-model="inputFilter" :placeholder="$t('input_placeholder.filter')"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">
@@ -42,7 +42,7 @@
               :disabled="disableDeposit"
               @click="requestCrossChainTranfer(DEPOSIT, symbol)"
             >
-              Deposit
+              {{ $t('views.my_account.deposit' )}}
               <b-badge variant="warning" v-if="symbol in ethereumAllowances">!</b-badge>
             </b-button>
             <b-button
@@ -51,19 +51,19 @@
               :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
-              <span>Withdraw</span>
+              <span>{{ $t('views.my_account.withdraw' )}}</span>
             </b-button>
             <b-button
               class="button"
               variant="outline-primary"
               :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestSwap(symbol)"
-            >Transfer</b-button>
+            >{{ $t('components.gameAsset.cards.transfer' )}}</b-button>
           </b-button-group>
         </b-list-group-item>
       </b-list-group>
       <b-card-footer>
-        <b-button class="button" variant="primary" @click="requestAddToken()">Add token</b-button>
+        <b-button class="button" variant="primary" @click="requestAddToken()">{{ $t('views.deposit_withdraw.add_token') }}</b-button>
       </b-card-footer>
     </b-card>
     <transfer-tokens-form-modal @refreshTokenList="filterTokens" :token="selectedToken" />

@@ -5,10 +5,10 @@
         <strong>{{item.index}}</strong>
       </div>
       <div class="col-sm-4 text-left">
-        <strong>Amount: </strong><span>{{item.amount | tokenAmount}}</span>
+        <strong>{{ $t('components.modals.faucet_delegate_modal.amount') }} </strong><span>{{item.amount | tokenAmount}}</span>
       </div>
       <div class="col-sm-6 text-left">
-        <strong>Locktime: </strong><span>{{item.lockTime | readableDate}}</span>
+        <strong>{{ $t('components.modals.faucet_delegate_modal.locktime') }}: </strong><span>{{item.lockTime | readableDate}}</span>
       </div>
     </div>
   </div>

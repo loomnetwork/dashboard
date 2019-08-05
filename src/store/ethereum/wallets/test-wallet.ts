@@ -21,9 +21,8 @@ export const TestWalletAdapter: WalletType = {
   async createProvider() {
     const provider = new PrivateKeyProvider(
       "348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
-      ethereumModule.state.endpoint)
+      "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0")
 
     return provider
   },
 }
-

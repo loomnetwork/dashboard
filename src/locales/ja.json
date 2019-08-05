@@ -321,9 +321,10 @@
     "ERC20Received": "デポジット",
     "event:MainnetDepositEvent": "デポジット",
     "event:MainnetWithdrawalEvent": "出金",
-    "event:WithdrawLoomCoin": "出金(LOOM)",
+    "event:WithdrawLoomCoin": "Withdrawal",
     "event:TokenWithdrawalSigned": "署名済みの出金",
-    "TokenWithdrawn": "出金済みトークン",
-    "ETHReceived": "Deposit (ETH)"
+    "TokenWithdrawn": "Withdrawal",
+    "LoomCoinReceived": "Deposit",
+    "ETHReceived": "Deposit"
   }
 }

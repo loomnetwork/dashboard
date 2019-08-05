@@ -22,8 +22,6 @@ export function ethereumReactions(store: Store<DashboardState>) {
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
 
-    // gatewayModule.checkTxStatus("0xd22ba4a70f89663022e61e8e296113b372839a9334e1edd902ae61378e3882da")
-
   }
 
 }

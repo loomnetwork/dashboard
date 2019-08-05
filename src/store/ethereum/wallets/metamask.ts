@@ -3,8 +3,7 @@
  * @module loomrx.ethereum
  * @preferred
  */
-
-import { ethers } from "ethers"
+import * as Sentry from "@sentry/browser"
 
 import { WalletType } from "../types"
 import { provider } from "web3-providers"
@@ -32,12 +31,10 @@ export const MetaMaskAdapter: WalletType = {
 }
 
 function isLegacyApi() {
-  // @ts-ignore
   return "web3" in window
 }
 
 function isCurrentApi() {
-  // @ts-ignore
   return "ethereum" in window
 }
 
@@ -47,35 +44,35 @@ function getLegacyApi(): Promise<provider> {
 }
 
 async function getCurrentApi(): Promise<provider> {
+  // @ts-ignore
+  const ethereum = window.ethereum
   try {
-    // @ts-ignore
-    await window.ethereum.enable()
-    // @ts-ignore
-    // return new ethers.providers.Web3Provider(window.ethereum)
+    await ethereum.enable()
+  } catch (err) {
+    Sentry.captureException(err)
+    feedbackModule.endTask()
+  }
 
-    // @ts-ignore
-    window.ethereum.on("accountsChanged", (accounts) => {
+  try {
+    // The following throws on Trust
+    ethereum.on("accountsChanged", (accounts) => {
       // TODO: this is to resolve a bug with mismatched receipts, once all users are fixed, please remove.
       // @ts-ignore
       if (window.resolvingMismatchedReceipt) {
         return
       }
-
       if (ethereumModule.state.address &&
         ethereumModule.state.address.toLowerCase() !== accounts[0]) {
         // Remove any reference to past withdrawals as
         // it is bound to a specific address
         localStorage.removeItem("lastWithdrawTime")
         ethereumModule.state.metamaskChangeAlert = true
-        // @ts-ignore
-        window.ethereum.removeAllListeners()
+        ethereum.removeAllListeners()
       }
     })
-
-    // @ts-ignore
-    return window.ethereum
   } catch (err) {
-    feedbackModule.endTask()
-    throw Error("User denied access to Metamask")
+    Sentry.captureException(err)
   }
+
+  return ethereum
 }

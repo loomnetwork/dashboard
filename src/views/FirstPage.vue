@@ -96,7 +96,31 @@
                   </div>
 
                 </b-card>
-              </div>              
+              </div>   
+              <div class="col-sm-12 mb-3">
+                <b-card
+                  id="portis-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('portis')"
+                >
+                  <div class="ml-1">
+                    <img src="../assets/portis_icon.svg" />
+                    <span>Portis</span>
+                  </div>
+                </b-card>
+              </div>
+              <div class="col-sm-12 mb-3">
+                <b-card
+                  id="fortmatic-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('fortmatic')"
+                >
+                  <div>
+                    <img src="../assets/fortmatic-icon.svg" />
+                    <span>Fortmatic</span>
+                  </div>
+                </b-card>
+              </div>           
               <div class="col-sm-12">
                 <b-card
                   id="explore-button"
@@ -109,6 +133,7 @@
                   </div>
                 </b-card>
               </div>
+
             </div>
           </b-card>
 
@@ -163,7 +188,6 @@
           </b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
-
       </main>
     </div>
   </div>
@@ -183,6 +207,7 @@ import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from "../feedback/store"
 
+import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 
 @Component({

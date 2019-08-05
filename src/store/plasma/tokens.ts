@@ -259,8 +259,9 @@ export async function approve(
   if (currentAllowance.gte(weiAmount)) {
     return Promise.resolve(true)
   }
-  const approvalAmount = weiAmount.sub(currentAllowance)
-  // to do approve allowance - weiAmount
+  // this somehow breaks on some accounts (for dpos), as if currentAllowance is wrong
+  // const approvalAmount = weiAmount.sub(currentAllowance)
+  const approvalAmount = weiAmount
   feedbackModule.setStep(
     i18n.t("feedback_msg.step.approving_spending",
   { tokenAmount: formatTokenAmount(approvalAmount, token.decimals), symbol: payload.symbol})

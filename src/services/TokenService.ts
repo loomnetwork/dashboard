@@ -36,8 +36,13 @@ export interface TokenData {
 }
 
 class TokenService {
+  env: string = ""
   baseURL: string = ""
   symbols: TokenData[] = []
+
+  setEnv(env: string) {
+    this.env = env
+  }
 
   /**
    * should call this method after service class created
@@ -54,6 +59,7 @@ class TokenService {
         binance: "",
       }),
     )
+
     // hack until it's updated in loomauth
     const BNB = this.symbols.find((data) => data.symbol === "BNB")!
     BNB.decimals = 8
@@ -76,6 +82,12 @@ class TokenService {
         BNB.binance = "bnb17mxq8p5jmw27dtt6s92fd35yltdml6snw3r98t"
         break
     }
+
+    if (this.env === "ext-dev") {
+      const LOOM = this.symbols.find((data) => data.symbol === "LOOM")
+      LOOM!.ethereum = "0x493640B5BEFB0962CE0932653987C41aA3608bd0"
+    }
+
   }
   /**
    *

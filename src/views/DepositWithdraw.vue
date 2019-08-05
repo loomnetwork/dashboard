@@ -170,8 +170,12 @@ export default class DepositWithdraw extends Vue {
   }
 
   async mounted() {
-    const tokenSymbols = getWalletFromLocalStorage().map((symbol) => symbol)
-    tokenSymbols.forEach((symbol) => plasmaModule.addToken(symbol))
+    const supported = tokenService.symbols.map((token) => token.symbol)
+    // TODO move this to store
+    getWalletFromLocalStorage()
+      .filter((symbol) => supported.includes(symbol))
+      .forEach((symbol) => plasmaModule.addToken(symbol))
+
     this.filterTokens()
 
     if (this.$route.query.depositCoin === "LOOM") {

@@ -49,7 +49,6 @@ export default class Rewards extends Vue {
   hideTooltip = false
   pollInterval = null
 
-
   get state(): HasDPOSState {
     return this.$store.state
   }

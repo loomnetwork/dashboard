@@ -28,7 +28,7 @@
         <div class="p3">
           <h6>{{ $t('views.my_account.mainnet') }}</h6>
           <div>
-            <h5 class="highlight">
+            <h5 class="highlight" data-cy="ethereum-loom-balance">
               {{state.ethereum.coins.LOOM.balance | tokenAmount}} LOOM
               <loom-icon
                 v-if="!state.ethereum.coins.LOOM.loading"
@@ -43,7 +43,7 @@
           </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>
           <div>
-            <h5 class="highlight">
+            <h5 class="highlight" data-cy="plasma-loom-balance">
               {{state.plasma.coins.LOOM.balance | tokenAmount}} LOOM
               <loom-icon
                 v-if="!state.plasma.coins.LOOM.loading"

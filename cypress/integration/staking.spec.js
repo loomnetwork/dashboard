@@ -1,3 +1,6 @@
+import BN from 'bn.js'
+import BigNumber from "bignumber.js"
+
 describe('Staking Test', () => {
 
   beforeEach(() => {
@@ -51,4 +54,47 @@ describe('Staking Test', () => {
       })
     })
   })
+
+  describe('Claim rewards', () => {
+    it('PlasmaChain LOOM balance should increase by rewards after claimed', () => {
+      
+      cy.get('[data-cy=plasma-loom-balance]').then(($elem) => {
+        const text = $elem.text()
+        const amountBN = parseToWei(text.slice(0, text.indexOf(' LOOM')))
+        cy.wrap(amountBN).as('balance')
+      })
+
+      cy.get('[data-cy=unclaimed-rewards]').then(($elem) => {
+        const text = $elem.text()
+        const amountBN = parseToWei(text.slice(0, text.indexOf(' LOOM')))
+        cy.wrap(amountBN).as('rewards')
+      })
+      
+
+      cy.get('#claim-rewards').click()
+
+      cy.wait(60000)
+
+      cy.get('#faucet-header').should('contain', 'Rewards succesfully claimed.')
+
+      cy.get('@balance').then((balance) => {
+        cy.get('@rewards').then((rewards) => {
+          const sum = formatTokenAmount(balance.add(rewards))
+          cy.get('[data-cy=plasma-loom-balance]').should('contain', sum)
+        })
+      })
+    })
+  })
 })
+
+function parseToWei(amount, decimal = 18) {
+  // BN is ints only
+  const bigNumber = new BigNumber(amount).multipliedBy(10 ** decimal)
+  return new BN(bigNumber.toFixed())
+}
+
+function formatTokenAmount(wei, decimals = 18, precision) {
+  if (!wei) return wei
+  const c = new BigNumber(wei.toString()).dividedBy(10 ** decimals)
+  return c.toFormat(precision)
+}

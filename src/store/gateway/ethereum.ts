@@ -1,40 +1,35 @@
+import { feedbackModule as fb, feedbackModule } from "@/feedback/store"
+import { i18n } from "@/i18n"
+import { tokenService } from "@/services/TokenService"
+import { Funds } from "@/types"
+import { ZERO } from "@/utils"
+import * as Sentry from "@sentry/browser"
+import Axios from "axios"
 import BN from "bn.js"
-
-import Web3 from "web3"
-
-import GatewayABI_v1 from "./contracts/Gateway_v1.json"
-import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
-
+import debug from "debug"
+import { ethers } from "ethers"
+import { CryptoUtils } from "loom-js"
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { parseSigs } from "loom-js/dist/helpers"
 import ERC20GatewayABI_v1 from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
 import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
-
+import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
+import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
+import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
+import { from } from "rxjs"
+import { filter, mergeMap, tap, toArray } from "rxjs/operators"
+import Web3 from "web3"
+import { AbiItem } from "web3-utils"
+import { ethereumModule } from "../ethereum"
+import { PlasmaTokenKind } from "../plasma/types"
+import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 // these are v2 types
 import { Gateway } from "./contracts/Gateway"
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
-
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { Funds } from "@/types"
-import { ethereumModule } from "../ethereum"
-import { feedbackModule as fb, feedbackModule } from "@/feedback/store"
-
-import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+import GatewayABI_v1 from "./contracts/Gateway_v1.json"
 // XXX
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
-import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
-import { CryptoUtils } from "loom-js"
-import { parseSigs } from "loom-js/dist/helpers"
-import { ethers } from "ethers"
-import { AbiItem } from "web3-utils"
-
-import debug from "debug"
-import { tokenService, TokenData } from "@/services/TokenService"
-import { i18n } from "@/i18n"
-import { ZERO } from "@/utils"
-import { from } from "rxjs"
-import { concatMap, filter, mergeMap, scan, toArray, tap } from "rxjs/operators"
-import * as Sentry from "@sentry/browser"
-import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
-import { PlasmaTokenKind } from "../plasma/types"
+import { gatewayModule } from "./index"
+import { ActionContext, WithdrawalReceiptsV2 } from "./types"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -123,7 +118,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
       to: this.contract._address,
       value: amount.toString(),
     })
-    await this.web3.eth.sendTransaction({
+    return await this.web3.eth.sendTransaction({
       from: sender,
       // @ts-ignore
       to: this.contract._address,
@@ -286,7 +281,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     feedbackModule.setTask("ETH deposit")
     feedbackModule.setStep("Depositing ETH")
     try {
-      await gateway.deposit(weiAmount, context.rootState.ethereum.address)
+      const tx = await gateway.deposit(weiAmount, context.rootState.ethereum.address)
+      if (tx.transactionHash) gatewayModule.checkTxStatus(tx.transactionHash)
       feedbackModule.endTask()
     } catch (e) {
       feedbackModule.endTask()
@@ -384,6 +380,25 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       }
     },
   })
+}
+
+/**
+ * Check status of tx via etherscan api
+ * @param {*} address
+ */
+export async function checkTxStatus(context: ActionContext, tx: string, production = false) {
+  const api = production ? "//api.etherscan.io/api" : "//api-rinkeby.etherscan.io/api"
+  return Axios
+    .get(`${api}?module=transaction&action=getstatus&txhash=${tx}`)
+    .then((response) => {
+      const { isError, errDescription } = response.data.result
+      if (isError === "1" && errDescription === "out of gas") {
+        feedbackModule.showError(i18n.t("messages.transaction_out_of_gas").toString())
+      }
+    })
+    .catch((e) => {
+      console.error("Error querying etherscan api", e)
+    })
 }
 
 /**

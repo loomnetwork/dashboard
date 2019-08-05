@@ -432,7 +432,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
         receipt: JSON.stringify({
           tokenOwner: receipt.tokenOwner.local.toString(),
           tokenContract: receipt.tokenContract.local.toString(),
-          tokenId: receipt.tokenId!.toString(),
+          tokenId: (receipt.tokenId || "").toString(),
           tokenAmount: receipt.tokenAmount!.toString(),
           signatures: receipt.oracleSignature,
         }),
@@ -451,17 +451,17 @@ export async function refreshEthereumHistory(context: ActionContext) {
   const fromBlock = cached.length ? cached[0].blockNumber : 0
   const address = ethereum.address
   const coins = Object.keys(context.rootState.ethereum.coins)
-  coins.forEach(async (symbol) => {
+  const promises = coins.map((symbol) => {
     switch (symbol) {
       case PlasmaTokenKind.ETH:
-        await logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn")
+        return logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn")
       case PlasmaTokenKind.LOOMCOIN:
-        await logEvents(address, loomGateway, symbol, "LoomCoinReceived", "TokenWithdrawn")
+        return logEvents(address, loomGateway, symbol, "LoomCoinReceived", "TokenWithdrawn")
       default:
-        await logEvents(address, mainGateway, symbol, "ERC20Received", "TokenWithdrawn")
+        return logEvents(address, mainGateway, symbol, "ERC20Received", "TokenWithdrawn")
     }
   })
-
+  await Promise.all(promises)
   ethereum.history.sort((a, b) => b.blockNumber - a.blockNumber)
 }
 

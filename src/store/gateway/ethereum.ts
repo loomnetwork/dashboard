@@ -445,10 +445,10 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
 }
 
 export async function refreshEthereumHistory(context: ActionContext) {
+  // clear history
+  ethereumModule.clearHistory()
   const ethereum = context.rootState.ethereum
-  const cached = ethereum.history
   const { loomGateway, mainGateway } = service()
-  const fromBlock = cached.length ? cached[0].blockNumber : 0
   const address = ethereum.address
   const coins = Object.keys(context.rootState.ethereum.coins)
   const promises = coins.map((symbol) => {

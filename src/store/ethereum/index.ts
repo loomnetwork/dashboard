@@ -26,6 +26,7 @@ import {
   initUserData,
   setUserData,
   deleteUserData,
+  clearHistory,
 } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
@@ -132,6 +133,7 @@ export const ethereumModule = {
   initERC20: builder.dispatch(initERC20),
   clearERC20: builder.dispatch(clearERC20),
 
+  clearHistory: builder.commit(clearHistory),
   setBlockNumber: builder.commit(setBlockNumber),
   pollLastBlockNumber: builder.dispatch(pollLastBlockNumber),
 

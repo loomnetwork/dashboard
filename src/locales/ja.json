@@ -323,6 +323,7 @@
     "event:MainnetWithdrawalEvent": "出金",
     "event:WithdrawLoomCoin": "出金(LOOM)",
     "event:TokenWithdrawalSigned": "署名済みの出金",
-    "TokenWithdrawn": "出金済みトークン"
+    "TokenWithdrawn": "出金済みトークン",
+    "ETHReceived": "Deposit (ETH)"
   }
 }

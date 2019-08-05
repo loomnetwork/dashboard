@@ -2,6 +2,7 @@ import { Store } from "vuex"
 import { ethereumModule } from "."
 import { DashboardState } from "@/types"
 import { dposModule } from "@/dpos/store"
+import { gatewayModule } from "../gateway"
 
 export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.address, onAddressChange)
@@ -16,9 +17,11 @@ export function ethereumReactions(store: Store<DashboardState>) {
     }
 
     trackUser(address)
+    ethereumModule.initUserData(address)
     ethereumModule.pollLastBlockNumber()
     ethereumModule.initERC20("LOOM")
     ethereumModule.refreshBalance("ETH")
+
   }
 
 }

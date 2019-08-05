@@ -58,21 +58,21 @@ export default class MappedTokenAddress extends Vue {
 
   copyEthereum() {
     this.$copyText(this.tokenData.ethereum).then(() =>
-      feedbackModule.showSuccess("Ethereum address copied."),
+      feedbackModule.showSuccess(this.$t("feedback_msg.success.eth_addr_copied").toString()),
       console.error,
     )
   }
 
   copyPlasma() {
     this.$copyText(this.tokenData.plasma).then(() =>
-      feedbackModule.showSuccess("Plasma address copied."),
+      feedbackModule.showSuccess(this.$t("feedback_msg.success.plasma_addr_copied").toString()),
       console.error,
     )
   }
 
   toggleChains(value) {
-    this.chainTabs = value;
-    this.$emit('toggleChain', this.chainTabs)
+    this.chainTabs = value
+    this.$emit("toggleChain", this.chainTabs)
   }
 }
 </script>

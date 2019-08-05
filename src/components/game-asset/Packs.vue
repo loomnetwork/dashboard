@@ -2,7 +2,7 @@
   <b-card class="packs-view" no-body>
     <transfer-packs-modal ref="transferPackModalConfig"></transfer-packs-modal>
     <b-card-header>
-      <h4 class="card-title">{{$t('My Packs')}}</h4>
+      <h4 class="card-title">{{ $t('components.gameAsset.packs.my_packs') }}</h4>
     </b-card-header>
     <b-list-group flush>
       <b-list-group-item v-for="pack in packs" :key="pack.type">
@@ -15,7 +15,7 @@
             size="sm"
             variant="outline-primary"
             @click="transferpackTo(pack)"
-          >Transfer</b-button>
+          >{{ $t('components.gameAsset.packs.transfer') }}</b-button>
         </b-button-group>
       </b-list-group-item>
     </b-list-group>

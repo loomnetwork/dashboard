@@ -17,6 +17,7 @@ import { feedbackModule } from "@/feedback/store"
 import * as Sentry from "@sentry/browser"
 
 import axios from "axios"
+import { i18n } from "@/i18n"
 
 const log = debug("dash.mapper")
 
@@ -24,7 +25,7 @@ export async function loadMapping(context: ActionContext, address: string) {
   const client = context.rootState.plasma.client!
   const chainId = client.chainId
   const caller = context.rootState.plasma.appId.address
-  feedbackModule.setStep("Checking account mapping")
+  feedbackModule.setStep(i18n.t("feedback_msg.step.check_account_mapping").toString())
   const mapper = await AddressMapper.createAsync(
     client,
     Address.fromString([chainId, caller].join(":")),
@@ -77,7 +78,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
     rootState.plasma.endpoint,
     rootState.plasma.chainId,
   )
-  feedbackModule.setStep("Creating a new mapping from ethereum account")
+  feedbackModule.setStep(i18n.t("feedback_msg.step.create_new_mapping").toString())
   const mapper = await AddressMapper.createAsync(client, address)
   try {
     await mapper.addIdentityMappingAsync(
@@ -90,9 +91,9 @@ export async function createMapping(context: ActionContext, privateKey: string) 
   } catch (e) {
     if (e.message.includes("identity mapping already exists")) {
       state.requireMapping = true
-      feedbackModule.showError("The supplied key is already mapped.")
+      feedbackModule.showError(i18n.t("feedback_msg.error.supplied_key_already_mapped").toString())
     } else {
-      feedbackModule.showError("Unexpected error while adding account mapping.")
+      feedbackModule.showError(i18n.t("feedback_msg.error.unexpected_error_while_add_account").toString())
 
       console.error(e)
       console.error(

@@ -1,9 +1,9 @@
 <template>
   <div id="mobile-account">
     <account-info />
-    <b-card title="Balance" class="mb-4" no-body>
+    <b-card :title="$t('views.my_account.balance')" class="mb-4" no-body>
       <b-card-header class="custom-card-header d-flex justify-content-between">
-        <h4>Balance</h4>
+        <h4>{{ $t('views.my_account.balance') }}</h4>
         <a v-if="!showRefreshSpinner" @click="refresh">
           <fa :icon="['fas', 'sync']" class="refresh-icon" />
         </a>
@@ -14,14 +14,14 @@
           v-if="currentAllowance && !gatewayBusy"
           bg-variant="warning"
           text-variant="white"
-          header="Warning"
+          :header="$t('views.mobile_account.warning')"
           class="text-center mb-3"
         >
           <b-card-text>
             <p
               class="warning-copy mb-2"
-            >{{currentAllowance}} LOOM awaiting transfer to plasmachain account.</p>
-            <b-btn size="sm" variant="primary">Resume Deposit</b-btn>
+            >{{currentAllowance}} {{ $t('views.mobile_account.loom_awaiting_transfer') }}</p>
+            <b-btn size="sm" variant="primary">{{ $t('views.mobile_account.resume_deposit') }}</b-btn>
           </b-card-text>
         </b-card>
 
@@ -57,11 +57,11 @@
             <b-spinner variant="primary" label="Spinning" />
           </div>
           <b-link href="#" class="card-link">
-            <router-link to="/wallet">Deposit/Withdraw</router-link>
+            <router-link to="/wallet">{{ $t('components.faucet_sidebar.deposit_withdraw') }}</router-link>
           </b-link>
           <b-modal
             id="wait-tx"
-            title="Done"
+            :title="$t('button.done')"
             hide-footer
             centered
             no-close-on-backdrop
@@ -70,8 +70,8 @@
       </b-card-body>
     </b-card>
 
-    <b-card title="Election Cycle" class="mb-4">
-      <h6>Time left</h6>
+    <b-card :title="$t('views.mobile_account.election_cycle')" class="mb-4">
+      <h6>{{ $t('views.mobile_account.time_left') }}</h6>
       <election-timer />
     </b-card>
 
@@ -79,7 +79,7 @@
 
     <b-card id="delegations-container" no-body>
       <b-card-body>
-        <h4 class="card-title" style="margin: 0;">Delegations</h4>
+        <h4 class="card-title" style="margin: 0;">{{ $t('views.mobile_account.delegations') }}</h4>
       </b-card-body>
       <delegations :delegations="delegations" show-validator />
     </b-card>
@@ -89,7 +89,7 @@
     </pre>
 
     <div class="button-container">
-      <b-button @click="$router.push({ path: '/validators' })">Stake tokens</b-button>
+      <b-button @click="$router.push({ path: '/validators' })">{{ $t('views.validator_detail.stake_tokens') }}</b-button>
     </div>
   </div>
 </template>

@@ -70,6 +70,7 @@ export const gatewayModule = {
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
+  checkTxStatus: builder.dispatch(EthereumGateways.checkTxStatus),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
   loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),
@@ -125,11 +126,8 @@ async function checkIfPastWithdrawalEventExists() {
   const notExpired = history.find((event) => {
     return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) >= blockNumber)
   })
-  const inLocalStorage = JSON.parse(
-    localStorage.getItem("pendingWithdrawal") || "false",
-  )
+  const inLocalStorage = ethereumModule.state.userData.pendingWithdrawal
   if (notExpired!! || inLocalStorage) {
-    console.info("Remaining blocks until expiry", blockNumber - notExpired.blockNumber)
     return true
   }
   return false

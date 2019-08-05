@@ -10,10 +10,10 @@
       </div>
       <div
         v-else-if="hasRewardsBeingClaimed"
-      >{{rewardsBeingClaimed| tokenAmount}} LOOM will be reclaimed after next election.</div>
+      >{{rewardsBeingClaimed| tokenAmount}} {{ $t('views.rewards.will_be_reclaimed_after_next_election') }}</div>
       <div v-else>
         <h6>
-          You do not have any rewards at the moment.
+          {{ $t('views.rewards.no_rewards') }}
           <!-- only show this is user has no delegations
             Please visit the
             <router-link
@@ -48,7 +48,6 @@ export default class Rewards extends Vue {
 
   hideTooltip = false
   pollInterval = null
-
 
   get state(): HasDPOSState {
     return this.$store.state

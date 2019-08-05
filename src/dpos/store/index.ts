@@ -15,6 +15,7 @@ import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 import * as Sentry from "@sentry/browser"
+import { i18n } from "@/i18n"
 
 const log = debug("dash.dpos")
 
@@ -234,7 +235,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   const { state } = context
   const contract = state.contract!
 
-  feedback.setTask("Delegate")
+  feedback.setTask(i18n.t("feedback_msg.task.delegate").toString())
 
   const approved = await plasmaModule.approve({
     symbol: "LOOM",
@@ -248,7 +249,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
   }
 
   try {
-    feedback.setStep("Delegating...")
+    feedback.setStep(i18n.t("feedback_msg.step.delegating").toString())
     await context.state.contract!.delegateAsync(
       delegation.validator.address,
       delegation.amount,
@@ -258,7 +259,7 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Unexpected error while delegating, please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_delegate").toString())
     console.error(error)
     Sentry.withScope((scope) => {
       scope.setExtra("delegations", {
@@ -312,8 +313,8 @@ function getReferrer() {
  *  - updateAmount is the amount to redelegate
  */
 export async function redelegate(context: ActionContext, delegation: Delegation) {
-  feedback.setTask("Redelegating")
-  feedback.setStep("Scheduling redelegation...") // amount validator
+  feedback.setTask(i18n.t("feedback_msg.task.redelegating").toString())
+  feedback.setStep(i18n.t("feedback_msg.step.scheduling_redelegate").toString()) // amount validator
   try {
     await context.state.contract!.redelegateAsync(
       delegation.validator.address,
@@ -325,7 +326,7 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while redelegating. Please contact support")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_redelegate").toString())
     Sentry.withScope((scope) => {
       scope.setExtra("redelegations", {
         redelegations: JSON.stringify({
@@ -341,14 +342,14 @@ export async function redelegate(context: ActionContext, delegation: Delegation)
 }
 
 async function consolidate(context: ActionContext, validator: ICandidate) {
-  feedback.setTask("Consolidating")
-  feedback.setStep("Consolidating unlocked delegations on " + validator.name)
+  feedback.setTask(i18n.t("feedback_msg.task.consolidating").toString())
+  feedback.setStep(i18n.t("feedback_msg.step.consolidating_unlocked_on").toString() + validator.name)
   try {
     await context.state.contract!.consolidateDelegations(validator.address)
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while redelegating. Please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_redelegate").toString())
     Sentry.withScope((scope) => {
       scope.setExtra("consolidate", {
         consolidate: JSON.stringify({
@@ -369,8 +370,8 @@ async function consolidate(context: ActionContext, validator: ICandidate) {
  *  - updateAmount is the amount to un-delegate
  */
 export async function undelegate(context: ActionContext, delegation: Delegation) {
-  feedback.setTask("Undelegating")
-  feedback.setStep("Undelegating from " + delegation.validator.name)
+  feedback.setTask(i18n.t("feedback_msg.task.undelegating").toString())
+  feedback.setStep(i18n.t("feedback_msg.step.undelegating_from").toString() + delegation.validator.name)
   try {
     await context.state.contract!.unbondAsync(
       delegation.validator.address,
@@ -380,7 +381,7 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while undelegating. Please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_undelegate").toString())
     Sentry.withScope((scope) => {
       scope.setExtra("undelegations", {
         undelegations: JSON.stringify({
@@ -404,24 +405,24 @@ async function claimRewards(context: ActionContext) {
   const limboValidator = Address.fromString(
     context.rootState.plasma.chainId + ":0x" + "".padEnd(40, "0"),
   )
-  feedback.setTask("Claiming rewards")
-  feedback.setStep("Checking rewards...")
+  feedback.setTask(i18n.t("feedback_msg.task.claiming_reward").toString())
+  feedback.setStep(i18n.t("feedback_msg.step.checking_reward").toString())
   const limboDelegations = await contract.checkDelegationAsync(
     limboValidator,
     contract.caller,
   )
   if (limboDelegations!.delegationsArray.length > 0) {
-    feedback.setStep("Claiming DPOS 2 rewards...") // add amount
+    feedback.setStep(i18n.t("feedback_msg.step.claiming_dpos_reward").toString()) // add amount
     await contract.unbondAsync(limboValidator, 0, 0)
   }
   try {
-    feedback.setStep("Claiming rewards...") // add amount
+    feedback.setStep(i18n.t("feedback_msg.step.claiming_reward").toString()) // add amount
     await contract.claimDelegatorRewardsAsync()
     feedback.endTask()
-    feedback.showInfo("Rewards succesfully claimed.")
+    feedback.showInfo(i18n.t("feedback_msg.info.reward_claimed").toString())
   } catch (error) {
     feedback.endTask()
-    feedback.showError("Error while claiming rewards. Please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_claiming").toString())
   }
 }
 
@@ -435,7 +436,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
   const weiAmount = parseToWei("1250000")
 
   if (balance.lt(weiAmount)) {
-    feedback.showError("Insufficient funds.")
+    feedback.showError(i18n.t("feedback_msg.error.insufficient_funds").toString())
     return
   }
 
@@ -448,7 +449,7 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
       await plasmaModule.approve({ symbol: token, weiAmount, to: addressString })
     } catch (err) {
       console.error(err)
-      feedback.showError("Approval failed.")
+      feedback.showError(i18n.t("feedback_msg.error.approval_failed").toString())
       return
     }
   }
@@ -463,10 +464,10 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
       candidate.whitelistLocktimeTier,
     )
 
-    feedback.showSuccess("Successfully registered.")
+    feedback.showSuccess(i18n.t("feedback_msg.success.register_success").toString())
   } catch (err) {
     console.error(err)
-    feedback.showError("Error while registering. Please contact support.")
+    feedback.showError(i18n.t("feedback_msg.error.err_while_register").toString())
   }
 }
 

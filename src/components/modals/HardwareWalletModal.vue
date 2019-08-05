@@ -7,22 +7,21 @@
     centered
     no-close-on-backdrop
   >
-
     <b-form style="display: flex; flex-direction: column;">
       <b-alert
         show
         variant="warning">
-      This option is being deprecated. We recommend using Ledger via Metamask.</b-alert>
+      {{ $t('components.modals.hardware_wallet_modal.this_option_deprecated') }}</b-alert>
       <b-alert
         variant="info"
         :show="ledgerLocked === true"
-      >Please make sure your Ledger is connected, unlocked and then go tho ethereum app.</b-alert>
+      >{{ $t('components.modals.hardware_wallet_modal.ledger_locked') }}</b-alert>
       <b-alert :show="!!errorMsg">{{errorMsg}}</b-alert>
       <div v-if="!hdWallet && ledgerLocked === false">
-        <b-spinner label="Loading" />Initializing. Please wait...
+        <b-spinner label="Loading" />{{ $t('components.modals.hardware_wallet_modal.initializing') }}
       </div>
       <b-form-select class="mb-2" :value="null" :options="paths" v-model="selectedPath">
-        <option slot="first" :value="null">Select a path</option>
+        <option slot="first" :value="null">{{ $t('components.modals.hardware_wallet_modal.select_path') }}</option>
       </b-form-select>
 
       <b-list-group class="account-list" v-if="selectedPath">
@@ -35,7 +34,7 @@
           <address>{{formatAddress(option.address)}}</address>
           <div class="balance">{{option.balance | tokenAmount}} ETH</div>
         </b-list-group-item>
-        <b-list-group-item class="load-more" @click="loadMore" v-if="!loadingAccounts">Load more</b-list-group-item>
+        <b-list-group-item class="load-more" @click="loadMore" v-if="!loadingAccounts">{{ $t('components.modals.hardware_wallet_modal.load_more') }}</b-list-group-item>
         <b-list-group-item class="loading" v-else>
           <b-spinner label="Loading" />
         </b-list-group-item>
@@ -47,7 +46,7 @@
           :disabled="account === null"
           variant="primary"
           @click="connect(account)"
-        >Use account</b-button>
+        >{{ $t('components.modals.hardware_wallet_modal.use_account') }}</b-button>
       </footer>
     </b-form>
   </b-modal>

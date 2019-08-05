@@ -15,7 +15,7 @@ export interface TokenData {
 }
 
 const ETHBNB: TokenData = Object.freeze({
-  symbol: "BNB",
+  symbol: "ETHBNB",
   decimals: 18,
   ethereum: "0xb8c77482e45f1f44de1745f52c74426c631bdd52",
   plasma: "0xcf2851b1ad63d093238ea296524be8d7cd920e0b",

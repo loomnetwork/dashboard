@@ -350,8 +350,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     }
   }
   fb.requireConfirmation({
-    title: "Complete deposit",
-    message: "Please sign click confirm to complete your deposit.",
+    title: i18n.t("feedback_msg.require_confirmation.title.complete_deposit"),
+    message: i18n.t("feedback_msg.require_confirmation.message.please_sign_click"),
     onConfirm: async () => {
       try {
         fb.showLoadingBar(true)

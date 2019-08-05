@@ -680,6 +680,8 @@
       "withdraw_failed": "Withdraw failed, please try again or contact support.",
       "supplied_key_already_mapped": "The supplied key is already mapped.",
       "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
+      "balance_not_enough": "Your balance isn't enough. Please deposit first.",
+      "address_existed": "This address is already exists in your deployer list.",
       "failed_to_get_receipt": "Failed to get receipt"
     },
     "info": {
@@ -692,6 +694,9 @@
     },
     "success": {
       "transaction_success": "Transaction sent successfully.",
+      "eth_addr_copied": "Ethereum address copied.",
+      "plasma_addr_copied": "Plasma address copied.",
+      "address_copied": "Address copied.",
       "register_success": "Successfully registered."
     },
     "alert": {
@@ -703,11 +708,13 @@
         "existing_withdraw_being_process": "An existing withdrawal is currently being processed. Please try again later."
       }
     },
-    "eth_addr_copied": "Ethereum address copied.",
-    "plasma_addr_copied": "Plasma address copied.",
-    "balance_not_enough": "Your balance isn't enough. Please deposit first.",
-    "address_existed": "This address is already exists in your deployer list.",
-    "address_copied": "Address copied.",
-    "delegate": "Delegate"
+    "require_confirmation": {
+      "title": {
+        "complete_deposit": "Complete deposit"
+      },
+      "message": {
+        "please_sign_click": "Please sign click confirm to complete your deposit."
+      }
+    }
   }
 }

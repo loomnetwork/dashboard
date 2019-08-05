@@ -222,14 +222,14 @@ export default class AddKey extends Vue {
 
   async addKey(tier: ITier) {
     if (tier.fee.gt(plasmaModule.state.coins.LOOM.balance)) {
-      this.showError(this.$t('feedback_msg.balance_not_enough').toString())
+      this.showError(this.$t('feedback_msg.error.balance_not_enough').toString())
       // this.showError("Your balance isn't enough. Please deposit first.")
       return
     }
 
     const loomAddress = formatFromLoomAddress(this.newPublicAddress)
     if (this.publicKeys.filter((address) => address.hex === loomAddress).length > 0) {
-      this.showError(this.$t('feedback_msg.address_existed').toString())
+      this.showError(this.$t('feedback_msg.error.address_existed').toString())
       // this.showError("This address is already exists in your deployer list.")
       return
     }
@@ -254,7 +254,7 @@ export default class AddKey extends Vue {
 
   copyAddress(hex: string) {
     this.$copyText(formatToLoomAddress(hex)).then(() =>
-      feedbackModule.showSuccess(this.$t('feedback_msg.address_copied').toString()),
+      feedbackModule.showSuccess(this.$t('feedback_msg.success.address_copied').toString()),
       console.error,
     )
   }

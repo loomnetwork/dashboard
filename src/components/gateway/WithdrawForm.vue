@@ -28,7 +28,7 @@
         <input-address
           v-model="recepient"
           :chain="transferRequest.chain"
-          :placeholder="transferRequest.chain + ' address'"
+          :placeholder="$t('input_placeholder.chain_addr', {transferChain: transferRequest.chain})"
           @isValid="isValidAddressFormat"
         />
       </div>

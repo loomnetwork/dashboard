@@ -7,12 +7,11 @@
     centered
     no-close-on-backdrop
   >
-
     <b-form style="display: flex; flex-direction: column;">
       <b-alert
         show
         variant="warning">
-      This option is being deprecated. We recommend using Ledger via Metamask.</b-alert>
+      {{ $t('components.modals.hardware_wallet_modal.this_option_deprecated') }}</b-alert>
       <b-alert
         variant="info"
         :show="ledgerLocked === true"

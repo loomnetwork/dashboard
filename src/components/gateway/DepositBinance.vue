@@ -26,11 +26,11 @@
           <p>{{ $t('components.gateway.deposit_binance.select_asset') }}</p>
           <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
           <p>{{ $t('components.gateway.deposit_binance.to_address') }}</p>
-          <b-form-input placeholder="Gateway Address" :value="form.gateway" disabled></b-form-input>
+          <b-form-input :placeholder="$t('input_placeholder.gateway_addr')" :value="form.gateway" disabled></b-form-input>
           <p>{{ $t('components.gateway.deposit_binance.send_amount') }}</p>
-          <b-form-input placeholder="Amount" :value="$t('components.gateway.deposit_binance.send_amount_placeholder')" disabled></b-form-input>
+          <b-form-input :placeholder="$t('input_placeholder.amount')" :value="$t('components.gateway.deposit_binance.send_amount_placeholder')" disabled></b-form-input>
           <p>{{ $t('components.gateway.deposit_binance.memo') }}</p>
-          <b-form-textarea rows="3" placeholder="Memo text" disabled v-model="form.memo"></b-form-textarea>
+          <b-form-textarea rows="3" :placeholder="$t('input_placeholder.memo')" disabled v-model="form.memo"></b-form-textarea>
         </div>
       </div>
       <div class="content" v-else-if="step === 2">

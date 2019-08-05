@@ -10,7 +10,7 @@
     no-close-on-esc
   >
     <h6>{{ $t('components.modals.faucet_redelegate_modal.select_validator') }} {{ validatorSelected }}</h6>
-    <b-input placeholder="Search..." type="search" @input="onInput" class="mb-2"></b-input>
+    <b-input :placeholder="$t('input_placeholder.search')" type="search" @input="onInput" class="mb-2"></b-input>
     <b-list-group flush class="mb-4">
       <b-list-group-item
         class="flex-column align-items-start"

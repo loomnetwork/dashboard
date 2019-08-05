@@ -16,7 +16,7 @@
         id="delegation-amount-input"
         v-model.number="delegationAmount"
         required
-        :placeholder="$t('components.modals.faucet_delegate_modal.enter_amount')"
+        :placeholder="$t('input_placeholder.enter_amount')"
         :state="isAmountValid"
         inputmode="numeric"
         pattern="[0-9]*"

@@ -37,7 +37,7 @@
         <b-form-input
           id="input-formatter"
           v-model="privateKey"
-          placeholder="Loom private key (base64)"
+          :placeholder="$t('input_placeholder.loom_private_base64')"
           aria-describedby="input-formatter-help"
           :state="isPKValid"
         ></b-form-input>

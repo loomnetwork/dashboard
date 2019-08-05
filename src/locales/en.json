@@ -281,7 +281,6 @@
       "show_block_explorer": "Show in Block Explorer"
     },
     "amount_input": {
-      "enter_amount": "Enter amount",
       "all": "All"
     },
     "faucet_footer": {
@@ -432,7 +431,6 @@
         "delegate": "Delegate",
         "cancel": "Cancel",
         "your_balance": "Your balance is {amount} LOOM",
-        "enter_amount": "Enter amount",
         "locktime_bonuses": "Locktime / Bonuses:",
         "warning_please_note_that_any": "Warning, please note that any additional delegation will overwrite any pre-existing delegation!",
         "warning_please_note_that_un_delegating": "Warning, please note that un-delegating will exempt you from being elligible to collect any rewards earned during the staking period.",
@@ -465,7 +463,8 @@
         "initializing": "Initializing. Please wait...",
         "select_path": "Select a path",
         "load_more": "Load more",
-        "use_account": "Use account"
+        "use_account": "Use account",
+        "this_option_deprecated": "This option is being deprecated. We recommend using Ledger via Metamask."
       },
       "faucet_redelegate_modal": {
         "select_validator": "Select a validator :",
@@ -488,8 +487,7 @@
       },
       "add_token_modal": {
         "add_new" : "Add New Token",
-        "token_symbol": "Token Symbol",
-        "search": "Search"
+        "token_symbol": "Token Symbol"
       },
       "transfer_all_cards": {
         "title": "Transfer All Cards",
@@ -716,5 +714,18 @@
         "please_sign_click": "Please sign click confirm to complete your deposit."
       }
     }
+  },
+  "input_placeholder": {
+    "enter_amount": "Enter amount",
+    "filter": "Filter",
+    "gateway_addr": "Gateway Address",
+    "amount": "Amount",
+    "memo": "Memo text",
+    "chain_addr": "{transferChain} address",
+    "loom_private_base64": "Loom private key (base64)",
+    "search": "Search",
+    "loom_addr": "Loom Address",
+    "enter_your_addr": "Enter your address",
+    "token_name": "Token name"
   }
 }

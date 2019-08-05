@@ -14,7 +14,7 @@
       </b-dropdown>
     </b-card-header>
     <b-card-body v-if="filteredCards.length > 7 || inputFilter !== ''">
-      <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
+      <b-form-input v-model="inputFilter" :placeholder="$t('input_placeholder.filter')"></b-form-input>
     </b-card-body>
     <b-card-body v-if="filteredCards.length === 0">{{ $t('components.gameAsset.cards.no_card') }}</b-card-body>
     <b-list-group flush>

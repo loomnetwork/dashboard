@@ -26,7 +26,7 @@
         </a>
       </b-card-header>
       <b-card-body v-if="filteredSymbols.length > 7 || inputFilter !== ''">
-        <b-form-input v-model="inputFilter" placeholder="Filter"></b-form-input>
+        <b-form-input v-model="inputFilter" :placeholder="$t('input_placeholder.filter')"></b-form-input>
       </b-card-body>
       <b-list-group flush>
         <b-list-group-item v-for="symbol in filteredSymbols" :key="symbol">

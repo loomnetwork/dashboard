@@ -133,7 +133,7 @@
 
           <b-modal v-model="addressModalShow" hide-header hide-footer>
             <div>
-              <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
+              <b-form-input v-model="address" class="mb-2" :placeholder="$t('input_placeholder.enter_your_addr')"></b-form-input>
               <b-button type="submit" @click="setExploreMode(address)" variant="primary">{{ $t('button.submit') }}</b-button>
             </div>
           </b-modal>

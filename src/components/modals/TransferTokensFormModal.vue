@@ -29,7 +29,7 @@
           v-model="receiverAddress"
           chain="loom"
           :blacklist="[ownAddress]"
-          placeholder="'Loom Address'"
+          :placeholder="$t('input_placeholder.loom_addr')"
           @isValid="isValidAddressFormat"
         />
       </div>

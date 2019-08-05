@@ -13,7 +13,7 @@
         v-model="selectedToken"
         list="token-symbol"
         id="input-with-list"
-        :placeholder="$t('components.modals.add_token_modal.search')"
+        :placeholder="$t('input_placeholder.search')"
       ></b-form-input>
       <div class="virtual-list mt-3">
         <virtual-list :size="30" :remain="8">

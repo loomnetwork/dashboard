@@ -25,7 +25,7 @@
             <b-form-input
               v-model="tokenName"
               type="text"
-              placeholder="Token name"
+              :placeholder="$t('input_placeholder.token_name')"
               style="text-align: right;"
             ></b-form-input>
             <b-input-group-append>

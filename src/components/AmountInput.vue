@@ -6,7 +6,7 @@
           id="input-amount"
           v-model="amount"
           :type="'number'"
-          :placeholder="$t('components.amount_input.enter_amount')"
+          :placeholder="$t('input_placeholder.enter_amount')"
           aria-describedby="input-live-help input-live-feedback"
           @keyup="validateAmount"
         ></b-form-input>

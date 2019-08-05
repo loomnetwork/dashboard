@@ -108,10 +108,10 @@ export default class DelegateModal extends Vue {
 
   created() {
     this.locktimeTiers = [
-      this.$t('components.modals.faucet_delegate_modal.two_weeks').toString(),
-      this.$t('components.modals.faucet_delegate_modal.three_months').toString(),
-      this.$t('components.modals.faucet_delegate_modal.six_months').toString(),
-      this.$t('components.modals.faucet_delegate_modal.one_year').toString(),
+      this.$t("components.modals.faucet_delegate_modal.two_weeks").toString(),
+      this.$t("components.modals.faucet_delegate_modal.three_months").toString(),
+      this.$t("components.modals.faucet_delegate_modal.six_months").toString(),
+      this.$t("components.modals.faucet_delegate_modal.one_year").toString(),
     ]
   }
 

@@ -66,7 +66,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get title() {
-    return status === "error" ? this.$t('components.gateway.confirm_withdrawal_modal.status_failed') : this.$t('components.gateway.confirm_withdrawal_modal.status_confirmed')
+    return status === "error" ? this.$t("components.gateway.confirm_withdrawal_modal.status_failed") : this.$t("components.gateway.confirm_withdrawal_modal.status_confirmed")
   }
 
   get visible() {

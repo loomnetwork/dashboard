@@ -92,11 +92,11 @@ export default class RedelegateModal extends Vue {
     this.errorMsg = ""
     const delegation = this.delegation!
     if (delegation.updateValidator === undefined) {
-      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.target_error').toString()
+      this.errorMsg = this.$t("components.modals.faucet_redelegate_modal.target_error").toString()
       return
     }
     if (delegation.validator === delegation.updateValidator) {
-      this.errorMsg = this.$t('components.modals.faucet_redelegate_modal.same_target_error').toString()
+      this.errorMsg = this.$t("components.modals.faucet_redelegate_modal.same_target_error").toString()
       return
     }
     // for now redelegate all

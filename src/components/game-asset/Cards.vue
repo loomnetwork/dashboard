@@ -76,8 +76,8 @@ export default class Cards extends Vue {
   get editionFilterText() {
     console.log(this.edition)
     return this.edition ?
-      `${this.edition.name} ${this.$t('components.gameAsset.cards.edition')} (${this.edition.amount})` :
-      `${this.$t('components.gameAsset.cards.all_edition')} (${this.userCardsAmount})`
+      `${this.edition.name} ${this.$t("components.gameAsset.cards.edition")} (${this.edition.amount})` :
+      `${this.$t("components.gameAsset.cards.all_edition")} (${this.userCardsAmount})`
   }
 
   get filteredCards() {

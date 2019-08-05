@@ -88,11 +88,11 @@ export default class DepositBinance extends Vue {
   }
 
   get title() {
-    return this.step === 4 ? this.$t('components.gateway.deposit_binance.title_success') : this.$t('components.gateway.deposit_binance.title_deposit')
+    return this.step === 4 ? this.$t("components.gateway.deposit_binance.title_success") : this.$t("components.gateway.deposit_binance.title_deposit")
   }
 
   get backButtonText() {
-    return this.step === 1 ? this.$t('components.gateway.deposit_binance.cancel') : this.$t('components.gateway.deposit_binance.back')
+    return this.step === 1 ? this.$t("components.gateway.deposit_binance.cancel") : this.$t("components.gateway.deposit_binance.back")
   }
   onBack() {
     if (this.step === 1) {

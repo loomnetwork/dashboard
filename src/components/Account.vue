@@ -53,14 +53,14 @@ export default class Account extends Vue {
 
   copyEthereum() {
     this.$copyText(this.ethAccount).then(() =>
-      feedbackModule.showSuccess(this.$t('feedback_msg.success.eth_addr_copied').toString()),
+      feedbackModule.showSuccess(this.$t("feedback_msg.success.eth_addr_copied").toString()),
       console.error,
     )
   }
 
   copyPlasma() {
     this.$copyText(formatToLoomAddress(this.plasmaAccount)).then(() =>
-      feedbackModule.showSuccess(this.$t('feedback_msg.success.plasma_addr_copied').toString()),
+      feedbackModule.showSuccess(this.$t("feedback_msg.success.plasma_addr_copied").toString()),
       console.error,
     )
   }

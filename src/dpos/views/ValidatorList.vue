@@ -98,18 +98,18 @@ export default class ValidatorList extends Vue {
   validatorFields: any[] = []
 
   created() {
-    this.validatorFields = [{ key: "name", sortable: true, label: this.$t('views.validator_list.name') },
-      { key: "active", sortable: true, label: this.$t('views.validator_detail.active') },
+    this.validatorFields = [{ key: "name", sortable: true, label: this.$t("views.validator_list.name") },
+      { key: "active", sortable: true, label: this.$t("views.validator_detail.active") },
       //  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
       {
         key: "totalStaked",
         sortable: true,
-        label: this.$t('components.modals.faucet_redelegate_modal.total_stake'),
+        label: this.$t("components.modals.faucet_redelegate_modal.total_stake"),
         formatter: (value) => formatTokenAmount(value, 18, 0),
         thClass: "align-center-th",
         tdClass: "align-right-td",
       },
-      { key: "fee", sortable: true, label: this.$t('components.validator_extended_detail.fee'), thClass: "align-center-th", tdClass: "align-right-td" },
+      { key: "fee", sortable: true, label: this.$t("components.validator_extended_detail.fee"), thClass: "align-center-th", tdClass: "align-right-td" },
     ]
   }
 

@@ -15,7 +15,6 @@ import { ethereumModule } from "../ethereum"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { ActionContext } from "./types"
 import Axios from "axios"
-import { sleep } from "@/utils"
 
 const log = debug("dash.gateway")
 

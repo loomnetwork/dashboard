@@ -151,7 +151,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     const mainGateway = plasmaGateways.ethereumMainGateway
     const loomReceipt = await loomGateway.withdrawalReceiptAsync(loomGateway.caller)
     const mainReceipt = await mainGateway.withdrawalReceiptAsync(mainGateway.caller)
-    if (!loomGateway && !mainReceipt) return
+    if (!loomReceipt && !mainReceipt) return
 
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
 

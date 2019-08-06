@@ -43,6 +43,6 @@ export default {
     },
   },
   coinDataUrl: "https://auth.loom.games/wallet/tokens",
-  disabled: [],
+  disabled: ["portis", "fortmatic"],
   chains: ["ethereum", "binance"],
 } as DashboardConfig

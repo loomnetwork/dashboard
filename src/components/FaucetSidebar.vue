@@ -1,7 +1,7 @@
 <template>
   <nav id="faucet-sidebar" vertical class="navbar-side">
     <header>
-      <h6 class="rmv-spacing">Staking</h6>
+      <h6 class="rmv-spacing">{{ $t('components.faucet_sidebar.staking') }}</h6>
     </header>
     <b-nav class="staking" vertical>
       <b-nav-item
@@ -20,7 +20,7 @@
     </b-nav>
     <section>
       <header>
-        <h6 class="rmv-spacing">Plasma Wallet</h6>
+        <h6 class="rmv-spacing">{{ $t('components.faucet_sidebar.plasma_wallet') }}</h6>
       </header>
       <b-nav vertical>
         <b-nav-item
@@ -34,7 +34,7 @@
     </section>
     <section class="developer-menu">
       <header>
-        <h6 class="rmv-spacing">Developers</h6>
+        <h6 class="rmv-spacing">{{ $t('components.faucet_sidebar.developers') }}</h6>
       </header>
       <b-nav vertical>
         <b-nav-item
@@ -49,7 +49,7 @@
     </section>
     <section>
       <header>
-        <h6 class="rmv-spacing">Help</h6>
+        <h6 class="rmv-spacing">{{ $t('components.faucet_sidebar.help') }}</h6>
       </header>
       <b-nav vertical>
         <b-nav-item
@@ -62,7 +62,7 @@
       </b-nav>
     </section>
     <b-nav vertical>
-      <b-nav-item v-if="!!state.plasma.address" @click="logout">Sign out</b-nav-item>
+      <b-nav-item v-if="!!state.plasma.address" @click="logout">{{ $t('components.faucet_header.sign_out') }}</b-nav-item>
     </b-nav>
   </nav>
 </template>
@@ -119,11 +119,11 @@ export default class FaucetSidebar extends Vue {
         },
         {
           to: "/transfer-gateway",
-          text: "Transfer Gateway",
+          text: "components.faucet_sidebar.transfer_gateway",
         },
         {
           to: "/validator-management",
-          text: "Validator Management",
+          text: "components.faucet_sidebar.validator_management",
         },
       ],
       help: [

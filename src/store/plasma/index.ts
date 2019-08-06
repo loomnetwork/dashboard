@@ -10,6 +10,7 @@ import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 
 import * as mutations from "./mutations"
+import { i18n } from "@/i18n"
 
 import {
   setupProtocolsFromEndpoint,
@@ -167,7 +168,7 @@ async function changeIdentity(
     )
     // destroy loomProvider and old web3
   } else {
-    feedbackModule.setStep("Connecting to Plasma chain")
+    feedbackModule.setStep(i18n.t("feedback_msg.step.connecting_plasma").toString())
     await signer.configureClient(ctx.state.client!)
     feedbackModule.endTask()
   }

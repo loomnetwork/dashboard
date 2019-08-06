@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-xs-12">
 
-        Total staked:
+        {{ $t('components.modals.faucet_redelegate_modal.total_stake') }}:
         <strong>
           <abbr>{{item.totalStaked | tokenAmount}}</abbr>
         </strong>
@@ -16,7 +16,7 @@
     <div class="row">
       <div class="col-xs-12">
 
-        Fee:
+        {{ $t('components.modals.faucet_redelegate_modal.fee') }}
         <strong>
           <abbr>{{item.fee}}%</abbr>
         </strong>

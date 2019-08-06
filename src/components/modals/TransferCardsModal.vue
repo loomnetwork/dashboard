@@ -2,29 +2,29 @@
   <b-modal
     id="transfer-cards-modal"
     ref="modalRef"
-    title="Transfer Cards"
+    :title="$t('components.modals.transfer_cards_modal.title')"
     hide-footer
     centered
     @show="resetModal()"
   >
     <b-container fluid>
-      <h6>Card ID: {{cardToTransfer.id}}</h6>
-      <h6>Name: {{cardToTransfer.display_name}}</h6>
-      <h6>Variation: {{cardToTransfer.variation}}</h6>
-      <h6>Your existing card: {{cardToTransfer.amount}}</h6>
-      Amount: (max: {{cardToTransfer.amount}})
+      <h6>{{ $t('components.modals.transfer_cards_modal.card_id') }} {{cardToTransfer.id}}</h6>
+      <h6>{{ $t('components.modals.transfer_cards_modal.name') }} {{cardToTransfer.display_name}}</h6>
+      <h6>{{ $t('components.modals.transfer_cards_modal.variation') }} {{cardToTransfer.variation}}</h6>
+      <h6>{{ $t('components.modals.transfer_cards_modal.your_exist_card') }} {{cardToTransfer.amount}}</h6>
+      {{ $t('components.modals.transfer_cards_modal.amount', { amount: cardToTransfer.amount }) }}
       <b-input
         class="my-2"
         type="number"
         v-model.number="amountToTransfer"
         :max="cardToTransfer.amount"
         :min="1"
-      ></b-input>Receiver Loom Address:
+      ></b-input>{{ $t('components.modals.transfer_cards_modal.receiver_address') }}
       <input-address
         v-model="receiverAddress"
         chain="loom"
         :blacklist="[ownAddress]"
-        :placeholder="'Loom Address'"
+        :placeholder="$t('input_placeholder.loom_addr')"
         @isValid="isValidAddressFormat"
       />
       <b-form-checkbox
@@ -33,13 +33,13 @@
         v-model="confirmCard"
         name="confirmCard"
         v-show="amountToTransfer && receiverAddress"
-      >I confirm to transfer {{amountToTransfer}} cards to {{receiverAddress}} address.</b-form-checkbox>
+      >{{ $t('components.modals.transfer_cards_modal.amount', { amount: amountToTransfer, receiverAddress: receiverAddress }) }}</b-form-checkbox>
       <b-button
         class="my-2"
         type="button"
         @click="transferCardsHandler()"
         :disabled="validInput === false"
-      >Transfer</b-button>
+      >{{ $t('components.modals.transfer_cards_modal.transfer') }}</b-button>
     </b-container>
   </b-modal>
 </template>

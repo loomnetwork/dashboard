@@ -259,11 +259,13 @@ export async function approve(
   if (currentAllowance.gte(weiAmount)) {
     return Promise.resolve(true)
   }
-  const approvalAmount = weiAmount.sub(currentAllowance)
-  // to do approve allowance - weiAmount
+  // this somehow breaks on some accounts (for dpos), as if currentAllowance is wrong
+  // const approvalAmount = weiAmount.sub(currentAllowance)
+  const approvalAmount = weiAmount
   feedbackModule.setStep(
-    "Approving spending of " + formatTokenAmount(approvalAmount, token.decimals) + " " + payload.symbol,
-  )
+    i18n.t("feedback_msg.step.approving_spending",
+  { tokenAmount: formatTokenAmount(approvalAmount, token.decimals), symbol: payload.symbol})
+  .toString())
   try {
     await adapter.approve(to, approvalAmount)
     return true
@@ -312,7 +314,8 @@ export async function transfer(
 
   // plasmaModule.refreshBalance(payload.symbol)
   feedbackModule.setStep(
-    `Transfering ${formatTokenAmount(weiAmount, token.decimals)} ${symbol}`,
-  )
+    i18n.t("feedback_msg.step.transfering_token",
+  { tokenAmount: formatTokenAmount(weiAmount, token.decimals), symbol: payload.symbol})
+  .toString())
   return await adapter.transfer(to, weiAmount)
 }

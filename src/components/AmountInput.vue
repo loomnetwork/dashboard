@@ -6,14 +6,14 @@
           id="input-amount"
           v-model="amount"
           :type="'number'"
-          placeholder="Enter amount"
+          :placeholder="$t('input_placeholder.enter_amount')"
           aria-describedby="input-live-help input-live-feedback"
           @keyup="validateAmount"
         ></b-form-input>
         <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       </b-col>
       <b-col>
-        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">All</b-button>
+        <b-button variant="outline-primary" @click="setAllAmount" style="min-width:100px">{{ $t('components.amount_input.all') }}</b-button>
       </b-col>
     </b-row>
   </div>
@@ -70,12 +70,12 @@ export default class AmountInput extends Vue {
     const min = this.min
 
     if (!amount) {
-      this.errorMsg = "Please enter a valid amount"
+      this.errorMsg = this.$t("messages.amount_input_invalid_amount").toString()
       this.$emit("isError", true)
       return
     }
     if (this.round && Number.isInteger(amount) === false && !amountBN.eq(max)) {
-      this.errorMsg = "Only round amounts allowed"
+      this.errorMsg = this.$t("messages.amount_input_only_round_amount").toString()
       this.$emit("isError", true)
       return
     }
@@ -100,7 +100,7 @@ export default class AmountInput extends Vue {
   // Button Action
   setAllAmount() {
     // @ts-ignore
-    this.amount = formatTokenAmount(this.max, this.decimals)
+    this.amount = new BigNumber(this.max.toString()).div(10 ** this.decimals).toFixed()
     this.errorMsg = ""
     this.$emit("isError", false)
   }

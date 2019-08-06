@@ -1,7 +1,7 @@
 <template>
   <b-card bg-variant="light">
     <b-form @submit="onSubmit">
-      <b-form-group label="Public Key" label-for="input-pubkey">
+      <b-form-group :label="$t('components.registerCandidate.public_key')" label-for="input-pubkey">
         <b-form-input
           id="input-pubkey"
           v-model="form.pubKey"
@@ -9,7 +9,7 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Validator Name" label-for="input-name">
+      <b-form-group :label="$t('components.registerCandidate.validator_name')" label-for="input-name">
         <b-form-input
           id="input-name"
           v-model="form.name"
@@ -17,7 +17,7 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Description" label-for="input-description">
+      <b-form-group :label="$t('components.registerCandidate.description')" label-for="input-description">
         <b-form-textarea
           id="input-description"
           v-model="form.description"
@@ -25,7 +25,7 @@
         ></b-form-textarea>
       </b-form-group>
 
-      <b-form-group label="Website" label-for="input-website">
+      <b-form-group :label="$t('components.registerCandidate.website')" label-for="input-website">
         <b-form-input
           id="input-website"
           v-model="form.website"
@@ -34,7 +34,7 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group label="Fee" label-for="input-fee">
+      <b-form-group :label="$t('components.registerCandidate.fee')" label-for="input-fee">
         <b-form-input
           id="input-fee"
           v-model="form.fee"
@@ -42,7 +42,7 @@
           required
         ></b-form-input>
       </b-form-group>
-    <b-button type="submit" variant="primary" style="float: right;">Submit</b-button>
+    <b-button type="submit" variant="primary" style="float: right;">{{ $t('button.submit') }}</b-button>
     </b-form>
   </b-card>
 </template>

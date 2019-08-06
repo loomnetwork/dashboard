@@ -30,7 +30,7 @@
     </section>
     <section v-if="status === 'error'">
       <div class="lead">
-        <p>An error occurred, please try again.</p>
+        <p>{{ $t('messages.error_try_again') }}</p>
       </div>
     </section>
   </b-modal>

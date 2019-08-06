@@ -62,7 +62,6 @@ export const gatewayModule = {
     return stateGetter()
   },
 
-  withdrawalInProgress: builder.read(withdrawalInProgress),
   checkIfPastWithdrawalEventExists: builder.read(checkIfPastWithdrawalEventExists),
 
   getTokenContractLogs: builder.dispatch(getTokenContractLogs),
@@ -70,6 +69,7 @@ export const gatewayModule = {
   // gateway
   ethereumDeposit: builder.dispatch(EthereumGateways.ethereumDeposit),
   ethereumWithdraw: builder.dispatch(EthereumGateways.ethereumWithdraw),
+  checkTxStatus: builder.dispatch(EthereumGateways.checkTxStatus),
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
   loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),
@@ -107,15 +107,6 @@ export const gatewayModule = {
   ),
 }
 
-function withdrawalInProgress() {
-  const withdrawalBlock = JSON.parse(
-    localStorage.getItem("latestWithdrawalBlock") || "null",
-  )
-  if (!withdrawalBlock) return false
-  // 10 block confirmations + 5 for processing
-  return ethereumModule.state.blockNumber - 15 > withdrawalBlock ? false : true
-}
-
 async function checkIfPastWithdrawalEventExists() {
   await gatewayModule.refreshEthereumHistory()
   const history = ethereumModule.state.history
@@ -123,13 +114,10 @@ async function checkIfPastWithdrawalEventExists() {
   //  check if there is a withdrawal event in the history that has yet to expire
   // (block number is less then the current blocknumber + 15 confirmations)
   const notExpired = history.find((event) => {
-    return (event.type === "TokenWithdrawn" && (event.blockNumber + 15) >= blockNumber)
+    return (event.type === "TokenWithdrawn" && (event.blockNumber + 20) >= blockNumber)
   })
-  const inLocalStorage = JSON.parse(
-    localStorage.getItem("pendingWithdrawal") || "false",
-  )
+  const inLocalStorage = ethereumModule.state.userData.pendingWithdrawal
   if (notExpired!! || inLocalStorage) {
-    console.info("Remaining blocks until expiry", blockNumber - notExpired.blockNumber)
     return true
   }
   return false

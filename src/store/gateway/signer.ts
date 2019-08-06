@@ -40,7 +40,7 @@ function initSignedEthMiddleware(signer: ethers.Signer): SignedEthTxMiddleware {
   const middleware = new SignedEthTxMiddleware(signer)
   const handle = middleware.Handle.bind(middleware)
   middleware.Handle = async (txData) => {
-    feedbackModule.showInfo("Please sign the tx using your wallet.")
+    feedbackModule.showInfo(i18n.t("feedback_msg.info.please_sign_tx").toString())
     try {
       const res = await handle(txData)
       feedbackModule.showInfo("")
@@ -67,7 +67,7 @@ function initSignedEthMiddleware(signer: ethers.Signer): SignedEthTxMiddleware {
 export function modifyRPCSigner(signer: ethers.Signer): ethers.Signer {
   const signMessage = signer.signMessage.bind(signer)
   signer.signMessage = async (txData) => {
-    feedbackModule.showInfo("Please sign the tx using your wallet.")
+    feedbackModule.showInfo(i18n.t("feedback_msg.info.please_sign_tx").toString())
     try {
       const res = await signMessage(txData)
       feedbackModule.showInfo("")

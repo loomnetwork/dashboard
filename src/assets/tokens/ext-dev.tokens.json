@@ -7,6 +7,14 @@
     "plasma": "0x0e9d499f42dfafe7f0e397f86fee6ab09483f36b"
   },
   {
+    "symbol": "ETH",
+    "name": "Ether",
+    "decimals": 18,
+    "plasma": "0x0000000000000000000000000000000000000000",
+    "ethereum": "0x0000000000000000000000000000000000000000",
+    "binance": ""
+  },  
+  {
     "symbol": "MTC",
     "name": "MyToken",
     "plasma": "0x4c28a06a90c222402a678c4e21c8c52727b0b2ed",

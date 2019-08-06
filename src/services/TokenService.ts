@@ -87,7 +87,7 @@ class TokenService {
     address: string,
     chain: "plasma" | "ethereum",
   ): TokenData | null {
-    const info = this.tokens.find((token) => token[chain] === address.toLocaleLowerCase())
+    const info = this.tokens.find((token) => token[chain].toLocaleLowerCase() === address.toLocaleLowerCase())
     if (info === undefined) {
       console.warn(
         `No known token contract matches address ${address} on ${chain}`,

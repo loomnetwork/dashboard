@@ -120,7 +120,7 @@ function setConfig(state: PlasmaState, config: PlasmaConfig) {
 
 // getter
 function getAddress(state: PlasmaState): Address {
-  const chainId = "default" // state.chainId
+  const chainId = state.chainId
   return new Address(chainId, LocalAddress.fromHexString(state.address))
 }
 

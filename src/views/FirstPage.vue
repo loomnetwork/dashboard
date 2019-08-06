@@ -59,7 +59,7 @@
                   </div>
                 </b-card>
               </div>
-              <div v-if="$store.state.envs !== 'production'" class="col-sm-12 mb-3">
+              <div v-if="$store.state.env !== 'production'" class="col-sm-12 mb-3">
                 <b-card
                   id="test-wallet-button"
                   class="wallet-selection-card text-center"

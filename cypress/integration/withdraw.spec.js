@@ -20,7 +20,7 @@ describe('Withdrawal Test', () => {
       .as('balance')
 
     cy.get('@balance').then(($span) => {
-      const expectedBalance = parseFloat($span.text()) - 1
+      const expectedBalance = Number($span.text()) - 1
       cy.wrap(expectedBalance).as('expectedBalance')
     })
 
@@ -51,7 +51,7 @@ describe('Withdrawal Test', () => {
     cy.get('.close').click()
 
     cy.get('@balance').then(($span) => {
-      const actualBalance = parseFloat($span.text())
+      const actualBalance = Number($span.text())
       cy.get('@expectedBalance').should('eq', actualBalance)
     })
   })
@@ -67,7 +67,7 @@ describe('Withdrawal Test', () => {
       .as('balance')
 
     cy.get('@balance').then(($span) => {
-      const expectedBalance = parseFloat($span.text()) - 1
+      const expectedBalance = Number($span.text()) - 1
       cy.wrap(expectedBalance).as('expectedBalance')
     })
 
@@ -98,7 +98,7 @@ describe('Withdrawal Test', () => {
     cy.get('.close').click()
 
     cy.get('@balance').then(($span) => {
-      const actualBalance = parseFloat($span.text())
+      const actualBalance = Number($span.text())
       cy.get('@expectedBalance').should('eq', actualBalance)
     })
   })

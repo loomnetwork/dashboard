@@ -9,7 +9,7 @@ describe('Deposit Test', () => {
       .contains('Deposit/Withdraw').click()
   })
 
-  it('Depositing 0.1 LOOM', () => {
+  it('Depositing 1 LOOM', () => {
     cy.contains('.symbol', 'LOOM')
       .parent()
       .as('token')
@@ -20,14 +20,14 @@ describe('Deposit Test', () => {
       .as('balance')
 
     cy.get('@balance').then(($span) => {
-      const expectedBalance = parseFloat($span.text()) + 0.1
+      const expectedBalance = Number($span.text()) + 1
       cy.wrap(expectedBalance).as('expectedBalance')
     })
 
     cy.get('@token')
       .contains('Deposit').click()
 
-    cy.get('input').type('0.1')
+    cy.get('input').type('1')
 
     cy.contains('Confirm').click()
 
@@ -45,12 +45,12 @@ describe('Deposit Test', () => {
     cy.get('.close').click()
 
     cy.get('@balance').then(($span) => {
-      const actualBalance = parseFloat($span.text())
+      const actualBalance = Number($span.text())
       cy.get('@expectedBalance').should('eq', actualBalance)
     })
   })
 
-  it('Depositing 0.1 ETH', () => {
+  it('Depositing 1 ETH', () => {
     cy.contains('.symbol', 'ETH')
       .parent()
       .as('token')
@@ -61,21 +61,21 @@ describe('Deposit Test', () => {
       .as('balance')
 
     cy.get('@balance').then(($span) => {
-      const expectedBalance = parseFloat($span.text()) + 0.1
+      const expectedBalance = Number($span.text()) + 1
       cy.wrap(expectedBalance).as('expectedBalance')
     })
 
     cy.get('@token')
       .contains('Deposit').click()
 
-    cy.get('input').type('0.1')
+    cy.get('input').type('1')
 
     cy.contains('Confirm').click()
 
     cy.wait(300000)
 
     cy.get('@balance').then(($span) => {
-      const actualBalance = parseFloat($span.text())
+      const actualBalance = Number($span.text())
       cy.get('@expectedBalance').should('eq', actualBalance)
     })
   })

@@ -97,7 +97,7 @@
 
                 </b-card>
               </div>   
-              <div class="col-sm-12 mb-3" v-if="$store.state.disabled.includes('portis')">
+              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
                 <b-card
                   id="portis-button"
                   class="wallet-selection-card text-center"
@@ -109,7 +109,7 @@
                   </div>
                 </b-card>
               </div>
-              <div class="col-sm-12 mb-3" v-if="$store.state.disabled.includes('fortmatic')">
+              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('fortmatic')">
                 <b-card
                   id="fortmatic-button"
                   class="wallet-selection-card text-center"

@@ -91,7 +91,7 @@ class TokenService {
 
     if (this.env === "ext-dev") {
       const LOOM = this.symbols.find((data) => data.symbol === "LOOM")
-      LOOM!.ethereum = "0x493640B5BEFB0962CE0932653987C41aA3608bd0"
+      LOOM!.ethereum = "0x493640B5BEFB0962CE0932653987C41aA3608bd0".toLowerCase()
     }
 
   }

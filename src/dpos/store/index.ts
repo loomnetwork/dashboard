@@ -409,7 +409,7 @@ async function claimRewards(context: ActionContext) {
   feedback.setStep(i18n.t("feedback_msg.step.checking_reward").toString())
   const limboDelegations = await contract.checkDelegationAsync(
     limboValidator,
-    contract.caller,
+    plasmaModule.getAddress(),
   )
   if (limboDelegations!.delegationsArray.length > 0) {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_dpos_reward").toString()) // add amount

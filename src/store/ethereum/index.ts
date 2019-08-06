@@ -19,11 +19,22 @@ import {
 import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
-import { setBlockNumber, setLatestWithdrawalBlock, setClaimedReceiptHasExpired } from "./mutations"
+import {
+  setBlockNumber,
+  setLatestWithdrawalBlock,
+  setClaimedReceiptHasExpired,
+  initUserData,
+  setUserData,
+  deleteUserData,
+  clearHistory,
+} from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
+import { i18n } from "@/i18n"
+import { PortisAdapter } from "./wallets/portis";
+import { FortmaticAdapter } from "./wallets/fortmatic";
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -33,6 +44,8 @@ const ZERO = new BN("0")
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["ledger", LedgerAdapter],
+  ["portis", PortisAdapter],
+  ["fortmatic", FortmaticAdapter],
 ])
 
 const initialState: EthereumState = {
@@ -69,6 +82,9 @@ const initialState: EthereumState = {
   claimedReceiptHasExpired: false,
   history: [],
   metamaskChangeAlert: false,
+  userData: {
+    pendingWithdrawal: false,
+  },
 }
 
 // web3 instance
@@ -98,8 +114,10 @@ export const ethereumModule = {
   },
 
   getERC20,
-
   setConfig: builder.commit(setConfig),
+  setUserData: builder.commit(setUserData),
+  initUserData: builder.commit(initUserData),
+  removeUserData: builder.commit(deleteUserData),
 
   refreshBalance: builder.dispatch(refreshBalance),
   approve: builder.dispatch(approve),
@@ -115,6 +133,7 @@ export const ethereumModule = {
   initERC20: builder.dispatch(initERC20),
   clearERC20: builder.dispatch(clearERC20),
 
+  clearHistory: builder.commit(clearHistory),
   setBlockNumber: builder.commit(setBlockNumber),
   pollLastBlockNumber: builder.dispatch(pollLastBlockNumber),
 
@@ -139,11 +158,11 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
   context.state.walletType = walletType
   if (wallet.isMultiAccount === false) {
-    feedbackModule.setTask("Connecting wallet")
-    feedbackModule.setStep("Connecting wallet")
+    feedbackModule.setTask(i18n.t("feedback_msg.task.connect_wallet").toString())
+    feedbackModule.setStep(i18n.t("feedback_msg.task.connect_wallet").toString())
 
     await wallet
-      .createProvider()
+      .createProvider(context.state)
       .then(async (web3provider) => await setProvider(context, web3provider))
       .catch((error) => {
         Sentry.captureException(error)

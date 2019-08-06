@@ -2,15 +2,17 @@
   <b-modal
     id="transfer-tokens-form-modal"
     ref="modalRef"
-    title="Transfer Token"
+    :title="$t('components.modals.transfer_token_form_modal.title')"
     hide-footer
     @hide="resetModal"
   >
     <b-card>
-      <h6>Token type: {{ token }}</h6>
-      <h6>Your token balance: {{ balance | tokenAmount(tokenDecimals)}} {{ token }}</h6>
+      <h6>{{ $t('components.modals.transfer_token_form_modal.token_type') }} {{ token }}</h6>
+      <h6>{{ $t('components.modals.transfer_token_form_modal.balance') }} {{ balance | tokenAmount(tokenDecimals)}} {{ token }}</h6>
       <div class="input-section">
-        <span>Amount: (max: {{ balance | tokenAmount(tokenDecimals)}} )</span>
+        <i18n path="components.modals.transfer_token_form_modal.amount">
+          <span place="amount"> {{ balance | tokenAmount(tokenDecimals)}} </span>
+        </i18n>
         <amount-input
           :min="min"
           :max="balance"
@@ -22,16 +24,16 @@
         />
       </div>
       <div class="input-section">
-        <span>Receiver Loom Address:</span>
+        <span>{{ $t('components.modals.transfer_token_form_modal.receiver_address') }}</span>
         <input-address
           v-model="receiverAddress"
           chain="loom"
           :blacklist="[ownAddress]"
-          placeholder="'Loom Address'"
+          :placeholder="$t('input_placeholder.loom_addr')"
           @isValid="isValidAddressFormat"
         />
       </div>
-      <b-button type="button" :disabled="valid === false" @click="transferToken()">Transfer</b-button>
+      <b-button type="button" :disabled="valid === false" @click="transferToken()">{{ $t('components.modals.transfer_token_form_modal.transfer') }}</b-button>
     </b-card>
   </b-modal>
 </template>

@@ -33,7 +33,7 @@
             variant="outline-primary"
             :disabled="delegation.pending || delegation.locked"
             @click="requestUndelegation(delegation)"
-          >{{ $t('Undelegate') }}</b-button>
+          >{{ $t('components.modals.faucet_undelegate_modal.undelegate') }}</b-button>
         </b-button-group>
       </footer>
     </b-list-group-item>

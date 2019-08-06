@@ -147,20 +147,21 @@ export function gatewayReactions(store: Store<DashboardState>) {
   async function checkIncompleteTransfers() {
 
     const plasmaGateways = PlasmaGateways.service()
+    const loomGateway = plasmaGateways.ethereumLoomGateway
+    const mainGateway = plasmaGateways.ethereumMainGateway
+    const loomReceipt = await loomGateway.withdrawalReceiptAsync(loomGateway.caller)
+    const mainReceipt = await mainGateway.withdrawalReceiptAsync(mainGateway.caller)
+    if (!loomReceipt && !mainReceipt) return
 
-    let receipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
 
-    // @ts-ignore
-    if (receipt && !pastWithdrawalExist) {
-      gatewayModule.setWithdrawalReceipts(receipt)
+    if (loomReceipt && !pastWithdrawalExist) {
+      gatewayModule.setWithdrawalReceipts(loomReceipt)
       return
     }
 
-    receipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
-    // @ts-ignore
-    if (receipt || !pastWithdrawalExist) {
-      gatewayModule.setWithdrawalReceipts(receipt)
+    if (mainReceipt && !pastWithdrawalExist) {
+      gatewayModule.setWithdrawalReceipts(mainReceipt)
       return
     }
 

@@ -10,13 +10,13 @@
     no-close-on-backdrop
     hide-header-close
   >
-    <template slot="modal-title">Deposit {{ token }} from {{transferRequest.chain}}</template>
+    <template slot="modal-title">{{ $t('components.gateway.deposit_form.title', {token: token, chain: transferRequest.chain}) }}</template>
     <div v-if="!status">
       <form>
         <h6
           v-if="allowance !== ZERO"
-        >Amount approved : {{allowance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
-        <h6>Your token balance: {{ userBalance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
+        >{{ $t('components.gateway.deposit_form.amount_approved') }} {{allowance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
+        <h6>{{ $t('components.gateway.deposit_form.balance') }} {{ userBalance | tokenAmount(state.plasma.coins[token].decimals)}} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="userBalance"
@@ -29,23 +29,23 @@
       </form>
     </div>
     <div v-else-if="status === 'sending'">
-      <p class="lead">{{ $t("components.gateway.approval.sending") }}</p>
+      <p class="lead">{{ $t('components.gateway.approval.sending') }}</p>
     </div>
     <div v-else-if="status === 'failed'">
-      <p class="lead">{{ $t("components.gateway.approval.failure") }}</p>
+      <p class="lead">{{ $t('components.gateway.approval.failure') }}</p>
     </div>
     <div v-else-if="status === 'sent'">
-      <p class="lead">{{ $t("components.gateway.approval.sent") }}</p>
+      <p class="lead">{{ $t('components.gateway.approval.sent') }}</p>
     </div>
     <template slot="modal-footer">
       <div v-if="!status">
         <b-btn @click="close()" class="mr-2">Cancel</b-btn>
         <span style="flex:1"></span>
-        <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">Confirm</b-btn>
+        <b-btn @click="sendApproval" variant="primary" :disabled="hasErrors">{{ $t("button.confirm") }}</b-btn>
       </div>
       <div v-else>
         <span style="flex:1"></span>
-        <b-btn @click="close">Close</b-btn>
+        <b-btn @click="close">{{ $t("button.close") }}</b-btn>
       </div>
     </template>
   </b-modal>

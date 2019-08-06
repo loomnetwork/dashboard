@@ -14,15 +14,15 @@
             v-model="maybeRelentlessUser"
           >
             <div class="confirm-link text-center">
-              <h3>Are you from Relentless Marketplace ?</h3>
-              <p>If you are, looks like you have to link your marketplace account to this dashboard account</p>
+              <h3>{{ $t('views.first_page.ask_from_relentless_marketplace') }}</h3>
+              <p>{{ $t('views.first_page.if_from_relentless_marketplace') }}</p>
               <div class="linking-div">
                 <img src="../assets/images/relentless.png" />
                 <i style="font-size:56px;" class="fa">&#8651;</i>
                 <loom-icon width="56px" height="56px" :color="'#6eccd8'" />
               </div>
               <div class="linking-div-choice">
-                <b-button block variant="outline-primary" :href="loomGamesUrl">Link my account</b-button>
+                <b-button block variant="outline-primary" :href="loomGamesUrl">{{ $t('views.first_page.link_my_account') }}</b-button>
               </div>
             </div>
             <div slot="modal-footer" class="w-100" style="text-align: center;">
@@ -31,20 +31,20 @@
                 variant="link"
                 style="color: gray;"
                 @click="reconsider = true"
-              >Nope, I'm not from Relentless Marketplace</b-button>
+              >{{ $t('views.first_page.not_from_relentless_marketplace') }}</b-button>
               <div class="reconsider" v-show="reconsider">
-                <h5>Are you sure ?</h5>
+                <h5>{{ $t('views.first_page.you_sure') }}</h5>
                 <p
                   style="color: red;"
-                >Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace</p>
+                >{{ $t('views.first_page.warn_note') }}</p>
                 <b-button
                   variant="outline-dark"
                   @click="maybeRelentlessUser = false"
-                >Create a new account</b-button>
+                >{{ $t('views.first_page.create_new_account') }}</b-button>
               </div>
             </div>
           </b-modal>
-          <b-card title="Select wallet" class="wallet-provider-container">
+          <b-card :title="$t('views.first_page.select_wallet')" class="wallet-provider-container">
             <div class="row">
               <div class="col-sm-12 mb-3">
                 <b-card
@@ -55,7 +55,7 @@
                 >
                   <div>
                     <img src="../assets/metamask_logo.png" />
-                    <span>Metamask</span>
+                    <span>{{ $t('views.first_page.wallets.metamask') }}</span>
                   </div>
                 </b-card>
               </div>
@@ -67,7 +67,7 @@
                 >
                   <div>
                     <img src="../assets/ledger_logo.svg" />
-                    <span>Ledger (via Metamask)</span>
+                    <span>{{ $t('views.first_page.wallets.ledger_via_metamask') }}</span>
                   </div>
                 </b-card>
               </div>
@@ -80,7 +80,7 @@
                 >
                   <div>
                     <img src="../assets/metamask_logo.png" />
-                    <span>Trezor (via Metamask)</span>
+                    <span>{{ $t('views.first_page.wallets.trezor_via_metamask') }}</span>
                   </div>
                 </b-card>
               </div>
@@ -92,11 +92,35 @@
                 >
                   <div id="ledger-card">
                     <img src="../assets/ledger_logo.svg" />
-                    <span>Ledger (Legacy)</span>
+                    <span>{{ $t('views.first_page.wallets.ledger_legacy') }}</span>
                   </div>
 
                 </b-card>
-              </div>              
+              </div>   
+              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
+                <b-card
+                  id="portis-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('portis')"
+                >
+                  <div class="ml-1">
+                    <img src="../assets/portis_icon.svg" />
+                    <span>Portis</span>
+                  </div>
+                </b-card>
+              </div>
+              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('fortmatic')">
+                <b-card
+                  id="fortmatic-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('fortmatic')"
+                >
+                  <div>
+                    <img src="../assets/fortmatic-icon.svg" />
+                    <span>Fortmatic</span>
+                  </div>
+                </b-card>
+              </div>           
               <div class="col-sm-12">
                 <b-card
                   id="explore-button"
@@ -105,35 +129,41 @@
                 >
                   <div>
                     <fa icon="search" class="search-icon" />
-                    <span>Explore</span>
+                    <span>{{ $t('views.first_page.wallets.explore') }}</span>
                   </div>
                 </b-card>
               </div>
+
             </div>
           </b-card>
 
           <b-card v-if="!metamaskInstalled" class="metamask-suggest">
-            <img id="metamask-mini-icon" src="../assets/metamask_logo.png" />
-            <b-card-text class="text-inline">
-              Looks like you don't have
-              <font id="orange">Metamask</font> extension
-            </b-card-text>
-            <b-button
-              target="_blank"
-              variant="outline-primary"
-              href="https://metamask.io/"
-              style="float: right; margin-top: 5px"
-            >Get one here!</b-button>
+            <b-row>
+              <b-col class="card-label">
+                <img class="mr-2" id="metamask-mini-icon" src="../assets/metamask_logo.png" />
+                <i18n path="views.first_page.no_metamask">
+                  <span place="metamask" id="orange">{{ $t('views.first_page.wallets.metamask') }}</span>
+                </i18n>
+              </b-col>
+              <b-col>
+                <b-button
+                  target="_blank"
+                  variant="outline-primary"
+                  href="https://metamask.io/"
+                  style="float: right; margin-top: 5px"
+                >{{ $t('views.first_page.get_one') }}</b-button>
+              </b-col>
+            </b-row>
           </b-card>
 
           <b-modal v-model="addressModalShow" hide-header hide-footer>
             <div>
-              <b-form-input v-model="address" class="mb-2" placeholder="Enter your address"></b-form-input>
-              <b-button type="submit" @click="setExploreMode(address)" variant="primary">Submit</b-button>
+              <b-form-input v-model="address" class="mb-2" :placeholder="$t('input_placeholder.enter_your_addr')"></b-form-input>
+              <b-button type="submit" @click="setExploreMode(address)" variant="primary">{{ $t('button.submit') }}</b-button>
             </div>
           </b-modal>
 
-          <b-modal id="metmask-hardware-wizard" title="Hardware wallets">
+          <b-modal id="metmask-hardware-wizard" :title="$t('components.modals.hardware_wallet_modal.hardware_wallet')">
             <div>
               <div class="wizard-img-container mb-3">
                 <img class="wizard-img" src="../assets/metamask-hardware-screencap.png" alt />
@@ -142,19 +172,22 @@
             </div>
             <template slot="modal-footer">
               <div>
-                <b-btn @click="setWallet('metamask')">Next</b-btn>
+                <b-btn @click="setWallet('metamask')">{{ $t('button.next') }}</b-btn>
               </div>
             </template>
           </b-modal>
           <b-popover
             class="popover"
             target="ledger-card"
-            title="Now deprecated"
+            :title="$t('views.first_page.now_deprecated')"
             triggers="hover"
-          >We recommend using <strong>Ledger (via Metamask)</strong> instead.</b-popover>
+          >
+            <i18n path="views.first_page.recommend_use_ledger_via_metamask">
+              <strong place="ledgerMetamask">{{ $t('views.first_page.wallets.ledger_via_metamask') }}</strong>
+            </i18n>
+          </b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
-
       </main>
     </div>
   </div>
@@ -174,6 +207,7 @@ import { Gateway } from "../store/gateway/contracts/Gateway"
 import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from "../feedback/store"
 
+import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 
 @Component({
@@ -457,7 +491,6 @@ export default class FirstPage extends Vue {
 #metamask-mini-icon {
   width: 48px;
   height: auto;
-  display: inline;
 }
 #orange {
   color: #f29040;

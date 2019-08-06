@@ -1,0 +1,2863 @@
+[
+  {
+    "symbol": "LOOM",
+    "name": "Loom",
+    "decimals": 18,
+    "ethereum": "0x493640B5BEFB0962CE0932653987C41aA3608bd0",
+    "plasma": "0x0e9d499f42dfafe7f0e397f86fee6ab09483f36b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x4c28a06a90c222402a678c4e21c8c52727b0b2ed",
+    "ethereum": "0x010ce34707833ec624ad33c47ec958ef9e4a622f"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xda93f7f019e901c0fe75db3af448d03b389432b3",
+    "ethereum": "0x0150fc8289cf605ce6fc62c11b7ff4374918e178"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xea088caa00309b2d92349c533acf7b030ea9cc0e",
+    "ethereum": "0x025fabb093e9bb93b603764a41f2dce618771852"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x300b9ac1fc5841e5d632f3df181a30eeb91c5d00",
+    "ethereum": "0x02c47b5b05176229e48ec7fb18b32589c7456e37"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x0a6c15f2d397ce5a12cc7225869b262f486e757c",
+    "ethereum": "0x02c87f3b216ff74d914996ff116e9ac321d4e479"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf05afedbe7c33e5f82e377454297992958c5554d",
+    "ethereum": "0x03406cc7a222137f46cae5f8aad0cd879f6b8d4f"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x31744f7810c1b9db7307085a1898b3bfdda8468a",
+    "ethereum": "0x0394fc3f1df08d2f7622f34d79c563b3e30ae07d"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x8f15d1ef591033a614879f7da1c5a44b74d4eca8",
+    "ethereum": "0x049faba6c8beafbfdd2389962d9ae1e9fea11c26"
+  },
+  {
+    "symbol": "BRPART",
+    "name": "BR Part",
+    "plasma": "0xbf13059e6969cc70159fff5ff13d8a5edc92e4fe",
+    "ethereum": "0x04abd5ea9362a1e1a34c15c4b56beddcd5e75023"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x8b1742eb5c298fdb01d5212cfe558136b3a66c17",
+    "ethereum": "0x055e568d06715b7339d7d52ffc579370a26a09e8"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x70c04fceb38cfce4713b2f4c59ee97a0cfc99c88",
+    "ethereum": "0x05b6cfa11a28131861802c57b8b5cc6829f0ba48"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xc9da3b8ede20b781ee8fff95adbccb869e63dbb5",
+    "ethereum": "0x0632d41b848f500743acd818b76eba5601d5107b"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x531d32f2b649fa10e0d32f4910378bd3061cac8e",
+    "ethereum": "0x06cb17e2bc4ad570089eb8245796f8c79a4ba947"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xd4f2dde5284e2d62e8c29a49d0fc330469f55f67",
+    "ethereum": "0x07374d69a00280181aebc194e986add84d4b4f29"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xfa4ebd5637591f7ff4aaf503f0b294e22a7650b4",
+    "ethereum": "0x07b4529a3e7233b2d1e7c96e80410e717f2de36f"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xf2d7b261ed3037ba9235bee2b026f8a3b684cfd6",
+    "ethereum": "0x07b4678a410a93182a42fb781be93cfcbbb6fba5"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x3f160f78f1824f58dfcde6f4bddfd1d63705ca86",
+    "ethereum": "0x07c6188645895c44ffeeaf8fdd8904c0ecbd823a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x08300284a08a277e2b8fe3775a516be5052826aa",
+    "ethereum": "0x082d4a15cbdb50650d05b667bff9e9f265e7cc40"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x92979cc9a7cfd8337d9db351f6b8ed1f7280df99",
+    "ethereum": "0x08362e40a653c992c47cfc80dff03f4895da779d"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0xc5629f3926490e181469a84aa3fb9ac90db32d12",
+    "ethereum": "0x08901354844076f5f919c7f83c05f1261e0c944d"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xff0b2666fa2b322446584c6290a7507a11395743",
+    "ethereum": "0x09841844bf62fd0dc2aa371cae37c73091305e0d"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf1482676b8585cd227cadac2af529ef8cadf7722",
+    "ethereum": "0x099e780473b78612de5f0b0a0c4da61c844cc0bc"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0xceea76a216ff9d9015ab86f418630a2add8ac98a",
+    "ethereum": "0x0b2bde17a7486e35f0cfbbb06cc46b70e7bda033"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0xb62e30206c4166ed31b46a5dce05804eb6890a09",
+    "ethereum": "0x0b5a6dfb30e42a7c98dd56922707e04184300912"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x027ca423c1cc6d6208c54cf018e3275a8ca8b259",
+    "ethereum": "0x0d32a86f3f9c14c55f9c251d56f7d11e7221d981"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3724dfbbdda4400db70d2032209f6c6e4e5812cb",
+    "ethereum": "0x0e8e22b59e3702a210caa0792873ea13d269c477"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x6dd57bd5cfb850a29e74105fe8ccdcfe88cf75ac",
+    "ethereum": "0x0ef485e2570829dc911f7dea4780dccb544c4d6f"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x6fd988d9d6681588ec8df60b1b3958d888045e42",
+    "ethereum": "0x0f5149a17bcdaeeb5f146a79617685487202ab77"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x3b75f2c4a43ecc663904af648d01f721eac65b6f",
+    "ethereum": "0x0fa96645c252b0a04df14ecbea6858e31b0d2179"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xdbcd41d801735e10c9a05fa46c399fc086eb446f",
+    "ethereum": "0x0fe5ecd00629b1b12e0f1a624df198c0550b8205"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2562266c039cfdcf38c22cf8b26e518de830454e",
+    "ethereum": "0x103e0b6d2b632f4b120d5e994db56408be8cd42f"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xedfb1a9892c261d39f5f61e890ed21357c64a34e",
+    "ethereum": "0x120a2c16319715e7a826c529af88464a5add9250"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x87e1fd3de3339668d2914f3a8ba724773d757f64",
+    "ethereum": "0x125e10aefa8c0d8e187be4c5a6af922f72dbf03c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x439e363e3851c53048bbbd9de3d127bdec5e58ac",
+    "ethereum": "0x130d91f335052da8d27f1a2b813ed372a05bc835"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x65f935388938e9f2e726d4fa30399109691a9287",
+    "ethereum": "0x134ffe0ef2b4341d4c26720219032e5f40c6c481"
+  },
+  {
+    "symbol": "NFT",
+    "name": "TerraVirtua",
+    "plasma": "0x4a5866245ce68badc940db54d3dd09b9fe1a9fe1",
+    "ethereum": "0x1362c57d1a5ad547820a9d22c0122d27b8c750c8"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xda1db6604ef0a9d6dfa79b7311f5e68e575d2c3f",
+    "ethereum": "0x1516e938e8d9dd5a0038c0c8ac4c1ba39026fe33"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xa11a23d80032761c495238f9cd6456652e526c30",
+    "ethereum": "0x15ea0f8d6ec4d5cf9d077e9d3d410500507f80f3"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x62234fe8904bd1922aa9d128baba20a83765a324",
+    "ethereum": "0x16a33bcdff939571e626d9b5e15bf4db58994e66"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x8af828d1de70617d71cae66b73057c778616a024",
+    "ethereum": "0x16c003c33fc77be485059b7584e8ea6ed3e29d4d"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc1a4e8b0a993bc4136d461c45af3cbe6a261923d",
+    "ethereum": "0x1702cf12b8c55e2cb3a1472731d44fc7e9bffda4"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x4bdf269f4fb3e2d5dcffc279d48dd568b9eda01f",
+    "ethereum": "0x17bb5f66dae08939675697dc3ff309405171a1c3"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7c25199e631158caa3359f831f5760206f2c1a04",
+    "ethereum": "0x1803f5d5fa6a4a83639ce75a0c7a9dd2a344b281"
+  },
+  {
+    "symbol": "HLC",
+    "name": "HULLCOIN",
+    "decimals": 18,
+    "plasma": "0x7e19decbd28b78b59cbfa463e03c9a97d9f931c6",
+    "ethereum": "0x1830291b376bc7f9b1cf4516e5b4ffca8b96a4c8"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xd61b441403d5983242d6dab094e3b9b06ae44086",
+    "ethereum": "0x187e85fe40296c8ccad67a6164bc68623efe6c81"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xa6eac7d5f61ec8199eef09fda4f8ced0b4c2ec3a",
+    "ethereum": "0x18c5bd8fb86896cbb2fcd34b23ae2987e1f94991"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0x2f1f1ae01b47cc2ce0723b9e055dffede2c1cd9c",
+    "ethereum": "0x19192b67476426fafcfb3e25fcc5f4f927440064"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xee7f47bd590100e4c45b11b5338e8d2717773516",
+    "ethereum": "0x194e0cee232318f45cb719c9b40a795d35363ba8"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x6e8918b0a4fc9cd186c64e378be0ea3a5e002628",
+    "ethereum": "0x19c3e18c27154e7d6d4789992f913e46d3ffe324"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xf3938116e4b71f2699f1d881970659f9fe65df17",
+    "ethereum": "0x1ab482c4f19f99340f23b15a2bc86c8ac6332717"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 2,
+    "plasma": "0x04076914a8dc2ad94bb90e81c3be221a4939c859",
+    "ethereum": "0x1ae6a97f9b32584ed4f19d6bb7e1904b536cfc71"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x1bd27cbea70ac7f4c1c6e0275bf4eea120c1c793",
+    "ethereum": "0x1bdc4a2377c44129e1f09acb6d681ad05e00e5ef"
+  },
+  {
+    "symbol": "CNTK",
+    "name": "Cybernetika",
+    "plasma": "0x2050893ca581a6a7bb4d47381d58afd137374be0",
+    "ethereum": "0x1cbb14d8abc97106104207f55106abaec096b16b"
+  },
+  {
+    "symbol": "CTML",
+    "name": "CryptoMemeLoom",
+    "plasma": "0x141144d9f994a0f8a89647bea42adc73c9b34ce8",
+    "ethereum": "0x1d5011a4ee63d7c6dabb186efc68c149314fbb2f"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xa5fc9bc5e2c73ce3a7692215cd00f017f7445883",
+    "ethereum": "0x1da945b776278ed96870b2ab2f66e730dc689df7"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xb507f8a62760cf3fe17a5e789029a4809ca5e0b5",
+    "ethereum": "0x1db29ffdf04ecd2c06b0af8b1acd4419d6f54f6e"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x160ec95c25788c13a3f30a7f7a41aa1acea6ce58",
+    "ethereum": "0x1dd0b401e6042392a4c06295a6aea4d6785d0576"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x0195bb9338318316212ddf8f9157dd624075de0b",
+    "ethereum": "0x1f346806f2668ccbb8b377c11d83a0d729631e2e"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x6ad81ce73a73b9c6c53ca204e7210b963903993d",
+    "ethereum": "0x1fd10c527cfa18ea6647c22dbfb527cba77741fc"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xbc128cf7bb80e7600659025af5f3d8b70e6e759e",
+    "ethereum": "0x20240d76553b3a919c1615f6287b4531fdce5f9c"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xabccb366ccdb8e974d5aca1ec9316d53dd4588f0",
+    "ethereum": "0x20ba84b1f47a9fb5d92b2d2e5e162aa5e4671daa"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x2df589e982962040a6f1f223565800de92ceb2ba",
+    "ethereum": "0x20e91657884ef650cea775d54d4fb909bc12a932"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x7143bc0c379894dc87871b8d4beb51049a201ca2",
+    "ethereum": "0x211a707abcdfc02c9cc3509c1240a28021c570d3"
+  },
+  {
+    "symbol": "FRD",
+    "name": "Ferdon Plasma Token",
+    "decimals": 18,
+    "plasma": "0xb8cf8450e22af26b9a64096c72649fc56b318331",
+    "ethereum": "0x2132590d9417a5ab3d542861c6848cec2cdeab05"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x80064264e6cbbd302a5050fb86091feaec58db44",
+    "ethereum": "0x21a27e58277bc771b73c8dfdf75d5fece750d19a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x461d67251afbee5e0a376ccc5189fb906bae94ab",
+    "ethereum": "0x21cbe3e59152c691e16a11c692354b1695593b8e"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x6e859d9e34a4dac56486c1864ad1d2cd54c5bcbd",
+    "ethereum": "0x21fecc78e9a8b333c72609590e0f5e7c4e70a6d4"
+  },
+  {
+    "symbol": "TRS",
+    "name": "TERSECOIN",
+    "decimals": 18,
+    "plasma": "0x46f774f4b251609d9443bb7865b4c8ebe95479ad",
+    "ethereum": "0x223209a6405f8c74381ffe4c2da5100ec7029af4"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xceb41c81917004f842f405c279770cf165a3f8eb",
+    "ethereum": "0x2328e0ad310515d67487521dae4d9e547dfa0ace"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x51f2b5bbf5ecceba51e2c6f9cecf3e27eeee44de",
+    "ethereum": "0x2444429e67ba4ad5c8ee13a67dfd3c4fc05bf36f"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x0431394f7ea80a57ed7e88ad74a7db3bb6c571aa",
+    "ethereum": "0x260fe7d5a67fd93d348155438f3799623573933a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3020c601b281264f39311373232715cdf741af3f",
+    "ethereum": "0x26291ea3f90961aea6c75b8977b84fe9c3d1395d"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xd8f3b1e4ba9dd4c6b76cb791b85d4aadd510dd11",
+    "ethereum": "0x26b29b503b265d247fbd20132824efcb9027af23"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xd2297a8d2c363083289a3da4f3af51e88b2d9ea5",
+    "ethereum": "0x270eddcc516b0572f4746ffbc32a8a53421b6148"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x356a3fce23fd8a224ace33a78fd1684962eaa067",
+    "ethereum": "0x27d2707fc38bc700d29b43e0f05099c59e5c4df0"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x6b8228408c9440a44b4e742f162002b1419a53d3",
+    "ethereum": "0x280d3100135bfec385dc779c63c25130bcac3d78"
+  },
+  {
+    "symbol": "BCT",
+    "name": "BityondChainToken",
+    "decimals": 18,
+    "plasma": "0xe46fbe6e6e30e92353de8852ae8bd5a784b94a65",
+    "ethereum": "0x29201ffdac211ac7c21128324b6af838c571dc45"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf97923e1137714326f42ffaf0ad1073af175b5eb",
+    "ethereum": "0x294dfd1b3762a3a531c419488e2b24ba708843bd"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xb776419970be2d30429ad18dcaa2369f22354f0f",
+    "ethereum": "0x2a1ecb286b9714f40fde00e065502852abf4c20b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x59e0a56a817cd61242a64d7da29a3112b803f0fb",
+    "ethereum": "0x2b7c82bbd4676e0d8db99618e8711ee192261d83"
+  },
+  {
+    "symbol": "@nomniminis",
+    "name": "@nomniminis",
+    "decimals": 18,
+    "plasma": "0xaa66285a5caf386ceeb5d8b5ce5644fdcd8bd399",
+    "ethereum": "0x2d675f0fa71d6480a0b13af5b2b0827225f33ad2"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xd4b39fccf6aee8d3d109e561f44dd470ba3dfacf",
+    "ethereum": "0x2e8c64b871056424e6f4fc2265b1a2b4669a06e4"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x7958cac99ca2e6c604a5210ebf13f9974489cf68",
+    "ethereum": "0x2edf51e64f42939545fbaeb0e37b074050be7199"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7eb7c9af9c3b8a1b210fd87ffa83a7928add07d8",
+    "ethereum": "0x2f8f18b9ede4b48126122171d2463dde738c3ac0"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xa38bf9944313fe99518a173d007039ba1358a81a",
+    "ethereum": "0x2fcf70cab1a7e99ca8f2c2368a2daa5d70517228"
+  },
+  {
+    "symbol": "TRS",
+    "name": "TERSECOIN",
+    "decimals": 18,
+    "plasma": "0x51b26093e84f0bb0ccf5bcd669ec6ebfa1caf973",
+    "ethereum": "0x302a313458b2e6e939d4f6531f73f348191a87c4"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd2f011ac8e3cee113e026c997dcafe53f68fe687",
+    "ethereum": "0x303a630702470dd16ac848bceb9a1bcee3288d31"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x945d42abb7156dcf322f0ecd8d8f7d5edaa49026",
+    "ethereum": "0x30661f9844522c2523f8d28fd00e0320869e5113"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x0fd19a6c49012522d974ca51a1a0dd3378d803d0",
+    "ethereum": "0x30ba3a2a267dc7d530e71b2cf25d347b37cf3cdf"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x49988c6d179ee53974f3b32ebbbcdb2c3680ead3",
+    "ethereum": "0x30c92ab1c78bdd0ede4b2884f629c5f44de5f2a9"
+  },
+  {
+    "symbol": "CUE",
+    "name": "CUE Token",
+    "decimals": 18,
+    "plasma": "0xac6faadf29d66b755f2172cdf858ec42f19d926f",
+    "ethereum": "0x3111bbf2d9c9902984583e69603b6a4980cc944e"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x8b8070057516b6990071288949c72fb5d4b6aead",
+    "ethereum": "0x32375b4aa2ddb187a367c5ce51286d5d3c6fea58"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x58f31e88b2e2a0c4fd35cc0867ddc6ea86bd8325",
+    "ethereum": "0x32a9bec436ec9bfd50a75eebc08622d7fff7292e"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xaf376cc86f52333628b7836acae2031f3078c26b",
+    "ethereum": "0x33406f39e7844028c54714950af64b5aa9fad609"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3e751e1dc5022add7d1866d5d9c26326f8495f20",
+    "ethereum": "0x3380830868d5bbf81bb747e576092f9e235699dc"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xcb61cf91349545e34b457ff132f24e38cd15f6fb",
+    "ethereum": "0x348c78bd1c63f2c7d21e7b680de6396f96e6bd16"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xcd8628fb4dfe2833b18bf7416cf518bd70729cc8",
+    "ethereum": "0x34aba5aea5ee987a0740dd49b75061cb35e97100"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x3c8a5086aa3bd27137d9d103a904596dba09bf64",
+    "ethereum": "0x34d3e35ee9e7b807b71edec50437110187b5c920"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2e25b145a1b19b4f970f988fb8afe84c345b1266",
+    "ethereum": "0x3548ae87928402f915c64a09fbdf9ad72b2e4610"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x244dd914f227a0d72e67b23018ceef92107c86cb",
+    "ethereum": "0x365fe7c76ffa48e99fde1a61c7d84109a83684c0"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x3ee9a30bb08101c6cfaea184d9f054f4dfaa765d",
+    "ethereum": "0x37cf64b830ed9792920c5247cb7c3e0b794428ab"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x359271ad8ea52131ec1b4cfd2391b66f34a1da5c",
+    "ethereum": "0x3881725405e4c2c6364ad8d49bfdb328380152fd"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xa8a1338ebed109741a8211879c7acff8841da484",
+    "ethereum": "0x38e833b11b583a94c11574228678b473c1c70b4f"
+  },
+  {
+    "symbol": "CUE",
+    "name": "CUE Token",
+    "decimals": 18,
+    "plasma": "0xb41689f75462243c59aca25498f6894e35a51dbd",
+    "ethereum": "0x39986336e9efc2b7217cb0baf1a1167ee693b08e"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd41fb46dfd4a4e5f73ac6f18339ec87465cb86aa",
+    "ethereum": "0x3a37f91077c0beb27089e7b7e8383cf7e25405b8"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x0b537ee2bbecd92eae1f9e8e8f29245b9f6149e7",
+    "ethereum": "0x3a9a5a0e8db0cda5c82fc2eba6dec795b40bbb96"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x1d7e1d2609a5eaff9475ad93354e930778a60bb3",
+    "ethereum": "0x3b2b0d6e82bb3144fd1036fb52ddb4428533fa42"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x1a360f3a6478465b3f90947e2635a1ca6e0c7311",
+    "ethereum": "0x3b7d253cfb3d3ae532144237651c5541d146cb6f"
+  },
+  {
+    "symbol": "BLKS",
+    "name": "Blocks",
+    "decimals": 18,
+    "plasma": "0x4c7d4103a690ee4b4620158ce1692d20f70b04e6",
+    "ethereum": "0x3b8ec7fced08cc4be448469396730c7ed0a5faf4"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xaafa260132b56099056275054f884612c62ebd06",
+    "ethereum": "0x3c556f1d726f57c0f3cdd0b296c3bae2e4214d32"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xb6fef6ad1cb28b9d3ee773e102c623006d84ec1d",
+    "ethereum": "0x3d52e637b16916e85a8c16602c6906fe93354dfb"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x35c95cbbcb8e9f4448f5c3dc51d9a56d74d93004",
+    "ethereum": "0x3d5781dade6896ba4658d35f575aa37929ee03c1"
+  },
+  {
+    "symbol": "HC",
+    "name": "HullCoin",
+    "decimals": 18,
+    "plasma": "0xc542650f42bc4f87e4736e00f01c85e36a44e616",
+    "ethereum": "0x3de09918578b1fa1ce5e8f1d0e659d3f41eaa505"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xebe13090b7badec3f09a260cb0f22b4310e18bab",
+    "ethereum": "0x3dfd2880cdb3bff4a07d7b4e3d1a8cf3f660f459"
+  },
+  {
+    "symbol": "CNTK",
+    "name": "Cybernetika",
+    "plasma": "0xbd21e8fdaa808a8008f319558ef33f84d5de3474",
+    "ethereum": "0x3e2dcdb0d0ef60937568204c1f06050345e1acc4"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xf15363e8747672bcdfe50998f0cfce0648b4083a",
+    "ethereum": "0x3f1a074791b7fa2a469269d1ca9709855ca8a82d"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0xe759f8a863b55322188154f4653beb4a6dcae17f",
+    "ethereum": "0x3f95c3b1896b6e6de3b25b568adc00f97b6d68c2"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x9e3c25859959dec7108ccd47d7a1f90d46ba0c9f",
+    "ethereum": "0x3f980a4467f63f973593f962bd16c5f101485dae"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2b1714b81a1ff46630c9ed6e1455089eb80e0304",
+    "ethereum": "0x40d012154a473828761e1486b73aa9e76e679fb8"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x760a34b0308f1902530dad543f7aee5720a347f6",
+    "ethereum": "0x40e7b7fd01ac286bed46b473fead0076586d23f3"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x4bc8b4ca1f54b2f2a5add6c96751c32be52a6170",
+    "ethereum": "0x40f9c827a08c1f37a7a8f77959077dc6960e8dcc"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xae3c3bd0fe55cc77db41d721daacc919783a5367",
+    "ethereum": "0x411fbb9878f8b3030bf2f3c52868c06b774877a8"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x410e8056e96afe0a9037675e23b2d7fd9f97cd2b",
+    "ethereum": "0x420b3a9765a527eebcc59c74ecbc657f9bc17cf2"
+  },
+  {
+    "symbol": "FRD",
+    "name": "Ferdon Token",
+    "plasma": "0x8cb5f4dc07cd1c6acb63a7ae695557a06ca5045a",
+    "ethereum": "0x4216575f11586bcda8828944f0198162a52d9d57"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x7c8bccef5f392268bf4c77741122a241846414ab",
+    "ethereum": "0x423d895de1a43e96e9591ebf95ac4b0611a38ccc"
+  },
+  {
+    "symbol": "ZYM",
+    "name": "ZYM Coin",
+    "decimals": 18,
+    "plasma": "0x9d81d264f224851bfe94efacab59962be9ae08bd",
+    "ethereum": "0x4249367b99d2cfcef2181ac3cdd38929f30ea24a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x291ecbc8c88da1911456c85f36ee31f8c9f11794",
+    "ethereum": "0x42aa8d4d673066dbd2b2fe7254ac5f4fdb0f1bf1"
+  },
+  {
+    "symbol": "HOL",
+    "name": "LoomHoe",
+    "plasma": "0x92972f8d2c9370511baf3839e4a0065013550b42",
+    "ethereum": "0x43113ce85610b5eae3e91ff85bb14d6260342515"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf7d0ab0b2d5a066d7d7eb248019177b37fff0616",
+    "ethereum": "0x43dc969cd6e5a59577ee9e771ae9984634499172"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x9807504de3dc1e3a51ae46bb5a5e3a6d6f6c26fd",
+    "ethereum": "0x44222f9084b5c73822aefb253f672552e5444688"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x73d8fc5ceaab896283c8fb6953108347248500e2",
+    "ethereum": "0x44254b5cec9e8e80e476988edc675cb8f6f86d22"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0xe9418563eedc828d6e1f3282cfcc42768ae7b374",
+    "ethereum": "0x446c4e08456a4ebfd8584b7ef30ec3582f8ddfca"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xbbecfc135216f86802b62a8251d747bdbe7b4553",
+    "ethereum": "0x449d75537c56e18c9d5e0438f7847628bbd981f7"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x87e370c658f36de343466a95324d8218ecf8cf00",
+    "ethereum": "0x450cc47f3ed7886750cf9e303c7d85ff02a6e538"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x3dbe27974e82c2e57a4ff95c333937a4c28d7c2c",
+    "ethereum": "0x452c1827645bcfe49e7ebb6d376ebfc909550b4d"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x6788a9173daf2acb9a8f043e4af3529ac3c14995",
+    "ethereum": "0x46600a082d3cb96fe07892733fb9ee5ea330cfb5"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x2ecfe2fe6350c9826f87caf06386c315bf9e8e5a",
+    "ethereum": "0x46dbda23ba965a510ddb00420c184a3f4f63c48a"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x0c3f7b1357ba79199cfb4df2df2b2c503aa69ad7",
+    "ethereum": "0x47562226cac57d8d9dce23917d9e5cddf48b9746"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x987656fb24f3e2873b1f8c09a5a739ce7712e100",
+    "ethereum": "0x48f73353bbe6f840e93c5b2177252e7719328395"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x8a808c9778961bd1d0f457a7acdbb010b0fc8584",
+    "ethereum": "0x4986e87927599afa138127edcd04ec4ccd5fec9a"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x20fa7619082e6a1924e106174c404e744451beeb",
+    "ethereum": "0x4a08f7ca238742051322b685742ffe12e17ca745"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xf13bdbcf63efbd6cb4e34db97fa142c1d3795590",
+    "ethereum": "0x4b930c56041d630e65addc61ea9601574a285506"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x1fa15d71f5c3b734dae0918c954274ae8ebc77e2",
+    "ethereum": "0x4c79584fcdccf5105b1767d473f05805e86d93a1"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x8acaf519cb749c746247cd832b56b48b3656b8ec",
+    "ethereum": "0x4d42172ce6e6771699b55cb3d6a252e659b7bf6d"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x817910eaa0bcce6bb35705e9548bc14933165ede",
+    "ethereum": "0x4f5c0657fb0072b38f583a0a4d31e0d8373014d4"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x16448267440ec1ee4ba34ddcc4f891c2e303704a",
+    "ethereum": "0x4fbd38b4a23463ea48753f0ac7a7a4efd50bd7d0"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0xde4096ba3df1d0034788d26837b79d81c3e6a28b",
+    "ethereum": "0x50755fd3bc0c245b8075930fbdf1745e1d8c5ac6"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x4bb900a33e84adf5933d983c9c17eefafc012334",
+    "ethereum": "0x50c4ac156c9ce02e7dd9aa071969b85dac4fcad5"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0xed12b85495ab2cb772df495e04e9c56ce4583854",
+    "ethereum": "0x50c95d54d01bb564eae739bab453e8cf38856975"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xe2750b57b79edd139ec58a346bd222d250c36c1c",
+    "ethereum": "0x50d16ddaf6ce0184b72601b6795eeb7f5f8c15ba"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x4b6b505c1f47eaf4aa7fb1a9934c90d5d4a549bd",
+    "ethereum": "0x50d498ec2e9a2aa490b91285296c08c827fc08c0"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x1d6056535a16e0ed7b78326f13447bf12424d3d3",
+    "ethereum": "0x54083e80e6ad650017ee2482e2374e0f8f7b39aa"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x5e7c0c7bc7627b07dfdf4835f8df4b9934f9b112",
+    "ethereum": "0x549067a933d4455c4a41b45469de24fff3a80743"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x67b5624a8eea7067946eab597b8ebd451512f305",
+    "ethereum": "0x54b082dd440c600b2c633c6eb7034d8f4d5581f7"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x80576ed691cda3fe4b463c798b73d61c5d906e67",
+    "ethereum": "0x55153f9ebc149c7cecdb6e07f39a4c34637c75e6"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x37d990b681db744de4a4830febb7d4c015bd2637",
+    "ethereum": "0x553b3f4666a21424526c096bad416dc69dee684b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3213cc8d295f947fbe19b24972bb417ae75ee296",
+    "ethereum": "0x56767d642827e52779546278934345bdf53dc518"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7970f6f6d1cbf403b35feb4a199c84a6822dcc70",
+    "ethereum": "0x56f6b9d360f5f3e6b7a989247da4a67f84b1f001"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xd16c22df097646fd65f5f1e92983cf6958a94ae2",
+    "ethereum": "0x571fac00a926d301307dab455b46cddc833df4e3"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x7b22b578af2805ca440bec67ea1f9263e315f024",
+    "ethereum": "0x57f102d5babfd13572c36007ca0dc80f5e4cc4af"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0xa94be28e9f498635700f1bb652910e8deaaf97f1",
+    "ethereum": "0x5810409eb57953b6655c94479de4e2b863cec600"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x4d11ba88e799e263a1774bad872baab38c94eb02",
+    "ethereum": "0x589e536d5e179c615ac2c6b417ad20c8bfea98d8"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xe0305d4b458b156d998d02bd3faf8d60158451e1",
+    "ethereum": "0x590125d1d2808fbda8c10259249db567411bff62"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xeff716ccb285a6d0eefe7c4c997526c467003abf",
+    "ethereum": "0x598f63cd662ea8348357bb7b32e48435dd45dc9a"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x6851a0c08f49144ce01e113bbaf980d0782d6ae6",
+    "ethereum": "0x5a3e1ebefa585dd1d28610273188d478c36c9cd9"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x3ab9210f9232b85682c38d3d93ee0f93548c60bb",
+    "ethereum": "0x5a604416a2647577803735d9596a9d678025306b"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xad3b8eb07f2c22af5d489ce64dbfa1b39dffe3be",
+    "ethereum": "0x5a87fe3e199f5674cf604ddb0c785783a5cfc743"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xc2a4ffd7fe2b441c3e6ef5b04dba620c2dd8223c",
+    "ethereum": "0x5a9c1ec2d6502de23ce88f7b234e0b0619a1e499"
+  },
+  {
+    "symbol": "CUE",
+    "name": "CUE Token",
+    "decimals": 18,
+    "plasma": "0x3aba481d7bdd826369423d4b451587b7db363a8f",
+    "ethereum": "0x5aaf600cd5449a6441b6512c474a011350641608"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x579f541d50f024058067e94c65934bbc28d06ec7",
+    "ethereum": "0x5ae9874b14d75d816e2ea2768ac478fc624f4cc9"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xff6bf7fe748408daa7708da6ca01d130e3a3c616",
+    "ethereum": "0x5b33b703d1835b06b15043e18e93056068c65e1e"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x9c9e2a043ecfac4fc9d2b90380774236d5e4220c",
+    "ethereum": "0x5b6801b6a80fb53f5ea37c575c868415fd22c0da"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x15f80a5e6b58dc2392ef3769b63e74c11e8fe636",
+    "ethereum": "0x5bfdecd8cb6fd61c81c9cf4d8e9703b5abec18fc"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x1cc7d68717529c3f6f3a3db62f00b6ab04144dd8",
+    "ethereum": "0x5c738b56812587071aac3d4d7e4c775d044f698b"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x93d9869b51eba37e9dabfceb81b2c51c24adee9b",
+    "ethereum": "0x5d8d96a7192d2676c7fb56582d88ae6129c29316"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xcfd384154ec5205372792308922261a24396d75f",
+    "ethereum": "0x5e585045d5e31fe90db6395d3d959cb25c444e2a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xbc7424c17100a6b5a3e8287a337b6768f9d692ec",
+    "ethereum": "0x5ed860d6c9741d31e0a3163cf8d97e362fd77e1d"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xfb4b50b10a6d40aee7d125fcb6d2fa350d84ac97",
+    "ethereum": "0x5edf318864dd081b4ed510b33b76fa2b02d7de3e"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xa60432e1af09dab2398dfc440d0c49071584dfb1",
+    "ethereum": "0x5f59af3e3a451e6217198c39ec7d7ed7877244e4"
+  },
+  {
+    "symbol": "HC",
+    "name": "HULLCOIN",
+    "decimals": 18,
+    "plasma": "0x8535b7f4983878430877e897e4df07a5ffb25186",
+    "ethereum": "0x613b233ffa0d194df69889e14e528e02f088757c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x42930fe0317880ce69873ad2c4b133d2a5382419",
+    "ethereum": "0x614b2b9f955f1ee8373c8d4bd68817d57e64d110"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x5a35c25630f0e37f79f90cb2db5ca650494c13f2",
+    "ethereum": "0x615a476fea96b88d425c12e52b2179095af815e8"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x52b73861a32678e465d957e122fb0dfee2473e2d",
+    "ethereum": "0x61d8f42eef34244abea76348b2558ffbb5d60076"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x0e9575a99945770239d0c7d00f49533c8c38b630",
+    "ethereum": "0x6243a696451ad8abc2c72f5221175360b47d08a3"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x61d730ab1ebce6a3cd883577ec3fe36c7735fe53",
+    "ethereum": "0x625b71124859a9ff71e2f74febef63b0b9f9078a"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x84f7677691ec865e9d445069f6d74af3ec703fb1",
+    "ethereum": "0x63f84ed431e7c547d9a055a915a7c1bc2ef738e7"
+  },
+  {
+    "symbol": "CNTK",
+    "name": "Cybernetika",
+    "plasma": "0x50632915c6dee2dd8fb59915111b438cc3196377",
+    "ethereum": "0x64a467b835be4d4ed00c85b200d9ecdd19832861"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x2af64016be570afa68fb31c13db2c6576e171b73",
+    "ethereum": "0x64ebca2a76a9cbe8ede85e8b2d381763f8f2663a"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xe94afd7a11b2aa3953bdb296182e9d885ac11309",
+    "ethereum": "0x6508ad381a1df2997398f1997f591fd4ea49c030"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x9dadc3574a238cdfc130db48bd5fcdbda903afdd",
+    "ethereum": "0x65237bd989880c95a7d9b4c8b96424bb71be35f2"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x8db3f306d9571f540758747d3ab40801a7e1eae6",
+    "ethereum": "0x67ff50d58c0876e37e9106afee801747be6dee26"
+  },
+  {
+    "symbol": "FRD",
+    "name": "FerdonToken",
+    "decimals": 18,
+    "plasma": "0xff665e6e02bcd153de3927e2cba05887083164f8",
+    "ethereum": "0x685bd0680bff3d3a7a2fe9890444d67cafcd0e07"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x8f0e7195fc083bedcf9db6eafa82e61209a5325d",
+    "ethereum": "0x6a1a673e7950e187abdd5fd788f14fd36da22399"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x48eafd2cbc80d621229660b15f54a291f384148f",
+    "ethereum": "0x6a1ff8ec222d99837325cd68e7b48e3f917efca0"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x736a5de69bfbd1e19d62883a614813ccb70dfa0f",
+    "ethereum": "0x6a740d681baafe98a5aef33f84f3dba742aba595"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7442c922d111fc5684638fbd8cd0c242fc2023de",
+    "ethereum": "0x6bf0aa8e4b76ead2019ea1e674aca64e157dde96"
+  },
+  {
+    "symbol": "CNTK",
+    "name": "Cybernetika",
+    "plasma": "0x77833fca0cc7bf5a2a89ac213f33963b4c98a446",
+    "ethereum": "0x6c0d5e8c6cca9795c7812668091c19b9ccc710c8"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0xae2ed3bccbb55cb263cd568054020d1e60744259",
+    "ethereum": "0x6c54cc4c1fa0f5c746e8e28e35e0dc72cda01535"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xfce89e34655b08868fa96734551d01199d01a6a4",
+    "ethereum": "0x6ca18ff30d11b3194bf844c3e418c41421ea5eb7"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x7cb42ec7dac6c6517acea2a5ecd1d5e9dcc07535",
+    "ethereum": "0x6ca2850a04417cb68cefc6339ea42750f86a0c41"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x6b9dbf6d77e6781b62ad29a28bc4fff796f3f707",
+    "ethereum": "0x6d598be7f2af48120508a7965cb8ab23a5fbbda7"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3b92575b7d3d84d4b159b11499b050bc5f40499f",
+    "ethereum": "0x6d5affd94a7b2715c5404544d3bc5b8b4e22d8cd"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x4ed5f5792cb4507407e9d01f51bdf259563dd005",
+    "ethereum": "0x6f4b980458cf6c9183e360ff86539fad1922995a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x76666ca8f9e271458c70919662ef7486a6e0e091",
+    "ethereum": "0x700c6bd230116291c2781ac77c6822832591f560"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xb552c525a8fefec63e28174a021b3c5345ee9c6b",
+    "ethereum": "0x70a08b8796296be665df58102126b3a4f7822e34"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3b56ba2d73e6b8860911112636732ababf8f3f9e",
+    "ethereum": "0x715f6445663a0ac145d633b0f0a96bf2d4206cb5"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7ec65b3a3c8f08a8bdbd4992d4950270b102fe16",
+    "ethereum": "0x71b724589670b742c42e9345ccaeaa43751ad3ad"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x80ffdf08036f1270b3548e1b38e08079b750d1a3",
+    "ethereum": "0x726cf790051a5464f65ad8ef87d0a10a1d08f518"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x79eeb76dfc4776d5cd53c28e37b447225bd73c8f",
+    "ethereum": "0x728091a21a82ce4d3bd29b0a83f786f0ff205711"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x6fbf0287132032ad3f96f88bc8e460b8ea96ff48",
+    "ethereum": "0x72f3bc4ed69bf6ecbf6eee9d758292b99090a182"
+  },
+  {
+    "symbol": "CNTK",
+    "name": "Cybernetika",
+    "plasma": "0x6ddc158e49faf236390858d706e1c2b1cf8ecdf5",
+    "ethereum": "0x7402934fb19ec8fd51e041b17f124651d9fad8a2"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x22a05b90da2b111db2387b60cd83dedcfcefb451",
+    "ethereum": "0x75ecf6bc4eb5342dc8007effe48b7e1c000bc81a"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xda2a9c8fe0c7e33a9df0c3c9233eb5f24fbd7d37",
+    "ethereum": "0x7745d04fb0203182109dd32c19aea190def129c8"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x87d81cc4024d29981823dc9808502a62adaa9516",
+    "ethereum": "0x78b40b7e2c8f9aab2fda3ff20da4db589a0851e2"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xa926a9b92ec3e48c56f521541705f5433821c0de",
+    "ethereum": "0x793bce33a8125812caa0b120c7d3761a9c22ea95"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xe338697d652c9c0b94ab8368380c51d49bb45408",
+    "ethereum": "0x7ae4b15a61b1f42388b3b919c225ba9cb7fc6d60"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf487913b29562401943ea218f9d0ce45072ac9e2",
+    "ethereum": "0x7b1795d2fc1fd0ab47d4e4f4304035cda5838bd4"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xa1d81534e163aeae9f7c4bbeb25ebd68301f674b",
+    "ethereum": "0x7c2b13d9ba084c397028e15ec0f136dda15a6a72"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x1a91d8e04591c429b1a289c3d2753df926cafc79",
+    "ethereum": "0x7d940ec5533bc69a96bdb9ca61abd890037f433e"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xe9cb023991088751d9bf6e700f8d6db1c19f1ac4",
+    "ethereum": "0x7dd45426ea7cbab5e286e3202da503142640de1c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2f573e34ef3b3f3760913a6617f1395302e47d3d",
+    "ethereum": "0x7e0c0bbe5ff93c619636cf1ce76c48f885665300"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xea331163cdfc3dc7a068788c96a6a0c217350906",
+    "ethereum": "0x7ed032b358227bab71e346128cb4e8c2a412680d"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xf3f466c899cd428467474fb9a2073a3c3f05daf2",
+    "ethereum": "0x7f3b0542624e0e77cc5234229eaee43b5234ecd5"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x231441a64b33c61b537a5e8c7dfe0df0b1947f7c",
+    "ethereum": "0x7f44877bedae6a43a13fcf3e2ae65b956e4d0644"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x9ff0fd43ce8f8ff7df0766e2e6724e4e02e8e9eb",
+    "ethereum": "0x7f4a0fee1559dfdbb44b40b9082f1db21a7d4186"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x8573efd4ea33c7d587591fdcf33fb74d61a55577",
+    "ethereum": "0x7febb7674833dbc8443bbc93f4b4999b711b5386"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x462efa400b4656fc582dcd72adc4352696ebf552",
+    "ethereum": "0x8123120a5d9c5213189e901b7e1c1f1de9dda268"
+  },
+  {
+    "symbol": "@cryptoravesOfficialToken",
+    "name": "@cryptoravesOfficialToken",
+    "decimals": 18,
+    "plasma": "0x28694c32059a9538680a622a2764d7cbb0e01f93",
+    "ethereum": "0x815399ff3d5035a8fc86e1812d4d77bb23082dc9"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd01af3ecfbd15dbcf8e2c2bb3ca0ed29ce718d21",
+    "ethereum": "0x81ae4bae37bec6b8423059889d66d24d004e02c9"
+  },
+  {
+    "symbol": "MNT",
+    "name": "MyNewToken",
+    "plasma": "0xeaabbab6126191297058c9a87017b5959302bc10",
+    "ethereum": "0x82586947836b78b10501ee9b820a5d3abd7f9161"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x9524bbcf0dade61ea8a0e1981c03d6af949d6e29",
+    "ethereum": "0x8314a4727642ecd8e22ca6156ca56b30aca961da"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd019a397a09425a0d0c2cf6223188733e958f2be",
+    "ethereum": "0x831f5ec00fe46ac1c1ad6cd9999eae4636d5851a"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xdb236ebf8341b60882bc26f5c06d9b6b849cba26",
+    "ethereum": "0x845050baeb2a711aa3a4418cd94f7fb28dad94a5"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x549a6e22a3485bb69ffc51cab75fee84f612bec9",
+    "ethereum": "0x84d847ef03626b11798f4d5c666df8af55a4946f"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc596adcb505e77ea91cb59225a22b5b19815722a",
+    "ethereum": "0x84dea053c0ef566be1755a631966d2b957e0d886"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x429d9a54979d0ca35173d12be89eb0bec8dc2d05",
+    "ethereum": "0x84f17f8796c9edb1110fbf4a9110e017a0268f64"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x98833130a018ac238e8ee6aa1e04a369526f3c9a",
+    "ethereum": "0x8508dfba75a23b1fca86d90f5f63114a6b259715"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x44de3fd0eca9e55723f041a04510ffe7eae903f9",
+    "ethereum": "0x85098d7d2477feaf2e29d2525e71a19556a8d4d5"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xa93d25e0461e56bb96db06f3fd5b247fc30aed82",
+    "ethereum": "0x85d9f198f35c31f2986494da665e57a28d34c1cc"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x0cc883407977d710be07ad79a5db899103949c19",
+    "ethereum": "0x85e5c164732919cbab971a91778027c698360d06"
+  },
+  {
+    "symbol": "THX",
+    "name": "THX Token",
+    "decimals": 18,
+    "plasma": "0xdf205d2520f4379ae4c48b52178fc8524566ce97",
+    "ethereum": "0x85f19b33d794e327740fe8d4d731654231e562b7"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xa922ae1f1fe12802bc965721119f041e3502be92",
+    "ethereum": "0x8636da0b5a897da46879f268202cd7c07002ff32"
+  },
+  {
+    "symbol": "ZRX",
+    "name": "0x Protocol Token",
+    "decimals": 18,
+    "plasma": "0xcb953bae2c287709d9dc7ef76dbc760a7102bcb2",
+    "ethereum": "0x877f0d0ea2ec40b126ba1065f73f3ad3e43e4881"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x09176443f1b081cf1afdb53fee3531e7ed512e0a",
+    "ethereum": "0x8789a942ab98e7868dbf05aadfdc9a83c503ec5b"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x6e55c46887aa36bc95cf8b3e25a42ef53438d45a",
+    "ethereum": "0x87e3064dbbea83963a6f516debfb8bc0429bffdc"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x0d340ea4cb94ed91c2ee4ba0a654a5f6da9bf67a",
+    "ethereum": "0x883e4b061c2f922ea009db0bcd3ab8212db5f927"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xff3976f84f6c4bcab384c02632f3c1682f212403",
+    "ethereum": "0x89e7a7933f986d410ba052abc223612e16c1650c"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xd464684e52c6caabbf3b7ca1c01661e9363aa691",
+    "ethereum": "0x8b2065b2fdbedb3b6b2bd86c15e5e171c3d6f169"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x32a76ea19c4ff8cd2ce7fc923b4c3e80a952d6f0",
+    "ethereum": "0x8b217935abdacc89d1dca3a60adc69c8d9ce7f47"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x6d8655087229ef4f3c797385672758c79eaed056",
+    "ethereum": "0x8b2b0614441240885d9b661e73e146c3d4616a24"
+  },
+  {
+    "symbol": "BRPART",
+    "name": "BR Part",
+    "plasma": "0x43eae30fbd6708fa5b749e0eaeb5963c61929616",
+    "ethereum": "0x8b2bd942a4eae3d54394248599c85d7de768a4d0"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x63605f963b693621f11a4091be89f8680c8919ff",
+    "ethereum": "0x8c983cdd55dc6699629e42ae0bc487b63a4e7c89"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x36cec939360b8b2b3fe0116ec74beae6c8a2bd19",
+    "ethereum": "0x8ced9259ac59548eaa14f520f213b0638bf8596e"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x3b2a7a0c3a027ec32662ccc76fc7dedca21a4bee",
+    "ethereum": "0x8e36dbfb770be5dbd6106fea48e83d8eb6a72a4b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xcd470bcc3159c82a97d080158e2c271a92b74038",
+    "ethereum": "0x8e44a0331e00ba07c6b06fa6781356948754c074"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x6b73ac47cc7a5ccf8871c5b5f816c68a7db78a95",
+    "ethereum": "0x8e5ed294e12029f8a5234af9829b6ff50567588c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xa29fa065e64344a351f13a26fa3314af27a2329d",
+    "ethereum": "0x8f9ffc7a902a20773ad46341b789bd230d9e9c0a"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x1ef5caccf711403f7a4a336e5a3768f7800e9aac",
+    "ethereum": "0x9072a0e8b995a490025343b7a5ec8a78ae34f1e8"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x366efaed68918fe4fd56bfffc572fa3bfb7de8d4",
+    "ethereum": "0x909da677dbc9052644af402181e7d38dcd119041"
+  },
+  {
+    "symbol": "HC",
+    "name": "HULLCOIN",
+    "decimals": 18,
+    "plasma": "0xb2d22dfae12d22c02b9ffa0d1bacb590e78e6dcf",
+    "ethereum": "0x90d0870e68ec4e49b0ea6018db4620f1b1a39cd6"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x4bb41b9e27c894574daae783f06f8f6e59bf06f9",
+    "ethereum": "0x90e956f267878ab631da72914dc8b60496d8e0d0"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x9a22743f9c0d0bb88dad650c253eb8dee4f43365",
+    "ethereum": "0x9119bf6ec94e2cd91f48df873fd0e5a54ee79873"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0xc1c87664e87302d6472787d8a55054a25756b102",
+    "ethereum": "0x91867d5af6721fb6639eb86c4d4c80c92a302bb8"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x06768684a2062c4b53a83d969c87f8b9f75e9f45",
+    "ethereum": "0x91954d8dabb5193d01d1bfecccc75a2b47355faa"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xdd0bde87fd6293c779b630786a181ae52f26a7df",
+    "ethereum": "0x91adf7947ea19631ae8b007e9fc268accb565474"
+  },
+  {
+    "symbol": "FRD",
+    "name": "Ferdon Plasma Token",
+    "decimals": 18,
+    "plasma": "0xa791629b6e5e73998abaca9ba3081840653cdbea",
+    "ethereum": "0x924dc69a43530dd5c6368a8723777fe8a3e72fe1"
+  },
+  {
+    "symbol": "DSC",
+    "name": "DAppChain Stable Coin",
+    "decimals": 18,
+    "plasma": "0xb99f19b9a09c1bb4142fc0fe95091d20df3a6f33",
+    "ethereum": "0x92e98d0aabca4c2cbbf6014f0dc93875821339bb"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x4504f7207eac211183e341b8e85823756ee97b07",
+    "ethereum": "0x92efbd5a1b63cccffd189a5b16e1e5d326fe3d82"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xa8e9867258289ebdd37947b443807a518e997aeb",
+    "ethereum": "0x93d45478a190f8c134ee7d2dcbe43471669184c5"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x1418857ec3b44ba2645c1fb8c462a8bf69dfdcda",
+    "ethereum": "0x9475a409656dc00861ac5c213381faead6c304a4"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf6f2ee1f4ecd34bda4b560a16598503a19e3bee7",
+    "ethereum": "0x94eb50dd4e8fa04711614db253dda69b2fe8cf63"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x361e90cdcdd4939bd340d538a568c0a9f4b429dc",
+    "ethereum": "0x97be5fc07931ff886c7064588628a14cae377722"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0x2d2a18172abce9dc92420747b1de4caa709833f2",
+    "ethereum": "0x97f0dfa60fdd3e51a8ba7121aca3163087fa353c"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xcfc751c50a2e1de33df9c9c5c5382559af600ce4",
+    "ethereum": "0x9829b53b52064d297f2de0abfeb26900aa0b392c"
+  },
+  {
+    "symbol": "MKR",
+    "name": "Maker",
+    "decimals": 18,
+    "plasma": "0xf646abdea2b45108127ec9a52a56ec40d60d2283",
+    "ethereum": "0x982dead19da33149e365b6aeb324ca0120ae9f93"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x7f1b5f89433324eec3bf219fe2084c203dd1b945",
+    "ethereum": "0x9832a7ac3f621fdf28f715915e05ca9c9f3b4041"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xd4fe4e6172f4cf046af6be8849fce9ce7ff4208d",
+    "ethereum": "0x986602a03f50ed6d6ec86f7e91c786483f6b0d73"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x942798ccb0023aec34ce42bd4ee7690c03a12264",
+    "ethereum": "0x9aa37434449ba0feb48133c4cfd4311e9d5521a6"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xabdf9a5d165a5331d92f436e5ae7085c885a131d",
+    "ethereum": "0x9b7481b3bd26522bffdbbafdf0e075808ac3a0cb"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x4752a19628ab4707415885741372efd18d53b7b2",
+    "ethereum": "0x9b94bcd98cef1862a20c4517b4e85e9588c1c52c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3bb653630a9ab81c971edd12f7d4e034d1256eb0",
+    "ethereum": "0x9c55cbe276759d36f22f5a775e0f8826a791c9fe"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc251be249314a58a770a2e6baa6badd9443617db",
+    "ethereum": "0x9d97c7e389d51a8b19ad872eeb1a3ff5ea303547"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x4cf112aeb1a8e0b3b921ad9047bdfa6e40849621",
+    "ethereum": "0x9e43620486cd9695779f15da617867f7087c364b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x7c08d5cf8a2d39949014be2fac8bace095ec3a8f",
+    "ethereum": "0x9ec31426562354d21e7b5047ea67bccaef1652a1"
+  },
+  {
+    "symbol": "HOL",
+    "name": "LoomHoe",
+    "plasma": "0x2e2673e7fd083b3ca2a5c5ea909638623d6bf62e",
+    "ethereum": "0x9ec506fd6322db624e4a228af617027733203cf1"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x9213238b75ba4cc2c2c54fee2194b707cc886812",
+    "ethereum": "0x9ed775280fbd923d00a6ff51a770e7edd9f9acb5"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x61c5b109b8068225044b6ce680f6c698508613c7",
+    "ethereum": "0x9ee937b9defee45e1e81c09c5a57159a9d8af867"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x838f2ae5ffec30be4101bf6c0427f5b334548890",
+    "ethereum": "0x9f498d49a86f2fb6259e2c30fa23abf035204368"
+  },
+  {
+    "symbol": "CUE",
+    "name": "CUE Token",
+    "decimals": 18,
+    "plasma": "0x85b3ae871ec1ff9ed96076831c4bd70fb7438410",
+    "ethereum": "0x9f90f16dc156a12adb57eb88bb905f0cea557765"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc53d19c9e4eababaf04ada6d0e2193b3ae2673eb",
+    "ethereum": "0x9fabb0f76e6b33a5cdef563cb9825e825c5e00cb"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0xd8b287123163593812a48ec32202d446f6837fde",
+    "ethereum": "0x9ff53251ed73b316a442c4db5361f6b4c8ea1e91"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x37bfe1b488292f367f3d02491d87c0e9b6b37dd4",
+    "ethereum": "0xa00650ec8a7d0fcec15bd62eeb31af8f15cd64cd"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd0bc042212ed4cf98320ccfcab1f3867859b96af",
+    "ethereum": "0xa141e9d56ff5c612034399e047a89ff5c6005f20"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7d1cc2af5fb9c62dde41d1e20ec15b5e73eeb79a",
+    "ethereum": "0xa1cb383492ba40cf4ff5fc61de8d1706cd9ad247"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc4eee342f8cd65010bbeb012cc99e12434f2d4a5",
+    "ethereum": "0xa1d1432578db5cdcb4f7f6cf433040399e40c4f6"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xd50959286b7943c072cf69c217236b217b0eb45a",
+    "ethereum": "0xa21082b2faff4d5b5199691d757ae698c8b88764"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x95e732cd5cf5c0b7a102542a6bb2748bbce44751",
+    "ethereum": "0xa2520810750cc91b69ea4e168d09a43cabf1168e"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x104163b4e262accba480d6d6b08abd8383998201",
+    "ethereum": "0xa2c0f7dd702e233a62b19a6b9771729542dd5cb5"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x69d73118680478ebe14024d29c8d637125847294",
+    "ethereum": "0xa2d1c21678190805271d73ecf9b2a92162b5f974"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x6e4a568da39c59838264d2089718913dfd7ca0db",
+    "ethereum": "0xa33a68b0fa34c1c7aee25304c2acacaea79ced8c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xe4ece56876eba6412487a1c56cb9806b33b7d902",
+    "ethereum": "0xa3c547c1a661ebeba206bcd085e2cf30cbe41155"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x9fd51e1aa015f0ba562922b2a3c9576cb4ab8655",
+    "ethereum": "0xa40eaca2297f7ddef8bec38c1ab6a3ca062b76e8"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x34c438c4f64d9f04007d9179eeb9e58fc2aa1ffd",
+    "ethereum": "0xa417ba1f22199aa843c5716f3f076d95f53a5780"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc2ccf8774c0d0596f1ce4ec23fed8c92afd9151f",
+    "ethereum": "0xa45d2fd6616c0fcadc6211242a685d8f7a3b9838"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xcd272a787cfea06d6f5177924e4e0e5f74eaf8d6",
+    "ethereum": "0xa47d3939b0a9f706a22f35ef2ffc38142d7e66aa"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x4f5fa41d85cf5a4e9ca27bc3f05aac55fe17de7e",
+    "ethereum": "0xa4d4de3e35639eca937ca2d65df7dbd3c9df7630"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x6e4050e9b4659979bac48d9112a55804a5a1d644",
+    "ethereum": "0xa50a53abfffd91375faa12209e88a3d41a3e92cc"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x251cdb2016735c1b7141f7385bace72b61cc515a",
+    "ethereum": "0xa52d1f4add04fd6397fbb99c512397ab9bf39ca7"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xc0b7d7e0619558ac5891fca68e8db1c5fdc9d761",
+    "ethereum": "0xa5920087d5e4bd2f79343a2c9d1d9915d89bf132"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x9d7ad435cc4c83887cb8c7a2e5cb30d4ee7d585f",
+    "ethereum": "0xa6db4cb10b938963daef82b086ce50a984f39886"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xfd6a1d3c3cffbf3d54be5e6a81e26567945d0d2a",
+    "ethereum": "0xa7eb4ce4c659201b31ecb6f7b584f4e974d8afc1"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x468b017a4dcd97a9f1def8ff48216e300481cd25",
+    "ethereum": "0xa8468000aa87d1cbdaaffa1fc449fd2b551e8018"
+  },
+  {
+    "symbol": "BCT",
+    "name": "BityondChainToken",
+    "decimals": 18,
+    "plasma": "0xa1c95bbbbf7881d1c073d6d636cedee3a864c77f",
+    "ethereum": "0xa9955d84d0598d1d608edd3852aa98c2e5af6496"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0xc3704f9b3c0cad45fa5305c1cf9a37b0f37b985d",
+    "ethereum": "0xab06433b3d3c12e250dbe1cecc5533ab04281ed3"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x50e69e14fddce52306c22376f9ca12225c59bdcf",
+    "ethereum": "0xab6a3c6b1662e7df33c6f42cb45bdc571f1792de"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x0c2d4ba0e2065cc55cb73fe0f7676bf834e2970d",
+    "ethereum": "0xabe458822ba3d8f9fa4de462eedbf8390596c187"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x6170f5a95329974012aa0a2d01e9f9dc4a21b9d9",
+    "ethereum": "0xac81821a500901462ef0700cf6986c3aac2b8c28"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xd4f2b291fe7c49c4034529d09237fd19e5f3ba86",
+    "ethereum": "0xad2e5f24b741f47afb771b5df93662009a75e4c4"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x92f40cf787a812c2dc894d3fc1c74ee116439678",
+    "ethereum": "0xadf9d69556eab51b237c554a8b3b6b2f24729b6c"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xd363867f52b71aa2b820e37c0ed569fe5358a833",
+    "ethereum": "0xaecdb330c9746a0c7472be2d23d70caa895facaf"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x5caa1528b51bea8ef2b87af268b04e75b8fbd5ce",
+    "ethereum": "0xb164cce9fdb56f091f92f40d91d9d596f40d2e9a"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x103835712811dae30b4801573630d4f8f5e52b9a",
+    "ethereum": "0xb175f50c7986a4262f3319966384a781041c805e"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x20a784bd183717cfcbc4c2505769393e436b47af",
+    "ethereum": "0xb39a2a2c88c4afa7c5a4907d4dcc5523bf4fa41e"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xa38f5e7586e29f26fb146ac424b529967e2848cb",
+    "ethereum": "0xb4987a36adde7a0bcb5dbf5fe30d95e2329026f3"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x405f00614561eea2445f0e16049c3564bdcf789b",
+    "ethereum": "0xb5677861bc6004594f997ce57333a6573964f4c8"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd1d80b36c4d504e665c60c7b525eb6e0684ce7d5",
+    "ethereum": "0xb583ebeaa1c2059ca37178f7551c54707cbf9c6d"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xd8f4394119aaf0050f927f680b4b990401998020",
+    "ethereum": "0xb594c4a95c8f7607fd625b960769836199ae260e"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x48ef10210dd7bf835fc0b2266de225d6f8358d5d",
+    "ethereum": "0xb68aa7a5168662ad0ae00a3df483526e0eb0c2fe"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x14811caca55867a21bf510b9378ebe929aeb788a",
+    "ethereum": "0xb6ac0dc91ab73ec6cddd9cf95f43370e381352ef"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x14e47503f25dc1c35689f1b95723610ec3be05b6",
+    "ethereum": "0xb749ebda6bac7f72a706f009fdcdfa00ffa7fa27"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x51420745daa4d74b894c959ca75cc9b09738fab3",
+    "ethereum": "0xb783ad07bf0698b07b824f3714ea65c540818b4f"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x953edaf855d54f95f9dc22f476ee819b46bb2177",
+    "ethereum": "0xb7a87635591b9990bd832d44a66422a204597f7e"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xe2d78a44c7269dfb3302246953468a8cbf91682d",
+    "ethereum": "0xb7cd3cd5ceb3d832a7ebf8a15948bdbb22a23226"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x3836c72e0e18cf3df5e7295516baaaf907824441",
+    "ethereum": "0xb8c0d54c0a77c5fa122f04ea690a2f22d5add2f9"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x4dc5cf328778c2a929a409232e38fe018ca01b34",
+    "ethereum": "0xb8c413ecef39cfcdc17a2fce7b5e262a111b7bba"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xcbbb873bb51441f9e9f2996ab8d723e684b7c44f",
+    "ethereum": "0xb8e43cd406ba70fc220485ef01a0b86b436a9d96"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x229067c54f97a06d698d1e0e23d461ae8e37c7a5",
+    "ethereum": "0xbb21c67c68599ab50958ad8eb5434f77c51a8f0d"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x82b682d911cbc9e58a2ebcea0bb0a625e2ae6fc7",
+    "ethereum": "0xbb266778c4e951ff51c2eb696a56e54a31ec8746"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x7cc675d0fdbd6cf889713c70e8c50c0b35d5bf01",
+    "ethereum": "0xbc16d3b96c66364cf6b532660de8dc3937f2a94d"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x2b62617902c1100ca09f79f3f745128a782deebc",
+    "ethereum": "0xbd1c07c0f11c7138e668cbeaba66ae737a4cb3f2"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xdd0d9234d09bc08950a1b9c985e6079229754c56",
+    "ethereum": "0xbd4b251fe73f437668012f38ac93e3d9ccbcf9f3"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x212899ee9202f175ba8550f9c3055a0f137c7edf",
+    "ethereum": "0xbdb9846e94055d91f0bcdc6e52be1cc7230bafa1"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xcb8865b24f8f66b7fe05278235a3413828789ad7",
+    "ethereum": "0xbe1091d43b91d95991e3b7f32293a77005ee407d"
+  },
+  {
+    "symbol": "FRD",
+    "name": "Ferdon Plasma Token",
+    "decimals": 18,
+    "plasma": "0x900a2fcfd78bd65e0006891b15b84242b5553484",
+    "ethereum": "0xbe9b8c8b7d5640a30f6506de497f12fa8cc38851"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf604b4cf33cc8216b5771b464ade62f7dad5ce93",
+    "ethereum": "0xc016f8f80f5fae78827df4634fb3e04384b8a61a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xca28e9a3912b7e8fb27314bbb53da335258f3b52",
+    "ethereum": "0xc06123343dc1c33d7e8241b5e1180f65a500cba3"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x97787ee22685e5ba7c8f32b2be34da3610917643",
+    "ethereum": "0xc2b898ceda6078ea8608a8df5ff8f7979cd46800"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x711fc1970736fc9a2514b60eef561f119fdc9cd5",
+    "ethereum": "0xc30792370a0e9fd74f582393498031f52aa0aea5"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xb519f328a9bbe6b91a5344d6afce5c9d19d142c2",
+    "ethereum": "0xc37f863f8a320a82136f33d9ba8a9df42b604116"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0xaf2e6755514316debfb83b27de92eacd9bcf7ba9",
+    "ethereum": "0xc38d6eff6391f012d5152fe0cd8d9d50ca27a827"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xa97694bac1cd6f25a68aea420602acb352e362ed",
+    "ethereum": "0xc5093c947c91ae05016c5cb175292bde4817301d"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xa8d5080a7b0e9873e960929fb83de76421fe9c45",
+    "ethereum": "0xc52712e5fda32ce875cd526ff5fa66c8a1e7811a"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x55672cf854038bc03012ffc5f0ef462f31b7bc7c",
+    "ethereum": "0xc63c69ad2bbbe15b6ccbc65fc2d1de78060fa049"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x6e43937038a023889500d17494c93f82c5f71218",
+    "ethereum": "0xc68d4f62e24551ce17b39db161eea7fe5e919174"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x0e75d2d2688b957733b8adbd9d7460a9773a1b1e",
+    "ethereum": "0xc783ff376b6688aac5036f2e34f37711daca2a86"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x6f2b555d35fb62c366f3668c3ba8662cecfb984b",
+    "ethereum": "0xc974d92415cbb6d3454dec3a40410f61ed7a3dc2"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x908f99aa87a7f58f3392baa104f19c67ce442c64",
+    "ethereum": "0xc9eabad0aca02697f42a33afb4d387dba43401ee"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf11259866de7576277eea9b286ed08caa6f5afdd",
+    "ethereum": "0xca410795ef7185341f5e03570e4bad2ae1a5753f"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x7d0c2b09d6ca8b057401a021916c037eaef7f009",
+    "ethereum": "0xcab7891f3a2b2015b0308816389c7886b5b6dd3f"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xe8ce64a647740155d044eaed16cbf2197d92787a",
+    "ethereum": "0xcc2cb4ef6683791911a54a7b6c817b187231f736"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xe8fbfb5b9f5ecb9c308d03457f37737af1da4c16",
+    "ethereum": "0xcd4849b8a0ce8246ca40cc956e5c8181678cea11"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x20c7309e174aedfffe2a4e4b7e65a479ca5dfdd0",
+    "ethereum": "0xcda5072d15ec84ed15b363983a84ca327039f8c9"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xe30c6ab89f1a39f4086b5a6f87cf2df85b4560d9",
+    "ethereum": "0xcee15a382e7c8ca87660bea67d5206f04b8c9427"
+  },
+  {
+    "symbol": "CNTK",
+    "name": "Cybernetika",
+    "plasma": "0x34af9328843a71a7983f396bedfccdd591919d59",
+    "ethereum": "0xcf2252a85d229572bcb3af2ddbdb1eaa714ca8e2"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x7b73eedbb465b525a663156acb74981109b3c2c4",
+    "ethereum": "0xcf225d215f7e17795b1e2cd5c9cda464ade69589"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x04a864513f3e74a74a81e0c36f915a873a9bc409",
+    "ethereum": "0xcfeac1a483ef04284f01640591311ee8fc3f666a"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x5d60b25de8823dd3f36db0fdee28698404f7cd4b",
+    "ethereum": "0xd0299fa771dd9a16761161062ddd3ef1248822bc"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x64521a8741b2518a076128a86936b78e0bf9dbed",
+    "ethereum": "0xd0e2a5c693572343e8a0e1b7970f7cec06fde660"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x6c637f62b9b3c9b443c0d892f63244458c003b9c",
+    "ethereum": "0xd1d1e70f280abe4331aae35064b781fd73f33c9d"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xfd47bb959ab5c3e1a464dc61ca27e62fa684ba25",
+    "ethereum": "0xd265cece7137d7d1031b2b93e649eca0f27a29e9"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xeab2c219364fe1637ea0245855425aaa10fd6997",
+    "ethereum": "0xd26bccba5558b717569f71f2b761a43b540bf5cc"
+  },
+  {
+    "symbol": "MLC",
+    "name": "MyLoomCoin",
+    "decimals": 18,
+    "plasma": "0xb9f28d8d0077af23ae82437edfa93b67761b925e",
+    "ethereum": "0xd2cef73c8122534ef713dbdc5fd9d1eddcdc809a"
+  },
+  {
+    "symbol": "DAI",
+    "name": "DAI Stable Coin",
+    "decimals": 18,
+    "plasma": "0xcecd059cde0138cb681ff9bf9445a0a2cc9e98cb",
+    "ethereum": "0xd2d3148b9a467ea0884fba49662e8c42688f1101"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x66ce5d9ce759352e2905f895e2b3969c1d46dbac",
+    "ethereum": "0xd31ccfbf0d523e3305b25e7091531b40e40f7275"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x28581224fe29756742840122c9224ed5e93284c3",
+    "ethereum": "0xd31f98ffcbf8250b906ada451dbb9d126f5f5c53"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x73f886c11db0519181b32055b40a6eea22dd001e",
+    "ethereum": "0xd381bf418965825a996cfe1f0241c39528e1952b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xff828ff8a1bed992f84b2047bea06545cb114d0d",
+    "ethereum": "0xd60bae27f69ac8b671ca69f17d22d8eb3fab85f1"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x80a6630b307c76f95087c27bd782c00008d89613",
+    "ethereum": "0xd6107af1fda42d8b98128df6cb471ea8b74e980a"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x133cb58c2f5c849f24c8cc8007dca82980f68492",
+    "ethereum": "0xd628e76d31ea901481097839d63f7c0f4f4b18ba"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x67e4596806e3779d706fa050757842c3d6815c40",
+    "ethereum": "0xd842f3ee6b19dc46a201b061678ef5ad0eab7a28"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x19f792102bc89a6e4a8c8eeecc078c088c9a17ed",
+    "ethereum": "0xd84abb6550507d90d3129b4dd5646243d7dc2586"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x6f6604a7908bfd2304942cb69459121a7c7bcfbd",
+    "ethereum": "0xd8c0e604004fa7df2ddbcf1acc8c05d01d4a3bea"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x286f3d81c1aebacc5334810aab73a8909601c8f3",
+    "ethereum": "0xd926e91aff10165fcacf65a3907b3aea24610cba"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x30a067dc9ea2316072a8966bbb56b368f48a4b3e",
+    "ethereum": "0xda35c2bf1ba31d8d5376c16326062710f885bfe7"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xfb6adab2e7d35caa4e7f4a05e4fdd89615e48021",
+    "ethereum": "0xda551c3ed75fc8ce13a6d0b49fd5f3af4d72e14c"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xa1cb37301504311d7bb2870ff7d94a01a5778b44",
+    "ethereum": "0xda9ec008f64e29a6626f3d6f868c5dcd241e9d04"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2b9aa0dea2c7c1a72cb49440eba0ab7e7d295d77",
+    "ethereum": "0xdb1305c22db05792ea4a8744d9411c14420c8532"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x0eacfb19234a4a16210d425a7a239b32cb4f59e1",
+    "ethereum": "0xdbb951b08a1f45d4f9dd37cdfa325faa52680675"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xcb25224402116500f33b25f7b8c4a57d5243c37b",
+    "ethereum": "0xdf54add5b21387dea8bf76531ae534295be18113"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0xcb913f1ef7e9ab2f4b868b030cd41e4d0d045782",
+    "ethereum": "0xdfa54f371f8b111da26dd63f91421bf443300adb"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xbff0e1aacaf3dd4c1bca797be39b4eace9388ebd",
+    "ethereum": "0xdfc08eb27b52ac7b6fe087d72f76903831ce7812"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xf260a9839d7e086fbedd8752afad8a971bd3d87e",
+    "ethereum": "0xe1c4d84761bdeda2f9f44f7bee9d70beb13e074d"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x65f34762155c0a8ac463478bd2cb4a6ce0eb4b3a",
+    "ethereum": "0xe22176c0762915b356744540d6e105c54eaf5fe0"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x388b16046799a49299eeb24416a5515ab06ca402",
+    "ethereum": "0xe26a28ce5d054e3449363a99378e1636b6072d59"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2a7b63620aed6df6ce3447e20e58caccfd6538d3",
+    "ethereum": "0xe2759f793aff841b49dc97a26819109491f0403d"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x0b517713f5e6a1b8ccec8e6f42bd24cc5b29210b",
+    "ethereum": "0xe332bb2ecdf53a4b67e508422a3fb8e68e635f2b"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x3c6e10ff75900a3a7986fc5737683b70ddd6b11c",
+    "ethereum": "0xe4454e7d48ecd3ed39b1cfeb168662d69169b907"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x9b6406bc127bbccb7713990d26b780a9dcbbc585",
+    "ethereum": "0xe56a887c498e7464c1e60c37ec91ff8be9e32dc9"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x5eb0694ff25e465b6a63cf9e5b781438bc573579",
+    "ethereum": "0xe619f1e4b298859612aebab54531a58e31a7ca9c"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd9200b1cd0c2e715d4fc697362f66c8c7a2cdbba",
+    "ethereum": "0xe624b5701368916c384a777689dc1650ed1a39cf"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x938d922bad898952a49296612036d295179af55c",
+    "ethereum": "0xe684277f905106bd2fd7da39927c42c101db210b"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x62e3d874d4c09e22b87876323e8d20c3de3e3454",
+    "ethereum": "0xe7edff718d2666fed766667f3ba79ae8f02b521b"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x32dc4f868be903bff3ce641ffa3d1eac99151307",
+    "ethereum": "0xe894aac05d43ce15bbae9d4629115bf9a43b7585"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xf32cdc9614cb2944a9cda97c630f3b097d4c1811",
+    "ethereum": "0xe8c7fbfa442bc46a20b201bfd687dd76d93b2d3f"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0x3d40e364ec21df195f4cdc29b46a784d20c05efc",
+    "ethereum": "0xe97f54e8b65955352495e7f9a20892153e5a8d35"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x2996bf59786f6d47514241c56404203c7e1b4e83",
+    "ethereum": "0xe9b062b7f2627c4d8dc99614703605a49680a921"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0xc95fb3f1bc276d38070cea72dbc06ec7401a24d7",
+    "ethereum": "0xea170cd1ae247dda873d4500ade0bf0d8ed73f4c"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x0d8e3da6f85f85f0413958e380e06d1fbe874ee7",
+    "ethereum": "0xeb990a0a0a4a91356fb7e65ccf2fe2752b84004e"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0xe6dacd90fe1ccdc00d4a63e160ea93adf05b4a40",
+    "ethereum": "0xecd26e645a23046b8a8ecfbdde17d514021948ab"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x9b75f8af27c66aa14313acdf00a62e0f819d6c7b",
+    "ethereum": "0xececfc5436bd8ee0c8e98379f3d99dfde6e15fb9"
+  },
+  {
+    "symbol": "ETK",
+    "name": "Ethickets",
+    "plasma": "0x8a3846c91869c1af24cb90a0dc807567d1d96c87",
+    "ethereum": "0xed4cb60ecf721dd59dc9b4d3f1fd6da10ccc1c3a"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x6fd60d99cfd60219614770403128700ab316cc78",
+    "ethereum": "0xed9dd681f5f9ef6780c48f37a9d34921a8134637"
+  },
+  {
+    "symbol": "FUNC",
+    "name": "Func Token",
+    "decimals": 18,
+    "plasma": "0xf947938cc91db9e306941fb91e8c33e5722eed8c",
+    "ethereum": "0xee3cb16e758df2be1a95629581cab9c1cd77bb0d"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0xdf0aae5fe031dbe454a27313f2f7e3d5d75f0675",
+    "ethereum": "0xeed8ef7a957db3b4687a39b1c589cf56364a9d5a"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x970cd544bf3d2dd0c66a6d4980cc3b761251adb8",
+    "ethereum": "0xeeed18c0058c71b6549172c6a476ba0e8fc7d402"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x7bcaaf77062a63f41a7b390c80cac00e24e27423",
+    "ethereum": "0xef89edbccabd28be5a3de8e230e7c85dd92b0baa"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x8c1a32c5e6ed55d210e2fc2100da8630b71a5eb6",
+    "ethereum": "0xf0a9841ef8a568b13553a20081cae7f8bf7bffd5"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x0364d89710c3cd2b1818dfb5d436957e1bfdaf8e",
+    "ethereum": "0xf15bb6c1ca34065acd064cf5090f1aa7fbdb65f2"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0xed26813de4a94bd8c453d3dedf98deb4f64e0686",
+    "ethereum": "0xf1743fce89f3b3e495b825d46a3dc9e3e74b95b3"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0x7cc2f504e6bd4f8fa86dfd0c16e3b88be13d861f",
+    "ethereum": "0xf17c186edcb109d9214ee8532521695f1385b0f6"
+  },
+  {
+    "symbol": "CoC",
+    "name": "CoinClash",
+    "decimals": 18,
+    "plasma": "0x965e122b6bdcb175877e44d9157188969b99ba3d",
+    "ethereum": "0xf23a8d01ec345c02599e831ca031350714ee0c14"
+  },
+  {
+    "symbol": "XCRD",
+    "name": "ERC721XCards",
+    "plasma": "0xb3ba8a506e509d1c85dca63e481c866dc62c0cef",
+    "ethereum": "0xf24472d288689ced4aa46459e74a68f20d5edeb3"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x944c94668f037effd8ee4e7e6fd8e076095a0af9",
+    "ethereum": "0xf2c9eac5c019d71bc36fb7b38c42e74614808500"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xcc67bbc866644e4ceae2a5ef059cc23cf12011b5",
+    "ethereum": "0xf331d4d3199deda4c9aa3f6be7ed4096f612c87f"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xd7faa9ed6953d69f8643cf4df6cfab3f3c668a3c",
+    "ethereum": "0xf376787850b82f87a4efdbbe046beba9b1880e5d"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x3aa5133640a89e496d2e94583cb47fb3e095444d",
+    "ethereum": "0xf3b6394cea323e63b610e3e875c18a2e072295d5"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x2194f4b6209e67cbc7c0d5b36b42fe1fd07300f0",
+    "ethereum": "0xf43f0a00448a1ad8c1f4606f8a21b814c341cd72"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xbba48bc69eb7f2368ea449718ef9574df176091e",
+    "ethereum": "0xf45d84db6833e3081d993e006a36fa014acc30cc"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x61812a84541a743bb84fcaad8bb45c329d00ae34",
+    "ethereum": "0xf59d0b73691df68badb73d4599934c958684d743"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x98d0e7ddf282609a8e8e9308cc9c113a7b888a56",
+    "ethereum": "0xf731151deaa289dfff2187065cec3097859e7941"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x4ed2920601dddc3a575fbe9ea57a0deccad8691c",
+    "ethereum": "0xf73f7fc1bb14f0218b9f899ce8f5b6d370017c64"
+  },
+  {
+    "symbol": "SOR",
+    "name": "Sorare",
+    "plasma": "0x1a89d7689708e6ed79cc063a72c6292aa66eacd7",
+    "ethereum": "0xf742cf2322f265a0c0768a5cb06420242a81bebf"
+  },
+  {
+    "symbol": "@nomnominisf",
+    "name": "@nomnominisfOfficialCryptoravesToken",
+    "decimals": 18,
+    "plasma": "0x431b277f7226a5f581c26b3edff8f40a0dcfecfc",
+    "ethereum": "0xf8f92e4d3fc1d6a0ae25c796396381e96263d12d"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0xd2d00875cf80328b963d3209b8ec1e4e3e1c7f70",
+    "ethereum": "0xf9bd78214eca9d1822c802ab5b8683ad65750a48"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xa65dfef12749ce8154984bd0badd8e31fef5b4a6",
+    "ethereum": "0xf9cd85d9845d7016777e4c5560387fbb2ddab61c"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x55f2d3b5b37fdf65496e64b0c52318723087e804",
+    "ethereum": "0xf9e6a8f651c49766fb87c3da1009bbe6fe5a38ee"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x738b180ea8dec708e9b4ead85c492863b2d6645d",
+    "ethereum": "0xfcf04ff9b89a78fac8052667e0911ee94d4216fa"
+  },
+  {
+    "symbol": "MTC",
+    "name": "MyToken",
+    "plasma": "0x7429439550cfa30ef4f73e2229bf14a55d502919",
+    "ethereum": "0xfdd4df5b87417dcc3e4e7bfb3ed95f9b2a0382aa"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0xb69970e3609ebeaaae35a0cd4bb467cf73be527a",
+    "ethereum": "0xfde337a5365f7d0f9e0281280c792c1831f0ce82"
+  },
+  {
+    "symbol": "DIME",
+    "name": "Dime",
+    "plasma": "0x7b53add11461120c88bc558ff2dc9ed913a17b9f",
+    "ethereum": "0xfe98a7ca8ba9d9711d2d903b2ea21b04cfbc43a9"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x0e2f7f3e43b9142a110b41f515ca7a1b8b7a55f0",
+    "ethereum": "0xff0e965609f99adae2cd99b135309e7895d07dcd"
+  },
+  {
+    "symbol": "WETH",
+    "name": "WETH",
+    "decimals": 18,
+    "plasma": "0xeb0d58f9b14821b0af19b292d0f6a7b2747c16cb",
+    "ethereum": "0xff172e89849e13df28779a4ac816889acf9ae3b8"
+  },
+  {
+    "symbol": "MCC",
+    "name": "MyCoin",
+    "decimals": 18,
+    "plasma": "0x6b20deef3b08a5f2097e73d19aae1462f2be15d2",
+    "ethereum": "0xff6c0d51b1e4afe7a53929a2b92553e9beea12d1"
+  },
+  {
+    "symbol": "BNB",
+    "name": "BNBToken",
+    "decimals": 8,
+    "plasma": "0x9ab4e22d56c0c4f7d494442714c82a605d2f28e0",
+    "binance": "0x0000000000000000000000000000000000424e42"
+  }
+]

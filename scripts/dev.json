@@ -1,0 +1,2452 @@
+[
+  {
+    "symbol": "LOOM",
+    "name": "Loom",
+    "decimals": 18,
+    "ethereum": "0x165245382ff23A5D3782b48286B6A81b6fd0508e",
+    "plasma": "0xcd9bfe0d35c054305ee1b7f3a2677c1bbbb74a9f",
+    "binance": ""
+  },
+  {
+    "symbol": "ETH",
+    "name": "Ether",
+    "decimals": 18,
+    "plasma": "0x0000000000000000000000000000000000000000",
+    "ethereum": "0x0000000000000000000000000000000000000000",
+    "binance": ""
+  },
+  {
+    "symbol": "OMG",
+    "name": "OMGToken",
+    "decimals": 18,
+    "plasma": "0x001eaf48e53d8c84b25d4de025803315116a3e25",
+    "ethereum": "0xb02e3456ff4d1127b14bb6fbd8fd8647bcb19011",
+    "binance": ""
+  },
+  {
+    "symbol": "MKR",
+    "name": "MKRToken",
+    "decimals": 18,
+    "plasma": "0x014906e600df33cd338940ace288b13ec8d49506",
+    "ethereum": "0x46c2a09942748d870c43557df11c4e677d539572",
+    "binance": ""
+  },
+  {
+    "symbol": "ZRX",
+    "name": "ZRXToken",
+    "decimals": 18,
+    "plasma": "0x033ab6938f294a9f15a13c9f7a2eba7ab72b5da0",
+    "ethereum": "0x7b6b75a8ff021a8668370f156ebcc7fec39be4f8",
+    "binance": ""
+  },
+  {
+    "symbol": "PAY",
+    "name": "PAYToken",
+    "decimals": 18,
+    "plasma": "0x0482d645ffc4b91166ad1a97c0a8786c1f25d348",
+    "ethereum": "0xc12171cdfd3fc50c4682bf81f542aedb5bdb1a09",
+    "binance": ""
+  },
+  {
+    "symbol": "QKC",
+    "name": "QKCToken",
+    "decimals": 18,
+    "plasma": "0x0533f42699e9636be7d91f11fa4def88207ec126",
+    "ethereum": "0xdbb3f5fcef74bc6b41780cc7abc3112c68a3c849",
+    "binance": ""
+  },
+  {
+    "symbol": "INO",
+    "name": "INOToken",
+    "decimals": 0,
+    "plasma": "0x061cc8e2c42aabb671873ed57f93b1b7e793638d",
+    "ethereum": "0x846706cb93f371eaf1b55eb91de2fffdca0dbcf9",
+    "binance": ""
+  },
+  {
+    "symbol": "IOTX",
+    "name": "IOTXToken",
+    "decimals": 18,
+    "plasma": "0x0674a378a4854999a33f58f4a767c5c88f076722",
+    "ethereum": "0xd60906c6677313ad2b9aaa0b9fd6298e30afe22a",
+    "binance": ""
+  },
+  {
+    "symbol": "SAN",
+    "name": "SANToken",
+    "decimals": 18,
+    "plasma": "0x06f18465c75caaebc2c5180caa5c2eae5d890dbc",
+    "ethereum": "0x2967fbff6b3094ed46ae97837672b26931afff65",
+    "binance": ""
+  },
+  {
+    "symbol": "ELF",
+    "name": "ELFToken",
+    "decimals": 18,
+    "plasma": "0x072f10551a9d2a3738f10c28d38e561b05d2068e",
+    "ethereum": "0xd4040a0cc09c5362ffc76c66a79869c4d42c4a30",
+    "binance": ""
+  },
+  {
+    "symbol": "CREDO",
+    "name": "CREDOToken",
+    "decimals": 18,
+    "plasma": "0x07c4a11c720f2c87d5c2dbbea3583c76f68a9899",
+    "ethereum": "0xf573c43b0e1b8b8d36d3f18b73c321036defffb2",
+    "binance": ""
+  },
+  {
+    "symbol": "CRO",
+    "name": "CROToken",
+    "decimals": 8,
+    "plasma": "0x07d0020a8f9c9a0be82a81135d5cdf3d1c39f39b",
+    "ethereum": "0x56a1c85a52c3de809713085a2a6c6fbef817a365",
+    "binance": ""
+  },
+  {
+    "symbol": "MXM",
+    "name": "MXMToken",
+    "decimals": 18,
+    "plasma": "0x07e8207a56ad281eede8d8e54e32e9efe04a5267",
+    "ethereum": "0x8fdec707afa35e80fb1cd9078eff315580981acb",
+    "binance": ""
+  },
+  {
+    "symbol": "GNT",
+    "name": "GNTToken",
+    "decimals": 18,
+    "plasma": "0x08f45467c7effc0c38c52f7ce3ae9c2cabe74470",
+    "ethereum": "0x08c80e3a6f5e50a1f8f45284dd153a5870717adc",
+    "binance": ""
+  },
+  {
+    "symbol": "PRG",
+    "name": "PRGToken",
+    "decimals": 6,
+    "plasma": "0x0972a6b1041c7b89c4150284968c87eb8feb1831",
+    "ethereum": "0xf0c2014253cc6ca3218d48ac54277fc9726541a4",
+    "binance": ""
+  },
+  {
+    "symbol": "CRO",
+    "name": "CROToken",
+    "decimals": 8,
+    "plasma": "0x09f2b8aa65b70e5e96447d10726c6b74ef609db6",
+    "ethereum": "0x5de3a9b4205d89df870944f189771a1ec06a27fb",
+    "binance": ""
+  },
+  {
+    "symbol": "KNC",
+    "name": "KNCToken",
+    "decimals": 18,
+    "plasma": "0x0a89cc749ec6f9792c0dd42aa611f816fb3f9f68",
+    "ethereum": "0x90ec6bef0da5551f5087cca7e82422343c0a953c",
+    "binance": ""
+  },
+  {
+    "symbol": "AGI",
+    "name": "AGIToken",
+    "decimals": 8,
+    "plasma": "0x0c3cb07afed75e26086bf89e7a3eab0b475919d6",
+    "ethereum": "0x1af1c9a9b5747968aeca2f363befb83a63a3687c",
+    "binance": ""
+  },
+  {
+    "symbol": "CVC",
+    "name": "CVCToken",
+    "decimals": 8,
+    "plasma": "0x0d71d428ad150bc21decae2e5255c908b475a88c",
+    "ethereum": "0xc2838acb70330ea8617f74f1de67669040a03c92",
+    "binance": ""
+  },
+  {
+    "symbol": "FSN",
+    "name": "FSNToken",
+    "decimals": 18,
+    "plasma": "0x0ff1b5c50a4ed3e012822ed60000888188059293",
+    "ethereum": "0x29eb0294cd340023610a3853b4195d04757ceb00",
+    "binance": ""
+  },
+  {
+    "symbol": "R",
+    "name": "RToken",
+    "decimals": 0,
+    "plasma": "0x10be98eecd6b3d7014cf5b89c43e450045469b61",
+    "ethereum": "0xbf2fdb0e10b133cc6fbcf9b1409244c3ff650543",
+    "binance": ""
+  },
+  {
+    "symbol": "USDC",
+    "name": "USDCToken",
+    "decimals": 6,
+    "plasma": "0x1129dd42cd2de3d3d5fa5955a8209a47a3e27f92",
+    "ethereum": "0x420c2658d185bec56c853c4cb6e8048a485e6492",
+    "binance": ""
+  },
+  {
+    "symbol": "CENNZ",
+    "name": "CENNZToken",
+    "decimals": 18,
+    "plasma": "0x113048953807bff63a720e401173a063d42a194b",
+    "ethereum": "0xd0fc91591b478771166c17f643da288418107164",
+    "binance": ""
+  },
+  {
+    "symbol": "BAT",
+    "name": "BATToken",
+    "decimals": 18,
+    "plasma": "0x122db0664aaabaa9843f43f1262e4eb372495607",
+    "ethereum": "0xd305b48d991339c0d49e1dd41400cfd24e70c980",
+    "binance": ""
+  },
+  {
+    "symbol": "USDC",
+    "name": "USDCToken",
+    "decimals": 6,
+    "plasma": "0x142a1514ca7360af29aae753486c17aaa07fc8d4",
+    "ethereum": "0x58bdcf134acd75c5960c4187f5245817d202cdb7",
+    "binance": ""
+  },
+  {
+    "symbol": "BNB",
+    "name": "BNBToken",
+    "decimals": 18,
+    "plasma": "0x1538021b8a39446ae1220abc2e076a46c773bfeb",
+    "ethereum": "0xd9759110e867096b59f68deef18405446aa3e812",
+    "binance": ""
+  },
+  {
+    "symbol": "VEN",
+    "name": "VENToken",
+    "decimals": 18,
+    "plasma": "0x15738566126562aa46a1313153a8b6204873eaf8",
+    "ethereum": "0x70ee8752c347db7d6e0050d81eeda3db212c00bf",
+    "binance": ""
+  },
+  {
+    "symbol": "WTC",
+    "name": "WTCToken",
+    "decimals": 18,
+    "plasma": "0x1687063a93a063c8daef602b4a824850925933f6",
+    "ethereum": "0xfd4ca5766341def8efb50d044b49a942576eecac",
+    "binance": ""
+  },
+  {
+    "symbol": "NEC",
+    "name": "NECToken",
+    "decimals": 18,
+    "plasma": "0x178f1e6d23842821aed9127e11ced8856e094037",
+    "ethereum": "0x272013983747f19a5360dd96aa207d7ee79e443d",
+    "binance": ""
+  },
+  {
+    "symbol": "NEXO",
+    "name": "NEXOToken",
+    "decimals": 18,
+    "plasma": "0x1a1fe9dceb30f6016c4d7125448c0f427d1da47a",
+    "ethereum": "0xc3e5e8ecb2a11b72f976df285480c4e75b6b4211",
+    "binance": ""
+  },
+  {
+    "symbol": "EURS",
+    "name": "EURSToken",
+    "decimals": 2,
+    "plasma": "0x1c72524c06c70de6f4dfe41cb0e9b5d270a6b12d",
+    "ethereum": "0xb222e6470103eac8347b3c54c4a50aa5605064e7",
+    "binance": ""
+  },
+  {
+    "symbol": "HOT",
+    "name": "HOTToken",
+    "decimals": 18,
+    "plasma": "0x1e6994a4c435e6a8b5c22e6df875f236627dbe00",
+    "ethereum": "0xf7e9771cb5b5fcf160d232cfaeb9fcdb50a07bd8",
+    "binance": ""
+  },
+  {
+    "symbol": "LRC",
+    "name": "LRCToken",
+    "decimals": 18,
+    "plasma": "0x1ea7954bc25227851051d45f0477d2b9667e4d5d",
+    "ethereum": "0x652f9f676dde9fad1161f4acd2fbd000b854f80c",
+    "binance": ""
+  },
+  {
+    "symbol": "SAN",
+    "name": "SANToken",
+    "decimals": 18,
+    "plasma": "0x1f4c752a19cb91d4bf4bd709c9e82ad7e227d370",
+    "ethereum": "0xa32f63a2be370d55c8c0a3d2a213361b60d0f6e5",
+    "binance": ""
+  },
+  {
+    "symbol": "ELF",
+    "name": "ELFToken",
+    "decimals": 18,
+    "plasma": "0x1f6c727aafe891f7a024fa2cf12015e5843a900a",
+    "ethereum": "0x0c805e0c3db67beee1a59c5483e27857fc5d4d58",
+    "binance": ""
+  },
+  {
+    "symbol": "GVT",
+    "name": "GVTToken",
+    "decimals": 18,
+    "plasma": "0x2021fe8e14fc6b92d2741a3487618c18fd672066",
+    "ethereum": "0x2785190fd118fd2c1f908282bd6c08274d338a27",
+    "binance": ""
+  },
+  {
+    "symbol": "DGD",
+    "name": "DGDToken",
+    "decimals": 9,
+    "plasma": "0x209c93462325bf02fef51f3f960d6e4e975ec4bc",
+    "ethereum": "0xc44c08a26ec1d7d2a6075c24681184004afbab54",
+    "binance": ""
+  },
+  {
+    "symbol": "DRGN",
+    "name": "DRGNToken",
+    "decimals": 18,
+    "plasma": "0x20ab2a05a834168eeae774e281779af80ec7a7a6",
+    "ethereum": "0x000bbda29e63dd29bd9763ee9bab232c415748d4",
+    "binance": ""
+  },
+  {
+    "symbol": "TKN",
+    "name": "TKNToken",
+    "decimals": 8,
+    "plasma": "0x240b3d064ba8c744f88c850d30423b9e781668a8",
+    "ethereum": "0x12de051606c416af57b092ec51ea641fcd49c80b",
+    "binance": ""
+  },
+  {
+    "symbol": "PRL",
+    "name": "PRLToken",
+    "decimals": 18,
+    "plasma": "0x2602d163b6ef0808a72fee9266304704b0f939ec",
+    "ethereum": "0xcb2e6077b62457abee318f42d586aaa836f8ddf4",
+    "binance": ""
+  },
+  {
+    "symbol": "NEC",
+    "name": "NECToken",
+    "decimals": 18,
+    "plasma": "0x2621f229ac87433b90f65382ea6836f87c818f59",
+    "ethereum": "0x431b01539f2fa0c092bc2286027c144ffddd7029",
+    "binance": ""
+  },
+  {
+    "symbol": "HEDG",
+    "name": "HEDGToken",
+    "decimals": 18,
+    "plasma": "0x26a075bfa6a1265bfc44ef4d3c6e8162d2bfc3c0",
+    "ethereum": "0xefc3ebac12b5568ef437c292a4e5dc475f2ba5d6",
+    "binance": ""
+  },
+  {
+    "symbol": "MDA",
+    "name": "MDAToken",
+    "decimals": 18,
+    "plasma": "0x28b400a692e521284d2755443fc368b650706898",
+    "ethereum": "0x46228ee982e9b0e4485090eaa5508bf10fa77d40",
+    "binance": ""
+  },
+  {
+    "symbol": "BIX",
+    "name": "BIXToken",
+    "decimals": 18,
+    "plasma": "0x28d8d0a9bc5ebd231d7b514decef31f254b279cd",
+    "ethereum": "0x27308fdd1ed1073cbcaf0f9c464630f4be202e8f",
+    "binance": ""
+  },
+  {
+    "symbol": "LOOM",
+    "name": "LOOMToken",
+    "decimals": 18,
+    "plasma": "0x29245dca86eca9f7aca25ab09df5c8d426657dd6",
+    "ethereum": "0x53317a541c4ed05b304eb6212c06c92ffd22212d",
+    "binance": ""
+  },
+  {
+    "symbol": "DCN",
+    "name": "DCNToken",
+    "decimals": 0,
+    "plasma": "0x29a595c73767d76ce770e16c92c1dd02ff52e8cd",
+    "ethereum": "0x0c0efbd8ea8dba9362d9e6f89e48e7387c4b53bc",
+    "binance": ""
+  },
+  {
+    "symbol": "MKR",
+    "name": "MKRToken",
+    "decimals": 18,
+    "plasma": "0x29e0798aba51c7131536e4f134254a174ada7f13",
+    "ethereum": "0x4d47b39807b76ddd07d71c97889b648e1f4f98fc",
+    "binance": ""
+  },
+  {
+    "symbol": "QKC",
+    "name": "QKCToken",
+    "decimals": 18,
+    "plasma": "0x29e4b4697ef654155ff32164944f353617f0dc8f",
+    "ethereum": "0x62802326089cb95bbb564818702fc43fd7a27f37",
+    "binance": ""
+  },
+  {
+    "symbol": "LRC",
+    "name": "LRCToken",
+    "decimals": 18,
+    "plasma": "0x2b1c76a919699bd6f7e08997e8f2ed9687e459c1",
+    "ethereum": "0xc47200cad786eabe4d6473a1378b587bc57ea103",
+    "binance": ""
+  },
+  {
+    "symbol": "DENT",
+    "name": "DENTToken",
+    "decimals": 8,
+    "plasma": "0x2b44d4f3b086d4b752d762ec2cf1ab7a0b3bfe44",
+    "ethereum": "0xc08ec1214e603599884b016f9abba41ae22373a9",
+    "binance": ""
+  },
+  {
+    "symbol": "RNT",
+    "name": "RNTToken",
+    "decimals": 18,
+    "plasma": "0x2c0c7b74cf77fe050c228f821465c25ec2b2b622",
+    "ethereum": "0x80c746f5797231eecf3d49bd1957ecf7e83ae0d2",
+    "binance": ""
+  },
+  {
+    "symbol": "ENJ",
+    "name": "ENJToken",
+    "decimals": 18,
+    "plasma": "0x2d4c2fae9a08722185d63777ea1bb18e8750b3ec",
+    "ethereum": "0x1557974d73e910401c0280a7cf8cf0617274f90c",
+    "binance": ""
+  },
+  {
+    "symbol": "CMT",
+    "name": "CMTToken",
+    "decimals": 18,
+    "plasma": "0x2e5bd3d03257c283aafcbe81aabb0cf2db027801",
+    "ethereum": "0x5c2a1da19e9d6de538c0e75c824d439e1133aa6d",
+    "binance": ""
+  },
+  {
+    "symbol": "R",
+    "name": "RToken",
+    "decimals": 0,
+    "plasma": "0x2e82082e11b131d52b419611b6a5358d258f4ba2",
+    "ethereum": "0x67b2ef7fedae4353311013d7400045958f418296",
+    "binance": ""
+  },
+  {
+    "symbol": "BNT",
+    "name": "BNTToken",
+    "decimals": 18,
+    "plasma": "0x2fa54683d976c72806d2e54d1d61a476848e4da9",
+    "ethereum": "0x7cf1970cccbd308abd45d2967e4f63d8d3b9ba8d",
+    "binance": ""
+  },
+  {
+    "symbol": "CTXC",
+    "name": "CTXCToken",
+    "decimals": 18,
+    "plasma": "0x2fb8c267629d06a902352cea41b9f14c23d9a4bd",
+    "ethereum": "0xa695734f39466bddfe47262af573f1cbe4932c75",
+    "binance": ""
+  },
+  {
+    "symbol": "TOMO",
+    "name": "TOMOToken",
+    "decimals": 18,
+    "plasma": "0x30d2094a2479767e4ccbd2c040602db762a4877e",
+    "ethereum": "0x708bedef59ee7bdc07d80793be37c6474c051128",
+    "binance": ""
+  },
+  {
+    "symbol": "QBIT",
+    "name": "QBITToken",
+    "decimals": 6,
+    "plasma": "0x3143cdc4bf8626b24af954cdedecbb080a8aeedb",
+    "ethereum": "0x2a1ce0858b27d3848b6a7f52f401858f816623a7",
+    "binance": ""
+  },
+  {
+    "symbol": "DGTX",
+    "name": "DGTXToken",
+    "decimals": 18,
+    "plasma": "0x3171304a4892447888b9a5f62ea37c5b508da014",
+    "ethereum": "0x802ea392680ae51dbbf5b08abcc1448d64305f04",
+    "binance": ""
+  },
+  {
+    "symbol": "EDG",
+    "name": "EDGToken",
+    "decimals": 0,
+    "plasma": "0x326033237ef1f52c9a33e00d300aa5589a412845",
+    "ethereum": "0xf2183f333a51209227b1d9e1c61cb7c0593dff0f",
+    "binance": ""
+  },
+  {
+    "symbol": "BNT",
+    "name": "BNTToken",
+    "decimals": 18,
+    "plasma": "0x337d16917d514ca0a200d4349807e8a61fd2997a",
+    "ethereum": "0xe79674e4c6d61280fea548417c4d62558f0b76f3",
+    "binance": ""
+  },
+  {
+    "symbol": "NEXO",
+    "name": "NEXOToken",
+    "decimals": 18,
+    "plasma": "0x344f839ec0ffe79461e402badbe8c75e9f5bb90d",
+    "ethereum": "0x774eb1c2458f1dc8b850e03861563eca8aaf0e0a",
+    "binance": ""
+  },
+  {
+    "symbol": "GVT",
+    "name": "GVTToken",
+    "decimals": 18,
+    "plasma": "0x34a402472c3baae76d68077ebfe9930b323fb5d6",
+    "ethereum": "0xa321921da9cfc7811990433102342b10d40f86fb",
+    "binance": ""
+  },
+  {
+    "symbol": "ICX",
+    "name": "ICXToken",
+    "decimals": 18,
+    "plasma": "0x355f5a063f6834e32fd55cbc8a753a70ca05edff",
+    "ethereum": "0x7d138625cd2647cae68f8b7ec43de8902e6136ad",
+    "binance": ""
+  },
+  {
+    "symbol": "CREDO",
+    "name": "CREDOToken",
+    "decimals": 18,
+    "plasma": "0x36c8afec79b6b9fca2781b17355f0b2a19dd1136",
+    "ethereum": "0x09f44bb0e1d14464a2fc13d22d61a9fd71205629",
+    "binance": ""
+  },
+  {
+    "symbol": "KIN",
+    "name": "KINToken",
+    "decimals": 18,
+    "plasma": "0x3a25fd6f5d1408c0f87f52cc4c187fd107d9d4fd",
+    "ethereum": "0xb1e602845629fc8896e8f70bf31a4c98d6a13e69",
+    "binance": ""
+  },
+  {
+    "symbol": "CRO",
+    "name": "CROToken",
+    "decimals": 8,
+    "plasma": "0x3ad97c0fcf69656bf7861feb3c2ab30f929730f7",
+    "ethereum": "0xfdfc42d6fba9d3493f6ff7efbf47efb4fcb87c61",
+    "binance": ""
+  },
+  {
+    "symbol": "TUSD",
+    "name": "TUSDToken",
+    "decimals": 18,
+    "plasma": "0x3b6779b13366e77e4ec325e753e2462cdd9bab61",
+    "ethereum": "0x65e6b7de6bcfa91146ffc85e21c4166094a2256b",
+    "binance": ""
+  },
+  {
+    "symbol": "LKY",
+    "name": "LKYToken",
+    "decimals": 18,
+    "plasma": "0x3bad36a136e7c8d38ca590fe1f49fc16c52f418b",
+    "ethereum": "0x270613dd3e36de323798af503c540c69d94401dc",
+    "binance": ""
+  },
+  {
+    "symbol": "NAS",
+    "name": "NASToken",
+    "decimals": 18,
+    "plasma": "0x3c2d654cd468633d7f84ae5a93da1b543b74c164",
+    "ethereum": "0x0e326451c03852a759f5c45146778755c664b28b",
+    "binance": ""
+  },
+  {
+    "symbol": "RNT",
+    "name": "RNTToken",
+    "decimals": 18,
+    "plasma": "0x3c807e181642997ca13d59a39ad63f7590e29250",
+    "ethereum": "0x908f3a630605bc87973246c8bb628b1655a5b926",
+    "binance": ""
+  },
+  {
+    "symbol": "EDR",
+    "name": "EDRToken",
+    "decimals": 18,
+    "plasma": "0x3dfc8d15c2d953b85a18501a6a9209830718e8b4",
+    "ethereum": "0x685cf4d0b1e29cdb8069e26b1bdcab8831932fdf",
+    "binance": ""
+  },
+  {
+    "symbol": "FUN",
+    "name": "FUNToken",
+    "decimals": 8,
+    "plasma": "0x3f2147aac990e11f0b20ca01a1347b41d52739ae",
+    "ethereum": "0xdca7859d405a04ad7f87d3b5d4511ce7c4b58c3f",
+    "binance": ""
+  },
+  {
+    "symbol": "MXM",
+    "name": "MXMToken",
+    "decimals": 18,
+    "plasma": "0x3f66267951c26bb56da4eb1758a23a28653fce52",
+    "ethereum": "0xd02a6bdb4046fd76bce874ad4e22bbc0d93981ba",
+    "binance": ""
+  },
+  {
+    "symbol": "MCO",
+    "name": "MCOToken",
+    "decimals": 8,
+    "plasma": "0x40c9399ceca3f6b7030d8363c1f32e4b744839f3",
+    "ethereum": "0x8d48471a1d7deafb2445c545b09d54ea6774736c",
+    "binance": ""
+  },
+  {
+    "symbol": "WAX",
+    "name": "WAXToken",
+    "decimals": 8,
+    "plasma": "0x413db2a16de5d2bd6b4a48be7a772d739932ded1",
+    "ethereum": "0x9bce72e5215d07065a4483c59da437d70cb827ba",
+    "binance": ""
+  },
+  {
+    "symbol": "KIN",
+    "name": "KINToken",
+    "decimals": 18,
+    "plasma": "0x4200727854eda3e12009d18b4bbcbd3cf595aa1c",
+    "ethereum": "0x4d199e13d0721f37d16d1616eea43dd33d50a15d",
+    "binance": ""
+  },
+  {
+    "symbol": "RLC",
+    "name": "RLCToken",
+    "decimals": 9,
+    "plasma": "0x42e1465be55815d9a22d7b26d9c8f0a79ce83317",
+    "ethereum": "0x05daddca3e40a200a64ec2812b2ed9dcf7dad581",
+    "binance": ""
+  },
+  {
+    "symbol": "IOTX",
+    "name": "IOTXToken",
+    "decimals": 18,
+    "plasma": "0x46c4a22075aefb56cf3a8ff68d37fcc78b83bf77",
+    "ethereum": "0xbb44850802f08f095039df0b63fd15e0312d6c44",
+    "binance": ""
+  },
+  {
+    "symbol": "GVT",
+    "name": "GVTToken",
+    "decimals": 18,
+    "plasma": "0x46f7177f152dcd263491bc02a28430a697ce2101",
+    "ethereum": "0x6e61859840da6d08d4aa6a3e180fd34eed9576d9",
+    "binance": ""
+  },
+  {
+    "symbol": "AOA",
+    "name": "AOAToken",
+    "decimals": 18,
+    "plasma": "0x4730cc8fac5628163058e1fd8361d08a615dff1d",
+    "ethereum": "0x9a5e88f6486eb2e75a826c56569b23284d5741f2",
+    "binance": ""
+  },
+  {
+    "symbol": "DAI",
+    "name": "DAIToken",
+    "decimals": 18,
+    "plasma": "0x48b8a19a12f7dceee084a0bd71328a8b06126ecb",
+    "ethereum": "0x88b81d86a713014fa77e44e6502e2f57b39b74a9",
+    "binance": ""
+  },
+  {
+    "symbol": "KNC",
+    "name": "KNCToken",
+    "decimals": 18,
+    "plasma": "0x490a3e907c82d468abb133363320cff3df9b2355",
+    "ethereum": "0x250d7f72a00450695d9c1da65e6176c85d522d6f",
+    "binance": ""
+  },
+  {
+    "symbol": "PRL",
+    "name": "PRLToken",
+    "decimals": 18,
+    "plasma": "0x49119a29106b8fa13a5f2143258d172d58ca2aa5",
+    "ethereum": "0x331570e49b5821e1f99e8f3319a54e06193242a1",
+    "binance": ""
+  },
+  {
+    "symbol": "AOA",
+    "name": "AOAToken",
+    "decimals": 18,
+    "plasma": "0x493cbba14a27d4592ef693734bc57245d6967e39",
+    "ethereum": "0x2c87cce37e6e4706d330e46463c57486bc57c6ee",
+    "binance": ""
+  },
+  {
+    "symbol": "XIN",
+    "name": "XINToken",
+    "decimals": 18,
+    "plasma": "0x49e7ff558bd89e2a6c7cd68f8dcf97a230aac888",
+    "ethereum": "0x31c583fa93671e8dd56e1d1a0f03405527c9e868",
+    "binance": ""
+  },
+  {
+    "symbol": "BNTK",
+    "name": "BinanceToken",
+    "decimals": 0,
+    "plasma": "0x4ae5d7520e7eb2995137c5a3ed14f6d89a44a920",
+    "ethereum": "0x1b2dc7a2a27431a4037455a5e8283587583260c7",
+    "binance": ""
+  },
+  {
+    "symbol": "ZRX",
+    "name": "ZRXToken",
+    "decimals": 18,
+    "plasma": "0x4c7e6155fc26fbcf28552c068c236745c8165f4a",
+    "ethereum": "0x1d2d2c232c097f4375f25d6b93f078777c44aaed",
+    "binance": ""
+  },
+  {
+    "symbol": "PRG",
+    "name": "PRGToken",
+    "decimals": 6,
+    "plasma": "0x4ca6a183519ac4b46069d54199949cfa31d4db64",
+    "ethereum": "0x52150c0e1183e6fe647712eac64d5df2a8a49b48",
+    "binance": ""
+  },
+  {
+    "symbol": "AUTO",
+    "name": "AUTOToken",
+    "decimals": 18,
+    "plasma": "0x4cf112aeb1a8e0b3b921ad9047bdfa6e40849621",
+    "ethereum": "0x255b7becb35c5511c2e64b53427ac1251aaa09f2",
+    "binance": ""
+  },
+  {
+    "symbol": "VERI",
+    "name": "VERIToken",
+    "decimals": 18,
+    "plasma": "0x4e806f7d879358f924d6088f2cad54c3a26d62c3",
+    "ethereum": "0x0e7e92ebf0e2b3e16da3eb455491f46ff930891f",
+    "binance": ""
+  },
+  {
+    "symbol": "HT",
+    "name": "HTToken",
+    "decimals": 18,
+    "plasma": "0x4ee8ed4c00832cf538d117a772d9347efa77851b",
+    "ethereum": "0xc843b1d0634595fdb1776decb82af78bf62380ff",
+    "binance": ""
+  },
+  {
+    "symbol": "MCO",
+    "name": "MCOToken",
+    "decimals": 8,
+    "plasma": "0x4f9c7e06911ce2a6a5290be81ce01d05eb8e8704",
+    "ethereum": "0xd90179205c3ede9d018e8d1347ecff101d76962e",
+    "binance": ""
+  },
+  {
+    "symbol": "CHX",
+    "name": "CHXToken",
+    "decimals": 18,
+    "plasma": "0x50d8b79bc840953d33ea4a4b840bbc073797cfaa",
+    "ethereum": "0xe0620e13c58070e53963c99ff0c0b37d7dce56cb",
+    "binance": ""
+  },
+  {
+    "symbol": "BTM",
+    "name": "BTMToken",
+    "decimals": 8,
+    "plasma": "0x50da896793068f21dca4cdaf2b3895f008534b9e",
+    "ethereum": "0xaeeed113497545ff2d13a778f9f1422d94c20eab",
+    "binance": ""
+  },
+  {
+    "symbol": "QASH",
+    "name": "QASHToken",
+    "decimals": 6,
+    "plasma": "0x5243d4e780104180aed9d84bd4e7c15639ea3258",
+    "ethereum": "0x99c6c37c3371a2e76e762614bdfe83a5247ec682",
+    "binance": ""
+  },
+  {
+    "symbol": "AION",
+    "name": "AIONToken",
+    "decimals": 8,
+    "plasma": "0x52c80bc380a23e614403c6beaac709590d3c6834",
+    "ethereum": "0xaaa730c786753e7d8e0f15c9fbb81d94d8e90bb7",
+    "binance": ""
+  },
+  {
+    "symbol": "PPT",
+    "name": "PPTToken",
+    "decimals": 8,
+    "plasma": "0x539408f7c0528bd33d42184c77e7d3649dc4547e",
+    "ethereum": "0xe48276b69cef0d9d3083d1ba68592411f420b5cd",
+    "binance": ""
+  },
+  {
+    "symbol": "LA",
+    "name": "LAToken",
+    "decimals": 18,
+    "plasma": "0x54a5e45e7b6907021b6b22f4264bc8055c7a355d",
+    "ethereum": "0xe69bd9c255e72a78393d6f22d3d7784fa0879826",
+    "binance": ""
+  },
+  {
+    "symbol": "SNT",
+    "name": "SNTToken",
+    "decimals": 18,
+    "plasma": "0x54f583b94ef6d39e311b05faf6596bb61ac3dfb8",
+    "ethereum": "0x51173ff2136c83cfdbcc700d69e6e8dd5c6d6e26",
+    "binance": ""
+  },
+  {
+    "symbol": "DRGN",
+    "name": "DRGNToken",
+    "decimals": 18,
+    "plasma": "0x5532091f3d237086ce7b1216b86a9318e8c20706",
+    "ethereum": "0xad8c5944154f872bca68712d27e5ab72f64ea1b2",
+    "binance": ""
+  },
+  {
+    "symbol": "REP",
+    "name": "REPToken",
+    "decimals": 18,
+    "plasma": "0x56a4626a1003ad504ff6d6bc008c5296861f0550",
+    "ethereum": "0xc894540901ee66be7e7ad12bc05ddc41548d8870",
+    "binance": ""
+  },
+  {
+    "symbol": "MFT",
+    "name": "MFTToken",
+    "decimals": 18,
+    "plasma": "0x57cf67b8e69b9df592f3c371c14ea5d0a591944f",
+    "ethereum": "0x6aa69795d553fb5c3ec863367fdd43da97f82928",
+    "binance": ""
+  },
+  {
+    "symbol": "BRD",
+    "name": "BRDToken",
+    "decimals": 18,
+    "plasma": "0x590d4acd23947a8a16fae6677e36c59fc27907e0",
+    "ethereum": "0x05c7863878829a5c6cb74696adeea9e04b4a70fc",
+    "binance": ""
+  },
+  {
+    "symbol": "DCN",
+    "name": "DCNToken",
+    "decimals": 0,
+    "plasma": "0x590e91a8fcc8c6d2512e0e6890ebc958fc684a76",
+    "ethereum": "0x4b595878f9cd644da6159be1283902694b76a2ba",
+    "binance": ""
+  },
+  {
+    "symbol": "EDR",
+    "name": "EDRToken",
+    "decimals": 18,
+    "plasma": "0x5a71c655140ffd97bd86c3e8a18d2591c4b4705c",
+    "ethereum": "0x84c20178d0386a3c0d8a55cf62b6cf41c66387a2",
+    "binance": ""
+  },
+  {
+    "symbol": "DGTX",
+    "name": "DGTXToken",
+    "decimals": 18,
+    "plasma": "0x5a7f2c23e0c15a863f9f6fa27df8542e0ac8299f",
+    "ethereum": "0x5cbb25062530f534ea82e0953977013679a164bc",
+    "binance": ""
+  },
+  {
+    "symbol": "EDR",
+    "name": "EDRToken",
+    "decimals": 18,
+    "plasma": "0x5ab6eed725e257a71fbc38b3c56e5d31212a4d7b",
+    "ethereum": "0xa051d86d25e9951ff9df7ec50120368affdc1438",
+    "binance": ""
+  },
+  {
+    "symbol": "EDG",
+    "name": "EDGToken",
+    "decimals": 0,
+    "plasma": "0x5bf80ead998751dd56f28d2b1792b07abdd336f1",
+    "ethereum": "0xd30c55660c0283b500c27b03b8a1d1dac1066a5d",
+    "binance": ""
+  },
+  {
+    "symbol": "LINK",
+    "name": "LINKToken",
+    "decimals": 18,
+    "plasma": "0x5c0eed5670fa1e3d0487193b01ad3dfee35fa78d",
+    "ethereum": "0x946dcf83a2831d8ae25b7029140984029bf97bfd",
+    "binance": ""
+  },
+  {
+    "symbol": "AION",
+    "name": "AIONToken",
+    "decimals": 8,
+    "plasma": "0x5cf089739333d71649c5c98712030c79646ff8fd",
+    "ethereum": "0x4ac12a2e134f7ced0203a84f6c738a5c192a5a6e",
+    "binance": ""
+  },
+  {
+    "symbol": "BTM",
+    "name": "BTMToken",
+    "decimals": 8,
+    "plasma": "0x5cfb0d3fe09fe7f403a41ec36410e5a044b77e91",
+    "ethereum": "0xc23bf0e1745781fe008ba56fd62f24effa876f3e",
+    "binance": ""
+  },
+  {
+    "symbol": "POWR",
+    "name": "POWRToken",
+    "decimals": 6,
+    "plasma": "0x5d01a6c84a4828ec28d3f8698364dd2230a327a2",
+    "ethereum": "0x21dd3a452788fe4f6ce0dc03acbf4180e04ee583",
+    "binance": ""
+  },
+  {
+    "symbol": "WIC",
+    "name": "WICToken",
+    "decimals": 0,
+    "plasma": "0x5d8dc28c6af2317fa16c3d80b404eb17d5efe6ea",
+    "ethereum": "0x508fa741922e347ba7b9515f9e26a7de35ee1916",
+    "binance": ""
+  },
+  {
+    "symbol": "NPXS",
+    "name": "NPXSToken",
+    "decimals": 18,
+    "plasma": "0x5db3d61b4a6aa084d68cfd33a0d68d74e55ee88b",
+    "ethereum": "0xa1a372d39399d929b6294a136034ba7e479f5385",
+    "binance": ""
+  },
+  {
+    "symbol": "HPT",
+    "name": "HPTToken",
+    "decimals": 18,
+    "plasma": "0x5e31ad15d56f797a82b7e1b243450d562a9e11d8",
+    "ethereum": "0x592e43df58089b13559a6ce325997cb291ba8adb",
+    "binance": ""
+  },
+  {
+    "symbol": "ENG",
+    "name": "ENGToken",
+    "decimals": 8,
+    "plasma": "0x5eced352552757f95fe8a4a6a4f55ab0b1686c07",
+    "ethereum": "0x5af187e081045440f4487be28055bb787b69929b",
+    "binance": ""
+  },
+  {
+    "symbol": "NEXO",
+    "name": "NEXOToken",
+    "decimals": 18,
+    "plasma": "0x5f20bd1c347402f27a321cf34f00696504c32373",
+    "ethereum": "0xc7f7f4db7048fb4d1f08d49943116233a1094851",
+    "binance": ""
+  },
+  {
+    "symbol": "MCO",
+    "name": "MCOToken",
+    "decimals": 8,
+    "plasma": "0x5fb517d9adfc0efc04b6a64e47ba9bfdb35383d2",
+    "ethereum": "0xee14c5637dde696625bc361c27d63d2e6e5ca9dd",
+    "binance": ""
+  },
+  {
+    "symbol": "CREDO",
+    "name": "CREDOToken",
+    "decimals": 18,
+    "plasma": "0x61b25deb2ea5e25b3861a78d7c0d5612739b0418",
+    "ethereum": "0x7c8deab0e5ce67324d8e7877ca2cc650109fe661",
+    "binance": ""
+  },
+  {
+    "symbol": "LA",
+    "name": "LAToken",
+    "decimals": 18,
+    "plasma": "0x62ee1b80aca5009f700bb1d91e2dfacc66e6a46d",
+    "ethereum": "0x70f8fe62af92031191d52e34484895b9edb83d22",
+    "binance": ""
+  },
+  {
+    "symbol": "TCT",
+    "name": "TCTToken",
+    "decimals": 18,
+    "plasma": "0x640ddf4643659562e784857687cbfd2dd8d22dc4",
+    "ethereum": "0x9c46b93e264b0cc4d29095760c2890035a6ce290",
+    "binance": ""
+  },
+  {
+    "symbol": "ICX",
+    "name": "ICXToken",
+    "decimals": 18,
+    "plasma": "0x6439e2b0a45a410ae40e0d1bebd40bc816bc2d63",
+    "ethereum": "0x344c7cab74fac0c3a5f537480e4c2c069baa4992",
+    "binance": ""
+  },
+  {
+    "symbol": "REP",
+    "name": "REPToken",
+    "decimals": 18,
+    "plasma": "0x64980b249d26bd8ab6db4b031899aa2a2687bf2d",
+    "ethereum": "0xf117ccc58156320570612baadea33ccb5e1cbf42",
+    "binance": ""
+  },
+  {
+    "symbol": "XIN",
+    "name": "XINToken",
+    "decimals": 18,
+    "plasma": "0x64f8e52d7fb979a12c2d18201909f483d9a9dc31",
+    "ethereum": "0x8951978553cf4d2c804022daa8b17e35b97a6829",
+    "binance": ""
+  },
+  {
+    "symbol": "PPT",
+    "name": "PPTToken",
+    "decimals": 8,
+    "plasma": "0x651c56b7a24a49211090ec8738ce93bf6d7a993c",
+    "ethereum": "0xbc1317d2f5fa9135f1ce328f966a7d75dcccf0a5",
+    "binance": ""
+  },
+  {
+    "symbol": "PAX",
+    "name": "PAXToken",
+    "decimals": 18,
+    "plasma": "0x65250dc7016addd1ce226259e2e60ca8ac13ca52",
+    "ethereum": "0x9d633be2ff4151e85fc5d6444b5e12f5ae442f23",
+    "binance": ""
+  },
+  {
+    "symbol": "WIC",
+    "name": "WICToken",
+    "decimals": 0,
+    "plasma": "0x65f34762155c0a8ac463478bd2cb4a6ce0eb4b3a",
+    "ethereum": "0xb1520aa47bc7cd090106a583ebbab98b1ec8fa74",
+    "binance": ""
+  },
+  {
+    "symbol": "INB",
+    "name": "INBToken",
+    "decimals": 18,
+    "plasma": "0x68296ad4ed10c16d5c1692c84afb66ded0cc3494",
+    "ethereum": "0x587dd6e6368fb3294ff28a7b035a2a85b874024e",
+    "binance": ""
+  },
+  {
+    "symbol": "KNC",
+    "name": "KNCToken",
+    "decimals": 18,
+    "plasma": "0x68459dbda96fa0188966b92a750ee19cf0a9b797",
+    "ethereum": "0xe7dde70c4e0e85cdd582bcb25df298d05c73adec",
+    "binance": ""
+  },
+  {
+    "symbol": "CHX",
+    "name": "CHXToken",
+    "decimals": 18,
+    "plasma": "0x68e0869c7ca1efc970b696ac4021b5195d152d72",
+    "ethereum": "0x8ffc6881b1ee1948d5a340d890f05bd618fece27",
+    "binance": ""
+  },
+  {
+    "symbol": "R",
+    "name": "RToken",
+    "decimals": 0,
+    "plasma": "0x6a3b0c057207d63b6e8cf292b21ccfc38acb7ad4",
+    "ethereum": "0xe4ccd0b2b29f00a1097a1fe7635f4caa9e86934c",
+    "binance": ""
+  },
+  {
+    "symbol": "STORJ",
+    "name": "STORJToken",
+    "decimals": 8,
+    "plasma": "0x6a5e8db42159b339d24f8fa78cee529c8810193d",
+    "ethereum": "0xa5ac1acc381af310b44684853cea55259e3adead",
+    "binance": ""
+  },
+  {
+    "symbol": "TOMO",
+    "name": "TOMOToken",
+    "decimals": 18,
+    "plasma": "0x6b50e5478a2656bfacbb994e3170f0b08ec72f2a",
+    "ethereum": "0xd3395bedfdd1cf627dc1377516c7af02d52b5a5d",
+    "binance": ""
+  },
+  {
+    "symbol": "IOST",
+    "name": "IOSTToken",
+    "decimals": 18,
+    "plasma": "0x6b6487e11c96c449e02dc6c5b4ac0b7cdaf5834e",
+    "ethereum": "0x5556e7ad63b6ae0c31cffb2d992c740153883023",
+    "binance": ""
+  },
+  {
+    "symbol": "MGO",
+    "name": "MGOToken",
+    "decimals": 8,
+    "plasma": "0x6c73a3d880ec475d69576a44705ae24aa5dfaf06",
+    "ethereum": "0x028e9c39fc1025561440969b85d141491e6d1833",
+    "binance": ""
+  },
+  {
+    "symbol": "POLY",
+    "name": "POLYToken",
+    "decimals": 18,
+    "plasma": "0x6dc3965b6f377ff20b4a1694e51af32c697d52e2",
+    "ethereum": "0xd75c616f538c1b4d0612c7fd09b317db79344899",
+    "binance": ""
+  },
+  {
+    "symbol": "USDC",
+    "name": "USDCToken",
+    "decimals": 6,
+    "plasma": "0x6f0b9e68d5b87a60168177c37a5bfa3312c679ab",
+    "ethereum": "0xb9de9fa099e1415b491ed6072b4f947955e6b596",
+    "binance": ""
+  },
+  {
+    "symbol": "HPT",
+    "name": "HPTToken",
+    "decimals": 18,
+    "plasma": "0x6f3fa9af14c6ce04bc7a88dc92fa84bf3c40907a",
+    "ethereum": "0x20ec632f752718dc75aadd2e8c9df334a086890d",
+    "binance": ""
+  },
+  {
+    "symbol": "IOTX",
+    "name": "IOTXToken",
+    "decimals": 18,
+    "plasma": "0x6f57ef2fd5976f7ad9f1a15384c48b6372283a13",
+    "ethereum": "0x4de7f97bf5a407fd28136cacf4eb97275c0fdfc3",
+    "binance": ""
+  },
+  {
+    "symbol": "BHPC",
+    "name": "BHPCToken",
+    "decimals": 18,
+    "plasma": "0x6ffeb89d8ccf075162072637da2e9ac1c85805d7",
+    "ethereum": "0xb421799c232b491edce071323ec13dd1ba384a77",
+    "binance": ""
+  },
+  {
+    "symbol": "MKR",
+    "name": "MKRToken",
+    "decimals": 18,
+    "plasma": "0x740d8be133ead3af43eadf9d8df174e4e1c6db25",
+    "ethereum": "0xdac43a6ac8ef799e460edc907172ac7acf80555d",
+    "binance": ""
+  },
+  {
+    "symbol": "AOA",
+    "name": "AOAToken",
+    "decimals": 18,
+    "plasma": "0x74776bd26a18860b05287ddfcad79eff6f3dcb9b",
+    "ethereum": "0x0a49de2735ee385e7a96e62b5bffeab44e69ff61",
+    "binance": ""
+  },
+  {
+    "symbol": "TCT",
+    "name": "TCTToken",
+    "decimals": 18,
+    "plasma": "0x74cfd5862b1e6fe14becda7d3de04ee66c3f12ad",
+    "ethereum": "0x9a8e6b8345b513448028fa3c112aaf0b51b901cd",
+    "binance": ""
+  },
+  {
+    "symbol": "TKN",
+    "name": "TKNToken",
+    "decimals": 8,
+    "plasma": "0x755f5f2092865af88d33dde5ddccc14cea9b5ade",
+    "ethereum": "0x8b5908bb16efd76e954085522f558953dfc88c77",
+    "binance": ""
+  },
+  {
+    "symbol": "THETA",
+    "name": "THETAToken",
+    "decimals": 18,
+    "plasma": "0x76a2b104c8089042e3edec9a00226f6e1b121644",
+    "ethereum": "0x120e4168257bd62ba2df2952732a7a80aa755504",
+    "binance": ""
+  },
+  {
+    "symbol": "CENNZ",
+    "name": "CENNZToken",
+    "decimals": 18,
+    "plasma": "0x76e21be5527317833c267bb259bfaecc46055b3c",
+    "ethereum": "0x84fe70627d4654533a533a99d11cbcb37f7b3872",
+    "binance": ""
+  },
+  {
+    "symbol": "TUSD",
+    "name": "TUSDToken",
+    "decimals": 18,
+    "plasma": "0x76eaca8411d26009179af78dd5ff629b151be02a",
+    "ethereum": "0x1afd57bbdc42f26dd07c7df1f252d40053cefd48",
+    "binance": ""
+  },
+  {
+    "symbol": "CENNZ",
+    "name": "CENNZToken",
+    "decimals": 18,
+    "plasma": "0x77d0d856d45e1cc1f2e1b5faa31cb975c39026c7",
+    "ethereum": "0xbdbc3bfb03af6b1ef49fccd231cf8acd90733021",
+    "binance": ""
+  },
+  {
+    "symbol": "DCN",
+    "name": "DCNToken",
+    "decimals": 0,
+    "plasma": "0x77fc760c5280deb0982a917b2000afaf52d3840e",
+    "ethereum": "0xe74175126340ea244a9da045214cfccfe2d2de15",
+    "binance": ""
+  },
+  {
+    "symbol": "KIN",
+    "name": "KINToken",
+    "decimals": 18,
+    "plasma": "0x77fd6615465f695643e41ee068a84af3292d4129",
+    "ethereum": "0x0346279594f0647bcaabe4fd34c484c80cfadf49",
+    "binance": ""
+  },
+  {
+    "symbol": "ENJ",
+    "name": "ENJToken",
+    "decimals": 18,
+    "plasma": "0x79edd3507682825e0829acbd9df5a6ca031954f3",
+    "ethereum": "0x69ef5f2f77ed5ccecfaaaa0a0ccd60acf9ff04a5",
+    "binance": ""
+  },
+  {
+    "symbol": "WAX",
+    "name": "WAXToken",
+    "decimals": 8,
+    "plasma": "0x7a3dda802f65f3e3879699ae89b2940b58d10ced",
+    "ethereum": "0x451b2874ae563acaf6f84ac590b309b6ed8e3916",
+    "binance": ""
+  },
+  {
+    "symbol": "DRGN",
+    "name": "DRGNToken",
+    "decimals": 18,
+    "plasma": "0x7aef265be0f7aac7c2fe0343d328afbc4c1253c2",
+    "ethereum": "0x974a571845c403b71ab4433edcb11daecae3f4f3",
+    "binance": ""
+  },
+  {
+    "symbol": "AGI",
+    "name": "AGIToken",
+    "decimals": 8,
+    "plasma": "0x7af6d270326b0ae94d99039c382316df340fd793",
+    "ethereum": "0x55a8f32fbc642bcf3184f611b663b7cdd0b5115f",
+    "binance": ""
+  },
+  {
+    "symbol": "HEDG",
+    "name": "HEDGToken",
+    "decimals": 18,
+    "plasma": "0x7bc78065703f3cf8fe7ede12cef9c1e8b8666329",
+    "ethereum": "0xe399da65311de4dfffb118c15c7c9b2efd523538",
+    "binance": ""
+  },
+  {
+    "symbol": "INO",
+    "name": "INOToken",
+    "decimals": 0,
+    "plasma": "0x7c429ca4c8139c9591b76736f7a0ceed3efd4c03",
+    "ethereum": "0x2957e8ca1130bc10c9ec34469b7a7497487514b5",
+    "binance": ""
+  },
+  {
+    "symbol": "HT",
+    "name": "HTToken",
+    "decimals": 18,
+    "plasma": "0x7d0815d457adb31c32aebf8c2cb487cbe8a8b466",
+    "ethereum": "0xeef642a581044bc07f59fe3accb89ba3966e7dfa",
+    "binance": ""
+  },
+  {
+    "symbol": "FSN",
+    "name": "FSNToken",
+    "decimals": 18,
+    "plasma": "0x7f1b123f9c689178e1940dc984ac929d087ddc0b",
+    "ethereum": "0xc944a3f055e3fce39a14b8550b84cc75be6cbf01",
+    "binance": ""
+  },
+  {
+    "symbol": "MANA",
+    "name": "MANAToken",
+    "decimals": 18,
+    "plasma": "0x807a51866f5315723288e1f9fe88bf42db34fca4",
+    "ethereum": "0x3feac56f0e8e387cdc0d2aaab77c6e65c9ba4498",
+    "binance": ""
+  },
+  {
+    "symbol": "MANA",
+    "name": "MANAToken",
+    "decimals": 18,
+    "plasma": "0x80bb5dcf5564ede48f735ecd0304e9149f4bd0dd",
+    "ethereum": "0x668eadce4b6ba3b2dc2ae651649b033b186f7a35",
+    "binance": ""
+  },
+  {
+    "symbol": "EURS",
+    "name": "EURSToken",
+    "decimals": 2,
+    "plasma": "0x82fb45f70b1f0d653d16c31107b638584406ee3f",
+    "ethereum": "0x24502deb7f40f2872ee6e769bb18f482353b63fb",
+    "binance": ""
+  },
+  {
+    "symbol": "LINK",
+    "name": "LINKToken",
+    "decimals": 18,
+    "plasma": "0x84e454ee70b1d065b4e78cbb90b07b2b2a81ebcf",
+    "ethereum": "0x5f7e51a6a64a3c438f3d0a3de0606df37364c8e5",
+    "binance": ""
+  },
+  {
+    "symbol": "ZRX",
+    "name": "ZRXToken",
+    "decimals": 18,
+    "plasma": "0x8538fd77b354a11e467b50787e28770152cb6fdb",
+    "ethereum": "0xeccf36615891bbbead6393be6be516f3ce391f0f",
+    "binance": ""
+  },
+  {
+    "symbol": "BHPC",
+    "name": "BHPCToken",
+    "decimals": 18,
+    "plasma": "0x86d79d001bf634b8bbd13945a0ed7f1b8e1e2383",
+    "ethereum": "0xeb1ee93e08fcc7cae01a691ada561e28b80cae4d",
+    "binance": ""
+  },
+  {
+    "symbol": "ICX",
+    "name": "ICXToken",
+    "decimals": 18,
+    "plasma": "0x86d821c3158835540cef4b92841ab24ff145b939",
+    "ethereum": "0x28f37d1c79dffea8e051816ba3caa433ec3140cf",
+    "binance": ""
+  },
+  {
+    "symbol": "FUN",
+    "name": "FUNToken",
+    "decimals": 8,
+    "plasma": "0x87ac1ba350361207a042cb10c0c6523e5e516480",
+    "ethereum": "0x48d7812d7454b57269968ee14ccfb1b326c56d7c",
+    "binance": ""
+  },
+  {
+    "symbol": "WTC",
+    "name": "WTCToken",
+    "decimals": 18,
+    "plasma": "0x87bb26816bd3593f85b19ed4a0a15d0e1ede19a5",
+    "ethereum": "0xea4b8a5d15ace2925cac7549bd3269957073ba77",
+    "binance": ""
+  },
+  {
+    "symbol": "ZIL",
+    "name": "ZILToken",
+    "decimals": 12,
+    "plasma": "0x8907babd0681ce5fdb336abdd5dab448b3024d07",
+    "ethereum": "0xf680f2126f91342f972047dffc76284bd10d42ac",
+    "binance": ""
+  },
+  {
+    "symbol": "LKY",
+    "name": "LKYToken",
+    "decimals": 18,
+    "plasma": "0x8bead1c163c96b4ea49a3c39c6657df46e64a29c",
+    "ethereum": "0xaf72c360355b1fb35785c2b93da18454299672fe",
+    "binance": ""
+  },
+  {
+    "symbol": "RLC",
+    "name": "RLCToken",
+    "decimals": 9,
+    "plasma": "0x8bfb068a5e205ca8a27741a1405392902abeca05",
+    "ethereum": "0x7173304782631c018f2e8e0bfe247fe2cfc4abbb",
+    "binance": ""
+  },
+  {
+    "symbol": "QKC",
+    "name": "QKCToken",
+    "decimals": 18,
+    "plasma": "0x8c153f0a1366a1025f037e8837725e6554bea95d",
+    "ethereum": "0x1d5d3db10864b31c9859efc4048bf6728bb798fa",
+    "binance": ""
+  },
+  {
+    "symbol": "LINK",
+    "name": "LINKToken",
+    "decimals": 18,
+    "plasma": "0x8d0881214ab3978de3813de36d443f44ac23a217",
+    "ethereum": "0x800ac6c83f121b4c34b85910ecb02a6ffd58cd0b",
+    "binance": ""
+  },
+  {
+    "symbol": "STORJ",
+    "name": "STORJToken",
+    "decimals": 8,
+    "plasma": "0x8e6f2060231572e780a1e2d5f6b859ece86998e3",
+    "ethereum": "0x0306f0e467acca550e810d771dabc026456a5086",
+    "binance": ""
+  },
+  {
+    "symbol": "ENG",
+    "name": "ENGToken",
+    "decimals": 8,
+    "plasma": "0x8fdb2226a0d8dde2ec9e80bfc665f7bc5f69fb0d",
+    "ethereum": "0x54912061d421263cf6579de5436e5411658fdc3a",
+    "binance": ""
+  },
+  {
+    "symbol": "CTXC",
+    "name": "CTXCToken",
+    "decimals": 18,
+    "plasma": "0x90f989f9a67457613bf9edeac8d9e706d3d3c462",
+    "ethereum": "0xb134064a9f6333b1b9ba719e895110a082b3751d",
+    "binance": ""
+  },
+  {
+    "symbol": "VEN",
+    "name": "VENToken",
+    "decimals": 18,
+    "plasma": "0x91a942a3f59b548c72a7b28b6fe1a1fde2828dae",
+    "ethereum": "0x98cfd05a27085c5b4cfdfcd4bc9aa7826b2a4664",
+    "binance": ""
+  },
+  {
+    "symbol": "SNT",
+    "name": "SNTToken",
+    "decimals": 18,
+    "plasma": "0x923e7307e325778eca304acc82babdef9f53c740",
+    "ethereum": "0x1e59ffb27015133302f7a4898e9d021acc57dca5",
+    "binance": ""
+  },
+  {
+    "symbol": "DENT",
+    "name": "DENTToken",
+    "decimals": 8,
+    "plasma": "0x94a2396dedbccba260cd7f64ae116296fca7b0f0",
+    "ethereum": "0x67df7e6610dc65eda8a62be74ec0c76d1d6101fd",
+    "binance": ""
+  },
+  {
+    "symbol": "PAX",
+    "name": "PAXToken",
+    "decimals": 18,
+    "plasma": "0x963a662a1b14038242da4d21c4a443d6e0fede7c",
+    "ethereum": "0x7ceb10bba9e2999d4dadf92ca9ad72e568728b7c",
+    "binance": ""
+  },
+  {
+    "symbol": "VEN",
+    "name": "VENToken",
+    "decimals": 18,
+    "plasma": "0x98b7930a0449390caf5f837f006462edfa7bec8b",
+    "ethereum": "0x1cf941617a5a9bafd7a592ab85872ec529f580a9",
+    "binance": ""
+  },
+  {
+    "symbol": "POLY",
+    "name": "POLYToken",
+    "decimals": 18,
+    "plasma": "0x99a82701959d1bc8f0d3d821879afd767fe78534",
+    "ethereum": "0x44ea6a0fa6ac0cfd7c7dff137e9a96abe83599bc",
+    "binance": ""
+  },
+  {
+    "symbol": "RNT",
+    "name": "RNTToken",
+    "decimals": 18,
+    "plasma": "0x9a7dc3b3a0c7ffcb1db459795de1ba9ffda2814d",
+    "ethereum": "0xf4fa74e7cef95ada3b626fcb90cb63a15ccfa257",
+    "binance": ""
+  },
+  {
+    "symbol": "FUN",
+    "name": "FUNToken",
+    "decimals": 8,
+    "plasma": "0x9ab4e22d56c0c4f7d494442714c82a605d2f28e0",
+    "ethereum": "0xce211b2d9d6e731fd8249c8f4759c15cb3a8e2d4",
+    "binance": ""
+  },
+  {
+    "symbol": "WTC",
+    "name": "WTCToken",
+    "decimals": 18,
+    "plasma": "0x9ad13fa05e6fd45a3807e7223615f7e36d14a79e",
+    "ethereum": "0x16fe904e1dee9f67cd2eb33c2dcafb79840bb46e",
+    "binance": ""
+  },
+  {
+    "symbol": "TUSD",
+    "name": "TUSDToken",
+    "decimals": 18,
+    "plasma": "0x9b56293a6e48161b8599260ab73fb335ebc0c8ee",
+    "ethereum": "0xc64bf14c79fd61519d92e8542da02e8c03f15444",
+    "binance": ""
+  },
+  {
+    "symbol": "EDG",
+    "name": "EDGToken",
+    "decimals": 0,
+    "plasma": "0x9d71b59a00fdfe8219c432ab4844bd0c6f07940b",
+    "ethereum": "0x85bd3db7cbadec1e165f19c892363eded329260d",
+    "binance": ""
+  },
+  {
+    "symbol": "NAS",
+    "name": "NASToken",
+    "decimals": 18,
+    "plasma": "0x9d95e4d59d9785685a85008f5ccddb15ab728e54",
+    "ethereum": "0xcc2e365b73199bdb26e82ba47409291933ffda56",
+    "binance": ""
+  },
+  {
+    "symbol": "IOST",
+    "name": "IOSTToken",
+    "decimals": 18,
+    "plasma": "0xa079dc2a2213defebd28426b4655f6f35c3d47c7",
+    "ethereum": "0x03d096b998dfcaf33d22be65775042b7fc9af9d9",
+    "binance": ""
+  },
+  {
+    "symbol": "CHX",
+    "name": "CHXToken",
+    "decimals": 18,
+    "plasma": "0xa1982991358ffad470b36e5eac6ab5b4726db046",
+    "ethereum": "0xbfd70a92bb739cf93eed32f7892da8df6e2b4e30",
+    "binance": ""
+  },
+  {
+    "symbol": "CND",
+    "name": "CNDToken",
+    "decimals": 18,
+    "plasma": "0xa25e9f8be7d757d6bfcea5e34715b82bee1d2dc3",
+    "ethereum": "0x5183008a8cf694184da634deca701431b263b05f",
+    "binance": ""
+  },
+  {
+    "symbol": "EDO",
+    "name": "EDOToken",
+    "decimals": 18,
+    "plasma": "0xa2adb3eed141b0ce7e4895af6453147c686e1075",
+    "ethereum": "0x46612efd7dcf4c639493076c6328a20e7136f55b",
+    "binance": ""
+  },
+  {
+    "symbol": "ODEM",
+    "name": "ODEMToken",
+    "decimals": 18,
+    "plasma": "0xa373dde8550bbb6134010850c0e45f24bf3860c9",
+    "ethereum": "0x633f5593c4aafba04573c59b75e2f17381825b7c",
+    "binance": ""
+  },
+  {
+    "symbol": "MGO",
+    "name": "MGOToken",
+    "decimals": 8,
+    "plasma": "0xa44063b552d3d2578da48afd4780bd931b070f3b",
+    "ethereum": "0x561d64995f462502d4e6833e3e7d85b75ab62ca6",
+    "binance": ""
+  },
+  {
+    "symbol": "QNT",
+    "name": "QNTToken",
+    "decimals": 18,
+    "plasma": "0xa534b81ce09e0bdbe0a7a6fc016bd39d2a780852",
+    "ethereum": "0x373704457a757a61df60cdc654d4601cef6b7afc",
+    "binance": ""
+  },
+  {
+    "symbol": "BAT",
+    "name": "BATToken",
+    "decimals": 18,
+    "plasma": "0xa56363d40e6a138a6707f825309883ee1a91226d",
+    "ethereum": "0x5374995073b769e095b2f43109d5b02951f6cc48",
+    "binance": ""
+  },
+  {
+    "symbol": "DAI",
+    "name": "DAIToken",
+    "decimals": 18,
+    "plasma": "0xa7a7afd25a92671738a5e14f08aae414b0db8bf6",
+    "ethereum": "0x6eedb671341db9e5c924389dce67ffcc50cf8a02",
+    "binance": ""
+  },
+  {
+    "symbol": "AGI",
+    "name": "AGIToken",
+    "decimals": 8,
+    "plasma": "0xa824d0df915e164ec5c85a8db00644bc15facad2",
+    "ethereum": "0x9e16187a786d626f784ce3b1fe34da214ea336fe",
+    "binance": ""
+  },
+  {
+    "symbol": "RLC",
+    "name": "RLCToken",
+    "decimals": 9,
+    "plasma": "0xa964078425b70e682913046abc3de65650e1a255",
+    "ethereum": "0x144185ccc9afc29bff4e6f1c0d1e6b0bd20b447e",
+    "binance": ""
+  },
+  {
+    "symbol": "HOT",
+    "name": "HOTToken",
+    "decimals": 18,
+    "plasma": "0xaae41766c765dc16615d745ef5921b09f5fdb186",
+    "ethereum": "0x5e66730cbbed0ce15d48edd0e0d05636f7410099",
+    "binance": ""
+  },
+  {
+    "symbol": "INO",
+    "name": "INOToken",
+    "decimals": 0,
+    "plasma": "0xabb762176dadb6d792ed5de51bdfbe23866b11ad",
+    "ethereum": "0xb4233cd6465f38adb91181c8c6bcc2a452423f22",
+    "binance": ""
+  },
+  {
+    "symbol": "BRD",
+    "name": "BRDToken",
+    "decimals": 18,
+    "plasma": "0xabc31d73a2a9c6df62884b70621b16ec0fe9a722",
+    "ethereum": "0x6cef206f88a82fb65d2d4240168158a8304f9a37",
+    "binance": ""
+  },
+  {
+    "symbol": "ODEM",
+    "name": "ODEMToken",
+    "decimals": 18,
+    "plasma": "0xac326da7f094579f99fabb720b4b6519ff5af56c",
+    "ethereum": "0x6d35bd593cda45e208e0a8b6b1647381497e56e2",
+    "binance": ""
+  },
+  {
+    "symbol": "SAN",
+    "name": "SANToken",
+    "decimals": 18,
+    "plasma": "0xac61ecf74cf91151ea93155a173aba96928c70d9",
+    "ethereum": "0x1fdc7b5989917e3a4f1dd9c0566e04aea5321302",
+    "binance": ""
+  },
+  {
+    "symbol": "ZIL",
+    "name": "ZILToken",
+    "decimals": 12,
+    "plasma": "0xac870ad3ae5fb7dab811a9050fb193dd95c38b7e",
+    "ethereum": "0xbf2392950d3a4a4930695b8fd0cd636a1e9cd8f0",
+    "binance": ""
+  },
+  {
+    "symbol": "PPT",
+    "name": "PPTToken",
+    "decimals": 8,
+    "plasma": "0xacc4945874e2fe857c780f5523d63d1ae31ee06b",
+    "ethereum": "0x8f8638b8f950a0e153bc0ea64e08c5839c25752b",
+    "binance": ""
+  },
+  {
+    "symbol": "PAY",
+    "name": "PAYToken",
+    "decimals": 18,
+    "plasma": "0xad6f561a5c59992027a65628d38434340f1daa3c",
+    "ethereum": "0x6eaf790ead8299f6a29f968fea2254336e254846",
+    "binance": ""
+  },
+  {
+    "symbol": "AE",
+    "name": "AEToken",
+    "decimals": 18,
+    "plasma": "0xad94eae166f5f69167e5668f2c8dbfa8e690a120",
+    "ethereum": "0x3f881b452f0a127b786b5a2fc3121d1730036461",
+    "binance": ""
+  },
+  {
+    "symbol": "QASH",
+    "name": "QASHToken",
+    "decimals": 6,
+    "plasma": "0xae1000f8e4a310c2d7b510fabfbafd4036625df8",
+    "ethereum": "0x65fd14137e23b9fc68ee238ae42c55805230b817",
+    "binance": ""
+  },
+  {
+    "symbol": "LOOM",
+    "name": "LOOMToken",
+    "decimals": 18,
+    "plasma": "0xae1b74376dcd7d21a2c25bd8e564265ae3944eb2",
+    "ethereum": "0xc4401163b0e39718b0369195970d172842d9b43a",
+    "binance": ""
+  },
+  {
+    "symbol": "BIX",
+    "name": "BIXToken",
+    "decimals": 18,
+    "plasma": "0xae7c379cdd83344ff08621a9fae0b9414a6e0638",
+    "ethereum": "0xa45e4de71afca63e97b0a8fe90066a33c98599c4",
+    "binance": ""
+  },
+  {
+    "symbol": "AE",
+    "name": "AEToken",
+    "decimals": 18,
+    "plasma": "0xaef550afe348e7d072470307f84420208db9e3be",
+    "ethereum": "0xc2949d358c1f1092252819574cd00df08022e764",
+    "binance": ""
+  },
+  {
+    "symbol": "BNB",
+    "name": "BNBToken",
+    "decimals": 18,
+    "plasma": "0xb09364aadfd41a18ad1126f00de8c42c753bd12f",
+    "ethereum": "0xd2701c4c062e64ea23573367b0b807c67f542802",
+    "binance": ""
+  },
+  {
+    "symbol": "PRG",
+    "name": "PRGToken",
+    "decimals": 6,
+    "plasma": "0xb11653b62a54b4da9d67651d5ab6ab008a81d240",
+    "ethereum": "0x6066cea107b2f377be8f5b407f8520c88f90210e",
+    "binance": ""
+  },
+  {
+    "symbol": "GUSD",
+    "name": "GUSDToken",
+    "decimals": 2,
+    "plasma": "0xb14bb6929933bd71b613dab51c9efa553bf63c75",
+    "ethereum": "0x024d72f17b33435d64e298932cb72769e10cf789",
+    "binance": ""
+  },
+  {
+    "symbol": "QBIT",
+    "name": "QBITToken",
+    "decimals": 6,
+    "plasma": "0xb1a378054461aa9939002bf32e6e517ad9b96bd1",
+    "ethereum": "0x810b818ff37fbb43aef988cd0cf28d03319b3544",
+    "binance": ""
+  },
+  {
+    "symbol": "MGO",
+    "name": "MGOToken",
+    "decimals": 8,
+    "plasma": "0xb1f4a0926167917c332b87b5600f951b2c41684e",
+    "ethereum": "0x362b0799138e92a2633c01e8dfcf9bdfd2c4e1e0",
+    "binance": ""
+  },
+  {
+    "symbol": "BTM",
+    "name": "BTMToken",
+    "decimals": 8,
+    "plasma": "0xb21b5b5652963fe43639bddab2b89ee22460642a",
+    "ethereum": "0x98e092a2f8d3d8a64894b21eece4d6c8b1181827",
+    "binance": ""
+  },
+  {
+    "symbol": "AE",
+    "name": "AEToken",
+    "decimals": 18,
+    "plasma": "0xb2453432c23c8ef08d2c0b40755ddc9d583fe8e8",
+    "ethereum": "0x0e8aa9f946771899534b404e82395aa67eb7d58f",
+    "binance": ""
+  },
+  {
+    "symbol": "DGD",
+    "name": "DGDToken",
+    "decimals": 9,
+    "plasma": "0xb24c4b03a66db008a597627b7ea1179e20967485",
+    "ethereum": "0xdbd9e8b09d2edcedb3e5f99fbfd9c46c13d411b6",
+    "binance": ""
+  },
+  {
+    "symbol": "ENG",
+    "name": "ENGToken",
+    "decimals": 8,
+    "plasma": "0xb293d102a3a58b159806bb13c96241f3fb387dbd",
+    "ethereum": "0x92e8b7f9903535b3469af7dd6fb7e20217a953da",
+    "binance": ""
+  },
+  {
+    "symbol": "QNT",
+    "name": "QNTToken",
+    "decimals": 18,
+    "plasma": "0xb4405c9b94bca7a0a38d945459dcfae2cc08859a",
+    "ethereum": "0xb5cd46a3503e66df490b3f29c4a0fe9c7afc59bc",
+    "binance": ""
+  },
+  {
+    "symbol": "ODEM",
+    "name": "ODEMToken",
+    "decimals": 18,
+    "plasma": "0xb5924c73085d03b4083efd5788f4a00e0281b491",
+    "ethereum": "0x00ec64ab1302450af5974d7535609a0fa3165f0a",
+    "binance": ""
+  },
+  {
+    "symbol": "POWR",
+    "name": "POWRToken",
+    "decimals": 6,
+    "plasma": "0xb5fdd9f0cff2a3278f12f83acd9e7a0009405451",
+    "ethereum": "0xad643198e5bcab914968a80959aafd95a134c7ff",
+    "binance": ""
+  },
+  {
+    "symbol": "FSN",
+    "name": "FSNToken",
+    "decimals": 18,
+    "plasma": "0xb717b43c8982578a6d6b5efb49ff99269e3b081a",
+    "ethereum": "0x197ab8c4752e42be4aa37c6cf131c7e929d0e4d0",
+    "binance": ""
+  },
+  {
+    "symbol": "TOMO",
+    "name": "TOMOToken",
+    "decimals": 18,
+    "plasma": "0xb76d8ed0ed7f57a543330292068f2a9561b27e94",
+    "ethereum": "0x2c48464bf43b5112c8d31bb65b87b57a0d0e7e42",
+    "binance": ""
+  },
+  {
+    "symbol": "THETA",
+    "name": "THETAToken",
+    "decimals": 18,
+    "plasma": "0xb80348ae327467c51eef3d73aac7a93b198c12eb",
+    "ethereum": "0xba00af62978423b20037df9588f5adaebaab49d1",
+    "binance": ""
+  },
+  {
+    "symbol": "CVC",
+    "name": "CVCToken",
+    "decimals": 8,
+    "plasma": "0xb8357e4deb282fb20bc6da6a18f21f2da546149b",
+    "ethereum": "0xeeed0e6127bcba10fda2cbd5902a0f8043762a45",
+    "binance": ""
+  },
+  {
+    "symbol": "INB",
+    "name": "INBToken",
+    "decimals": 18,
+    "plasma": "0xb83730cded6cb4a5fef90e1a87794469016a675b",
+    "ethereum": "0xb06a881fc5c01a7eaff574bdf497abba5c76c00d",
+    "binance": ""
+  },
+  {
+    "symbol": "WAX",
+    "name": "WAXToken",
+    "decimals": 8,
+    "plasma": "0xb870a03b198ed90b5e0261c6eff2dde5d8d453f4",
+    "ethereum": "0xf84e8cebc1ee34ba67bb2b61b0f8cce87fa8532c",
+    "binance": ""
+  },
+  {
+    "symbol": "REP",
+    "name": "REPToken",
+    "decimals": 18,
+    "plasma": "0xb892a6d2a1e50b2bc2648eae70a57c652ef532cf",
+    "ethereum": "0xffa8c1b1a6514998d75b41a946219c3fcfba3ae5",
+    "binance": ""
+  },
+  {
+    "symbol": "QASH",
+    "name": "QASHToken",
+    "decimals": 6,
+    "plasma": "0xb9381894a779cf8d1260c4d20b142d3a978a4d16",
+    "ethereum": "0xdf18239580a01afe499dccd6b5ded36ad5c953f9",
+    "binance": ""
+  },
+  {
+    "symbol": "NULS",
+    "name": "NULSToken",
+    "decimals": 18,
+    "plasma": "0xbaebb12f24f6db2e88e57392e3333b6d19dba035",
+    "ethereum": "0x7d647f5425eddb4dc20794558a7a6bab9b13e434",
+    "binance": ""
+  },
+  {
+    "symbol": "CTXC",
+    "name": "CTXCToken",
+    "decimals": 18,
+    "plasma": "0xbe62505335fb93c4e0083f243748122459cd708a",
+    "ethereum": "0x86e73b60aa23c0840291d4442eeb3c6d57d20c21",
+    "binance": ""
+  },
+  {
+    "symbol": "STORJ",
+    "name": "STORJToken",
+    "decimals": 8,
+    "plasma": "0xbec0135660bb97f8ddc04db7b224cab3752286bf",
+    "ethereum": "0x52d47e5e118075f1c36a8a7d651a619a5894d77f",
+    "binance": ""
+  },
+  {
+    "symbol": "NPXS",
+    "name": "NPXSToken",
+    "decimals": 18,
+    "plasma": "0xc1ba024ce9ebd0cbf1a0e8bb89bf4430dc62e63f",
+    "ethereum": "0xe66136e156507e621f2ba70863486fbf92c495aa",
+    "binance": ""
+  },
+  {
+    "symbol": "ENJ",
+    "name": "ENJToken",
+    "decimals": 18,
+    "plasma": "0xc1d5b1e99f13e493d78e1099590f347e39d791aa",
+    "ethereum": "0xcb8dc13075dabcad3dad13f75e488abbd8b841e8",
+    "binance": ""
+  },
+  {
+    "symbol": "POWR",
+    "name": "POWRToken",
+    "decimals": 6,
+    "plasma": "0xc212c8c42b2a6dc50bcb837133193cb9b4682c98",
+    "ethereum": "0x6ad9b85a59a1e61a7e18cb9f8f7097b33b314a68",
+    "binance": ""
+  },
+  {
+    "symbol": "EDO",
+    "name": "EDOToken",
+    "decimals": 18,
+    "plasma": "0xc227ca55bc1face4d76490b7e58ea4230d602dc3",
+    "ethereum": "0x16c1396b1f29f0b19827df9bb49e818ee1edb9a4",
+    "binance": ""
+  },
+  {
+    "symbol": "BNT",
+    "name": "BNTToken",
+    "decimals": 18,
+    "plasma": "0xc3e5afe52982120559d6e228db60a96f53e436e4",
+    "ethereum": "0x2a67fd975cd661132b9494ee33327db038ee607a",
+    "binance": ""
+  },
+  {
+    "symbol": "INB",
+    "name": "INBToken",
+    "decimals": 18,
+    "plasma": "0xc3fa0881d62ea334c14ba22e23e7df3fecd94636",
+    "ethereum": "0x1da75dd9338789608e1e057c3e85eb7a469d098f",
+    "binance": ""
+  },
+  {
+    "symbol": "SNT",
+    "name": "SNTToken",
+    "decimals": 18,
+    "plasma": "0xc47a3a6952362f1ef00cabd00906b4fe004055a7",
+    "ethereum": "0x3fd8e425bf7c659f5884ea327a17a2b77043c153",
+    "binance": ""
+  },
+  {
+    "symbol": "ELF",
+    "name": "ELFToken",
+    "decimals": 18,
+    "plasma": "0xc48fa15059103be3014164136a4e2c350657a1a2",
+    "ethereum": "0x9af55543ad2c84e78464cf7bea5d76bc4f608c00",
+    "binance": ""
+  },
+  {
+    "symbol": "NAS",
+    "name": "NASToken",
+    "decimals": 18,
+    "plasma": "0xc66ac541c1527d2b1ac13a8585f74a3c3f3e0ddd",
+    "ethereum": "0x8a31cff6bc1becab84416c9ebde1a5ceaa052601",
+    "binance": ""
+  },
+  {
+    "symbol": "VERI",
+    "name": "VERIToken",
+    "decimals": 18,
+    "plasma": "0xc6ae372dde23289f93e81e1591616b6aa6e4b888",
+    "ethereum": "0x6bd4456e9ce50463679fe6d01bb78dd1637745ec",
+    "binance": ""
+  },
+  {
+    "symbol": "CND",
+    "name": "CNDToken",
+    "decimals": 18,
+    "plasma": "0xc6c48704139dbb8b07843e57be80621c57eef2d2",
+    "ethereum": "0x73e65dd4b8208052b4982172ee7939beedb2100c",
+    "binance": ""
+  },
+  {
+    "symbol": "HT",
+    "name": "HTToken",
+    "decimals": 18,
+    "plasma": "0xc70769449a17c343f58d63b1999fcf5a756ec8a4",
+    "ethereum": "0x6d6020b3eb81bec417baeb1b9a2e383b84001bf4",
+    "binance": ""
+  },
+  {
+    "symbol": "CMT",
+    "name": "CMTToken",
+    "decimals": 18,
+    "plasma": "0xc7cc2d15640be1d7f4525f7f9ca70305b5695c0b",
+    "ethereum": "0xed5cc27054c050b25f8610d509386108f898db69",
+    "binance": ""
+  },
+  {
+    "symbol": "DGD",
+    "name": "DGDToken",
+    "decimals": 9,
+    "plasma": "0xc7e6117a53d01a04d27bf1bcbbdcedd1f9d07f5f",
+    "ethereum": "0xfa81fe2c896f07fac88d0fecf5cb57024df1cf03",
+    "binance": ""
+  },
+  {
+    "symbol": "EURS",
+    "name": "EURSToken",
+    "decimals": 2,
+    "plasma": "0xc8052b77e170354a7d3d5bb6d7cf2e9f784962a9",
+    "ethereum": "0xb78638483988b90d27d3661b4586b12007ed56da",
+    "binance": ""
+  },
+  {
+    "symbol": "POLY",
+    "name": "POLYToken",
+    "decimals": 18,
+    "plasma": "0xc97329f6cc2fb3c8e19839be599d1123fc630a12",
+    "ethereum": "0x6de5e47ba49d0f7d428b58cea0c9234e32d81807",
+    "binance": ""
+  },
+  {
+    "symbol": "TCT",
+    "name": "TCTToken",
+    "decimals": 18,
+    "plasma": "0xcb24100d5ef6748ca0e6f6ae923655aeff15fbd9",
+    "ethereum": "0xbc4688ace87e5f1f24f885afb79353cf3029653f",
+    "binance": ""
+  },
+  {
+    "symbol": "MFT",
+    "name": "MFTToken",
+    "decimals": 18,
+    "plasma": "0xcc019a214c5b35b8bf4890d21a81a41681b9ca55",
+    "ethereum": "0xd0df3e3dc2a4f3a65c6fb254377f02aecdd98931",
+    "binance": ""
+  },
+  {
+    "symbol": "TKN",
+    "name": "TKNToken",
+    "decimals": 8,
+    "plasma": "0xcdebaa41decd8cc101a0be87d9728192aef02098",
+    "ethereum": "0x19d4c5fabcce2f0fe3fed38e36c8d17d3bdbd8c8",
+    "binance": ""
+  },
+  {
+    "symbol": "ZIL",
+    "name": "ZILToken",
+    "decimals": 12,
+    "plasma": "0xce03907c8535eac62c05f5635285c73271fda34d",
+    "ethereum": "0x57b09ded6b8aabcce332c2cb4d2d1cbc5842dd8b",
+    "binance": ""
+  },
+  {
+    "symbol": "THETA",
+    "name": "THETAToken",
+    "decimals": 18,
+    "plasma": "0xcfaef1552a11acc7794088ea2434c23af8434ced",
+    "ethereum": "0xefb3aafa29a0208f2f4b1820168203e1ded9085f",
+    "binance": ""
+  },
+  {
+    "symbol": "GNT",
+    "name": "GNTToken",
+    "decimals": 18,
+    "plasma": "0xd0464df93a9a92f2bb1cc1af5bec7e0b9b09dc3a",
+    "ethereum": "0x072bd0e5502a2db50526a53a32e7694a4a02d290",
+    "binance": ""
+  },
+  {
+    "symbol": "CVC",
+    "name": "CVCToken",
+    "decimals": 8,
+    "plasma": "0xd1614763de9065904c9b099e181324570fa2e453",
+    "ethereum": "0x5eae374fa32cd23fbc5605fe06ecc8ee8a2b44dc",
+    "binance": ""
+  },
+  {
+    "symbol": "GUSD",
+    "name": "GUSDToken",
+    "decimals": 2,
+    "plasma": "0xd1d6c78cc8963b522a7e21a0dc523737fbe64d5e",
+    "ethereum": "0xfc5bbb8f001679f9cffa68f72393fcbc325edf23",
+    "binance": ""
+  },
+  {
+    "symbol": "AUTO",
+    "name": "AUTOToken",
+    "decimals": 18,
+    "plasma": "0xd3a0a5e25d93554c21674477b8cecb72da9af886",
+    "ethereum": "0x762afb72afa1cbd9351b6b68df455f5ce545419d",
+    "binance": ""
+  },
+  {
+    "symbol": "MFT",
+    "name": "MFTToken",
+    "decimals": 18,
+    "plasma": "0xd478c9c480b037e518429e3d1a80f74d861e4843",
+    "ethereum": "0xfa2d91d7e4e23fedf56a1965dfa67a150afec557",
+    "binance": ""
+  },
+  {
+    "symbol": "BAT",
+    "name": "BATToken",
+    "decimals": 18,
+    "plasma": "0xd5a482359fa8ac99508dac01ce9222a425a45898",
+    "ethereum": "0x4831abf2d8d337a9b39003f8541b6e98aeebc31d",
+    "binance": ""
+  },
+  {
+    "symbol": "OMG",
+    "name": "OMGToken",
+    "decimals": 18,
+    "plasma": "0xd72fb7edb394ef16a9a3252cd8c744951b789371",
+    "ethereum": "0xf10000151cd82f12cd707101ae5d80a6ed02c2bf",
+    "binance": ""
+  },
+  {
+    "symbol": "PAX",
+    "name": "PAXToken",
+    "decimals": 18,
+    "plasma": "0xd779ffec3bf1b48af0fefa0391e8b3374b4f3a5a",
+    "ethereum": "0xdee0c474378f740ea8fec66320e83d46429982da",
+    "binance": ""
+  },
+  {
+    "symbol": "HPT",
+    "name": "HPTToken",
+    "decimals": 18,
+    "plasma": "0xd9c20b9e173c993d6dcd298610e81ec55db21341",
+    "ethereum": "0x3d5a6bfab8ea8a4bc8823f39b2399932442f5d2c",
+    "binance": ""
+  },
+  {
+    "symbol": "NEC",
+    "name": "NECToken",
+    "decimals": 18,
+    "plasma": "0xdb3ba50a5ec925c2adac0d5c786601784548effb",
+    "ethereum": "0xb537a3fe615a329d00d40052f71a63f7e3795fbf",
+    "binance": ""
+  },
+  {
+    "symbol": "HEDG",
+    "name": "HEDGToken",
+    "decimals": 18,
+    "plasma": "0xdcd11288a08d1525359ae9695b4d2e6fad36492e",
+    "ethereum": "0x445aea5b92c819b2ec9c713fd2b6c0e887222b52",
+    "binance": ""
+  },
+  {
+    "symbol": "AUTO",
+    "name": "AUTOToken",
+    "decimals": 18,
+    "plasma": "0xdd4adc9fb78ce7899e28c259ca85f835f5e622ec",
+    "ethereum": "0x5a217dad3537202177e3c60fb3234d915b42653c",
+    "binance": ""
+  },
+  {
+    "symbol": "PAY",
+    "name": "PAYToken",
+    "decimals": 18,
+    "plasma": "0xde3000d65442343b1a74d6dfe001a84fbd0d6799",
+    "ethereum": "0xdb8666a3293890779d2fa3158456d912e8f59e56",
+    "binance": ""
+  },
+  {
+    "symbol": "WIC",
+    "name": "WICToken",
+    "decimals": 0,
+    "plasma": "0xdfab2a8dda5a7f2c53f111a697dc485a7eeabbd0",
+    "ethereum": "0x7a3431e623712afa6e7b932d301f361a711efd22",
+    "binance": ""
+  },
+  {
+    "symbol": "AION",
+    "name": "AIONToken",
+    "decimals": 8,
+    "plasma": "0xdffe629e5e88c9a4934a06ea81d7e744becce0ed",
+    "ethereum": "0x916e4c716b6bcf4225a2fc28bed653e0c166d4d4",
+    "binance": ""
+  },
+  {
+    "symbol": "VERI",
+    "name": "VERIToken",
+    "decimals": 18,
+    "plasma": "0xe07b3d19e9fc67c74964e1e2ba9179a2a6ce1a4d",
+    "ethereum": "0xf016e35f45441a362292768102f2bb80c8edd258",
+    "binance": ""
+  },
+  {
+    "symbol": "QBIT",
+    "name": "QBITToken",
+    "decimals": 6,
+    "plasma": "0xe0d8bc044dab8afa23cf98422ce71e60aca1d5fd",
+    "ethereum": "0x232844eb4441630b62339be8b5fbd3960c5415b3",
+    "binance": ""
+  },
+  {
+    "symbol": "BHPC",
+    "name": "BHPCToken",
+    "decimals": 18,
+    "plasma": "0xe57711a2c8af6e38405b4db675720d675a97fa92",
+    "ethereum": "0xf97f09a623b3bad574bf80505cd6f52cc4b57a25",
+    "binance": ""
+  },
+  {
+    "symbol": "MXM",
+    "name": "MXMToken",
+    "decimals": 18,
+    "plasma": "0xe69281f3b378f987c32553aa02c6c7324faba462",
+    "ethereum": "0x5a06f92031ee792f1e5e5918bf41447ebc067d61",
+    "binance": ""
+  },
+  {
+    "symbol": "NULS",
+    "name": "NULSToken",
+    "decimals": 18,
+    "plasma": "0xe697c3046b52772d7c9d2b07866f7b8780842cf1",
+    "ethereum": "0xd33d5c9e4345b15361b72f3ac054f38e6549a25a",
+    "binance": ""
+  },
+  {
+    "symbol": "DENT",
+    "name": "DENTToken",
+    "decimals": 8,
+    "plasma": "0xe6ac469feca631516a7cc58e847caa124ad66c8f",
+    "ethereum": "0x3b367cb4cf6c4431b7146a5cecc0d073eb4179b0",
+    "binance": ""
+  },
+  {
+    "symbol": "LA",
+    "name": "LAToken",
+    "decimals": 18,
+    "plasma": "0xe771e345230f75581c3a8072651c864e6ce8a964",
+    "ethereum": "0x2c05d54127ab465af7218656c9b46cbac6d8150a",
+    "binance": ""
+  },
+  {
+    "symbol": "MDA",
+    "name": "MDAToken",
+    "decimals": 18,
+    "plasma": "0xe91ebeeb15f3adc7fe62b26d5c1999f738f968fe",
+    "ethereum": "0x04abaa5a651fed3bf79b1737342c2648d20ccc5e",
+    "binance": ""
+  },
+  {
+    "symbol": "GUSD",
+    "name": "GUSDToken",
+    "decimals": 2,
+    "plasma": "0xea5c509b66881a70aa7da96c52d6038082ba88e1",
+    "ethereum": "0x06f3fc989bd5e82f0456e4908e7431659a314133",
+    "binance": ""
+  },
+  {
+    "symbol": "HOT",
+    "name": "HOTToken",
+    "decimals": 18,
+    "plasma": "0xeb12431649b7bd0478253b7c98003463fe3a6761",
+    "ethereum": "0x6a48785204a34f7cd9da8ade214f589aa6927b76",
+    "binance": ""
+  },
+  {
+    "symbol": "XIN",
+    "name": "XINToken",
+    "decimals": 18,
+    "plasma": "0xebabe11951dfe497523d242494f0f20706e5c698",
+    "ethereum": "0x3996df30741b3e0cebb85bd75acf2ce2605fe18a",
+    "binance": ""
+  },
+  {
+    "symbol": "QNT",
+    "name": "QNTToken",
+    "decimals": 18,
+    "plasma": "0xebec272ccb6f356b31cd1a5489b4023d350bbafa",
+    "ethereum": "0x73fec6fa5330609a91b26f2f390b11aee1bba9d4",
+    "binance": ""
+  },
+  {
+    "symbol": "DGTX",
+    "name": "DGTXToken",
+    "decimals": 18,
+    "plasma": "0xedd019ee504c306a212c578e0ce239c40e5f138e",
+    "ethereum": "0x19e17f7e66228c29af7f3247d14796936d9bbee0",
+    "binance": ""
+  },
+  {
+    "symbol": "DAI",
+    "name": "DAIToken",
+    "decimals": 18,
+    "plasma": "0xeed6901b0aaa20943527a805a50f48f58df3a7c6",
+    "ethereum": "0xd5e04bf1c3cbaa233240483325839538ea665084",
+    "binance": ""
+  },
+  {
+    "symbol": "BRD",
+    "name": "BRDToken",
+    "decimals": 18,
+    "plasma": "0xeef9a60109352e01912cdbcb5133f7af2646fc37",
+    "ethereum": "0xba344ccf5c2b403eba5c7bbf55716f5645045f00",
+    "binance": ""
+  },
+  {
+    "symbol": "PRL",
+    "name": "PRLToken",
+    "decimals": 18,
+    "plasma": "0xef7feb2164546d399f5aa95bd5f3763a9050d65a",
+    "ethereum": "0x0039f64409e3738f3a96e9caf2f6f115230484da",
+    "binance": ""
+  },
+  {
+    "symbol": "LRC",
+    "name": "LRCToken",
+    "decimals": 18,
+    "plasma": "0xf03276f6a17bb8198ab2d00e8c95981af7ca0505",
+    "ethereum": "0x87e434007f8dea36664c3b969190d50797feb1d8",
+    "binance": ""
+  },
+  {
+    "symbol": "OMG",
+    "name": "OMGToken",
+    "decimals": 18,
+    "plasma": "0xf08a011b429254af54d04af6091d8289df3ba946",
+    "ethereum": "0x6d40c2cd6c2d73500efbd74555a9e28ed8c7bfda",
+    "binance": ""
+  },
+  {
+    "symbol": "CMT",
+    "name": "CMTToken",
+    "decimals": 18,
+    "plasma": "0xf2e92991fa77191142c89df5310c1aff5d592106",
+    "ethereum": "0x0d66c5cb2fe9d363a83a39930b6d76b984b0e30f",
+    "binance": ""
+  },
+  {
+    "symbol": "MDA",
+    "name": "MDAToken",
+    "decimals": 18,
+    "plasma": "0xf4c8e5e5f4b22e991f25345e688467c3bdba3fef",
+    "ethereum": "0x98dc2053386d407a7915125242b40a58452b0628",
+    "binance": ""
+  },
+  {
+    "symbol": "MANA",
+    "name": "MANAToken",
+    "decimals": 18,
+    "plasma": "0xf79552d72be701707d9e914e8fe2d5fb2e723a47",
+    "ethereum": "0xd3137a7009a1059b44ff11529ff6e83ec071e510",
+    "binance": ""
+  },
+  {
+    "symbol": "NULS",
+    "name": "NULSToken",
+    "decimals": 18,
+    "plasma": "0xf9b9e193f7b4e5070f81c4df56d48c0e589517e8",
+    "ethereum": "0xe06bd4b70b487d87b90df111d463c86d6366d9e1",
+    "binance": ""
+  },
+  {
+    "symbol": "CND",
+    "name": "CNDToken",
+    "decimals": 18,
+    "plasma": "0xfa7c93e8b25d53a3a3fb742230c391228e405cbc",
+    "ethereum": "0x3fd19a3fc052edab943aa96930b7920be2887809",
+    "binance": ""
+  },
+  {
+    "symbol": "NPXS",
+    "name": "NPXSToken",
+    "decimals": 18,
+    "plasma": "0xfdd33c963b0ed431384393a199c4169c730af058",
+    "ethereum": "0xc86989a383d597c19b0beca63ce661008ce6a66c",
+    "binance": ""
+  },
+  {
+    "symbol": "IOST",
+    "name": "IOSTToken",
+    "decimals": 18,
+    "plasma": "0xfdf60026c2180f57767b992e347c2f18e124b253",
+    "ethereum": "0x53710bc8fd7fd9cc90e2fa81ca063fb2e8b46f4e",
+    "binance": ""
+  },
+  {
+    "symbol": "BIX",
+    "name": "BIXToken",
+    "decimals": 18,
+    "plasma": "0xfe59ddd99cfeb20d5b5b11be9f10d1c4b035d2e7",
+    "ethereum": "0xabf90ff23216d481942ba310fbf6c9bdca5d1604",
+    "binance": ""
+  },
+  {
+    "symbol": "LKY",
+    "name": "LKYToken",
+    "decimals": 18,
+    "plasma": "0xfef8ee739e52cb51148ecd3762f2cd6472a51ab6",
+    "ethereum": "0xf2f3f3c6e199972fcfde007f7b2557c6f6a41dd0",
+    "binance": ""
+  },
+  {
+    "symbol": "GNT",
+    "name": "GNTToken",
+    "decimals": 18,
+    "plasma": "0xff33b78487a755c7c3922f629c5598fedecb0514",
+    "ethereum": "0x73f70f42891791041146fd59e0d7d72286064081",
+    "binance": ""
+  },
+  {
+    "symbol": "EDO",
+    "name": "EDOToken",
+    "decimals": 18,
+    "plasma": "0xff84fa9b13f9615e577410e9b0674e1e254adc9e",
+    "ethereum": "0x2e49cb58bb1fb5081456781666518b5bcdf61b9b",
+    "binance": ""
+  },
+  {
+    "symbol": "SBT",
+    "name": "My Sample BEP2 Token",
+    "decimals": 8,
+    "plasma": "0x25c5d28e7f05c4ce1e214ee84ba043ed45ace49d",
+    "binance": "0x000000000000000000000000004254452d413136"
+  },
+  {
+    "symbol": "SBT",
+    "name": "My Sample BEP2 Token",
+    "decimals": 8,
+    "plasma": "0x7a8edb0d03661ec0eb8e8da38a31cbc175b09f93",
+    "binance": "0x000000000000000000000000004254542d464543"
+  },
+  {
+    "symbol": "SBEP2",
+    "name": "SAMPLEBEP2",
+    "decimals": 8,
+    "plasma": "0xaf7addc20235089072cb5de4a743853d7e3aea14",
+    "binance": "0x0000000000000000000000004c4f4f4d2d303635"
+  },
+  {
+    "symbol": "BNB",
+    "name": "BNBToken",
+    "decimals": 8,
+    "plasma": "0xb6f5558ed8fd604dcda28514c4fb39af935c48e9",
+    "binance": "0x0000000000000000000000000000000000424e42"
+  },
+  {
+    "symbol": "SBT",
+    "name": "My Sample BEP2 Token",
+    "decimals": 8,
+    "plasma": "0xdbf44474c938f6e5380b5b80dbb9f27382aaf68f",
+    "binance": "0x000000000000000000000000004c54542d303644"
+  },
+  {
+    "symbol": "MOOL",
+    "name": "SampleBEP2Token",
+    "decimals": 8,
+    "plasma": "0xfc9fa5b21589ed973639f2e793c9a3cbf94266dc",
+    "binance": "0x0000000000000000000000004d4f4f4c2d433236"
+  }
+]

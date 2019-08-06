@@ -42,7 +42,7 @@ export default {
       fee: 37500,
     },
   },
-  coinDataUrl: "https://auth.loom.games/wallet/tokens",
+  coinDataUrl: "/tokens/production.tokens.json",
   disabled: ["portis", "fortmatic"],
   chains: ["ethereum", "binance"],
 } as DashboardConfig

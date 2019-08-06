@@ -56,7 +56,7 @@ const chainNames = {
     binance: "binance",
     eth: "ethereum",
 }
-
+// todo add an exclude list
 function generate(config: DashboardConfig) {
     console.log("\n=======\n " + config.name)
     const dappchainKey = CryptoUtils.generatePrivateKey()
@@ -90,13 +90,25 @@ function generate(config: DashboardConfig) {
             toArray(),
             switchMap(async (list) => {
                 const loomMapping = await loadEthereumLoomMapping(client, config)
-                list.unshift({
-                    symbol: "LOOM",
-                    name: "Loom",
-                    decimals: 18,
-                    chains: loomMapping,
-                })
-                console.log("saving file for env", list.length)
+                list.unshift(
+                    {
+                        symbol: "LOOM",
+                        name: "Loom",
+                        decimals: 18,
+                        ...loomMapping,
+                        binance: "",
+                    },
+                    {
+                        symbol: "ETH",
+                        name: "Ether",
+                        decimals: 18,
+                        ethereum: "0x".padEnd(42, "0"),
+                        // Not used but should set to the real one
+                        plasma: "0x".padEnd(42, "0"),
+                        binance: "",
+                    },
+                )
+                console.log("saving file for env", list.length, config.name)
                 fs.writeFileSync(__dirname + "/" + config.name + ".json", JSON.stringify(list, null, 2))
                 return config.name
             }),
@@ -165,9 +177,8 @@ async function tokenInfoFromPlasma(mapping: Mapping, web3: Web3, address: Addres
         }
     })
     await Promise.all(proms)
-    info.chains = mapping
-    console.log(info)
-    return info as TokenInfo
+    console.log({ ...info, ...mapping })
+    return { ...info, ...mapping }
 }
 
 function convertMapping({ from, to }: IAddressMapping, chainId: string) {

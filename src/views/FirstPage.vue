@@ -59,6 +59,19 @@
                   </div>
                 </b-card>
               </div>
+              <div v-if="$store.state.env !== 'production'" class="col-sm-12 mb-3">
+                <b-card
+                  id="test-wallet-button"
+                  class="wallet-selection-card text-center"
+                  :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                  @click="setWallet('test_wallet')"
+                >
+                  <div>
+                    <img src="../assets/metamask_logo.png" />
+                    <span>Metamask (Test Wallet)</span>
+                  </div>
+                </b-card>
+              </div>
               <div class="col-sm-12">
                 <b-card
                   id="ledger-button"
@@ -97,7 +110,7 @@
 
                 </b-card>
               </div>   
-              <div class="col-sm-12 mb-3">
+              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
                 <b-card
                   id="portis-button"
                   class="wallet-selection-card text-center"
@@ -109,7 +122,7 @@
                   </div>
                 </b-card>
               </div>
-              <div class="col-sm-12 mb-3">
+              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('fortmatic')">
                 <b-card
                   id="fortmatic-button"
                   class="wallet-selection-card text-center"

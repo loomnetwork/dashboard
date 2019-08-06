@@ -59,6 +59,19 @@
                   </div>
                 </b-card>
               </div>
+              <div v-if="$store.state.env !== 'production'" class="col-sm-12 mb-3">
+                <b-card
+                  id="test-wallet-button"
+                  class="wallet-selection-card text-center"
+                  :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                  @click="setWallet('test_wallet')"
+                >
+                  <div>
+                    <img src="../assets/metamask_logo.png" />
+                    <span>Metamask (Test Wallet)</span>
+                  </div>
+                </b-card>
+              </div>
               <div class="col-sm-12">
                 <b-card
                   id="ledger-button"

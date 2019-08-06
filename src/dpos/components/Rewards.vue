@@ -6,10 +6,11 @@
       </div>
       <div v-else-if="hasRewardsUnclaimed">
         <h6>{{ $t('views.rewards.unclaimed_rewards') }}</h6>
-        <h5 class="highlight">{{rewardsUnclaimed | tokenAmount}} LOOM</h5>
+        <h5 class="highlight" data-cy="unclaimed-rewards">{{rewardsUnclaimed | tokenAmount}} LOOM</h5>
       </div>
       <div
         v-else-if="hasRewardsBeingClaimed"
+        data-cy="rewards-being-claimed"
       >{{rewardsBeingClaimed| tokenAmount}} {{ $t('views.rewards.will_be_reclaimed_after_next_election') }}</div>
       <div v-else>
         <h6>

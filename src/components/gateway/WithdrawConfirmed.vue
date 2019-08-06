@@ -39,6 +39,7 @@ export default class WithdrawConfirmed extends Vue {
   chain = ""
 
   completeWithdrawalHandler() {
+
     if (this.chain === "ethereum") {
       gatewayModule.ethereumWithdraw(this.symbol)
     } else if (this.chain === "binance") {
@@ -56,12 +57,8 @@ export default class WithdrawConfirmed extends Vue {
 
   get amount(): BN | undefined | "" {
     if (!this.receipt) return ""
-    try {
-      // @ts-ignore
-      return formatTokenAmount(this.receipt.tokenAmount, tokenService.getTokenbySymbol(this.symbol).decimals)
-    } catch (err) {
-      console.log(err)
-    }
+    // @ts-ignore
+    return formatTokenAmount(this.receipt.tokenAmount, tokenService.getTokenbySymbol(this.symbol).decimals)
   }
 
   get state(): DashboardState {

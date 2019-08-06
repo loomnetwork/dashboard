@@ -413,7 +413,7 @@ async function claimRewards(context: ActionContext) {
   )
   if (limboDelegations!.delegationsArray.length > 0) {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_dpos_reward").toString()) // add amount
-    await contract.unbondAsync(limboValidator, limboDelegations!.amount, 0)
+    await contract.unbondAsync(limboValidator, 0, 0)
   }
   try {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_reward").toString()) // add amount

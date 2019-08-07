@@ -94,7 +94,6 @@ export default class WithdrawConfirmed extends Vue {
       eth: "ethereum",
       tron: "tron",
     }
-    debugger
     const chain = chainMappings[chainId]
     const contractAddress = receipt.tokenContract.local
     const contractAddrStr = contractAddress.toString().toLowerCase()

@@ -282,7 +282,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     feedbackModule.setStep(i18n.t("feedback_msg.step.depositing_eth").toString())
     try {
       const tx = await gateway.deposit(weiAmount, context.rootState.ethereum.address)
-      if (tx.transactionHash) gatewayModule.checkTxStatus(tx.transactionHash)
+      if (tx.transactionHash) await gatewayModule.checkTxStatus(tx.transactionHash)
       feedbackModule.endTask()
     } catch (e) {
       feedbackModule.endTask()

@@ -57,8 +57,13 @@ export default class WithdrawConfirmed extends Vue {
 
   get amount(): BN | undefined | "" {
     if (!this.receipt) return ""
-    // @ts-ignore
-    return formatTokenAmount(this.receipt.tokenAmount, tokenService.getTokenbySymbol(this.symbol).decimals)
+    try {
+      // @ts-ignore
+      return formatTokenAmount(this.receipt.tokenAmount, tokenService.getTokenbySymbol(this.symbol).decimals)
+    } catch (err) {
+      console.error(err)
+    }
+
   }
 
   get state(): DashboardState {
@@ -89,7 +94,6 @@ export default class WithdrawConfirmed extends Vue {
       eth: "ethereum",
       tron: "tron",
     }
-
     const chain = chainMappings[chainId]
     const contractAddress = receipt.tokenContract.local
     const contractAddrStr = contractAddress.toString().toLowerCase()
@@ -101,10 +105,14 @@ export default class WithdrawConfirmed extends Vue {
       const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join("")
       tokenInfo = tokenService.getTokenbySymbol(symbol)
     } else {
-      tokenInfo = tokenService.tokenFromAddress(contractAddrStr, chain)
+      try {
+        tokenInfo = tokenService.tokenFromAddress(contractAddrStr, chain)
+      } catch (err) {
+        console.error(err)
+      }
     }
 
-    if (tokenInfo !== null) {
+    if (tokenInfo) {
       this.symbol = tokenInfo.symbol
       this.chain = chain
     } else if (contractAddrStr === this.state.ethereum.contracts.mainGateway.toLowerCase()) {

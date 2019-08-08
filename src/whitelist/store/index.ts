@@ -51,6 +51,7 @@ export const whiteListModule = {
   setUserDeployersAddress: builder.commit(mutations.setUserDeployersAddress),
   setDefaultTiers: builder.commit(mutations.setDefaultTiers),
   setDeployedContractAddress: builder.commit(mutations.setDeployedContractAddress),
+  setDefaultDeployedContractAddress: builder.commit(mutations.setDefaultDeployedContractAddress),
 
   createContract: builder.dispatch(createContract),
   addDeployer: builder.dispatch(addDeployer),
@@ -64,7 +65,7 @@ export const whiteListModule = {
  *
  * @param context
  */
-async function createContract(context: WhiteListContext) {
+export async function createContract(context: WhiteListContext) {
   const client = context.rootState.plasma.client!
   const caller = await plasmaModule.getCallerAddress()
   const contract = await UserDeployerWhitelist.createAsync(client, caller)
@@ -76,7 +77,7 @@ async function createContract(context: WhiteListContext) {
  * @param context
  * @param payload
  */
-async function getTierInfo(
+export async function getTierInfo(
   context: WhiteListContext,
   payload: { tierID: TierID },
 ) {
@@ -95,7 +96,7 @@ async function getTierInfo(
  * @param context
  * @param payload
  */
-async function addDeployer(
+export async function addDeployer(
   context: WhiteListContext,
   payload: { deployer: string; tier: ITier },
 ) {
@@ -114,6 +115,7 @@ async function addDeployer(
     })
     log("approved", approvedResult)
   } catch (error) {
+    console.log("catch", error)
     feedbackModule.endTask()
     return
   }
@@ -148,7 +150,7 @@ async function addDeployer(
  *
  * @param context
  */
-async function getDeployers(context: WhiteListContext) {
+export async function getDeployers(context: WhiteListContext) {
   const chainId = context.rootState.plasma.chainId
   const accountString = context.rootState.plasma.address
   const contract = context.state.userDeployerWhitelist!
@@ -164,8 +166,8 @@ async function getDeployers(context: WhiteListContext) {
   }
   const deployedContractAddress = {}
   deployerAddresses.forEach((address) => { deployedContractAddress[address.hex] = [] })
-  mutations.setUserDeployersAddress(context.state, deployerAddresses)
-  mutations.setDefaultDeployedContractAddress(context.state, deployedContractAddress)
+  whiteListModule.setUserDeployersAddress(deployerAddresses)
+  whiteListModule.setDefaultDeployedContractAddress(deployedContractAddress)
 }
 
 /**
@@ -173,7 +175,7 @@ async function getDeployers(context: WhiteListContext) {
  * @param context
  * @param payload
  */
-async function getDeployedContractAddresses(context: WhiteListContext, payload: {deployerAddress: Address}) {
+export async function getDeployedContractAddresses(context: WhiteListContext, payload: {deployerAddress: Address}) {
   const contract = context.state.userDeployerWhitelist!
   let contractAddresses: IDeployedContract[] | [] = []
 
@@ -216,7 +218,7 @@ function formatDeployersAddress(
  *
  * @param context
  */
-async function generateSeeds(context: WhiteListContext) {
+export async function generateSeeds(context: WhiteListContext) {
   feedbackModule.setTask(i18n.t("feedback_msg.task.new_key").toString())
   feedbackModule.setStep(i18n.t("feedback_msg.step.generating_new_key").toString())
 

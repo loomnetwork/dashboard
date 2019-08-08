@@ -1,19 +1,12 @@
 import "mocha"
-import { getStoreBuilder } from "vuex-typex"
-import { Address, LocalAddress, CryptoUtils, Client } from "loom-js"
+import { Address, Client } from "loom-js"
 import { TierID } from "loom-js/dist/proto/user_deployer_whitelist_pb"
-import { generateMnemonic, mnemonicToSeedSync } from "bip39"
 import BN from "bn.js"
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
 import { WhiteListState, DeployerAddress, DeployedContractAddress } from "../types"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
-import { sha256 } from "js-sha256"
-import { i18n } from "@/i18n"
-import { plasmaModule } from "@/store/plasma"
-import { feedbackModule } from "@/feedback/store"
 import * as mutations from "../mutations"
 import { expect } from "chai"
-import sinon from "sinon"
 
 const initialState = (): WhiteListState => {
   return {
@@ -29,7 +22,7 @@ const initialState = (): WhiteListState => {
   }
 }
 
-describe.only("Whitelist, mutations test", () => {
+describe("Whitelist, mutations test", () => {
   let whiteListState: WhiteListState
   // 0x0000000000000000000000000000000000000
   const defaultAddress = "default:0x" + "".padEnd(40, "0")

@@ -143,6 +143,7 @@ describe("Whitelist, actions test", () => {
     const deployAddress = new Address(rootState.plasma.client.chainId, LocalAddress.fromHexString(addressString)) 
 
     before(async () => {
+      plasmaModuleStub.approve.reset()
       plasmaModuleStub.getCallerAddress.reset()
       plasmaModuleStub.getCallerAddress.resolves(address)
 
@@ -216,6 +217,7 @@ describe("Whitelist, actions test", () => {
     // const mnemonicToSeedSyncStub = sinon.stub(mnemonicToSeedSync)
 
     before(async () => {
+      cryptoUtilsStub.Uint8ArrayToB64.reset()
       // @ts-ignore
       await generateSeeds({ ...{state}, ...{rootState} })
     })

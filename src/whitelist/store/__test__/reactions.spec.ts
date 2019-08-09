@@ -1,29 +1,15 @@
 import "mocha"
-import { plasmaModuleStub, feedbackModuleStub } from "@/dpos/store/__test__/_helpers"
-import { Address, LocalAddress, CryptoUtils, Client } from "loom-js"
-import { shallowMount } from "@vue/test-utils"
-import { TierID } from "loom-js/dist/proto/user_deployer_whitelist_pb"
-import { generateMnemonic, mnemonicToSeedSync } from "bip39"
-import BN from "bn.js"
+import { PlasmaState, PlasmaConfig } from "@/store/plasma/types"
+import { Address } from "loom-js"
 import { UserDeployerWhitelist } from "loom-js/dist/contracts"
-import { WhiteListState, DeployerAddress, DeployedContractAddress } from "../types"
-import { ITier, IDeployer, IDeployedContract } from "loom-js/dist/contracts/user-deployer-whitelist"
-import { sha256 } from "js-sha256"
+import { WhiteListState } from "../types"
 import sinon from "sinon"
-import { TransferRequest } from '@/store/plasma/types';
-import { whiteListModule,
-  createContract,
-  getTierInfo,
-  addDeployer,
-  getDeployers,
-  getDeployedContractAddresses,
-  generateSeeds } from "@/whitelist/store/index"
 import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
 import { whiteListReaction } from "../reactions"
 import { whiteListModuleStub } from "./_helpers"
-import * as mutations from "../mutations"
-import { timer } from 'rxjs';
+import { timer } from "rxjs";
+import BN from "bn.js"
 
 const whiteListstate: WhiteListState = {
   userDeployerWhitelist: null,
@@ -37,19 +23,59 @@ const whiteListstate: WhiteListState = {
   },
 }
 
+const initialState: PlasmaState = {
+  networkId: "",
+  chainId: "",
+  endpoint: "",
+  historyUrl: "",
+  // todo move these out of the state
+  client: null, // createClient(configs.us1),
+  web3: null,
+  provider: null,
+  ethersProvider: null,
+  signer: null,
+  address: "",
+  appId: {
+    private:
+      "nGaUFwXTBjtGcwVanY4UjjzMVJtb0jCUMiz8vAVs8QB+d4Kv6+4TB86dbJ9S4ghZzzgc6hhHvhnH5pdXqLX4CQ==",
+    public: "",
+    address: "0xcfa12adc558ea05d141687b8addc5e7d9ee1edcf",
+  },
+  coins: {
+    LOOM: {
+      balance: new BN("0"),
+      loading: false,
+      decimals: 18,
+    },
+    ETH: {
+      balance: new BN("0"),
+      loading: false,
+      decimals: 18,
+    },
+    // bnb: {
+    //   balance: new BN("0"),
+    //   loading: false,
+    // },
+  },
+  selectedToken: "",
+  blockExplorer: "",
+  loomGamesEndpoint: "",
+  history: [],
+}
+
 const address = Address.fromString("default:0x" + "".padEnd(40, "0"))
 const addressString = address.local.toString()
 
-describe.only("Whitelist, reactions test", () => {
+describe("Whitelist, reactions test", () => {
   const store = getStoreBuilder<DashboardState>().vuexStore()
 
   before(async () => {
     whiteListModuleStub.createContract.reset()
     store.state.whiteList = whiteListstate
+    store.state.plasma = initialState
     // @ts-ignore
     whiteListReaction(store)
     store.state.plasma.address = addressString
-    whiteListModuleStub.addDeployer.resolves()
   })
 
   it("should calls whitelistModule.createContract when state.plasma.address mutated", () => {
@@ -65,6 +91,7 @@ describe.only("Whitelist, reactions test", () => {
   })
 
   it.skip("should calls whiteListModule.getDeployers after whiteListModule.addDeployer on actions", () => {
+    whiteListModuleStub.addDeployer.resolves()
     sinon.assert.calledOnce(whiteListModuleStub.getDeployers)
   })
 })

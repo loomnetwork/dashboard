@@ -30,7 +30,7 @@ describe("Whitelist, mutations test", () => {
   const deployerWhitelistConstructor = {
     contractAddr: Address.fromString(defaultAddress),
     callerAddr: Address.fromString(defaultAddress),
-    client: new Client("us1", "https://dev-dashboard.dappchains.com"),
+    client: {} as Client,
   }
 
   const deployerAddressDummy: DeployerAddress[] = [{

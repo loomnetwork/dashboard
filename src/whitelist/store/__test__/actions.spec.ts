@@ -10,13 +10,13 @@ import { ITier, IDeployer, IDeployedContract } from "loom-js/dist/contracts/user
 import { sha256 } from "js-sha256"
 import sinon from "sinon"
 import { TransferRequest } from '@/store/plasma/types';
-import { whiteListModule,
-  createContract,
-  getTierInfo,
-  addDeployer,
-  getDeployers,
-  getDeployedContractAddresses,
-  generateSeeds } from "@/whitelist/store/index"
+import { createContract,
+         getTierInfo,
+         addDeployer,
+         getDeployers,
+         getDeployedContractAddresses,
+         generateSeeds } from "@/whitelist/store/index"
+import { whiteListModuleStub } from "./_helpers"
 
 const state: WhiteListState = {
     userDeployerWhitelist: null,
@@ -30,13 +30,13 @@ const state: WhiteListState = {
     },
   }
 
-describe.only("Whitelist, actions test", () => {
+describe("Whitelist, actions test", () => {
   const address = Address.fromString("default:0x" + "".padEnd(40, "0"))
   const addressString = address.local.toString()
   const client = {} as Client
   const deployerWhitelistStub = sinon.stub(UserDeployerWhitelist)
   const userDeployerWhitelist = sinon.mock(UserDeployerWhitelist.prototype)
-  const whiteListModuleStub = sinon.stub(whiteListModule)
+  // const whiteListModuleStub = sinon.stub(whiteListModule)
   const deployerWhitelistConstructor = {
     contractAddr: address,
     callerAddr: address,

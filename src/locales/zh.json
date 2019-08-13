@@ -482,7 +482,7 @@
       "account_mapping_modal": {
         "description": "This is the first time you are accessing the dashboard with this account.",
         "choose": "Choose weither to map to a new loom account or an existing one.",
-        "map_to": "Map to an existing loom account",
+        "map_to": "Map to an existing loom account (for validators)",
         "new_account": "Create a new account",
         "input_help": "The private key is used to sign the mapping and is then discarded."
       },

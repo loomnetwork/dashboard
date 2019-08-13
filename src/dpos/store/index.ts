@@ -314,7 +314,7 @@ function getReferrer() {
  */
 export async function redelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask(i18n.t("feedback_msg.task.redelegating").toString())
-  feedback.setStep(i18n.t("feedback_msg.step.scheduling_redelegate").toString()) // amount validator
+  feedback.setStep(i18n.t("feedback_msg.step.scheduling_redelgate").toString()) // amount validator
   try {
     await context.state.contract!.redelegateAsync(
       delegation.validator.address,

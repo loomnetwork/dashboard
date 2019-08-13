@@ -40,7 +40,7 @@
         <dt>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }}</dt>
         <dd>{{validator.stakedAmount.add(validator.whitelistAmount) | tokenAmount(18,0)}}</dd>
         <dt>{{ $t('components.validator_extended_detail.fee') }}</dt>
-        <dd>{{validator.fee}}</dd>
+        <dd>{{validator.fee}}%</dd>
       </dl>
     </section>
     <b-card tag="section" v-if="!!state.plasma.address" class="user-stakes" no-body>

@@ -15,14 +15,14 @@
       <b-form-group>
         <b-form-radio
           v-model="mappingChoice"
+          name="mapping-choice"
+          value="generate"
+        >{{ $t('components.modals.account_mapping_modal.new_account') }}</b-form-radio>        
+        <b-form-radio
+          v-model="mappingChoice"
           name="mapping-existing"
           value="existing"
         >{{ $t('components.modals.account_mapping_modal.map_to') }}</b-form-radio>
-        <b-form-radio
-          v-model="mappingChoice"
-          name="mapping-choice"
-          value="generate"
-        >{{ $t('components.modals.account_mapping_modal.new_account') }}</b-form-radio>
       </b-form-group>
       <div v-if="mappingChoice === 'existing'">
         <div class="mb-2">

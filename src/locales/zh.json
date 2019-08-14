@@ -62,11 +62,11 @@
       "create_account": "创建账户",
       "restore_account": "恢复帐户",
       "ask_from_relentless_marketplace": "你是从 Relentless 交易市场过来的吗?",
-      "if_from_relentless_marketplace": "如果是的话，你需要将你的交易市场账号关联这个锁仓管理面版账号。",
-      "link_my_account": "关联我的账号",
+      "if_from_relentless_marketplace": "如果是的话，你需要将你的交易市场账户关联这个锁仓管理面版账户。",
+      "link_my_account": "关联我的账户",
       "not_from_relentless_marketplace": "不，我并不是从 Relentless 交易市场过来的",
       "you_sure": "你确定吗？",
-      "warn_note": "请注意：如果你创建一个新的 Plasma 账号，而没有关联你的 Relentless 账号，你将无法获取你在 Relentless 交易市场上的资产。",
+      "warn_note": "请注意：如果你创建一个新的 Plasma 账户，而没有关联你的 Relentless 账户，你将无法获取你在 Relentless 交易市场上的资产。",
       "create_new_account": "创建新账户",
       "select_wallet": "选择钱包",
       "wallets": {
@@ -74,12 +74,12 @@
         "ledger_via_metamask": "Ledger (通过 Metamask)",
         "trezor_via_metamask": "Trezor (通过 Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
-        "explore": "Explore"
+        "explore": "直接输入"
       },
-      "no_metamask": "Looks like you don't have {metamask} extension",
-      "get_one": "Get one here!",
-      "now_deprecated": "Now deprecated",
-      "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
+      "no_metamask": "看起来你没有装 {metamask} 扩展",
+      "get_one": "装一个吧！",
+      "now_deprecated": "现已不建议使用",
+      "recommend_use_ledger_via_metamask": "我们建议使用 {ledgerMetamask}。"
     },
     "help": {
       "what_is_plasma_chain": "PlasmaChain 是什么？",
@@ -131,14 +131,14 @@
       "yes_if_the_protocol_rules": "有这种可能。如果不遵循协议规定，验证者可能被“扣罚”。这意味着他们将被没收一部分锁定的代币，包括已委托给其股权池的代币。扣罚有助于阻止恶意行为，并维护一个每个人都遵守同样规则的系统。它的目的是让不诚实和错误的行为付出超出其价值的代价。例如，提交一个无效的区块、尝试双倍花费、和/或遇到停机都将导致扣罚。最终确定后，我们将发布具体的扣罚细则。",
       "where_do_the_tokens_go": "扣罚的代币会去哪里？",
       "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。",
-      "check_your_balance": "Check your token balances",
-      "deposit_to_plasmachain": "Deposit to Plasmachain from Ethereum",
-      "withdraw_to_ethereum": "Withdraw to Ethereum",
-      "transfer_token": "Transfer tokens to other PlasmaChain accounts",
-      "check_your_asset": "Check your Relentless assets (more coming soon)",
-      "transfer_asset_to_other": "Transfer assets to other addresses",
-      "in_order_to_deploy_contract": "In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.",
-      "adding_key_requires": "Adding a key requires you to stake tokens."
+      "check_your_balance": "查看你的代币余额",
+      "deposit_to_plasmachain": "从以太坊存入到 PlasmaChain",
+      "withdraw_to_ethereum": "提取到以太坊",
+      "transfer_token": "将代币转移到其他 PlasmaChain 账户",
+      "check_your_asset": "查看你的 Relentless 资产（更多功能即将到来）",
+      "transfer_asset_to_other": "将资产转移到其他地址",
+      "in_order_to_deploy_contract": "要部署合约到 PlasmaChain，你需要将你的部署密钥加入白名单。可以在下方管理你的密钥、将现有的密钥加入白名单或者生成一个新密钥。",
+      "adding_key_requires": "添加密钥需要你锁定代币。"
     },
     "staking_guide": {
       "intro": "Congratulations on your decision to stake LOOM and help secure PlasmaChain! This guide will walk you through the steps needed to stake your LOOM, and the various actions you can take after you’ve staked.",
@@ -496,7 +496,7 @@
       "network": "Network: ",
       "sign_wallet_title": "Sign Your wallet",
       "account_mapped_title": "Account Mapped",
-      "metamask_changed": "你刚刚切换了MetaMask帐户。 为避免任何意外行为，应用程序将重新加载",
+      "metamask_changed": "你刚刚切换了 MetaMask 帐户。 为避免任何意外行为，应用程序将重新加载",
       "metamask_error": "Metamask 错误！？",
       "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
       "mapping_error": "映射错误！？",

@@ -646,7 +646,7 @@
     },
     "step": {
       "delegating": "Delegating...",
-      "scheduling_redelgate": "Scheduling redelegation...",
+      "scheduling_redelegate": "Scheduling redelegation...",
       "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
       "undelegating_from": "Undelegating from ",
       "checking_reward": "Checking rewards...",

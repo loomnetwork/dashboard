@@ -5,7 +5,7 @@
     </header>
     <b-nav class="staking" vertical>
       <b-nav-item
-        v-if="false"
+        v-if="state.env !== 'production'"
         to="/analytics"
         class="router"
         exact-active-class="router-active"

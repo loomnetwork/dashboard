@@ -6,8 +6,7 @@ import { HasPlasmaState } from "@/store/plasma/types"
 import { ZERO } from "@/utils"
 import BN from "bn.js"
 import { Address, LocalAddress } from "loom-js"
-import { DPOS3, ICandidate, IValidator } from "loom-js/dist/contracts/dpos3"
-
+import { DPOS3, ICandidate, IValidator, IDelegation } from "loom-js/dist/contracts/dpos3"
 import bigInt from "big-integer"
 
 import {
@@ -78,6 +77,7 @@ export class Validator implements IValidator, ICandidate {
   isBootstrap: boolean = false
   active: boolean = false
   addr: string = ""
+  allDelegations: Array<IDelegation> = []
 
   setCandidateData(c: ICandidate) {
     Object.assign(this, c)

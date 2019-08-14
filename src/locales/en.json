@@ -179,7 +179,8 @@
       "go_to_validitor": "Go to the Validators page and click on the validator you would like to delegate to.",
       "specific_validator": "On the specific validator’s page, scroll down and press the “Stake Tokens” button.",
       "pop_up_ask": "A pop-up will ask you how many LOOM you wish to stake.",
-      "locktime_bonus": "Select a locktime bonus. See this {article} for more information about locktime bonuses.",
+      "locktime_bonus": "Select a locktime bonus. See this {link} for more information about locktime bonuses.",
+      "locktime_bonus_link": "https://medium.com/loom-network/plasmachain-validator-staking-economics-part-1-e816d5825849",
       "press_delegate": "Press the “Delegate” button.",
       "asked_to_sign": "You will be asked to sign the transaction twice. The first time is to approve the transaction details and the second time is to actually sign the transfer of funds.",
       "claiming_your_rewards": "Claiming Your Rewards",
@@ -229,7 +230,7 @@
       "8_step_2": "Sign the transaction",
       "go_to_validator_page": "Go to the validator’s page (click on a specific validator from the Validators page), scroll down, and press the “Consolidate” button.",
       "once_the_transaction": "Once the transaction has been signed, you’ll see the update at the end of the current election cycle.",
-      "any_questions": "If you have any questions, please see our Staking F.A.Q."
+      "any_questions": "If you have any questions, please see our {link}."
     },
     "history": {
       "your_history": "Your History",

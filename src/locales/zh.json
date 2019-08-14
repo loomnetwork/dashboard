@@ -34,10 +34,10 @@
     "input_address_invalid_chain": "无效的 {chain} 地址。",
     "error_try_again": "发生错误，请重试。",
     "no_event_found": "这个链或代币上未发现任何事件",
-    "no_token_found": "Token {tokenName} not found",
-    "transaction_out_of_gas": "Transaction out of gas. Consider increasing the gas limit"
+    "no_token_found": "未找到 {tokenName} 代币",
+    "transaction_out_of_gas": "事务 gas 不足。请考虑增加 gas"
   },
-  "transfer_all": "All ({amount} LOOM)",
+  "transfer_all": "全部 ({amount} 个 LOOM)",
   "views": {
     "candidate_detail": {
       "www_candidate_com": "www.candidate.com",
@@ -61,11 +61,11 @@
       "sign_out": "退出",
       "create_account": "创建账户",
       "restore_account": "恢复帐户",
-      "ask_from_relentless_marketplace": "Are you from Relentless Marketplace ?",
-      "if_from_relentless_marketplace": "If you are, looks like you have to link your marketplace account to this dashboard account",
-      "link_my_account": "Link my account",
-      "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
-      "you_sure": "Are you sure ?",
+      "ask_from_relentless_marketplace": "你是从 Relentless 交易市场过来的吗?",
+      "if_from_relentless_marketplace": "如果是的话，你需要将你的交易市场账号关联这个锁仓管理面版账号。",
+      "link_my_account": "关联我的账号",
+      "not_from_relentless_marketplace": "不，我并不是从 Relentless 交易市场过来的",
+      "you_sure": "你确定吗？",
       "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
       "create_new_account": "Create new account",
       "select_wallet": "Select wallet",

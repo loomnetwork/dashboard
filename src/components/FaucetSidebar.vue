@@ -128,6 +128,10 @@ export default class FaucetSidebar extends Vue {
       ],
       help: [
         {
+          to: "/staking-guide",
+          text: "components.faucet_sidebar.staking_guide",
+        },
+        {
           to: "/faq",
           text: "components.faucet_sidebar.faq",
         },

@@ -96,11 +96,11 @@ const router = new VueRouter({
       name: "blockexplorer",
       component: BlockExplorer,
     },
-    // {
-    //   path: "/analytics",
-    //   name: "analytics",
-    //   component: Analytics,
-    // },
+    {
+      path: "/analytics",
+      name: "analytics",
+      component: Analytics,
+    },
     {
       path: "/feedback",
       name: "feedback",
@@ -122,6 +122,7 @@ const router = new VueRouter({
       path: "/analytics",
       name: "analytics",
       component: Analytics,
+      beforeEnter: requireAccount,
     },
     {
       path: "/",

@@ -143,6 +143,7 @@ export async function refreshValidators(ctx: ActionContext) {
       const node = getOrCreate(addr)
       node.stakedAmount = d.delegationTotal
       node.totalStaked = node.whitelistAmount.add(d.delegationTotal)
+      node.allDelegations = d.delegationsArray
     })
   // use the address for those without names
   nodes
@@ -314,7 +315,7 @@ function getReferrer() {
  */
 export async function redelegate(context: ActionContext, delegation: Delegation) {
   feedback.setTask(i18n.t("feedback_msg.task.redelegating").toString())
-  feedback.setStep(i18n.t("feedback_msg.step.scheduling_redelgate").toString()) // amount validator
+  feedback.setStep(i18n.t("feedback_msg.step.scheduling_redelegate").toString()) // amount validator
   try {
     await context.state.contract!.redelegateAsync(
       delegation.validator.address,

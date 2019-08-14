@@ -66,13 +66,13 @@
       "link_my_account": "关联我的账号",
       "not_from_relentless_marketplace": "不，我并不是从 Relentless 交易市场过来的",
       "you_sure": "你确定吗？",
-      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
-      "create_new_account": "Create new account",
-      "select_wallet": "Select wallet",
+      "warn_note": "请注意：如果你创建一个新的 Plasma 账号，而没有关联你的 Relentless 账号，你将无法获取你在 Relentless 交易市场上的资产。",
+      "create_new_account": "创建新账户",
+      "select_wallet": "选择钱包",
       "wallets": {
         "metamask": "Metamask",
-        "ledger_via_metamask": "Ledger (via Metamask)",
-        "trezor_via_metamask": "Trezor (via Metamask)",
+        "ledger_via_metamask": "Ledger (通过 Metamask)",
+        "trezor_via_metamask": "Trezor (通过 Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
         "explore": "Explore"
       },

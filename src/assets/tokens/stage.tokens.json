@@ -7,6 +7,14 @@
     "plasma": "0xe288d6eec7150d6a22fde33f0aa2d81e06591c4d"
   },
   {
+    "symbol": "ETH",
+    "name": "Ether",
+    "decimals": 18,
+    "plasma": "0x0000000000000000000000000000000000000000",
+    "ethereum": "0x0000000000000000000000000000000000000000",
+    "binance": ""
+  },
+  {
     "symbol": "BHPC",
     "name": "BHPCToken",
     "decimals": 18,

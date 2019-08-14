@@ -7,6 +7,14 @@
     "ethereum": "0xA4e8C3Ec456107eA67d3075bF9e3DF3A75823DB0"
   },
   {
+    "symbol": "ETH",
+    "name": "Ether",
+    "decimals": 18,
+    "plasma": "0x0000000000000000000000000000000000000000",
+    "ethereum": "0x0000000000000000000000000000000000000000",
+    "binance": ""
+  },
+  {
     "symbol": "PAY",
     "name": "PAYToken",
     "decimals": 18,

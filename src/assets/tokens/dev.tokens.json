@@ -7,6 +7,14 @@
     "plasma": "0xcd9bfe0d35c054305ee1b7f3a2677c1bbbb74a9f"
   },
   {
+    "symbol": "ETH",
+    "name": "Ether",
+    "decimals": 18,
+    "plasma": "0x0000000000000000000000000000000000000000",
+    "ethereum": "0x0000000000000000000000000000000000000000",
+    "binance": ""
+  },
+  {
     "symbol": "OMG",
     "name": "OMGToken",
     "decimals": 18,

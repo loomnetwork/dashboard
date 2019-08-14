@@ -392,8 +392,19 @@ export async function checkTxStatus(context: ActionContext, tx: string) {
     .get(`${api}?module=transaction&action=getstatus&txhash=${tx}`)
     .then((response) => {
       const { isError, errDescription } = response.data.result
-      if (isError === "1" && errDescription === "out of gas") {
-        feedbackModule.showError(i18n.t("messages.transaction_out_of_gas").toString())
+      if (isError === "0") {
+        fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
+      } else {
+        switch (errDescription) {
+          case "out of gas":
+            feedbackModule.showError(i18n.t("messages.transaction_out_of_gas").toString())
+            break
+
+          default:
+            console.error(errDescription)
+            fb.showError(i18n.t("components.gateway.deposit.failure").toString())
+            break
+        }
       }
     })
     .catch((e) => {

@@ -36,11 +36,7 @@
 <script lang="ts">
 import { Component, Watch, Vue, Prop, Provide } from "vue-property-decorator"
 import VirtualList from "vue-virtual-scroll-list"
-import Toptokens from "@/data/topTokensSymbol.json"
-import { PlasmaState } from "../../store/plasma/types"
 import { plasmaModule } from "../../store/plasma"
-import { DashboardState } from "@/types"
-import BN from "bn.js"
 import { tokenService, TokenData } from "@/services/TokenService"
 
 @Component({
@@ -51,14 +47,6 @@ import { tokenService, TokenData } from "@/services/TokenService"
 export default class AddTokenModal extends Vue {
   searchText: string = ""
   filteredTokens: TokenData[] = []
-
-  get state(): DashboardState {
-    return this.$store.state
-  }
-
-  get plasma(): PlasmaState {
-    return this.state.plasma
-  }
 
   async mounted() {
     this.filterToken()

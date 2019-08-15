@@ -205,7 +205,7 @@
           <b-collapse id="collaspe-2">
             <b-card-body>
               <b-card-text>
-                <h3 class="header-grey">{{ $t('views.staking_guide.delegate_loom') }}</h3>
+                <h3 class="header-grey">{{ $t('views.staking_guide.claim_rewards') }}</h3>
                 <p>{{ $t('views.staking_guide.steps') }}</p>
                 <ol>
                   <li>{{ $t('views.staking_guide.4_step_1') }}</li>

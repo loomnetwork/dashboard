@@ -10,20 +10,23 @@
     <b-card>
       <h6>{{ $t('components.modals.add_token_modal.token_symbol') }}</h6>
       <b-form-input
-        v-model="selectedToken"
+        v-model="searchText"
         list="token-symbol"
         id="input-with-list"
         :placeholder="$t('input_placeholder.search')"
+        type="search"
       ></b-form-input>
       <div class="virtual-list mt-3">
         <virtual-list :size="30" :remain="8">
           <div
-            v-for="token in filteredSymbols"
-            @click="addToken(token)"
+            v-for="token in filteredTokens"
+            @click="addToken(token.symbol)"
             class="list-item"
-            :value="token"
-            :key="token"
-          >{{ token }}</div>
+            :key="token.plasma"
+          >
+            <h6 class="mb-1">{{ token.symbol }}</h6>
+            <small>{{ token.plasma }}</small>
+          </div>
         </virtual-list>
       </div>
     </b-card>
@@ -33,12 +36,8 @@
 <script lang="ts">
 import { Component, Watch, Vue, Prop, Provide } from "vue-property-decorator"
 import VirtualList from "vue-virtual-scroll-list"
-import Toptokens from "@/data/topTokensSymbol.json"
-import { PlasmaState } from "../../store/plasma/types"
 import { plasmaModule } from "../../store/plasma"
-import { DashboardState } from "@/types"
-import BN from "bn.js"
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 
 @Component({
   components: {
@@ -46,34 +45,24 @@ import { tokenService } from "@/services/TokenService"
   },
 })
 export default class AddTokenModal extends Vue {
-  selectedToken: string = "LOOM"
-  filteredSymbols: string[] = []
-  tokenSymbol: string[] = tokenService.getSymbols()
-
-  get state(): DashboardState {
-    return this.$store.state
-  }
-
-  get plasma(): PlasmaState {
-    return this.state.plasma
-  }
+  searchText: string = ""
+  filteredTokens: TokenData[] = []
 
   async mounted() {
     this.filterToken()
   }
+
   resetModal() {
-    this.selectedToken = ""
+    this.searchText = ""
   }
 
-  get token() {
-    return this.tokenSymbol.find((token) => token === this.selectedToken)
-  }
-
-  @Watch("selectedToken")
+  @Watch("searchText")
   filterToken() {
-    const filter = this.selectedToken.toLowerCase()
-    this.filteredSymbols = this.tokenSymbol
-      .filter((token) => (token.toLowerCase().includes(filter) || filter === ""))
+    const filter = this.searchText.toLowerCase()
+    this.filteredTokens = tokenService.tokens.filter((token) =>
+      token.symbol &&
+      (token.symbol.toLowerCase().includes(filter) || filter === ""),
+    )
   }
 
   addToken(token) {

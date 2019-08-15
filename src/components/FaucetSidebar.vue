@@ -5,7 +5,7 @@
     </header>
     <b-nav class="staking" vertical>
       <b-nav-item
-        v-if="false"
+        v-if="state.env !== 'production'"
         to="/analytics"
         class="router"
         exact-active-class="router-active"
@@ -127,6 +127,10 @@ export default class FaucetSidebar extends Vue {
         },
       ],
       help: [
+        {
+          to: "/staking-guide",
+          text: "components.faucet_sidebar.staking_guide",
+        },
         {
           to: "/faq",
           text: "components.faucet_sidebar.faq",

@@ -26,8 +26,16 @@
     "invalid_addr": "无效的接收人地址",
     "amount_input_should_less": "无效的数量。应该少于 {amount}",
     "amount_input_should_more": "无效的数量。应该多于 {amount}",
+    "amount_input_invalid_amount": "Please enter a valid amount",
+    "amount_input_only_round_amount": "Only round amounts allowed",
     "awaiting_transaction": "等待交易确认",
-    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice."
+    "metamask_hardware_wizard": "Please connect via Metamask by clicking on \"Connect Hardware wallet\" and select the wallet of choice.",
+    "input_address_cant_transfer_own": "Cannot transfer to own address.",
+    "input_address_invalid_chain": "Invalid {chain} address.",
+    "error_try_again": "An error occurred, please try again.",
+    "no_event_found": "No event found on this chain or token",
+    "no_token_found": "Token {tokenName} not found",
+    "transaction_out_of_gas": "Transaction out of gas. Consider increasing the gas limit"
   },
   "transfer_all": "All ({amount} LOOM)",
   "views": {
@@ -52,7 +60,26 @@
       "returning_user": "老用户",
       "sign_out": "退出",
       "create_account": "创建账户",
-      "restore_account": "恢复帐户"
+      "restore_account": "恢复帐户",
+      "ask_from_relentless_marketplace": "Are you from Relentless Marketplace ?",
+      "if_from_relentless_marketplace": "If you are, looks like you have to link your marketplace account to this dashboard account",
+      "link_my_account": "Link my account",
+      "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
+      "you_sure": "Are you sure ?",
+      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
+      "create_new_account": "Create new account",
+      "select_wallet": "Select wallet",
+      "wallets": {
+        "metamask": "Metamask",
+        "ledger_via_metamask": "Ledger (via Metamask)",
+        "trezor_via_metamask": "Trezor (via Metamask)",
+        "ledger_legacy": "Ledger (Legacy)",
+        "explore": "Explore"
+      },
+      "no_metamask": "Looks like you don't have {metamask} extension",
+      "get_one": "Get one here!",
+      "now_deprecated": "Now deprecated",
+      "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
     },
     "help": {
       "what_is_plasma_chain": "PlasmaChain 是什么？",
@@ -103,14 +130,26 @@
       "are_there_any_ways_to": "有没有可能丢失一些委托的代币?",
       "yes_if_the_protocol_rules": "有这种可能。如果不遵循协议规定，验证者可能被“扣罚”。这意味着他们将被没收一部分锁定的代币，包括已委托给其股权池的代币。扣罚有助于阻止恶意行为，并维护一个每个人都遵守同样规则的系统。它的目的是让不诚实和错误的行为付出超出其价值的代价。例如，提交一个无效的区块、尝试双倍花费、和/或遇到停机都将导致扣罚。最终确定后，我们将发布具体的扣罚细则。",
       "where_do_the_tokens_go": "扣罚的代币会去哪里？",
-      "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。"
+      "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。",
+      "check_your_balance": "Check your token balances",
+      "deposit_to_plasmachain": "Deposit to Plasmachain from Ethereum",
+      "withdraw_to_ethereum": "Withdraw to Ethereum",
+      "transfer_token": "Transfer tokens to other PlasmaChain accounts",
+      "check_your_asset": "Check your Relentless assets (more coming soon)",
+      "transfer_asset_to_other": "Transfer assets to other addresses",
+      "in_order_to_deploy_contract": "In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.",
+      "adding_key_requires": "Adding a key requires you to stake tokens."
     },
     "history": {
       "your_history": "我的历史记录",
       "sort_by": "排序方式：",
       "item_1": "第 1 项",
       "item_2": "第 2 项",
-      "home": "首页"
+      "home": "首页",
+      "no_activity": "No activity detected.",
+      "or_head_to_validators_page": "Or head over to the {page} to get started",
+      "validators_page": "Validators page",
+      "funds_to_plasma": "Deposit funds to the PlasmaChain"
     },
     "my_account": {
       "my_address": "我的地址",
@@ -144,9 +183,13 @@
       "to": "到"
     },
     "rewards": {
+      "rewards": "Rewards",
       "unclaimed_rewards": "未领取的奖励：",
       "you_have_yet_to_receive": "你还未得到任何奖励",
-      "claim_reward": "领取奖励"
+      "claim_reward": "领取奖励",
+      "will_be_reclaimed_after_next_election": "LOOM will be reclaimed after next election.",
+      "no_rewards": "You do not have any rewards at the moment.",
+      "total": "Total"
     },
     "validator_detail": {
       "state": "状态：",
@@ -159,14 +202,88 @@
       "unlocked": "已解除锁定",
       "no_stakes": "You have not yet staked with {name}",
       "stake_tokens": "Stake tokens",
-      "consolidate": "Consolidate"
+      "consolidate": "Consolidate",
+      "loading_validators": "Loading validators....",
+      "delegator_stake": "Delegators Stake",
+      "active": "Active",
+      "inactive": "Inactive",
+      "my_stake": "My stakes",
+      "states": {
+        "bonding": "Bonding",
+        "bonded": "Bonded",
+        "unbonding": "Unbounding",
+        "redelegating": "Redelegating"
+      }
     },
     "validator_list": {
       "no_validators_available_please_try": "连接到管理面板节点时出错。请稍后再查看。",
-      "validators": "验证者"
+      "validators": "验证者",
+      "next_election_in": "Next election in:",
+      "total_staked_amount": "Total staked amount",
+      "stake": "Stake",
+      "name": "Name"
+    },
+    "analytics": {
+      "total_amount_staked": "Total amount staked",
+      "tier_distribution": "Tier distribution"
+    },
+    "deposit_withdraw": {
+      "wallet": "Wallet",
+      "tokens": "Tokens",
+      "add_token": "Add token"
+    },
+    "mobile_account": {
+      "warning": "Warning",
+      "loom_awaiting_transfer": "LOOM awaiting transfer to plasmachain account.",
+      "resume_deposit": "Resume Deposit",
+      "election_cycle": "Election Cycle",
+      "time_left": "Time left",
+      "delegations": "Delegations"
+    },
+    "transfer_gateway": {
+      "connect_new_contracts": "Connect New Contracts",
+      "view_docs": "View Documentations",
+      "debug_mapped_contract": "Debug Mapped Contract",
+      "view_logs": "View Logs",
+      "loading": "Loading...",
+      "fields": {
+        "id": "Id",
+        "created_at": "Created At",
+        "token_owner": "Token Owner",
+        "token_kind": "Token Kind",
+        "token_amount": "Token Amount",
+        "topic": "Topic"
+      }
+    },
+    "add_key": {
+      "deployer_public_keys": "Deployer Public Keys",
+      "add_new_key": "Add New Key",
+      "no_deployer_address": "You have no deployer address yet. Use the form below to add one",
+      "no_contract": "No contract deployed",
+      "low_balance": "LOOM balance low.",
+      "whitelisting_require": "Whitelisting keys requires at least {amount} LOOM. Your balance is {balance} LOOM",
+      "deposit_more": "Deposit more LOOM to Plasmachain",
+      "generate_new": "Generate New Key",
+      "your_loom_address": "Your Loom Public Address",
+      "use_exist_or_create": "Use an existing address or creare a new one by clicking on generate new key",
+      "select_tier": "Select a tier",
+      "in_order_to_deploy": "In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.",
+      "tier": "Tier",
+      "limited_offer": "Limited time offer",
+      "coming_soon": "Coming soon",
+      "add_key": "Add key",
+      "your_balance": "Your balance : {amount} LOOM"
     }
   },
   "components": {
+    "account": {
+      "account": "Account",
+      "show_etherscan": "Show in EtherScan",
+      "show_block_explorer": "Show in Block Explorer"
+    },
+    "amount_input": {
+      "all": "All"
+    },
     "faucet_footer": {
       "loom_network": "Loom Network",
       "eth_fiddle": "EthFiddle",
@@ -201,7 +318,9 @@
       "my_staking": "我的锁定",
       "my_stakes": "我锁定的代币",
       "status": "状态",
-      "block_explorer": "区块浏览器"
+      "block_explorer": "区块浏览器",
+      "back": "Back",
+      "sign_out": "Sign out"
     },
     "faucet_sidebar": {
       "analytics": "Analytics",
@@ -211,6 +330,7 @@
       "rewards": "奖励",
       "history": "历史记录",
       "deposit_withdraw": "Deposit/Withdraw",
+      "staking": "Staking",
       "faq": "常见问题",
       "account_explorer": "Account Explorer",
       "game_assets": "游戏资产",
@@ -218,7 +338,14 @@
       "deploy_to_plasmachain": "部署到 PlasmaChain",
       "transfer_gateway": "转移网关",
       "validator_management": "验证者管理",
-      "feedback_form": "联系客服"
+      "feedback_form": "联系客服",
+      "plasma_wallet": "Plasma Wallet",
+      "developers": "Developers",
+      "help": "Help"
+    },
+    "history_event": {
+      "confirmations": "Confirmations",
+      "block_no": "Block # "
     },
     "gateway": {
       "complete_deposit": "完成存入",
@@ -234,9 +361,48 @@
         "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
         "view_confirmation": "View confirmations",
         "failure": "Deposit failed..."
+      },
+      "deposit_binance": {
+        "title_deposit": "Deposit to Plasmachain from Binance",
+        "title_success": "Success",
+        "description": "Please go to {link} and fill in the form as show below.",
+        "binance_link": "https://binance.org/en/balances",
+        "send_asset": "Send Asset",
+        "select_asset": "Select Asset",
+        "to_address": "To Address",
+        "send_amount": "Amount to send",
+        "memo": "Memo",
+        "send_amount_placeholder": "Enter the deposit amount",
+        "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
+        "next": "Next",
+        "close": "Close",
+        "back": "Back",
+        "cancel": "Cancel"
+      },
+      "deposit_form": {
+        "title": "Deposit {token} from {chain}",
+        "amount_approved": "Amount approved : ",
+        "balance": "Your token balance : "
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
+        "error": "An error occurred, please try again.",
+        "complete": "Complete withdraw",
+        "status_failed": "Withdrawal failed",
+        "status_confirmed": "Withdraw to gateway confirmed"
+      },
+      "withdraw_form_modal": {
+        "title": "Withdraw {token} to {chain}",
+        "transfer_fee": "Transfer to {chain} requires a fee of ",
+        "balance": "Your balance : ",
+        "recipient": "Recipient on {chain}",
+        "withdraw": "Withdraw"
       }
     },
     "layout": {
+      "network": "Network: ",
+      "sign_wallet_title": "Sign Your wallet",
+      "account_mapped_title": "Account Mapped",
       "metamask_changed": "你刚刚切换了MetaMask帐户。 为避免任何意外行为，应用程序将重新加载",
       "metamask_error": "Metamask 错误！？",
       "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
@@ -246,7 +412,9 @@
       "please_change_your_metamask_account": "请更改你的以太坊帐户",
       "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
       "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
-      "already_mapped": " 你选择的账户已映射。请选择新帐户。"
+      "already_mapped": " 你选择的账户已映射。请选择新帐户。",
+      "your_wallet_connected_to": "Your wallet is connected to {network}.",
+      "please_change_to": "Please change to {network}."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "请耐心等待哟，Loomy 正在努力加载！",
@@ -259,9 +427,18 @@
       },
       "faucet_delegate_modal": {
         "amount": "数量：",
+        "locktime": "Locktime",
+        "bonuses": "Bonuses",
+        "delegate": "Delegate",
+        "cancel": "Cancel",
+        "your_balance": "Your balance is {amount} LOOM",
         "locktime_bonuses": "锁定期 / 奖励：",
         "warning_please_note_that_any": "提醒一下，请注意任何额外的委托都将覆盖已存在的委托！",
-        "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。"
+        "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。",
+        "two_weeks": "2 weeks",
+        "three_months": "3 months",
+        "six_months": "6 months",
+        "one_year": "1 year"
       },
       "restore_account_modal": {
         "please_type_in_your_seed": "请在下方输入你的助记词。",
@@ -272,17 +449,82 @@
         "you_must_create_a_backup_nbsp": "You must create a backup!",
         "write_or_print_it_out": "写下来或打印出来，并保存在安全的地方。",
         "without_it_you_will_not": "没有它的话，一旦出现问题，你将无法恢复你的代币。",
-        "copy_to_clipboard": "复制到剪贴板"
+        "copy_to_clipboard": "复制到剪贴板",
+        "create_account": "Create Account",
+        "confirm_mnemonic": "I keep these seed phrase and public address somewhere safe."
       },
       "success_modal": {
         "success": "成功"
       },
       "hardware_wallet_modal": {
+        "hardware_wallet": "Hardware wallets",
         "unlock_hardware_wallet": "解锁硬件钱包",
-        "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。"
+        "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。",
+        "ledger_locked": "Please make sure your Ledger is connected, unlocked and then go tho ethereum app.",
+        "initializing": "Initializing. Please wait...",
+        "select_path": "Select a path",
+        "load_more": "Load more",
+        "use_account": "Use account",
+        "this_option_deprecated": "This option is being deprecated. We recommend using Ledger via Metamask."
       },
-      "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account."
+      "faucet_redelegate_modal": {
+        "select_validator": "Select a validator :",
+        "fee": "Fee:",
+        "total_stake": "Total Staked",
+        "redelegate": "Redelegate",
+        "target_error": "Please select a target validator",
+        "same_target_error": "Cannot redelegate to the same validator",
+        "no_validator": "No validator found."
+      },
+      "faucet_undelegate_modal": {
+        "undelegate": "Undelegate"
+      },
+      "account_mapping_modal": {
+        "description": "This is the first time you are accessing the dashboard with this account.",
+        "choose": "Choose weither to map to a new loom account or an existing one.",
+        "map_to": "Map to an existing loom account (for validators)",
+        "new_account": "Create a new account",
+        "input_help": "The private key is used to sign the mapping and is then discarded."
+      },
+      "add_token_modal": {
+        "add_new": "Add New Token",
+        "token_symbol": "Token Symbol"
+      },
+      "transfer_all_cards": {
+        "title": "Transfer All Cards",
+        "this_will_transfer": "This will transfer all of your {edition} edition cards.",
+        "amount": "Amount : ",
+        "receiver_address": "Receiver Loom Address:",
+        "confirm_transfer": "I confirm that i want to transfer {amount} cards to {receiverAddress} address.",
+        "transfer_all": "Transfer All"
+      },
+      "transfer_cards_modal": {
+        "title": "Transfer Cards",
+        "card_id": "Card Id: ",
+        "name": "Name: ",
+        "variation": "Variation: ",
+        "your_exist_card": "Your existing card: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address:",
+        "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
+        "transfer": "Transfer"
+      },
+      "transfer_packs_modal": {
+        "title": "Transfer Packs",
+        "pack_type": "Pack Type",
+        "your_exist_pack": "Your existing pack: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address: ",
+        "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
+        "transfer": "Transfer"
+      },
+      "transfer_token_form_modal": {
+        "title": "Transfer Token",
+        "token_type": "Token Type: ",
+        "balance": "Your token balance: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address: ",
+        "transfer": "Transfer"
       }
     },
     "blockExplorer": {
@@ -315,15 +557,178 @@
         "most_old": "最早的记录",
         "pending": "待处理"
       }
+    },
+    "gameAsset": {
+      "cards": {
+        "my_cards": "My Cards",
+        "edition": "Edition",
+        "all_edition": "All edition",
+        "no_card": "No cards to show",
+        "amount": "card(s)",
+        "transfer": "Transfer",
+        "transfer_all": "Transfer all cards in"
+      },
+      "packs": {
+        "my_packs": "My Packs",
+        "transfer": "Transfer"
+      }
+    },
+    "registerCandidate": {
+      "public_key": "Public key",
+      "validator_name": "Validator Name",
+      "description": "Description",
+      "website": "Website",
+      "fee": "Fee"
+    },
+    "validator_extended_detail": {
+      "validator_associated": "Validator Associated",
+      "not_validator_account": "This account {address} is not a validator account.",
+      "become_validator": "Becoming a Validator",
+      "follow_guide": "To register as a validator, please first follow the {link}.",
+      "validator_guide": "Validators guide",
+      "register_as_validator": "Registering as a validator",
+      "register_as_validator_description": "If your Validator node is up and running and its loom address is {address}, then you can register as a validator by clicking the button below.",
+      "use_form_below": "Please register your account by clicking the below.",
+      "whitelist_amount": "Whitelist amount",
+      "whitelist_amount_description": "Note: 1.25M LOOM is required for whitelisting.",
+      "register_amount": "Register Validator",
+      "register_this_account_as_a_validator": "Register this account as a validator {address}",
+      "filled_out_form": "Filled out and submit the form below.",
+      "more_detail": "More detail? Check out this {link}.",
+      "link": "link",
+      "setup_node": "Setup a node",
+      "check_out": "Check out this {link}.",
+      "public_key": "Public key",
+      "fee": "Fee",
+      "new_fee": "New fee",
+      "candidate_state": "Candidate state",
+      "max_referral_percentage": "Max referral %",
+      "slash_percentage": "Slash %",
+      "delegation_total": "Delegation Total",
+      "staked_amount": "Staked Amount",
+      "whitelist_locktime_tier": "Whitelist locktime tier"
     }
   },
   "events": {
     "ERC20Received": "Deposit",
     "event:MainnetDepositEvent": "Deposit",
     "event:MainnetWithdrawalEvent": "Withdrawal",
-    "event:WithdrawLoomCoin": "Withdraw (LOOM)",
+    "event:WithdrawLoomCoin": "Withdrawal",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
-    "TokenWithdrawn": "Token Withdrawn",
-    "ETHReceived": "Deposit (ETH)"
+    "TokenWithdrawn": "Withdrawal",
+    "LoomCoinReceived": "Deposit",
+    "ETHReceived": "Deposit"
+  },
+  "button": {
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "done": "Done",
+    "submit": "Submit"
+  },
+  "feedback_msg": {
+    "task": {
+      "delegate": "Delegate",
+      "connect_wallet": "Connecting wallet",
+      "redelegating": "Redelegating",
+      "consolidating": "Consolidating",
+      "undelegating": "Undelegating",
+      "claiming_reward": "Claiming rewards",
+      "eth_deposit": "ETH Deposit",
+      "withdraw": "withdraw",
+      "batch_transfer": "Batch Transfer",
+      "pack_transfer": "Pack transfer",
+      "adding_deployer": "Adding deployer key",
+      "new_key": "New key"
+    },
+    "step": {
+      "delegating": "Delegating...",
+      "scheduling_redelgate": "Scheduling redelegation...",
+      "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
+      "undelegating_from": "Undelegating from ",
+      "checking_reward": "Checking rewards...",
+      "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
+      "claiming_reward": "Claiming rewards...",
+      "depositing_eth": "Depositing ETH",
+      "checking_receipt": "Checking for pre-existing receipts...",
+      "check_account_mapping": "Checking account mapping",
+      "create_new_mapping": "Creating a new mapping from ethereum account",
+      "depositing_to_plasma": "Depositing to Plasmachain Gateway...",
+      "awaiting_oracle": "Awaiting Oracle signature...",
+      "complete_withdrawal_binance": "Completing withdrawal to binance...",
+      "transfering_card": "Transfering cards",
+      "transfering_pack": "Transfering packs",
+      "refresh_balance": "Refreshing balance",
+      "connecting_plasma": "Connecting to Plasmachain",
+      "adding_new_deployer": "Adding new deployer",
+      "generating_new_key": "Generating new key",
+      "approving_spending": "Approving spending of {tokenAmount} {symbol}",
+      "transfering_token": "Transfering {tokenAmount} {symbol}"
+    },
+    "error": {
+      "err_while_redelegate": "Error while redelegating. Please contact support.",
+      "err_while_undelegate": "Error while undelegating. Please contact support.",
+      "err_while_claiming": "Error while claiming rewards. Please contact support.",
+      "err_while_delegate": "Unexpected error while delegating, please contact support.",
+      "insufficient_funds": "Insufficient funds.",
+      "approval_failed": "Approval failed.",
+      "err_while_register": "Error while registering. Please contact support.",
+      "could_not_deposit_eth": "Could not deposit ETH, please make sure you pay enough gas for the transaction.",
+      "deposit_approval_failed": "Deposit approval failed.",
+      "withdraw_failed": "Withdraw failed, please try again or contact support.",
+      "supplied_key_already_mapped": "The supplied key is already mapped.",
+      "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
+      "balance_not_enough": "Your balance isn't enough. Please deposit first.",
+      "address_existed": "This address is already exists in your deployer list.",
+      "failed_to_get_receipt": "Failed to get receipt"
+    },
+    "info": {
+      "reward_claimed": "Rewards succesfully claimed.",
+      "please_track_transaction": "Please track the transaction on your wallet",
+      "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
+      "withdrawal_in_progress": "Withdrawal already in progress.",
+      "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
+      "please_sign_tx": "Please sign the tx using your wallet."
+    },
+    "success": {
+      "transaction_success": "Transaction sent successfully.",
+      "eth_addr_copied": "Ethereum address copied.",
+      "plasma_addr_copied": "Plasma address copied.",
+      "address_copied": "Address copied.",
+      "register_success": "Successfully registered."
+    },
+    "alert": {
+      "title": {
+        "withdraw_ongoing": "Withdrawal ongoing"
+      },
+      "message": {
+        "withdraw_in_process": "A withdrawal is still being processed. Please try again later.",
+        "existing_withdraw_being_process": "An existing withdrawal is currently being processed. Please try again later."
+      }
+    },
+    "require_confirmation": {
+      "title": {
+        "complete_deposit": "Complete deposit"
+      },
+      "message": {
+        "please_sign_click": "Please sign click confirm to complete your deposit."
+      }
+    }
+  },
+  "input_placeholder": {
+    "enter_amount": "Enter amount",
+    "filter": "Filter",
+    "gateway_addr": "Gateway Address",
+    "amount": "Amount",
+    "memo": "Memo text",
+    "chain_addr": "{transferChain} address",
+    "loom_private_base64": "Loom private key (base64)",
+    "search": "Search",
+    "loom_addr": "Loom Address",
+    "enter_your_addr": "Enter your address",
+    "token_name": "Token name"
   }
 }

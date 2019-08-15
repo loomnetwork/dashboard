@@ -17,11 +17,13 @@
       ></b-form-input>
       <div class="virtual-list mt-3">
         <virtual-list :size="30" :remain="8">
-          <div v-for="token in filteredSymbols"
-                  @click="addToken(token)"
-                  class="list-item"
-                  :value="token"
-                  :key="token">{{ token }}</div>
+          <div
+            v-for="token in filteredSymbols"
+            @click="addToken(token)"
+            class="list-item"
+            :value="token"
+            :key="token"
+          >{{ token }}</div>
         </virtual-list>
       </div>
     </b-card>
@@ -46,7 +48,7 @@ import { tokenService } from "@/services/TokenService"
 export default class AddTokenModal extends Vue {
   selectedToken: string = "LOOM"
   filteredSymbols: string[] = []
-  tokenSymbol: string[] = tokenService.getAllTokenSymbol()
+  tokenSymbol: string[] = tokenService.getSymbols()
 
   get state(): DashboardState {
     return this.$store.state
@@ -83,12 +85,12 @@ export default class AddTokenModal extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .virtual-list {
-    border: 1px solid #ced4da;
-    border-radius: 3px;
-  }
-  .list-item {
-    border-bottom: 1px solid #ced4da;
-    padding: 8px 12px;
-  }
+.virtual-list {
+  border: 1px solid #ced4da;
+  border-radius: 3px;
+}
+.list-item {
+  border-bottom: 1px solid #ced4da;
+  padding: 8px 12px;
+}
 </style>

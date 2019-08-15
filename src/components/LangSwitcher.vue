@@ -20,6 +20,22 @@ export default class LangSwitcher extends Vue {
       key: "zh",
       localizedName: "中文",
     },
+    {
+      key: "es",
+      localizedName: "Español",
+    },
+    {
+      key: "ja",
+      localizedName: "日本語 ",
+    },
+    {
+      key: "th",
+      localizedName: "ภาษาไทย",
+    },
+    {
+      key: "ko",
+      localizedName: "조선말/한국어",
+    },
   ]
 
   locale = "en"

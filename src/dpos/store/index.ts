@@ -143,6 +143,7 @@ export async function refreshValidators(ctx: ActionContext) {
       const node = getOrCreate(addr)
       node.stakedAmount = d.delegationTotal
       node.totalStaked = node.whitelistAmount.add(d.delegationTotal)
+      node.allDelegations = d.delegationsArray
     })
   // use the address for those without names
   nodes

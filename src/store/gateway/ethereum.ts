@@ -282,7 +282,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
     feedbackModule.setStep(i18n.t("feedback_msg.step.depositing_eth").toString())
     try {
       const tx = await gateway.deposit(weiAmount, context.rootState.ethereum.address)
-      if (tx.transactionHash) gatewayModule.checkTxStatus(tx.transactionHash)
+      if (tx.transactionHash) await gatewayModule.checkTxStatus(tx.transactionHash)
       feedbackModule.endTask()
     } catch (e) {
       feedbackModule.endTask()
@@ -392,8 +392,19 @@ export async function checkTxStatus(context: ActionContext, tx: string) {
     .get(`${api}?module=transaction&action=getstatus&txhash=${tx}`)
     .then((response) => {
       const { isError, errDescription } = response.data.result
-      if (isError === "1" && errDescription === "out of gas") {
-        feedbackModule.showError(i18n.t("messages.transaction_out_of_gas").toString())
+      if (isError === "0") {
+        fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
+      } else {
+        switch (errDescription) {
+          case "out of gas":
+            feedbackModule.showError(i18n.t("messages.transaction_out_of_gas").toString())
+            break
+
+          default:
+            console.error(errDescription)
+            fb.showError(i18n.t("components.gateway.deposit.failure").toString())
+            break
+        }
       }
     })
     .catch((e) => {

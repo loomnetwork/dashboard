@@ -142,7 +142,7 @@
     },
     "staking_guide": {
       "intro": "Congratulations on your decision to stake LOOM and help secure PlasmaChain! This guide will walk you through the steps needed to stake your LOOM, and the various actions you can take after you’ve staked.",
-      "staking_basics": "Staking Basics",
+      "staking_basics": "스테이킹 기초",
       "select_wallet": "1. Select a supported wallet and fund it with LOOM and ETH",
       "loom_plasma_support": "Loom PlasmaChain staking currently supports the following wallets:",
       "desktop_wallets": "Desktop wallets",

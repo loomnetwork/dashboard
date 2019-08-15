@@ -33,7 +33,7 @@
             <b-collapse is-nav id="nav_collapse">
               <!-- Right aligned nav items -->
               <b-navbar-nav class="mobile-nav ml-auto">
-                <b-nav-item v-if="false">
+                <b-nav-item v-if="state.env !== 'production'">
                   <h5>
                     <router-link
                       to="/analytics"

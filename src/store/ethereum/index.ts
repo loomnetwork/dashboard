@@ -35,6 +35,7 @@ import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
 import { PortisAdapter } from "./wallets/portis";
 import { FortmaticAdapter } from "./wallets/fortmatic";
+import { TestWalletAdapter } from "./wallets/test-wallet"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -46,6 +47,7 @@ const wallets: Map<string, WalletType> = new Map([
   ["ledger", LedgerAdapter],
   ["portis", PortisAdapter],
   ["fortmatic", FortmaticAdapter],
+  ["test_wallet", TestWalletAdapter],
 ])
 
 const initialState: EthereumState = {
@@ -152,7 +154,7 @@ function getERC20(token: string) {
 async function setWalletType(context: ActionContext, walletType: string) {
   const wallet = wallets.get(walletType)
   if (wallet === undefined) {
-    console.error("unsuported wallet type " + walletType)
+    console.error("unsupported wallet type " + walletType)
     // to do tell the user about the error
     return
   }

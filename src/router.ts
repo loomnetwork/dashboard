@@ -10,6 +10,7 @@ import BlockExplorer from "./views/BlockExplorer.vue"
 import Analytics from "./views/Analytics.vue"
 import MobileAccount from "./views/MobileAccount.vue"
 import Help from "./views/Help.vue"
+import StakingGuide from "./views/StakingGuide.vue"
 import GameAssets from "./views/GameAssets.vue"
 import AddKey from "@/whitelist/views/AddKey.vue"
 import DepositWithdraw from "./views/DepositWithdraw.vue"
@@ -63,6 +64,11 @@ const router = new VueRouter({
       component: Help,
     },
     {
+      path: "/staking-guide",
+      name: "Staking Guide",
+      component: StakingGuide,
+    },
+    {
       path: "/wallet",
       name: "depositeWithdraw",
       component: DepositWithdraw,
@@ -96,11 +102,11 @@ const router = new VueRouter({
       name: "blockexplorer",
       component: BlockExplorer,
     },
-    // {
-    //   path: "/analytics",
-    //   name: "analytics",
-    //   component: Analytics,
-    // },
+    {
+      path: "/analytics",
+      name: "analytics",
+      component: Analytics,
+    },
     {
       path: "/feedback",
       name: "feedback",
@@ -122,6 +128,7 @@ const router = new VueRouter({
       path: "/analytics",
       name: "analytics",
       component: Analytics,
+      beforeEnter: requireAccount,
     },
     {
       path: "/",

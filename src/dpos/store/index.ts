@@ -143,6 +143,7 @@ export async function refreshValidators(ctx: ActionContext) {
       const node = getOrCreate(addr)
       node.stakedAmount = d.delegationTotal
       node.totalStaked = node.whitelistAmount.add(d.delegationTotal)
+      node.allDelegations = d.delegationsArray
     })
   // use the address for those without names
   nodes
@@ -409,7 +410,7 @@ async function claimRewards(context: ActionContext) {
   feedback.setStep(i18n.t("feedback_msg.step.checking_reward").toString())
   const limboDelegations = await contract.checkDelegationAsync(
     limboValidator,
-    contract.caller,
+    plasmaModule.getAddress(),
   )
   if (limboDelegations!.delegationsArray.length > 0) {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_dpos_reward").toString()) // add amount

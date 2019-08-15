@@ -26,8 +26,16 @@
     "invalid_addr": "유효하지 않은 수신자 주소입니다.",
     "amount_input_should_less": "유효하지 않은 숫자입니다. {amount}보다 적어야 합니다.",
     "amount_input_should_more": "유효하지 않은 숫자입니다. {amount}보다 많아야 합니다.",
+    "amount_input_invalid_amount": "Please enter a valid amount",
+    "amount_input_only_round_amount": "Only round amounts allowed",
     "awaiting_transaction": "트랜잭션 확인을 기다리는 중입니다.",
-    "metamask_hardware_wizard": "\"하드웨어 지갑 연결\"을 클릭하여 메타마스크로 연결한 뒤, 원하는 지갑을 선택하세요."
+    "metamask_hardware_wizard": "\"하드웨어 지갑 연결\"을 클릭하여 메타마스크로 연결한 뒤, 원하는 지갑을 선택하세요.",
+    "input_address_cant_transfer_own": "Cannot transfer to own address.",
+    "input_address_invalid_chain": "Invalid {chain} address.",
+    "error_try_again": "An error occurred, please try again.",
+    "no_event_found": "No event found on this chain or token",
+    "no_token_found": "Token {tokenName} not found",
+    "transaction_out_of_gas": "Transaction out of gas. Consider increasing the gas limit"
   },
   "transfer_all": "모두 전송 ({amount} LOOM)",
   "views": {
@@ -52,7 +60,26 @@
       "returning_user": "기존 사용자",
       "sign_out": "로그아웃",
       "create_account": "계정 생성",
-      "restore_account": "계정 복구"
+      "restore_account": "계정 복구",
+      "ask_from_relentless_marketplace": "Are you from Relentless Marketplace ?",
+      "if_from_relentless_marketplace": "If you are, looks like you have to link your marketplace account to this dashboard account",
+      "link_my_account": "Link my account",
+      "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
+      "you_sure": "Are you sure ?",
+      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
+      "create_new_account": "Create new account",
+      "select_wallet": "Select wallet",
+      "wallets": {
+        "metamask": "Metamask",
+        "ledger_via_metamask": "Ledger (via Metamask)",
+        "trezor_via_metamask": "Trezor (via Metamask)",
+        "ledger_legacy": "Ledger (Legacy)",
+        "explore": "Explore"
+      },
+      "no_metamask": "Looks like you don't have {metamask} extension",
+      "get_one": "Get one here!",
+      "now_deprecated": "Now deprecated",
+      "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
     },
     "help": {
       "what_is_plasma_chain": "PlasmaChain이 무엇인가요?",
@@ -103,14 +130,26 @@
       "are_there_any_ways_to": "위임된 토큰을 잃을 수도 있나요?",
       "yes_if_the_protocol_rules": "네. 프로토콜 규칙을 준수하지 않을 경우, 검증자는 '처벌' 받을 수 있습니다. 즉, 그들의 풀에 위임된 토큰과 스테이킹 된 토큰 일부를 몰수하게 됩니다. 이러한 처벌은 악의적인 행동을 방지하고, 모두가 같은 규칙에 따라 행동하는 네트워크를 유지하는 데 도움을 줍니다. 이 시스템은 부정직하고 잘못된 행동을 하면 오히려 더 큰 비용이 들도록 설계되었습니다. 예를 들어, 유효하지 않은 블록 전송, 이중 지급 시도 및(또는) 다운 타임 발생의 경우, 처벌을 받게 됩니다. 처벌 조건이 확실히 결정되는 대로 자세한 내용을 공개할 예정입니다.",
       "where_do_the_tokens_go": "검증자들이 처벌받으면, 토큰은 어떻게 되나요?",
-      "slashed_tokens_will_be_contributed": "몰수된 토큰은 앞으로의 블록 보상을 위한 비상금으로 환원되어 네트워크에서 검증 및 스테이킹을 하는 사람들에게 지급됩니다."
+      "slashed_tokens_will_be_contributed": "몰수된 토큰은 앞으로의 블록 보상을 위한 비상금으로 환원되어 네트워크에서 검증 및 스테이킹을 하는 사람들에게 지급됩니다.",
+      "check_your_balance": "Check your token balances",
+      "deposit_to_plasmachain": "Deposit to Plasmachain from Ethereum",
+      "withdraw_to_ethereum": "Withdraw to Ethereum",
+      "transfer_token": "Transfer tokens to other PlasmaChain accounts",
+      "check_your_asset": "Check your Relentless assets (more coming soon)",
+      "transfer_asset_to_other": "Transfer assets to other addresses",
+      "in_order_to_deploy_contract": "In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.",
+      "adding_key_requires": "Adding a key requires you to stake tokens."
     },
     "history": {
       "your_history": "내 거래 내역",
       "sort_by": "정렬 기준:",
       "item_1": "아이템 1",
       "item_2": "아이템 2",
-      "home": "홈"
+      "home": "홈",
+      "no_activity": "No activity detected.",
+      "or_head_to_validators_page": "Or head over to the {page} to get started",
+      "validators_page": "Validators page",
+      "funds_to_plasma": "Deposit funds to the PlasmaChain"
     },
     "my_account": {
       "my_address": "내 주소",
@@ -144,9 +183,13 @@
       "to": "받는 사람"
     },
     "rewards": {
+      "rewards": "Rewards",
       "unclaimed_rewards": "요청하지 않은 보상:",
       "you_have_yet_to_receive": "아직 받은 보상이 없습니다.",
-      "claim_reward": "보상 요청하기"
+      "claim_reward": "보상 요청하기",
+      "will_be_reclaimed_after_next_election": "LOOM will be reclaimed after next election.",
+      "no_rewards": "You do not have any rewards at the moment.",
+      "total": "Total"
     },
     "validator_detail": {
       "state": "상태:",
@@ -159,14 +202,88 @@
       "unlocked": "잠금 해제됨",
       "no_stakes": "아직 {name}에 스테이킹하지 않았습니다.",
       "stake_tokens": "토큰 스테이크하기",
-      "consolidate": "하나로 통합하기"
+      "consolidate": "하나로 통합하기",
+      "loading_validators": "Loading validators....",
+      "delegator_stake": "Delegators Stake",
+      "active": "Active",
+      "inactive": "Inactive",
+      "my_stake": "My stakes",
+      "states": {
+        "bonding": "Bonding",
+        "bonded": "Bonded",
+        "unbonding": "Unbounding",
+        "redelegating": "Redelegating"
+      }
     },
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
-      "validators": "검증자"
+      "validators": "검증자",
+      "next_election_in": "Next election in:",
+      "total_staked_amount": "Total staked amount",
+      "stake": "Stake",
+      "name": "Name"
+    },
+    "analytics": {
+      "total_amount_staked": "Total amount staked",
+      "tier_distribution": "Tier distribution"
+    },
+    "deposit_withdraw": {
+      "wallet": "Wallet",
+      "tokens": "Tokens",
+      "add_token": "Add token"
+    },
+    "mobile_account": {
+      "warning": "Warning",
+      "loom_awaiting_transfer": "LOOM awaiting transfer to plasmachain account.",
+      "resume_deposit": "Resume Deposit",
+      "election_cycle": "Election Cycle",
+      "time_left": "Time left",
+      "delegations": "Delegations"
+    },
+    "transfer_gateway": {
+      "connect_new_contracts": "Connect New Contracts",
+      "view_docs": "View Documentations",
+      "debug_mapped_contract": "Debug Mapped Contract",
+      "view_logs": "View Logs",
+      "loading": "Loading...",
+      "fields": {
+        "id": "Id",
+        "created_at": "Created At",
+        "token_owner": "Token Owner",
+        "token_kind": "Token Kind",
+        "token_amount": "Token Amount",
+        "topic": "Topic"
+      }
+    },
+    "add_key": {
+      "deployer_public_keys": "Deployer Public Keys",
+      "add_new_key": "Add New Key",
+      "no_deployer_address": "You have no deployer address yet. Use the form below to add one",
+      "no_contract": "No contract deployed",
+      "low_balance": "LOOM balance low.",
+      "whitelisting_require": "Whitelisting keys requires at least {amount} LOOM. Your balance is {balance} LOOM",
+      "deposit_more": "Deposit more LOOM to Plasmachain",
+      "generate_new": "Generate New Key",
+      "your_loom_address": "Your Loom Public Address",
+      "use_exist_or_create": "Use an existing address or creare a new one by clicking on generate new key",
+      "select_tier": "Select a tier",
+      "in_order_to_deploy": "In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.",
+      "tier": "Tier",
+      "limited_offer": "Limited time offer",
+      "coming_soon": "Coming soon",
+      "add_key": "Add key",
+      "your_balance": "Your balance : {amount} LOOM"
     }
   },
   "components": {
+    "account": {
+      "account": "Account",
+      "show_etherscan": "Show in EtherScan",
+      "show_block_explorer": "Show in Block Explorer"
+    },
+    "amount_input": {
+      "all": "All"
+    },
     "faucet_footer": {
       "loom_network": "Loom Network",
       "eth_fiddle": "EthFiddle",
@@ -201,7 +318,9 @@
       "my_staking": "내 스테이킹",
       "my_stakes": "내 스테이크",
       "status": "상태",
-      "block_explorer": "블록 탐색기"
+      "block_explorer": "블록 탐색기",
+      "back": "Back",
+      "sign_out": "Sign out"
     },
     "faucet_sidebar": {
       "analytics": "분석",
@@ -211,6 +330,7 @@
       "rewards": "보상",
       "history": "거래 내역",
       "deposit_withdraw": "입금/인출",
+      "staking": "Staking",
       "faq": "자주 묻는 질문",
       "account_explorer": "계정 탐색기",
       "game_assets": "게임 자산",
@@ -218,7 +338,14 @@
       "deploy_to_plasmachain": "플라즈마체인에 배포하기",
       "transfer_gateway": "전송 게이트웨이",
       "validator_management": "검증자 관리",
-      "feedback_form": "고객센터에 문의하기"
+      "feedback_form": "고객센터에 문의하기",
+      "plasma_wallet": "Plasma Wallet",
+      "developers": "Developers",
+      "help": "Help"
+    },
+    "history_event": {
+      "confirmations": "Confirmations",
+      "block_no": "Block # "
     },
     "gateway": {
       "complete_deposit": "입금 완료하기",
@@ -234,9 +361,48 @@
         "confirmed": "입금이 확인되었습니다. 당신의 플라즈마 잔액은 10번 확인된 후에 업데이트될 것입니다.",
         "view_confirmation": "확인 내역 보기",
         "failure": "입금에 실패하였습니다..."
+      },
+      "deposit_binance": {
+        "title_deposit": "Deposit to Plasmachain from Binance",
+        "title_success": "Success",
+        "description": "Please go to {link} and fill in the form as show below.",
+        "binance_link": "https://binance.org/en/balances",
+        "send_asset": "Send Asset",
+        "select_asset": "Select Asset",
+        "to_address": "To Address",
+        "send_amount": "Amount to send",
+        "memo": "Memo",
+        "send_amount_placeholder": "Enter the deposit amount",
+        "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
+        "next": "Next",
+        "close": "Close",
+        "back": "Back",
+        "cancel": "Cancel"
+      },
+      "deposit_form": {
+        "title": "Deposit {token} from {chain}",
+        "amount_approved": "Amount approved : ",
+        "balance": "Your token balance : "
+      },
+      "confirm_withdrawal_modal": {
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
+        "error": "An error occurred, please try again.",
+        "complete": "Complete withdraw",
+        "status_failed": "Withdrawal failed",
+        "status_confirmed": "Withdraw to gateway confirmed"
+      },
+      "withdraw_form_modal": {
+        "title": "Withdraw {token} to {chain}",
+        "transfer_fee": "Transfer to {chain} requires a fee of ",
+        "balance": "Your balance : ",
+        "recipient": "Recipient on {chain}",
+        "withdraw": "Withdraw"
       }
     },
     "layout": {
+      "network": "Network: ",
+      "sign_wallet_title": "Sign Your wallet",
+      "account_mapped_title": "Account Mapped",
       "metamask_changed": "MetaMask 계정을 전환했습니다. 예기치 않은 오류를 방지하기 위해 앱을 재시작합니다.",
       "metamask_error": "MetaMask 오류!?",
       "please_enable_metamask_or_switch": "MetaMask를 활성화하거나, 지원되는 브라우저를 사용해 주세요.",
@@ -246,7 +412,9 @@
       "please_change_your_metamask_account": "이더리움 계좌를 변경해주세요.",
       "please_check_your_metamask_account": "이더리움 계좌 및(또는) 네트워크를 확인해주세요.",
       "sign_wallet": "지갑을 사용하여 메시지에 서명하고, 이더리움 계좌를 확인하세요. (가스 비용 없음)",
-      "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요."
+      "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요.",
+      "your_wallet_connected_to": "Your wallet is connected to {network}.",
+      "please_change_to": "Please change to {network}."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "잠시만 기다려주세요, Loomy가 처리 중입니다!",
@@ -259,9 +427,18 @@
       },
       "faucet_delegate_modal": {
         "amount": "수량:",
+        "locktime": "Locktime",
+        "bonuses": "Bonuses",
+        "delegate": "Delegate",
+        "cancel": "Cancel",
+        "your_balance": "Your balance is {amount} LOOM",
         "locktime_bonuses": "락업 기간 / 보너스:",
         "warning_please_note_that_any": "경고: 추가로 위임할 경우, 기존의 위임에 덮어씌워지니 주의하세요!",
-        "warning_please_note_that_un_delegating": "경고: 위임을 취소할 경우, 스테이킹 기간 중에 얻은 보상을 받을 수 없습니다."
+        "warning_please_note_that_un_delegating": "경고: 위임을 취소할 경우, 스테이킹 기간 중에 얻은 보상을 받을 수 없습니다.",
+        "two_weeks": "2 weeks",
+        "three_months": "3 months",
+        "six_months": "6 months",
+        "one_year": "1 year"
       },
       "restore_account_modal": {
         "please_type_in_your_seed": "아래 입력 칸에 시드 문자를 입력해주세요.",
@@ -272,17 +449,82 @@
         "you_must_create_a_backup_nbsp": "백업을 꼭 해두셔야 합니다!",
         "write_or_print_it_out": "적어두거나 인쇄하여 안전한 곳에 보관하세요.",
         "without_it_you_will_not": "이 시드가 없으면 문제가 생겼을 때 여러분의 토큰을 복구할 수 없습니다.",
-        "copy_to_clipboard": "클립보드에 복사"
+        "copy_to_clipboard": "클립보드에 복사",
+        "create_account": "Create Account",
+        "confirm_mnemonic": "I keep these seed phrase and public address somewhere safe."
       },
       "success_modal": {
         "success": "성공"
       },
       "hardware_wallet_modal": {
+        "hardware_wallet": "Hardware wallets",
         "unlock_hardware_wallet": "하드웨어 지갑 잠금해제",
-        "enter_pin_code": "여러분의 장부에서 핀 코드를 입력하여 이더리움 앱에 로그인하세요."
+        "enter_pin_code": "여러분의 장부에서 핀 코드를 입력하여 이더리움 앱에 로그인하세요.",
+        "ledger_locked": "Please make sure your Ledger is connected, unlocked and then go tho ethereum app.",
+        "initializing": "Initializing. Please wait...",
+        "select_path": "Select a path",
+        "load_more": "Load more",
+        "use_account": "Use account",
+        "this_option_deprecated": "This option is being deprecated. We recommend using Ledger via Metamask."
       },
-      "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "플라즈마체인에서 {amount} {token}이(가) 인출되었습니다. 자금을 당신의 {chain} 계정으로 전송하려면 완료를 클릭하세요."
+      "faucet_redelegate_modal": {
+        "select_validator": "Select a validator :",
+        "fee": "Fee:",
+        "total_stake": "Total Staked",
+        "redelegate": "Redelegate",
+        "target_error": "Please select a target validator",
+        "same_target_error": "Cannot redelegate to the same validator",
+        "no_validator": "No validator found."
+      },
+      "faucet_undelegate_modal": {
+        "undelegate": "Undelegate"
+      },
+      "account_mapping_modal": {
+        "description": "This is the first time you are accessing the dashboard with this account.",
+        "choose": "Choose weither to map to a new loom account or an existing one.",
+        "map_to": "Map to an existing loom account (for validators)",
+        "new_account": "Create a new account",
+        "input_help": "The private key is used to sign the mapping and is then discarded."
+      },
+      "add_token_modal": {
+        "add_new": "Add New Token",
+        "token_symbol": "Token Symbol"
+      },
+      "transfer_all_cards": {
+        "title": "Transfer All Cards",
+        "this_will_transfer": "This will transfer all of your {edition} edition cards.",
+        "amount": "Amount : ",
+        "receiver_address": "Receiver Loom Address:",
+        "confirm_transfer": "I confirm that i want to transfer {amount} cards to {receiverAddress} address.",
+        "transfer_all": "Transfer All"
+      },
+      "transfer_cards_modal": {
+        "title": "Transfer Cards",
+        "card_id": "Card Id: ",
+        "name": "Name: ",
+        "variation": "Variation: ",
+        "your_exist_card": "Your existing card: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address:",
+        "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
+        "transfer": "Transfer"
+      },
+      "transfer_packs_modal": {
+        "title": "Transfer Packs",
+        "pack_type": "Pack Type",
+        "your_exist_pack": "Your existing pack: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address: ",
+        "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
+        "transfer": "Transfer"
+      },
+      "transfer_token_form_modal": {
+        "title": "Transfer Token",
+        "token_type": "Token Type: ",
+        "balance": "Your token balance: ",
+        "amount": "Amount: (max: {amount})",
+        "receiver_address": "Receiver Loom Address: ",
+        "transfer": "Transfer"
       }
     },
     "blockExplorer": {
@@ -315,15 +557,178 @@
         "most_old": "가장 오래된 블록",
         "pending": "처리 중"
       }
+    },
+    "gameAsset": {
+      "cards": {
+        "my_cards": "My Cards",
+        "edition": "Edition",
+        "all_edition": "All edition",
+        "no_card": "No cards to show",
+        "amount": "card(s)",
+        "transfer": "Transfer",
+        "transfer_all": "Transfer all cards in"
+      },
+      "packs": {
+        "my_packs": "My Packs",
+        "transfer": "Transfer"
+      }
+    },
+    "registerCandidate": {
+      "public_key": "Public key",
+      "validator_name": "Validator Name",
+      "description": "Description",
+      "website": "Website",
+      "fee": "Fee"
+    },
+    "validator_extended_detail": {
+      "validator_associated": "Validator Associated",
+      "not_validator_account": "This account {address} is not a validator account.",
+      "become_validator": "Becoming a Validator",
+      "follow_guide": "To register as a validator, please first follow the {link}.",
+      "validator_guide": "Validators guide",
+      "register_as_validator": "Registering as a validator",
+      "register_as_validator_description": "If your Validator node is up and running and its loom address is {address}, then you can register as a validator by clicking the button below.",
+      "use_form_below": "Please register your account by clicking the below.",
+      "whitelist_amount": "Whitelist amount",
+      "whitelist_amount_description": "Note: 1.25M LOOM is required for whitelisting.",
+      "register_amount": "Register Validator",
+      "register_this_account_as_a_validator": "Register this account as a validator {address}",
+      "filled_out_form": "Filled out and submit the form below.",
+      "more_detail": "More detail? Check out this {link}.",
+      "link": "link",
+      "setup_node": "Setup a node",
+      "check_out": "Check out this {link}.",
+      "public_key": "Public key",
+      "fee": "Fee",
+      "new_fee": "New fee",
+      "candidate_state": "Candidate state",
+      "max_referral_percentage": "Max referral %",
+      "slash_percentage": "Slash %",
+      "delegation_total": "Delegation Total",
+      "staked_amount": "Staked Amount",
+      "whitelist_locktime_tier": "Whitelist locktime tier"
     }
   },
   "events": {
     "ERC20Received": "입금",
     "event:MainnetDepositEvent": "입금",
     "event:MainnetWithdrawalEvent": "인출",
-    "event:WithdrawLoomCoin": "인출 (LOOM)",
+    "event:WithdrawLoomCoin": "Withdrawal",
     "event:TokenWithdrawalSigned": "서명된 인출",
-    "TokenWithdrawn": "출금한 토큰",
-    "ETHReceived": "입금 (ETH)"
+    "TokenWithdrawn": "Withdrawal",
+    "LoomCoinReceived": "Deposit",
+    "ETHReceived": "Deposit"
+  },
+  "button": {
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "done": "Done",
+    "submit": "Submit"
+  },
+  "feedback_msg": {
+    "task": {
+      "delegate": "Delegate",
+      "connect_wallet": "Connecting wallet",
+      "redelegating": "Redelegating",
+      "consolidating": "Consolidating",
+      "undelegating": "Undelegating",
+      "claiming_reward": "Claiming rewards",
+      "eth_deposit": "ETH Deposit",
+      "withdraw": "withdraw",
+      "batch_transfer": "Batch Transfer",
+      "pack_transfer": "Pack transfer",
+      "adding_deployer": "Adding deployer key",
+      "new_key": "New key"
+    },
+    "step": {
+      "delegating": "Delegating...",
+      "scheduling_redelgate": "Scheduling redelegation...",
+      "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
+      "undelegating_from": "Undelegating from ",
+      "checking_reward": "Checking rewards...",
+      "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
+      "claiming_reward": "Claiming rewards...",
+      "depositing_eth": "Depositing ETH",
+      "checking_receipt": "Checking for pre-existing receipts...",
+      "check_account_mapping": "Checking account mapping",
+      "create_new_mapping": "Creating a new mapping from ethereum account",
+      "depositing_to_plasma": "Depositing to Plasmachain Gateway...",
+      "awaiting_oracle": "Awaiting Oracle signature...",
+      "complete_withdrawal_binance": "Completing withdrawal to binance...",
+      "transfering_card": "Transfering cards",
+      "transfering_pack": "Transfering packs",
+      "refresh_balance": "Refreshing balance",
+      "connecting_plasma": "Connecting to Plasmachain",
+      "adding_new_deployer": "Adding new deployer",
+      "generating_new_key": "Generating new key",
+      "approving_spending": "Approving spending of {tokenAmount} {symbol}",
+      "transfering_token": "Transfering {tokenAmount} {symbol}"
+    },
+    "error": {
+      "err_while_redelegate": "Error while redelegating. Please contact support.",
+      "err_while_undelegate": "Error while undelegating. Please contact support.",
+      "err_while_claiming": "Error while claiming rewards. Please contact support.",
+      "err_while_delegate": "Unexpected error while delegating, please contact support.",
+      "insufficient_funds": "Insufficient funds.",
+      "approval_failed": "Approval failed.",
+      "err_while_register": "Error while registering. Please contact support.",
+      "could_not_deposit_eth": "Could not deposit ETH, please make sure you pay enough gas for the transaction.",
+      "deposit_approval_failed": "Deposit approval failed.",
+      "withdraw_failed": "Withdraw failed, please try again or contact support.",
+      "supplied_key_already_mapped": "The supplied key is already mapped.",
+      "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
+      "balance_not_enough": "Your balance isn't enough. Please deposit first.",
+      "address_existed": "This address is already exists in your deployer list.",
+      "failed_to_get_receipt": "Failed to get receipt"
+    },
+    "info": {
+      "reward_claimed": "Rewards succesfully claimed.",
+      "please_track_transaction": "Please track the transaction on your wallet",
+      "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
+      "withdrawal_in_progress": "Withdrawal already in progress.",
+      "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
+      "please_sign_tx": "Please sign the tx using your wallet."
+    },
+    "success": {
+      "transaction_success": "Transaction sent successfully.",
+      "eth_addr_copied": "Ethereum address copied.",
+      "plasma_addr_copied": "Plasma address copied.",
+      "address_copied": "Address copied.",
+      "register_success": "Successfully registered."
+    },
+    "alert": {
+      "title": {
+        "withdraw_ongoing": "Withdrawal ongoing"
+      },
+      "message": {
+        "withdraw_in_process": "A withdrawal is still being processed. Please try again later.",
+        "existing_withdraw_being_process": "An existing withdrawal is currently being processed. Please try again later."
+      }
+    },
+    "require_confirmation": {
+      "title": {
+        "complete_deposit": "Complete deposit"
+      },
+      "message": {
+        "please_sign_click": "Please sign click confirm to complete your deposit."
+      }
+    }
+  },
+  "input_placeholder": {
+    "enter_amount": "Enter amount",
+    "filter": "Filter",
+    "gateway_addr": "Gateway Address",
+    "amount": "Amount",
+    "memo": "Memo text",
+    "chain_addr": "{transferChain} address",
+    "loom_private_base64": "Loom private key (base64)",
+    "search": "Search",
+    "loom_addr": "Loom Address",
+    "enter_your_addr": "Enter your address",
+    "token_name": "Token name"
   }
 }

@@ -1,23 +1,23 @@
 <template>
   <div>
     <b-card>
-      <b-card-title>{{ $t('components.validator_extended_detail.validator_associated') }}</b-card-title>
+      <b-card-title>{{ $t('components.validator_extended_detail.register_as_validator') }}</b-card-title>
       <hr />
       <b-card-body v-if="!validator">
+
         <i18n tag="p" path="components.validator_extended_detail.not_validator_account">
           <code place="address">{{ plasmaAddress }}</code>
         </i18n>
-        <h4>{{ $t('components.validator_extended_detail.become_validator') }}</h4>
-        <i18n tag="p" path="components.validator_extended_detail.follow_guide">
-          <a place="link" :href="guideLink" target="_blank">{{ $t('components.validator_extended_detail.validator_guide') }}</a>
-        </i18n>
-        <h4>{{ $t('components.validator_extended_detail.register_as_validator') }}</h4>
+        <p>
+          <i18n tag="span" path="components.validator_extended_detail.follow_guide">
+            <a place="link" :href="guideLink" target="_blank">{{ $t('components.validator_extended_detail.validator_guide') }}</a>
+          </i18n>          
+          <br>
+          <span>{{ $t('components.validator_extended_detail.whitelist_amount_description') }}</span>          
+        </p>
         <i18n tag="p" path="components.validator_extended_detail.register_as_validator_description">
           <code place="address">{{ plasmaAddress }}</code>
         </i18n>
-        <p>{{ $t('components.validator_extended_detail.use_form_below') }}</p>
-        <h5>{{ $t('components.validator_extended_detail.whitelist_amount') }}</h5>
-        <p>{{ $t('components.validator_extended_detail.whitelist_amount_description') }}</p>
         <b-button variant="primary" @click="showInfo = true">{{ $t('components.validator_extended_detail.register_amount') }}</b-button>
       </b-card-body>
       <b-list-group class="validator-info" v-if="showInfo && !validator">

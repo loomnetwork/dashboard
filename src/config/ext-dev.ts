@@ -27,7 +27,7 @@ export default {
     bootstrapNodes: [],
     analyticsUrl: "//dev-api.loom.games",
   },
-  coinDataUrl: "https://dev-auth.loom.games/wallet/tokens",
+  coinDataUrl: "/tokens/ext-dev.tokens.json",
   gateway: {
     chains: ["ethereum", "binance"],
     multisig: false,

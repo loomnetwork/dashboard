@@ -109,7 +109,14 @@ export default class ValidatorList extends Vue {
         thClass: "align-center-th",
         tdClass: "align-right-td",
       },
-      { key: "fee", sortable: true, label: this.$t("components.validator_extended_detail.fee"), thClass: "align-center-th", tdClass: "align-right-td" },
+      {
+        key: "fee",
+        sortable: true,
+        label: this.$t("components.validator_extended_detail.fee"),
+        formatter: (value) => value + "%",
+        thClass: "align-center-th",
+        tdClass: "align-right-td",
+      },
     ]
   }
 

@@ -3,21 +3,21 @@
     <hr>
       <b-card class="token-counter mb-3">
         <b-row>
-          <b-col><b-card-title class="ml-3 mt-2">Stake a 1.25 million tokens</b-card-title></b-col>
-          <b-col v-if="isStakable"><span class="stake-ready">&#10003; Ready to stake</span></b-col>
-          <b-col v-else><span class="stake-not-ready">&#10007; Insufficient LOOM</span></b-col>
+          <b-col><b-card-title class="ml-3 mt-2">{{ $t('components.registerCandidate.stake_million_tokens') }}</b-card-title></b-col>
+          <b-col v-if="isStakable"><span class="stake-ready">&#10003; {{ $t('components.registerCandidate.ready_to_stake') }}</span></b-col>
+          <b-col v-else><span class="stake-not-ready">&#10007; {{ $t('components.registerCandidate.insufficient_loom') }}</span></b-col>
         </b-row>
         <b-card-body>
           <b-row>
             <b-col>
               <b-row>
-                <b-col><span class="amount-label">Required</span></b-col>
+                <b-col><span class="amount-label">{{ $t('components.registerCandidate.required') }}</span></b-col>
                 <b-col><span style="color:#327BFD;">1,250,000 LOOM</span></b-col>
               </b-row>
             </b-col>
             <b-col>
               <b-row>
-                <b-col><span class="amount-label">Your balance</span></b-col>
+                <b-col><span class="amount-label">{{ $t('components.registerCandidate.your_balance') }}</span></b-col>
                 <b-col><span>{{ fixedLoomBalance }} LOOM</span></b-col>
               </b-row>
             </b-col>

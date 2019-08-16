@@ -116,38 +116,18 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
  * Return list of token symbol from localStorage
  */
 export function getWalletFromLocalStorage() {
+  const tokens = {
+    "production": productionTokens,
+    "ext-dev": extDevTokens,
+    "stage": stageTokens,
+    "dev": devTokens,
+  }
   const env = store.state.env
-  let wallet = JSON.parse(localStorage.getItem("wallet")!) // Get wallet from localStorage
+  let wallet = JSON.parse(localStorage.getItem("walletTokens")!) // Get wallet from localStorage
 
   if (!wallet || !Object.keys(wallet).includes(env)) {
-    if (wallet.includes("LOOM", "ETH")) {
-      wallet = {}
-    }
-
-    let plasmaLoomAddr
-    let plasmaEthAddr
-
-    switch (env) {
-      case "production":
-        plasmaLoomAddr = productionTokens.find((token) => token.symbol === "LOOM")!.plasma
-        plasmaEthAddr = productionTokens.find((token) => token.symbol === "ETH")!.plasma
-        break
-      case "ext-dev":
-        plasmaLoomAddr = extDevTokens.find((token) => token.symbol === "LOOM")!.plasma
-        plasmaEthAddr = extDevTokens.find((token) => token.symbol === "ETH")!.plasma
-        break
-      case "stage":
-        plasmaLoomAddr = stageTokens.find((token) => token.symbol === "LOOM")!.plasma
-        plasmaEthAddr = stageTokens.find((token) => token.symbol === "ETH")!.plasma
-        break
-      case "dev":
-        plasmaLoomAddr = devTokens.find((token) => token.symbol === "LOOM")!.plasma
-        plasmaEthAddr = devTokens.find((token) => token.symbol === "ETH")!.plasma
-        break
-      default:
-        console.error("Unknown env " + env)
-        break
-    }
+    const plasmaLoomAddr = tokens[env].find((token) => token.symbol === "LOOM")!.plasma
+    const plasmaEthAddr = tokens[env].find((token) => token.symbol === "ETH")!.plasma
 
     // Create default wallet
     if (!wallet) {
@@ -156,7 +136,7 @@ export function getWalletFromLocalStorage() {
       wallet[env] = [plasmaLoomAddr, plasmaEthAddr]
     }
 
-    localStorage.setItem("wallet", JSON.stringify(wallet)) // set wallet to localStorage
+    localStorage.setItem("walletTokens", JSON.stringify(wallet)) // set wallet to localStorage
   }
 
   return wallet
@@ -174,7 +154,7 @@ export function setNewTokenToLocalStorage(newSymbol: TokenData) {
   if (!isExist) {
     wallet[env].push(newSymbol.plasma)
   }
-  localStorage.setItem("wallet", JSON.stringify(wallet))
+  localStorage.setItem("walletTokens", JSON.stringify(wallet))
 }
 
 export function isMobile() {

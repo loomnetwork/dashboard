@@ -239,9 +239,9 @@
       "item_2": "第 2 项",
       "home": "首页",
       "no_activity": "未检测到活动。",
-      "or_head_to_validators_page": "Or head over to the {page} to get started",
-      "validators_page": "Validators page",
-      "funds_to_plasma": "Deposit funds to the PlasmaChain"
+      "or_head_to_validators_page": "或者可以去 {page} 开始",
+      "validators_page": "验证者页面",
+      "funds_to_plasma": "将资金存入 PlasmaChain"
     },
     "my_account": {
       "my_address": "我的地址",
@@ -264,7 +264,7 @@
       "tokens_pending_withdraw": "你有一笔{pendingWithdrawAmount} 个代币的待处理取款。必须完成此笔取款后才可以进行下一笔。",
       "reclaim_deposit": "取回存款代币",
       "complete_withdraw": "完成取款",
-      "pending_withdrawal": "Withdrawal pending"
+      "pending_withdrawal": "提取待处理"
     },
     "my_delegations": {
       "no_delegations": "暂无委托"
@@ -275,13 +275,13 @@
       "to": "到"
     },
     "rewards": {
-      "rewards": "Rewards",
+      "rewards": "奖励",
       "unclaimed_rewards": "未领取的奖励：",
       "you_have_yet_to_receive": "你还未得到任何奖励",
       "claim_reward": "领取奖励",
-      "will_be_reclaimed_after_next_election": "LOOM will be reclaimed after next election.",
-      "no_rewards": "You do not have any rewards at the moment.",
-      "total": "Total"
+      "will_be_reclaimed_after_next_election": "将在下轮选举后取回 LOOM。",
+      "no_rewards": "你现在还没有任何奖励。",
+      "total": "共计："
     },
     "validator_detail": {
       "state": "状态：",
@@ -292,10 +292,10 @@
       "timelock_tier": "可选的计时锁定：",
       "timelock": "计时锁定：",
       "unlocked": "已解除锁定",
-      "no_stakes": "You have not yet staked with {name}",
+      "no_stakes": "你还未和 {name} 一起锁仓过。",
       "stake_tokens": "锁定代币",
-      "consolidate": "Consolidate",
-      "loading_validators": "Loading validators....",
+      "consolidate": "合并",
+      "loading_validators": "加载验证者……",
       "delegator_stake": "Delegators Stake",
       "active": "Active",
       "inactive": "Inactive",

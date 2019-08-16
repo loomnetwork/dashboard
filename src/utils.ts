@@ -3,6 +3,11 @@ import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
 import { TokenData, tokenService } from "./services/TokenService"
+import { store } from "./store"
+import productionTokens from "@/assets/tokens/production.tokens.json"
+import extDevTokens from "@/assets/tokens/ext-dev.tokens.json"
+import stageTokens from "@/assets/tokens/stage.tokens.json"
+import devTokens from "@/assets/tokens/dev.tokens.json"
 
 export const ZERO = new BN(0)
 
@@ -111,15 +116,49 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
  * Return list of token symbol from localStorage
  */
 export function getWalletFromLocalStorage() {
-  let strWallet = localStorage.getItem("wallet") // Get wallet from localStorage
-  if (!strWallet || strWallet.includes(`"LOOM","ETH"`)) {
-    // if wallet is not exist in localStorage
-    const plasmaLoomAddr = tokenService.getTokenAddressBySymbol("LOOM", "plasma")
-    const plasmaEthAddr = tokenService.getTokenAddressBySymbol("ETH", "plasma")
-    strWallet = JSON.stringify([plasmaLoomAddr, plasmaEthAddr]) // Create default wallet
-    localStorage.setItem("wallet", strWallet) // set wallet to localStorage
+  const env = store.state.env
+  let wallet = JSON.parse(localStorage.getItem("wallet")!) // Get wallet from localStorage
+
+  if (!wallet || !Object.keys(wallet).includes(env)) {
+    if (wallet.includes("LOOM", "ETH")) {
+      wallet = {}
+    }
+
+    let plasmaLoomAddr
+    let plasmaEthAddr
+
+    switch (env) {
+      case "production":
+        plasmaLoomAddr = productionTokens.find((token) => token.symbol === "LOOM")!.plasma
+        plasmaEthAddr = productionTokens.find((token) => token.symbol === "ETH")!.plasma
+        break
+      case "ext-dev":
+        plasmaLoomAddr = extDevTokens.find((token) => token.symbol === "LOOM")!.plasma
+        plasmaEthAddr = extDevTokens.find((token) => token.symbol === "ETH")!.plasma
+        break
+      case "stage":
+        plasmaLoomAddr = stageTokens.find((token) => token.symbol === "LOOM")!.plasma
+        plasmaEthAddr = stageTokens.find((token) => token.symbol === "ETH")!.plasma
+        break
+      case "dev":
+        plasmaLoomAddr = devTokens.find((token) => token.symbol === "LOOM")!.plasma
+        plasmaEthAddr = devTokens.find((token) => token.symbol === "ETH")!.plasma
+        break
+      default:
+        console.error("Unknown env " + env)
+        break
+    }
+
+    // Create default wallet
+    if (!wallet) {
+      wallet = { [env]: [plasmaLoomAddr, plasmaEthAddr] }
+    } else {
+      wallet[env] = [plasmaLoomAddr, plasmaEthAddr]
+    }
+
+    localStorage.setItem("wallet", JSON.stringify(wallet)) // set wallet to localStorage
   }
-  const wallet = JSON.parse(strWallet)
+
   return wallet
 }
 
@@ -128,11 +167,12 @@ export function getWalletFromLocalStorage() {
  * @param newSymbol Token symbol
  */
 export function setNewTokenToLocalStorage(newSymbol: TokenData) {
+  const env = store.state.env
   const wallet = getWalletFromLocalStorage()
   // check symbol not exist in wallet
-  const isExist = wallet.find((symbol) => newSymbol.plasma === symbol)
+  const isExist = wallet[env].find((symbol) => newSymbol.plasma === symbol)
   if (!isExist) {
-    wallet.push(newSymbol.plasma)
+    wallet[env].push(newSymbol.plasma)
   }
   localStorage.setItem("wallet", JSON.stringify(wallet))
 }

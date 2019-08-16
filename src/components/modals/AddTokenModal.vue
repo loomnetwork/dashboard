@@ -20,7 +20,7 @@
         <virtual-list :size="30" :remain="8">
           <div
             v-for="token in filteredTokens"
-            @click="addToken(token.symbol)"
+            @click="addToken(token)"
             class="list-item"
             :key="token.plasma"
           >

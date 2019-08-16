@@ -170,11 +170,11 @@ export default class DepositWithdraw extends Vue {
   }
 
   async mounted() {
-    const supported = tokenService.symbols.map((token) => token.symbol)
+    const supported = tokenService.symbols.map((token) => token.plasma)
     // TODO move this to store
     getWalletFromLocalStorage()
-      .filter((symbol) => supported.includes(symbol))
-      .forEach((symbol) => plasmaModule.addToken(symbol))
+      .filter((address) => supported.includes(address))
+      .forEach((address) => plasmaModule.addToken(tokenService.tokenFromAddress(address, "plasma")!))
 
     this.filterTokens()
 

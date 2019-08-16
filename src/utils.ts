@@ -2,6 +2,7 @@ import BN from "bn.js"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
+import { TokenData, tokenService } from "./services/TokenService"
 
 export const ZERO = new BN(0)
 
@@ -109,11 +110,13 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
 /**
  * Return list of token symbol from localStorage
  */
-export const getWalletFromLocalStorage = (): string[] => {
+export function getWalletFromLocalStorage() {
   let strWallet = localStorage.getItem("wallet") // Get wallet from localStorage
-  if (!strWallet) {
+  if (!strWallet || strWallet.includes(`"LOOM","ETH"`)) {
     // if wallet is not exist in localStorage
-    strWallet = JSON.stringify(["LOOM", "ETH"]) // Create default wallet
+    const plasmaLoomAddr = tokenService.getTokenAddressBySymbol("LOOM", "plasma")
+    const plasmaEthAddr = tokenService.getTokenAddressBySymbol("ETH", "plasma")
+    strWallet = JSON.stringify([plasmaLoomAddr, plasmaEthAddr]) // Create default wallet
     localStorage.setItem("wallet", strWallet) // set wallet to localStorage
   }
   const wallet = JSON.parse(strWallet)
@@ -124,12 +127,12 @@ export const getWalletFromLocalStorage = (): string[] => {
  * To add the new token symbol into wallet, then update wallet in localStorage
  * @param newSymbol Token symbol
  */
-export const setNewTokenToLocalStorage = (newSymbol: string = "") => {
+export function setNewTokenToLocalStorage(newSymbol: TokenData) {
   const wallet = getWalletFromLocalStorage()
   // check symbol not exist in wallet
-  const isExist = wallet.find((symbol) => newSymbol === symbol)
+  const isExist = wallet.find((symbol) => newSymbol.plasma === symbol)
   if (!isExist) {
-    wallet.push(newSymbol.toUpperCase())
+    wallet.push(newSymbol.plasma)
   }
   localStorage.setItem("wallet", JSON.stringify(wallet))
 }

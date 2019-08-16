@@ -142,7 +142,7 @@
     },
     "staking_guide": {
       "intro": "祝贺你决定锁定 LOOM 并帮助保护 PlasmaChain！本指南将向你详细介绍锁定 LOOM 的步骤、以及锁定之后可以进行的各种操作。",
-      "staking_basics": "锁仓基础",
+      "staking_basics": "锁仓基本操作",
       "select_wallet": "1. 选择一个支持的钱包并存入 LOOM 和 ETH",
       "loom_plasma_support": "Loom PlasmaChain 锁仓目前支持以下钱包：",
       "desktop_wallets": "桌面版钱包",
@@ -201,16 +201,16 @@
       "transaction_twice": "会要求你签署两次事务。如果成功，会看到这个弹窗：",
       "confirm_withdrawal_request": "现在会要求你在以太坊网络上确认提取请求。",
       "take_some_time": "这一步可能需要一会儿，取决于以太坊网络的繁忙程度。",
-      "your_ethereum_wallet": "Your LOOM will be back in your Ethereum wallet address once the Ethereum network confirms the transfer.",
-      "additional_actions": "Additional Actions",
-      "redelegate_to_another_validator": "1. Redelegate to another validator",
-      "6_step_1": "Find your delegation",
-      "6_step_2": "Choose a new validator",
-      "6_step_3": "Sign the transaction",
-      "find_the_delegation": "Find the delegation you wish to redelegate on the My Account page and press the “Redelegate” button.",
-      "validators_and_fees": "You will see a pop-up that shows a list of validators and their fees:",
-      "select_the_validator": "Select the validator you want to redelegate to and press the “Redelegate” button on the pop-up.",
-      "transaction_to_confirm": "You will be asked to sign the transaction to confirm.",
+      "your_ethereum_wallet": "一旦以太坊网络确认完此次转移，你的 LOOM 就会回到你的以太坊钱包地址里。",
+      "additional_actions": "其他操作",
+      "redelegate_to_another_validator": "1. 重新委托给另外的验证者",
+      "6_step_1": "找到你的委托",
+      "6_step_2": "选择一个新的验证者",
+      "6_step_3": "签署此事务",
+      "find_the_delegation": "在“我的账户”页面找到想要重新委托的那条委托，然后点击“重新委托”按钮。",
+      "validators_and_fees": "会出现弹窗，显示验证者列表和各自的佣金：",
+      "select_the_validator": "选择想要重新委托的验证者，点击弹窗上的“重新委托”按钮。",
+      "transaction_to_confirm": "会要求你签署事务以确认。",
       "delegation_is_redelegating": "You should now see that your delegation is “Redelegating”",
       "redelegation_will_be_complete": "Your redelegation will be complete at the end of the current election cycle.",
       "undelegate": "2. Undelegate",
@@ -304,7 +304,7 @@
         "bonding": "Bonding",
         "bonded": "Bonded",
         "unbonding": "Unbounding",
-        "redelegating": "Redelegating"
+        "redelegating": "重新委托中"
       }
     },
     "validator_list": {
@@ -726,7 +726,7 @@
     "task": {
       "delegate": "Delegate",
       "connect_wallet": "Connecting wallet",
-      "redelegating": "Redelegating",
+      "redelegating": "重新委托中",
       "consolidating": "Consolidating",
       "undelegating": "Undelegating",
       "claiming_reward": "Claiming rewards",

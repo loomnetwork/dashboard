@@ -699,7 +699,9 @@
       "slash_percentage": "Slash %",
       "delegation_total": "Delegation Total",
       "staked_amount": "Staked Amount",
-      "whitelist_locktime_tier": "Whitelist locktime tier"
+      "whitelist_locktime_tier": "Whitelist locktime tier",
+      "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
+      "node_setup_guide": "Node setup guide"
     }
   },
   "events": {

@@ -166,10 +166,10 @@
       "deposit_withdraw_page": "至“存/取”页面。",
       "press_deposit": "在想要存入的资产旁（LOOM），点击“存入”按钮",
       "pop_up": "将会出现弹窗，供你选择要存入的数量并确认。",
-      "sign_approval": "You should be asked to sign the approval request transaction on the Ethereum network.",
-      "approval_request": "When the approval request has been confirmed, you will be asked to complete the deposit by signing the deposit request.",
-      "confirm_transaction": "Confirm the deposit transaction.",
-      "yellow_warning": "Note that if you got the yellow warning bar (see Step 2), you will not see the “Complete deposit” pop-up, but you’ll be asked to confirm the deposit transaction straight away.",
+      "sign_approval": "会要求你签署以太坊网络上的批准请求事务。",
+      "approval_request": "批准请求一经确认，会要求你签署存入请求来完成此笔存入。",
+      "confirm_transaction": "确认此存入事务。",
+      "yellow_warning": "注意：如果出现了黄色警告条（见步骤2），后面就不会再出现“完成存入”弹窗，而是会要求你立即确认此存入事务。",
       "block_confirmations": "Wait 10 Ethereum block confirmations to see an update in your PlasmaChain balance. You can find the number of block confirmations on the History page.",
       "delegate_loom": "3. Delegate LOOM to a validator",
       "3_step_1": "Select a validator",
@@ -804,7 +804,7 @@
     },
     "require_confirmation": {
       "title": {
-        "complete_deposit": "Complete deposit"
+        "complete_deposit": "完成存入"
       },
       "message": {
         "please_sign_click": "Please sign click confirm to complete your deposit."

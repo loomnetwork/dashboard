@@ -128,7 +128,7 @@ async function loadEthereumLoomMapping(client: Client, config: DashboardConfig) 
     console.log("LOOM ethereum", ethereum)
     return {
         ethereum,
-        plasma: plasma!.local.toString(),
+        plasma: plasma!.local.toString().toLowerCase(),
     } as Mapping
 }
 
@@ -184,8 +184,8 @@ async function tokenInfoFromPlasma(mapping: Mapping, web3: Web3, address: Addres
 function convertMapping({ from, to }: IAddressMapping, chainId: string) {
     const chainName = chainNames[chainId]
     return {
-        plasma: (from.chainId === chainId ? to : from).local.toString().toLocaleLowerCase(),
-        [chainName]: (from.chainId === chainId ? from : to).local.toString().toLocaleLowerCase(),
+        plasma: (from.chainId === chainId ? to : from).local.toString().toLowerCase(),
+        [chainName]: (from.chainId === chainId ? from : to).local.toString().toLowerCase(),
     }
 
 }

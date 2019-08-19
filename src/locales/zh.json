@@ -191,7 +191,7 @@
       "asked_to_sign_transaction": "会要求你签署此事务。",
       "if_rewards_claim": "如果奖励领取成功，你将会看到这条消息：“X LOOM 将会在下次选举结束时被取回。”",
       "withdraw_to_ethereum": "2. 提取到以太坊",
-      "5_step_1": "选择要取出的 LOOM 数量",
+      "5_step_1": "选择要提取的 LOOM 数量",
       "5_step_2": "签署两个事务（在 PlasmaChain 上）",
       "5_step_3": "确认提取请求（在以太坊上）",
       "5_step_4": "等待以太坊确认",
@@ -263,7 +263,7 @@
       "tokens_pending_deposit": "你有一笔{pendingDepositAmount} 个代币的待处理存款。必须完成此笔存款后才可以进行下一笔。",
       "tokens_pending_withdraw": "你有一笔{pendingWithdrawAmount} 个代币的待处理取款。必须完成此笔取款后才可以进行下一笔。",
       "reclaim_deposit": "取回存款代币",
-      "complete_withdraw": "完成取款",
+      "complete_withdraw": "完成提取",
       "pending_withdrawal": "提取待处理"
     },
     "my_delegations": {
@@ -462,24 +462,24 @@
         "binance_link": "https://binance.org/en/balances",
         "send_asset": "发送资产",
         "select_asset": "选择资产",
-        "to_address": "To Address",
-        "send_amount": "Amount to send",
-        "memo": "Memo",
-        "send_amount_placeholder": "Enter the deposit amount",
-        "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
-        "next": "Next",
-        "close": "Close",
-        "back": "Back",
-        "cancel": "Cancel"
+        "to_address": "至地址",
+        "send_amount": "要发送的数量",
+        "memo": "备注",
+        "send_amount_placeholder": "输入要存入的数量",
+        "deposit_message": "事务一旦在 binance 上处理了，你的 plasmachain 余额就会更新。",
+        "next": "下一步",
+        "close": "关闭",
+        "back": "返回",
+        "cancel": "取消"
       },
       "deposit_form": {
-        "title": "Deposit {token} from {chain}",
-        "amount_approved": "Amount approved : ",
-        "balance": "Your token balance : "
+        "title": "从 {chain} 存入 {token}",
+        "amount_approved": "已批准的数量： ",
+        "balance": "你的代币余额： "
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
-        "error": "An error occurred, please try again.",
+        "confirm_withdrawl": "{amount} 个 {token} 已经从 Plasmachain 提取出来了。点击“完成”将资金转移到你的 {chain} 账户。",
+        "error": "发生错误，请重试。",
         "complete": "Complete withdraw",
         "status_failed": "Withdrawal failed",
         "status_confirmed": "Withdraw to gateway confirmed"

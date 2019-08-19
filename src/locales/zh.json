@@ -432,13 +432,13 @@
       "transfer_gateway": "转移网关",
       "validator_management": "验证者管理",
       "feedback_form": "联系客服",
-      "plasma_wallet": "Plasma Wallet",
-      "developers": "Developers",
-      "help": "Help"
+      "plasma_wallet": "Plasma 钱包",
+      "developers": "开发者",
+      "help": "帮助"
     },
     "history_event": {
-      "confirmations": "Confirmations",
-      "block_no": "Block # "
+      "confirmations": "确认",
+      "block_no": "区块 # "
     },
     "gateway": {
       "complete_deposit": "完成存入",
@@ -450,18 +450,18 @@
       },
       "deposit": {
         "sending": "正在发送存入请求……",
-        "sent": "Deposit transaction successfully sent. You will be notified once it is confirmed.",
-        "confirmed": "The deposit has been confirmed. Your plasma balance will be updated after 10 confirmations.",
-        "view_confirmation": "View confirmations",
-        "failure": "Deposit failed..."
+        "sent": "存入事务已成功发送。一旦确认，你会收到通知。",
+        "confirmed": "此笔存入已确认。 你的 plasma 余额将在10个确认后更新。",
+        "view_confirmation": "查看确认",
+        "failure": "存入失败……"
       },
       "deposit_binance": {
-        "title_deposit": "Deposit to Plasmachain from Binance",
-        "title_success": "Success",
-        "description": "Please go to {link} and fill in the form as show below.",
+        "title_deposit": "从 Binance 存入到 Plasmachain",
+        "title_success": "成功",
+        "description": "请至 {link}，填写如下表格。",
         "binance_link": "https://binance.org/en/balances",
-        "send_asset": "Send Asset",
-        "select_asset": "Select Asset",
+        "send_asset": "发送资产",
+        "select_asset": "选择资产",
         "to_address": "To Address",
         "send_amount": "Amount to send",
         "memo": "Memo",

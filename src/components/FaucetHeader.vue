@@ -181,6 +181,10 @@ export default class FaucetHeader extends Vue {
       ],
       help: [
         {
+          to: "/staking-guide",
+          text: "components.faucet_sidebar.staking_guide",
+        },
+        {
           to: "/faq",
           text: "components.faucet_sidebar.faq",
         },

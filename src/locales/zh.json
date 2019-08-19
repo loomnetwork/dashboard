@@ -317,7 +317,7 @@
     },
     "analytics": {
       "total_amount_staked": "锁定总量",
-      "tier_distribution": "Tier distribution"
+      "tier_distribution": "层级分布"
     },
     "deposit_withdraw": {
       "wallet": "钱包",
@@ -357,24 +357,24 @@
       "deposit_more": "将 LOOM 存入 PlasmaChain",
       "generate_new": "生成新密钥",
       "your_loom_address": "你的 loom 地址",
-      "use_exist_or_create": "Use an existing address or creare a new one by clicking on generate new key",
-      "select_tier": "Select a tier",
-      "in_order_to_deploy": "In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.",
-      "tier": "Tier",
-      "limited_offer": "Limited time offer",
-      "coming_soon": "Coming soon",
-      "add_key": "Add key",
-      "your_balance": "Your balance : {amount} LOOM"
+      "use_exist_or_create": "使用现有地址或点击“生成新密钥”创建一个新地址",
+      "select_tier": "从下列层级中选一个",
+      "in_order_to_deploy": "要部署合约到 PlasmaChain，你需要锁定 LOOM 作为付款方式支付给验证者。",
+      "tier": "层级",
+      "limited_offer": "限时优惠",
+      "coming_soon": "即将到来",
+      "add_key": "添加密钥",
+      "your_balance": "你的余额：{amount} 个 LOOM"
     }
   },
   "components": {
     "account": {
-      "account": "Account",
-      "show_etherscan": "Show in EtherScan",
-      "show_block_explorer": "Show in Block Explorer"
+      "account": "账户：",
+      "show_etherscan": "查看 EtherScan",
+      "show_block_explorer": "查看区块浏览器"
     },
     "amount_input": {
-      "all": "All"
+      "all": "所有"
     },
     "faucet_footer": {
       "loom_network": "Loom Network",
@@ -411,19 +411,19 @@
       "my_stakes": "我锁定的代币",
       "status": "状态",
       "block_explorer": "区块浏览器",
-      "back": "Back",
-      "sign_out": "Sign out"
+      "back": "返回",
+      "sign_out": "登出"
     },
     "faucet_sidebar": {
-      "analytics": "Analytics",
-      "validators": "Validators",
+      "analytics": "分析",
+      "validators": "验证者",
       "my_account": "我的账户",
       "my_delegations": "我的委托",
       "rewards": "奖励",
       "history": "历史记录",
       "deposit_withdraw": "存/取",
-      "staking": "Staking",
-      "staking_guide": "Staking Guide",
+      "staking": "锁仓",
+      "staking_guide": "锁仓指南",
       "faq": "常见问题",
       "account_explorer": "Account Explorer",
       "game_assets": "游戏资产",
@@ -683,7 +683,7 @@
       "not_validator_account": "This account {address} is not a validator account.",
       "become_validator": "Becoming a Validator",
       "follow_guide": "To register as a validator, please first follow the {link}.",
-      "validator_guide": "Validators guide",
+      "validator_guide": "验证者指南",
       "register_as_validator": "Registering as a validator",
       "register_as_validator_description": "If your Validator node is up and running and its loom address is {address}, then you can register as a validator by clicking the button below.",
       "use_form_below": "Please register your account by clicking the below.",
@@ -706,7 +706,7 @@
       "staked_amount": "Staked Amount",
       "whitelist_locktime_tier": "Whitelist locktime tier",
       "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
-      "node_setup_guide": "Node setup guide"
+      "node_setup_guide": "节点设置指南"
     }
   },
   "events": {

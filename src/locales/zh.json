@@ -255,14 +255,14 @@
       "map_accounts": "映射账户",
       "history": "历史记录",
       "deposit": "存入",
-      "withdraw": "取出",
+      "withdraw": "提取",
       "use_maximum": "输入全部余额",
       "transfer_to_plasmachain_for_staking": "转移到 plasmachain 进行锁仓",
       "withdraw_to_metamask": "取回到你的钱包",
       "wait_tx": "你的交易正在等候操作。请稍等几分钟，你的余额将在交易确认后更新。",
-      "tokens_pending_deposit": "你有一笔{pendingDepositAmount} 个代币的待处理存款。必须完成此笔存款后才可以进行下一笔。",
-      "tokens_pending_withdraw": "你有一笔{pendingWithdrawAmount} 个代币的待处理取款。必须完成此笔取款后才可以进行下一笔。",
-      "reclaim_deposit": "取回存款代币",
+      "tokens_pending_deposit": "你有一笔 {pendingDepositAmount} 个代币的待处理存入。必须完成此笔存入后才可以进行下一笔。",
+      "tokens_pending_withdraw": "你有一笔 {pendingWithdrawAmount} 个代币的待处理提取。必须完成此笔提取后才可以进行下一笔。",
+      "reclaim_deposit": "取回存入的代币",
       "complete_withdraw": "完成提取",
       "pending_withdrawal": "提取待处理"
     },
@@ -480,22 +480,22 @@
       "confirm_withdrawal_modal": {
         "confirm_withdrawl": "{amount} 个 {token} 已经从 Plasmachain 提取出来了。点击“完成”将资金转移到你的 {chain} 账户。",
         "error": "发生错误，请重试。",
-        "complete": "Complete withdraw",
-        "status_failed": "Withdrawal failed",
-        "status_confirmed": "Withdraw to gateway confirmed"
+        "complete": "完成提取",
+        "status_failed": "提取失败",
+        "status_confirmed": "已确认提取到网关"
       },
       "withdraw_form_modal": {
-        "title": "Withdraw {token} to {chain}",
-        "transfer_fee": "Transfer to {chain} requires a fee of ",
-        "balance": "Your balance : ",
-        "recipient": "Recipient on {chain}",
-        "withdraw": "Withdraw"
+        "title": "提取 {token} 到 {chain}",
+        "transfer_fee": "转移到 {chain} 需要手续费 ",
+        "balance": "你的余额： ",
+        "recipient": "{chain} 上的接受者",
+        "withdraw": "提取"
       }
     },
     "layout": {
-      "network": "Network: ",
-      "sign_wallet_title": "Sign Your wallet",
-      "account_mapped_title": "Account Mapped",
+      "network": "网络: ",
+      "sign_wallet_title": "签署你的钱包",
+      "account_mapped_title": "账户已映射",
       "metamask_changed": "你刚刚切换了 MetaMask 帐户。 为避免任何意外行为，应用程序将重新加载",
       "metamask_error": "Metamask 错误！？",
       "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
@@ -504,7 +504,7 @@
       "but_your_current_account_address": "但你当前的以太坊账户地址是：",
       "please_change_your_metamask_account": "请更改你的以太坊帐户",
       "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
-      "sign_wallet": "Using your wallet, sign the message to confirm your Ethereum identity. (No gas required)",
+      "sign_wallet": "用你的钱包，签名以确认你的以太坊身份。（不需要gas）",
       "already_mapped": " 你选择的账户已映射。请选择新帐户。",
       "your_wallet_connected_to": "Your wallet is connected to {network}.",
       "please_change_to": "Please change to {network}."
@@ -712,10 +712,10 @@
   "events": {
     "ERC20Received": "Deposit",
     "event:MainnetDepositEvent": "Deposit",
-    "event:MainnetWithdrawalEvent": "Withdrawal",
+    "event:MainnetWithdrawalEvent": "提取",
     "event:WithdrawLoomCoin": "Withdrawal",
     "event:TokenWithdrawalSigned": "Withdrawal signed",
-    "TokenWithdrawn": "Withdrawal",
+    "TokenWithdrawn": "提取",
     "LoomCoinReceived": "Deposit",
     "ETHReceived": "Deposit"
   },
@@ -738,7 +738,7 @@
       "undelegating": "Undelegating",
       "claiming_reward": "Claiming rewards",
       "eth_deposit": "ETH Deposit",
-      "withdraw": "withdraw",
+      "withdraw": "提取",
       "batch_transfer": "Batch Transfer",
       "pack_transfer": "Pack transfer",
       "adding_deployer": "Adding deployer key",

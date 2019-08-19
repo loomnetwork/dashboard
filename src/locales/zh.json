@@ -564,7 +564,7 @@
         "select_validator": "选择一个验证者 :",
         "fee": "佣金：",
         "total_stake": "总共锁定",
-        "redelegate": "Redelegate",
+        "redelegate": "重新委托",
         "target_error": "请选择一个目标验证者",
         "same_target_error": "不能重新委托给同一个验证者",
         "no_validator": "未发现验证者。"
@@ -599,25 +599,25 @@
         "your_exist_card": "你现有的卡牌： ",
         "amount": "数量：（最多： {amount}）",
         "receiver_address": "接收者 loom 地址：",
-        "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
-        "transfer": "Transfer"
+        "confirm_transfer": "我确认转移 {amount} 张卡牌到 {receiverAddress} 地址。",
+        "transfer": "转移"
       },
       "transfer_packs_modal": {
-        "title": "Transfer Packs",
-        "pack_type": "Pack Type",
-        "your_exist_pack": "Your existing pack: ",
-        "amount": "Amount: (max: {amount})",
+        "title": "转移卡包",
+        "pack_type": "卡包种类",
+        "your_exist_pack": "你现有的卡包： ",
+        "amount": "数量：（最多： {amount}）",
         "receiver_address": "接收者 loom 地址： ",
-        "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
-        "transfer": "Transfer"
+        "confirm_transfer": "我确认转移 {amount} 个卡包到 {receiverAddress} 地址。",
+        "transfer": "转移"
       },
       "transfer_token_form_modal": {
-        "title": "Transfer Token",
-        "token_type": "Token Type: ",
-        "balance": "Your token balance: ",
-        "amount": "Amount: (max: {amount})",
+        "title": "转移代币",
+        "token_type": "代币种类： ",
+        "balance": "你的代币余额： ",
+        "amount": "数量：（最多： {amount}）",
         "receiver_address": "接收者 loom 地址： ",
-        "transfer": "Transfer"
+        "transfer": "转移"
       }
     },
     "blockExplorer": {
@@ -653,12 +653,12 @@
     },
     "gameAsset": {
       "cards": {
-        "my_cards": "My Cards",
-        "edition": "Edition",
-        "all_edition": "All edition",
-        "no_card": "No cards to show",
-        "amount": "card(s)",
-        "transfer": "Transfer",
+        "my_cards": "我的卡牌",
+        "edition": "版本",
+        "all_edition": "所有版本",
+        "no_card": "无卡牌可供显示",
+        "amount": "卡牌",
+        "transfer": "转移",
         "transfer_all": "Transfer all cards in"
       },
       "packs": {

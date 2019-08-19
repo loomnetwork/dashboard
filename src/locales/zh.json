@@ -344,16 +344,16 @@
         "token_owner": "代币拥有者",
         "token_kind": "代币种类",
         "token_amount": "代币数量",
-        "topic": "Topic"
+        "topic": "主题"
       }
     },
     "add_key": {
-      "deployer_public_keys": "Deployer Public Keys",
-      "add_new_key": "Add New Key",
-      "no_deployer_address": "You have no deployer address yet. Use the form below to add one",
-      "no_contract": "No contract deployed",
-      "low_balance": "LOOM balance low.",
-      "whitelisting_require": "Whitelisting keys requires at least {amount} LOOM. Your balance is {balance} LOOM",
+      "deployer_public_keys": "部署者公钥",
+      "add_new_key": "添加新的密钥",
+      "no_deployer_address": "你目前还没有部署者地址。使用下方表格来添加一个",
+      "no_contract": "还未部署合约",
+      "low_balance": "LOOM 余额不足。",
+      "whitelisting_require": "将密钥添加到白名单要求至少 {amount} 个LOOM。你目前的余额是 {balance} 个 LOOM",
       "deposit_more": "Deposit more LOOM to Plasmachain",
       "generate_new": "Generate New Key",
       "your_loom_address": "Your Loom Public Address",

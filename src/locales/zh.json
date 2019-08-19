@@ -506,8 +506,8 @@
       "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
       "sign_wallet": "用你的钱包，签名以确认你的以太坊身份。（不需要gas）",
       "already_mapped": " 你选择的账户已映射。请选择新帐户。",
-      "your_wallet_connected_to": "Your wallet is connected to {network}.",
-      "please_change_to": "Please change to {network}."
+      "your_wallet_connected_to": "你的钱包已连接到 {network}。",
+      "please_change_to": "请更换到 {network}。"
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "请耐心等待哟，Loomy 正在努力加载！",
@@ -520,18 +520,18 @@
       },
       "faucet_delegate_modal": {
         "amount": "数量：",
-        "locktime": "Locktime",
-        "bonuses": "Bonuses",
-        "delegate": "Delegate",
-        "cancel": "Cancel",
-        "your_balance": "Your balance is {amount} LOOM",
+        "locktime": "锁定期",
+        "bonuses": "奖励",
+        "delegate": "委托",
+        "cancel": "取消",
+        "your_balance": "你的余额是 {amount} 个 LOOM",
         "locktime_bonuses": "锁定期 / 奖励：",
         "warning_please_note_that_any": "提醒一下，请注意任何额外的委托都将覆盖已存在的委托！",
         "warning_please_note_that_un_delegating": "提醒一下，请注意：取消委托后，你将失去在锁定期间获得任何奖励的资格。",
-        "two_weeks": "2 weeks",
-        "three_months": "3 months",
-        "six_months": "6 months",
-        "one_year": "1 year"
+        "two_weeks": "2星期",
+        "three_months": "3个月",
+        "six_months": "6个月",
+        "one_year": "1年"
       },
       "restore_account_modal": {
         "please_type_in_your_seed": "请在下方输入你的助记词。",
@@ -539,38 +539,38 @@
       },
       "seed_phrase_modal": {
         "note_these_12_words_allow": "注意：这12个单词可以帮助你在丢失或损坏的情况下恢复你的钱包。",
-        "you_must_create_a_backup_nbsp": "You must create a backup!",
+        "you_must_create_a_backup_nbsp": "你必须创建一个备份！",
         "write_or_print_it_out": "写下来或打印出来，并保存在安全的地方。",
         "without_it_you_will_not": "没有它的话，一旦出现问题，你将无法恢复你的代币。",
         "copy_to_clipboard": "复制到剪贴板",
-        "create_account": "Create Account",
+        "create_account": "创建账户",
         "confirm_mnemonic": "I keep these seed phrase and public address somewhere safe."
       },
       "success_modal": {
         "success": "成功"
       },
       "hardware_wallet_modal": {
-        "hardware_wallet": "Hardware wallets",
+        "hardware_wallet": "硬件钱包",
         "unlock_hardware_wallet": "解锁硬件钱包",
         "enter_pin_code": "在你的ledger上，请输入你的pin码并登录到以太坊应用程序。",
-        "ledger_locked": "Please make sure your Ledger is connected, unlocked and then go tho ethereum app.",
-        "initializing": "Initializing. Please wait...",
-        "select_path": "Select a path",
-        "load_more": "Load more",
-        "use_account": "Use account",
-        "this_option_deprecated": "This option is being deprecated. We recommend using Ledger via Metamask."
+        "ledger_locked": "请确保你的 Ledger 已连接，已解锁，然后去以太坊应用。",
+        "initializing": "初始化。请稍等……",
+        "select_path": "选择一个路径",
+        "load_more": "加载更多",
+        "use_account": "使用账户",
+        "this_option_deprecated": "这个选项正在被弃用。我们建议通过 Metamask 使用 Ledger。"
       },
       "faucet_redelegate_modal": {
-        "select_validator": "Select a validator :",
-        "fee": "Fee:",
-        "total_stake": "Total Staked",
+        "select_validator": "选择一个验证者 :",
+        "fee": "佣金：",
+        "total_stake": "总共锁定",
         "redelegate": "Redelegate",
-        "target_error": "Please select a target validator",
-        "same_target_error": "Cannot redelegate to the same validator",
-        "no_validator": "No validator found."
+        "target_error": "请选择一个目标验证者",
+        "same_target_error": "不能重新委托给同一个验证者",
+        "no_validator": "未发现验证者。"
       },
       "faucet_undelegate_modal": {
-        "undelegate": "Undelegate"
+        "undelegate": "取消委托"
       },
       "account_mapping_modal": {
         "description": "This is the first time you are accessing the dashboard with this account.",

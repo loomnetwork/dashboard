@@ -238,9 +238,9 @@
       "item_1": "아이템 1",
       "item_2": "아이템 2",
       "home": "홈",
-      "no_activity": "No activity detected.",
-      "or_head_to_validators_page": "Or head over to the {page} to get started",
-      "validators_page": "Validators page",
+      "no_activity": "발견된 활동이 없습니다.",
+      "or_head_to_validators_page": "또는 {page}로 가서 시작해보세요!",
+      "validators_page": "검증자 페이지",
       "funds_to_plasma": "Deposit funds to the PlasmaChain"
     },
     "my_account": {
@@ -275,13 +275,13 @@
       "to": "받는 사람"
     },
     "rewards": {
-      "rewards": "Rewards",
+      "rewards": "보상",
       "unclaimed_rewards": "요청하지 않은 보상:",
       "you_have_yet_to_receive": "아직 받은 보상이 없습니다.",
       "claim_reward": "보상 요청하기",
       "will_be_reclaimed_after_next_election": "LOOM will be reclaimed after next election.",
       "no_rewards": "You do not have any rewards at the moment.",
-      "total": "Total"
+      "total": "총"
     },
     "validator_detail": {
       "state": "상태:",
@@ -299,7 +299,7 @@
       "delegator_stake": "Delegators Stake",
       "active": "Active",
       "inactive": "Inactive",
-      "my_stake": "My stakes",
+      "my_stake": "내 스테이킹",
       "states": {
         "bonding": "Bonding",
         "bonded": "Bonded",
@@ -713,11 +713,11 @@
     "ERC20Received": "입금",
     "event:MainnetDepositEvent": "입금",
     "event:MainnetWithdrawalEvent": "인출",
-    "event:WithdrawLoomCoin": "Withdrawal",
+    "event:WithdrawLoomCoin": "인출",
     "event:TokenWithdrawalSigned": "서명된 인출",
-    "TokenWithdrawn": "Withdrawal",
-    "LoomCoinReceived": "Deposit",
-    "ETHReceived": "Deposit"
+    "TokenWithdrawn": "인출",
+    "LoomCoinReceived": "입금",
+    "ETHReceived": "입금"
   },
   "button": {
     "next": "Next",

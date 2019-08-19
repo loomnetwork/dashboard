@@ -2,8 +2,7 @@ import BN from "bn.js"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
-import { TokenData, tokenService } from "./services/TokenService"
-import { store } from "./store"
+import { TokenData } from "./services/TokenService"
 import productionTokens from "@/assets/tokens/production.tokens.json"
 import extDevTokens from "@/assets/tokens/ext-dev.tokens.json"
 import stageTokens from "@/assets/tokens/stage.tokens.json"
@@ -115,14 +114,13 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
 /**
  * Return list of token symbol from localStorage
  */
-export function getWalletFromLocalStorage() {
+export function getWalletFromLocalStorage(env: string) {
   const tokens = {
     "production": productionTokens,
     "ext-dev": extDevTokens,
     "stage": stageTokens,
     "dev": devTokens,
   }
-  const env = store.state.env
   let wallet = JSON.parse(localStorage.getItem("walletTokens")!) // Get wallet from localStorage
 
   if (!wallet || !Object.keys(wallet).includes(env)) {
@@ -144,17 +142,17 @@ export function getWalletFromLocalStorage() {
 
 /**
  * To add the new token symbol into wallet, then update wallet in localStorage
- * @param newSymbol Token symbol
+ * @param token Token data
+ * @param env Current environment
  */
-export function setNewTokenToLocalStorage(newSymbol: TokenData) {
-  const env = store.state.env
-  const wallet = getWalletFromLocalStorage()
+export function setNewTokenToLocalStorage(token: TokenData, env: string) {
+  const wallet = getWalletFromLocalStorage(env)
   // check symbol not exist in wallet
-  const isExist = wallet[env].find((symbol) => newSymbol.plasma === symbol)
+  const isExist = wallet[env].find((address) => token.plasma === address)
   if (!isExist) {
-    wallet[env].push(newSymbol.plasma)
+    wallet[env].push(token.plasma)
+    localStorage.setItem("walletTokens", JSON.stringify(wallet))
   }
-  localStorage.setItem("walletTokens", JSON.stringify(wallet))
 }
 
 export function isMobile() {

@@ -175,7 +175,7 @@ export async function addToken(context: PlasmaContext, token: TokenData) {
   } catch (error) {
     console.error("error ", error)
   }
-  setNewTokenToLocalStorage(token)
+  setNewTokenToLocalStorage(token, context.rootState.env)
 }
 
 /**

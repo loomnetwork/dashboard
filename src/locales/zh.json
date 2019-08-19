@@ -320,14 +320,14 @@
       "tier_distribution": "Tier distribution"
     },
     "deposit_withdraw": {
-      "wallet": "Wallet",
-      "tokens": "Tokens",
-      "add_token": "Add token"
+      "wallet": "钱包",
+      "tokens": "代币",
+      "add_token": "添加代币"
     },
     "mobile_account": {
-      "warning": "Warning",
-      "loom_awaiting_transfer": "LOOM awaiting transfer to plasmachain account.",
-      "resume_deposit": "Resume Deposit",
+      "warning": "提醒",
+      "loom_awaiting_transfer": "LOOM 正在等待转移到 plasmachain 账户。",
+      "resume_deposit": "继续存入",
       "election_cycle": "Election Cycle",
       "time_left": "Time left",
       "delegations": "Delegations"

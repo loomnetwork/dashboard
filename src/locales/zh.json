@@ -327,23 +327,23 @@
     "mobile_account": {
       "warning": "提醒",
       "loom_awaiting_transfer": "LOOM 正在等待转移到 plasmachain 账户。",
-      "resume_deposit": "继续存入",
-      "election_cycle": "Election Cycle",
-      "time_left": "Time left",
-      "delegations": "Delegations"
+      "resume_deposit": "Resume Deposit",
+      "election_cycle": "选举周期",
+      "time_left": "剩下时间",
+      "delegations": "委托"
     },
     "transfer_gateway": {
-      "connect_new_contracts": "Connect New Contracts",
-      "view_docs": "View Documentations",
-      "debug_mapped_contract": "Debug Mapped Contract",
-      "view_logs": "View Logs",
-      "loading": "Loading...",
+      "connect_new_contracts": "连接新合约",
+      "view_docs": "查看文档",
+      "debug_mapped_contract": "调试已映射合约",
+      "view_logs": "查看日志",
+      "loading": "加载中……",
       "fields": {
         "id": "Id",
-        "created_at": "Created At",
-        "token_owner": "Token Owner",
-        "token_kind": "Token Kind",
-        "token_amount": "Token Amount",
+        "created_at": "创建于",
+        "token_owner": "代币拥有者",
+        "token_kind": "代币种类",
+        "token_amount": "代币数量",
         "topic": "Topic"
       }
     },

@@ -78,20 +78,20 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.subscribeAction({
     after(action) {
       if (/^plasma.+addToken$/.test(action.type)) {
-        const tokenInfo = tokenService.getTokenbySymbol(action.payload)
+        const tokenInfo = action.payload
         if (tokenInfo.ethereum) {
-          ethereumModule.initERC20(action.payload)
+          ethereumModule.initERC20(tokenInfo.symbol)
           const ethereumGateways = EthereumGateways.service()
           log("adding gateway for %s to ethereum", tokenInfo.symbol)
           const etherumTokenAddress = tokenInfo.ethereum
-          const adapter = ethereumGateways.add(action.payload, etherumTokenAddress)
+          const adapter = ethereumGateways.add(tokenInfo.symbol, etherumTokenAddress)
           // @ts-ignore
           const ethGatewayAddr = Address.fromString("eth:" + adapter!.contract._address)
-          PlasmaGateways.service().add("ethereum", action.payload, ethGatewayAddr)
+          PlasmaGateways.service().add("ethereum", tokenInfo.symbol, ethGatewayAddr)
         }
         if (tokenInfo.binance) {
           log("adding gateway for %s to binance", tokenInfo.symbol)
-          PlasmaGateways.service().add("binance", action.payload)
+          PlasmaGateways.service().add("binance", tokenInfo.symbol)
           gatewayModule.refreshWithdrawalReceipt({ chain: "binance", symbol: tokenInfo.symbol })
         }
         // XXX dont refresh all allowances, just the current token

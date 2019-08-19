@@ -12,7 +12,7 @@ import BN from "bn.js"
 import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import { feedbackModule } from "@/feedback/store"
 import { i18n } from "@/i18n"
 import { formatTokenAmount } from "@/filters"
@@ -154,18 +154,11 @@ export function addCoinState(state: PlasmaState, symbol: string) {
   }
 }
 
-export async function addToken(context: PlasmaContext, tokenSymbol: string) {
+export async function addToken(context: PlasmaContext, token: TokenData) {
   const state = context.state
-  const symbol = tokenSymbol.toUpperCase()
-  const token = tokenService.getTokenbySymbol(symbol)
   const web3 = state.web3!
   // const network = state.networkId // 'us1'
-  const chain = "plasma"
-  if (token === undefined) {
-    throw new Error("Could not find token symbol " + tokenSymbol)
-  }
-  const address = tokenService.getTokenAddressBySymbol(symbol, chain)
-  if (symbol in state.coins) {
+  if (token.symbol in state.coins) {
     return
   }
   state.coins[token.symbol] = {
@@ -177,12 +170,12 @@ export async function addToken(context: PlasmaContext, tokenSymbol: string) {
   log("add token state ", state.coins)
   let contract
   try {
-    contract = new web3.eth.Contract(ERC20ABI, address) as ERC20
-    await addContract(tokenSymbol, PlasmaTokenKind.ERC20, contract)
+    contract = new web3.eth.Contract(ERC20ABI, token.plasma) as ERC20
+    await addContract(token.symbol, PlasmaTokenKind.ERC20, contract)
   } catch (error) {
     console.error("error ", error)
   }
-  setNewTokenToLocalStorage(symbol)
+  setNewTokenToLocalStorage(token, context.rootState.env)
 }
 
 /**

@@ -2,6 +2,11 @@ import BN from "bn.js"
 import BigNumber from "bignumber.js"
 import Cards from "./data/cards.json"
 import CardDetails from "./data/cardDetail.json"
+import { TokenData } from "./services/TokenService"
+import productionTokens from "@/assets/tokens/production.tokens.json"
+import extDevTokens from "@/assets/tokens/ext-dev.tokens.json"
+import stageTokens from "@/assets/tokens/stage.tokens.json"
+import devTokens from "@/assets/tokens/dev.tokens.json"
 
 export const ZERO = new BN(0)
 
@@ -109,29 +114,47 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
 /**
  * Return list of token symbol from localStorage
  */
-export const getWalletFromLocalStorage = (): string[] => {
-  let strWallet = localStorage.getItem("wallet") // Get wallet from localStorage
-  if (!strWallet) {
-    // if wallet is not exist in localStorage
-    strWallet = JSON.stringify(["LOOM", "ETH"]) // Create default wallet
-    localStorage.setItem("wallet", strWallet) // set wallet to localStorage
+export function getWalletFromLocalStorage(env: string) {
+  const tokens = {
+    "production": productionTokens,
+    "ext-dev": extDevTokens,
+    "stage": stageTokens,
+    "dev": devTokens,
   }
-  const wallet = JSON.parse(strWallet)
-  return wallet
+  let wallets = JSON.parse(localStorage.getItem("wallets")!) // Get wallet from localStorage
+
+  if (!wallets || !Object.keys(wallets).includes(env)) {
+    const plasmaLoomAddr = tokens[env].find((token) => token.symbol === "LOOM")!.plasma
+    const plasmaEthAddr = tokens[env].find((token) => token.symbol === "ETH")!.plasma
+
+    // Create default wallet
+    if (!wallets) {
+      wallets = { [env]: [plasmaLoomAddr, plasmaEthAddr] }
+    } else {
+      wallets[env] = [plasmaLoomAddr, plasmaEthAddr]
+    }
+
+    localStorage.setItem("wallets", JSON.stringify(wallets)) // set wallet to localStorage
+  }
+
+  return wallets[env]
 }
 
 /**
  * To add the new token symbol into wallet, then update wallet in localStorage
- * @param newSymbol Token symbol
+ * @param token Token data
+ * @param env Current environment
  */
-export const setNewTokenToLocalStorage = (newSymbol: string = "") => {
-  const wallet = getWalletFromLocalStorage()
+export function setNewTokenToLocalStorage(token: TokenData, env: string) {
+  const wallet = getWalletFromLocalStorage(env)
   // check symbol not exist in wallet
-  const isExist = wallet.find((symbol) => newSymbol === symbol)
+  const isExist = wallet.find((address) => token.plasma === address)
   if (!isExist) {
-    wallet.push(newSymbol.toUpperCase())
+    wallet.push(token.plasma)
+    const wallets = JSON.parse(localStorage.getItem("wallets")!)
+    wallets[env] = wallet
+    localStorage.setItem("wallets", JSON.stringify(wallets))
   }
-  localStorage.setItem("wallet", JSON.stringify(wallet))
 }
 
 export function isMobile() {

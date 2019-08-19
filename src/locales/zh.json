@@ -21,9 +21,9 @@
     "select_path_err_tx": "无法连接到你的钱包。请重试。",
     "load_wallet_err_tx": "加载你的钱包账户出错。请重试。",
     "copied_tx": "复制到剪贴板",
-    "receiver_addr_err_tx": "无效的接收人地址",
+    "receiver_addr_err_tx": "无效的接收者地址",
     "invalid_amount": "无效的数量",
-    "invalid_addr": "无效的接收人地址",
+    "invalid_addr": "无效的接收者地址",
     "amount_input_should_less": "无效的数量。应该少于 {amount}",
     "amount_input_should_more": "无效的数量。应该多于 {amount}",
     "amount_input_invalid_amount": "请输入一个有效的数量",
@@ -573,32 +573,32 @@
         "undelegate": "取消委托"
       },
       "account_mapping_modal": {
-        "description": "This is the first time you are accessing the dashboard with this account.",
-        "choose": "Choose weither to map to a new loom account or an existing one.",
-        "map_to": "Map to an existing loom account (for validators)",
-        "new_account": "Create a new account",
-        "input_help": "The private key is used to sign the mapping and is then discarded."
+        "description": "这是你首次使用该账户访问锁仓面版。",
+        "choose": "选择映射到一个新的 loom 账户或现有账户",
+        "map_to": "映射到现有的 loom 账户（针对验证者）",
+        "new_account": "创建新账户",
+        "input_help": "私钥用于签署映射，然后就可以丢弃。"
       },
       "add_token_modal": {
-        "add_new": "Add New Token",
-        "token_symbol": "Token Symbol"
+        "add_new": "添加新代币",
+        "token_symbol": "代币标志"
       },
       "transfer_all_cards": {
-        "title": "Transfer All Cards",
-        "this_will_transfer": "This will transfer all of your {edition} edition cards.",
-        "amount": "Amount : ",
-        "receiver_address": "Receiver Loom Address:",
-        "confirm_transfer": "I confirm that i want to transfer {amount} cards to {receiverAddress} address.",
-        "transfer_all": "Transfer All"
+        "title": "转移所有卡牌",
+        "this_will_transfer": "这将转移你所有的 {edition} 版卡牌。",
+        "amount": "数量 : ",
+        "receiver_address": "接收者 loom 地址：",
+        "confirm_transfer": "我确认我想转移 {amount} 张卡牌到 {receiverAddress} 地址。",
+        "transfer_all": "全部转移"
       },
       "transfer_cards_modal": {
-        "title": "Transfer Cards",
-        "card_id": "Card Id: ",
-        "name": "Name: ",
-        "variation": "Variation: ",
-        "your_exist_card": "Your existing card: ",
-        "amount": "Amount: (max: {amount})",
-        "receiver_address": "Receiver Loom Address:",
+        "title": "转移卡牌",
+        "card_id": "卡牌 Id： ",
+        "name": "名字: ",
+        "variation": "变体： ",
+        "your_exist_card": "你现有的卡牌： ",
+        "amount": "数量：（最多： {amount}）",
+        "receiver_address": "接收者 loom 地址：",
         "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
         "transfer": "Transfer"
       },
@@ -607,7 +607,7 @@
         "pack_type": "Pack Type",
         "your_exist_pack": "Your existing pack: ",
         "amount": "Amount: (max: {amount})",
-        "receiver_address": "Receiver Loom Address: ",
+        "receiver_address": "接收者 loom 地址： ",
         "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
         "transfer": "Transfer"
       },
@@ -616,7 +616,7 @@
         "token_type": "Token Type: ",
         "balance": "Your token balance: ",
         "amount": "Amount: (max: {amount})",
-        "receiver_address": "Receiver Loom Address: ",
+        "receiver_address": "接收者 loom 地址： ",
         "transfer": "Transfer"
       }
     },

@@ -121,23 +121,23 @@ export function getWalletFromLocalStorage(env: string) {
     "stage": stageTokens,
     "dev": devTokens,
   }
-  let wallet = JSON.parse(localStorage.getItem("walletTokens")!) // Get wallet from localStorage
+  let wallets = JSON.parse(localStorage.getItem("wallets")!) // Get wallet from localStorage
 
-  if (!wallet || !Object.keys(wallet).includes(env)) {
+  if (!wallets || !Object.keys(wallets).includes(env)) {
     const plasmaLoomAddr = tokens[env].find((token) => token.symbol === "LOOM")!.plasma
     const plasmaEthAddr = tokens[env].find((token) => token.symbol === "ETH")!.plasma
 
     // Create default wallet
-    if (!wallet) {
-      wallet = { [env]: [plasmaLoomAddr, plasmaEthAddr] }
+    if (!wallets) {
+      wallets = { [env]: [plasmaLoomAddr, plasmaEthAddr] }
     } else {
-      wallet[env] = [plasmaLoomAddr, plasmaEthAddr]
+      wallets[env] = [plasmaLoomAddr, plasmaEthAddr]
     }
 
-    localStorage.setItem("walletTokens", JSON.stringify(wallet)) // set wallet to localStorage
+    localStorage.setItem("wallets", JSON.stringify(wallets)) // set wallet to localStorage
   }
 
-  return wallet
+  return wallets[env]
 }
 
 /**
@@ -148,10 +148,12 @@ export function getWalletFromLocalStorage(env: string) {
 export function setNewTokenToLocalStorage(token: TokenData, env: string) {
   const wallet = getWalletFromLocalStorage(env)
   // check symbol not exist in wallet
-  const isExist = wallet[env].find((address) => token.plasma === address)
+  const isExist = wallet.find((address) => token.plasma === address)
   if (!isExist) {
-    wallet[env].push(token.plasma)
-    localStorage.setItem("walletTokens", JSON.stringify(wallet))
+    wallet.push(token.plasma)
+    const wallets = JSON.parse(localStorage.getItem("wallets")!)
+    wallets[env] = wallet
+    localStorage.setItem("wallets", JSON.stringify(wallets))
   }
 }
 

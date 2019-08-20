@@ -802,11 +802,11 @@
     },
     "alert": {
       "title": {
-        "withdraw_ongoing": "Withdrawal ongoing"
+        "withdraw_ongoing": "提取正在进行"
       },
       "message": {
-        "withdraw_in_process": "A withdrawal is still being processed. Please try again later.",
-        "existing_withdraw_being_process": "An existing withdrawal is currently being processed. Please try again later."
+        "withdraw_in_process": "正在进行一笔提取。请晚点再试。",
+        "existing_withdraw_being_process": "目前正在进行一笔提取。请晚点再试。"
       }
     },
     "require_confirmation": {
@@ -819,11 +819,11 @@
     }
   },
   "input_placeholder": {
-    "enter_amount": "Enter amount",
-    "filter": "Filter",
-    "gateway_addr": "Gateway Address",
-    "amount": "Amount",
-    "memo": "Memo text",
+    "enter_amount": "输入数量",
+    "filter": "筛选条件",
+    "gateway_addr": "网关地址",
+    "amount": "数量",
+    "memo": "备注文字",
     "chain_addr": "{transferChain} address",
     "loom_private_base64": "Loom private key (base64)",
     "search": "Search",

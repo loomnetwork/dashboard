@@ -310,25 +310,25 @@
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
       "validators": "검증자",
-      "next_election_in": "Next election in:",
-      "total_staked_amount": "Total staked amount",
-      "stake": "Stake",
+      "next_election_in": "다음 선거 주기까지 남은 시간:",
+      "total_staked_amount": "총 스테이킹 금액",
+      "stake": "스테이킹",
       "name": "이름"
     },
     "analytics": {
-      "total_amount_staked": "Total amount staked",
+      "total_amount_staked": "총 스테이킹 금액",
       "tier_distribution": "Tier distribution"
     },
     "deposit_withdraw": {
       "wallet": "지갑",
-      "tokens": "Tokens",
+      "tokens": "토큰",
       "add_token": "Add token"
     },
     "mobile_account": {
-      "warning": "Warning",
+      "warning": "주의",
       "loom_awaiting_transfer": "LOOM awaiting transfer to plasmachain account.",
-      "resume_deposit": "Resume Deposit",
-      "election_cycle": "Election Cycle",
+      "resume_deposit": "입금 계속하기",
+      "election_cycle": "선거 주기",
       "time_left": "Time left",
       "delegations": "Delegations"
     },
@@ -337,13 +337,13 @@
       "view_docs": "View Documentations",
       "debug_mapped_contract": "Debug Mapped Contract",
       "view_logs": "View Logs",
-      "loading": "Loading...",
+      "loading": "로딩 중...",
       "fields": {
         "id": "Id",
-        "created_at": "Created At",
-        "token_owner": "Token Owner",
-        "token_kind": "Token Kind",
-        "token_amount": "Token Amount",
+        "created_at": "생성 시간",
+        "token_owner": "토큰 소유자",
+        "token_kind": "토큰 종류",
+        "token_amount": "토큰 양",
         "topic": "Topic"
       }
     },
@@ -411,8 +411,8 @@
       "my_stakes": "내 스테이크",
       "status": "상태",
       "block_explorer": "블록 탐색기",
-      "back": "Back",
-      "sign_out": "Sign out"
+      "back": "뒤로",
+      "sign_out": "로그아웃"
     },
     "faucet_sidebar": {
       "analytics": "분석",
@@ -422,7 +422,7 @@
       "rewards": "보상",
       "history": "거래 내역",
       "deposit_withdraw": "입금/인출",
-      "staking": "Staking",
+      "staking": "스테이킹",
       "staking_guide": "스테이킹 가이드",
       "faq": "자주 묻는 질문",
       "account_explorer": "계정 탐색기",
@@ -432,13 +432,13 @@
       "transfer_gateway": "전송 게이트웨이",
       "validator_management": "검증자 관리",
       "feedback_form": "고객센터에 문의하기",
-      "plasma_wallet": "Plasma Wallet",
-      "developers": "Developers",
-      "help": "Help"
+      "plasma_wallet": "플라즈마 지갑",
+      "developers": "개발자",
+      "help": "도움말"
     },
     "history_event": {
-      "confirmations": "Confirmations",
-      "block_no": "Block # "
+      "confirmations": "확인",
+      "block_no": "블록 #"
     },
     "gateway": {
       "complete_deposit": "입금 완료하기",
@@ -456,20 +456,20 @@
         "failure": "입금에 실패하였습니다..."
       },
       "deposit_binance": {
-        "title_deposit": "Deposit to Plasmachain from Binance",
-        "title_success": "Success",
+        "title_deposit": "Binance에서 플라즈마체인으로 입금",
+        "title_success": "성공",
         "description": "Please go to {link} and fill in the form as show below.",
-        "binance_link": "https://binance.org/en/balances",
-        "send_asset": "Send Asset",
-        "select_asset": "Select Asset",
+        "binance_link": "https://binance.org/kr/balances",
+        "send_asset": "자산 전송",
+        "select_asset": "자산 선택",
         "to_address": "To Address",
         "send_amount": "Amount to send",
-        "memo": "Memo",
+        "memo": "메모",
         "send_amount_placeholder": "Enter the deposit amount",
         "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
         "next": "Next",
         "close": "Close",
-        "back": "Back",
+        "back": "뒤로",
         "cancel": "Cancel"
       },
       "deposit_form": {
@@ -721,7 +721,7 @@
   },
   "button": {
     "next": "Next",
-    "back": "Back",
+    "back": "뒤로",
     "close": "Close",
     "cancel": "Cancel",
     "confirm": "Confirm",

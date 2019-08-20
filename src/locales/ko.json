@@ -34,8 +34,8 @@
     "input_address_invalid_chain": "유효하지 않은 {chain} 주소입니다.",
     "error_try_again": "오류가 발생했습니다. 다시 시도해주세요.",
     "no_event_found": "No event found on this chain or token",
-    "no_token_found": "Token {tokenName} not found",
-    "transaction_out_of_gas": "Transaction out of gas. Consider increasing the gas limit"
+    "no_token_found": "{tokenName} 토큰을 찾을 수 없습니다.",
+    "transaction_out_of_gas": "트랜잭션 가스가 부족합니다. 가스 한도를 높여보세요."
   },
   "transfer_all": "모두 전송 ({amount} LOOM)",
   "views": {
@@ -313,14 +313,14 @@
       "next_election_in": "Next election in:",
       "total_staked_amount": "Total staked amount",
       "stake": "Stake",
-      "name": "Name"
+      "name": "이름"
     },
     "analytics": {
       "total_amount_staked": "Total amount staked",
       "tier_distribution": "Tier distribution"
     },
     "deposit_withdraw": {
-      "wallet": "Wallet",
+      "wallet": "지갑",
       "tokens": "Tokens",
       "add_token": "Add token"
     },

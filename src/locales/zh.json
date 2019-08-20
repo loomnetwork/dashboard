@@ -327,7 +327,7 @@
     "mobile_account": {
       "warning": "提醒",
       "loom_awaiting_transfer": "LOOM 正在等待转移到 plasmachain 账户。",
-      "resume_deposit": "Resume Deposit",
+      "resume_deposit": "继续未完成的存入",
       "election_cycle": "选举周期",
       "time_left": "剩下时间",
       "delegations": "委托"
@@ -824,11 +824,11 @@
     "gateway_addr": "网关地址",
     "amount": "数量",
     "memo": "备注文字",
-    "chain_addr": "{transferChain} address",
-    "loom_private_base64": "Loom private key (base64)",
-    "search": "Search",
-    "loom_addr": "Loom Address",
-    "enter_your_addr": "Enter your address",
-    "token_name": "Token name"
+    "chain_addr": "{transferChain} 地址",
+    "loom_private_base64": "Loom 私钥 (base64)",
+    "search": "搜索",
+    "loom_addr": "Loom 地址",
+    "enter_your_addr": "输入你的地址",
+    "token_name": "代币名称"
   }
 }

@@ -753,10 +753,10 @@
       "claiming_dpos_reward": "正在领取 DPOS 2 的奖励...",
       "claiming_reward": "正在领取奖励...",
       "depositing_eth": "正在存入 ETH",
-      "checking_receipt": "Checking for pre-existing receipts...",
-      "check_account_mapping": "Checking account mapping",
-      "create_new_mapping": "Creating a new mapping from ethereum account",
-      "depositing_to_plasma": "Depositing to Plasmachain Gateway...",
+      "checking_receipt": "正在检查之前的收据……",
+      "check_account_mapping": "正在检查账户映射",
+      "create_new_mapping": "正在创建一个来自于以太坊账户的新映射",
+      "depositing_to_plasma": "正在存入到 PlasmaChain 网关",
       "awaiting_oracle": "等待 Oracle 签名……",
       "complete_withdrawal_binance": "正在完成提取到 binance……",
       "transfering_card": "正在转移卡牌",
@@ -777,28 +777,28 @@
       "approval_failed": "批准失败。",
       "err_while_register": "注册出错。请联系客服。",
       "could_not_deposit_eth": "不能存入 ETH，请确认为此事务支付足够的 gas 费。",
-      "deposit_approval_failed": "Deposit approval failed.",
+      "deposit_approval_failed": "存入批准失败。",
       "withdraw_failed": "提取出错，请重试或联系客服。",
-      "supplied_key_already_mapped": "The supplied key is already mapped.",
-      "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
-      "balance_not_enough": "Your balance isn't enough. Please deposit first.",
-      "address_existed": "This address is already exists in your deployer list.",
-      "failed_to_get_receipt": "Failed to get receipt"
+      "supplied_key_already_mapped": "提供的密钥已映射。",
+      "unexpected_error_while_add_account": "添加账户映射时出现意外错误。",
+      "balance_not_enough": "你的余额不足。请先存入一些。",
+      "address_existed": "这个地址已经在你的部署者清单里了。",
+      "failed_to_get_receipt": "获取收据失败"
     },
     "info": {
-      "reward_claimed": "Rewards succesfully claimed.",
-      "please_track_transaction": "Please track the transaction on your wallet",
-      "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
-      "withdrawal_in_progress": "Withdrawal already in progress.",
-      "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
-      "please_sign_tx": "Please sign the tx using your wallet."
+      "reward_claimed": "成功领取奖励。",
+      "please_track_transaction": "请在你的钱包上跟踪这个事务",
+      "please_track_deposit_approval": "请在你的钱包上跟踪这个存入批准事务。",
+      "withdrawal_in_progress": "提取已经在进行了。",
+      "withdrawal_request_sent": "提取请求已发送。你的 binance 账户很快将收到这笔资金。",
+      "please_sign_tx": "请用你的钱包签署这个事务。"
     },
     "success": {
-      "transaction_success": "Transaction sent successfully.",
-      "eth_addr_copied": "Ethereum address copied.",
-      "plasma_addr_copied": "Plasma address copied.",
-      "address_copied": "Address copied.",
-      "register_success": "Successfully registered."
+      "transaction_success": "事务已成功发送。",
+      "eth_addr_copied": "已复制以太坊地址。",
+      "plasma_addr_copied": "已复制 Plasma 地址。",
+      "address_copied": "已复制地址。",
+      "register_success": "已成功注册。"
     },
     "alert": {
       "title": {

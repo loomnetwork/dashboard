@@ -189,7 +189,7 @@
       "4_step_2": "Sign the transaction for every validator",
       "press_claim_button": "내 계정 페이지로 가서 \"보상 수령하기\" 버튼을 클릭하세요.",
       "asked_to_sign_transaction": "트랜잭션 서명을 요청하는 팝업에서 승인(Sign)을 클릭하세요.",
-      "if_rewards_claim": "If the rewards claim is successful, then you will see this message: “X LOOM will be reclaimed after the next election.”",
+      "if_rewards_claim": "보상을 성공적으로 수령했다면, 다음과 같은 메시지가 뜰 것입니다: \"X LOOM은 다음 선거 주기가 끝날 때 수령이 완료될 것입니다.\"",
       "withdraw_to_ethereum": "2. 이더리움으로 출금하기",
       "5_step_1": "출금할 금액(LOOM) 입력",
       "5_step_2": "두 개의 트랜잭션에 서명 (플라즈마체인상에서)",

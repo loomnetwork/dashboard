@@ -189,7 +189,7 @@
       "4_step_2": "为每一个验证者签署事务",
       "press_claim_button": "至“我的账户”页面，点击“领取奖励”按钮。",
       "asked_to_sign_transaction": "会要求你签署此事务。",
-      "if_rewards_claim": "If the rewards claim is successful, then you will see this message: “X LOOM will be reclaimed after the next election.”",
+      "if_rewards_claim": "如果奖励领取成功，你将会看到这条消息：“X LOOM 将会在下次选举结束时被取回。”",
       "withdraw_to_ethereum": "2. 提取到以太坊",
       "5_step_1": "选择要提取的 LOOM 数量",
       "5_step_2": "签署两个事务（在 PlasmaChain 上）",

@@ -814,7 +814,7 @@
         "complete_deposit": "完成存入"
       },
       "message": {
-        "please_sign_click": "Please sign click confirm to complete your deposit."
+        "please_sign_click": "请点击以确认完成你的存入。"
       }
     }
   },

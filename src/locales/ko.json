@@ -61,25 +61,25 @@
       "sign_out": "로그아웃",
       "create_account": "계정 생성",
       "restore_account": "계정 복구",
-      "ask_from_relentless_marketplace": "Are you from Relentless Marketplace ?",
-      "if_from_relentless_marketplace": "If you are, looks like you have to link your marketplace account to this dashboard account",
-      "link_my_account": "Link my account",
-      "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
-      "you_sure": "Are you sure ?",
-      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
-      "create_new_account": "Create new account",
-      "select_wallet": "Select wallet",
+      "ask_from_relentless_marketplace": "릴렌트리스 마켓플레이스에서 오셨나요 ?",
+      "if_from_relentless_marketplace": "그렇다면, 당신의 마켓플레이스 계정과 대시보드 계정을 연결해야 합니다.",
+      "link_my_account": "내 계정 연결",
+      "not_from_relentless_marketplace": "아니요, 저는 릴렌트리스 마켓플레이스에서 오지 않았습니다.",
+      "you_sure": "정말인가요 ?",
+      "warn_note": "릴렌트리스 계정이 연결되지 않은 채로 새로운 플라즈마 계정을 생성하면, 릴렌트리스 마켓플레이스에서 당신의 자산에 접근할 수 없습니다.",
+      "create_new_account": "새 계정 생성",
+      "select_wallet": "지갑 선택",
       "wallets": {
-        "metamask": "Metamask",
-        "ledger_via_metamask": "Ledger (via Metamask)",
-        "trezor_via_metamask": "Trezor (via Metamask)",
-        "ledger_legacy": "Ledger (Legacy)",
-        "explore": "Explore"
+        "metamask": "메타마스크",
+        "ledger_via_metamask": "Ledger (메타마스크를 통한)",
+        "trezor_via_metamask": "Trezor (메타마스크를 통한)",
+        "ledger_legacy": "Ledger (하드웨어로 연결)",
+        "explore": "살펴보기"
       },
-      "no_metamask": "Looks like you don't have {metamask} extension",
-      "get_one": "Get one here!",
-      "now_deprecated": "Now deprecated",
-      "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
+      "no_metamask": "{metamask} 확장 프로그램이 설치되어있지 않습니다.",
+      "get_one": "여기에서 설치하세요!\n",
+      "now_deprecated": "더 이상 사용되지 않습니다.",
+      "recommend_use_ledger_via_metamask": "{ledgerMetamask}를 사용하는 것을 권장합니다."
     },
     "help": {
       "what_is_plasma_chain": "PlasmaChain이 무엇인가요?",
@@ -131,10 +131,10 @@
       "yes_if_the_protocol_rules": "네. 프로토콜 규칙을 준수하지 않을 경우, 검증자는 '처벌' 받을 수 있습니다. 즉, 그들의 풀에 위임된 토큰과 스테이킹 된 토큰 일부를 몰수하게 됩니다. 이러한 처벌은 악의적인 행동을 방지하고, 모두가 같은 규칙에 따라 행동하는 네트워크를 유지하는 데 도움을 줍니다. 이 시스템은 부정직하고 잘못된 행동을 하면 오히려 더 큰 비용이 들도록 설계되었습니다. 예를 들어, 유효하지 않은 블록 전송, 이중 지급 시도 및(또는) 다운 타임 발생의 경우, 처벌을 받게 됩니다. 처벌 조건이 확실히 결정되는 대로 자세한 내용을 공개할 예정입니다.",
       "where_do_the_tokens_go": "검증자들이 처벌받으면, 토큰은 어떻게 되나요?",
       "slashed_tokens_will_be_contributed": "몰수된 토큰은 앞으로의 블록 보상을 위한 비상금으로 환원되어 네트워크에서 검증 및 스테이킹을 하는 사람들에게 지급됩니다.",
-      "check_your_balance": "Check your token balances",
-      "deposit_to_plasmachain": "Deposit to Plasmachain from Ethereum",
-      "withdraw_to_ethereum": "Withdraw to Ethereum",
-      "transfer_token": "Transfer tokens to other PlasmaChain accounts",
+      "check_your_balance": "당신의 토큰 잔액을 확인하세요",
+      "deposit_to_plasmachain": "이더리움에서 플라즈마체인으로 입금",
+      "withdraw_to_ethereum": "이더리움으로 출금",
+      "transfer_token": "다른 플라즈마체인 계정으로 토큰 전송",
       "check_your_asset": "Check your Relentless assets (more coming soon)",
       "transfer_asset_to_other": "Transfer assets to other addresses",
       "in_order_to_deploy_contract": "In order to deploy contracts to PlasmaChain, you need to whitelist your deployment keys. You can manage your keys below, whitelist an existing key or generate a new one.",
@@ -298,11 +298,11 @@
       "loading_validators": "Loading validators....",
       "delegator_stake": "Delegators Stake",
       "active": "Active",
-      "inactive": "Inactive",
+      "inactive": "비활성화",
       "my_stake": "내 스테이킹",
       "states": {
-        "bonding": "Bonding",
-        "bonded": "Bonded",
+        "bonding": "잠그는 중",
+        "bonded": "잠김",
         "unbonding": "Unbounding",
         "redelegating": "Redelegating"
       }
@@ -489,7 +489,7 @@
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
         "recipient": "Recipient on {chain}",
-        "withdraw": "Withdraw"
+        "withdraw": "출금"
       }
     },
     "layout": {
@@ -520,18 +520,18 @@
       },
       "faucet_delegate_modal": {
         "amount": "수량:",
-        "locktime": "Locktime",
-        "bonuses": "Bonuses",
-        "delegate": "Delegate",
+        "locktime": "락업 기간",
+        "bonuses": "보너스",
+        "delegate": "위임",
         "cancel": "취소",
         "your_balance": "Your balance is {amount} LOOM",
         "locktime_bonuses": "락업 기간 / 보너스:",
         "warning_please_note_that_any": "경고: 추가로 위임할 경우, 기존의 위임에 덮어씌워지니 주의하세요!",
         "warning_please_note_that_un_delegating": "경고: 위임을 취소할 경우, 스테이킹 기간 중에 얻은 보상을 받을 수 없습니다.",
-        "two_weeks": "2 weeks",
-        "three_months": "3 months",
-        "six_months": "6 months",
-        "one_year": "1년"
+        "two_weeks": "2 주",
+        "three_months": "3 개월",
+        "six_months": "6 개월",
+        "one_year": "1 년"
       },
       "restore_account_modal": {
         "please_type_in_your_seed": "아래 입력 칸에 시드 문자를 입력해주세요.",
@@ -600,7 +600,7 @@
         "amount": "Amount: (max: {amount})",
         "receiver_address": "Receiver Loom Address:",
         "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
-        "transfer": "Transfer"
+        "transfer": "전송"
       },
       "transfer_packs_modal": {
         "title": "Transfer Packs",
@@ -609,7 +609,7 @@
         "amount": "Amount: (max: {amount})",
         "receiver_address": "Receiver Loom Address: ",
         "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
-        "transfer": "Transfer"
+        "transfer": "전송"
       },
       "transfer_token_form_modal": {
         "title": "Transfer Token",
@@ -617,7 +617,7 @@
         "balance": "Your token balance: ",
         "amount": "Amount: (max: {amount})",
         "receiver_address": "Receiver Loom Address: ",
-        "transfer": "Transfer"
+        "transfer": "전송"
       }
     },
     "blockExplorer": {
@@ -653,24 +653,24 @@
     },
     "gameAsset": {
       "cards": {
-        "my_cards": "My Cards",
-        "edition": "Edition",
+        "my_cards": "내 카드",
+        "edition": "에디션",
         "all_edition": "All edition",
         "no_card": "No cards to show",
-        "amount": "card(s)",
-        "transfer": "Transfer",
+        "amount": "카드(들)",
+        "transfer": "전송",
         "transfer_all": "Transfer all cards in"
       },
       "packs": {
-        "my_packs": "My Packs",
-        "transfer": "Transfer"
+        "my_packs": "내 팩",
+        "transfer": "전송"
       }
     },
     "registerCandidate": {
       "public_key": "Public key",
       "validator_name": "Validator Name",
       "description": "Description",
-      "website": "Website",
+      "website": "웹사이트",
       "fee": "수수료",
       "stake_million_tokens": "Stake a 1.25 million tokens",
       "required": "Required",
@@ -698,10 +698,10 @@
       "check_out": "Check out this {link}.",
       "public_key": "Public key",
       "fee": "수수료",
-      "new_fee": "New fee",
+      "new_fee": "새 수수료",
       "candidate_state": "Candidate state",
       "max_referral_percentage": "Max referral %",
-      "slash_percentage": "Slash %",
+      "slash_percentage": "처벌 %",
       "delegation_total": "Delegation Total",
       "staked_amount": "Staked Amount",
       "whitelist_locktime_tier": "Whitelist locktime tier",
@@ -724,7 +724,7 @@
     "back": "뒤로",
     "close": "닫기",
     "cancel": "취소",
-    "confirm": "Confirm",
+    "confirm": "확인",
     "continue": "Continue",
     "done": "완료",
     "submit": "제출"
@@ -742,10 +742,10 @@
       "batch_transfer": "Batch Transfer",
       "pack_transfer": "Pack transfer",
       "adding_deployer": "Adding deployer key",
-      "new_key": "New key"
+      "new_key": "새 키"
     },
     "step": {
-      "delegating": "Delegating...",
+      "delegating": "위임 중...",
       "scheduling_redelegate": "Scheduling redelegation...",
       "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
       "undelegating_from": "Undelegating from ",
@@ -820,7 +820,7 @@
   },
   "input_placeholder": {
     "enter_amount": "Enter amount",
-    "filter": "Filter",
+    "filter": "필터",
     "gateway_addr": "Gateway Address",
     "amount": "수량",
     "memo": "Memo text",

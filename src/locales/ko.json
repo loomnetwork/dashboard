@@ -197,7 +197,7 @@
       "5_step_4": "이더리움 확인 대기",
       "press_withdraw": "출금하고자 하는 자산(LOOM) 옆의 \"출금\" 버튼을 누르세요.",
       "pop_up_asking": "팝업창에 얼마만큼의 LOOM을 출금할지 입력하세요.",
-      "press_next_button": "Press the “Next” button. You should see the following pop-up:",
+      "press_next_button": "\"다음\" 버튼을 클릭하면, 다음과 같은 팝업 창이 뜰 것입니다:",
       "transaction_twice": "트랜잭션에 두 번 서명하세요. 성공적으로 서명이 완료되었다면, 다음과 같은 팝업창이 뜰 것입니다:",
       "confirm_withdrawal_request": "이제 이더리움 네트워크상에서 출금 요청에 대한 승인(Confirm) 요청을 받을 것입니다.",
       "take_some_time": "이 작업은 이더리움 네트워크가 혼잡할 경우, 시간이 더 소요될 수 있습니다.",
@@ -215,22 +215,22 @@
       "redelegation_will_be_complete": "재위임 작업은 현재 선거 주기가 끝나면 완료될 것입니다.",
       "undelegate": "2. 위임 취소하기",
       "once_the_time_lock": "위임 내역의 락업 기간이 끝나면 잠금 해제 상태가 됩니다. 잠금 해제된 위임 내역은 기본 수준인 연간 5%의 보상을 계속해서 얻습니다.",
-      "unlocked_delegation": "You can undelegate an unlocked delegation if you so choose.",
-      "7_step_1": "Find the delegation and press the “Undelegate” button",
-      "7_step_2": "Select how much LOOM to undelegate",
-      "7_step_3": "Sign the transaction",
-      "my_account_page": "On the My Account page, scroll down, find the delegation, and press the “Undelegate” button.",
-      "how_many_loom": "A pop-up will ask you how many LOOM you want to undelegate.",
-      "enter_amount": "Enter the amount you wish to undelegate and press the “Undelegate” button.",
-      "sign_to_confirm": "Sign the transaction to confirm.",
-      "undelegated_amount": "Your undelegated amount will show up under PlasmaChain balance on the My Account page once the current election cycle ends.",
-      "consolidate": "3. Consolidate",
-      "unlocked_delegations": "If you have multiple unlocked delegations to a single validator, you can consolidate them into one delegation. ",
-      "8_step_1": "Go to specific validator’s page and press the “Consolidate” button",
-      "8_step_2": "Sign the transaction",
-      "go_to_validator_page": "Go to the validator’s page (click on a specific validator from the Validators page), scroll down, and press the “Consolidate” button.",
-      "once_the_transaction": "Once the transaction has been signed, you’ll see the update at the end of the current election cycle.",
-      "any_questions": "If you have any questions, please see our {link}."
+      "unlocked_delegation": "원한다면 잠금 해제된 위임 내역을 위임 취소할 수도 있습니다.",
+      "7_step_1": "위임 내역을 찾아 \"위임 취소\" 버튼 클릭",
+      "7_step_2": "위임 취소할 금액(LOOM) 입력",
+      "7_step_3": "트랜잭션에 서명",
+      "my_account_page": "\"내 계정\" 페이지에서 스크롤을 내려 위임 내역을 찾은 뒤, \"위임 취소\" 버튼을 클릭하세요.",
+      "how_many_loom": "팝업창에 얼마만큼의 LOOM을 위임 취소할지 묻는 팝업 창이 뜰 것입니다.",
+      "enter_amount": "위임 취소하고자하는 금액을 입력한 뒤 \"위임 취소\" 버튼을 클릭하세요.",
+      "sign_to_confirm": "트랜잭션 서명을 요청하는 팝업 창에서 승인(Sign)을 클릭하세요.",
+      "undelegated_amount": "위임 취소한 금액은 현재 선거 주기가 끝나면 \"내 계정\" 페이지의 플라즈마체인 잔액에 나타날 것입니다.",
+      "consolidate": "하나로 통합하기",
+      "unlocked_delegations": "하나의 검증자에게 여러 개의 잠금 해제된 위임 내역이 있다면, 하나의 위임으로 통합할 수 있습니다.",
+      "8_step_1": "해당 검증자의 페이지로 이동하여 \"하나로 통합하기\" 버튼 클릭",
+      "8_step_2": "트랜잭션에 서명",
+      "go_to_validator_page": "검증자의 페이지로 이동하여(전체 검증자 페이지에서 해당 검증자를 클릭) 스크롤을 내려 \"하나로 통합하기\" 버튼을 클릭하세요.",
+      "once_the_transaction": "트랜잭션 서명이 완료되면, 현재 선거 주기가 끝난 뒤에 위임 내역이 업데이트될 것입니다.",
+      "any_questions": "궁금한 점이 더 있으시다면, {link}를 확인해주세요."
     },
     "history": {
       "your_history": "내 거래 내역",
@@ -363,18 +363,18 @@
       "tier": "Tier",
       "limited_offer": "Limited time offer",
       "coming_soon": "Coming soon",
-      "add_key": "Add key",
+      "add_key": "키 추가",
       "your_balance": "Your balance : {amount} LOOM"
     }
   },
   "components": {
     "account": {
-      "account": "Account",
+      "account": "계정",
       "show_etherscan": "Show in EtherScan",
       "show_block_explorer": "Show in Block Explorer"
     },
     "amount_input": {
-      "all": "All"
+      "all": "전액"
     },
     "faucet_footer": {
       "loom_network": "Loom Network",
@@ -467,10 +467,10 @@
         "memo": "메모",
         "send_amount_placeholder": "Enter the deposit amount",
         "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
-        "next": "Next",
-        "close": "Close",
+        "next": "다음",
+        "close": "닫기",
         "back": "뒤로",
-        "cancel": "Cancel"
+        "cancel": "취소"
       },
       "deposit_form": {
         "title": "Deposit {token} from {chain}",
@@ -523,7 +523,7 @@
         "locktime": "Locktime",
         "bonuses": "Bonuses",
         "delegate": "Delegate",
-        "cancel": "Cancel",
+        "cancel": "취소",
         "your_balance": "Your balance is {amount} LOOM",
         "locktime_bonuses": "락업 기간 / 보너스:",
         "warning_please_note_that_any": "경고: 추가로 위임할 경우, 기존의 위임에 덮어씌워지니 주의하세요!",
@@ -531,7 +531,7 @@
         "two_weeks": "2 weeks",
         "three_months": "3 months",
         "six_months": "6 months",
-        "one_year": "1 year"
+        "one_year": "1년"
       },
       "restore_account_modal": {
         "please_type_in_your_seed": "아래 입력 칸에 시드 문자를 입력해주세요.",
@@ -562,7 +562,7 @@
       },
       "faucet_redelegate_modal": {
         "select_validator": "Select a validator :",
-        "fee": "Fee:",
+        "fee": "수수료:",
         "total_stake": "Total Staked",
         "redelegate": "Redelegate",
         "target_error": "Please select a target validator",
@@ -594,7 +594,7 @@
       "transfer_cards_modal": {
         "title": "Transfer Cards",
         "card_id": "Card Id: ",
-        "name": "Name: ",
+        "name": "이름: ",
         "variation": "Variation: ",
         "your_exist_card": "Your existing card: ",
         "amount": "Amount: (max: {amount})",
@@ -671,7 +671,7 @@
       "validator_name": "Validator Name",
       "description": "Description",
       "website": "Website",
-      "fee": "Fee",
+      "fee": "수수료",
       "stake_million_tokens": "Stake a 1.25 million tokens",
       "required": "Required",
       "insufficient_loom": "Insufficient LOOM",
@@ -693,11 +693,11 @@
       "register_this_account_as_a_validator": "Register this account as a validator {address}",
       "filled_out_form": "Filled out and submit the form below.",
       "more_detail": "More detail? Check out this {link}.",
-      "link": "link",
+      "link": "링크",
       "setup_node": "Setup a node",
       "check_out": "Check out this {link}.",
       "public_key": "Public key",
-      "fee": "Fee",
+      "fee": "수수료",
       "new_fee": "New fee",
       "candidate_state": "Candidate state",
       "max_referral_percentage": "Max referral %",
@@ -720,14 +720,14 @@
     "ETHReceived": "입금"
   },
   "button": {
-    "next": "Next",
+    "next": "다음",
     "back": "뒤로",
-    "close": "Close",
-    "cancel": "Cancel",
+    "close": "닫기",
+    "cancel": "취소",
     "confirm": "Confirm",
     "continue": "Continue",
-    "done": "Done",
-    "submit": "Submit"
+    "done": "완료",
+    "submit": "제출"
   },
   "feedback_msg": {
     "task": {
@@ -822,11 +822,11 @@
     "enter_amount": "Enter amount",
     "filter": "Filter",
     "gateway_addr": "Gateway Address",
-    "amount": "Amount",
+    "amount": "수량",
     "memo": "Memo text",
     "chain_addr": "{transferChain} address",
     "loom_private_base64": "Loom private key (base64)",
-    "search": "Search",
+    "search": "검색",
     "loom_addr": "Loom Address",
     "enter_your_addr": "Enter your address",
     "token_name": "Token name"

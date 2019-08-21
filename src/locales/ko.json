@@ -214,7 +214,7 @@
       "delegation_is_redelegating": "이제 당신의 위임 상태가 \"다시 위임하는 중\"으로 바뀌었을 것입니다.",
       "redelegation_will_be_complete": "재위임 작업은 현재 선거 주기가 끝나면 완료될 것입니다.",
       "undelegate": "2. 위임 취소하기",
-      "once_the_time_lock": "Once the time lock has expired on your delegation, it becomes unlocked. Unlocked delegations keep earning the base reward of 5% per year.",
+      "once_the_time_lock": "위임 내역의 락업 기간이 끝나면 잠금 해제 상태가 됩니다. 잠금 해제된 위임 내역은 기본 수준인 연간 5%의 보상을 계속해서 얻습니다.",
       "unlocked_delegation": "You can undelegate an unlocked delegation if you so choose.",
       "7_step_1": "Find the delegation and press the “Undelegate” button",
       "7_step_2": "Select how much LOOM to undelegate",

@@ -207,7 +207,7 @@
       "6_step_1": "자신의 위임 내역 찾기",
       "6_step_2": "새로운 검증자 선택",
       "6_step_3": "트랜잭션에 서명",
-      "find_the_delegation": "Find the delegation you wish to redelegate on the My Account page and press the “Redelegate” button.",
+      "find_the_delegation": "\"내 계정\" 페이지에서 다시 위임할 위임 내역을 찾은 뒤, \"다시 위임하기\" 버튼을 클릭하세요.",
       "validators_and_fees": "You will see a pop-up that shows a list of validators and their fees:",
       "select_the_validator": "Select the validator you want to redelegate to and press the “Redelegate” button on the pop-up.",
       "transaction_to_confirm": "You will be asked to sign the transaction to confirm.",

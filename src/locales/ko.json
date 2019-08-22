@@ -33,7 +33,7 @@
     "input_address_cant_transfer_own": "자신의 주소로 전송할 수 없습니다.",
     "input_address_invalid_chain": "유효하지 않은 {chain} 주소입니다.",
     "error_try_again": "오류가 발생했습니다. 다시 시도해주세요.",
-    "no_event_found": "No event found on this chain or token",
+    "no_event_found": "이 체인 또는 토큰에서 발견된 이벤트가 없습니다.",
     "no_token_found": "{tokenName} 토큰을 찾을 수 없습니다.",
     "transaction_out_of_gas": "트랜잭션 가스가 부족합니다. 가스 한도를 높여보세요."
   },
@@ -82,20 +82,20 @@
       "recommend_use_ledger_via_metamask": "{ledgerMetamask}를 사용하는 것을 권장합니다."
     },
     "help": {
-      "what_is_plasma_chain": "PlasmaChain이 무엇인가요?",
-      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain은 사이드체인과 이더리움 메인넷 간의 트랜잭션 처리를 위한 Plasma Cash 기반의 허브입니다. 이를 통해 확장성이 뛰어난 사용자 대면 DApp을 만들 수 있으며, 체인 간 안전한 자산 이동을 가능하게 합니다.",
+      "what_is_plasma_chain": "플라즈마체인이 무엇인가요?",
+      "plasma_chain_is_our_plasma_cash_backed": "플라즈마체인은 사이드체인과 이더리움 메인넷 간의 트랜잭션 처리를 위한 플라즈마 캐시 기반의 허브입니다. 이를 통해 확장성이 뛰어난 사용자 대면 디앱을 만들 수 있으며, 체인 간 안전한 자산 이동을 가능하게 합니다.",
       "what_is_staking": "스테이킹이 무엇인가요?",
       "when_a_user_stakes_tokens": "사용자가 토큰을 \"스테이크\"한다는 것은 그들의 토큰을 일정 시간동안 락업하여 네트워크에서 권한을 획득하고, 서비스를 수행하며, 보상을 받을 수 있다는 것을 의미합니다. LOOM 소유자는 ",
-      "help_secure_plasma_chain": "PlasmaChain이 안전하도록 돕기 위해",
+      "help_secure_plasma_chain": "플라즈마체인이 안전하도록 돕기 위해",
       "by_staking_your_tokens_with": " 토큰을 검증자에게 위임할 수 있습니다.",
-      "why_is_staking_important_for": "왜 PlasmaChain에게 스테이킹이 중요한가요?",
-      "as_plasma_chain_runs_a_delegated": "PlasmaChain은 위임 지분 증명(Delegated Proof of Stake, DPoS) 합의 모델을 사용하기 때문에, 스테이킹은 네트워크의 보안을 위해서 매우 중요합니다. \"위임\"을 통해, 사용자들은 검증자의 스테이킹 풀에 자신의 토큰을 위임하여 검증자를 지지합니다. 가장 큰 풀을 가진 검증자 후보들은 네트워크의 공식 검증자가 됩니다. 여러분의 LOOM 토큰을 스테이킹함으로써, 여러분은 PlasmaChain이 최고의 보안과 성능을 보장할 수 있는 최상의 검증자들을 선택하는 것을 도울 수 있습니다 (또한, 이를 통해 보상을 얻을 수도 있답니다 — 아래 내용을 확인하세요). 더 많은 사람들이 위임하고, 활발히 기여할수록, 체인은 더욱더 안전해집니다.",
-      "how_can_i_stake_my": "PlasmaChain에 제 LOOM 토큰을 스테이킹하려면 어떻게 해야 하나요?",
-      "you_can_stake_your_tokens": "PlasmaChain 대시보드에서 여러분의 토큰을 스테이킹할 수 있습니다:",
+      "why_is_staking_important_for": "왜 플라즈마체인에게 스테이킹이 중요한가요?",
+      "as_plasma_chain_runs_a_delegated": "플라즈마체인은 위임 지분 증명(Delegated Proof of Stake, DPoS) 합의 모델을 사용하기 때문에, 스테이킹은 네트워크의 보안을 위해서 매우 중요합니다. \"위임\"을 통해, 사용자들은 검증자의 스테이킹 풀에 자신의 토큰을 위임하여 검증자를 지지합니다. 가장 큰 풀을 가진 검증자 후보들은 네트워크의 공식 검증자가 됩니다. 여러분의 LOOM 토큰을 스테이킹함으로써, 여러분은 플라즈마체인이 최고의 보안과 성능을 보장할 수 있는 최상의 검증자들을 선택하는 것을 도울 수 있습니다 (또한, 이를 통해 보상을 얻을 수도 있답니다 — 아래 내용을 확인하세요). 더 많은 사람들이 위임하고, 활발히 기여할수록, 체인은 더욱더 안전해집니다.",
+      "how_can_i_stake_my": "플라즈마체인에 제 LOOM 토큰을 스테이킹하려면 어떻게 해야 하나요?",
+      "you_can_stake_your_tokens": "플라즈마체인 대시보드에서 여러분의 토큰을 스테이킹할 수 있습니다:",
       "create_an_account": "계정 생성",
       "generate_a_private_key": "개인 키 생성",
       "log_in_to_your_meta_mask": "내 MetaMask 지갑에 로그인하기",
-      "deposit_loom_tokens_onto_plasma_chain": "PlasmaChain에 LOOM 토큰을 입금하세요.",
+      "deposit_loom_tokens_onto_plasma_chain": "플라즈마체인에 LOOM 토큰을 입금하세요.",
       "choose_validators_to_stake_with": "스테이킹할 검증자 선택하기",
       "how_many_tokens_are_required": "위임자가 되려면 토큰이 얼만큼 필요한가요?",
       "there_is_no_minimum_required": "위임자가 되기 위한 최소 토큰 수 제한은 없습니다. LOOM 토큰을 가지고 있다면 누구든지 네트워크의 모든 검증자 후보들에게 위임할 수 있습니다.",
@@ -113,7 +113,7 @@
       "this_post_on_validator_and": "검증자와 스테이킹 경제학에 관한 이 글을 참고하세요.",
       "what_currency_will_rewards_be": "보상은 어떤 화폐로 지급되나요?",
       "how_do_i_claim_my": "제 보상은 어떻게 수령하나요?",
-      "the_delegation_rewards_will_be": "위임자 보상은 네트워크에서 자동으로 분배될 것이며, PlasmaChain 대시보드의 \"보상\" 탭에서 수령할 수 있습니다: ",
+      "the_delegation_rewards_will_be": "위임자 보상은 네트워크에서 자동으로 분배될 것이며, 플라즈마체인 대시보드의 \"보상\" 탭에서 수령할 수 있습니다: ",
       "plasma_chain_dashboard": "플라즈마체인 대시보드",
       "": ".",
       "when_will_i_receive_rewards": "제 위임에 대한 보상을 언제 받을 수 있나요?",
@@ -163,7 +163,7 @@
       "2_step_2": "승인 요청에 서명",
       "2_step_3": "입금 요청에 서명",
       "2_step_4": "10개의 이더리움 블록 확인 대기",
-      "deposit_withdraw_page": "입금/인출 페이지로 이동하세요.",
+      "deposit_withdraw_page": "입금/출금 페이지로 이동하세요.",
       "press_deposit": "입금하고자 하는 자산(LOOM) 옆의 \"입금\" 버튼을 누르세요.",
       "pop_up": "팝업 창에서 입금할 금액을 입력하고 확인 버튼을 누르세요.",
       "sign_approval": "이더리움 네트워크상의 승인 요청 트랜잭션에 대한 서명 요청을 받을 것입니다.",
@@ -247,7 +247,7 @@
       "my_address": "내 주소",
       "balance": "잔액",
       "mainnet": "메인넷",
-      "plasmachain": "PlasmaChain",
+      "plasmachain": "플라즈마체인",
       "account_details": "계정 정보",
       "deposit_withdraw": "입출금",
       "connect_to_deposit_funds": "연결하여 자금 입금하기",
@@ -255,16 +255,16 @@
       "map_accounts": "계정 매핑",
       "history": "거래 내역",
       "deposit": "입금",
-      "withdraw": "인출",
+      "withdraw": "출금",
       "use_maximum": "전액 사용하기",
-      "transfer_to_plasmachain_for_staking": "PlasmaChain에 전송하여 스테이킹",
-      "withdraw_to_metamask": "내 지갑으로 인출하기",
+      "transfer_to_plasmachain_for_staking": "플라즈마체인에 전송하여 스테이킹",
+      "withdraw_to_metamask": "내 지갑으로 출금하기",
       "wait_tx": "트랜잭션이 대기열에 있습니다. 트랜잭션이 확인된 후, 잔액이 업데이트될 때까지 잠시 기다려 주세요.",
       "tokens_pending_deposit": "입금 처리 중인 {pendingDepositAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 입금을 완료해주세요.",
       "tokens_pending_withdraw": "출금 처리 중인 {pendingWithdrawAmount} 토큰이 있습니다. 다른 작업을 하기 전에 반드시 먼저 출금을 완료해주세요.",
       "reclaim_deposit": "예치된 토큰 회수하기",
       "complete_withdraw": "출금 완료",
-      "pending_withdrawal": "인출 진행 중"
+      "pending_withdrawal": "출금 진행 중"
     },
     "my_delegations": {
       "no_delegations": "위임 내역 없음"
@@ -335,7 +335,7 @@
     "transfer_gateway": {
       "connect_new_contracts": "새 컨트랙트 연결",
       "view_docs": "문서 보기",
-      "debug_mapped_contract": "Debug Mapped Contract",
+      "debug_mapped_contract": "매핑된 컨트랙트 디버그",
       "view_logs": "로그 확인하기",
       "loading": "로딩 중...",
       "fields": {
@@ -396,12 +396,12 @@
     "faucet_header": {
       "eth_connected": "이더리움 연결됨",
       "eth_disconnected": "이더리움 연결 끊어짐",
-      "dapp_connected": "PlasmaChain 연결됨",
-      "dapp_disconnected": "PlasmaChain 연결 끊어짐",
+      "dapp_connected": "플라즈마체인 연결됨",
+      "dapp_disconnected": "플라즈마체인 연결 끊어짐",
       "explorer": "탐색기",
       "f_a_q": "자주 묻는 질문",
       "next_election_cycle": "다음 선거 주기:",
-      "plasma_chain": "PlasmaChain:",
+      "plasma_chain": "플라즈마체인:",
       "staked": "스테이크:",
       "deposit": "입금",
       "plasmachain_dashboard": "플라즈마체인 대시보드",
@@ -421,7 +421,7 @@
       "my_delegations": "내 위임",
       "rewards": "보상",
       "history": "거래 내역",
-      "deposit_withdraw": "입금/인출",
+      "deposit_withdraw": "입금/출금",
       "staking": "스테이킹",
       "staking_guide": "스테이킹 가이드",
       "faq": "자주 묻는 질문",
@@ -478,7 +478,7 @@
         "balance": "당신의 토큰 잔액 : "
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "플라즈마체인에서 {amount} {token}이(가) 인출되었습니다. 자금을 당신의 {chain} 계정으로 전송하려면 완료를 클릭하세요.",
+        "confirm_withdrawl": "플라즈마체인에서 {amount} {token}이(가) 출금되었습니다. 자금을 당신의 {chain} 계정으로 전송하려면 완료를 클릭하세요.",
         "error": "오류가 발생했습니다. 다시 시도해주세요.",
         "complete": "출금 완료하기",
         "status_failed": "출금 실패",
@@ -712,10 +712,10 @@
   "events": {
     "ERC20Received": "입금",
     "event:MainnetDepositEvent": "입금",
-    "event:MainnetWithdrawalEvent": "인출",
-    "event:WithdrawLoomCoin": "인출",
-    "event:TokenWithdrawalSigned": "서명된 인출",
-    "TokenWithdrawn": "인출",
+    "event:MainnetWithdrawalEvent": "출금",
+    "event:WithdrawLoomCoin": "출금",
+    "event:TokenWithdrawalSigned": "서명된 출금",
+    "TokenWithdrawn": "출금",
     "LoomCoinReceived": "입금",
     "ETHReceived": "입금"
   },
@@ -747,8 +747,8 @@
     "step": {
       "delegating": "위임 중...",
       "scheduling_redelegate": "재위임 스케줄링 중...",
-      "consolidating_unlocked_on": "Consolidating unlocked delegations on ",
-      "undelegating_from": "Undelegating from ",
+      "consolidating_unlocked_on": "잠금 해제된 위임 내역들을 통합하는 중입니다. 검증자: ",
+      "undelegating_from": "다음 검증자로부터 위임 취소 중: ",
       "checking_reward": "보상 확인하는 중...",
       "claiming_dpos_reward": "DPOS 2 보상 수령 중...",
       "claiming_reward": "보상을 수령하는 중...",
@@ -806,29 +806,29 @@
       },
       "message": {
         "withdraw_in_process": "출금이 아직 처리 중입니다. 나중에 다시 시도해주세요.",
-        "existing_withdraw_being_process": "An existing withdrawal is currently being processed. Please try again later."
+        "existing_withdraw_being_process": "현재 기존의 출금 작업을 처리 중입니다. 나중에 다시 시도해주세요."
       }
     },
     "require_confirmation": {
       "title": {
-        "complete_deposit": "Complete deposit"
+        "complete_deposit": "입금 완료하기"
       },
       "message": {
-        "please_sign_click": "Please sign click confirm to complete your deposit."
+        "please_sign_click": "승인(Confirm)을 클릭하여 입금을 완료하세요."
       }
     }
   },
   "input_placeholder": {
-    "enter_amount": "Enter amount",
+    "enter_amount": "수량 입력",
     "filter": "필터",
-    "gateway_addr": "Gateway Address",
+    "gateway_addr": "게이트웨이 주소",
     "amount": "수량",
-    "memo": "Memo text",
-    "chain_addr": "{transferChain} address",
-    "loom_private_base64": "Loom private key (base64)",
+    "memo": "비고",
+    "chain_addr": "{transferChain} 주소",
+    "loom_private_base64": "Loom 개인 키 (base64)",
     "search": "검색",
-    "loom_addr": "Loom Address",
-    "enter_your_addr": "Enter your address",
-    "token_name": "Token name"
+    "loom_addr": "Loom 주소",
+    "enter_your_addr": "당신의 주소를 입력하세요",
+    "token_name": "토큰 이름"
   }
 }

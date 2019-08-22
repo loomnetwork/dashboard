@@ -585,38 +585,38 @@
       },
       "transfer_all_cards": {
         "title": "모든 카드 전송하기",
-        "this_will_transfer": "This will transfer all of your {edition} edition cards.",
+        "this_will_transfer": "이 작업은 당신의 모든 {edition} 에디션 카드들을 전송할 것입니다.",
         "amount": "수량 : ",
         "receiver_address": "수신자의 Loom 주소:",
-        "confirm_transfer": "I confirm that i want to transfer {amount} cards to {receiverAddress} address.",
+        "confirm_transfer": "{amount}장의 카드를 {receiverAddress} 주소로 전송할 것을 승인합니다.",
         "transfer_all": "모두 전송하기"
       },
       "transfer_cards_modal": {
         "title": "카드 전송하기",
         "card_id": "카드 Id: ",
         "name": "이름: ",
-        "variation": "Variation: ",
-        "your_exist_card": "Your existing card: ",
-        "amount": "Amount: (max: {amount})",
-        "receiver_address": "Receiver Loom Address:",
-        "confirm_transfer": "I confirm to transfer {amount} cards to {receiverAddress} address.",
+        "variation": "에디션: ",
+        "your_exist_card": "보유하고 있는 카드 수: ",
+        "amount": "수량: (최대: {amount}장)",
+        "receiver_address": "수신자의 Loom 주소:",
+        "confirm_transfer": "{amount}장의 카드를 {receiverAddress} 주소로 전송할 것을 승인합니다.",
         "transfer": "전송"
       },
       "transfer_packs_modal": {
-        "title": "Transfer Packs",
-        "pack_type": "Pack Type",
-        "your_exist_pack": "Your existing pack: ",
-        "amount": "Amount: (max: {amount})",
-        "receiver_address": "Receiver Loom Address: ",
-        "confirm_transfer": "I confirm to transfer {amount} packs to {receiverAddress} address.",
+        "title": "팩 전송하기",
+        "pack_type": "팩 종류",
+        "your_exist_pack": "보유하고 있는 팩 수: ",
+        "amount": "수량: (최대: {amount}개)",
+        "receiver_address": "수신자의 Loom 주소: ",
+        "confirm_transfer": "{amount}개의 팩을 {receiverAddress} 주소로 전송할 것을 승인합니다.",
         "transfer": "전송"
       },
       "transfer_token_form_modal": {
-        "title": "Transfer Token",
-        "token_type": "Token Type: ",
-        "balance": "Your token balance: ",
-        "amount": "Amount: (max: {amount})",
-        "receiver_address": "Receiver Loom Address: ",
+        "title": "토큰 전송하기",
+        "token_type": "토큰 종류: ",
+        "balance": "당신의 토큰 잔액: ",
+        "amount": "수량: (최대: {amount}개)",
+        "receiver_address": "수신자의 Loom 주소: ",
         "transfer": "전송"
       }
     },
@@ -655,11 +655,11 @@
       "cards": {
         "my_cards": "내 카드",
         "edition": "에디션",
-        "all_edition": "All edition",
-        "no_card": "No cards to show",
+        "all_edition": "모든 에디션",
+        "no_card": "카드가 없습니다.",
         "amount": "카드(들)",
         "transfer": "전송",
-        "transfer_all": "Transfer all cards in"
+        "transfer_all": "다음 에디션의 카드 모두 전송: "
       },
       "packs": {
         "my_packs": "내 팩",
@@ -667,20 +667,20 @@
       }
     },
     "registerCandidate": {
-      "public_key": "Public key",
-      "validator_name": "Validator Name",
-      "description": "Description",
+      "public_key": "공개키",
+      "validator_name": "검증자 이름",
+      "description": "설명",
       "website": "웹사이트",
       "fee": "수수료",
-      "stake_million_tokens": "Stake a 1.25 million tokens",
-      "required": "Required",
-      "insufficient_loom": "Insufficient LOOM",
-      "ready_to_stake": "Ready to stake",
-      "your_balance": "Your balance"
+      "stake_million_tokens": "125만개의 토큰 스테이킹 ",
+      "required": "필요",
+      "insufficient_loom": "LOOM이 충분하지 않습니다.",
+      "ready_to_stake": "스테이킹이 준비되었습니다.",
+      "your_balance": "당신의 잔액"
     },
     "validator_extended_detail": {
-      "validator_associated": "Validator Associated",
-      "not_validator_account": "This account {address} is not a validator account.",
+      "validator_associated": "관련된 검증자",
+      "not_validator_account": "이 계정({address})은 검증자 계정이 아닙니다.",
       "become_validator": "Becoming a Validator",
       "follow_guide": "To register as a validator, please first follow the {link}.",
       "validator_guide": "Validators guide",

@@ -482,10 +482,10 @@
         "error": "오류가 발생했습니다. 다시 시도해주세요.",
         "complete": "출금 완료하기",
         "status_failed": "출금 실패",
-        "status_confirmed": "Withdraw to gateway confirmed"
+        "status_confirmed": "게이트웨이로 출금 확인됨"
       },
       "withdraw_form_modal": {
-        "title": "Withdraw {token} to {chain}",
+        "title": "{chain}으로 {token} 출금",
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
         "recipient": "Recipient on {chain}",
@@ -493,7 +493,7 @@
       }
     },
     "layout": {
-      "network": "Network: ",
+      "network": "네트워크: ",
       "sign_wallet_title": "Sign Your wallet",
       "account_mapped_title": "Account Mapped",
       "metamask_changed": "MetaMask 계정을 전환했습니다. 예기치 않은 오류를 방지하기 위해 앱을 재시작합니다.",

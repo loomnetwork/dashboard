@@ -553,15 +553,15 @@
         "hardware_wallet": "하드웨어 지갑",
         "unlock_hardware_wallet": "하드웨어 지갑 잠금해제",
         "enter_pin_code": "여러분의 장부에서 핀 코드를 입력하여 이더리움 앱에 로그인하세요.",
-        "ledger_locked": "Please make sure your Ledger is connected, unlocked and then go tho ethereum app.",
-        "initializing": "Initializing. Please wait...",
-        "select_path": "Select a path",
-        "load_more": "Load more",
-        "use_account": "Use account",
-        "this_option_deprecated": "This option is being deprecated. We recommend using Ledger via Metamask."
+        "ledger_locked": "당신의 Ledger 기기가 잠금 해제된 상태로 연결되어 있는지 확인한 후 이더리움 앱으로 가세요.",
+        "initializing": "초기화 중입니다. 잠시 기다려주세요...",
+        "select_path": "경로를 선택하세요.",
+        "load_more": "더 불러오기",
+        "use_account": "계정 사용",
+        "this_option_deprecated": "이 옵션은 더 이상 사용되지 않습니다. 메타마스크를 통해 Ledger를 사용하는 것을 권장합니다."
       },
       "faucet_redelegate_modal": {
-        "select_validator": "Select a validator :",
+        "select_validator": "검증자 선택 :",
         "fee": "수수료:",
         "total_stake": "Total Staked",
         "redelegate": "Redelegate",

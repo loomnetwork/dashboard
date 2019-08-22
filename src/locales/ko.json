@@ -462,18 +462,18 @@
         "binance_link": "https://binance.org/kr/balances",
         "send_asset": "자산 전송",
         "select_asset": "자산 선택",
-        "to_address": "To Address",
-        "send_amount": "Amount to send",
+        "to_address": "전송할 주소",
+        "send_amount": "전송할 금액",
         "memo": "메모",
-        "send_amount_placeholder": "Enter the deposit amount",
-        "deposit_message": "Once the transaction is processed on binance, your balance on plasmachain will be updated.",
+        "send_amount_placeholder": "입금하고자 하는 금액을 입력하세요",
+        "deposit_message": "Binance에서 트랜잭션이 처리되면, 당신의 플라즈마체인 잔액이 업데이트될 것입니다.",
         "next": "다음",
         "close": "닫기",
         "back": "뒤로",
         "cancel": "취소"
       },
       "deposit_form": {
-        "title": "Deposit {token} from {chain}",
+        "title": "{chain}으로부터 {token}입금",
         "amount_approved": "Amount approved : ",
         "balance": "Your token balance : "
       },

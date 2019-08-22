@@ -563,37 +563,37 @@
       "faucet_redelegate_modal": {
         "select_validator": "검증자 선택 :",
         "fee": "수수료:",
-        "total_stake": "Total Staked",
-        "redelegate": "Redelegate",
-        "target_error": "Please select a target validator",
-        "same_target_error": "Cannot redelegate to the same validator",
-        "no_validator": "No validator found."
+        "total_stake": "총 스테이킹 금액",
+        "redelegate": "다시 위임하기",
+        "target_error": "재위임할 검증자를 선택해주세요.",
+        "same_target_error": "같은 검증자에게 재위임할 수 없습니다.",
+        "no_validator": "검색된 검증자가 없습니다."
       },
       "faucet_undelegate_modal": {
-        "undelegate": "Undelegate"
+        "undelegate": "위임 취소하기"
       },
       "account_mapping_modal": {
-        "description": "This is the first time you are accessing the dashboard with this account.",
-        "choose": "Choose weither to map to a new loom account or an existing one.",
-        "map_to": "Map to an existing loom account (for validators)",
-        "new_account": "Create a new account",
-        "input_help": "The private key is used to sign the mapping and is then discarded."
+        "description": "이 계정을 사용하여 처음으로 대시보드에 로그인했습니다.",
+        "choose": "새로운 Loom 계정 생성 또는 기존 계정에 매핑하는 것 중 하나를 선택해주세요.",
+        "map_to": "기존 Loom 계정에 매핑 (검증자 대상)",
+        "new_account": "새 계정 생성",
+        "input_help": "개인 키는 매핑 작업에 서명하는 데 사용되며, 사용 후 삭제됩니다."
       },
       "add_token_modal": {
-        "add_new": "Add New Token",
-        "token_symbol": "Token Symbol"
+        "add_new": "새 토큰 추가",
+        "token_symbol": "토큰 심볼"
       },
       "transfer_all_cards": {
-        "title": "Transfer All Cards",
+        "title": "모든 카드 전송하기",
         "this_will_transfer": "This will transfer all of your {edition} edition cards.",
-        "amount": "Amount : ",
-        "receiver_address": "Receiver Loom Address:",
+        "amount": "수량 : ",
+        "receiver_address": "수신자의 Loom 주소:",
         "confirm_transfer": "I confirm that i want to transfer {amount} cards to {receiverAddress} address.",
-        "transfer_all": "Transfer All"
+        "transfer_all": "모두 전송하기"
       },
       "transfer_cards_modal": {
-        "title": "Transfer Cards",
-        "card_id": "Card Id: ",
+        "title": "카드 전송하기",
+        "card_id": "카드 Id: ",
         "name": "이름: ",
         "variation": "Variation: ",
         "your_exist_card": "Your existing card: ",

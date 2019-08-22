@@ -788,24 +788,24 @@
     "info": {
       "reward_claimed": "보상을 성공적으로 수령하였습니다.",
       "please_track_transaction": "당신의 지갑에서 이 트랜잭션을 추적하세요.",
-      "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
-      "withdrawal_in_progress": "Withdrawal already in progress.",
-      "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
-      "please_sign_tx": "Please sign the tx using your wallet."
+      "please_track_deposit_approval": "당신의 지갑에서 이 트랜잭션의 입금 승인을 추적하세요.",
+      "withdrawal_in_progress": "출금이 이미 진행 중입니다.",
+      "withdrawal_request_sent": "출금 요청이 전송되었습니다. 당신의 Binance 계정에 곧 자금이 입금될 것입니다.",
+      "please_sign_tx": "당신의 지갑을 사용하여 트랜잭션에 서명하세요."
     },
     "success": {
-      "transaction_success": "Transaction sent successfully.",
-      "eth_addr_copied": "Ethereum address copied.",
-      "plasma_addr_copied": "Plasma address copied.",
-      "address_copied": "Address copied.",
-      "register_success": "Successfully registered."
+      "transaction_success": "트랜잭션이 성공적으로 전송되었습니다.",
+      "eth_addr_copied": "이더리움 주소가 복사되었습니다.",
+      "plasma_addr_copied": "플라즈마 주소가 복사되었습니다.",
+      "address_copied": "주소가 복사되었습니다.",
+      "register_success": "성공적으로 등록되었습니다."
     },
     "alert": {
       "title": {
-        "withdraw_ongoing": "Withdrawal ongoing"
+        "withdraw_ongoing": "출금 진행 중"
       },
       "message": {
-        "withdraw_in_process": "A withdrawal is still being processed. Please try again later.",
+        "withdraw_in_process": "출금이 아직 처리 중입니다. 나중에 다시 시도해주세요.",
         "existing_withdraw_being_process": "An existing withdrawal is currently being processed. Please try again later."
       }
     },

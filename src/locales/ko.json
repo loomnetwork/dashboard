@@ -474,14 +474,14 @@
       },
       "deposit_form": {
         "title": "{chain}으로부터 {token}입금",
-        "amount_approved": "Amount approved : ",
-        "balance": "Your token balance : "
+        "amount_approved": "승인된 금액 : ",
+        "balance": "당신의 토큰 잔액 : "
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
-        "error": "An error occurred, please try again.",
-        "complete": "Complete withdraw",
-        "status_failed": "Withdrawal failed",
+        "confirm_withdrawl": "플라즈마체인에서 {amount} {token}이(가) 인출되었습니다. 자금을 당신의 {chain} 계정으로 전송하려면 완료를 클릭하세요.",
+        "error": "오류가 발생했습니다. 다시 시도해주세요.",
+        "complete": "출금 완료하기",
+        "status_failed": "출금 실패",
         "status_confirmed": "Withdraw to gateway confirmed"
       },
       "withdraw_form_modal": {

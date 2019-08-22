@@ -702,11 +702,11 @@
       "candidate_state": "후보 상태",
       "max_referral_percentage": "최대 추천 %",
       "slash_percentage": "처벌 %",
-      "delegation_total": "Delegation Total",
-      "staked_amount": "Staked Amount",
-      "whitelist_locktime_tier": "Whitelist locktime tier",
-      "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
-      "node_setup_guide": "Node setup guide"
+      "delegation_total": "총 위임 금액",
+      "staked_amount": "스테이킹 금액",
+      "whitelist_locktime_tier": "락업 기간 등급을 화이트리스트에 추가",
+      "follow_node_guide": "당신만의 검증자 노드를 구축하려면 다음 {link}를 참고하세요.",
+      "node_setup_guide": "노드 구축 가이드"
     }
   },
   "events": {
@@ -725,19 +725,19 @@
     "close": "닫기",
     "cancel": "취소",
     "confirm": "확인",
-    "continue": "Continue",
+    "continue": "계속",
     "done": "완료",
     "submit": "제출"
   },
   "feedback_msg": {
     "task": {
-      "delegate": "Delegate",
-      "connect_wallet": "Connecting wallet",
-      "redelegating": "Redelegating",
-      "consolidating": "Consolidating",
-      "undelegating": "Undelegating",
+      "delegate": "위임",
+      "connect_wallet": "지갑 연결 중",
+      "redelegating": "다시 위임하는 중",
+      "consolidating": "통합하는 중",
+      "undelegating": "위임 취소 중",
       "claiming_reward": "보상 수령",
-      "eth_deposit": "ETH Deposit",
+      "eth_deposit": "ETH 입금",
       "withdraw": "withdraw",
       "batch_transfer": "Batch Transfer",
       "pack_transfer": "Pack transfer",

@@ -344,13 +344,13 @@
         "token_owner": "토큰 소유자",
         "token_kind": "토큰 종류",
         "token_amount": "토큰 양",
-        "topic": "Topic"
+        "topic": "항목"
       }
     },
     "add_key": {
-      "deployer_public_keys": "Deployer Public Keys",
-      "add_new_key": "Add New Key",
-      "no_deployer_address": "You have no deployer address yet. Use the form below to add one",
+      "deployer_public_keys": "배포자 공개키",
+      "add_new_key": "새로운 키 추가",
+      "no_deployer_address": "당신은 아직 배포자 주소를 가지고 있지 않습니다. 아래 양식을 통해 주소를 추가해주세요.",
       "no_contract": "No contract deployed",
       "low_balance": "LOOM balance low.",
       "whitelisting_require": "Whitelisting keys requires at least {amount} LOOM. Your balance is {balance} LOOM",

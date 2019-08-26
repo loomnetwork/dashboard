@@ -22,6 +22,8 @@
     "@portis/web3": "^2.0.0-beta.34",
     "@sentry/browser": "^5.5.0",
     "@sentry/integrations": "^5.5.0",
+    "@walletconnect/browser": "^1.0.0-beta.33",
+    "@walletconnect/qrcode-modal": "^1.0.0-beta.33",
     "animate.css": "^3.7.0",
     "axios": "^0.19.0",
     "bech32": "^1.1.3",

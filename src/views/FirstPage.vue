@@ -133,7 +133,17 @@
                     <span>Fortmatic</span>
                   </div>
                 </b-card>
-              </div>           
+              </div>
+              <div class="col-sm-12 mb-3">
+                <b-card
+                  id="explore-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('walletconnect')">
+                  <div>
+                    <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
+                  </div>
+                </b-card>
+              </div>                       
               <div class="col-sm-12">
                 <b-card
                   id="explore-button"
@@ -222,6 +232,7 @@ import { feedbackModule } from "../feedback/store"
 
 import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
+
 
 @Component({
   components: {

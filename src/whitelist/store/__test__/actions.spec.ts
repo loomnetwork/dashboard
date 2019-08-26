@@ -99,6 +99,7 @@ describe("Whitelist, actions test", () => {
       address,
       contracts: [],
       tierId: TierID.DEFAULT,
+      inactive: false,
     }]
 
     before(async () => {

@@ -306,9 +306,11 @@ export async function transfer(
   }
 
   // plasmaModule.refreshBalance(payload.symbol)
+  feedbackModule.setTask(i18n.t("feedback_msg.task.transfer_token").toString())
   feedbackModule.setStep(
     i18n.t("feedback_msg.step.transfering_token",
   { tokenAmount: formatTokenAmount(weiAmount, token.decimals), symbol: payload.symbol})
   .toString())
-  return await adapter.transfer(to, weiAmount)
+  await adapter.transfer(to, weiAmount)
+  feedbackModule.endTask()
 }

@@ -4,7 +4,6 @@ import { Observable } from "rxjs"
 import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
 import { GatewayState } from "../gateway/types"
 import { provider } from "web3-providers"
-import Connector from "@walletconnect/core"
 
 export interface EthereumConfig {
   networkId: string
@@ -27,7 +26,7 @@ export interface EthereumState extends EthereumConfig {
   // see type provider in web3-provider
   provider: provider | null
   address: string
-  signer: ethers.Signer | Connector | null
+  signer: ethers.Signer | null
   walletType: string
   balances: {
     [erc20Symbol: string]: BN,

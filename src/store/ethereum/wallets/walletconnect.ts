@@ -1,12 +1,7 @@
 import { ethers } from "ethers"
-
 import { WalletType, EthereumConfig } from "../types"
 
-import WalletConnect from "@walletconnect/browser"
-import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal"
-
 import Web3 from "web3"
-import Connector from "@walletconnect/core"
 import WalletConnectProvider from "@walletconnect/web3-provider"
 
 export const WalletConnectAdapter: WalletType = {

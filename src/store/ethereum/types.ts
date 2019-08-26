@@ -70,7 +70,6 @@ export interface WalletType {
   mobile: boolean
   // createProvider(): Promise<ethers.providers.Web3Provider>
   createProvider(config: EthereumConfig): Promise<provider>
-  initConnector(config: EthereumConfig): Promise<Connector>
 }
 
 export interface MultiAccountWallet {

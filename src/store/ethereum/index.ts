@@ -162,11 +162,6 @@ async function setWalletType(context: ActionContext, walletType: string) {
     return
   }
   context.state.walletType = walletType
-  if (walletType === "walletconnect") {
-    await wallet
-    .initConnector(context.state)
-    .then(async (connector) => await setConnector(context, connector))
-  }
   if (wallet.isMultiAccount === false) {
     feedbackModule.setTask(i18n.t("feedback_msg.task.connect_wallet").toString())
     feedbackModule.setStep(i18n.t("feedback_msg.task.connect_wallet").toString())
@@ -182,12 +177,6 @@ async function setWalletType(context: ActionContext, walletType: string) {
   } else {
     context.state.walletType = walletType
   }
-}
-
-async function setConnector(context: ActionContext, c: Connector) {
-  // TODO: Extend connector to also return address
-  // and implement signer methods
-  context.state.signer = c
 }
 
 async function setProvider(context: ActionContext, p: provider) {

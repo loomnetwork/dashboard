@@ -72,7 +72,7 @@
         :hasDelegation="hasDelegation"
       ></faucet-delegate-modal>-->
       <template v-if="!!state.dpos.delegation">
-        <delegate-modal :validatorFee="validator.fee"></delegate-modal>
+        <delegate-modal></delegate-modal>
       </template>
       <success-modal></success-modal>
     </b-card>

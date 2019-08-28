@@ -79,10 +79,7 @@ const MULTIPLIER = new BN("10").pow(new BN("18"))
 @Component
 export default class DelegateModal extends Vue {
 
-  @Prop(Object) validatorFee!: BN
-
   roundAmount = false
-  validator = null
   showValidators = false
   formattedValidators: any[] = []
   unbond = false
@@ -138,6 +135,10 @@ export default class DelegateModal extends Vue {
     console.log("set visible...")
   }
 
+  get validator() {
+    return this.delegation!.validator
+  }
+
   get validators() {
     return this.state.dpos.validators
   }
@@ -189,7 +190,7 @@ export default class DelegateModal extends Vue {
   }
 
   calcReceiveAmount(i) {
-    const feePercent = this.validatorFee.toNumber() / 100
+    const feePercent = this.validator.fee.toNumber() / 100
     return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * this.rewardTiers[i]) * (1 - feePercent)))
   }
 }

@@ -72,7 +72,7 @@
         :hasDelegation="hasDelegation"
       ></faucet-delegate-modal>-->
       <template v-if="!!state.dpos.delegation">
-        <delegate-modal></delegate-modal>
+        <delegate-modal :validatorFee="validator.fee"></delegate-modal>
       </template>
       <success-modal></success-modal>
     </b-card>
@@ -91,6 +91,7 @@ import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
 import { plasmaModule } from "../../store/plasma"
+import BN from "bn.js"
 
 @Component({
   components: {

@@ -91,7 +91,6 @@ import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
 import { plasmaModule } from "../../store/plasma"
-import BN from "bn.js"
 
 @Component({
   components: {

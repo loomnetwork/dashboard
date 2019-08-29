@@ -742,7 +742,8 @@
       "batch_transfer": "배치 전송(묶음 전송)",
       "pack_transfer": "팩 전송",
       "adding_deployer": "배포자 키를 추가하는 중",
-      "new_key": "새 키"
+      "new_key": "새 키",
+      "transfer_token": "Transfer Token"
     },
     "step": {
       "delegating": "위임 중...",

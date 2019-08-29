@@ -57,6 +57,9 @@
               :sort-compare="sortCompare"
               @row-clicked="showValidatorDetail"
             >
+              <template slot="name" slot-scope="data">
+                <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"></li>{{ data.item.name }}
+              </template>
               <template slot="active" slot-scope="data">{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
             </b-table>
           </template>
@@ -285,5 +288,26 @@ main.validators {
       }
     }
   }
+}
+
+.jailed-symbol {
+  display: block;
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  margin-right: 1rem;
+  border-radius: 100%;
+  background-color: #3bef3b;
+  animation: fade 1s alternate infinite;
+
+  &.jailed {
+    background-color: #ec1d05;
+  }
+}
+
+@keyframes fade {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
 }
 </style>

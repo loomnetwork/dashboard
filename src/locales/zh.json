@@ -742,7 +742,8 @@
       "batch_transfer": "批量转移",
       "pack_transfer": "卡包转移",
       "adding_deployer": "正在添加部署者密钥",
-      "new_key": "新密钥"
+      "new_key": "新密钥",
+      "transfer_token": "Transfer Token"
     },
     "step": {
       "delegating": "正在委托……",

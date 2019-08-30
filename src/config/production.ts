@@ -45,4 +45,7 @@ export default {
   coinDataUrl: "/tokens/production.tokens.json",
   disabled: ["portis", "fortmatic"],
   chains: ["ethereum", "binance"],
+  announcement: {
+    popup: true,
+  },
 } as DashboardConfig

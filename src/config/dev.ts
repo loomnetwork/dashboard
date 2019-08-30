@@ -40,4 +40,7 @@ export default {
   },
   disabled: [],
   chains: ["ethereum", "binance"],
+  announcements: {
+    home: true,
+  },
 } as DashboardConfig

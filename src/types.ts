@@ -19,6 +19,9 @@ export interface DashboardConfig {
   ethereum: EthereumConfig
   dpos: DPOSConfig
   gateway: GatewayConfig
+  announcements: {
+    home: boolean,
+  }
 }
 
 export interface DashboardState extends

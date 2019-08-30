@@ -42,5 +42,6 @@ export default {
   },
   announcement: {
     popup: true,
+    home: true,
   },
 } as DashboardConfig

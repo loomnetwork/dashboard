@@ -279,7 +279,7 @@ export default class FirstPage extends Vue {
   addressModalShow = false
   mappedModalShow = false
   reconsider = false
-  showAnnounce = this.getEnv().announcements.home
+  showAnnounce = this.getEnv().announcement.home
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
@@ -306,7 +306,7 @@ export default class FirstPage extends Vue {
 
   @Watch("$store.state.plasma.chainId")
   chainIdChange(oldVal, newVal) {
-    this.showAnnounce = this.getEnv().announcements.home
+    this.showAnnounce = this.getEnv().announcement.home
   }
 
 }

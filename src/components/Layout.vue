@@ -70,6 +70,9 @@
     <WithdrawConfirmed />
     <feedback-alert />
     <AccountMappingModal />
+
+    <!-- announcement -->
+    <AnnouncementModal />
   </div>
 </template>
 
@@ -83,13 +86,13 @@ import LoadingSpinner from "@/components/LoadingSpinner.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
 import ProgressModal from "@/feedback/components/ProgressModal.vue"
 import FeedbackAlert from "@/feedback/components/FeedbackAlert.vue"
-
 import WithdrawConfirmed from "@/components/gateway/WithdrawConfirmed.vue"
 import RedelegateModal from "@/dpos/components/RedelegateModal.vue"
 import UndelegateModal from "@/dpos/components/UndelegateModal.vue"
-import { DashboardState } from "@/types"
-
 import AccountMappingModal from "@/components/modals/AccountMappingModal.vue"
+import AnnouncementModal from "@/components/modals/AnnouncementModal.vue"
+
+import { DashboardState } from "@/types"
 import { ethereumModule } from "../store/ethereum"
 
 @Component({
@@ -105,6 +108,7 @@ import { ethereumModule } from "../store/ethereum"
     UndelegateModal,
     WithdrawConfirmed,
     AccountMappingModal,
+    AnnouncementModal,
   },
   props: {
     data: Object,

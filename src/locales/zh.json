@@ -74,6 +74,7 @@
         "ledger_via_metamask": "Ledger (通过 Metamask)",
         "trezor_via_metamask": "Trezor (通过 Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
+        "walletconnect": "WalletConnect",
         "explore": "直接输入"
       },
       "no_metamask": "看起来你没有装 {metamask} 扩展",

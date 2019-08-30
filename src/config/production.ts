@@ -46,7 +46,7 @@ export default {
   disabled: ["portis", "fortmatic"],
   chains: ["ethereum", "binance"],
   announcement: {
-    popup: true,
+    popup: false,
     home: false,
   },
 } as DashboardConfig

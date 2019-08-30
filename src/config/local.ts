@@ -36,5 +36,6 @@ export default {
   chains: ["ethereum"],
   announcement: {
     popup: true,
+    home: true,
   },
 } as DashboardConfig

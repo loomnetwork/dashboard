@@ -21,6 +21,7 @@ export interface DashboardConfig {
   gateway: GatewayConfig,
   announcement: {
     popup: boolean,
+    home: boolean,
   }
 }
 

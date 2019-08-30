@@ -33,11 +33,9 @@ import { feedbackModule } from "@/feedback/store"
 import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
-import { PortisAdapter } from "./wallets/portis"
-import { FortmaticAdapter } from "./wallets/fortmatic"
+import { PortisAdapter } from "./wallets/portis";
+import { FortmaticAdapter } from "./wallets/fortmatic";
 import { TestWalletAdapter } from "./wallets/test-wallet"
-import { WalletConnectAdapter } from "./wallets/walletconnect"
-import Connector from "@walletconnect/core"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -50,7 +48,6 @@ const wallets: Map<string, WalletType> = new Map([
   ["portis", PortisAdapter],
   ["fortmatic", FortmaticAdapter],
   ["test_wallet", TestWalletAdapter],
-  ["walletconnect", WalletConnectAdapter],
 ])
 
 const initialState: EthereumState = {

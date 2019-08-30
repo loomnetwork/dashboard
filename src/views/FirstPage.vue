@@ -44,7 +44,8 @@
               </div>
             </div>
           </b-modal>
-          <b-row id="main-main" class="container-fluid center-content" style="justify-content: center;"> 
+          
+          <b-row id="main-main" class="container-fluid center-content" style="    justify-content: center;"> 
             <b-card :title="$t('views.first_page.select_wallet')" class="wallet-provider-container">
               <b-card-body>
               <div class="row">
@@ -148,6 +149,7 @@
                     </div>
                   </b-card>
                 </div>
+
               </div>
               </b-card-body>
             </b-card>
@@ -245,7 +247,6 @@ import { feedbackModule } from "../feedback/store"
 
 import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
-
 
 @Component({
   components: {

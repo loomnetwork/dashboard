@@ -34,4 +34,7 @@ export default {
   coinDataUrl: "",
   disabled: [],
   chains: ["ethereum"],
+  announcement: {
+    popup: true,
+  },
 } as DashboardConfig

@@ -18,7 +18,10 @@ export interface DashboardConfig {
   plasma: PlasmaConfig
   ethereum: EthereumConfig
   dpos: DPOSConfig
-  gateway: GatewayConfig
+  gateway: GatewayConfig,
+  announcement: {
+    popup: boolean,
+  }
 }
 
 export interface DashboardState extends

@@ -44,8 +44,7 @@
               </div>
             </div>
           </b-modal>
-          
-          <b-row id="main-main" class="container-fluid center-content" style="    justify-content: center;"> 
+          <b-row id="main-main" class="container-fluid center-content" style="justify-content: center;"> 
             <b-card :title="$t('views.first_page.select_wallet')" class="wallet-provider-container">
               <b-card-body>
               <div class="row">
@@ -136,7 +135,17 @@
                       <span>Fortmatic</span>
                     </div>
                   </b-card>
-                </div>           
+                </div>
+                <div class="col-sm-12 mb-3">
+                <b-card
+                  id="explore-button"
+                  class="wallet-selection-card text-center"
+                  @click="setWallet('walletconnect')">
+                  <div>
+                    <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
+                  </div>
+                </b-card>
+              </div>
                 <div class="col-sm-12">
                   <b-card
                     id="explore-button"
@@ -149,7 +158,6 @@
                     </div>
                   </b-card>
                 </div>
-
               </div>
               </b-card-body>
             </b-card>
@@ -247,6 +255,7 @@ import { feedbackModule } from "../feedback/store"
 
 import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
+
 
 @Component({
   components: {

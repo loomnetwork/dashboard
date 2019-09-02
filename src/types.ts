@@ -21,6 +21,8 @@ export interface DashboardConfig {
   gateway: GatewayConfig,
   announcement: {
     validatorsPage: boolean,
+    popup: boolean,
+    home: boolean,
   }
 }
 

@@ -36,5 +36,7 @@ export default {
   chains: ["ethereum"],
   announcement: {
     validatorsPage: true,
+    popup: true,
+    home: true,
   },
 } as DashboardConfig

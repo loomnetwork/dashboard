@@ -40,4 +40,7 @@ export default {
   },
   disabled: [],
   chains: ["ethereum", "binance"],
+  announcement: {
+    validatorsPage: true,
+  },
 } as DashboardConfig

@@ -288,14 +288,15 @@ export default class FirstPage extends Vue {
   addressModalShow = false
   mappedModalShow = false
   reconsider = false
-  showAnnounce = this.getEnv().announcement.home
+
+  showAnnounce = false
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
   }
 
   getEnv() {
-    return this.$state.envs.find((env) => env.name === this.$state.env)!
+    return (this.$state.envs || []).find((env) => env.name === this.$state.env)!
   }
 
   onClose() {

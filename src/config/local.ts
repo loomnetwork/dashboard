@@ -35,6 +35,7 @@ export default {
   disabled: [],
   chains: ["ethereum"],
   announcement: {
+    validatorsPage: true,
     popup: true,
     home: true,
   },

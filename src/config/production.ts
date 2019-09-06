@@ -46,6 +46,7 @@ export default {
   disabled: ["portis", "fortmatic"],
   chains: ["ethereum", "binance"],
   announcement: {
+    validatorsPage: true,
     popup: false,
     home: false,
   },

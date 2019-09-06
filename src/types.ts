@@ -20,6 +20,7 @@ export interface DashboardConfig {
   dpos: DPOSConfig
   gateway: GatewayConfig,
   announcement: {
+    validatorsPage: boolean,
     popup: boolean,
     home: boolean,
   }

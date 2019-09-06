@@ -41,6 +41,7 @@ export default {
   disabled: [],
   chains: ["ethereum", "binance"],
   announcement: {
+    validatorsPage: true,
     popup: true,
     home: true,
   },

@@ -74,7 +74,7 @@
         "ledger_via_metamask": "Ledger (通过 Metamask)",
         "trezor_via_metamask": "Trezor (通过 Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
-        "walletconnect": "WalletConnect",
+        "walletconnect": "钱包连接",
         "explore": "直接输入"
       },
       "no_metamask": "看起来你没有装 {metamask} 扩展",
@@ -744,7 +744,7 @@
       "pack_transfer": "卡包转移",
       "adding_deployer": "正在添加部署者密钥",
       "new_key": "新密钥",
-      "transfer_token": "Transfer Token"
+      "transfer_token": "转移代币"
     },
     "step": {
       "delegating": "正在委托……",

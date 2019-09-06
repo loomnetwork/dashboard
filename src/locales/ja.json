@@ -74,6 +74,7 @@
         "ledger_via_metamask": "Ledger (via Metamask)",
         "trezor_via_metamask": "Trezor (via Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
+        "walletconnect": "WalletConnect",
         "explore": "Explore"
       },
       "no_metamask": "Looks like you don't have {metamask} extension",
@@ -742,7 +743,8 @@
       "batch_transfer": "Batch Transfer",
       "pack_transfer": "Pack transfer",
       "adding_deployer": "Adding deployer key",
-      "new_key": "New key"
+      "new_key": "New key",
+      "transfer_token": "Transfer Token"
     },
     "step": {
       "delegating": "Delegating...",

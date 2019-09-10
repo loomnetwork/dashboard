@@ -306,7 +306,6 @@ export default class FirstPage extends Vue {
   addressModalShow = false
   mappedModalShow = false
   reconsider = false
-
   showAnnounce = false
 
   onConnectionUrlChanged(newUrl) {
@@ -334,6 +333,10 @@ export default class FirstPage extends Vue {
 
   @Watch("$store.state.plasma.networkId")
   chainIdChange() {
+    this.showAnnounce = this.getEnv().announcement.home
+  }
+
+  mounted() {
     this.showAnnounce = this.getEnv().announcement.home
   }
 

@@ -19,6 +19,7 @@
           :symbol="transferRequest.token"
           :decimals="tokenInfo.decimals"
           :round="false"
+          :isWithdraw="true"
           v-model="weiAmount"
           @isError="setAmountIsError"
         />

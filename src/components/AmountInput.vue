@@ -40,6 +40,7 @@ export default class AmountInput extends Vue {
    */
   @Prop(Object) max!: BN
   @Prop(String) symbol!: string
+  @Prop({ default: false }) isWithdraw!: boolean
   @Prop({ default: true }) round!: boolean
 
   @Prop({ default: 18 }) decimals!: number
@@ -80,10 +81,10 @@ export default class AmountInput extends Vue {
       return
     }
 
-    if (this.symbol === "LOOM" && amountBN.gt(LOOM_LIMIT)) {
+    if (this.symbol === "LOOM" && amountBN.gt(LOOM_LIMIT) && this.isWithdraw) {
       this.errorMsg = "Amount exceeds daily limit of 1 million LOOM"
       this.$emit("isError", true)
-    } else if (this.symbol === "ETH" && amountBN.gt(ETH_LIMIT)) {
+    } else if (this.symbol === "ETH" && amountBN.gt(ETH_LIMIT) && this.isWithdraw) {
       this.errorMsg = "Amount exceeds daily limit of 300 ETH"
       this.$emit("isError", true)
     } else if (amountBN.gt(max)) {

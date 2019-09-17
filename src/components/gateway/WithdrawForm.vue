@@ -54,7 +54,7 @@ import { Component, Prop, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { formatTokenAmount } from "@/filters"
-import { formatToCrypto, formatToLoomAddress, ZERO, ETH_LIMIT, LOOM_LIMIT } from "@/utils"
+import { formatToCrypto, formatToLoomAddress, ZERO, ETH_WITHDRAW_LIMIT, LOOM_WITHDRAW_LIMIT } from "@/utils"
 import { DashboardState, Funds } from "@/types"
 import { gatewayModule } from "@/store/gateway"
 import { gatewayReactions } from "@/store/gateway/reactions"
@@ -152,9 +152,9 @@ export default class WithdrawForm extends Vue {
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
     if (token === "ETH") {
-      this.max = this.balance.lt(ETH_LIMIT) ? this.balance : ETH_LIMIT
+      this.max = this.balance.lt(ETH_WITHDRAW_LIMIT) ? this.balance : ETH_WITHDRAW_LIMIT
     } else if (token === "LOOM") {
-      this.max = this.balance.lt(LOOM_LIMIT) ? this.balance : LOOM_LIMIT
+      this.max = this.balance.lt(LOOM_WITHDRAW_LIMIT) ? this.balance : LOOM_WITHDRAW_LIMIT
     } else {
       this.max = this.balance
     }

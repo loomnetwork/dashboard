@@ -189,3 +189,5 @@ export function detectedWallet() {
 
   return ""
 }
+export const ETH_WITHDRAW_LIMIT = new BN(300).mul(new BN(10).pow(new BN(18))) // 300 ETH
+export const LOOM_WITHDRAW_LIMIT = new BN(1000000).mul(new BN(10).pow(new BN(18))) // 1 million LOOM

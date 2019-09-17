@@ -23,7 +23,7 @@
 import { Vue, Prop, Component, Watch } from "vue-property-decorator"
 import BN from "bn.js"
 import { formatTokenAmount } from "@/filters"
-import { parseToWei, ETH_LIMIT, LOOM_LIMIT } from "@/utils"
+import { parseToWei } from "@/utils"
 import BigNumber from "bignumber.js"
 import { tokenService } from "../services/TokenService"
 
@@ -79,7 +79,6 @@ export default class AmountInput extends Vue {
       this.$emit("isError", true)
       return
     }
-
     if (amountBN.gt(max)) {
       this.errorMsg = this.$t(
         "messages.amount_input_should_less",

@@ -9,7 +9,7 @@ import { WhiteListState, DeployerAddress, DeployedContractAddress } from "../typ
 import { ITier, IDeployer, IDeployedContract } from "loom-js/dist/contracts/user-deployer-whitelist"
 import { sha256 } from "js-sha256"
 import sinon from "sinon"
-import { TransferRequest } from "@/store/plasma/types";
+import { TransferRequest } from '@/store/plasma/types';
 import { createContract,
          getTierInfo,
          addDeployer,
@@ -99,7 +99,6 @@ describe("Whitelist, actions test", () => {
       address,
       contracts: [],
       tierId: TierID.DEFAULT,
-      inactive: false,
     }]
 
     before(async () => {
@@ -141,7 +140,7 @@ describe("Whitelist, actions test", () => {
       to: addressString,
     }
 
-    const deployAddress = new Address(rootState.plasma.client.chainId, LocalAddress.fromHexString(addressString))
+    const deployAddress = new Address(rootState.plasma.client.chainId, LocalAddress.fromHexString(addressString)) 
 
     before(async () => {
       plasmaModuleStub.approve.reset()
@@ -191,7 +190,7 @@ describe("Whitelist, actions test", () => {
 
     const contractAddresses = {
       deployerAddress: addressString,
-      deployedContractAddress: [addressString],
+      deployedContractAddress: [addressString]
     }
 
     before(async () => {

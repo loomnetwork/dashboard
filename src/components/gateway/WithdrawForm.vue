@@ -19,7 +19,6 @@
           :symbol="transferRequest.token"
           :decimals="tokenInfo.decimals"
           :round="false"
-          :isWithdraw="true"
           v-model="weiAmount"
           @isError="setAmountIsError"
         />
@@ -55,7 +54,7 @@ import { Component, Prop, Watch } from "vue-property-decorator"
 import { ethers } from "ethers"
 
 import { formatTokenAmount } from "@/filters"
-import { formatToCrypto, formatToLoomAddress, ZERO } from "@/utils"
+import { formatToCrypto, formatToLoomAddress, ZERO, ETH_LIMIT, LOOM_LIMIT } from "@/utils"
 import { DashboardState, Funds } from "@/types"
 import { gatewayModule } from "@/store/gateway"
 import { gatewayReactions } from "@/store/gateway/reactions"
@@ -152,7 +151,13 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    this.max = this.balance
+    if (token === "ETH") {
+      this.max = this.balance.lt(ETH_LIMIT) ? this.balance : ETH_LIMIT
+    } else if (token === "LOOM") {
+      this.max = this.balance.lt(LOOM_LIMIT) ? this.balance : LOOM_LIMIT
+    } else {
+      this.max = this.balance
+    }
     if (fee) {
       const { decimals } = tokenService.getTokenbySymbol(token)
       this.fee = { ...fee, decimals }

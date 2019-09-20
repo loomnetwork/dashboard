@@ -66,7 +66,7 @@
       "link_my_account": "Link my account",
       "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
       "you_sure": "Are you sure ?",
-      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
+      "warn_note": "Please note that, if you create a new Basechain account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
       "create_new_account": "Create new account",
       "select_wallet": "Select wallet",
       "wallets": {
@@ -84,7 +84,7 @@
     },
     "help": {
       "what_is_plasma_chain": "What is PlasmaChain?",
-      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Basechain Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "What is staking?",
       "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",
       "help_secure_plasma_chain": "help secure PlasmaChain",
@@ -433,7 +433,7 @@
       "transfer_gateway": "Transfer Gateway",
       "validator_management": "Validator Management",
       "feedback_form": "Contact Support",
-      "plasma_wallet": "Plasma Wallet",
+      "plasma_wallet": "Basechain Wallet",
       "developers": "Developers",
       "help": "Help"
     },
@@ -798,7 +798,7 @@
     "success": {
       "transaction_success": "Transaction sent successfully.",
       "eth_addr_copied": "Ethereum address copied.",
-      "plasma_addr_copied": "Plasma address copied.",
+      "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
       "register_success": "Successfully registered."
     },

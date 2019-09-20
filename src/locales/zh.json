@@ -405,7 +405,7 @@
       "plasma_chain": "PlasmaChain：",
       "staked": "已锁定：",
       "deposit": "存入",
-      "plasmachain_dashboard": "Plasmachain 管理面板",
+      "plasmachain_dashboard": "Basechain 管理面板",
       "dashboard": "管理面板",
       "wallet": "钱包",
       "my_staking": "我的锁定",
@@ -457,7 +457,7 @@
         "failure": "存入失败……"
       },
       "deposit_binance": {
-        "title_deposit": "从 Binance 存入到 Plasmachain",
+        "title_deposit": "从 Binance 存入到 Basechain",
         "title_success": "成功",
         "description": "请至 {link}，填写如下表格。",
         "binance_link": "https://binance.org/en/balances",
@@ -479,7 +479,7 @@
         "balance": "你的代币余额： "
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} 个 {token} 已经从 Plasmachain 提取出来了。点击“完成”将资金转移到你的 {chain} 账户。",
+        "confirm_withdrawl": "{amount} 个 {token} 已经从 Basechain 提取出来了。点击“完成”将资金转移到你的 {chain} 账户。",
         "error": "发生错误，请重试。",
         "complete": "完成提取",
         "status_failed": "提取失败",
@@ -764,7 +764,7 @@
       "transfering_card": "正在转移卡牌",
       "transfering_pack": "正在转移卡包",
       "refresh_balance": "正在刷新余额",
-      "connecting_plasma": "正在连接 Plasmachain",
+      "connecting_plasma": "正在连接 Basechain",
       "adding_new_deployer": "正在添加新的部署者",
       "generating_new_key": "正在生成新密钥",
       "approving_spending": "正在批准花费 {tokenAmount} {symbol}",

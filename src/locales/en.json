@@ -74,6 +74,7 @@
         "ledger_via_metamask": "Ledger (via Metamask)",
         "trezor_via_metamask": "Trezor (via Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
+        "walletconnect": "WalletConnect",
         "explore": "Explore"
       },
       "no_metamask": "Looks like you don't have {metamask} extension",
@@ -189,7 +190,7 @@
       "4_step_2": "Sign the transaction for every validator",
       "press_claim_button": "Go to the My Account page and press the “Claim Reward” button.",
       "asked_to_sign_transaction": "You’ll be asked to sign the transaction.",
-      "if_rewards_claim": "If the rewards claim is successful, then you will see this message: “X LOOM will be reclaimed after next election.”",
+      "if_rewards_claim": "If the rewards claim is successful, then you will see this message: “X LOOM will be reclaimed after the next election.”",
       "withdraw_to_ethereum": "2. Withdraw to Ethereum",
       "5_step_1": "Select LOOM amount to withdraw",
       "5_step_2": "Sign two transactions (on PlasmaChain)",
@@ -671,7 +672,12 @@
       "validator_name": "Validator Name",
       "description": "Description",
       "website": "Website",
-      "fee": "Fee"
+      "fee": "Fee",
+      "stake_million_tokens": "Stake a 1.25 million tokens",
+      "required": "Required",
+      "insufficient_loom": "Insufficient LOOM",
+      "ready_to_stake": "Ready to stake",
+      "your_balance": "Your balance"
     },
     "validator_extended_detail": {
       "validator_associated": "Validator Associated",
@@ -699,7 +705,9 @@
       "slash_percentage": "Slash %",
       "delegation_total": "Delegation Total",
       "staked_amount": "Staked Amount",
-      "whitelist_locktime_tier": "Whitelist locktime tier"
+      "whitelist_locktime_tier": "Whitelist locktime tier",
+      "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
+      "node_setup_guide": "Node setup guide"
     }
   },
   "events": {
@@ -735,7 +743,8 @@
       "batch_transfer": "Batch Transfer",
       "pack_transfer": "Pack transfer",
       "adding_deployer": "Adding deployer key",
-      "new_key": "New key"
+      "new_key": "New key",
+      "transfer_token": "Transfer Token"
     },
     "step": {
       "delegating": "Delegating...",

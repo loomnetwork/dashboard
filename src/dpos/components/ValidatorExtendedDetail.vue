@@ -4,46 +4,26 @@
       <b-card-title>{{ $t('components.validator_extended_detail.register_as_validator') }}</b-card-title>
       <hr />
       <b-card-body v-if="!validator">
-
         <i18n tag="p" path="components.validator_extended_detail.not_validator_account">
           <code place="address">{{ plasmaAddress }}</code>
         </i18n>
         <p>
           <i18n tag="span" path="components.validator_extended_detail.follow_guide">
             <a place="link" :href="guideLink" target="_blank">{{ $t('components.validator_extended_detail.validator_guide') }}</a>
-          </i18n>          
+          </i18n>    
           <br>
           <span>{{ $t('components.validator_extended_detail.whitelist_amount_description') }}</span>          
         </p>
+        <i18n tag="p" path="components.validator_extended_detail.follow_node_guide">
+          <a place="link" :href="setupLink" target="_blank">{{ $t('components.validator_extended_detail.node_setup_guide') }}</a>
+        </i18n>
         <i18n tag="p" path="components.validator_extended_detail.register_as_validator_description">
           <code place="address">{{ plasmaAddress }}</code>
         </i18n>
+        
         <b-button variant="primary" @click="showInfo = true">{{ $t('components.validator_extended_detail.register_amount') }}</b-button>
       </b-card-body>
-      <b-list-group class="validator-info" v-if="showInfo && !validator">
-        <b-list-group-item>
-          <h5>{{ $t('components.validator_extended_detail.register_this_account_as_a_validator', { address: plasmaAddress }) }}</h5>
-          <ul>
-            <li>{{ $t('components.validator_extended_detail.filled_out_form') }}</li>
-            <li>
-              <i18n path="components.validator_extended_detail.more_detail">
-                <a place="link" :href="guideLink" target="_blank">{{ $t('components.validator_extended_detail.link') }}</a>
-              </i18n>
-            </li>
-          </ul>
-          <register-candidate-form class="mb-2" />
-        </b-list-group-item>
-        <b-list-group-item>
-          <h5>{{ $t('components.validator_extended_detail.setup_node') }}</h5>
-          <ul>
-            <li>
-              <i18n path="components.validator_extended_detail.check_out">
-                <a place="link" :href="setupLink" target="_blank">{{ $t('components.validator_extended_detail.link') }}</a>
-              </i18n>
-            </li>
-          </ul>
-        </b-list-group-item>
-      </b-list-group>
+      <register-candidate-form class="mb-2" v-if="showInfo && !validator"/>
       <b-card-header class="validator-head" v-if="validator">
         <div>
           <h2>{{ validator.name }}</h2>
@@ -104,10 +84,11 @@ import { Component, Watch, Prop } from "vue-property-decorator"
 import { HasDPOSState } from "@/dpos/store/types"
 import { formatTokenAmount } from "@/filters"
 import { TextDecoder } from "util"
-import { formatToLoomAddress } from "@/utils"
+import { formatToLoomAddress, parseToWei } from "@/utils"
 import BN from "bn.js"
 import { dposModule } from "../store"
 import RegisterCandidateForm from "./RegisterCandidateForm.vue"
+import BigNumber from 'bignumber.js';
 
 @Component({
   components: {
@@ -144,6 +125,7 @@ export default class ValidatorExtendedDetail extends Vue {
   decodeUint8Array(key: Uint8Array) {
     return Buffer.from(key).toString("hex")
   }
+
 
 }
 </script>

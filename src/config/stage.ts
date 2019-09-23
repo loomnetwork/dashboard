@@ -40,4 +40,9 @@ export default {
     },
     tokenContractLogsURL: "https://stage-api.loom.games/plasma/tokencontract/eth:{address}",
   },
+  announcement: {
+    validatorsPage: true,
+    popup: true,
+    home: true,
+  },
 } as DashboardConfig

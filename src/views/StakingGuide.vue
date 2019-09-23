@@ -51,19 +51,19 @@
                   {{ $t('views.staking_guide.on_desktop') }}
                 </p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-1.png" alt="Select wallet">
+                  <img src="../assets/staking-guide-1.png" class="img-medium-size" alt="Select wallet">
                 </div>
                 <p>
                   {{ $t('views.staking_guide.select_your_wallet') }}
                 </p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-2.png" alt="New account">
+                  <img src="../assets/staking-guide-2.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>
                   {{ $t('views.staking_guide.following_page') }}
                 </p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-3.png" alt="New account">
+                  <img src="../assets/staking-guide-3.png" class="img-medium-size" alt="New account">
                 </div>
                 <hr>
                 <h3 class="header-grey">{{ $t('views.staking_guide.deposit_loom') }}</h3>
@@ -86,13 +86,13 @@
                   {{ $t('views.staking_guide.press_deposit') }}
                 </p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-4.png" alt="New account">
+                  <img src="../assets/staking-guide-4.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>
                   {{ $t('views.staking_guide.pop_up') }}
                 </p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-5.png" alt="New account">
+                  <img src="../assets/staking-guide-5.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -114,7 +114,7 @@
                   {{ $t('views.staking_guide.approval_request') }}
                 </p>               
                 <div class="img-container">
-                  <img src="../assets/staking-guide-7.png" alt="New account">
+                  <img src="../assets/staking-guide-7.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>
                   {{ $t('views.staking_guide.confirm_transaction') }}
@@ -131,7 +131,7 @@
                   </u>
                 </h6>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-9.png" alt="New account">
+                  <img src="../assets/staking-guide-9.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>
                   {{ $t('views.staking_guide.block_confirmations') }}
@@ -154,7 +154,7 @@
                   {{ $t('views.staking_guide.go_to_validitor') }}
                 </p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-10.png" alt="New account">
+                  <img src="../assets/staking-guide-10.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -165,7 +165,7 @@
                   {{ $t('views.staking_guide.specific_validator') }}
                 </p>                
                 <div class="img-container">
-                  <img src="../assets/staking-guide-11.png" alt="New account">
+                  <img src="../assets/staking-guide-11.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -179,7 +179,7 @@
                   <a place="link" :href="$t('views.staking_guide.locktime_bonus_link')" target="_blank">article</a>
                 </i18n>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-12.png" alt="New account">
+                  <img src="../assets/staking-guide-12.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>
                   {{ $t('views.staking_guide.press_delegate') }}
@@ -205,7 +205,7 @@
           <b-collapse id="collaspe-2">
             <b-card-body>
               <b-card-text>
-                <h3 class="header-grey">{{ $t('views.staking_guide.delegate_loom') }}</h3>
+                <h3 class="header-grey">{{ $t('views.staking_guide.claim_rewards') }}</h3>
                 <p>{{ $t('views.staking_guide.steps') }}</p>
                 <ol>
                   <li>{{ $t('views.staking_guide.4_step_1') }}</li>
@@ -218,7 +218,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.press_claim_button') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-13.png" alt="New account">
+                  <img src="../assets/staking-guide-13.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -231,7 +231,7 @@
                 </div>
                 <p>{{ $t('views.staking_guide.if_rewards_claim') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-15.png" alt="New account">
+                  <img src="../assets/staking-guide-15.png" class="img-medium-size" alt="New account">
                 </div>
                 <hr>
                 <h3 class="header-grey">{{ $t('views.staking_guide.withdraw_to_ethereum') }}</h3>
@@ -250,11 +250,11 @@
                 <p>{{ $t('views.staking_guide.deposit_withdraw_page') }}</p>
                 <p>{{ $t('views.staking_guide.press_withdraw') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-16.png" alt="New account">
+                  <img src="../assets/staking-guide-16.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.pop_up_asking') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-17.png" alt="New account">
+                  <img src="../assets/staking-guide-17.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -263,11 +263,11 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.press_next_button') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-18.png" alt="New account">
+                  <img src="../assets/staking-guide-18.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.transaction_twice') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-19.png" alt="New account">
+                  <img src="../assets/staking-guide-19.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -311,7 +311,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.find_the_delegation') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-21.png" alt="New account">
+                  <img src="../assets/staking-guide-21.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -320,7 +320,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.validators_and_fees') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-22.png" alt="New account">
+                  <img src="../assets/staking-guide-22.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.select_the_validator') }}</p>
                 <h6>
@@ -334,7 +334,7 @@
                 </div>
                 <p>{{ $t('views.staking_guide.delegation_is_redelegating') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-24.png" alt="New account">
+                  <img src="../assets/staking-guide-24.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.redelegation_will_be_complete') }}</p>
                 <hr>
@@ -354,7 +354,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.my_account_page') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-25.png" alt="New account">
+                  <img src="../assets/staking-guide-25.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -363,7 +363,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.how_many_loom') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-26.png" alt="New account">
+                  <img src="../assets/staking-guide-26.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.enter_amount') }}</p>
                 <h6>
@@ -391,7 +391,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.go_to_validator_page') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-28.png" alt="New account">
+                  <img src="../assets/staking-guide-28.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -440,6 +440,19 @@
   margin: 0 auto;
   width: 50%;
   height: auto;
+}
+
+.img-medium-size {
+  width: 100% !important;  
+}
+
+@media only screen and (min-width: 780px) {
+  .img-container {
+    margin: 48px 0;
+  }
+  .img-medium-size {
+    width: 80% !important;
+  }
 }
 
 .header {

@@ -9,26 +9,28 @@ import { WhiteListState, DeployerAddress, DeployedContractAddress } from "../typ
 import { ITier, IDeployer, IDeployedContract } from "loom-js/dist/contracts/user-deployer-whitelist"
 import { sha256 } from "js-sha256"
 import sinon from "sinon"
-import { TransferRequest } from '@/store/plasma/types';
-import { createContract,
-         getTierInfo,
-         addDeployer,
-         getDeployers,
-         getDeployedContractAddresses,
-         generateSeeds } from "@/whitelist/store/index"
+import { TransferRequest } from "@/store/plasma/types";
+import {
+  createContract,
+  getTierInfo,
+  addDeployer,
+  getDeployers,
+  getDeployedContractAddresses,
+  generateSeeds
+} from "@/whitelist/store/index"
 import { whiteListModuleStub } from "./_helpers"
 
 const state: WhiteListState = {
-    userDeployerWhitelist: null,
-    userDeployersAddress: [],
-    tierIDs: [0],
-    tiers: [],
-    deployedContractAddress: {},
-    seed: {
-      mnemonic: "",
-      publicAddress: "",
-    },
-  }
+  userDeployerWhitelist: null,
+  userDeployersAddress: [],
+  tierIDs: [0],
+  tiers: [],
+  deployedContractAddress: {},
+  seed: {
+    mnemonic: "",
+    publicAddress: "",
+  },
+}
 
 describe("Whitelist, actions test", () => {
   const address = Address.fromString("default:0x" + "".padEnd(40, "0"))
@@ -58,7 +60,7 @@ describe("Whitelist, actions test", () => {
       plasmaModuleStub.getCallerAddress.resolves(address)
 
       // @ts-ignore
-      await createContract({ ...{state}, ...{rootState} })
+      await createContract({ ...{ state }, ...{ rootState } })
     })
 
     it("calls plasmaModule.getCallerAddress", () => {
@@ -80,7 +82,7 @@ describe("Whitelist, actions test", () => {
       deployerWhitelistStub.createAsync.reset()
       state.userDeployerWhitelist = new UserDeployerWhitelist(deployerWhitelistConstructor)
       // @ts-ignore
-      tierDetail = await getTierInfo({ ...{state}, ...{rootState} }, TierID.DEFAULT)
+      tierDetail = await getTierInfo({ ...{ state }, ...{ rootState } }, TierID.DEFAULT)
     })
 
     it("calls userDeployerWhitelist.getTierInfoAsync with correct values", () => {
@@ -99,6 +101,7 @@ describe("Whitelist, actions test", () => {
       address,
       contracts: [],
       tierId: TierID.DEFAULT,
+      inactive: false,
     }]
 
     before(async () => {
@@ -109,7 +112,7 @@ describe("Whitelist, actions test", () => {
       getDeployersAsyncStub.resolves(deployersResponseDummy)
 
       // @ts-ignore
-      await getDeployers({ ...{state}, ...{rootState} })
+      await getDeployers({ ...{ state }, ...{ rootState } })
     })
 
     it("calls userDeployerWhitelist.getDeployersAsync", () => {
@@ -140,7 +143,7 @@ describe("Whitelist, actions test", () => {
       to: addressString,
     }
 
-    const deployAddress = new Address(rootState.plasma.client.chainId, LocalAddress.fromHexString(addressString)) 
+    const deployAddress = new Address(rootState.plasma.client.chainId, LocalAddress.fromHexString(addressString))
 
     before(async () => {
       plasmaModuleStub.approve.reset()
@@ -151,7 +154,7 @@ describe("Whitelist, actions test", () => {
       deployerWhitelistStub.createAsync.resolves(new UserDeployerWhitelist(deployerWhitelistConstructor))
 
       // @ts-ignore
-      await addDeployer({ ...{state}, ...{rootState} }, { deployer: addressString, tier: iTiersDummy})
+      await addDeployer({ ...{ state }, ...{ rootState } }, { deployer: addressString, tier: iTiersDummy })
     })
 
     it("calls plasmaModule.approve", () => {
@@ -190,14 +193,14 @@ describe("Whitelist, actions test", () => {
 
     const contractAddresses = {
       deployerAddress: addressString,
-      deployedContractAddress: [addressString]
+      deployedContractAddress: [addressString],
     }
 
     before(async () => {
       getDeployedContractsAsyncStub.resolves(deployedContract)
 
       // @ts-ignore
-      await getDeployedContractAddresses({ ...{state}, ...{rootState} }, { deployerAddress: address })
+      await getDeployedContractAddresses({ ...{ state }, ...{ rootState } }, { deployerAddress: address })
     })
 
     it("calls UserDeployerWhitelist.getDeployedContractsAsync", () => {
@@ -219,7 +222,7 @@ describe("Whitelist, actions test", () => {
     before(async () => {
       cryptoUtilsStub.Uint8ArrayToB64.reset()
       // @ts-ignore
-      await generateSeeds({ ...{state}, ...{rootState} })
+      await generateSeeds({ ...{ state }, ...{ rootState } })
     })
 
     it("calls generateMnemonic")

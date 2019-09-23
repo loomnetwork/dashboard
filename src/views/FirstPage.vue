@@ -22,7 +22,11 @@
                 <loom-icon width="56px" height="56px" :color="'#6eccd8'" />
               </div>
               <div class="linking-div-choice">
-                <b-button block variant="outline-primary" :href="loomGamesUrl">{{ $t('views.first_page.link_my_account') }}</b-button>
+                <b-button
+                  block
+                  variant="outline-primary"
+                  :href="loomGamesUrl"
+                >{{ $t('views.first_page.link_my_account') }}</b-button>
               </div>
             </div>
             <div slot="modal-footer" class="w-100" style="text-align: center;">
@@ -34,9 +38,7 @@
               >{{ $t('views.first_page.not_from_relentless_marketplace') }}</b-button>
               <div class="reconsider" v-show="reconsider">
                 <h5>{{ $t('views.first_page.you_sure') }}</h5>
-                <p
-                  style="color: red;"
-                >{{ $t('views.first_page.warn_note') }}</p>
+                <p style="color: red;">{{ $t('views.first_page.warn_note') }}</p>
                 <b-button
                   variant="outline-dark"
                   @click="maybeRelentlessUser = false"
@@ -44,111 +46,147 @@
               </div>
             </div>
           </b-modal>
-          <b-card :title="$t('views.first_page.select_wallet')" class="wallet-provider-container">
-            <div class="row">
-              <div class="col-sm-12 mb-3">
-                <b-card
-                  id="metamask-button"
-                  class="wallet-selection-card text-center"
-                  :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
-                  @click="setWallet('metamask')"
-                >
-                  <div>
-                    <img src="../assets/metamask_logo.png" />
-                    <span>{{ $t('views.first_page.wallets.metamask') }}</span>
+          <b-row
+            id="main-main"
+            class="container-fluid center-content"
+            style="justify-content: center;"
+          >
+            <b-card :title="$t('views.first_page.select_wallet')" class="wallet-provider-container">
+              <b-card-body>
+                <div class="row">
+                  <div class="col-sm-12 mb-3">
+                    <b-card
+                      id="metamask-button"
+                      class="wallet-selection-card text-center"
+                      :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                      @click="setWallet('metamask')"
+                    >
+                      <div>
+                        <img src="../assets/metamask_logo.png" />
+                        <span>{{ $t('views.first_page.wallets.metamask') }}</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>
-              <div v-if="$store.state.env !== 'production'" class="col-sm-12 mb-3">
-                <b-card
-                  id="test-wallet-button"
-                  class="wallet-selection-card text-center"
-                  :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
-                  @click="setWallet('test_wallet')"
-                >
-                  <div>
-                    <img src="../assets/metamask_logo.png" />
-                    <span>Metamask (Test Wallet)</span>
+                  <div v-if="$store.state.env !== 'production'" class="col-sm-12 mb-3">
+                    <b-card
+                      id="test-wallet-button"
+                      class="wallet-selection-card text-center"
+                      :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                      @click="setWallet('test_wallet')"
+                    >
+                      <div>
+                        <img src="../assets/metamask_logo.png" />
+                        <span>Metamask (Test Wallet)</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>
-              <div class="col-sm-12">
-                <b-card
-                  id="ledger-button"
-                  class="wallet-selection-card text-center mb-3"
-                  @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
-                >
-                  <div>
-                    <img src="../assets/ledger_logo.svg" />
-                    <span>{{ $t('views.first_page.wallets.ledger_via_metamask') }}</span>
+                  <div class="col-sm-12">
+                    <b-card
+                      id="ledger-button"
+                      class="wallet-selection-card text-center mb-3"
+                      @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
+                    >
+                      <div>
+                        <img src="../assets/ledger_logo.svg" />
+                        <span>{{ $t('views.first_page.wallets.ledger_via_metamask') }}</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>
-              <div class="col-sm-12 mb-3">
-                <b-card
-                  id="trezor-button"
-                  class="wallet-selection-card text-center"
-                  :class="{'disabled' : !metamaskInstalled}"
-                  @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
-                >
-                  <div>
-                    <img src="../assets/metamask_logo.png" />
-                    <span>{{ $t('views.first_page.wallets.trezor_via_metamask') }}</span>
+                  <div class="col-sm-12 mb-3">
+                    <b-card
+                      id="trezor-button"
+                      class="wallet-selection-card text-center"
+                      :class="{'disabled' : !metamaskInstalled}"
+                      @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
+                    >
+                      <div>
+                        <img src="../assets/metamask_logo.png" />
+                        <span>{{ $t('views.first_page.wallets.trezor_via_metamask') }}</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>
-              <div class="col-sm-12">
-                <b-card
-                  id="ledger-button"
-                  class="wallet-selection-card text-center mb-3"
-                  @click="setWallet('ledger')"
-                >
-                  <div id="ledger-card">
-                    <img src="../assets/ledger_logo.svg" />
-                    <span>{{ $t('views.first_page.wallets.ledger_legacy') }}</span>
+                  <div class="col-sm-12">
+                    <b-card
+                      id="ledger-button"
+                      class="wallet-selection-card text-center mb-3"
+                      @click="setWallet('ledger')"
+                    >
+                      <div id="ledger-card">
+                        <img src="../assets/ledger_logo.svg" />
+                        <span>{{ $t('views.first_page.wallets.ledger_legacy') }}</span>
+                      </div>
+                    </b-card>
                   </div>
-
-                </b-card>
-              </div>   
-              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
-                <b-card
-                  id="portis-button"
-                  class="wallet-selection-card text-center"
-                  @click="setWallet('portis')"
-                >
-                  <div class="ml-1">
-                    <img src="../assets/portis_icon.svg" />
-                    <span>Portis</span>
+                  <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
+                    <b-card
+                      id="portis-button"
+                      class="wallet-selection-card text-center"
+                      @click="setWallet('portis')"
+                    >
+                      <div class="ml-1">
+                        <img src="../assets/portis_icon.svg" />
+                        <span>Portis</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>
-              <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('fortmatic')">
-                <b-card
-                  id="fortmatic-button"
-                  class="wallet-selection-card text-center"
-                  @click="setWallet('fortmatic')"
-                >
-                  <div>
-                    <img src="../assets/fortmatic-icon.svg" />
-                    <span>Fortmatic</span>
+                  <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('fortmatic')">
+                    <b-card
+                      id="fortmatic-button"
+                      class="wallet-selection-card text-center"
+                      @click="setWallet('fortmatic')"
+                    >
+                      <div>
+                        <img src="../assets/fortmatic-icon.svg" />
+                        <span>Fortmatic</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>           
-              <div class="col-sm-12">
-                <b-card
-                  id="explore-button"
-                  class="wallet-selection-card text-center"
-                  @click="addressModalShow = !addressModalShow"
-                >
-                  <div>
-                    <fa icon="search" class="search-icon" />
-                    <span>{{ $t('views.first_page.wallets.explore') }}</span>
+                  <div class="col-sm-12 mb-3">
+                    <b-card
+                      id="explore-button"
+                      class="wallet-selection-card text-center"
+                      @click="setWallet('walletconnect')"
+                    >
+                      <div>
+                        <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
+                      </div>
+                    </b-card>
                   </div>
-                </b-card>
-              </div>
-
+                  <div class="col-sm-12">
+                    <b-card
+                      id="explore-button"
+                      class="wallet-selection-card text-center"
+                      @click="addressModalShow = !addressModalShow"
+                    >
+                      <div>
+                        <fa icon="search" class="search-icon" />
+                        <span>{{ $t('views.first_page.wallets.explore') }}</span>
+                      </div>
+                    </b-card>
+                  </div>
+                </div>
+              </b-card-body>
+            </b-card>
+            <div class="d-none d-xl-block">
+              <b-card id="announcement" v-if="showAnnounce">
+                <b-card-title>Ad here</b-card-title>
+                <b-card-body>
+                  <p>Content here</p>
+                  <b-button>Click here</b-button>
+                </b-card-body>
+              </b-card>
             </div>
-          </b-card>
+          </b-row>
+
+          <div class="d-xl-none" v-if="showAnnounce">
+            <b-card id="announcement-mobile">
+              <b-card-title>Ad here</b-card-title>
+              <b-card-body>
+                <p>Content here</p>
+                <b-button>Click here</b-button>
+              </b-card-body>
+            </b-card>
+          </div>
 
           <b-card v-if="!metamaskInstalled" class="metamask-suggest">
             <b-row>
@@ -171,12 +209,23 @@
 
           <b-modal v-model="addressModalShow" hide-header hide-footer>
             <div>
-              <b-form-input v-model="address" class="mb-2" :placeholder="$t('input_placeholder.enter_your_addr')"></b-form-input>
-              <b-button type="submit" @click="setExploreMode(address)" variant="primary">{{ $t('button.submit') }}</b-button>
+              <b-form-input
+                v-model="address"
+                class="mb-2"
+                :placeholder="$t('input_placeholder.enter_your_addr')"
+              ></b-form-input>
+              <b-button
+                type="submit"
+                @click="setExploreMode(address)"
+                variant="primary"
+              >{{ $t('button.submit') }}</b-button>
             </div>
           </b-modal>
 
-          <b-modal id="metmask-hardware-wizard" :title="$t('components.modals.hardware_wallet_modal.hardware_wallet')">
+          <b-modal
+            id="metmask-hardware-wizard"
+            :title="$t('components.modals.hardware_wallet_modal.hardware_wallet')"
+          >
             <div>
               <div class="wizard-img-container mb-3">
                 <img class="wizard-img" src="../assets/metamask-hardware-screencap.png" alt />
@@ -196,7 +245,9 @@
             triggers="hover"
           >
             <i18n path="views.first_page.recommend_use_ledger_via_metamask">
-              <strong place="ledgerMetamask">{{ $t('views.first_page.wallets.ledger_via_metamask') }}</strong>
+              <strong
+                place="ledgerMetamask"
+              >{{ $t('views.first_page.wallets.ledger_via_metamask') }}</strong>
             </i18n>
           </b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
@@ -213,7 +264,7 @@ import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
 import { BModal } from "bootstrap-vue"
 
 import { ethereumModule } from "@/store/ethereum"
-import { DashboardState } from "../types"
+import { DashboardState, DashboardConfig } from "../types"
 
 import LoomIcon from "@/components/LoomIcon.vue"
 import { Gateway } from "../store/gateway/contracts/Gateway"
@@ -222,6 +273,7 @@ import { feedbackModule } from "../feedback/store"
 
 import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
+
 
 @Component({
   components: {
@@ -254,9 +306,14 @@ export default class FirstPage extends Vue {
   addressModalShow = false
   mappedModalShow = false
   reconsider = false
+  showAnnounce = false
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
+  }
+
+  getEnv() {
+    return (this.$state.envs || []).find((env) => env.name === this.$state.env)!
   }
 
   onClose() {
@@ -274,9 +331,37 @@ export default class FirstPage extends Vue {
     return MetaMaskAdapter.detect()
   }
 
+  @Watch("$store.state.plasma.networkId")
+  chainIdChange() {
+    this.showAnnounce = this.getEnv().announcement.home
+  }
+
+  mounted() {
+    this.showAnnounce = this.getEnv().announcement.home
+  }
+
 }
 </script>
 <style lang="scss" scoped>
+
+#main-main {
+  flex-direction: row
+}
+
+  #announcement {
+    margin: 0 34px;
+    width: 300px;
+    height: 250px;
+    text-align: center;
+  }
+
+  #announcement-mobile {
+    margin: auto;
+    width: 300px;
+    height: 250px;
+    text-align: center;
+  }
+
 .button-container {
   display: flex;
   justify-content: center;
@@ -318,6 +403,9 @@ export default class FirstPage extends Vue {
 }
 
 @media (max-width: 767px) {
+  #main-main {
+    flex-direction: column
+  }
   #login-tab {
     .actions {
       display: flex;
@@ -328,6 +416,14 @@ export default class FirstPage extends Vue {
       }
     }
   }
+
+}
+
+@media (max-width: 1024px) {
+  .wallet-provider-container {
+    margin: auto;
+  }
+
 }
 
 </style>
@@ -405,9 +501,12 @@ export default class FirstPage extends Vue {
   }
 }
 
+.center-content { 
+  margin: 24px auto;
+}
+
 .wallet-provider-container {
   max-width: 350px;
-  margin: 24px auto;
   .wallet-selection-card {
     position: relative;
     div {

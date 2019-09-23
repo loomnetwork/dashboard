@@ -22,9 +22,12 @@
           <template v-if="isSmallDevice">
             <div class="py-3"></div>
 
-            <b-card
-              v-for="validator in validators"
+            <div
+              v-for="(validator, index) in validators"
               :key="validator.name"
+            >
+
+            <b-card
               :disabled="!!validator.isBootstrap"
               @click="showValidatorDetail(validator)"
               class="validator-card-mobile mb-3"
@@ -45,18 +48,46 @@
                 <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
               </div>
             </b-card>
+
+            <b-card
+              v-if="index === 9 && isAdsEnabled()"
+              bg-variant="dark"
+              class="mb-3"
+              text-variant="white"
+              title="Ad here">
+              <b-card-text>
+                Content here
+              </b-card-text>
+            </b-card>
+            </div>
+
           </template>
           <template v-else>
             <b-table
               responsive
+              id="validatorTable"
               table-active="table-active"
               tr-class="spacer"
               :items="validators"
               :fields="validatorFields"
-              :sort-desc="false"
-              :sort-compare="sortCompare"
+              :class="{'validator-ads' : isAdsEnabled()}"
               @row-clicked="showValidatorDetail"
             >
+              <template slot="name" slot-scope="data">
+                <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"></li>{{ data.item.name }}               
+                <b-card
+                  v-if="data.index === 9 && isAdsEnabled()"
+                  bg-variant="dark"
+                  class="mb-3 ads"
+                  text-variant="white"
+                  title="Ad here"
+                  >
+                  <b-card-text>
+                    Content here
+                  </b-card-text>
+                </b-card>
+              </template>
+
               <template slot="active" slot-scope="data">{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
             </b-table>
           </template>
@@ -76,6 +107,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
 import { formatTokenAmount } from "@/filters"
 import BN from "bn.js"
+import { DashboardState } from '../../types';
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -122,6 +154,11 @@ export default class ValidatorList extends Vue {
 
   get state(): HasDPOSState {
     return this.$store.state
+  }
+
+  isAdsEnabled() {
+    const config = this.$store.state.envs.find((env) => env.name === this.state.env)!
+    return config.announcement.validatorsPage
   }
 
   get totalStaked() {
@@ -190,7 +227,10 @@ tr {
     background-color: #5756e60f;
     cursor: pointer;
   }
+
 }
+
+
 
 main.validators {
   // ther should be global class for page titles
@@ -285,5 +325,43 @@ main.validators {
       }
     }
   }
+}
+
+.jailed-symbol {
+  display: block;
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  margin-right: 1rem;
+  border-radius: 100%;
+  background-color: #3bef3b;
+  animation: fade 1s alternate infinite;
+
+  &.jailed {
+    background-color: #ec1d05;
+  }
+}
+
+
+.validator-ads {
+  table tr:nth-child(10) {
+    position: relative;
+    left: 0;
+    right: 0;
+    height: 165px;
+  }
+}
+
+.ads {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 1% 1.5%;
+}
+
+@keyframes fade {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
 }
 </style>

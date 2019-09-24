@@ -349,11 +349,6 @@ main.validators {
   margin: 1% 1.5%;
 }
 
-.ad-img {
-  width: 100%;
-  border-radius: 0.25rem;
-}
-
 @keyframes fade {
     from { opacity: 0.5; }
     to   { opacity: 1; }

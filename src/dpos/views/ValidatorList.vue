@@ -27,38 +27,33 @@
               :key="validator.name"
             >
 
-            <b-card
-              :disabled="!!validator.isBootstrap"
-              @click="showValidatorDetail(validator)"
-              class="validator-card-mobile mb-3"
-              no-body
-            >
-              <div class="copy-wrapper">
-                <h6>
-                  <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
-                  {{validator.name}}
-                </h6>
-              </div>
-              <div class="copy-wrapper">
-                <label>{{ $t('components.validator_extended_detail.fee') }}</label>
-                <strong>{{validator.fee}}</strong>
-              </div>
-              <div class="copy-wrapper">
-                <label>{{ $t('views.validator_list.stake') }}</label>
-                <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
-              </div>
-            </b-card>
+              <b-card
+                :disabled="!!validator.isBootstrap"
+                @click="showValidatorDetail(validator)"
+                class="validator-card-mobile mb-3"
+                no-body
+              >
+                <div class="copy-wrapper">
+                  <h6>
+                    <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
+                    {{validator.name}}
+                  </h6>
+                </div>
+                <div class="copy-wrapper">
+                  <label>{{ $t('components.validator_extended_detail.fee') }}</label>
+                  <strong>{{validator.fee}}</strong>
+                </div>
+                <div class="copy-wrapper">
+                  <label>{{ $t('views.validator_list.stake') }}</label>
+                  <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
+                </div>
+              </b-card>
 
-            <b-card
-              v-if="index === 9 && isAdsEnabled()"
-              bg-variant="dark"
-              class="mb-3"
-              text-variant="white"
-              title="Ad here">
-              <b-card-text>
-                Content here
-              </b-card-text>
-            </b-card>
+              <div v-if="index === 9 && isAdsEnabled()" class="mb-3">
+                <a href="https://cryptozombies.io/libra">
+                  <img src="../../assets/images/ads/CZ_Libra_ad_400x110.png" class="ad-img">
+                </a>
+              </div>
             </div>
 
           </template>
@@ -74,18 +69,12 @@
               @row-clicked="showValidatorDetail"
             >
               <template slot="name" slot-scope="data">
-                <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"></li>{{ data.item.name }}               
-                <b-card
-                  v-if="data.index === 9 && isAdsEnabled()"
-                  bg-variant="dark"
-                  class="mb-3 ads"
-                  text-variant="white"
-                  title="Ad here"
-                  >
-                  <b-card-text>
-                    Content here
-                  </b-card-text>
-                </b-card>
+                <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"/>{{ data.item.name }}
+                <div v-if="data.index === 9 && isAdsEnabled()" class="ads">
+                  <a href="https://cryptozombies.io/libra">
+                    <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img">
+                  </a>
+                </div>
               </template>
 
               <template slot="active" slot-scope="data">{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
@@ -358,6 +347,11 @@ main.validators {
   left: 0;
   right: 0;
   margin: 1% 1.5%;
+}
+
+.ad-img {
+  width: 100%;
+  border-radius: 0.25rem;
 }
 
 @keyframes fade {

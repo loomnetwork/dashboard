@@ -1,17 +1,17 @@
 <template>
   <div id="faucet-header" ref="header" class="header">
-    <feedback-notification class="custom-alert text-center"/>
+    <feedback-notification class="custom-alert text-center" />
 
     <div class="d-none d-lg-block">
       <nav class="navbar">
         <div class="container-fluid">
           <router-link to="/account" class="navbar-brand ml-3">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'"/>
-            <span class="px-1">Plasmachain</span>
+            <loom-icon width="18px" height="18px" :color="'#ffffff'" />
+            <span class="px-1">Basechain</span>
             <span class="beta-label">BETA</span>
           </router-link>
           <form class="form-inline">
-            <LangSwitcher/>
+            <LangSwitcher />
           </form>
         </div>
       </nav>
@@ -26,7 +26,7 @@
             </a>
 
             <b-navbar-brand href="#">
-              <loom-icon :color="'#ffffff'"/>
+              <loom-icon :color="'#ffffff'" />
             </b-navbar-brand>
 
             <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
@@ -47,22 +47,18 @@
                   :to="menu.to"
                   class="router"
                 >
-                  <h5 class="text-light hover-warning">
-                    {{ $t(menu.text) }}
-                  </h5>
+                  <h5 class="text-light hover-warning">{{ $t(menu.text) }}</h5>
                 </b-nav-item>
-                <hr>
+                <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.wallet"
                   :key="index+'w'"
                   :to="menu.to"
                   class="router"
                 >
-                  <h5 class="text-light hover-warning">
-                    {{ $t(menu.text) }}
-                  </h5>
+                  <h5 class="text-light hover-warning">{{ $t(menu.text) }}</h5>
                 </b-nav-item>
-                <hr>
+                <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.dev"
                   :key="index+'d'"
@@ -70,25 +66,24 @@
                   :href="menu.href"
                   class="router"
                 >
-                  <h5 class="text-light hover-warning">
-                    {{ $t(menu.text) }}
-                  </h5>
+                  <h5 class="text-light hover-warning">{{ $t(menu.text) }}</h5>
                 </b-nav-item>
-                <hr>
+                <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.help"
                   :key="index+'h'"
                   :to="menu.to"
                   class="router"
                 >
-                  <h5 class="text-light hover-warning">
-                    {{ $t(menu.text) }}
-                  </h5>
+                  <h5 class="text-light hover-warning">{{ $t(menu.text) }}</h5>
                 </b-nav-item>
-                <LangSwitcher/>
+                <LangSwitcher />
                 <b-nav-item v-if="!!state.plasma.address">
                   <h5>
-                    <a @click="logout" class="router text-light hover-warning">{{ $t('components.faucet_header.sign_out') }}</a>
+                    <a
+                      @click="logout"
+                      class="router text-light hover-warning"
+                    >{{ $t('components.faucet_header.sign_out') }}</a>
                   </h5>
                 </b-nav-item>
               </b-navbar-nav>

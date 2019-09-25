@@ -18,30 +18,16 @@
         <span>Last month's winner: Plasma-1 Bootstrap</span>
       </b-card-body>
     </b-card>
-    <div class="videos-section">
-      <h2 class="mb-3">Videos</h2>
-      <b-card class="mb-3" v-for="(bounty, index) in bountyVideos" :key="index">
+    <div v-for="(bounty, topic) in bountyList" :key="topic" class="topic-section">
+      <h2 class="bounty-topic mb-3">{{ topic }}</h2>
+      <b-card class="mb-3" v-for="(bountyData, index) in bounty" :key="index">
         <b-row>
           <b-col sm>
-            <b-card-title>{{ bounty.title }}</b-card-title>
-            <p>{{ bounty.description }}</p>
+            <b-card-title>{{ bountyData.title }}</b-card-title>
+            <p>{{ bountyData.description }}</p>
           </b-col>
           <b-col sm class="bounty-reward">
-            {{ loomAmount(bounty.reward) | tokenAmount(18,0)}} {{ bounty.token }}
-          </b-col>
-        </b-row>
-      </b-card>
-    </div>
-    <div class="articles-section">
-      <h2 class="mb-3">Articles</h2>
-      <b-card class="mb-3" v-for="(bounty, index) in bountyArticles" :key="index">
-        <b-row>
-          <b-col sm>
-            <b-card-title>{{ bounty.title }}</b-card-title>
-            <p>{{ bounty.description }}</p>
-          </b-col>
-          <b-col sm class="bounty-reward">
-            {{ loomAmount(bounty.reward) | tokenAmount(18,0)}} {{ bounty.token }}
+            {{ loomAmount(bountyData.reward) | tokenAmount(18,0)}} {{ bountyData.token }}
           </b-col>
         </b-row>
       </b-card>
@@ -59,26 +45,22 @@ import { parseToWei } from "@/utils"
 @Component
 export default class BountyPage extends Vue {
 
-  bountyVideos = BountyList.videos
-  bountyArticles = BountyList.articles
-  totalBounties = this.bountyVideos.length + this.bountyArticles.length
+  bountyList = BountyList
+  // totalBounties = Object.keys(this.bountyList)
 
-  viewVideo() {
-    console.log(this.bountyVideos)
-  }
-
-  viewArticle() {
-    console.log(this.bountyArticles)
-  }
-
-  viewTotal() {
-    console.log(this.totalBounties)
+  get totalBounties() {
+    const totalTopic = Object.keys(this.bountyList)
+    let totalBounties = 0
+    totalTopic.forEach((item, index) => {
+      totalBounties += Object.values(this.bountyList)[index].length
+    })
+    return totalBounties
   }
 
   loomAmount(amount) {
     return parseToWei(amount, 18)
   }
-
+  
 }
 </script>
 
@@ -92,12 +74,12 @@ export default class BountyPage extends Vue {
     background-color: #d8f7ff;
   }
 
-  .videos-section {
+  .topic-section {
     margin: 2rem 0;
   }
 
-  .articles-section {
-    margin: 2rem 0;
+  .bounty-topic {
+    text-transform: capitalize;
   }
 
   .bounty-reward {

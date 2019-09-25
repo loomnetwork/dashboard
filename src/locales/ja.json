@@ -360,7 +360,7 @@
       "your_loom_address": "Your Loom Public Address",
       "use_exist_or_create": "Use an existing address or creare a new one by clicking on generate new key",
       "select_tier": "Select a tier",
-      "in_order_to_deploy": "In order to deploy contracts to PlasmaChain, you need to stake LOOM as payment to the validators.",
+      "in_order_to_deploy": "In order to deploy contracts to Basechain, you need to pay LOOM to validators.",
       "tier": "Tier",
       "limited_offer": "Limited time offer",
       "coming_soon": "Coming soon",

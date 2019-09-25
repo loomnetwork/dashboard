@@ -148,6 +148,7 @@
                       @click="setWallet('walletconnect')"
                     >
                       <div>
+                        <img src="../assets/walletconnect-logo.svg" />
                         <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
                       </div>
                     </b-card>

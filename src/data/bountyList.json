@@ -1,0 +1,48 @@
+{
+  "videos": [
+    {
+      "title": "Tutorial video",
+      "description": "Tutorial video",
+      "reward": "300000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Non-technical video",
+      "description": "Non-technical video",
+      "reward": "100000",
+      "token": "LOOM"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Building an app with Unity",
+      "description": "Building an app with Unity",
+      "reward": "300000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Using the Loom Transfer Gateway",
+      "description": "Using the Loom Transfer Gateway",
+      "reward": "300000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Using Solidity for Loom",
+      "description": "Using Solidity for Loom",
+      "reward": "200000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Deploying a dapp to Loom",
+      "description": "Deploying a dapp to Loom",
+      "reward": "200000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Non-technical article",
+      "description": "Non-technical article",
+      "reward": "100000",
+      "token": "LOOM"
+    }
+  ]
+}

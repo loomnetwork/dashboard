@@ -17,8 +17,8 @@ export default {
     endpoint: "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
-      mainGateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
-      loomGateway: "0xEA319a0Ea64f482060032b4BE8d9d3F7232c1214",
+      mainGateway: "0xacd7acbe8a2b61e7e01cad0d0a01b2ff13b4d102",
+      loomGateway: "0xEB735040AB3cB730331F25a99aBE63AdA3f70096",
     },
     portisKey: "10589118-6329-43a0-818c-93800c206786",
     formaticKey: "pk_test_58DB7D96C460470B",

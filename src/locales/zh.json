@@ -788,7 +788,7 @@
       "failed_to_get_receipt": "获取收据失败"
     },
     "info": {
-      "reward_claimed": "成功领取奖励。",
+      "reward_claimed": "Rewards successfully claimed.",
       "please_track_transaction": "请在你的钱包上跟踪这个事务",
       "please_track_deposit_approval": "请在你的钱包上跟踪这个存入批准事务。",
       "withdrawal_in_progress": "提取已经在进行了。",

@@ -360,7 +360,7 @@
       "your_loom_address": "你的 loom 地址",
       "use_exist_or_create": "使用现有地址或点击“生成新密钥”创建一个新地址",
       "select_tier": "从下列层级中选一个",
-      "in_order_to_deploy": "要部署合约到 PlasmaChain，你需要锁定 LOOM 作为付款方式支付给验证者。",
+      "in_order_to_deploy": "In order to deploy contracts to Basechain, you need to pay LOOM to validators.",
       "tier": "层级",
       "limited_offer": "限时优惠",
       "coming_soon": "即将到来",

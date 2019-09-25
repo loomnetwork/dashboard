@@ -788,7 +788,7 @@
       "failed_to_get_receipt": "Failed to get receipt"
     },
     "info": {
-      "reward_claimed": "Rewards succesfully claimed.",
+      "reward_claimed": "Rewards successfully claimed.",
       "please_track_transaction": "Please track the transaction on your wallet",
       "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
       "withdrawal_in_progress": "Withdrawal already in progress.",

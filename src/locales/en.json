@@ -66,10 +66,10 @@
       "link_my_account": "Link my account",
       "not_from_relentless_marketplace": "Nope, I'm not from Relentless Marketplace",
       "you_sure": "Are you sure ?",
-      "warn_note": "Please note that, if you create a new Plasma account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
+      "warn_note": "Please note that, if you create a new Basechain account, while your relentless account is not linked, you will be unable to access your assets in the Relentless marketplace",
       "create_new_account": "Create new account",
       "select_wallet": "Select wallet",
-      "wallets" : {
+      "wallets": {
         "metamask": "Metamask",
         "ledger_via_metamask": "Ledger (via Metamask)",
         "trezor_via_metamask": "Trezor (via Metamask)",
@@ -84,7 +84,7 @@
     },
     "help": {
       "what_is_plasma_chain": "What is PlasmaChain?",
-      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Plasma Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
+      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Basechain Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "What is staking?",
       "when_a_user_stakes_tokens": "When a user “stakes” tokens, it means they time-lock their tokens to gain rights, perform services, and access rewards on the network. As a LOOM holder, you can",
       "help_secure_plasma_chain": "help secure PlasmaChain",
@@ -133,7 +133,7 @@
       "where_do_the_tokens_go": "Where do the tokens go when they are slashed?",
       "slashed_tokens_will_be_contributed": "Slashed tokens will be contributed back to the remaining token reserve to be paid out as future block rewards for those validating and staking on the network.",
       "check_your_balance": "Check your token balances",
-      "deposit_to_plasmachain": "Deposit to Plasmachain from Ethereum",
+      "deposit_to_plasmachain": "Deposit to Basechain from Ethereum",
       "withdraw_to_ethereum": "Withdraw to Ethereum",
       "transfer_token": "Transfer tokens to other PlasmaChain accounts",
       "check_your_asset": "Check your Relentless assets (more coming soon)",
@@ -339,7 +339,7 @@
       "debug_mapped_contract": "Debug Mapped Contract",
       "view_logs": "View Logs",
       "loading": "Loading...",
-      "fields" : {
+      "fields": {
         "id": "Id",
         "created_at": "Created At",
         "token_owner": "Token Owner",
@@ -355,7 +355,7 @@
       "no_contract": "No contract deployed",
       "low_balance": "LOOM balance low.",
       "whitelisting_require": "Whitelisting keys requires at least {amount} LOOM. Your balance is {balance} LOOM",
-      "deposit_more": "Deposit more LOOM to Plasmachain",
+      "deposit_more": "Deposit more LOOM to Basechain",
       "generate_new": "Generate New Key",
       "your_loom_address": "Your Loom Public Address",
       "use_exist_or_create": "Use an existing address or creare a new one by clicking on generate new key",
@@ -405,7 +405,7 @@
       "plasma_chain": "PlasmaChain:",
       "staked": "Staked:",
       "deposit": "Deposit",
-      "plasmachain_dashboard": "Plasmachain Dashboard",
+      "plasmachain_dashboard": "Basechain Dashboard",
       "dashboard": "Dashboard",
       "wallet": "Wallet",
       "my_staking": "My Staking",
@@ -429,11 +429,11 @@
       "account_explorer": "Account Explorer",
       "game_assets": "Game Assets",
       "block_explorer": "Block Explorer",
-      "deploy_to_plasmachain": "Deploy to Plasmachain",
+      "deploy_to_plasmachain": "Deploy to Basechain",
       "transfer_gateway": "Transfer Gateway",
       "validator_management": "Validator Management",
       "feedback_form": "Contact Support",
-      "plasma_wallet": "Plasma Wallet",
+      "plasma_wallet": "Basechain Wallet",
       "developers": "Developers",
       "help": "Help"
     },
@@ -457,7 +457,7 @@
         "failure": "Deposit failed..."
       },
       "deposit_binance": {
-        "title_deposit": "Deposit to Plasmachain from Binance",
+        "title_deposit": "Deposit to Basechain from Binance",
         "title_success": "Success",
         "description": "Please go to {link} and fill in the form as show below.",
         "binance_link": "https://binance.org/en/balances",
@@ -479,13 +479,13 @@
         "balance": "Your token balance : "
       },
       "confirm_withdrawal_modal": {
-        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Plasmachain. Click complete to transfer your funds to your {chain} account.",
+        "confirm_withdrawl": "{amount} {token} have been withdrawn out of Basechain. Click complete to transfer your funds to your {chain} account.",
         "error": "An error occurred, please try again.",
         "complete": "Complete withdraw",
         "status_failed": "Withdrawal failed",
         "status_confirmed": "Withdraw to gateway confirmed"
       },
-      "withdraw_form_modal" : {
+      "withdraw_form_modal": {
         "title": "Withdraw {token} to {chain}",
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
@@ -581,7 +581,7 @@
         "input_help": "The private key is used to sign the mapping and is then discarded."
       },
       "add_token_modal": {
-        "add_new" : "Add New Token",
+        "add_new": "Add New Token",
         "token_symbol": "Token Symbol"
       },
       "transfer_all_cards": {
@@ -652,7 +652,7 @@
         "pending": "Pending"
       }
     },
-    "gameAsset" : {
+    "gameAsset": {
       "cards": {
         "my_cards": "My Cards",
         "edition": "Edition",
@@ -758,13 +758,13 @@
       "checking_receipt": "Checking for pre-existing receipts...",
       "check_account_mapping": "Checking account mapping",
       "create_new_mapping": "Creating a new mapping from ethereum account",
-      "depositing_to_plasma": "Depositing to Plasmachain Gateway...",
+      "depositing_to_plasma": "Depositing to Basechain Gateway...",
       "awaiting_oracle": "Awaiting Oracle signature...",
       "complete_withdrawal_binance": "Completing withdrawal to binance...",
       "transfering_card": "Transfering cards",
       "transfering_pack": "Transfering packs",
       "refresh_balance": "Refreshing balance",
-      "connecting_plasma": "Connecting to Plasmachain",
+      "connecting_plasma": "Connecting to Basechain",
       "adding_new_deployer": "Adding new deployer",
       "generating_new_key": "Generating new key",
       "approving_spending": "Approving spending of {tokenAmount} {symbol}",
@@ -798,7 +798,7 @@
     "success": {
       "transaction_success": "Transaction sent successfully.",
       "eth_addr_copied": "Ethereum address copied.",
-      "plasma_addr_copied": "Plasma address copied.",
+      "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
       "register_success": "Successfully registered."
     },

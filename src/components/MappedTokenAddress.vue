@@ -6,15 +6,16 @@
       </b-col>
       <b-col>
         <b-button-group class="chain-tabs">
-          <b-button 
-          variant="outline-primary"
-          :class="{active: chainTabs ==='ethereum'}"
-          @click="toggleChains('ethereum')">
-          Ethereum</b-button>
-          <b-button 
-          variant="outline-primary"
-          :class="{active: chainTabs ==='binance'}"
-          @click="toggleChains('binance')">Binance</b-button>
+          <b-button
+            variant="outline-primary"
+            :class="{active: chainTabs ==='ethereum'}"
+            @click="toggleChains('ethereum')"
+          >Ethereum</b-button>
+          <b-button
+            variant="outline-primary"
+            :class="{active: chainTabs ==='binance'}"
+            @click="toggleChains('binance')"
+          >Binance</b-button>
         </b-button-group>
       </b-col>
     </b-row>
@@ -24,19 +25,18 @@
         <address @click="copyEthereum">
           <span v-if="!tokenData.ethereum" class="highlight">-</span>
           <span v-else class="highlight">{{ tokenData.ethereum }}</span>
-          <fa icon="paste"/>
+          <fa icon="paste" />
         </address>
       </b-col>
       <b-col class="account">
-        <label>Plasma</label>
+        <label>Basechain</label>
         <address @click="copyPlasma">
           <span v-if="!tokenData.plasma" class="highlight">-</span>
           <span v-else class="highlight">{{ tokenData.plasma }}</span>
-          <fa icon="paste"/>
+          <fa icon="paste" />
         </address>
       </b-col>
     </b-row>
-    
   </b-container>
 </template>
 

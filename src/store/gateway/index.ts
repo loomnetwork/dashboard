@@ -35,7 +35,7 @@ function initialState(): GatewayState {
     },
     withdrawStates: [
       { text: "Checking for pre-existing receipts...", isComplete: false },
-      { text: "Depositing to Plasmachain Gateway...", isComplete: false },
+      { text: "Depositing to Basechain Gateway...", isComplete: false },
       { text: "Awaiting Oracle signature...", isComplete: false },
       { text: "Withdrawing to your Ethereum account...", isComplete: false },
     ],

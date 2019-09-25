@@ -788,7 +788,7 @@
       "failed_to_get_receipt": "영수증을 가져오는 데 실패하였습니다."
     },
     "info": {
-      "reward_claimed": "보상을 성공적으로 수령하였습니다.",
+      "reward_claimed": "Rewards successfully claimed.",
       "please_track_transaction": "당신의 지갑에서 이 트랜잭션을 추적하세요.",
       "please_track_deposit_approval": "당신의 지갑에서 이 트랜잭션의 입금 승인을 추적하세요.",
       "withdrawal_in_progress": "출금이 이미 진행 중입니다.",

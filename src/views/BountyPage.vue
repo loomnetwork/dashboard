@@ -20,16 +20,20 @@
       <h2 class="bounty-topic mb-3">{{ topic }}</h2>
       <b-card class="mb-3" v-for="(bountyData, index) in bounty" :key="index">
         <b-row>
-          <b-col sm>
+          <b-col sm="8">
             <b-card-title>{{ bountyData.title }}</b-card-title>
             <p>{{ bountyData.description }}</p>
           </b-col>
-          <b-col sm class="bounty-reward">
+          <b-col sm="4" class="bounty-reward">
             {{ loomAmount(bountyData.reward) | tokenAmount(18,0)}} {{ bountyData.token }}
           </b-col>
         </b-row>
       </b-card>
     </div>
+    <b-card bg-variant="dark" text-variant="white" class="contact">
+      We're fleshing out the exact details now, if you have a submission please email 
+      <a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning" style="color: #6ec0ff;"><fa :icon="['fas', 'envelope']" fixed-width /> satoshi@loomx.io </a>
+    </b-card>
   </main>
 </template>
 

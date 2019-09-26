@@ -49,6 +49,20 @@
     </section>
     <section>
       <header>
+        <h6 class="rmv-spacing">{{ $t('Community') }}</h6>
+      </header>
+      <b-nav vertical>
+        <b-nav-item
+          v-for="(menu, index) in menus.community"
+          :key="index"
+          :to="menu.to"
+          class="router"
+          exact-active-class="router-active"
+        >{{ $t(menu.text) }}</b-nav-item>
+      </b-nav>
+    </section>
+    <section>
+      <header>
         <h6 class="rmv-spacing">{{ $t('components.faucet_sidebar.help') }}</h6>
       </header>
       <b-nav vertical>
@@ -125,6 +139,13 @@ export default class FaucetSidebar extends Vue {
           to: "/validator-management",
           text: "components.faucet_sidebar.validator_management",
         },
+      ],
+      community: [
+        {
+          to: "/bounty",
+          text: "Bounty",
+          name: "Bounty"
+        }
       ],
       help: [
         {

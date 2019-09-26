@@ -13,7 +13,7 @@
         </b-col>
       </b-row>
       <b-card-body>
-        <span>Get the most engagement in <strong>staking tutorials</strong>, wheter that is likes, retweets, claps or upvotes</span>
+        <span>Get the most engagement in <strong>staking tutorials</strong>, whether that is likes, retweets, claps or upvotes</span>
         <hr>
         <span>Last month's winner: Plasma-1 Bootstrap</span>
       </b-card-body>

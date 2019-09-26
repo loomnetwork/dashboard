@@ -69,6 +69,14 @@ export default class ValidatorStats extends Vue {
       dashArray: 5,
     },
     labels: ["Out of 100"],
+    states: {
+      hover: {
+        filter: undefined,
+      },
+      active: {
+        filter: undefined,
+      },
+    },
   }
 
   barOptions(title: string) {
@@ -103,6 +111,14 @@ export default class ValidatorStats extends Vue {
       },
       yaxis: {
         max: 100,
+      },
+      states: {
+        hover: {
+          filter: undefined,
+        },
+        active: {
+          filter: undefined,
+        },
       },
     }
   }

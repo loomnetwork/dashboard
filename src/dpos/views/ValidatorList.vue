@@ -50,7 +50,7 @@
               </b-card>
 
               <div v-if="index === 9 && isAdsEnabled()" class="mb-3">
-                <a href="https://cryptozombies.io/libra">
+                <a href="https://cryptozombies.io/libra" target="_blank">
                   <img src="../../assets/images/ads/CZ_Libra_ad_400x110.png" class="ad-img">
                 </a>
               </div>
@@ -71,7 +71,7 @@
               <template slot="name" slot-scope="data">
                 <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"/>{{ data.item.name }}
                 <div v-if="data.index === 9 && isAdsEnabled()" class="ads">
-                  <a href="https://cryptozombies.io/libra">
+                  <a href="https://cryptozombies.io/libra" target="_blank">
                     <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img">
                   </a>
                 </div>

@@ -170,7 +170,7 @@
             </b-card>
             <div class="d-none d-xl-block">
               <div id="announcement" v-if="showAnnounce">
-                <a href="https://cryptozombies.io/libra">
+                <a href="https://cryptozombies.io/libra" target="_blank">
                   <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
                 </a>
               </div>
@@ -179,7 +179,7 @@
 
           <div class="d-xl-none" v-if="showAnnounce">
             <div id="announcement-mobile">
-              <a href="https://cryptozombies.io/libra">
+              <a href="https://cryptozombies.io/libra" target="_blank">
                 <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
               </a>
             </div>

@@ -9,40 +9,45 @@
         >{{ $t('views.validator_list.validators') }}</router-link>
       </h1>
     </header>
-    <section class="validator-details">
-      <header>
-        <h1>
-          {{validator.name }}
-          <span>{{validator.isBootstrap ? "(bootstrap)" : ''}}</span>
-        </h1>
-        <small>loom{{validator.address.local.toString().substring(2)}}</small>
-        <p
-          v-if="validator.description"
-          style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0"
-        >{{validator.description}}</p>
-        <a :href="validator.website | url" target="_blank">
-          {{validator.website | domain}}
-          <fa icon="external-link-alt" />
-        </a>
-      </header>
-      <dl>
-        <dt>{{ $t('views.validator_detail.state') }}</dt>
-        <dd>{{validator.active ? $t('views.validator_detail.active') : $t('views.validator_detail.inactive')}}</dd>
-        <!--
-        <dt>Recently Missed Blocks</dt>
-        <dd>
-          {{ validator.recentlyMissedBlocks }}
-          <small>{{ validator.missedBlocks }}</small>
-        </dd>
-        -->
-        <dt>{{ $t('views.validator_detail.delegator_stake') }}</dt>
-        <dd>{{validator.stakedAmount | tokenAmount(18,0)}}</dd>
-        <dt>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }}</dt>
-        <dd>{{validator.stakedAmount.add(validator.whitelistAmount) | tokenAmount(18,0)}}</dd>
-        <dt>{{ $t('components.validator_extended_detail.fee') }}</dt>
-        <dd>{{validator.fee}}%</dd>
-      </dl>
-    </section>
+    <b-row class="justify-content-center">
+      <b-col cols="12" md="8" class="validator-details" style="max-width: 600px;">
+        <header>
+          <h1>
+            {{validator.name }}
+            <span>{{validator.isBootstrap ? "(bootstrap)" : ''}}</span>
+          </h1>
+          <small>loom{{validator.address.local.toString().substring(2)}}</small>
+          <p
+            v-if="validator.description"
+            style="color: rgba(0, 0, 0, 0.86);font-size: 16px;margin:0"
+          >{{validator.description}}</p>
+          <a :href="validator.website | url" target="_blank">
+            {{validator.website | domain}}
+            <fa icon="external-link-alt" />
+          </a>
+        </header>
+        <dl>
+          <dt>{{ $t('views.validator_detail.state') }}</dt>
+          <dd>{{validator.active ? $t('views.validator_detail.active') : $t('views.validator_detail.inactive')}}</dd>
+          <!--
+          <dt>Recently Missed Blocks</dt>
+          <dd>
+            {{ validator.recentlyMissedBlocks }}
+            <small>{{ validator.missedBlocks }}</small>
+          </dd>
+          -->
+          <dt>{{ $t('views.validator_detail.delegator_stake') }}</dt>
+          <dd>{{validator.stakedAmount | tokenAmount(18,0)}}</dd>
+          <dt>{{ $t('components.modals.faucet_redelegate_modal.total_stake') }}</dt>
+          <dd>{{validator.stakedAmount.add(validator.whitelistAmount) | tokenAmount(18,0)}}</dd>
+          <dt>{{ $t('components.validator_extended_detail.fee') }}</dt>
+          <dd>{{validator.fee}}%</dd>
+        </dl>
+      </b-col>
+      <b-col cols="12" md="4" class="validator-details">
+        <ValidatorStats />
+      </b-col>
+    </b-row>
     <b-card tag="section" v-if="!!state.plasma.address" class="user-stakes" no-body>
       <b-card-body>
         <h6 v-if="!validator.isBootstrap">{{ $t('views.validator_detail.my_stake') }}</h6>
@@ -84,6 +89,7 @@ import { Component, Watch } from "vue-property-decorator"
 import SuccessModal from "@/components/modals/SuccessModal.vue"
 import DelegateModal from "@/dpos/components/DelegateModal.vue"
 import LoadingSpinner from "@/components/LoadingSpinner.vue"
+import ValidatorStats from "@/components/ValidatorStats.vue"
 
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
@@ -98,6 +104,7 @@ import { plasmaModule } from "../../store/plasma"
     DelegateModal,
     DelegationsList,
     LoadingSpinner,
+    ValidatorStats,
   },
 })
 export default class ValidatorDetail extends Vue {

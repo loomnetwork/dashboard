@@ -30,6 +30,10 @@
         </b-row>
       </b-card>
     </div>
+    <b-card bg-variant="dark" text-variant="white" class="contact">
+      We're fleshing out the exact details now, if you have a submission please email 
+      <a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning" style="color: #6ec0ff;"><fa :icon="['fas', 'envelope']" fixed-width /> satoshi@loomx.io </a>
+    </b-card>
   </main>
 </template>
 

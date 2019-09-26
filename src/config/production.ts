@@ -6,7 +6,7 @@ export default {
     networkId: "plasma",
     chainId: "default",
     endpoint: "wss://plasma.dappchains.com",
-    blockExplorer: "https://plasma-blockexplorer.dappchains.com",
+    blockExplorer: "https://basechain-blockexplorer.dappchains.com",
     loomGamesEndpoint: "https://loom.games/en/dpos-link",
     historyUrl: "https://api.loom.games/plasma/address/{address}?sort=-block_height",
   },

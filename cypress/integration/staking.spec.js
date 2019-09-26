@@ -75,7 +75,7 @@ describe('Staking Test', () => {
 
       cy.wait(60000)
 
-      cy.get('#faucet-header').should('contain', 'Rewards succesfully claimed.')
+      cy.get('#faucet-header').should('contain', 'Rewards successfully claimed.')
 
       cy.get('@balance').then((balance) => {
         cy.get('@rewards').then((rewards) => {

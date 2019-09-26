@@ -148,6 +148,7 @@
                       @click="setWallet('walletconnect')"
                     >
                       <div>
+                        <img src="../assets/walletconnect-logo.svg" />
                         <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
                       </div>
                     </b-card>
@@ -168,24 +169,20 @@
               </b-card-body>
             </b-card>
             <div class="d-none d-xl-block">
-              <b-card id="announcement" v-if="showAnnounce">
-                <b-card-title>Ad here</b-card-title>
-                <b-card-body>
-                  <p>Content here</p>
-                  <b-button>Click here</b-button>
-                </b-card-body>
-              </b-card>
+              <div id="announcement" v-if="showAnnounce">
+                <a href="https://cryptozombies.io/libra" target="_blank">
+                  <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
+                </a>
+              </div>
             </div>
           </b-row>
 
           <div class="d-xl-none" v-if="showAnnounce">
-            <b-card id="announcement-mobile">
-              <b-card-title>Ad here</b-card-title>
-              <b-card-body>
-                <p>Content here</p>
-                <b-button>Click here</b-button>
-              </b-card-body>
-            </b-card>
+            <div id="announcement-mobile">
+              <a href="https://cryptozombies.io/libra" target="_blank">
+                <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
+              </a>
+            </div>
           </div>
 
           <b-card v-if="!metamaskInstalled" class="metamask-suggest">
@@ -274,7 +271,6 @@ import { feedbackModule } from "../feedback/store"
 import { PortisAdapter } from "../store/ethereum/wallets/portis"
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 
-
 @Component({
   components: {
     ChainSelector,
@@ -342,25 +338,24 @@ export default class FirstPage extends Vue {
 
 }
 </script>
+
 <style lang="scss" scoped>
 
 #main-main {
   flex-direction: row
 }
 
-  #announcement {
-    margin: 0 34px;
-    width: 300px;
-    height: 250px;
-    text-align: center;
-  }
+#announcement {
+  margin: 0 34px;
+  width: 300px;
+  height: 250px;
+}
 
-  #announcement-mobile {
-    margin: auto;
-    width: 300px;
-    height: 250px;
-    text-align: center;
-  }
+#announcement-mobile {
+  margin: auto;
+  width: 300px;
+  height: 250px;
+}
 
 .button-container {
   display: flex;
@@ -427,7 +422,6 @@ export default class FirstPage extends Vue {
 }
 
 </style>
-
 
 <style lang="scss">
 .header {
@@ -608,7 +602,12 @@ export default class FirstPage extends Vue {
   color: #f29040;
 }
 
+.ad-img {
+  width: 100%;
+  border-radius: 0.25rem;
+}
 </style>
+
 <style>
 body {
   overflow-y: scroll;

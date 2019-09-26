@@ -81,4 +81,7 @@ main.container {
   box-shadow: rgba(219, 219, 219, 0.56) 0px 3px 8px 0px;
 }
 
+#walletconnect-qrcode-modal {
+  z-index: 9999 !important;
+}
 </style>

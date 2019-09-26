@@ -67,7 +67,7 @@ describe("TokenService", () => {
       expect(() => { tokenService.getTokenAddressBySymbol(coinSymbol, ETH_CHAIN) }).to.throw(Error)
     })
 
-    it("Should NOT get TokenData address with AAA symbol & Plasmachain", () => {
+    it("Should NOT get TokenData address with AAA symbol & Basechain", () => {
       const coinSymbol = "AAA"
       // tslint:disable-next-line: no-unused-expression
       expect(() => { tokenService.getTokenAddressBySymbol(coinSymbol, PLASMA_CHAIN) }).to.throw(Error)
@@ -80,7 +80,7 @@ describe("TokenService", () => {
       expect(tokenService.tokenFromAddress(address, ETH_CHAIN)).to.be.an("object")
     })
 
-    it("Inserted address should be a member of all TokenSymbol array (Plasmachain)", () => {
+    it("Inserted address should be a member of all TokenSymbol array (Basechain)", () => {
       const randIndex = Math.floor(Math.random() * tokenService.getSymbols().length)
       const symbol = tokenService.getSymbols()[randIndex]
       const address = tokenService.getTokenAddressBySymbol(symbol, PLASMA_CHAIN)

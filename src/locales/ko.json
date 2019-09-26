@@ -84,7 +84,7 @@
     },
     "help": {
       "what_is_plasma_chain": "플라즈마체인이 무엇인가요?",
-      "plasma_chain_is_our_plasma_cash_backed": "PlasmaChain is our Basechain Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
+      "plasma_chain_is_our_plasma_cash_backed": "Basechain is our Basechain Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "스테이킹이 무엇인가요?",
       "when_a_user_stakes_tokens": "사용자가 토큰을 \"스테이크\"한다는 것은 그들의 토큰을 일정 시간동안 락업하여 네트워크에서 권한을 획득하고, 서비스를 수행하며, 보상을 받을 수 있다는 것을 의미합니다. LOOM 소유자는 ",
       "help_secure_plasma_chain": "플라즈마체인이 안전하도록 돕기 위해",

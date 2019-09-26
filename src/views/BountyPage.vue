@@ -14,8 +14,6 @@
       </b-row>
       <b-card-body>
         <span>Get the most engagement in <strong>staking tutorials</strong>, whether that is likes, retweets, claps or upvotes</span>
-        <hr>
-        <span>There is no winner for now.</span>
       </b-card-body>
     </b-card>
     <div v-for="(bounty, topic) in bountyList" :key="topic" class="topic-section">

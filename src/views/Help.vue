@@ -189,7 +189,7 @@
               <b-card-text>
                 {{ $t('views.help.the_delegation_rewards_will_be') }} <router-link to="/validators" class="router text-primary">{{ $t('views.help.plasma_chain_dashboard') }}</router-link>{{ $t('views.help.') }}
 
-                <div class="img-container">
+                <div class="img-container mt-4">
                   <img src="../assets/faq-screencap-3.png" alt="The rewards page">
                 </div>
               </b-card-text>
@@ -226,7 +226,7 @@
                 {{ $t('views.help.you_can_choose_from_any') }} <br><br>
                 {{ $t('views.help.for_the_validators_that_choose') }}
               </b-card-text>
-              <div class="img-container">
+              <div class="img-container mt-4">
                 <img src="../assets/faq-screencap-1.png" alt="These bonus levels are before deduction of any validator fees.">
                 <small>{{ $t('views.help.note_these_bonus_levels_are') }} </small>
               </div>
@@ -242,7 +242,7 @@
             <b-card-body>
               <b-card-text>
                 {{ $t('views.help.simply_navigate_to_my_delegations') }}
-                <div class="img-container">
+                <div class="img-container mt-4">
                   <img src="../assets/faq-screencap-2.png" alt="Click on the un-delegate button">
                 </div>
               </b-card-text>
@@ -305,6 +305,10 @@
 
 .img-container {
   text-align: center;
+  
+  img {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .img-container img {

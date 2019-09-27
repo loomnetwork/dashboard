@@ -43,11 +43,11 @@ export default {
     },
   },
   coinDataUrl: "/tokens/production.tokens.json",
-  disabled: ["portis", "fortmatic"],
+  disabled: ["portis", "fortmatic", "walletconnect"],
   chains: ["ethereum", "binance"],
   announcement: {
     validatorsPage: true,
     popup: false,
-    home: false,
+    home: true,
   },
 } as DashboardConfig

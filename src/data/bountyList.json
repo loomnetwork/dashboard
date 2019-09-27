@@ -1,4 +1,18 @@
 {
+  "developer": [
+    {
+      "title": "Launch a functional block explorer",
+      "description": "Launch a functional block explorer",
+      "reward": "2000000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Deploy a dapp to Basechain with 20+ DAU (weekly average)",
+      "description": "Deploy a dapp to Basechain with 20+ DAU (weekly average)",
+      "reward": "500000",
+      "token": "LOOM"
+    }
+  ],
   "videos": [
     {
       "title": "Tutorial video",
@@ -42,20 +56,6 @@
       "title": "Non-technical article",
       "description": "Non-technical article",
       "reward": "100000",
-      "token": "LOOM"
-    }
-  ],
-  "developer": [
-    {
-      "title": "Launch a functional block explorer",
-      "description": "Launch a functional block explorer",
-      "reward": "2000000",
-      "token": "LOOM"
-    },
-    {
-      "title": "Deploy a dapp to Basechain with 20+ DAU (weekly average)",
-      "description": "Deploy a dapp to Basechain with 20+ DAU (weekly average)",
-      "reward": "500000",
       "token": "LOOM"
     }
   ]

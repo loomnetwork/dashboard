@@ -10,7 +10,7 @@
           variant="outline-primary"
           @click="visible = 'plasma'"
           :class="{active:visible === 'plasma'}"
-        >PlasmaChain</b-button>
+        >Basechain</b-button>
         <b-button
           variant="outline-primary"
           @click="visible = 'ethereum'"

@@ -39,7 +39,7 @@ describe('Deposit Test', () => {
       .should(
         'contain',
         "The deposit has been confirmed. " +
-        "Your plasma balance will be updated after 10 confirmations."
+        "Your Basechain balance will be updated after 10 confirmations."
       )
 
     cy.get('.close').click()

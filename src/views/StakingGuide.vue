@@ -218,7 +218,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.press_claim_button') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-13.png" class="img-medium-size" alt="New account">
+                  <img src="../assets/faq-screencap-3.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -250,7 +250,7 @@
                 <p>{{ $t('views.staking_guide.deposit_withdraw_page') }}</p>
                 <p>{{ $t('views.staking_guide.press_withdraw') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-16.png" class="img-medium-size" alt="New account">
+                  <img src="../assets/staking-guide-4.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.pop_up_asking') }}</p>
                 <div class="img-container">

@@ -130,9 +130,6 @@
                     4. {{ $t('views.staking_guide.2_step_4') }}
                   </u>
                 </h6>
-                <div class="img-container">
-                  <img src="../assets/staking-guide-9.png" class="img-medium-size" alt="New account">
-                </div>
                 <p>
                   {{ $t('views.staking_guide.block_confirmations') }}
                 </p>

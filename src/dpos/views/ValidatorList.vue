@@ -22,41 +22,61 @@
           <template v-if="isSmallDevice">
             <div class="py-3"></div>
 
-            <b-card
-              v-for="validator in validators"
+            <div
+              v-for="(validator, index) in validators"
               :key="validator.name"
-              :disabled="!!validator.isBootstrap"
-              @click="showValidatorDetail(validator)"
-              class="validator-card-mobile mb-3"
-              no-body
             >
-              <div class="copy-wrapper">
-                <h6>
-                  <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
-                  {{validator.name}}
-                </h6>
+
+              <b-card
+                :disabled="!!validator.isBootstrap"
+                @click="showValidatorDetail(validator)"
+                class="validator-card-mobile mb-3"
+                no-body
+              >
+                <div class="copy-wrapper">
+                  <h6>
+                    <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
+                    {{validator.name}}
+                  </h6>
+                </div>
+                <div class="copy-wrapper">
+                  <label>{{ $t('components.validator_extended_detail.fee') }}</label>
+                  <strong>{{validator.fee}}</strong>
+                </div>
+                <div class="copy-wrapper">
+                  <label>{{ $t('views.validator_list.stake') }}</label>
+                  <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
+                </div>
+              </b-card>
+
+              <div v-if="index === 9 && isAdsEnabled()" class="mb-3">
+                <a href="https://cryptozombies.io/libra" target="_blank">
+                  <img src="../../assets/images/ads/CZ_Libra_ad_400x110.png" class="ad-img">
+                </a>
               </div>
-              <div class="copy-wrapper">
-                <label>{{ $t('components.validator_extended_detail.fee') }}</label>
-                <strong>{{validator.fee}}</strong>
-              </div>
-              <div class="copy-wrapper">
-                <label>{{ $t('views.validator_list.stake') }}</label>
-                <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
-              </div>
-            </b-card>
+            </div>
+
           </template>
           <template v-else>
             <b-table
               responsive
+              id="validatorTable"
               table-active="table-active"
               tr-class="spacer"
               :items="validators"
               :fields="validatorFields"
-              :sort-desc="false"
-              :sort-compare="sortCompare"
+              :class="{'validator-ads' : isAdsEnabled()}"
               @row-clicked="showValidatorDetail"
             >
+              <template slot="name" slot-scope="data">
+                <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"/>{{ data.item.name }}
+                <div v-if="data.index === 9 && isAdsEnabled()" class="ads">
+                  <a href="https://cryptozombies.io/libra" target="_blank">
+                    <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img">
+                  </a>
+                </div>
+              </template>
+
               <template slot="active" slot-scope="data">{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
             </b-table>
           </template>
@@ -76,6 +96,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
 import { formatTokenAmount } from "@/filters"
 import BN from "bn.js"
+import { DashboardState } from '../../types';
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -122,6 +143,11 @@ export default class ValidatorList extends Vue {
 
   get state(): HasDPOSState {
     return this.$store.state
+  }
+
+  isAdsEnabled() {
+    const config = this.$store.state.envs.find((env) => env.name === this.state.env)!
+    return config.announcement.validatorsPage
   }
 
   get totalStaked() {
@@ -190,7 +216,10 @@ tr {
     background-color: #5756e60f;
     cursor: pointer;
   }
+
 }
+
+
 
 main.validators {
   // ther should be global class for page titles
@@ -285,5 +314,43 @@ main.validators {
       }
     }
   }
+}
+
+.jailed-symbol {
+  display: block;
+  float: left;
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  margin-right: 1rem;
+  border-radius: 100%;
+  background-color: #3bef3b;
+  animation: fade 1s alternate infinite;
+
+  &.jailed {
+    background-color: #ec1d05;
+  }
+}
+
+
+.validator-ads {
+  table tr:nth-child(10) {
+    position: relative;
+    left: 0;
+    right: 0;
+    height: 165px;
+  }
+}
+
+.ads {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 1% 1.5%;
+}
+
+@keyframes fade {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
 }
 </style>

@@ -17,8 +17,8 @@ export default {
     endpoint: "wss://rinkeby.infura.io/ws",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
-      mainGateway: "0xe57e0793f953684bc9d2ef3d795408afb4a100c3",
-      loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
+      mainGateway: "0xa6BaAA13CD9d027e15Ae219C90b90991Af373796",
+      loomGateway: "0x065F7D2636880aE34a98dD7600b9bD1D5EcAFA97",
     },
     portisKey: "10589118-6329-43a0-818c-93800c206786",
     formaticKey: "pk_test_58DB7D96C460470B",
@@ -40,4 +40,9 @@ export default {
   },
   disabled: [],
   chains: ["ethereum", "binance"],
+  announcement: {
+    validatorsPage: true,
+    popup: true,
+    home: true,
+  },
 } as DashboardConfig

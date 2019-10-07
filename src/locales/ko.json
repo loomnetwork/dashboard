@@ -74,6 +74,7 @@
         "ledger_via_metamask": "Ledger (메타마스크를 통한)",
         "trezor_via_metamask": "Trezor (메타마스크를 통한)",
         "ledger_legacy": "Ledger (하드웨어로 연결)",
+        "walletconnect": "지갑 연결",
         "explore": "살펴보기"
       },
       "no_metamask": "{metamask} 확장 프로그램이 설치되어있지 않습니다.",
@@ -404,7 +405,7 @@
       "plasma_chain": "플라즈마체인:",
       "staked": "스테이크:",
       "deposit": "입금",
-      "plasmachain_dashboard": "플라즈마체인 대시보드",
+      "plasmachain_dashboard": "Basechain Dashboard",
       "dashboard": "대시보드",
       "wallet": "지갑",
       "my_staking": "내 스테이킹",
@@ -428,7 +429,7 @@
       "account_explorer": "계정 탐색기",
       "game_assets": "게임 자산",
       "block_explorer": "블록 탐색기",
-      "deploy_to_plasmachain": "플라즈마체인에 배포하기",
+      "deploy_to_plasmachain": "Deploy to Basechain",
       "transfer_gateway": "전송 게이트웨이",
       "validator_management": "검증자 관리",
       "feedback_form": "고객센터에 문의하기",
@@ -742,7 +743,8 @@
       "batch_transfer": "배치 전송(묶음 전송)",
       "pack_transfer": "팩 전송",
       "adding_deployer": "배포자 키를 추가하는 중",
-      "new_key": "새 키"
+      "new_key": "새 키",
+      "transfer_token": "토큰 전송하기"
     },
     "step": {
       "delegating": "위임 중...",

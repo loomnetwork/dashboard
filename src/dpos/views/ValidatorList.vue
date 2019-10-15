@@ -61,6 +61,7 @@
             <b-table
               responsive
               id="validatorTable"
+              :sort-compare="sortCompare"
               table-active="table-active"
               tr-class="spacer"
               :items="validators"

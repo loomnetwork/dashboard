@@ -366,6 +366,9 @@
       "coming_soon": "곧 출시될 예정입니다.",
       "add_key": "키 추가",
       "your_balance": "당신의 잔액 : {amount} LOOM"
+    },
+    "bounty": {
+      "description": "Each month, the validators who help the chain grow the most will be rewarded <strong>2,000,000 LOOM</strong>. For this month, we’re looking for high quality staking tutorials (video highly desired) with maximum amount of engagement (in terms of likes, retweets, views, upvotes, claps, etc)."
     }
   },
   "components": {

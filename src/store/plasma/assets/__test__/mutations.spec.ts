@@ -45,7 +45,7 @@ describe("Game Assets, Mutations", () => {
   let gameAssetState: AssetsState
   let packType: string[]
   let contract: Contract
-  const envName = ["local", "asia1", "us1", "plasma"]
+  const envName = ["local", "asia1", "plasma"]
   const exCard: CardDetail = {
     id: "1",
     amount: 1,

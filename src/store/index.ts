@@ -1,7 +1,6 @@
 import dev from "@/config/dev"
 import local from "@/config/local"
 import production from "@/config/production"
-import stage from "@/config/stage"
 
 import debug from "debug"
 import Vue from "vue"

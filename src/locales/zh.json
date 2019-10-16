@@ -368,7 +368,7 @@
       "your_balance": "你的余额：{amount} 个 LOOM"
     },
     "bounty": {
-      "description": "Each month, the validators who help the chain grow the most will be rewarded <strong>2,000,000 LOOM</strong>. For this month, we’re looking for high quality staking tutorials (video highly desired) with maximum amount of engagement (in terms of likes, retweets, views, upvotes, claps, etc)."
+      "description": "每个月，对链作出最大贡献的验证者将获得<strong>2,000,000 LOOM</strong>奖励。本月，我们正在寻找高质量锁仓教程（尤其是视频），当然参与度要高 (包括点赞、转发、浏览等) 。"
     }
   },
   "components": {

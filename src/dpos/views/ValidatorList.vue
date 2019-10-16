@@ -70,7 +70,7 @@
               @row-clicked="showValidatorDetail"
             >
               <template slot="name" slot-scope="data">
-                <li :class="[data.item.jailed ? 'jailed-symbol jailed' : 'jailed-symbol']"/>{{ data.item.name }}
+                <li :class="[data.item.jailed || !data.item.active ? 'jailed-symbol jailed' : 'jailed-symbol']"/>{{ data.item.name }}
                 <div v-if="data.index === 9 && isAdsEnabled()" class="ads">
                   <a href="https://cryptozombies.io/libra" target="_blank">
                     <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img">
@@ -159,9 +159,11 @@ export default class ValidatorList extends Vue {
 
   get validators() {
     const storeValidators = this.state.dpos.validators.sort((a, b) => {
-      const aValue = a.isBootstrap ? 0 : random() * 10000
-      const bValue = b.isBootstrap ? 0 : random() * 10000
-      return Math.floor(aValue) - Math.floor(bValue)
+      if (a.active === false) return -1
+      if (b.active === false) return 1
+      if (a.isBootstrap) return -1
+      if (b.isBootstrap) return 1
+      return Math.floor(random() * 10000) - Math.floor(random() * 10000)
     }).reverse()
     return storeValidators
   }
@@ -326,10 +328,11 @@ main.validators {
   margin-right: 1rem;
   border-radius: 100%;
   background-color: #3bef3b;
-  animation: fade 1s alternate infinite;
 
   &.jailed {
     background-color: #ec1d05;
+    border-radius: 0;
+    animation: none;
   }
 }
 

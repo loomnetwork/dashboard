@@ -368,7 +368,10 @@
       "your_balance": "당신의 잔액 : {amount} LOOM"
     },
     "bounty": {
-      "description": "Each month, the validators who help the chain grow the most will be rewarded <strong>2,000,000 LOOM</strong>. For this month, we’re looking for high quality staking tutorials (video highly desired) with maximum amount of engagement (in terms of likes, retweets, views, upvotes, claps, etc)."
+      "description": "Each month, the validators who help the chain grow the most will be rewarded <strong>2,000,000 LOOM</strong>. For this month, we’re looking for high quality staking tutorials (video highly desired) with maximum amount of engagement (in terms of likes, retweets, views, upvotes, claps, etc).",
+      "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
+      "contact": "Contact {email} if you need guidance with submissions",
+      "email": "satoshi@loomx.io"
     }
   },
   "components": {

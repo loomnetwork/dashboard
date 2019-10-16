@@ -150,9 +150,7 @@ export async function refreshValidators(ctx: ActionContext) {
     .filter((n) => n.name === "")
     .forEach((n) => (n.name = n.addr.replace("0x", "loom")))
 
-  ctx.state.validators = nodes
-    .filter((n) => !n.totalStaked.isZero())
-    .filter((n) => n.name.toLowerCase() != "bixin")
+  ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
   ctx.state.loading.validators = false
 }
 

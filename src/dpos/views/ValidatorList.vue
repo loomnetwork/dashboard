@@ -163,7 +163,7 @@ export default class ValidatorList extends Vue {
       const bValue = b.isBootstrap ? 0 : random() * 10000
       return Math.floor(aValue) - Math.floor(bValue)
     }).reverse()
-    return storeValidators.filter((v) => v.name.toLowerCase() != "bixin")
+    return storeValidators
   }
   /**
    * adds class bootstrap node if is bootstrap

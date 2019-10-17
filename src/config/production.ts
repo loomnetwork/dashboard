@@ -14,7 +14,7 @@ export default {
     networkId: "1",
     networkName: "mainnet",
     chainId: "eth",
-    endpoint: "https://mainnet.infura.io/5Ic91y0T9nLh6qUg33K0",
+    endpoint: "wss://mainnet.infura.io/ws/v3/5Ic91y0T9nLh6qUg33K0",
     blockExplorer: "https://etherscan.com",
     contracts: {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",

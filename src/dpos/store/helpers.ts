@@ -69,12 +69,12 @@ export function formerValidator(address: Address): Validator {
   let name = FORMER_VALIDATORS[addr]
   if (name === undefined) {
     Sentry.captureException(new Error("Unknown former validator " + addr))
-    name = `Former Validator ${addr.substring(35)}`
+    name = `${addr.substring(35)}`
   }
   const validator = new Validator()
   validator.addr = addr
   validator.address = address
-  validator.name = name
+  validator.name = `Former Validator ${name}`
   validator.description = "This validator is no longer active on Basechain."
   return validator
 }

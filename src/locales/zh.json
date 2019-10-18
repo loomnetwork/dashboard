@@ -369,8 +369,8 @@
     },
     "bounty": {
       "description": "每个月，对链作出最大贡献的验证者将获得<strong>2,000,000 LOOM</strong>奖励。本月，我们正在寻找高质量锁仓教程（尤其是视频），当然参与度要高 (包括点赞、转发、浏览等) 。",
-      "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
-      "contact": "Contact {email} if you need guidance with submissions",
+      "contact_desc": "Loom 将对提交作品进行评审，并选出每个奖项的获胜者",
+      "contact": "对于提交作品如果需要任何指导，请发邮件到 {email}",
       "email": "satoshi@loomx.io"
     }
   },

@@ -143,13 +143,13 @@ export default class FaucetSidebar extends Vue {
           text: "components.faucet_sidebar.validator_management",
         },
       ],
-      // community: [
-      //   {
-      //     to: "/bounty",
-      //     text: "Bounty",
-      //     name: "Bounty"
-      //   }
-      // ],
+      community: [
+        {
+          to: "/bounty",
+          text: "Bounty",
+          name: "Bounty"
+        }
+      ],
       help: [
         {
           to: "/staking-guide",

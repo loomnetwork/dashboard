@@ -81,11 +81,11 @@ const router = new VueRouter({
       component: AddKey,
       beforeEnter: requireAccount,
     },
-    // {
-    //   path: "/bounty",
-    //   name: "bounty",
-    //   component: BountyPage,
-    // },
+    {
+      path: "/bounty",
+      name: "bounty",
+      component: BountyPage,
+    },
     {
       path: "/game-assets",
       name: "gameAssets",

@@ -172,7 +172,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
-        feedbackModule.showError("There seems to be a problem conneting to your wallet. Please contact support.")
+        feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
       })
   } else {
     context.state.walletType = walletType

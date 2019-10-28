@@ -791,7 +791,8 @@
       "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
       "balance_not_enough": "Your balance isn't enough. Please deposit first.",
       "address_existed": "This address is already exists in your deployer list.",
-      "failed_to_get_receipt": "Failed to get receipt"
+      "failed_to_get_receipt": "Failed to get receipt",
+      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support."
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",

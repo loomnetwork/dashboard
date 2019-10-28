@@ -791,7 +791,8 @@
       "unexpected_error_while_add_account": "添加账户映射时出现意外错误。",
       "balance_not_enough": "你的余额不足。请先存入一些。",
       "address_existed": "这个地址已经在你的部署者清单里了。",
-      "failed_to_get_receipt": "获取收据失败"
+      "failed_to_get_receipt": "获取收据失败",
+      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support."
     },
     "info": {
       "reward_claimed": "已成功领取奖励。",

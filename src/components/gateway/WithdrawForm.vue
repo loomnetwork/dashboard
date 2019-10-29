@@ -147,14 +147,18 @@ export default class WithdrawForm extends Vue {
   }
 
   @Watch("visible")
-  refreshData(visible: boolean) {
+  async refreshData(visible: boolean) {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
     if (token === "ETH") {
-      this.max = this.balance.lt(ETH_WITHDRAW_LIMIT) ? this.balance : ETH_WITHDRAW_LIMIT
+      const { totalWithdrawalAmount } = await gatewayModule.getLocalAccountInfo({ chain, symbol: token })
+      const limit = ETH_WITHDRAW_LIMIT.sub(totalWithdrawalAmount)
+      this.max = this.balance.lt(limit) ? this.balance : limit
     } else if (token === "LOOM") {
-      this.max = this.balance.lt(LOOM_WITHDRAW_LIMIT) ? this.balance : LOOM_WITHDRAW_LIMIT
+      const { totalWithdrawalAmount } = await gatewayModule.getLocalAccountInfo({ chain, symbol: token })
+      const limit = LOOM_WITHDRAW_LIMIT.sub(totalWithdrawalAmount)
+      this.max = this.balance.lt(limit) ? this.balance : LOOM_WITHDRAW_LIMIT
     } else {
       this.max = this.balance
     }

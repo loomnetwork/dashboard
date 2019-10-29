@@ -3,8 +3,8 @@ import {
   LoomCoinTransferGateway,
   BinanceTransferGateway,
 } from "loom-js/dist/contracts"
-import { Address, Client, Contract } from "loom-js"
-import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { Address, Client, Contract, LocalAddress } from "loom-js"
+import { IWithdrawalReceipt, ILocalAccountInfo } from "loom-js/dist/contracts/transfer-gateway"
 
 import BN from "bn.js"
 import { Funds, Transfer } from "@/types"
@@ -348,6 +348,16 @@ async function refreshPendingReceipt(chain: string, symbol: string) {
   const receipt = await gateway.withdrawalReceipt()
   log("receipt", symbol, receipt)
   return receipt
+}
+
+export function getLocalAccountInfo(
+  context: ActionContext, { chain, symbol }: { chain: string, symbol: string }): ILocalAccountInfo {
+  const gateway = service().get(chain, symbol)
+  const address = new Address(
+    context.rootState.plasma.chainId,
+    LocalAddress.fromHexString(context.rootState.plasma.address),
+  )
+  return gateway.contract.getLocalAccountInfoAsync(address)
 }
 
 /* #endregion */

@@ -77,6 +77,7 @@ export const gatewayModule = {
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
   refreshWithdrawalReceipt: builder.dispatch(PlasmaGateways.refreshWithdrawalReceipt),
+  getLocalAccountInfo: builder.dispatch(PlasmaGateways.getLocalAccountInfo),
 
   // binance
   binanceResubmitWithdrawal: builder.dispatch(PlasmaGateways.binanceResubmitWithdrawal),

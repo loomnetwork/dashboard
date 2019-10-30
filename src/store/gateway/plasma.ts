@@ -25,6 +25,7 @@ import { TransferRequest } from "../plasma/types"
 import * as Sentry from "@sentry/browser"
 
 import { i18n } from "@/i18n"
+import { ETH_WITHDRAW_LIMIT, LOOM_WITHDRAW_LIMIT } from '@/utils'
 
 const log = debug("dash.gateway.plasma")
 
@@ -209,13 +210,16 @@ class PlasmaGateways {
 export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
   const { chain, symbol, weiAmount, recepient } = funds
   const gateway = service().get(chain, symbol)
+  let localAccountInfo: ILocalAccountInfo
   let receipt: IWithdrawalReceipt | null
+  let limit: BN | null = null
   log("plasmaWithdraw", chain, symbol)
 
   try {
     feedback.setTask(i18n.t("feedback_msg.task.withdraw").toString())
     feedback.setStep(i18n.t("feedback_msg.step.checking_receipt").toString())
-    receipt = await gateway.withdrawalReceipt()
+    localAccountInfo = await gatewayModule.getLocalAccountInfo({ chain, symbol })
+    receipt = localAccountInfo.withdrawalReceipt
   } catch (err) {
     console.error(err)
     feedback.endTask()
@@ -251,6 +255,19 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     setTimeout(() => {
       gatewayModule.setWithdrawalReceipts(receipt)
     }, 1)
+    return
+  }
+
+  // set available withdrawal amount left of ETH/LOOM token
+  if (symbol === "ETH") {
+    limit = ETH_WITHDRAW_LIMIT.sub(localAccountInfo.totalWithdrawalAmount)
+  } else if (symbol === "LOOM") {
+    limit = LOOM_WITHDRAW_LIMIT.sub(localAccountInfo.totalWithdrawalAmount)
+  }
+
+  if (limit && weiAmount.gt(limit)) {
+    feedback.endTask()
+    feedback.showError(i18n.t("feedback_msg.error.withdraw_over_limit").toString())
     return
   }
 

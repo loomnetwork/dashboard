@@ -369,7 +369,7 @@
     },
     "bounty": {
       "description": "매월 체인이 성장할 수 있도록 가장 많은 도움을 준 검증자들에게 <strong>2,000,000 LOOM</strong>을 보상으로 지급할 것입니다. 이번 달에는 게시물 참여도(좋아요, 리트윗, 조회 수, 레딧 업보트, 미디엄 클랩 수 등)가 높은 고품질의 스테이킹 튜토리얼(비디오 강력히 권장)를 찾고 있습니다.",
-      "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
+      "contact_desc": "Loom은 제출품에 대한 심사를 진행하고 각각의 바운티에 대한 우승자를 선정할 것입니다.",
       "contact": "제출품에 대한 가이드가 필요할 경우 {email}로 문의해주세요.",
       "email": "satoshi@loomx.io"
     }

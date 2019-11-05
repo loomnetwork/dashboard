@@ -792,7 +792,7 @@
       "balance_not_enough": "你的余额不足。请先存入一些。",
       "address_existed": "这个地址已经在你的部署者清单里了。",
       "failed_to_get_receipt": "获取收据失败",
-      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support."
+      "connect_wallet_prob": "连接你的钱包似乎有问题。请联系客服。"
     },
     "info": {
       "reward_claimed": "已成功领取奖励。",

@@ -30,6 +30,10 @@ export default {
     multisig: true,
     checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
+    binance: {
+      gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",
+      fee: 37500,
+    },
   },
   coinDataUrl: "",
   disabled: [],

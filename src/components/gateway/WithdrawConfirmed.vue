@@ -88,14 +88,14 @@ export default class WithdrawConfirmed extends Vue {
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
     if (receipt === null) return
-    const chainId = receipt.tokenContract.chainId
+    const chainId = receipt.tokenContract!.chainId
     const chainMappings = {
       binance: "binance",
       eth: "ethereum",
       tron: "tron",
     }
     const chain = chainMappings[chainId]
-    const contractAddress = receipt.tokenContract.local
+    const contractAddress = receipt.tokenContract!.local
     const contractAddrStr = contractAddress.toString().toLowerCase()
 
     let tokenInfo

@@ -158,7 +158,6 @@ class PlasmaGateways {
             token: "BNB",
             amount: new BN(37500),
           }, "LOOM")
-          log("added LOOM adapter")
           break
         } else {
           adapter = new LoomGatewayAdapter(

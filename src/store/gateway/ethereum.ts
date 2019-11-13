@@ -69,12 +69,14 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const localAddress = receipt.tokenOwner.local.toString()
     const tokenAddress = this.tokenAddress
     log("withdraw ERC20", receipt, amount)
-    console.assert(
-      tokenAddress.toLocaleLowerCase() === receipt.tokenContract.local.toString(),
-      "Receipt contract address different from current contract",
-      receipt.tokenContract.local.toString(),
-      tokenAddress,
-    )
+    if (receipt.tokenKind !== TransferGatewayTokenKind.LOOMCOIN) {
+      console.assert(
+        tokenAddress.toLocaleLowerCase() === receipt.tokenContract!.local.toString(),
+        "Receipt contract address different from current contract",
+        receipt.tokenContract!.local.toString(),
+        tokenAddress,
+      )
+    }
 
     let tx
     // multisig
@@ -422,7 +424,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     console.error("no withdraw receipt in state")
     return
   }
-  const tokenAddress = receipt.tokenContract.local.toString().toLowerCase()
+  const tokenAddress = receipt.tokenContract!.local.toString().toLowerCase()
   let token: string
   // ETH case tokenAddress is gateway address
   if (tokenAddress === context.rootState.ethereum.contracts.mainGateway.toLowerCase()) {
@@ -457,7 +459,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       scope.setExtra("ethereumWithdraw", {
         receipt: JSON.stringify({
           tokenOwner: receipt.tokenOwner.local.toString(),
-          tokenContract: receipt.tokenContract.local.toString(),
+          tokenContract: receipt.tokenContract!.local.toString(),
           tokenId: (receipt.tokenId || "").toString(),
           tokenAmount: receipt.tokenAmount!.toString(),
           signatures: receipt.oracleSignature,
@@ -565,7 +567,7 @@ async function createWithdrawalHash(
   gatewayContract: Gateway | ERC20Gateway_v2,
 ): Promise<string> {
   const ethAddress = receipt.tokenOwner.local.toString()
-  const tokenAddress = receipt.tokenContract.local.toString()
+  const tokenAddress = receipt.tokenContract!.local.toString()
   // ETH: gatewayAddress ?
   // @ts-ignore
   const gatewayAddress = gatewayContract._address

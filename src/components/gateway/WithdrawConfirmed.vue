@@ -39,14 +39,14 @@ export default class WithdrawConfirmed extends Vue {
   chain = ""
 
   completeWithdrawalHandler() {
-
+    
     if (this.chain === "ethereum") {
       gatewayModule.ethereumWithdraw(this.symbol)
-    } else if (this.chain === "binance") {
-      // retry withdraw for binance
-      gatewayModule.binanceResubmitWithdrawal()
     } else {
-      console.error("complete withdrawal unimplemented for chain" + this.chain)
+      // retry withdraw for binance
+      // TODO:  we force to resunmit on binance chain if it isn't Ethereum
+      //        need to fix this if we integrate with other chain
+      gatewayModule.binanceResubmitWithdrawal()
     }
     this.close()
   }
@@ -88,14 +88,14 @@ export default class WithdrawConfirmed extends Vue {
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
     if (receipt === null) return
-    const chainId = receipt.tokenContract.chainId
+    const chainId = receipt.tokenContract!.chainId
     const chainMappings = {
       binance: "binance",
       eth: "ethereum",
       tron: "tron",
     }
     const chain = chainMappings[chainId]
-    const contractAddress = receipt.tokenContract.local
+    const contractAddress = receipt.tokenContract!.local
     const contractAddrStr = contractAddress.toString().toLowerCase()
 
     let tokenInfo

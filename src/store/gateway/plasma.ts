@@ -153,11 +153,19 @@ class PlasmaGateways {
     let adapter: PlasmaGatewayAdapter
     switch (symbol) {
       case "LOOM":
-        adapter = new LoomGatewayAdapter(
-          this.ethereumLoomGateway,
-          srcChainGateway!,
-          this.mapping,
-        )
+        if (chain === "binance") {
+          adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
+            token: "BNB",
+            amount: new BN(37500),
+          }, "LOOM")
+          break
+        } else {
+          adapter = new LoomGatewayAdapter(
+            this.ethereumLoomGateway,
+            srcChainGateway!,
+            this.mapping,
+          )
+        }
         break
       case "ETH":
         adapter = new EthGatewayAdapter(
@@ -173,7 +181,7 @@ class PlasmaGateways {
           adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
             token: "BNB",
             amount: new BN(37500),
-          })
+          }, "BNB")
           log("added BNB adapter")
           break
         }

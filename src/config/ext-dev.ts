@@ -34,7 +34,7 @@ export default {
     checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "",
     binance: {
-      gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",
+      gatewayAccount: "tbnb1gc7azhlup5a34t8us84x6d0fluw57deuf47q9w",
       fee: 37500,
     },
   },

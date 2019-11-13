@@ -19,6 +19,7 @@ export interface GatewayConfig {
   chains: string[]
   checkMarketplaceURL: string
   tokenContractLogsURL: string
+  binance: BinanceGateway
 }
 /**
  * Gateway state
@@ -87,4 +88,9 @@ export interface PlasmaGatewayAdapter {
 export interface WithdrawalReceipt extends IWithdrawalReceipt {
   chain: string
   symbol: string
+}
+
+export interface BinanceGateway {
+  gatewayAccount: string
+  fee: number
 }

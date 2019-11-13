@@ -155,9 +155,9 @@ class PlasmaGateways {
       case "LOOM":
         if (chain === "binance") {
           adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
-            token: "LOOM",
+            token: "BNB",
             amount: new BN(37500),
-          })
+          }, "LOOM")
           log("added LOOM adapter")
           break
         } else {
@@ -182,7 +182,7 @@ class PlasmaGateways {
           adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
             token: "BNB",
             amount: new BN(37500),
-          })
+          }, "BNB")
           log("added BNB adapter")
           break
         }

@@ -22,10 +22,11 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
     readonly mapping: IAddressMapping,
     public readonly fee: {
       amount: BN,
-      token: string,
+      token: "BNB",
     },
+    token: string,
   ) {
-    this.token = fee.token
+    this.token = token
   }
   deposit() {
     console.warn("go to binance.com to make deposits from binance")

@@ -5,6 +5,7 @@ import {
 } from "loom-js/dist/contracts"
 import { Address, Client, Contract } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { TransferGatewayTxStatus } from "loom-js/dist/proto/transfer_gateway_pb"
 
 import BN from "bn.js"
 import { Funds, Transfer } from "@/types"
@@ -343,11 +344,13 @@ export function pollReceipt(chain: string, symbol: string) {
 
 export async function refreshWithdrawalReceipt(
   context: ActionContext, { chain, symbol }: { chain: string, symbol: string }) {
-  const receipt = await refreshPendingReceipt(chain, symbol)
+  const receipt: IWithdrawalReceipt | null = await refreshPendingReceipt(chain, symbol)
   log("refreshWithdrawalReceipt", chain, symbol, receipt)
   // @ts-ignore
   if (receipt !== null) {
+    if ((chain === "binance" && receipt.txStatus === TransferGatewayTxStatus.REJECTED) || chain !== "binance") {
     context.state.withdrawalReceipts = receipt
+    }
   }
 }
 

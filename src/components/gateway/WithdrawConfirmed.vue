@@ -28,6 +28,7 @@ import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
+import { TransferGatewayTxStatus } from "loom-js/dist/proto/transfer_gateway_pb"
 import { tokenService } from "../../services/TokenService"
 import { formatTokenAmount } from "../../filters"
 
@@ -39,12 +40,11 @@ export default class WithdrawConfirmed extends Vue {
   chain = ""
 
   completeWithdrawalHandler() {
-    
     if (this.chain === "ethereum") {
       gatewayModule.ethereumWithdraw(this.symbol)
     } else {
       // retry withdraw for binance
-      // TODO:  we force to resunmit on binance chain if it isn't Ethereum
+      // TODO:  we force to resubmit on binance chain if it isn't Ethereum
       //        need to fix this if we integrate with other chain
       gatewayModule.binanceResubmitWithdrawal()
     }
@@ -75,7 +75,14 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get visible() {
-    return this.state.gateway.withdrawalReceipts !== null
+    if (this.state.gateway.withdrawalReceipts !== null) {
+      if (this.chain === "binance") {
+        return this.state.gateway.withdrawalReceipts.txStatus === TransferGatewayTxStatus.REJECTED
+      } else {
+        return true
+      }
+    }
+    return false
   }
 
   set visible(value) {
@@ -88,6 +95,8 @@ export default class WithdrawConfirmed extends Vue {
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
     if (receipt === null) return
+    if (this.chain === "binance" && receipt.txStatus !== TransferGatewayTxStatus.REJECTED) return
+
     const chainId = receipt.tokenContract!.chainId
     const chainMappings = {
       binance: "binance",
@@ -99,7 +108,6 @@ export default class WithdrawConfirmed extends Vue {
     const contractAddrStr = contractAddress.toString().toLowerCase()
 
     let tokenInfo
-
     if (chain === "binance") {
       // for binance the token symbol is stored in the address
       const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join("")

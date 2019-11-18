@@ -94,11 +94,9 @@ export default class WithdrawConfirmed extends Vue {
 
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
-    if (receipt === null) {
-      return
-    } else {
-      if (this.chain === "binance" && receipt.txStatus !== TransferGatewayTxStatus.REJECTED) return
-    }
+    if (receipt === null) return
+    if (this.chain === "binance" && receipt.txStatus !== TransferGatewayTxStatus.REJECTED) return
+
     const chainId = receipt.tokenContract!.chainId
     const chainMappings = {
       binance: "binance",

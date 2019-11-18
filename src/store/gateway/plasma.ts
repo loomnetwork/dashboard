@@ -345,8 +345,7 @@ export function pollReceipt(chain: string, symbol: string) {
 export async function refreshWithdrawalReceipt(
   context: ActionContext, { chain, symbol }: { chain: string, symbol: string }) {
   const receipt: IWithdrawalReceipt | null = await refreshPendingReceipt(chain, symbol)
- log("refreshWithdrawalReceipt", chain, symbol, receipt)
-
+  log("refreshWithdrawalReceipt", chain, symbol, receipt)
   // @ts-ignore
   if (receipt !== null) {
     if ((chain === "binance" && receipt.txStatus === TransferGatewayTxStatus.REJECTED) || chain !== "binance") {

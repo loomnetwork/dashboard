@@ -75,7 +75,14 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get visible() {
-    return this.state.gateway.withdrawalReceipts !== null && this.state.gateway.withdrawalReceipts.txStatus === TransferGatewayTxStatus.REJECTED
+    if (this.state.gateway.withdrawalReceipts !== null) {
+      if (this.chain === "binance") {
+        return this.state.gateway.withdrawalReceipts.txStatus === TransferGatewayTxStatus.REJECTED
+      } else {
+        return true
+      }
+    }
+    return false
   }
 
   set visible(value) {
@@ -87,7 +94,11 @@ export default class WithdrawConfirmed extends Vue {
 
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
-    if (receipt === null || receipt.txStatus !== TransferGatewayTxStatus.REJECTED) return
+    if (receipt === null) {
+      return
+    } else {
+      if (this.chain === "binance" && receipt.txStatus !== TransferGatewayTxStatus.REJECTED) return
+    }
     const chainId = receipt.tokenContract!.chainId
     const chainMappings = {
       binance: "binance",

@@ -30,7 +30,10 @@ export default {
   coinDataUrl: "/tokens/ext-dev.tokens.json",
   gateway: {
     chains: ["ethereum", "binance"],
-    multisig: true,
+    multisig: {
+      loom: true,
+      main: true,
+    },
     checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "",
     binance: {

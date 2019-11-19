@@ -101,7 +101,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     },
   })
 
-  async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
+  async function initializeGateways(mapping: IAddressMapping, multisig: { loom: boolean, main: boolean }) {
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,

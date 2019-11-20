@@ -147,7 +147,8 @@ export default class WithdrawForm extends Vue {
   }
 
   get balanceCoversFee() {
-    if (this.fee) {
+    // @ts-ignore
+    if (this.fee.token) {
       // @ts-ignore
       return this.state.plasma.coins[this.fee.token].balance.gte(this.fee.amount)
     }

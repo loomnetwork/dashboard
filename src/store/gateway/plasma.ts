@@ -188,14 +188,22 @@ class PlasmaGateways {
         }
 
       default:
-        adapter = new ERC20GatewayAdapter(
-          this.ethereumMainGateway,
-          srcChainGateway!,
-          symbol,
-          this.mapping,
-        )
-        break
-    }
+        if (chain === "binance") {
+          adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
+            token: "BNB",
+            amount: new BN(37500),
+          }, symbol)
+          break
+        } else {
+          adapter = new ERC20GatewayAdapter(
+            this.ethereumMainGateway,
+            srcChainGateway!,
+            symbol,
+            this.mapping,
+          )
+          break
+        }
+      }
 
     this.adapters.set(symbol, adapter)
     if (!this.chains.has(chain)) {

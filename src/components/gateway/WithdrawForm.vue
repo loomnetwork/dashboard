@@ -143,7 +143,15 @@ export default class WithdrawForm extends Vue {
   }
 
   get validInput() {
-    return this.amountIsValid && (this.requireRecipient === false || this.isValidAddress)
+    return this.amountIsValid && (this.requireRecipient === false || this.isValidAddress) && this.balanceCoversFee
+  }
+
+  get balanceCoversFee() {
+    if (this.fee) {
+      // @ts-ignore
+      return this.state.plasma.coins[this.fee.token].balance.gte(this.fee.amount)
+    }
+    return true
   }
 
   @Watch("visible")
@@ -159,12 +167,13 @@ export default class WithdrawForm extends Vue {
       this.max = this.balance
     }
     if (fee) {
-      const { decimals } = tokenService.getTokenbySymbol(token)
+      const { decimals } = tokenService.getTokenbySymbol(fee.token)
       this.fee = { ...fee, decimals }
       if (fee.token === token) {
         this.max = this.balance.sub(fee.amount)
         console.log(this.max.toString(), this.balance.toString(), fee.amount.toString())
       }
+
     } else {
       this.fee = {}
     }

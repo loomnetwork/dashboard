@@ -156,10 +156,10 @@ let instance: EthereumGateways | null = null
 export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
-  multisig: boolean,
+  multisig: { main: boolean, loom: boolean },
 ) {
-  const ERC20GatewayABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
-  const GatewayABI: AbiItem[] = multisig ? GatewayABI_v2 : GatewayABI_v1
+  const ERC20GatewayABI: AbiItem[] = multisig.loom ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
+  const GatewayABI: AbiItem[] = multisig.main ? GatewayABI_v2 : GatewayABI_v1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI,
@@ -173,8 +173,10 @@ export async function init(
   )
   log("main gateway initialized")
   let vmcContract: any = null
-  if (multisig) {
-    const vmcAddress = await loomGateway.methods.vmc().call()
+  if (multisig.loom || multisig.main) {
+    const vmcSourceGateway = multisig.loom ? loomGateway : mainGateway
+    // @ts-ignore
+    const vmcAddress = await vmcSourceGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
       ValidatorManagerContractABI,
@@ -184,7 +186,7 @@ export async function init(
   } else {
     log("Assuming oracle sig gateways")
   }
-  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
+  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3, multisig)
   return instance
 }
 
@@ -210,6 +212,7 @@ class EthereumGateways {
     readonly loomGateway: ERC20Gateway_v2,
     readonly vmc: ValidatorManagerContract | null,
     readonly web3: Web3,
+    readonly multisig: { main: boolean, loom: boolean },
   ) { }
 
   destroy() {
@@ -229,16 +232,20 @@ class EthereumGateways {
       console.warn(token + " token gateway adapter already set.")
       return this.adapters.get(token)
     }
-    const { vmc, mainGateway, loomGateway, web3 } = this
+    const { mainGateway, loomGateway, web3, multisig } = this
     let adapter: EthereumGatewayAdapter
+    let vmc: ValidatorManagerContract | null
     switch (token) {
       case "ETH":
+        vmc = multisig.main ? this.vmc : null
         adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
       case "LOOM":
+        vmc = multisig.loom ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
         break
       default:
+        vmc = multisig.main ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, mainGateway, tokenAddress, token)
         break
     }
@@ -444,11 +451,11 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   fb.showLoadingBar(true)
   try {
     await gateway.withdraw(receipt)
-    ethereumModule.setUserData({pendingWithdrawal: true})
+    ethereumModule.setUserData({ pendingWithdrawal: true })
     fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
   } catch (err) {
     // imToken throws even if transaction succeeds
-    ethereumModule.setUserData({pendingWithdrawal: false})
+    ethereumModule.setUserData({ pendingWithdrawal: false })
     if ("imToken" in window) {
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {
@@ -468,7 +475,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       Sentry.captureException(err)
     })
   }
-  ethereumModule.setUserData({pendingWithdrawal: false})
+  ethereumModule.setUserData({ pendingWithdrawal: false })
   fb.showLoadingBar(false)
 }
 
@@ -514,10 +521,10 @@ async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) 
     }
   }
   const p1 = gateway
-  // @ts-ignore
-  .getPastEvents(depositEvent, { filter: { from: address }, ...range })
-  .then((results) => logToHistory(results, depositEvent, symbol, "amount"))
-  .catch((e) => console.error("error loading LoomCoinReceived", e.message))
+    // @ts-ignore
+    .getPastEvents(depositEvent, { filter: { from: address }, ...range })
+    .then((results) => logToHistory(results, depositEvent, symbol, "amount"))
+    .catch((e) => console.error("error loading LoomCoinReceived", e.message))
 
   const p2 = gateway
     // @ts-ignore
@@ -573,13 +580,13 @@ async function createWithdrawalHash(
   const gatewayAddress = gatewayContract._address
   const amount = receipt.value.isZero() ? receipt.tokenAmount!.toString() : receipt.value.toString()
   const amountHashed = receipt.tokenKind === TransferGatewayTokenKind.ETH
-                       ? ethers.utils.solidityKeccak256(
-                        ["uint256"],
-                        [amount],
-                       ) : ethers.utils.solidityKeccak256(
-                        ["uint256", "address"],
-                        [amount, tokenAddress],
-                       )
+    ? ethers.utils.solidityKeccak256(
+      ["uint256"],
+      [amount],
+    ) : ethers.utils.solidityKeccak256(
+      ["uint256", "address"],
+      [amount, tokenAddress],
+    )
   const prefix = WithdrawalPrefixes[receipt.tokenKind]
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)

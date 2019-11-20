@@ -20,7 +20,10 @@ const log = debug("dash.gateway")
 
 function initialState(): GatewayState {
   return {
-    multisig: false,
+    multisig: {
+      loom: false,
+      main: false,
+    },
     chains: [],
     mapping: null,
     withdrawalReceipts: null,

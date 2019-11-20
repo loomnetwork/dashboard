@@ -2133,8 +2133,8 @@
     "symbol": "CFT",
     "name": "CleverFlare",
     "decimals": 8,
-    "ethereum": "0xC22c91546b31eADD366678B6699C9aD513eb2693",
-    "plasma": "0xeC47cD2e727212DCD8fC11E84848f49507f3C508",
+    "ethereum": "0xc22c91546b31eadd366678b6699c9ad513eb2693",
+    "plasma": "0xec47cd2e727212dcd8fc11e84848f49507f3c508",
     "binance": "0x000000000000000000000043465441312d443642"
   }
 ]

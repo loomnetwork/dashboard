@@ -84,8 +84,8 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
 
   withdraw(amount: BN) {
     const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
-    const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
-    log("TransferGateway withdrawERC20Async", this.token, `default:${plasmaTokenAddrStr}`)
+    const plasmaTokenAddr = Address.fromString(`${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
+    log("TransferGateway withdrawERC20Async", this.token, `${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
     return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
   }
 }

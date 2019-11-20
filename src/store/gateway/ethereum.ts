@@ -516,6 +516,7 @@ async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) 
         transactionHash: item.transactionHash,
         amount: new BN(item.returnValues[valueField]),
         token: token || "other",
+        decimals: tokenService.get(token)!.decimals,
       })
       ethereumModule.state.history.push(entry)
     }

@@ -70,6 +70,15 @@
                 </b-nav-item>
                 <hr />
                 <b-nav-item
+                  v-for="(menu, index) in menus.community"
+                  :key="index+'c'"
+                  :to="menu.to"
+                  class="router"
+                >
+                  <h5 class="text-light hover-warning">{{ $t(menu.text) }}</h5>
+                </b-nav-item>
+                <hr />
+                <b-nav-item
                   v-for="(menu, index) in menus.help"
                   :key="index+'h'"
                   :to="menu.to"
@@ -173,6 +182,13 @@ export default class FaucetHeader extends Vue {
           to: "/validator-management",
           text: "components.faucet_sidebar.validator_management",
         },
+      ],
+      community: [
+        {
+          to: "/bounty",
+          text: "Bounty",
+          name: "Bounty"
+        }
       ],
       help: [
         {

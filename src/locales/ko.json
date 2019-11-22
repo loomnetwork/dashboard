@@ -805,7 +805,7 @@
     "success": {
       "transaction_success": "트랜잭션이 성공적으로 전송되었습니다.",
       "eth_addr_copied": "이더리움 주소가 복사되었습니다.",
-      "plasma_addr_copied": "베이스체인 주소가 복사되었습니다.",
+      "plasma_addr_copied": "베이스체인 주소가 복사되었습니다.",p
       "address_copied": "주소가 복사되었습니다.",
       "register_success": "성공적으로 등록되었습니다."
     },

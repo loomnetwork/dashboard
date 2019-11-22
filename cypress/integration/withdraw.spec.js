@@ -35,7 +35,7 @@ describe('Withdrawal Test', () => {
     cy.get('#withdraw-confirmed p', { timeout: 30000 })
       .should(
         "contain",
-        "1 LOOM have been withdrawn out of Plasmachain. " +
+        "1 LOOM have been withdrawn out of Basechain. " +
         "Click complete to transfer your funds to your ethereum account."
       )
 
@@ -82,7 +82,7 @@ describe('Withdrawal Test', () => {
     cy.get('#withdraw-confirmed p', { timeout: 30000 })
       .should(
         "contain",
-        "1 ETH have been withdrawn out of Plasmachain. " +
+        "1 ETH have been withdrawn out of Basechain. " +
         "Click complete to transfer your funds to your ethereum account."
       )
 

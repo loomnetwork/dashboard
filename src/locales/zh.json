@@ -743,7 +743,7 @@
       "redelegating": "正在重新委托",
       "consolidating": "正在合并",
       "undelegating": "正在取消委托",
-      "claiming_reward": "领取奖励",
+      "claiming_reward": "正在领取奖励",
       "eth_deposit": "存入 ETH",
       "withdraw": "提取",
       "batch_transfer": "批量转移",

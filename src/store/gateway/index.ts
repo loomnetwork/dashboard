@@ -20,7 +20,10 @@ const log = debug("dash.gateway")
 
 function initialState(): GatewayState {
   return {
-    multisig: false,
+    multisig: {
+      loom: false,
+      main: false,
+    },
     chains: [],
     mapping: null,
     withdrawalReceipts: null,
@@ -47,6 +50,10 @@ function initialState(): GatewayState {
     ethereumMappings: {
       confirmed: [],
       pending: [],
+    },
+    binance: {
+      gatewayAccount: "",
+      fee: 0,
     },
   }
 }

@@ -3,8 +3,9 @@
     "symbol": "LOOM",
     "name": "Loom",
     "decimals": 18,
-    "ethereum": "0x165245382ff23A5D3782b48286B6A81b6fd0508e",
-    "plasma": "0xcd9bfe0d35c054305ee1b7f3a2677c1bbbb74a9f"
+    "ethereum": "0x425532c6a0b0327bbd702ad7a1ab618b1e86289d",
+    "plasma": "0xcd9bfe0d35c054305ee1b7f3a2677c1bbbb74a9f",
+    "binance": "0x0000000000000000000000004c4f4f4d2d313732"
   },
   {
     "symbol": "ETH",
@@ -183,13 +184,6 @@
     "ethereum": "0x58bdcf134acd75c5960c4187f5245817d202cdb7"
   },
   {
-    "symbol": "BNB",
-    "name": "BNBToken",
-    "decimals": 18,
-    "plasma": "0x1538021b8a39446ae1220abc2e076a46c773bfeb",
-    "ethereum": "0xd9759110e867096b59f68deef18405446aa3e812"
-  },
-  {
     "symbol": "VEN",
     "name": "VENToken",
     "decimals": 18,
@@ -314,13 +308,6 @@
     "decimals": 18,
     "plasma": "0x28d8d0a9bc5ebd231d7b514decef31f254b279cd",
     "ethereum": "0x27308fdd1ed1073cbcaf0f9c464630f4be202e8f"
-  },
-  {
-    "symbol": "LOOM",
-    "name": "LOOMToken",
-    "decimals": 18,
-    "plasma": "0x29245dca86eca9f7aca25ab09df5c8d426657dd6",
-    "ethereum": "0x53317a541c4ed05b304eb6212c06c92ffd22212d"
   },
   {
     "symbol": "DCN",
@@ -1492,13 +1479,6 @@
     "ethereum": "0xc2949d358c1f1092252819574cd00df08022e764"
   },
   {
-    "symbol": "BNB",
-    "name": "BNBToken",
-    "decimals": 18,
-    "plasma": "0xb09364aadfd41a18ad1126f00de8c42c753bd12f",
-    "ethereum": "0xd2701c4c062e64ea23573367b0b807c67f542802"
-  },
-  {
     "symbol": "PRG",
     "name": "PRGToken",
     "decimals": 6,
@@ -2148,5 +2128,13 @@
     "decimals": 8,
     "plasma": "0xfc9fa5b21589ed973639f2e793c9a3cbf94266dc",
     "binance": "0x0000000000000000000000004d4f4f4c2d433236"
+  },
+  {
+    "symbol": "CFT",
+    "name": "CleverFlare",
+    "decimals": 8,
+    "ethereum": "0xc22c91546b31eadd366678b6699c9ad513eb2693",
+    "plasma": "0xec47cd2e727212dcd8fc11e84848f49507f3c508",
+    "binance": "0x000000000000000000000043465441312d443642"
   }
 ]

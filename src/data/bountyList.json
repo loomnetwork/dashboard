@@ -1,0 +1,68 @@
+{
+  "developer": [
+    {
+      "title": "Launch a functional block explorer",
+      "description": "Create a fully functional block explorer for Loom Basechain and other chains. For examples of what we’re looking for, see <a target='_blank' href='https://mintscan.io'>mintscan.io</a>, <a target='_blank' href='https://etherscan.io'>etherscan.io</a> or <a target='_blank' href='https://tronscan.org'>tronscan.org</a>",
+      "reward": "2000000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Deploy a dapp to Basechain with 20+ DAU (weekly average)",
+      "description": "Deploy a dapp to Basechain and register it with <a target='_blank' href='https://dappradar.com/rankings/protocol/loom'>dappradar.com</a>. Average 20+ daily active users (DAU) over a 3 week span.",
+      "reward": "500000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Deploy a dapp to Basechain in October",
+      "description": "Deploy a dapp to Basechain in October and register it with <a target='_blank' href='https://dappradar.com/rankings/protocol/loom'> dappradar.com </a>",
+      "reward": "500000",
+      "token": "LOOM"
+    }
+  ],
+  "videos": [
+    {
+      "title": "Tutorial video",
+      "description": "Video tutorial can be on any technical aspect of creating and deploying a dapp to Loom. It should be accessible to someone who has a beginner to intermediate level of experience with development. A great tutorial will explain each step in detail so viewers leave with a better understanding of how to interact with Loom.",
+      "reward": "300000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Non-technical video",
+      "description": "You have creative freedom, but the video should for example talk about where the value of Loom Network is, what the benefits of Loom are, etc. A successful video will go beyond the surface level (Loom is an interoperable solution) and should leave the viewer with a newly gained appreciation for Loom.",
+      "reward": "100000",
+      "token": "LOOM"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Building an app with Unity",
+      "description": "Write a detailed and high quality article that explains how to build a dapp using Unity from scratch to end product.",
+      "reward": "300000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Using the Loom Transfer Gateway",
+      "description": "Write a detailed and high quality article that explains how to use the Loom Transfer Gateway. Tutorial should be accessible to someone who has gone through the <a target='_blank' href='https://cryptozombies.io'> CryptoZombies.io </a> course and has beginning level experience with blockchain.",
+      "reward": "300000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Using Solidity for Loom",
+      "description": "Write a detailed and high quality article explaining how to use Solidity for Loom, with special emphasis on the steps needed to develop for Loom compared to Ethereum.",
+      "reward": "200000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Deploying a dapp to Loom",
+      "description": "Write a detailed and high quality article explaining how to deploy a dapp to Loom, with each step clearly explained. The article should show how to take a ready made dapp for Ethereum and deploy it to Loom.",
+      "reward": "200000",
+      "token": "LOOM"
+    },
+    {
+      "title": "Non-technical article",
+      "description": "Write a detailed and high quality article explaining what Loom is. You have creative control, but the article should for example talk about where the value of Loom Network is, what the benefits of Loom are. A successful article should leave the reader with a newly gained appreciation for Loom.",
+      "reward": "100000",
+      "token": "LOOM"
+    }
+  ]
+}

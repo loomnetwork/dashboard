@@ -48,7 +48,8 @@ export async function checkAirdrop(context: AirdropContext) {
     .call({ from: caller.local.toString() })
   const usersAirdrops: AirdropDetail[] = []
   for (let index = 0; index < airdropLength; index++) {
-    const airdropObject = await context.state.airdropContract!.methods.airdropPerUser(index)
+    const airdropObject = await context.state.airdropContract!.methods.airdropPerUser(account, index)
+      .call({ from: caller.local.toString() })
     usersAirdrops.push(airdropObject)
   }
   airdropModule.setUsersAirdrops(usersAirdrops)

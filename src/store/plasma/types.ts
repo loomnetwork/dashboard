@@ -95,6 +95,15 @@ export interface CardDetail {
 export enum TierID {
   DEFAULT = 0,
 }
+
+export interface AirdropDetail {
+  airdropID: number,
+  receiver: string,
+  tokenAddress: string,
+  airdropAmount: number,
+  timelock: number,
+}
+
 // helper/shorthand for plasma module action context
 export declare type PlasmaContext = BareActionContext<
   PlasmaState,

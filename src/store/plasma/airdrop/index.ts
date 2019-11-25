@@ -4,7 +4,7 @@ import { getStoreBuilder } from "vuex-typex"
 import * as getters from "./getters"
 import * as mutations from "./mutations"
 
-import { CardDetail, PackDetail } from "../types"
+import { CardDetail, PackDetail, AirdropDetail } from "../types"
 import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
 import { plasmaModule } from ".."
 import { i18n } from "@/i18n"
@@ -15,6 +15,7 @@ const log = debug("airdrop")
 function initialState(): AirdropState {
   return {
     airdropContract: null,
+    usersAirdrops: [],
   }
 }
 
@@ -32,23 +33,23 @@ export const airdropModule = {
   getAirdropInstance: builder.read(getters.getAirdropInstance),
   // Mutations
   setAirdropContract: builder.commit(mutations.setAirdropContract),
+  setUsersAirdrops: builder.commit(mutations.setUsersAirdrops),
 
   // // Actions
+  checkAirdrop: builder.dispatch(checkAirdrop),
 }
 
-// export async function checkCardBalance(context: AirdropContext) {
-//   const account = context.rootState.plasma.address
-//   const caller = await plasmaModule.getCallerAddress()
+export async function checkAirdrop(context: AirdropContext) {
+  const account = context.rootState.plasma.address
+  const caller = await plasmaModule.getCallerAddress()
 
-//   const tokens = await context.state
-//     .cardContract!.methods.tokensOwned(account)
-//     // @ts-ignore
-//     .call({ from: caller.local.toString() })
-//   const cards: CardDetail[] = []
-//   tokens.indexes.forEach((id: string, i: number) => {
-//     const card = getCardByTokenId(id.toString())
-//     card.amount = parseInt(tokens.balances[i], 10)
-//     cards.push(card)
-//   })
-//   airdropModule.setCardBalance(cards)
-// }
+  const airdropLength = await context.state.airdropContract!.methods.getAirdropLengthByUserAddress(account)
+    // @ts-ignore
+    .call({ from: caller.local.toString() })
+  const usersAirdrops: AirdropDetail[] = []
+  for (let index = 0; index < airdropLength; index++) {
+    const airdropObject = await context.state.airdropContract!.methods.airdropPerUser(index)
+    usersAirdrops.push(airdropObject)
+  }
+  airdropModule.setUsersAirdrops(usersAirdrops)
+}

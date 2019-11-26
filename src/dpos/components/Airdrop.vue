@@ -1,9 +1,12 @@
 <template>
   <b-card class="mb-4">
-      <b-card-title>
-        Airdrop
-      </b-card-title>
-      <hr />
+      <b-card-header class="custom-card-header d-flex justify-content-between">
+        <h4> Airdrop </h4>
+        <a v-if="!showRefreshSpinner" @click="refreshAirdrop">
+          <fa :icon="['fas', 'sync']" class="refresh-icon" />
+        </a>
+        <b-spinner v-else type="border" small />
+      </b-card-header>
 
       <b-card-body v-if="usersAirdrops.length !== 0">
         <b-list-group-item v-for="usersAirdrop in usersAirdrops" :key="usersAirdrop.airdropID">
@@ -45,6 +48,7 @@ export default class Airdrop extends Vue {
   fetchAirdrop = airdropModule.fetchAirdrop
   withdrawAirdrop = airdropModule.withdrawAirdrop
   isAirdropWithdrew = airdropModule.isAirdropWithdrew
+  showRefreshSpinner = false
 
   get state(): DashboardState {
     return this.$store.state
@@ -70,5 +74,14 @@ export default class Airdrop extends Vue {
     await this.withdrawAirdrop({airdropID})
     await this.fetchAirdrop()
   }
+
+  async refreshAirdrop() {
+    this.showRefreshSpinner = true
+    await this.fetchAirdrop()
+    this.showRefreshSpinner = false
+  }
+
 }
 </script>
+<style lang="scss">
+</style>

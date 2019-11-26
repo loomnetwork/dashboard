@@ -284,6 +284,14 @@
       "no_rewards": "You do not have any rewards at the moment.",
       "total": "Total"
     },
+    "airdrop": {
+      "airdrop": "Airdrop",
+      "airdrop_amount": "Airdrop Amount",
+      "token": "Token",
+      "unlock_time": "Unlock time",
+      "withdraw": "Withdraw",
+      "no_airdrop": "You have no airdrop."
+    },
     "validator_detail": {
       "state": "State:",
       "amount_delegated": "Amount Delegated:",

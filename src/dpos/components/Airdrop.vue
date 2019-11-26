@@ -1,7 +1,7 @@
 <template>
   <b-card class="mb-4">
       <b-card-header class="custom-card-header d-flex justify-content-between">
-        <h4> Airdrop </h4>
+        <h4> {{$t('views.airdrop.airdrop')}} </h4>
         <a v-if="!showRefreshSpinner" @click="refreshAirdrop">
           <fa :icon="['fas', 'sync']" class="refresh-icon" />
         </a>
@@ -11,11 +11,11 @@
       <b-card-body v-if="usersAirdrops.length !== 0">
         <b-list-group-item v-for="usersAirdrop in usersAirdrops" :key="usersAirdrop.airdropID">
         <dl>
-            <dt>Airdrop Amount:</dt>
+            <dt>{{$t('views.airdrop.airdrop_amount')}}:</dt>
             <dd>{{usersAirdrop.airdropAmount | tokenAmount(getTokensInfo(usersAirdrop.tokenAddress).decimals)}}</dd>
-            <dt>Token:</dt>
+            <dt>{{$t('views.airdrop.token')}}:</dt>
             <dd>{{getTokensInfo(usersAirdrop.tokenAddress).name}}</dd>
-            <dt>Unlock time:</dt>
+            <dt>{{$t('views.airdrop.unlock_time')}}:</dt>
             <dd>{{usersAirdrop.timelock | date('seconds')}}</dd>
         </dl>
         <b-button
@@ -25,12 +25,12 @@
           @click="withdraw(usersAirdrop.airdropID)"
           :disabled="isOntimeLocked(usersAirdrop) || usersAirdrop.isWithdrew"
         >
-        withdraw
+        {{$t('views.airdrop.withdraw')}}
         </b-button>
         </b-list-group-item>
       </b-card-body>
       <b-card-body v-else>
-        You have no airdrop.
+        {{$t('views.airdrop.no_airdrop')}}.
       </b-card-body>
   </b-card>
 </template>

@@ -30,7 +30,7 @@
         </b-list-group-item>
       </b-card-body>
       <b-card-body v-else>
-        {{$t('views.airdrop.no_airdrop')}}.
+        {{$t('views.airdrop.no_airdrop')}}
       </b-card-body>
   </b-card>
 </template>

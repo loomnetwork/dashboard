@@ -102,6 +102,7 @@ export interface AirdropDetail {
   tokenAddress: string,
   airdropAmount: number,
   timelock: number,
+  isWithdrew: boolean,
 }
 
 // helper/shorthand for plasma module action context

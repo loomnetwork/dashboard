@@ -20,8 +20,10 @@
           variant="outline-primary"
           type="button"
           @click="withdraw(usersAirdrop.airdropID)"
-          :disabled="!isWithdrawable(usersAirdrop)"
-        >withdraw</b-button>
+          :disabled="isOntimeLocked(usersAirdrop) || usersAirdrop.isWithdrew"
+        >
+        withdraw
+        </b-button>
         </b-list-group-item>
       </b-card-body>
       <b-card-body v-else>
@@ -40,19 +42,20 @@ import { tokenService } from "../../services/TokenService"
 
 @Component({})
 export default class Airdrop extends Vue {
-  checkAirdrop = airdropModule.checkAirdrop
+  fetchAirdrop = airdropModule.fetchAirdrop
   withdrawAirdrop = airdropModule.withdrawAirdrop
+  isAirdropWithdrew = airdropModule.isAirdropWithdrew
 
   get state(): DashboardState {
     return this.$store.state
   }
 
-  isWithdrawable(usersAirdrop: AirdropDetail) {
-    return usersAirdrop.timelock - Date.now() / 1000 <= 0
+  isOntimeLocked(usersAirdrop: AirdropDetail) {
+    return usersAirdrop.timelock - Date.now() / 1000 > 0
   }
 
   get usersAirdrops() {
-    return this.state.airdrop.usersAirdrops
+    return this.state.airdrop.usersAirdrops.filter((airdrop) => !airdrop.isWithdrew)
   }
 
   getTokensInfo(tokenAddr: string) {
@@ -60,11 +63,12 @@ export default class Airdrop extends Vue {
   }
 
   async mounted() {
-    await this.checkAirdrop()
+    await this.fetchAirdrop()
   }
 
   async withdraw(airdropID: number) {
     await this.withdrawAirdrop({airdropID})
+    await this.fetchAirdrop()
   }
 }
 </script>

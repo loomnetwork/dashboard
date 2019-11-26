@@ -792,7 +792,9 @@
       "balance_not_enough": "Your balance isn't enough. Please deposit first.",
       "address_existed": "This address is already exists in your deployer list.",
       "failed_to_get_receipt": "Failed to get receipt",
-      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support."
+      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",
@@ -807,7 +809,8 @@
       "eth_addr_copied": "Ethereum address copied.",
       "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
-      "register_success": "Successfully registered."
+      "register_success": "Successfully registered.",
+      "withdraw_airdrop_success": "Successfully withdrew airdrop."
     },
     "alert": {
       "title": {

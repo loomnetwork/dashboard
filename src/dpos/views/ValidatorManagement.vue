@@ -6,7 +6,6 @@
     <Account class="account"/>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
     <validator-rewards class="reward" v-if="isValidator"></validator-rewards> 
-    <airdrop/> 
   </main>
 </template>
 
@@ -17,7 +16,6 @@ import Account from "@/components/Account.vue"
 import Rewards from "@/dpos/components/Rewards.vue"
 import ValidatorExtendedDetail from "@/dpos/components/ValidatorExtendedDetail.vue"
 import ValidatorRewards from "@/dpos/components/ValidatorRewards.vue"
-import Airdrop from "@/dpos/components/Airdrop.vue"
 
 @Component({
   components: {
@@ -25,7 +23,6 @@ import Airdrop from "@/dpos/components/Airdrop.vue"
     Rewards,
     ValidatorExtendedDetail,
     ValidatorRewards,
-    Airdrop,
   },
 })
 

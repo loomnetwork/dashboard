@@ -37,6 +37,7 @@ export const airdropModule = {
 
   // // Actions
   checkAirdrop: builder.dispatch(checkAirdrop),
+  withdrawAirdrop: builder.dispatch(withdrawAirdrop),
 }
 
 export async function checkAirdrop(context: AirdropContext) {
@@ -53,4 +54,14 @@ export async function checkAirdrop(context: AirdropContext) {
     usersAirdrops.push(airdropObject)
   }
   airdropModule.setUsersAirdrops(usersAirdrops)
+}
+
+export async function withdrawAirdrop(context: AirdropContext, payload: {airdropID: number}) {
+  const caller = await plasmaModule.getCallerAddress()
+  try {
+    await context.state.airdropContract!.methods.withdrawAirdrop(payload.airdropID)
+      .send({ from: caller.local.toString() })
+  } catch (error) {
+    return error
+  }
 }

@@ -284,6 +284,14 @@
       "no_rewards": "현재 수령할 보상이 없습니다.",
       "total": "총"
     },
+    "airdrop": {
+      "airdrop": "Airdrop",
+      "airdrop_amount": "Airdrop Amount",
+      "token": "Token",
+      "unlock_time": "Unlock time",
+      "withdraw": "Withdraw",
+      "no_airdrop": "You have no airdrop."
+    },
     "validator_detail": {
       "state": "상태:",
       "amount_delegated": "위임한 양:",
@@ -792,7 +800,8 @@
       "balance_not_enough": "잔액이 충분하지 않습니다. 먼저 자금을 입금하세요.",
       "address_existed": "이 주소는 이미 당신의 배포자 목록에 존재합니다.",
       "failed_to_get_receipt": "영수증을 가져오는 데 실패하였습니다.",
-      "connect_wallet_prob": "지갑 연결 중 문제가 발생했습니다. 고객센터에 문의해주세요."
+      "connect_wallet_prob": "지갑 연결 중 문제가 발생했습니다. 고객센터에 문의해주세요.",
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
     },
     "info": {
       "reward_claimed": "보상을 성공적으로 수령하였습니다.",
@@ -805,9 +814,10 @@
     "success": {
       "transaction_success": "트랜잭션이 성공적으로 전송되었습니다.",
       "eth_addr_copied": "이더리움 주소가 복사되었습니다.",
-      "plasma_addr_copied": "베이스체인 주소가 복사되었습니다.",p
+      "plasma_addr_copied": "베이스체인 주소가 복사되었습니다.",
       "address_copied": "주소가 복사되었습니다.",
-      "register_success": "성공적으로 등록되었습니다."
+      "register_success": "성공적으로 등록되었습니다.",
+      "withdraw_airdrop_success": "Successfully withdrew airdrop."
     },
     "alert": {
       "title": {

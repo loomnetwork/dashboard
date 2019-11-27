@@ -40,7 +40,7 @@ import Vue from "vue"
 import { Component, Watch, Prop } from "vue-property-decorator"
 import { airdropModule } from "../../store/plasma/airdrop"
 import { DashboardState } from "@/types"
-import { AirdropDetail } from "@/store/plasma/types"
+import { AirdropDetail } from "@/store/plasma/airdrop/types"
 import { tokenService } from "../../services/TokenService"
 
 @Component({})

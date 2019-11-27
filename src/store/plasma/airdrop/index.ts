@@ -1,16 +1,12 @@
 import { AirdropState, HasAirdropState, AirdropContext } from "./types"
 import { getStoreBuilder } from "vuex-typex"
-// airdrop (make this a sepoerate module)
 import * as getters from "./getters"
 import * as mutations from "./mutations"
 
-import { CardDetail, PackDetail, AirdropDetail } from "../types"
-import { getCardByTokenId, formatFromLoomAddress } from "@/utils"
+import { AirdropDetail } from "../airdrop/types"
 import { plasmaModule } from ".."
 import { i18n } from "@/i18n"
-import debug from "debug"
 import { feedbackModule } from "@/feedback/store"
-const log = debug("airdrop")
 import { feedbackModule as feedback } from "@/feedback/store"
 
 function initialState(): AirdropState {

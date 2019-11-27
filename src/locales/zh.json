@@ -284,6 +284,14 @@
       "no_rewards": "你现在还没有任何奖励。",
       "total": "共计："
     },
+    "airdrop": {
+      "airdrop": "Airdrop",
+      "airdrop_amount": "Airdrop Amount",
+      "token": "Token",
+      "unlock_time": "Unlock time",
+      "withdraw": "Withdraw",
+      "no_airdrop": "You have no airdrop."
+    },
     "validator_detail": {
       "state": "状态：",
       "amount_delegated": "委托的数量：",
@@ -743,7 +751,7 @@
       "redelegating": "正在重新委托",
       "consolidating": "正在合并",
       "undelegating": "正在取消委托",
-      "claiming_reward": "正在领取奖励",
+      "claiming_reward": "领取奖励",
       "eth_deposit": "存入 ETH",
       "withdraw": "提取",
       "batch_transfer": "批量转移",
@@ -792,7 +800,8 @@
       "balance_not_enough": "你的余额不足。请先存入一些。",
       "address_existed": "这个地址已经在你的部署者清单里了。",
       "failed_to_get_receipt": "获取收据失败",
-      "connect_wallet_prob": "连接你的钱包似乎有问题。请联系客服。"
+      "connect_wallet_prob": "连接你的钱包似乎有问题。请联系客服。",
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
     },
     "info": {
       "reward_claimed": "已成功领取奖励。",
@@ -807,7 +816,8 @@
       "eth_addr_copied": "已复制以太坊地址。",
       "plasma_addr_copied": "已复制 Basechain 地址。",
       "address_copied": "已复制地址。",
-      "register_success": "已成功注册。"
+      "register_success": "已成功注册。",
+      "withdraw_airdrop_success": "Successfully withdrew airdrop."
     },
     "alert": {
       "title": {

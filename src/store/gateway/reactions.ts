@@ -145,7 +145,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
    * checks incomplete withdawals
    */
   async function checkIncompleteTransfers() {
-    console.log("checkIncompleteTransfers")
     const plasmaGateways = PlasmaGateways.service()
     const loomReceipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     const mainReceipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()

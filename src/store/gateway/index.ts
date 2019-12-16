@@ -48,6 +48,10 @@ function initialState(): GatewayState {
       confirmed: [],
       pending: [],
     },
+    binance: {
+      gatewayAccount: "",
+      fee: 0,
+    },
   }
 }
 

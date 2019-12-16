@@ -40,13 +40,13 @@ export const WalletConnectAdapter: WalletType = {
     provider.on("networkChanged", (net) => console.log("networkChanged", net))
     provider.on("accountsChanged", (acc) => window.location.reload())
     // wc is WalletConnect class in library
-    provider.wc.on('disconnect', (error, payload) => {
+    provider.wc.on("disconnect", (error, payload) => {
       if (error) {
         throw error
       }
       console.log("User cancel a sign-in request")
       WalletConnectQRCodeModal.close()
-      provider.updateState({...INITIAL_STATE})
+      provider.updateState({ ...INITIAL_STATE })
     })
 
     await provider.enable()

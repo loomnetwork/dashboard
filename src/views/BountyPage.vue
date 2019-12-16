@@ -31,8 +31,10 @@
       </b-card>
     </div>
     <b-card bg-variant="dark" text-variant="white" class="contact">
-      We're fleshing out the exact details now, if you have a submission please email 
-      <a href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning" style="color: #6ec0ff;"><fa :icon="['fas', 'envelope']" fixed-width /> satoshi@loomx.io </a>
+      <b-card-text> {{ $t('views.bounty.contact_desc') }}</b-card-text>
+      <i18n path="views.bounty.contact">
+        <a place="email" href="mailto:satoshi@loomx.io" target="_blank" class="hover-warning" style="color: #6ec0ff;"><fa :icon="['fas', 'envelope']" fixed-width /> {{ $t('views.bounty.email') }} </a>
+      </i18n>
     </b-card>
   </main>
 </template>
@@ -87,6 +89,13 @@ export default class BountyPage extends Vue {
   .bounty-reward {
     text-align: right;
     font-weight: 600;
+  }
+
+  .contact {
+    text-align: center;
+    p {
+      color: white;
+    }
   }
 
   #heart {

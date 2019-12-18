@@ -67,6 +67,11 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
     const owner = this.mapping.to
     return this.contract.withdrawalReceiptAsync(owner)
   }
+
+  async getLocalAccountInfo() {
+    const owner = this.mapping.from
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
 }
 
 class ERC20GatewayAdapter extends EthGatewayAdapter {
@@ -216,6 +221,21 @@ class PlasmaGateways {
 }
 
 /* #region Vuex */
+
+/**
+ * get local account info
+ */
+export async function getLocalAccountInfo(context: ActionContext, funds: Funds) {
+  console.log("hello")
+  const { chain, symbol } = funds
+  try {
+    const gateway = service().get(chain, symbol)
+    console.log("gateway: ", gateway)
+  } catch (error) {
+    console.log("error", error)
+  }
+  // await gateway.get()
+}
 
 /**
  * withdraw from plasma account to gateway

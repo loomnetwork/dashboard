@@ -8,7 +8,7 @@ import Axios from "axios"
 import BN from "bn.js"
 import debug from "debug"
 import { ethers } from "ethers"
-import { CryptoUtils } from "loom-js"
+import { CryptoUtils, Address } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { parseSigs } from "loom-js/dist/helpers"
 import ERC20GatewayABI_v1 from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
@@ -30,6 +30,7 @@ import GatewayABI_v1 from "./contracts/Gateway_v1.json"
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import { gatewayModule } from "./index"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+import { async } from 'rxjs/internal/scheduler/async'
 
 const log = debug("dash.gateway.ethereum")
 
@@ -43,6 +44,7 @@ interface EthereumGatewayAdapter {
 
   deposit(amount: BN, address: string)
   withdraw(receipt: IWithdrawalReceipt)
+  
 }
 
 class ERC20GatewayAdapter implements EthereumGatewayAdapter {

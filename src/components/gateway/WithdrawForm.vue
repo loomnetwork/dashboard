@@ -13,6 +13,7 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
+        Remaining {{ remainingAmount }}
         <amount-input
           :min="min"
           :max="max"
@@ -82,6 +83,7 @@ export default class WithdrawForm extends Vue {
   amountIsValid: boolean = false
   isValidAddress: boolean = false
   recepient = ""
+  remainingAmount = 0
 
   tokenInfo: TokenData | null = null
 
@@ -116,6 +118,11 @@ export default class WithdrawForm extends Vue {
       gatewayModule.clearTransferRequest()
       this.reset()
     }
+  }
+
+  async mounted() {
+    await gatewayModule.init()
+    this.remainWithdrawAmount()
   }
 
   reset() {
@@ -155,6 +162,25 @@ export default class WithdrawForm extends Vue {
     return true
   }
 
+  async remainWithdrawAmount() {
+    const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"
+    let recepient
+    if (this.isValidAddress && this.recepient) {
+      const tmp = this.decodeAddress(this.recepient)
+      recepient = new Address(targetChainId, new LocalAddress(tmp))
+    }
+    const payload: Funds = {
+      chain: this.transferRequest.chain,
+      symbol: this.transferRequest.token,
+      weiAmount: this.weiAmount,
+      recepient,
+    }
+    console.log("gatewayModule", gatewayModule)
+    const result =  await gatewayModule.plasmaGetLocalAccountInfo(payload)
+    console.log("result----", result)
+    return result
+  }
+
   @Watch("visible")
   refreshData(visible: boolean) {
     if (!visible) return
@@ -184,6 +210,8 @@ export default class WithdrawForm extends Vue {
 
   async requestWithdrawal(e) {
     e.preventDefault()
+
+    // this.remainingAmount = await this.remainWithdrawAmount()
 
     const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"
     let recepient

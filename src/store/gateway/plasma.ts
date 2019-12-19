@@ -67,11 +67,6 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
     const owner = this.mapping.to
     return this.contract.withdrawalReceiptAsync(owner)
   }
-
-  async getLocalAccountInfo() {
-    const owner = this.mapping.from
-    return this.contract.getLocalAccountInfoAsync(owner)
-  }
 }
 
 class ERC20GatewayAdapter extends EthGatewayAdapter {
@@ -225,12 +220,16 @@ class PlasmaGateways {
 /**
  * get local account info
  */
-export async function getLocalAccountInfo(context: ActionContext, funds: Funds) {
-  console.log("hello")
-  const { chain, symbol } = funds
+export async function getLocalAccountInfo(context: ActionContext) {
   try {
-    const gateway = service().get(chain, symbol)
-    console.log("gateway: ", gateway)
+    const gateway = service().ethereumLoomGateway
+    console.log("this.contract.address.chainId", context.rootState.plasma.chainId)
+    console.log("context.rootState.plasma.address", context.rootState.plasma.address)
+    const ownerAddress = Address.fromString(`${context.rootState.plasma.chainId}:${context.rootState.plasma.address}`)
+    console.log("ownerAddress", ownerAddress.toString())
+    const accountInfo = await gateway.getLocalAccountInfoAsync(ownerAddress)
+    console.log("accountInfo", accountInfo)
+    return accountInfo
   } catch (error) {
     console.log("error", error)
   }

@@ -121,7 +121,6 @@ export default class WithdrawForm extends Vue {
   }
 
   async mounted() {
-    await gatewayModule.init()
     this.remainWithdrawAmount()
   }
 
@@ -163,21 +162,9 @@ export default class WithdrawForm extends Vue {
   }
 
   async remainWithdrawAmount() {
-    const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"
-    let recepient
-    if (this.isValidAddress && this.recepient) {
-      const tmp = this.decodeAddress(this.recepient)
-      recepient = new Address(targetChainId, new LocalAddress(tmp))
-    }
-    const payload: Funds = {
-      chain: this.transferRequest.chain,
-      symbol: this.transferRequest.token,
-      weiAmount: this.weiAmount,
-      recepient,
-    }
     console.log("gatewayModule", gatewayModule)
-    const result =  await gatewayModule.plasmaGetLocalAccountInfo(payload)
-    console.log("result----", result)
+    const result =  await gatewayModule.plasmaGetLocalAccountInfo()
+    console.log("result", result)
     return result
   }
 
@@ -200,7 +187,6 @@ export default class WithdrawForm extends Vue {
         this.max = this.balance.sub(fee.amount)
         console.log(this.max.toString(), this.balance.toString(), fee.amount.toString())
       }
-
     } else {
       this.fee = {}
     }

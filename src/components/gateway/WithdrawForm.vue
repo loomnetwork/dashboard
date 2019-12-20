@@ -13,7 +13,7 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        Daily remaining withdraw amount:  {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
+        <h6>{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="max"
@@ -124,11 +124,12 @@ export default class WithdrawForm extends Vue {
     this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
   }
 
-  reset() {
+  async reset() {
     this.amountIsValid = false
     this.isValidAddress = false
     this.weiAmount = ZERO
     this.recepient = ""
+    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
   }
 
   isValidAddressFormat(isValid) {
@@ -167,6 +168,7 @@ export default class WithdrawForm extends Vue {
     const gatewayState = await gatewayModule.plasmaGetGatewayStateInfo()
     const maxPerAccountDailyWithdrawalAmount:BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
     const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
+    console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
     return remainingWithdrawAmount
   }
 
@@ -193,7 +195,6 @@ export default class WithdrawForm extends Vue {
       this.fee = {}
     }
     this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
-
   }
 
   async requestWithdrawal(e) {

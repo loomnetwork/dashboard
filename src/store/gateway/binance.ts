@@ -48,4 +48,11 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   withdrawalReceipt() {
     return this.contract.withdrawalReceiptAsync(this.mapping.to)
   }
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+  async getGatewayState() {
+    return this.contract.getStateAsync()
+  }
+
 }

@@ -48,6 +48,14 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
     const receipt = await this.contract.withdrawalReceiptAsync(this.mapping.to)
     return receipt
   }
+
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+
+  async getGatewayState() {
+    return this.contract.getStateAsync()
+  }
 }
 
 class EthGatewayAdapter implements PlasmaGatewayAdapter {
@@ -66,6 +74,12 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
     // const owner = this.contract.caller
     const owner = this.mapping.to
     return this.contract.withdrawalReceiptAsync(owner)
+  }
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+  async getGatewayState() {
+    return this.contract.getStateAsync()
   }
 }
 
@@ -87,6 +101,12 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
     const plasmaTokenAddr = Address.fromString(`${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
     log("TransferGateway withdrawERC20Async", this.token, `${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
     return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
+  }
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+  async getGatewayState() {
+    return this.contract.getStateAsync()
   }
 }
 
@@ -216,35 +236,6 @@ class PlasmaGateways {
 }
 
 /* #region Vuex */
-
-/**
- * get local account info
- */
-export async function getLocalAccountInfo(context: ActionContext) {
-  try {
-    const gateway = service().ethereumMainGateway
-    const ownerAddress = Address.fromString(`${context.rootState.plasma.chainId}:${context.rootState.plasma.address}`)
-    const accountInfo = await gateway.getLocalAccountInfoAsync(ownerAddress)
-    return accountInfo
-  } catch (error) {
-    console.log("error", error)
-  }
-  // await gateway.get()
-}
-
-/**
- * get gateway state info
- */
-export async function getGatewayStateInfo(context: ActionContext) {
-  try {
-    const gateway = service().ethereumMainGateway
-    const state = await gateway.getStateAsync()
-    return state
-  } catch (error) {
-    console.log("error", error)
-  }
-  // await gateway.get()
-}
 
 /**
  * withdraw from plasma account to gateway

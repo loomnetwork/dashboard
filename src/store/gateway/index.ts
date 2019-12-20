@@ -80,8 +80,6 @@ export const gatewayModule = {
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
   loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),
-  plasmaGetLocalAccountInfo: builder.dispatch(PlasmaGateways.getLocalAccountInfo),
-  plasmaGetGatewayStateInfo: builder.dispatch(PlasmaGateways.getGatewayStateInfo),
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
   refreshWithdrawalReceipt: builder.dispatch(PlasmaGateways.refreshWithdrawalReceipt),

@@ -163,11 +163,23 @@ export default class WithdrawForm extends Vue {
   }
 
   async remainWithdrawAmount() {
-    const plasmaAccountInfo =  await gatewayModule.plasmaGetLocalAccountInfo()
+    // const plasmaAccountInfo =  await tokenService.tokens()
+    const { chain, token } = this.transferRequest
+    const gateway = plasmaGateways.service().get(chain, token)
+    console.log("gateway",gateway);
+    console.log("chain",chain);
+    console.log("token",token);
+    
+    const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
+    const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
+    console.log("plasmaAccountInfo", plasmaAccountInfo)
     const totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
-    const gatewayState = await gatewayModule.plasmaGetGatewayStateInfo()
+    const gatewayState = await gateway.getGatewayState()
+    console.log("gatewayState", gatewayState)
     const maxPerAccountDailyWithdrawalAmount:BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
     const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
+    console.log("gatewayModule",gatewayModule);
+    
     console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
     return remainingWithdrawAmount
   }

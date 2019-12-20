@@ -13,7 +13,7 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        Remaining {{ remainingAmount }}
+        Daily remaining withdraw amount:  {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
         <amount-input
           :min="min"
           :max="max"
@@ -83,7 +83,7 @@ export default class WithdrawForm extends Vue {
   amountIsValid: boolean = false
   isValidAddress: boolean = false
   recepient = ""
-  remainingAmount = 0
+  dailyRemainingWithdrawAmount: BN = ZERO
 
   tokenInfo: TokenData | null = null
 
@@ -121,7 +121,7 @@ export default class WithdrawForm extends Vue {
   }
 
   async mounted() {
-    this.remainWithdrawAmount()
+    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
   }
 
   reset() {
@@ -162,10 +162,12 @@ export default class WithdrawForm extends Vue {
   }
 
   async remainWithdrawAmount() {
-    console.log("gatewayModule", gatewayModule)
-    const result =  await gatewayModule.plasmaGetLocalAccountInfo()
-    console.log("result", result)
-    return result
+    const plasmaAccountInfo =  await gatewayModule.plasmaGetLocalAccountInfo()
+    const totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
+    const gatewayState = await gatewayModule.plasmaGetGatewayStateInfo()
+    const maxPerAccountDailyWithdrawalAmount:BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
+    const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
+    return remainingWithdrawAmount
   }
 
   @Watch("visible")
@@ -197,7 +199,7 @@ export default class WithdrawForm extends Vue {
   async requestWithdrawal(e) {
     e.preventDefault()
 
-    // this.remainingAmount = await this.remainWithdrawAmount()
+    // this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
 
     const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"
     let recepient

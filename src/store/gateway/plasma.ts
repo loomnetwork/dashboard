@@ -222,14 +222,24 @@ class PlasmaGateways {
  */
 export async function getLocalAccountInfo(context: ActionContext) {
   try {
-    const gateway = service().ethereumLoomGateway
-    console.log("this.contract.address.chainId", context.rootState.plasma.chainId)
-    console.log("context.rootState.plasma.address", context.rootState.plasma.address)
+    const gateway = service().ethereumMainGateway
     const ownerAddress = Address.fromString(`${context.rootState.plasma.chainId}:${context.rootState.plasma.address}`)
-    console.log("ownerAddress", ownerAddress.toString())
     const accountInfo = await gateway.getLocalAccountInfoAsync(ownerAddress)
-    console.log("accountInfo", accountInfo)
     return accountInfo
+  } catch (error) {
+    console.log("error", error)
+  }
+  // await gateway.get()
+}
+
+/**
+ * get gateway state info
+ */
+export async function getGatewayStateInfo(context: ActionContext) {
+  try {
+    const gateway = service().ethereumMainGateway
+    const state = await gateway.getStateAsync()
+    return state
   } catch (error) {
     console.log("error", error)
   }

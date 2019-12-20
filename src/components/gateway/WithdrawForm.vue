@@ -129,7 +129,7 @@ export default class WithdrawForm extends Vue {
     this.isValidAddress = false
     this.weiAmount = ZERO
     this.recepient = ""
-    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+    this.dailyRemainingWithdrawAmount = ZERO
   }
 
   isValidAddressFormat(isValid) {
@@ -173,7 +173,7 @@ export default class WithdrawForm extends Vue {
   }
 
   @Watch("visible")
-  refreshData(visible: boolean) {
+  async refreshData(visible: boolean) {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
@@ -195,6 +195,7 @@ export default class WithdrawForm extends Vue {
       this.fee = {}
     }
     this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
+    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
   }
 
   async requestWithdrawal(e) {

@@ -14,6 +14,7 @@
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
         <h6>{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
+        <h6>max {{ max }}</h6>
         <amount-input
           :min="min"
           :max="max"
@@ -120,16 +121,11 @@ export default class WithdrawForm extends Vue {
     }
   }
 
-  async mounted() {
-    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
-  }
-
   async reset() {
     this.amountIsValid = false
     this.isValidAddress = false
     this.weiAmount = ZERO
     this.recepient = ""
-    this.dailyRemainingWithdrawAmount = ZERO
   }
 
   isValidAddressFormat(isValid) {
@@ -186,16 +182,19 @@ export default class WithdrawForm extends Vue {
 
   @Watch("visible")
   async refreshData(visible: boolean) {
+    console.log("visible", visible)
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    if (token === "ETH") {
-      this.max = this.balance.lt(ETH_WITHDRAW_LIMIT) ? this.balance : ETH_WITHDRAW_LIMIT
-    } else if (token === "LOOM") {
-      this.max = this.balance.lt(LOOM_WITHDRAW_LIMIT) ? this.balance : LOOM_WITHDRAW_LIMIT
-    } else {
-      this.max = this.balance
-    }
+    // if (token === "ETH") {
+    //   this.max = this.balance.lt(ETH_WITHDRAW_LIMIT) ? this.balance : ETH_WITHDRAW_LIMIT
+    // } else if (token === "LOOM") {
+    //   this.max = this.balance.lt(LOOM_WITHDRAW_LIMIT) ? this.balance : LOOM_WITHDRAW_LIMIT
+    // } else {
+    //   this.max = this.balance
+    // }
+    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+    this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
     if (fee) {
       const { decimals } = tokenService.getTokenbySymbol(fee.token)
       this.fee = { ...fee, decimals }
@@ -212,8 +211,6 @@ export default class WithdrawForm extends Vue {
 
   async requestWithdrawal(e) {
     e.preventDefault()
-
-    // this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
 
     const targetChainId = this.transferRequest.chain === "ethereum" ? "eth" : "binance"
     let recepient

@@ -419,15 +419,14 @@ async function claimRewards(context: ActionContext) {
   try {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_reward").toString()) // add amount
     await contract.claimDelegatorRewardsAsync()
+    // TODO remove once claimDelegatorRewardsAsync covers past validators
+    await tmpClaimPastValidatorsRewards(context)
     feedback.endTask()
     feedback.showInfo(i18n.t("feedback_msg.info.reward_claimed").toString())
   } catch (error) {
     feedback.endTask()
     feedback.showError(i18n.t("feedback_msg.error.err_while_claiming").toString())
   }
-
-  // TODO remove once claimDelegatorRewardsAsync covers past validators
-  await tmpCheckPastValidatorsRewards(context)
 
 }
 
@@ -436,7 +435,7 @@ async function claimRewards(context: ActionContext) {
  * This is temporary until DPOS.claimDelegatorRewardsAsync covers this case
  * @param context
  */
-async function tmpCheckPastValidatorsRewards(context: ActionContext) {
+async function tmpClaimPastValidatorsRewards(context: ActionContext) {
   const contract = context.state.contract!
   const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
 

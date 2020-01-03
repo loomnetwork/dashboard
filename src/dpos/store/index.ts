@@ -420,7 +420,7 @@ async function claimRewards(context: ActionContext) {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_reward").toString()) // add amount
     await contract.claimDelegatorRewardsAsync()
     // TODO remove once claimDelegatorRewardsAsync covers past validators
-    await tmpClaimPastValidatorsRewards(context)
+    await tmpClaimFormerValidatorsRewards(context)
     feedback.endTask()
     feedback.showInfo(i18n.t("feedback_msg.info.reward_claimed").toString())
   } catch (error) {
@@ -435,17 +435,17 @@ async function claimRewards(context: ActionContext) {
  * This is temporary until DPOS.claimDelegatorRewardsAsync covers this case
  * @param context
  */
-async function tmpClaimPastValidatorsRewards(context: ActionContext) {
+async function tmpClaimFormerValidatorsRewards(context: ActionContext) {
   const contract = context.state.contract!
   const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
 
-  const isPastValidator = (vAddr: Address): boolean => {
+  const isFormerValidator = (vAddr: Address): boolean => {
     const addr = vAddr.local.toString().toLowerCase()
     const found = context.state.validators.find((v) => v.addr === addr)
     return found === undefined
   }
   const rewardsToUnbond = response.delegationsArray
-    .filter((entry) => entry.index === 0 && isPastValidator(entry.validator))
+    .filter((entry) => entry.index === 0 && isFormerValidator(entry.validator))
 
   for (const reward of rewardsToUnbond) {
     feedback.setStep(

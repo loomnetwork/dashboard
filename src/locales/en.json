@@ -759,6 +759,7 @@
       "undelegating_from": "Undelegating from ",
       "checking_reward": "Checking rewards...",
       "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
+      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "Claiming rewards...",
       "depositing_eth": "Depositing ETH",
       "checking_receipt": "Checking for pre-existing receipts...",
@@ -792,7 +793,8 @@
       "balance_not_enough": "Your balance isn't enough. Please deposit first.",
       "address_existed": "This address is already exists in your deployer list.",
       "failed_to_get_receipt": "Failed to get receipt",
-      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support."
+      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",

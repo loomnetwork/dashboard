@@ -419,11 +419,38 @@ async function claimRewards(context: ActionContext) {
   try {
     feedback.setStep(i18n.t("feedback_msg.step.claiming_reward").toString()) // add amount
     await contract.claimDelegatorRewardsAsync()
+    // TODO remove once claimDelegatorRewardsAsync covers past validators
+    await tmpClaimFormerValidatorsRewards(context)
     feedback.endTask()
     feedback.showInfo(i18n.t("feedback_msg.info.reward_claimed").toString())
   } catch (error) {
     feedback.endTask()
     feedback.showError(i18n.t("feedback_msg.error.err_while_claiming").toString())
+  }
+
+}
+
+/**
+ * Checks if account has rewards from validators that are no longer active
+ * This is temporary until DPOS.claimDelegatorRewardsAsync covers this case
+ * @param context
+ */
+async function tmpClaimFormerValidatorsRewards(context: ActionContext) {
+  const contract = context.state.contract!
+  const response = await contract.checkAllDelegationsAsync(plasmaModule.getAddress())
+
+  const isFormerValidator = (vAddr: Address): boolean => {
+    const addr = vAddr.local.toString().toLowerCase()
+    const found = context.state.validators.find((v) => v.addr === addr)
+    return found === undefined
+  }
+  const rewardsToUnbond = response.delegationsArray
+    .filter((entry) => entry.index === 0 && isFormerValidator(entry.validator))
+
+  for (const reward of rewardsToUnbond) {
+    feedback.setStep(
+      i18n.t("feedback_msg.step.claiming_past_reward", [reward.validator.local.toString()]).toString())
+    await contract.unbondAsync(reward.validator, 0, 0)
   }
 }
 

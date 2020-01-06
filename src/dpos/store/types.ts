@@ -77,15 +77,18 @@ export class Validator implements IValidator, ICandidate {
   delegations: Delegation[] = []
   isBootstrap: boolean = false
   active: boolean = false
+  /**
+   * Lower case string representation of the local address
+   */
   addr: string = ""
-  allDelegations: Array<IDelegation> = []
+  allDelegations: IDelegation[] = []
 
   setCandidateData(c: ICandidate) {
     Object.assign(this, c)
     // this.delegationTotal = c.delegationTotal.sub(c.whitelistAmount)
     this.fee = c.fee.div(new BN(100))
     this.newFee = c.newFee.div(new BN(100))
-    this.addr = c.address.local.toString().toLocaleLowerCase()
+    this.addr = c.address.local.toString().toLowerCase()
     this.delegationTotal = c.delegationTotal.sub((c.whitelistAmount))
   }
   setValidatorData(v: IValidator) {
@@ -104,9 +107,9 @@ export class Validator implements IValidator, ICandidate {
     // just reusit for the sum
     this.recentlyMissedBlocks = this.missedBlocks.reduce((a, b) => a + b, 0)
     if (this.missedBlocks[0] >= 4096 &&
-        this.missedBlocks[1] >= 4096 &&
-        this.missedBlocks[2] >= 4096 &&
-        this.missedBlocks[3] >= 4096) {
+      this.missedBlocks[1] >= 4096 &&
+      this.missedBlocks[2] >= 4096 &&
+      this.missedBlocks[3] >= 4096) {
       this.jailed = true
     }
     // if node has validator info then its active

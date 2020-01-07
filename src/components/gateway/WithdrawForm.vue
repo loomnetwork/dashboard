@@ -13,7 +13,7 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6>{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
+        <h6 v-if="networkId === 'asia1'">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
         <h6>max {{ max }}</h6>
         <amount-input
           :min="min"
@@ -95,6 +95,8 @@ export default class WithdrawForm extends Vue {
     return this.$store.state
   }
 
+  get networkId() { return this.$store.state.plasma.networkId }
+
   get requireRecipient(): boolean {
     return this.transferRequest.chain === "binance"
   }
@@ -159,7 +161,6 @@ export default class WithdrawForm extends Vue {
   }
 
   async remainWithdrawAmount() {
-    // const plasmaAccountInfo =  await tokenService.tokens()
     const { chain, token } = this.transferRequest
     const gateway = plasmaGateways.service().get(chain, token)
     console.log("gateway",gateway);
@@ -185,15 +186,18 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    // if (token === "ETH") {
-    //   this.max = this.balance.lt(ETH_WITHDRAW_LIMIT) ? this.balance : ETH_WITHDRAW_LIMIT
-    // } else if (token === "LOOM") {
-    //   this.max = this.balance.lt(LOOM_WITHDRAW_LIMIT) ? this.balance : LOOM_WITHDRAW_LIMIT
-    // } else {
-    //   this.max = this.balance
-    // }
-    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
-    this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
+    if (this.networkId === 'asia1') {
+      this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+      this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
+    } else {
+      if (token === "ETH") {
+        this.max = this.balance.lt(ETH_WITHDRAW_LIMIT) ? this.balance : ETH_WITHDRAW_LIMIT
+      } else if (token === "LOOM") {
+        this.max = this.balance.lt(LOOM_WITHDRAW_LIMIT) ? this.balance : LOOM_WITHDRAW_LIMIT
+      } else {
+        this.max = this.balance
+      }
+    }
     if (fee) {
       const { decimals } = tokenService.getTokenbySymbol(fee.token)
       this.fee = { ...fee, decimals }

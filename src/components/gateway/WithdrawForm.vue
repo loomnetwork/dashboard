@@ -14,7 +14,6 @@
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
         <h6 v-if="networkId === 'asia1'">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
-        <h6>max {{ max }}</h6>
         <amount-input
           :min="min"
           :max="max"

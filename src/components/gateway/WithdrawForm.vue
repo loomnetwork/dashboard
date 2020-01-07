@@ -182,7 +182,6 @@ export default class WithdrawForm extends Vue {
 
   @Watch("visible")
   async refreshData(visible: boolean) {
-    console.log("visible", visible)
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee

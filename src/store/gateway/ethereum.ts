@@ -30,7 +30,6 @@ import GatewayABI_v1 from "./contracts/Gateway_v1.json"
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import { gatewayModule } from "./index"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
-import { async } from 'rxjs/internal/scheduler/async'
 
 const log = debug("dash.gateway.ethereum")
 

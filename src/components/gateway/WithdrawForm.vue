@@ -163,19 +163,13 @@ export default class WithdrawForm extends Vue {
   async remainWithdrawAmount() {
     const { chain, token } = this.transferRequest
     const gateway = plasmaGateways.service().get(chain, token)
-    console.log("gateway",gateway);
-    console.log("chain",chain);
-    console.log("token",token);
     
     const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
     const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
-    console.log("plasmaAccountInfo", plasmaAccountInfo)
     const totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
     const gatewayState = await gateway.getGatewayState()
-    console.log("gatewayState", gatewayState)
     const maxPerAccountDailyWithdrawalAmount:BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
     const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
-    console.log("gatewayModule",gatewayModule);
     
     console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
     return remainingWithdrawAmount
@@ -209,7 +203,9 @@ export default class WithdrawForm extends Vue {
       this.fee = {}
     }
     this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
-    this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+    if (this.networkId === 'asia1') {
+      this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+    }
   }
 
   async requestWithdrawal(e) {

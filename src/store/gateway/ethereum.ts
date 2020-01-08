@@ -596,6 +596,7 @@ async function createWithdrawalHash(
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)
   }
+  // @ts-ignore
   const nonce = await gatewayContract.methods.nonces(ethAddress).call()
   log("hash", [prefix, ethAddress, nonce, gatewayAddress, amountHashed])
   return ethers.utils.solidityKeccak256(

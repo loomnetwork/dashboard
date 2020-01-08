@@ -1,4 +1,4 @@
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { ERC20Factory } from "loom-js/dist/mainnet-contracts/ERC20Factory"
 import { timer } from "rxjs"
 import BN from "bn.js"
 import { BareActionContext } from "vuex-typex"
@@ -8,7 +8,7 @@ import { DashboardState } from "@/types"
 declare type ActionContext = BareActionContext<EthereumState, DashboardState>
 
 // holds the contracts. We don't need to exposed these on the state
-const erc20Contracts: Map<string, ERC20> = new Map()
+const erc20Contracts: Map<string, ERC20Factory> = new Map()
 
 /**
  * deposit from ethereum account to gateway

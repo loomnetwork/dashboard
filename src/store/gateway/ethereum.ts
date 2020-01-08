@@ -11,10 +11,10 @@ import { ethers } from "ethers"
 import { CryptoUtils, Address } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { parseSigs } from "loom-js/dist/helpers"
-import ERC20GatewayABI_v1 from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
-import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
+import { abi as GatewayABIv1 } from "loom-js/dist/mainnet-contracts/EthereumGatewayV1Factory"
+import { abi as GatewayABIv2 } from "loom-js/dist/mainnet-contracts/EthereumGatewayV2Factory"
 import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
-import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
+import { ValidatorManagerV2Factory } from "loom-js/dist/mainnet-contracts/ValidatorManagerV2Factory"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { from } from "rxjs"
 import { filter, mergeMap, tap, toArray } from "rxjs/operators"
@@ -30,6 +30,7 @@ import GatewayABI_v1 from "./contracts/Gateway_v1.json"
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import { gatewayModule } from "./index"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
+import { async } from "rxjs/internal/scheduler/async"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -159,8 +160,8 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   multisig: { main: boolean, loom: boolean },
 ) {
-  const ERC20GatewayABI: AbiItem[] = multisig.loom ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
-  const GatewayABI: AbiItem[] = multisig.main ? GatewayABI_v2 : GatewayABI_v1
+  const ERC20GatewayABI: AbiItem[] = multisig.loom ? GatewayABIv2 : GatewayABIv1
+  const GatewayABI: AbiItem[] = multisig.main ? GatewayABIv2 : GatewayABIv1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI,
@@ -180,7 +181,7 @@ export async function init(
     const vmcAddress = await vmcSourceGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
-      ValidatorManagerContractABI,
+      ValidatorManagerV2Factory,
       vmcAddress,
     )
     log("vmc initialized")

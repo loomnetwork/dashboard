@@ -122,7 +122,7 @@ export default class WithdrawForm extends Vue {
     }
   }
 
-  async reset() {
+  reset() {
     this.amountIsValid = false
     this.isValidAddress = false
     this.weiAmount = ZERO

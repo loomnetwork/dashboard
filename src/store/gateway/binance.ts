@@ -1,7 +1,5 @@
 import BN from "bn.js"
 import Web3 from "web3"
-import { ValidatorManagerContract } from "loom-js/dist/mainnet-contracts/ValidatorManagerContract"
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 import { timer } from "rxjs"
 // import { BinanceLoomCoinTransferGateway } from "loom-js/dist/contracts"
 import { PlasmaGatewayAdapter } from "./types"
@@ -48,4 +46,11 @@ export class BinanceGatewayAdapter implements PlasmaGatewayAdapter {
   withdrawalReceipt() {
     return this.contract.withdrawalReceiptAsync(this.mapping.to)
   }
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+  async getGatewayState() {
+    return this.contract.getStateAsync()
+  }
+
 }

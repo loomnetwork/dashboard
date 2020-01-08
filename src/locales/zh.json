@@ -503,6 +503,7 @@
         "title": "提取 {token} 到 {chain}",
         "transfer_fee": "转移到 {chain} 需要手续费 ",
         "balance": "你的余额： ",
+        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "{chain} 上的接受者",
         "withdraw": "提取"
       }

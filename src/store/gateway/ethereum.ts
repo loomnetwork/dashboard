@@ -21,7 +21,6 @@ import Web3 from "web3"
 import { AbiItem } from "web3-utils"
 import { ethereumModule } from "../ethereum"
 import { PlasmaTokenKind } from "../plasma/types"
-// import { ERC20Gateway_v2 } from "./contracts/GatewayABIv2"
 // these are v2 types
 import { Gateway } from "./contracts/Gateway"
 import GatewayABI_v1 from "./contracts/Gateway_v1.json"

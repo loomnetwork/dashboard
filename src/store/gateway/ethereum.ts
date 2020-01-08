@@ -56,6 +56,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
 
   deposit(amount: BN, address: string) {
     return (
+      // @ts-ignore
       this.contract.methods
         .depositERC20(amount.toString(), this.tokenAddress)
         // @ts-ignore
@@ -84,6 +85,7 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
+      // @ts-ignore
       tx = await this.contract.methods
         .withdrawERC20(amount, tokenAddress, valIndexes, vs, rs, ss)
         .send({ from: localAddress })
@@ -138,6 +140,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
+      // @ts-ignore
       return this.contract.methods.withdrawETH(
         amount,
         valIndexes, vs, rs, ss,

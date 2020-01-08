@@ -10,7 +10,7 @@ import { EventLog } from "web3-core"
 import { gatewayModule } from "."
 import { ethereumModule } from "../ethereum"
 import { plasmaModule } from "../plasma"
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
+import { EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV2Factory"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
@@ -201,7 +201,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
 function listenToDepositApproval(
   account: string,
-  gw: ERC20Gateway_v2,
+  gw: EthereumGatewayV2Factory,
   loom: ERC20,
 ) {
   // const approval = loom.filters.Approval(account, gw.address, null)
@@ -232,7 +232,7 @@ function listenToDepositApproval(
   )
 }
 
-function listenToDeposit(account: string, gw: ERC20Gateway_v2, loom: ERC20) {
+function listenToDeposit(account: string, gw: EthereumGatewayV2Factory, loom: ERC20) {
   loom.events.Transfer(
     {
       filter: {

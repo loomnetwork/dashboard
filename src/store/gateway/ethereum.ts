@@ -13,7 +13,6 @@ import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { parseSigs } from "loom-js/dist/helpers"
 import { abi as GatewayABIv1, EthereumGatewayV1Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV1Factory"
 import { abi as GatewayABIv2, EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV2Factory"
-import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
 import { abi as ValidatorManagerV2FactoryABI } from "loom-js/dist/mainnet-contracts/ValidatorManagerV2Factory"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { from } from "rxjs"
@@ -110,7 +109,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 
   constructor(
     private vmc: ValidatorManagerContract | null,
-    readonly contract: GatewayABIv1,
+    readonly contract: EthereumGatewayV1Factory,
     readonly tokenAddress: string,
     readonly web3: Web3,
   ) { }

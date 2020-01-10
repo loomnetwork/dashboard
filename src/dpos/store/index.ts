@@ -7,7 +7,7 @@ import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import Axios from "axios"
-import { IState, ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
+import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
@@ -47,6 +47,7 @@ const dposModule = {
   claimRewards: builder.dispatch(claimRewards),
 
   refreshElectionTime: builder.dispatch(refreshElectionTime),
+  refreshContractState: builder.dispatch(refreshContractState),
   refreshValidators: builder.dispatch(refreshValidators),
   refreshDelegations: builder.dispatch(refreshDelegations),
 
@@ -154,15 +155,19 @@ export async function refreshValidators(ctx: ActionContext) {
   ctx.state.loading.validators = false
 }
 
-export async function loadContractState(context: ActionContext) {
+export async function refreshContractState(context: ActionContext) {
   const { state } = context
   const contract = state.contract!
 
-  const cState = await contract.getStateAsync()
+  const cs = await contract.getStateAsync()
+  const stdRewardsRatio = new BN("0.05")
 
-  state.maxYearlyRewards = cState.maxYearlyRewards
-  state.totalWeightedAmountStaked = totalWeightedAmountStaked
-
+  state.maxYearlyRewards = cs.maxYearlyRewards
+  state.totalWeightedAmountStaked = cs.totalWeightedAmountStaked
+  state.rewardsFactor = cs.maxYearlyRewards.div(cs.totalWeightedAmountStaked.mul(stdRewardsRatio))
+  state.effectiveRewardsRatio = state.rewardsFactor.mul(stdRewardsRatio)
+  // shrink_factor = maxYearlyReward / (totalWeightedAmountStaked * 0.05)
+  // annualRewardsPercentage = 0.05 * shrink_factor
 }
 
 /**

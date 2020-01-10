@@ -14,7 +14,7 @@ cache:
 install:
   - yarn install
 stages:
-#  - lint
+  #  - lint
   - test
   - name: build
     if: type = push AND ( branch = develop OR branch = staging OR branch = master)
@@ -27,47 +27,72 @@ branches:
 
 jobs:
   include:
-#  - lint
-  - stage: test
-    env:
-      - NOVE_ENV=test
-    script: yarn test
-  - stage: build
-    env:
-      - NOVE_ENV=production
-    script: yarn build
+    #  - lint
+    - stage: test
+      env:
+        - NOVE_ENV=test
+      script: yarn test
+    - stage: build
+      env:
+        - NOVE_ENV=production
+        - NODE_OPTIONS="--max-old-space-size=8048"
+      script: yarn build
 
 # before_deploy:
-#deploy:
-  # - on:
-  #     branch: develop
-  #   skip_cleanup: true
-  #   provider: s3
-  #   bucket: "dashboard.dappchains.com"
-  #   local_dir: dist
-  #   # detect_encoding: true
-  #   # default_text_charset: 'utf-8'
-  #   # cache_control: "max-age=31536000"
-  # - on:
-  #     branch: staging
-  #   skip_cleanup: true
-  #   provider: s3
-  #   bucket: "dashboard.dappchains.com"
-  #   local_dir: dist
-  # - on:
-  #     branch: master
-  #   skip_cleanup: true
-  #   provider: s3
-  #   bucket: "dashboard.dappchains.com"
-  #   local_dir: dist
-  # - on:
-  #     branch: master
-  #   skip_cleanup: true
-  #   provider: s3
-  #   bucket: "wallet-dashboard.dappchains.com"
-  #   local_dir: dist
-# after_deploy:
+deploy:
+  - on:
+      branch: develop
+    skip_cleanup: true
+    provider: s3
+    access_key_id: "ENCRYPTED ACCESS KEY"
+    secret_access_key: "ENCRYPTED SECRET KEY"
+    bucket: "dev-dashboard.dappchains.com"
+    local_dir: dist
+    detect_encoding: true
+    # default_text_charset: 'utf-8'
+    cache_control: "max-age=86400"
+    acl: public_read
+  - on:
+      branch: staging
+    skip_cleanup: true
+    provider: s3
+    access_key_id: "ENCRYPTED ACCESS KEY"
+    secret_access_key: "ENCRYPTED SECRET KEY"
+    bucket: "stage-dashboard.dappchains.com"
+    local_dir: dist
+    detect_encoding: true
+    cache_control: "max-age=604800"
+    acl: public_read
+  - on:
+      branch: master
+    skip_cleanup: true
+    provider: s3
+    access_key_id: "ENCRYPTED ACCESS KEY"
+    secret_access_key: "ENCRYPTED SECRET KEY"
+    bucket: "dashboard.dappchains.com"
+    local_dir: dist
+    detect_encoding: true
+    cache_control:
+      - "max-age: *.html: 604800"
+      - "max-age=31536000"
+    acl: public_read
+  - on:
+      branch: master
+    skip_cleanup: true
+    provider: s3
+    access_key_id: "ENCRYPTED ACCESS KEY"
+    secret_access_key: "ENCRYPTED SECRET KEY"
+    bucket: "wallet-dashboard.dappchains.com"
+    local_dir: dist
+    detect_encoding: true
+    cache_control:
+      - "max-age: *.html: 604800"
+      - "max-age=31536000"
+    acl: public_read
+    # after_deploy:
 
+# Encrypt AWS Secrets
+# travis encrypt --add deploy.secret_access_key
 
 # todo
 # travis encrypt "<account>:<token>" --add notifications.slack.rooms

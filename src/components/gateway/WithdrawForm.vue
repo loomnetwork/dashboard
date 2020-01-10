@@ -41,7 +41,7 @@
         class="ml-2"
         @click="requestWithdrawal"
         variant="primary"
-        :disabled="validInput === false"
+        :disabled="validInput === false || max <= 0"
       >{{ $t('components.gateway.withdraw_form_modal.withdraw') }}</b-btn>
     </template>
   </b-modal>

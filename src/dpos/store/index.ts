@@ -7,7 +7,7 @@ import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import Axios from "axios"
-import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
+import { IState, ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState } from "./helpers"
 import * as mutations from "./mutations"
@@ -152,6 +152,17 @@ export async function refreshValidators(ctx: ActionContext) {
 
   ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
   ctx.state.loading.validators = false
+}
+
+export async function loadContractState(context: ActionContext) {
+  const { state } = context
+  const contract = state.contract!
+
+  const cState = await contract.getStateAsync()
+
+  state.maxYearlyRewards = cState.maxYearlyRewards
+  state.totalWeightedAmountStaked = totalWeightedAmountStaked
+
 }
 
 /**

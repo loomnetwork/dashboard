@@ -41,6 +41,8 @@ export interface DPOSState extends DPOSConfig {
   intent: "" | "delegate" | "redelegate" | "undelegate"
   delegation: Delegation | null,
   analyticsData: any[] | null,
+  maxYearlyRewards: BN,
+  totalWeightedAmountStaked: BN,
 }
 
 /**

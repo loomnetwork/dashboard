@@ -9,7 +9,7 @@ import {
 } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
+import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/ERC20Factory"
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
 import { tokenService, TokenData } from "@/services/TokenService"

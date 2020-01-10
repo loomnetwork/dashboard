@@ -2,8 +2,11 @@
   <b-modal lazy id="withdraw-confirmed" v-model="visible" :title="title">
     <section v-if="status === 'default'">
       <b-container fluid>
-        <div class="lead">
+        <div v-if="chain !== 'binance'" class="lead">
           <p>{{$t('components.gateway.confirm_withdrawal_modal.confirm_withdrawl', {chain,amount, token: this.symbol})}}</p>
+        </div>
+        <div v-else>
+           <p>Fund withdrawn to Binance</p>
         </div>
       </b-container>
     </section>
@@ -109,9 +112,8 @@ export default class WithdrawConfirmed extends Vue {
 
     let tokenInfo
     if (chain === "binance") {
-      // for binance the token symbol is stored in the address
-      const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join("")
-      tokenInfo = tokenService.getTokenbySymbol(symbol)
+      this.chain = "binance"
+      return
     } else {
       try {
         tokenInfo = tokenService.tokenFromAddress(contractAddrStr, chain)

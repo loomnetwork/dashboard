@@ -168,16 +168,16 @@ export async function refreshContractState(context: ActionContext) {
   state.maxYearlyRewards = fromBN(cs.maxYearlyRewards)
   state.totalWeightedStakes = fromBN(cs.totalWeightedAmountStaked)
 
-  const stdRewards = state.totalWeightedStakes.times(stdRewardsRatio)
+  const expectedYearlyRewards = state.totalWeightedStakes.times(stdRewardsRatio)
 
-  if (stdRewards.gt(state.maxYearlyRewards)) {
+  if (expectedYearlyRewards.gt(state.maxYearlyRewards)) {
     // shrink
-    state.rewardsFactor = stdRewards.div(state.maxYearlyRewards)
+    state.rewardsScalingFactor = expectedYearlyRewards.div(state.maxYearlyRewards)
   } else {
-    state.rewardsFactor = new BigNumber(1)
+    state.rewardsScalingFactor = new BigNumber(1)
   }
 
-  state.effectiveRewardsRatio = stdRewardsRatio.times(state.rewardsFactor).times(100)
+  state.effectiveRewardsRatio = stdRewardsRatio.times(state.rewardsScalingFactor).times(100)
 }
 
 /**

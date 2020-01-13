@@ -168,7 +168,7 @@ export async function refreshContractState(context: ActionContext) {
   state.maxYearlyRewards = fromBN(cs.maxYearlyRewards)
   state.totalWeightedStakes = fromBN(cs.totalWeightedAmountStaked)
 
-  const stdRewards = fromBN(cs.totalWeightedAmountStaked).times(stdRewardsRatio)
+  const stdRewards = state.totalWeightedStakes.times(stdRewardsRatio)
 
   if (stdRewards.gt(state.maxYearlyRewards)) {
     // shrink

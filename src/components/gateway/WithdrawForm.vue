@@ -166,6 +166,7 @@ export default class WithdrawForm extends Vue {
   async remainWithdrawAmount() {
     const { chain, token } = this.transferRequest
     const gateway = plasmaGateways.service().get(chain, token)
+
     const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
     const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
     let totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount

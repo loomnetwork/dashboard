@@ -13,7 +13,7 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6 v-if="networkId === 'asia1'">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
+        <h6 v-if="networkId === 'asia1' && isCheckDailyRemainingWithdrawAmount()">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="max"
@@ -133,6 +133,10 @@ export default class WithdrawForm extends Vue {
     return this.isValidAddress = isValid
   }
 
+  isCheckDailyRemainingWithdrawAmount() {
+    return this.transferRequest.token === "ETH" || this.transferRequest.token === "LOOM"
+  }
+
   close() {
     this.visible = false
   }
@@ -162,10 +166,20 @@ export default class WithdrawForm extends Vue {
   async remainWithdrawAmount() {
     const { chain, token } = this.transferRequest
     const gateway = plasmaGateways.service().get(chain, token)
-    
+
     const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
     const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
-    const totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
+    let totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
+    
+    const lastWithdrawalLimitResetTime: number = plasmaAccountInfo!.lastWithdrawalLimitResetTime
+    const lastWithdrawalLimitResetDate: Date = new Date(lastWithdrawalLimitResetTime * 1000)
+    const todayDate: Date = new Date()
+
+    // if lastWithdrawalLimitResetDate is not today then set total withdraw amount of this account to 0
+    if (lastWithdrawalLimitResetDate.toDateString() !== todayDate.toDateString()) {
+      totalWithdrawalAmount = new BN(0)
+    }
+
     const gatewayState = await gateway.getGatewayState()
     const maxPerAccountDailyWithdrawalAmount:BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
     const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
@@ -179,7 +193,7 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    if (this.networkId === 'asia1') {
+    if (this.networkId === 'asia1' && this.isCheckDailyRemainingWithdrawAmount()) {
       this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
       this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
     } else {

@@ -48,6 +48,14 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
     const receipt = await this.contract.withdrawalReceiptAsync(this.mapping.to)
     return receipt
   }
+
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+
+  async getGatewayState() {
+    return this.contract.getStateAsync()
+  }
 }
 
 class EthGatewayAdapter implements PlasmaGatewayAdapter {
@@ -66,6 +74,12 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
     // const owner = this.contract.caller
     const owner = this.mapping.to
     return this.contract.withdrawalReceiptAsync(owner)
+  }
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+  async getGatewayState() {
+    return this.contract.getStateAsync()
   }
 }
 
@@ -87,6 +101,12 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
     const plasmaTokenAddr = Address.fromString(`${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
     log("TransferGateway withdrawERC20Async", this.token, `${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
     return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
+  }
+  async getLocalAccountInfo(owner: Address) {
+    return this.contract.getLocalAccountInfoAsync(owner)
+  }
+  async getGatewayState() {
+    return this.contract.getStateAsync()
   }
 }
 

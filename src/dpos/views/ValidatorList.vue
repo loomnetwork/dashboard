@@ -17,16 +17,16 @@
             {{ $t('views.validator_list.total_staked_amount') }}
             <h5 class="highlight">{{totalStaked | tokenAmount(18,0)}} LOOM</h5>
           </h6>
+          <h6>
+            {{ $t('views.validator_list.effective_rewards') }}
+            <h5 class="highlight">{{state.dpos.effectiveRewardsRatio | bigNumber(2)}} %</h5>
+          </h6>
         </b-card>
         <div class="content">
           <template v-if="isSmallDevice">
             <div class="py-3"></div>
 
-            <div
-              v-for="(validator, index) in validators"
-              :key="validator.name"
-            >
-
+            <div v-for="(validator, index) in validators" :key="validator.name">
               <b-card
                 :disabled="!!validator.isBootstrap"
                 @click="showValidatorDetail(validator)"
@@ -51,11 +51,10 @@
 
               <div v-if="index === 9 && isAdsEnabled()" class="mb-3">
                 <a href="https://cryptozombies.io/libra" target="_blank">
-                  <img src="../../assets/images/ads/CZ_Libra_ad_400x110.png" class="ad-img">
+                  <img src="../../assets/images/ads/CZ_Libra_ad_400x110.png" class="ad-img" />
                 </a>
               </div>
             </div>
-
           </template>
           <template v-else>
             <b-table
@@ -69,15 +68,21 @@
               @row-clicked="showValidatorDetail"
             >
               <template slot="name" slot-scope="data">
-                <li :class="[data.item.jailed || !data.item.active ? 'jailed-symbol jailed' : 'jailed-symbol']"/>{{ data.item.name }}
+                <li
+                  :class="[data.item.jailed || !data.item.active ? 'jailed-symbol jailed' : 'jailed-symbol']"
+                />
+                {{ data.item.name }}
                 <div v-if="data.index === 9 && isAdsEnabled()" class="ads">
                   <a href="https://cryptozombies.io/libra" target="_blank">
-                    <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img">
+                    <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img" />
                   </a>
                 </div>
               </template>
 
-              <template slot="active" slot-scope="data">{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
+              <template
+                slot="active"
+                slot-scope="data"
+              >{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
             </b-table>
           </template>
         </div>
@@ -120,24 +125,24 @@ export default class ValidatorList extends Vue {
 
   created() {
     this.validatorFields = [{ key: "name", sortable: true, label: this.$t("views.validator_list.name") },
-      { key: "active", sortable: true, label: this.$t("views.validator_detail.active") },
-      //  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
-      {
-        key: "totalStaked",
-        sortable: true,
-        label: this.$t("components.modals.faucet_redelegate_modal.total_stake"),
-        formatter: (value) => formatTokenAmount(value, 18, 0),
-        thClass: "align-center-th",
-        tdClass: "align-right-td",
-      },
-      {
-        key: "fee",
-        sortable: true,
-        label: this.$t("components.validator_extended_detail.fee"),
-        formatter: (value) => value + "%",
-        thClass: "align-center-th",
-        tdClass: "align-right-td",
-      },
+    { key: "active", sortable: true, label: this.$t("views.validator_detail.active") },
+    //  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
+    {
+      key: "totalStaked",
+      sortable: true,
+      label: this.$t("components.modals.faucet_redelegate_modal.total_stake"),
+      formatter: (value) => formatTokenAmount(value, 18, 0),
+      thClass: "align-center-th",
+      tdClass: "align-right-td",
+    },
+    {
+      key: "fee",
+      sortable: true,
+      label: this.$t("components.validator_extended_detail.fee"),
+      formatter: (value) => value + "%",
+      thClass: "align-center-th",
+      tdClass: "align-right-td",
+    },
     ]
   }
 

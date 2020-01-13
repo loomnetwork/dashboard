@@ -8,6 +8,7 @@ import BN from "bn.js"
 import { Address, LocalAddress } from "loom-js"
 import { DPOS3, ICandidate, IValidator, IDelegation } from "loom-js/dist/contracts/dpos3"
 import bigInt from "big-integer"
+import BigNumber from "bignumber.js"
 
 import {
   CandidateState,
@@ -41,10 +42,10 @@ export interface DPOSState extends DPOSConfig {
   intent: "" | "delegate" | "redelegate" | "undelegate"
   delegation: Delegation | null,
   analyticsData: any[] | null,
-  rewardsFactor: BN,
-  effectiveRewardsRatio: BN,
-  maxYearlyRewards: BN,
-  totalWeightedAmountStaked: BN,
+  rewardsFactor: BigNumber,
+  effectiveRewardsRatio: BigNumber,
+  maxYearlyRewards: BigNumber,
+  totalWeightedStakes: BigNumber,
 }
 
 /**

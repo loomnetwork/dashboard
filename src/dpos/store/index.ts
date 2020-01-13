@@ -16,6 +16,7 @@ import { Address, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 import * as Sentry from "@sentry/browser"
 import { i18n } from "@/i18n"
+import BigNumber from "bignumber.js"
 
 const log = debug("dash.dpos")
 
@@ -160,14 +161,23 @@ export async function refreshContractState(context: ActionContext) {
   const contract = state.contract!
 
   const cs = await contract.getStateAsync()
-  const stdRewardsRatio = new BN("0.05")
+  const stdRewardsRatio = new BigNumber("0.05")
 
-  state.maxYearlyRewards = cs.maxYearlyRewards
-  state.totalWeightedAmountStaked = cs.totalWeightedAmountStaked
-  state.rewardsFactor = cs.maxYearlyRewards.div(cs.totalWeightedAmountStaked.mul(stdRewardsRatio))
-  state.effectiveRewardsRatio = state.rewardsFactor.mul(stdRewardsRatio)
-  // shrink_factor = maxYearlyReward / (totalWeightedAmountStaked * 0.05)
-  // annualRewardsPercentage = 0.05 * shrink_factor
+  const fromBN = (n: BN) => new BigNumber(n.toString())
+
+  state.maxYearlyRewards = fromBN(cs.maxYearlyRewards)
+  state.totalWeightedStakes = fromBN(cs.totalWeightedAmountStaked)
+
+  const stdRewards = fromBN(cs.totalWeightedAmountStaked).times(stdRewardsRatio)
+
+  if (stdRewards.gt(state.maxYearlyRewards)) {
+    // shrink
+    state.rewardsFactor = stdRewards.div(state.maxYearlyRewards)
+  } else {
+    state.rewardsFactor = new BigNumber(1)
+  }
+
+  state.effectiveRewardsRatio = stdRewardsRatio.times(state.rewardsFactor).times(100)
 }
 
 /**

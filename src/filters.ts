@@ -16,6 +16,8 @@ export function initFilters() {
   // Vue.filter('duration', formatDuration)
   Vue.filter("date", formatDate)
   Vue.filter("readableDate", readableDateTime)
+  Vue.filter("bn", formatBN)
+  Vue.filter("bigNumber", formatBigNumber)
   Vue.filter("tokenAmount", formatTokenAmount)
   Vue.filter("domain", formatDomain)
   Vue.filter("url", formatUrl)
@@ -82,6 +84,16 @@ export function formatTokenAmount(wei: BN, decimals = 18, precision?: number) {
   if (!wei) return wei
   const c = new BigNumber(wei.toString()).dividedBy(10 ** decimals)
   return c.toFormat(precision)
+}
+
+export function formatBN(wei: BN, precision?: number) {
+  if (!wei) return wei
+  return formatBigNumber(new BigNumber(wei.toString()), precision)
+}
+
+export function formatBigNumber(num: BigNumber, precision?: number) {
+  // @ts-ignore
+  return num.toFormat(precision)
 }
 
 export function capitalizeWord(text: string) {

@@ -503,6 +503,7 @@
         "title": "{chain}으로 {token} 출금",
         "transfer_fee": "{chain}으로 전송하려면 수수료가 필요합니다.",
         "balance": "당신의 잔액 : ",
+        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "{chain} 상의 수신자",
         "withdraw": "출금"
       }
@@ -767,6 +768,7 @@
       "undelegating_from": "다음 검증자로부터 위임 취소 중: ",
       "checking_reward": "보상 확인하는 중...",
       "claiming_dpos_reward": "DPOS 2 보상 수령 중...",
+      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "보상을 수령하는 중...",
       "depositing_eth": "ETH 입금 중",
       "checking_receipt": "이전 영수증을 검사하는 중...",

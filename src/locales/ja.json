@@ -503,6 +503,7 @@
         "title": "Withdraw {token} to {chain}",
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
+        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "Recipient on {chain}",
         "withdraw": "Withdraw"
       }
@@ -767,6 +768,7 @@
       "undelegating_from": "Undelegating from ",
       "checking_reward": "Checking rewards...",
       "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
+      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "Claiming rewards...",
       "depositing_eth": "Depositing ETH",
       "checking_receipt": "Checking for pre-existing receipts...",

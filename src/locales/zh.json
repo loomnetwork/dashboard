@@ -503,6 +503,7 @@
         "title": "提取 {token} 到 {chain}",
         "transfer_fee": "转移到 {chain} 需要手续费 ",
         "balance": "你的余额： ",
+        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "{chain} 上的接受者",
         "withdraw": "提取"
       }
@@ -767,6 +768,7 @@
       "undelegating_from": "正在取消委托，验证者： ",
       "checking_reward": "正在查看奖励……",
       "claiming_dpos_reward": "正在领取 DPOS 2 的奖励...",
+      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "正在领取奖励...",
       "depositing_eth": "正在存入 ETH",
       "checking_receipt": "正在检查之前的收据……",

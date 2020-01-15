@@ -158,13 +158,17 @@ export function gatewayReactions(store: Store<DashboardState>) {
    * checks incomplete withdawals
    */
   async function checkIncompleteTransfers() {
-
     const plasmaGateways = PlasmaGateways.service()
     const loomReceipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
     const mainReceipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
-    if (!loomReceipt && !mainReceipt) return
+    // console.log("receipts", loomReceipt, mainReceipt)
 
-    const pastWithdrawalExist = await gatewayModule.checkIfPastWithdrawalEventExists()
+    if (!loomReceipt && !mainReceipt) return
+    // console.log("receipts", loomReceipt, mainReceipt)
+
+    // Disable checking pending ethereum withdrawal transaction.
+    // worse that could happen is 1 transaction succeeding and the second failing.
+    const pastWithdrawalExist = false // await gatewayModule.checkIfPastWithdrawalEventExists()
     if (loomReceipt && !pastWithdrawalExist) {
       gatewayModule.setWithdrawalReceipts(loomReceipt)
       return

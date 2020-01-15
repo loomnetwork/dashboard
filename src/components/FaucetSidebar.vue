@@ -76,7 +76,10 @@
       </b-nav>
     </section>
     <b-nav vertical>
-      <b-nav-item v-if="!!state.plasma.address" @click="logout">{{ $t('components.faucet_header.sign_out') }}</b-nav-item>
+      <b-nav-item
+        v-if="!!state.plasma.address"
+        @click="logout"
+      >{{ $t('components.faucet_header.sign_out') }}</b-nav-item>
     </b-nav>
   </nav>
 </template>

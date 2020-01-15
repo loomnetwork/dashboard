@@ -9,7 +9,7 @@ import debug from "debug"
 import Axios from "axios"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
-import { fromIDelegation, defaultState } from "./helpers"
+import { fromIDelegation, defaultState, FORMER_VALIDATORS, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, CryptoUtils } from "loom-js"
@@ -112,21 +112,27 @@ export async function refreshValidators(ctx: ActionContext) {
     contract.getCandidatesAsync(),
     contract.getAllDelegations(),
   ])
-  //
 
+  // candidates
   const nodes = candidates.map((c) => {
     const node = new Validator()
     node.setCandidateData(c)
     node.isBootstrap = ctx.state.bootstrapNodes.includes(node.addr)
     return node
   })
-  // Helper: if node not found in the array
-  // creates a new one with given addr
-  const getOrCreate = (addr) => {
+
+  // Helper
+  const getOrCreate = (address: Address) => {
+    const addr = address.local.toString().toLowerCase()
     let existing = nodes.find((node) => node.addr === addr)
     if (existing === undefined) {
-      existing = new Validator()
-      existing.addr = addr
+      if (FORMER_VALIDATORS[addr]) {
+        existing = formerValidator(address)
+      } else {
+        existing = new Validator()
+        existing.addr = addr
+        existing.address = address
+      }
       existing.isBootstrap = ctx.state.bootstrapNodes.includes(addr)
       nodes.push(existing)
     }
@@ -134,14 +140,14 @@ export async function refreshValidators(ctx: ActionContext) {
   }
 
   validators.forEach((v) => {
-    const node = getOrCreate(v.address.local.toString())
+    const node = getOrCreate(v.address)
     node.setValidatorData(v)
   })
 
   delegations
     .filter((d) => d.delegationsArray.length > 0)
     .forEach((d) => {
-      const addr = d.delegationsArray[0].validator.local.toString()
+      const addr = d.delegationsArray[0].validator
       const node = getOrCreate(addr)
       node.stakedAmount = d.delegationTotal
       node.totalStaked = node.whitelistAmount.add(d.delegationTotal)

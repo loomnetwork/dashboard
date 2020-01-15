@@ -56,7 +56,7 @@
         <br />
       </p>
 
-      <div class="button-container" v-if="!validator.isBootstrap">
+      <div class="button-container" v-if="!validator.isBootstrap && validator.name != 'Bixin'">
         <b-button class="stake mr-3" @click="requestDelegation()">{{ $t('views.validator_detail.stake_tokens') }}</b-button>
         <b-button
           class="consolidate"

@@ -22,7 +22,7 @@
         <b-row>
           <b-col sm="9">
             <b-card-title>{{ bountyData.title }}</b-card-title>
-            <p>{{ bountyData.description }}</p>
+            <p v-html="bountyData.description"/>
           </b-col>
           <b-col sm="3" class="bounty-reward">
             {{ loomAmount(bountyData.reward) | tokenAmount(18,0)}} {{ bountyData.token }}

@@ -111,12 +111,7 @@ export class Validator implements IValidator, ICandidate {
     ].map((b) => b.toJSNumber())
     // just reusit for the sum
     this.recentlyMissedBlocks = this.missedBlocks.reduce((a, b) => a + b, 0)
-    if (this.missedBlocks[0] >= 4096 &&
-      this.missedBlocks[1] >= 4096 &&
-      this.missedBlocks[2] >= 4096 &&
-      this.missedBlocks[3] >= 4096) {
-      this.jailed = true
-    }
+    this.jailed = v.jailed
     // if node has validator info then its active
     this.active = true
     // default value for nodes without delegations

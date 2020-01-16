@@ -360,6 +360,7 @@
       "delegator_stake": "위임자들이 스테이킹한 금액",
       "active": "활성화",
       "inactive": "비활성화",
+      "jailed": "Jailed",
       "my_stake": "내 스테이킹",
       "states": {
         "bonding": "잠그는 중",

@@ -360,6 +360,7 @@
       "delegator_stake": "Delegators Stake",
       "active": "Active",
       "inactive": "Inactive",
+      "jailed": "Jailed",
       "my_stake": "My stakes",
       "states": {
         "bonding": "Bonding",

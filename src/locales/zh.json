@@ -360,6 +360,7 @@
       "delegator_stake": "委托者锁定",
       "active": "活跃",
       "inactive": "不活跃",
+      "jailed": "Jailed",
       "my_stake": "我锁定的代币",
       "states": {
         "bonding": "正在绑定",

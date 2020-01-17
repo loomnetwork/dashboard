@@ -83,7 +83,7 @@
               <template
                 slot="active"
                 slot-scope="data"
-              >{{ data.item.active ? $t('views.validator_detail.active') : "" }}</template>
+              >{{ data.item.jailed ? $t('views.validator_detail.jailed') : data.item.active ? $t('views.validator_detail.active') : "" }}</template>
             </b-table>
           </template>
         </div>

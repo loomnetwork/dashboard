@@ -1,5 +1,5 @@
 <template>
-  <div class="faucet-with-navbar">
+  <div class="faucet-with-navbar faq">
     <div class="faucet-content">
       <b-card class="mt-5 p-3">
         <details v-for="entry in questions" class="card mb-4 border-primary">
@@ -51,21 +51,12 @@ export default class Help extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/_mixin.scss';
-@import '~@/assets/scss/_variables.scss';
-
 .page-header {
   margin-top: 24px;
   margin-bottom: 32px;
 }
 
-.img-container {
-  text-align: center;
-  
-  img {
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
-  }
-}
+
 
 .img-container img {
   display: block;
@@ -87,6 +78,8 @@ h3 {
 .border-primary {
   border: 1px solid #007bff
 }
+
+
 
 </style>
 

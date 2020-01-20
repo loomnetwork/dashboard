@@ -374,6 +374,7 @@
       "validators": "Validators",
       "next_election_in": "Next election in:",
       "total_staked_amount": "Total staked amount",
+      "effective_rewards": "Base rewards",
       "stake": "Stake",
       "name": "Name"
     },

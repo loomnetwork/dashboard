@@ -8,12 +8,13 @@ import Axios from "axios"
 import BN from "bn.js"
 import debug from "debug"
 import { ethers } from "ethers"
-import { CryptoUtils, Address } from "loom-js"
+import { CryptoUtils } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { parseSigs } from "loom-js/dist/helpers"
-import { abi as GatewayABIv1, EthereumGatewayV1Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV1Factory"
-import { abi as GatewayABIv2, EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV2Factory"
-import { abi as ValidatorManagerV2FactoryABI } from "loom-js/dist/mainnet-contracts/ValidatorManagerV2Factory"
+import ERC20GatewayABI_v1 from "loom-js/dist/mainnet-contracts/ERC20Gateway.json"
+import ERC20GatewayABI_v2 from "loom-js/dist/mainnet-contracts/ERC20Gateway_v2.json"
+import GatewayABI_v2 from "loom-js/dist/mainnet-contracts/Gateway.json"
+import ValidatorManagerContractABI from "loom-js/dist/mainnet-contracts/ValidatorManagerContract.json"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { from } from "rxjs"
 import { filter, mergeMap, tap, toArray } from "rxjs/operators"
@@ -21,6 +22,7 @@ import Web3 from "web3"
 import { AbiItem } from "web3-utils"
 import { ethereumModule } from "../ethereum"
 import { PlasmaTokenKind } from "../plasma/types"
+import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
 // these are v2 types
 import { Gateway } from "./contracts/Gateway"
 import GatewayABI_v1 from "./contracts/Gateway_v1.json"
@@ -28,7 +30,6 @@ import GatewayABI_v1 from "./contracts/Gateway_v1.json"
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import { gatewayModule } from "./index"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
-import { async } from "rxjs/internal/scheduler/async"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -38,24 +39,22 @@ const log = debug("dash.gateway.ethereum")
  */
 interface EthereumGatewayAdapter {
   token: string
-  contract: EthereumGatewayV2Factory | EthereumGatewayV1Factory
+  contract: ERC20Gateway_v2 | Gateway
 
   deposit(amount: BN, address: string)
   withdraw(receipt: IWithdrawalReceipt)
-  
 }
 
 class ERC20GatewayAdapter implements EthereumGatewayAdapter {
   constructor(
     private vmc: ValidatorManagerContract | null,
-    readonly contract: EthereumGatewayV2Factory | EthereumGatewayV1Factory,
+    readonly contract: ERC20Gateway_v2 | Gateway,
     readonly tokenAddress: string,
     readonly token: string,
   ) { }
 
   deposit(amount: BN, address: string) {
     return (
-      // @ts-ignore
       this.contract.methods
         .depositERC20(amount.toString(), this.tokenAddress)
         // @ts-ignore
@@ -70,21 +69,18 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     const localAddress = receipt.tokenOwner.local.toString()
     const tokenAddress = this.tokenAddress
     log("withdraw ERC20", receipt, amount)
-    if (receipt.tokenKind !== TransferGatewayTokenKind.LOOMCOIN) {
-      console.assert(
-        tokenAddress.toLocaleLowerCase() === receipt.tokenContract!.local.toString(),
-        "Receipt contract address different from current contract",
-        receipt.tokenContract!.local.toString(),
-        tokenAddress,
-      )
-    }
+    console.assert(
+      tokenAddress.toLocaleLowerCase() === receipt.tokenContract.local.toString(),
+      "Receipt contract address different from current contract",
+      receipt.tokenContract.local.toString(),
+      tokenAddress,
+    )
 
     let tx
     // multisig
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      // @ts-ignore
       tx = await this.contract.methods
         .withdrawERC20(amount, tokenAddress, valIndexes, vs, rs, ss)
         .send({ from: localAddress })
@@ -110,7 +106,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 
   constructor(
     private vmc: ValidatorManagerContract | null,
-    readonly contract: EthereumGatewayV1Factory,
+    readonly contract: Gateway,
     readonly tokenAddress: string,
     readonly web3: Web3,
   ) { }
@@ -139,7 +135,6 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      // @ts-ignore
       return this.contract.methods.withdrawETH(
         amount,
         valIndexes, vs, rs, ss,
@@ -159,15 +154,15 @@ let instance: EthereumGateways | null = null
 export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
-  multisig: { main: boolean, loom: boolean },
+  multisig: boolean,
 ) {
-  const ERC20GatewayABI: AbiItem[] = multisig.loom ? GatewayABIv2 : GatewayABIv1
-  const GatewayABI: AbiItem[] = multisig.main ? GatewayABIv2 : GatewayABIv1
+  const ERC20GatewayABI: AbiItem[] = multisig ? ERC20GatewayABI_v2 : ERC20GatewayABI_v1
+  const GatewayABI: AbiItem[] = multisig ? GatewayABI_v2 : GatewayABI_v1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI,
     addresses.loomGateway,
-  ) as EthereumGatewayV2Factory
+  ) as ERC20Gateway_v2
   log("loom gateway initialized")
   // @ts-ignore
   const mainGateway: Gateway = new web3.eth.Contract(
@@ -176,20 +171,18 @@ export async function init(
   )
   log("main gateway initialized")
   let vmcContract: any = null
-  if (multisig.loom || multisig.main) {
-    const vmcSourceGateway = multisig.loom ? loomGateway : mainGateway
-    // @ts-ignore
-    const vmcAddress = await vmcSourceGateway.methods.vmc().call()
+  if (multisig) {
+    const vmcAddress = await loomGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
-      ValidatorManagerV2FactoryABI,
+      ValidatorManagerContractABI,
       vmcAddress,
     )
     log("vmc initialized")
   } else {
     log("Assuming oracle sig gateways")
   }
-  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3, multisig)
+  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3)
   return instance
 }
 
@@ -211,11 +204,10 @@ class EthereumGateways {
    * @param web3
    */
   constructor(
-    readonly mainGateway: EthereumGatewayV1Factory,
-    readonly loomGateway: EthereumGatewayV2Factory,
+    readonly mainGateway: Gateway,
+    readonly loomGateway: ERC20Gateway_v2,
     readonly vmc: ValidatorManagerContract | null,
     readonly web3: Web3,
-    readonly multisig: { main: boolean, loom: boolean },
   ) { }
 
   destroy() {
@@ -235,20 +227,16 @@ class EthereumGateways {
       console.warn(token + " token gateway adapter already set.")
       return this.adapters.get(token)
     }
-    const { mainGateway, loomGateway, web3, multisig } = this
+    const { vmc, mainGateway, loomGateway, web3 } = this
     let adapter: EthereumGatewayAdapter
-    let vmc: ValidatorManagerContract | null
     switch (token) {
       case "ETH":
-        vmc = multisig.main ? this.vmc : null
         adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
       case "LOOM":
-        vmc = multisig.loom ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
         break
       default:
-        vmc = multisig.main ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, mainGateway, tokenAddress, token)
         break
     }
@@ -434,7 +422,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     console.error("no withdraw receipt in state")
     return
   }
-  const tokenAddress = receipt.tokenContract!.local.toString().toLowerCase()
+  const tokenAddress = receipt.tokenContract.local.toString().toLowerCase()
   let token: string
   // ETH case tokenAddress is gateway address
   if (tokenAddress === context.rootState.ethereum.contracts.mainGateway.toLowerCase()) {
@@ -454,11 +442,11 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   fb.showLoadingBar(true)
   try {
     await gateway.withdraw(receipt)
-    ethereumModule.setUserData({ pendingWithdrawal: true })
+    ethereumModule.setUserData({pendingWithdrawal: true})
     fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
   } catch (err) {
     // imToken throws even if transaction succeeds
-    ethereumModule.setUserData({ pendingWithdrawal: false })
+    ethereumModule.setUserData({pendingWithdrawal: false})
     if ("imToken" in window) {
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {
@@ -469,7 +457,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       scope.setExtra("ethereumWithdraw", {
         receipt: JSON.stringify({
           tokenOwner: receipt.tokenOwner.local.toString(),
-          tokenContract: receipt.tokenContract!.local.toString(),
+          tokenContract: receipt.tokenContract.local.toString(),
           tokenId: (receipt.tokenId || "").toString(),
           tokenAmount: receipt.tokenAmount!.toString(),
           signatures: receipt.oracleSignature,
@@ -478,7 +466,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       Sentry.captureException(err)
     })
   }
-  ethereumModule.setUserData({ pendingWithdrawal: false })
+  ethereumModule.setUserData({pendingWithdrawal: false})
   fb.showLoadingBar(false)
 }
 
@@ -519,16 +507,15 @@ async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) 
         transactionHash: item.transactionHash,
         amount: new BN(item.returnValues[valueField]),
         token: token || "other",
-        decimals: tokenService.get(token)!.decimals,
       })
       ethereumModule.state.history.push(entry)
     }
   }
   const p1 = gateway
-    // @ts-ignore
-    .getPastEvents(depositEvent, { filter: { from: address }, ...range })
-    .then((results) => logToHistory(results, depositEvent, symbol, "amount"))
-    .catch((e) => console.error("error loading LoomCoinReceived", e.message))
+  // @ts-ignore
+  .getPastEvents(depositEvent, { filter: { from: address }, ...range })
+  .then((results) => logToHistory(results, depositEvent, symbol, "amount"))
+  .catch((e) => console.error("error loading LoomCoinReceived", e.message))
 
   const p2 = gateway
     // @ts-ignore
@@ -552,7 +539,7 @@ const WithdrawalPrefixes = [
 
 async function decodeSig(
   receipt: IWithdrawalReceipt,
-  gatewayContract: EthereumGatewayV1Factory | EthereumGatewayV2Factory,
+  gatewayContract: Gateway | ERC20Gateway_v2,
   ethereumVMC: ValidatorManagerContract,
 ) {
   const hash = await createWithdrawalHash(receipt, gatewayContract)
@@ -571,31 +558,30 @@ async function decodeSig(
 /**
  *
  * @param receipt withdrawal receipt
- * @param gatewayContract {GatewayABIv2} for loom {Gateway} for the rest
+ * @param gatewayContract {ERC20Gateway_v2} for loom {Gateway} for the rest
  */
 async function createWithdrawalHash(
   receipt: IWithdrawalReceipt,
-  gatewayContract: EthereumGatewayV1Factory | EthereumGatewayV2Factory,
+  gatewayContract: Gateway | ERC20Gateway_v2,
 ): Promise<string> {
   const ethAddress = receipt.tokenOwner.local.toString()
-  const tokenAddress = receipt.tokenContract!.local.toString()
+  const tokenAddress = receipt.tokenContract.local.toString()
   // ETH: gatewayAddress ?
   // @ts-ignore
   const gatewayAddress = gatewayContract._address
   const amount = receipt.value.isZero() ? receipt.tokenAmount!.toString() : receipt.value.toString()
   const amountHashed = receipt.tokenKind === TransferGatewayTokenKind.ETH
-    ? ethers.utils.solidityKeccak256(
-      ["uint256"],
-      [amount],
-    ) : ethers.utils.solidityKeccak256(
-      ["uint256", "address"],
-      [amount, tokenAddress],
-    )
+                       ? ethers.utils.solidityKeccak256(
+                        ["uint256"],
+                        [amount],
+                       ) : ethers.utils.solidityKeccak256(
+                        ["uint256", "address"],
+                        [amount, tokenAddress],
+                       )
   const prefix = WithdrawalPrefixes[receipt.tokenKind]
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)
   }
-  // @ts-ignore
   const nonce = await gatewayContract.methods.nonces(ethAddress).call()
   log("hash", [prefix, ethAddress, nonce, gatewayAddress, amountHashed])
   return ethers.utils.solidityKeccak256(

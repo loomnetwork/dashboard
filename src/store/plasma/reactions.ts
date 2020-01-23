@@ -13,7 +13,6 @@ import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
 
 import debug from "debug"
-import { tokenService } from "@/services/TokenService"
 const log = debug("dash.plasma")
 
 /**
@@ -91,7 +90,7 @@ async function resetEthContract(store: Store<DashboardState>) {
 }
 
 async function resetERC20Contracts(store: Store<DashboardState>) {
-  plasmaModule.addToken(tokenService.get("BNB")!)
+  // ...
 }
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {

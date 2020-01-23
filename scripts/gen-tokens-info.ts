@@ -1,6 +1,7 @@
 import { Client, CryptoUtils, Address, LoomProvider } from "loom-js"
 
 import production from "../src/config/production"
+import stage from "../src/config/stage"
 import dev from "../src/config/dev"
 import extDev from "../src/config/ext-dev"
 
@@ -25,8 +26,8 @@ const ERC20GatewayABI_v1 = require("loom-js/dist/mainnet-contracts/ERC20Gateway.
 const envName = process.argv[2]
 
 const envs = envName === undefined ?
-    [production, dev, extDev] :
-    [production, dev, extDev].filter((env) => env.name === envName)
+    [production, stage, dev, extDev] :
+    [production, stage, dev, extDev].filter((env) => env.name === envName)
 
 from(envs)
     .pipe(concatMap(generate))

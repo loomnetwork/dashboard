@@ -7,7 +7,7 @@
         {{confirmations}} {{ $t('components.history_event.confirmations') }}
       </li>
       <li class="block">{{ $t('components.history_event.block_no') }} {{event.blockNumber}}</li>
-      <li class="amount">{{event.amount | tokenAmount(event.decimals)}} {{event.token}}</li>
+      <li class="amount">{{event.amount | tokenAmount}} {{event.token}}</li>
     </ul>
     <a class="transaction-hash" :href="etherScanUrl" target="_blank">{{event.transactionHash}}</a>
   </section>

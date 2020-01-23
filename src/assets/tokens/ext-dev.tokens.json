@@ -4,8 +4,7 @@
     "name": "Loom",
     "decimals": 18,
     "ethereum": "0x493640b5befb0962ce0932653987c41aa3608bd0",
-    "plasma": "0x0e9d499f42dfafe7f0e397f86fee6ab09483f36b",
-    "binance": "0x0000000000000000000000004c4f4f4d2d394436"
+    "plasma": "0x0e9d499f42dfafe7f0e397f86fee6ab09483f36b"
   },
   {
     "symbol": "ETH",
@@ -2868,13 +2867,5 @@
     "decimals": 8,
     "plasma": "0x9ab4e22d56c0c4f7d494442714c82a605d2f28e0",
     "binance": "0x0000000000000000000000000000000000424e42"
-  },
-  {
-    "symbol": "CFT",
-    "name": "CleverFlare",
-    "decimals": 8,
-    "ethereum": "0x61635131b3e7e16b48740c4df1efcc69c16bf611",
-    "plasma": "0xe65406f10027e8798de1b982a3ae0a79bb931aaf",
-    "binance": "0x000000000000000000000000004346542d453638"
   }
 ]

@@ -6,7 +6,6 @@ import { Block } from "web3-eth"
 import { EventLog } from "web3-core"
 import { EventEmitter } from "events"
 import { Callback, TransactionObject } from "./types"
-import { Address } from "loom-js/dist/proto/loom_pb"
 
 export class Gateway extends Contract {
   constructor(jsonInterface: any[], address?: string, options?: ContractOptions)
@@ -24,10 +23,6 @@ export class Gateway extends Contract {
       tokenId: number | string,
       contractAddress: string
     ): TransactionObject<string>
-
-    getLocalAccountInfoAsync(
-      ownerAddress: Address
-    ): TransactionObject<void>
 
     depositERC20(
       amount: number | string,

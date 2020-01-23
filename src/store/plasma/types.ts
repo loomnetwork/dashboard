@@ -95,7 +95,6 @@ export interface CardDetail {
 export enum TierID {
   DEFAULT = 0,
 }
-
 // helper/shorthand for plasma module action context
 export declare type PlasmaContext = BareActionContext<
   PlasmaState,

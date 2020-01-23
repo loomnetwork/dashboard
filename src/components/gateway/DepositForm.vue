@@ -24,7 +24,6 @@
           :round="false"
           :symbol="token"
           @isError="errorHandler"
-          :decimals="state.plasma.coins[token].decimals"
         />
         <div class="error" v-for="e in amountErrors" :key="e">- {{e}}</div>
       </form>
@@ -160,6 +159,7 @@ export default class DepositForm extends Vue {
       symbol: this.token,
       weiAmount: this.transferAmount,
     }
+
     gatewayModule.ethereumDeposit(payload)
 
     this.close()

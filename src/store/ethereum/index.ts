@@ -7,7 +7,7 @@ import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { Transfer } from "@/types"
 import BN from "bn.js"
 import debug from "debug"
-import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/ERC20Factory"
+import ERC20ABI from "loom-js/dist/mainnet-contracts/ERC20.json"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import Web3 from "web3"
 import {

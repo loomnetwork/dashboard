@@ -113,14 +113,12 @@ export default class RedelegateModal extends Vue {
     if (value.length > 0) {
       this.items = validators.filter((validator) =>
         !validator.isBootstrap &&
-        !validator.jailed &&
         origin !== validator.addr &&
         validator.name.toLowerCase().includes(str),
       )
     } else {
       this.items = validators.filter((validator) =>
         !validator.isBootstrap &&
-        !validator.jailed &&
         origin !== validator.addr,
       )
     }

@@ -1,8 +1,6 @@
 import { IDelegation } from "loom-js/dist/contracts/dpos3"
 import { DelegationState } from "loom-js/dist/proto/dposv3_pb"
 import { Validator, Delegation, DPOSState } from "./types"
-import { ZERO } from "@/utils"
-import BigNumber from "bignumber.js"
 import { Address } from "loom-js"
 import * as Sentry from "@sentry/browser"
 
@@ -25,10 +23,6 @@ export function defaultState(): DPOSState {
     delegation: null,
     analyticsData: null,
     analyticsUrl: "",
-    rewardsScalingFactor: new BigNumber(0),
-    effectiveRewardsRatio: new BigNumber(0),
-    maxYearlyRewards: new BigNumber(0),
-    totalWeightedStakes: new BigNumber(0),
   }
 }
 

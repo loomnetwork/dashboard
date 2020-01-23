@@ -71,7 +71,7 @@
                 <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.community"
-                  :key="index+'c'"
+                  :key="index+'h'"
                   :to="menu.to"
                   class="router"
                 >

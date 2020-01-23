@@ -24,8 +24,8 @@
     "receiver_addr_err_tx": "无效的接收者地址",
     "invalid_amount": "无效的数量",
     "invalid_addr": "无效的接收者地址",
-    "amount_input_should_less": "数量应少于 {amount}",
-    "amount_input_should_more": "数量应多于 {amount}",
+    "amount_input_should_less": "无效的数量。应该少于 {amount}",
+    "amount_input_should_more": "无效的数量。应该多于 {amount}",
     "amount_input_invalid_amount": "请输入一个有效的数量",
     "amount_input_only_round_amount": "只接受整数",
     "awaiting_transaction": "正在等待交易确认",
@@ -66,7 +66,7 @@
       "link_my_account": "关联我的账户",
       "not_from_relentless_marketplace": "不，我并不是从 Relentless 交易市场过来的",
       "you_sure": "你确定吗？",
-      "warn_note": "请注意：如果你创建一个新的 Basechain 账户，而没有关联你的 Relentless 账户，你将无法获取你在 Relentless 交易市场上的资产",
+      "warn_note": "请注意：如果你创建一个新的 Plasma 账户，而没有关联你的 Relentless 账户，你将无法获取你在 Relentless 交易市场上的资产。",
       "create_new_account": "创建新账户",
       "select_wallet": "选择钱包",
       "wallets": {
@@ -83,14 +83,14 @@
       "recommend_use_ledger_via_metamask": "我们建议使用 {ledgerMetamask}。"
     },
     "help": {
-      "what_is_plasma_chain": "Basechain 是什么?",
-      "plasma_chain_is_our_plasma_cash_backed": "Basechain 是受 Basechain Cash 支持的中心枢纽，实现侧链和以太坊主网之间的交互。它支持高度可扩展、面向用户的DApp，并确保链之间资产转移的安全性。",
+      "what_is_plasma_chain": "Basechain 是什么？",
+      "plasma_chain_is_our_plasma_cash_backed": "Basechain is our Basechain Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "锁仓是什么？",
       "when_a_user_stakes_tokens": "当用户“锁定”代币时，这意味着他们对代币进行计时锁定，以获得网络上的权限、执行服务和访问奖励。作为 LOOM 持有者，你可以通过将你的代币委托给验证者来",
       "help_secure_plasma_chain": "协助保护 Basechain",
       "by_staking_your_tokens_with": "。",
       "why_is_staking_important_for": "为什么锁仓对 Basechain 很重要？",
-      "as_plasma_chain_runs_a_delegated": "由于 Basechain 使用委托股权证明（DPoS）共识机制，所以锁仓对网络安全至关重要。通过“委托”，用户通过将他们的代币代理到这些验证者的股权池来支持验证者。拥有最大池的候选验证者成为网络的正式验证者。通过锁定你的 LOOM 代币，你可以帮助选出最好的验证者，以确保 Basechain 有最强的安全性和最佳性能（这样做还能获得奖励 —— 见下文）。委托和积极贡献的人越多，Basechain 就越安全可靠。",
+      "as_plasma_chain_runs_a_delegated": "由于 Basechain 使用委托股权证明（DPoS）共识机制，所以锁仓对网络安全至关重要。通过“委托”，用户通过将他们的代币代理到这些验证者的股权池来支持验证者。拥有最大池的候选验证者成为网络的正式验证者。通过锁定你的 LOOM 代币，你可以帮助选出最好的验证者，以确保 Basechain 有最强的安全性和最佳性能（这样做还能获得奖励 —— 见下文）。委派和积极贡献的人越多，Basechain 就越安全可靠。",
       "how_can_i_stake_my": "如何在 Basechain 上锁定我的 LOOM 代币？",
       "you_can_stake_your_tokens": "可以在 Basechain 管理面板上锁定你的代币：",
       "create_an_account": "创建账户",
@@ -284,14 +284,6 @@
       "no_rewards": "你现在还没有任何奖励。",
       "total": "共计："
     },
-    "airdrop": {
-      "airdrop": "Airdrop",
-      "airdrop_amount": "Airdrop Amount",
-      "token": "Token",
-      "unlock_time": "Unlock time",
-      "withdraw": "Withdraw",
-      "no_airdrop": "You have no airdrop."
-    },
     "validator_detail": {
       "state": "状态：",
       "amount_delegated": "委托的数量：",
@@ -363,23 +355,17 @@
       "no_contract": "还未部署合约",
       "low_balance": "LOOM 余额不足。",
       "whitelisting_require": "将密钥添加到白名单要求至少 {amount} 个LOOM。你目前的余额是 {balance} 个 LOOM",
-      "deposit_more": "将 LOOM 存入 Basechain",
+      "deposit_more": "将 LOOM 存入 PlasmaChain",
       "generate_new": "生成新密钥",
       "your_loom_address": "你的 loom 地址",
       "use_exist_or_create": "使用现有地址或点击“生成新密钥”创建一个新地址",
       "select_tier": "从下列层级中选一个",
-      "in_order_to_deploy": "要部署合约到 Basechain，你需要支付 LOOM 给验证者。",
+      "in_order_to_deploy": "要部署合约到 PlasmaChain，你需要锁定 LOOM 作为付款方式支付给验证者。",
       "tier": "层级",
       "limited_offer": "限时优惠",
       "coming_soon": "即将到来",
       "add_key": "添加密钥",
       "your_balance": "你的余额：{amount} 个 LOOM"
-    },
-    "bounty": {
-      "description": "每个月，对链作出最大贡献的验证者将获得<strong>2,000,000 LOOM</strong>奖励。本月，我们正在寻找高质量锁仓教程（尤其是视频），当然参与度要高 (包括点赞、转发、浏览等) 。",
-      "contact_desc": "Loom 将对提交作品进行评审，并选出每个奖项的获胜者",
-      "contact": "对于提交作品如果需要任何指导，请发邮件到 {email}",
-      "email": "satoshi@loomx.io"
     }
   },
   "components": {
@@ -416,7 +402,7 @@
       "explorer": "浏览器",
       "f_a_q": "常见问题",
       "next_election_cycle": "下一轮选举周期：",
-      "plasma_chain": "Basechain:",
+      "plasma_chain": "Basechain：",
       "staked": "已锁定：",
       "deposit": "存入",
       "plasmachain_dashboard": "Basechain 管理面板",
@@ -443,7 +429,7 @@
       "account_explorer": "Account Explorer",
       "game_assets": "游戏资产",
       "block_explorer": "区块浏览器",
-      "deploy_to_plasmachain": "部署到 Basechain",
+      "deploy_to_plasmachain": "Deploy to Basechain",
       "transfer_gateway": "转移网关",
       "validator_management": "验证者管理",
       "feedback_form": "联系客服",
@@ -466,7 +452,7 @@
       "deposit": {
         "sending": "正在发送存入请求……",
         "sent": "存入事务已成功发送。一旦确认，你会收到通知。",
-        "confirmed": "此笔存入已确认。 你的 Basechain 余额将在10个确认后更新。",
+        "confirmed": "此笔存入已确认。 你的 plasma 余额将在10个确认后更新。",
         "view_confirmation": "查看确认",
         "failure": "存入失败……"
       },
@@ -503,7 +489,6 @@
         "title": "提取 {token} 到 {chain}",
         "transfer_fee": "转移到 {chain} 需要手续费 ",
         "balance": "你的余额： ",
-        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "{chain} 上的接受者",
         "withdraw": "提取"
       }
@@ -752,7 +737,7 @@
       "redelegating": "正在重新委托",
       "consolidating": "正在合并",
       "undelegating": "正在取消委托",
-      "claiming_reward": "领取奖励",
+      "claiming_reward": "正在领取奖励",
       "eth_deposit": "存入 ETH",
       "withdraw": "提取",
       "batch_transfer": "批量转移",
@@ -768,7 +753,6 @@
       "undelegating_from": "正在取消委托，验证者： ",
       "checking_reward": "正在查看奖励……",
       "claiming_dpos_reward": "正在领取 DPOS 2 的奖励...",
-      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "正在领取奖励...",
       "depositing_eth": "正在存入 ETH",
       "checking_receipt": "正在检查之前的收据……",
@@ -801,12 +785,10 @@
       "unexpected_error_while_add_account": "添加账户映射时出现意外错误。",
       "balance_not_enough": "你的余额不足。请先存入一些。",
       "address_existed": "这个地址已经在你的部署者清单里了。",
-      "failed_to_get_receipt": "获取收据失败",
-      "connect_wallet_prob": "连接你的钱包似乎有问题。请联系客服。",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "failed_to_get_receipt": "获取收据失败"
     },
     "info": {
-      "reward_claimed": "已成功领取奖励。",
+      "reward_claimed": "成功领取奖励。",
       "please_track_transaction": "请在你的钱包上跟踪这个事务",
       "please_track_deposit_approval": "请在你的钱包上跟踪这个存入批准事务。",
       "withdrawal_in_progress": "提取已经在进行了。",
@@ -818,8 +800,7 @@
       "eth_addr_copied": "已复制以太坊地址。",
       "plasma_addr_copied": "已复制 Basechain 地址。",
       "address_copied": "已复制地址。",
-      "register_success": "已成功注册。",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "register_success": "已成功注册。"
     },
     "alert": {
       "title": {

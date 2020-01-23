@@ -1,9 +1,5 @@
 <template>
-  <loading-spinner
-    v-if="isLoading"
-    :showBackdrop="false"
-    :message="$t('views.validator_detail.loading_validators')"
-  ></loading-spinner>
+  <loading-spinner v-if="isLoading" :showBackdrop="false" :message="$t('views.validator_detail.loading_validators')"></loading-spinner>
   <main v-else class="validator">
     <header>
       <h1>
@@ -31,10 +27,7 @@
       </header>
       <dl>
         <dt>{{ $t('views.validator_detail.state') }}</dt>
-        <dd
-          v-if="!validator.jailed"
-        >{{validator.active ? $t('views.validator_detail.active') : $t('views.validator_detail.inactive')}}</dd>
-        <dd v-else style="font-weight: bold">{{$t('views.validator_detail.jailed')}}</dd>
+        <dd>{{validator.active ? $t('views.validator_detail.active') : $t('views.validator_detail.inactive')}}</dd>
         <!--
         <dt>Recently Missed Blocks</dt>
         <dd>
@@ -64,11 +57,7 @@
       </p>
 
       <div class="button-container" v-if="!validator.isBootstrap && validator.name != 'Bixin'">
-        <b-button
-          class="stake mr-3"
-          @click="requestDelegation()"
-          :disabled="validator.jailed"
-        >{{ $t('views.validator_detail.stake_tokens') }}</b-button>
+        <b-button class="stake mr-3" @click="requestDelegation()">{{ $t('views.validator_detail.stake_tokens') }}</b-button>
         <b-button
           class="consolidate"
           v-if="canConsolidate"

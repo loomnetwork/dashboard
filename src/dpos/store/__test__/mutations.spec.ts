@@ -4,6 +4,7 @@ import BN from "bn.js"
 import { defaultState } from "../helpers"
 import sinon from "sinon"
 import { setConfig, setElectionTime } from "../mutations"
+import StageConfig from "../../../config/stage"
 import ProdConfig from "../../../config/production"
 import DevConfig from "../../../config/dev"
 import localConfig from "../../../config/local"
@@ -15,6 +16,7 @@ describe("DPOS store, Mutations", () => {
     let state: DPOSState
     let config: DPOSConfig
     const bootStrapNodes = {
+      stageNode: StageConfig.dpos.bootstrapNodes,
       prodNode: ProdConfig.dpos.bootstrapNodes,
       devNode: DevConfig.dpos.bootstrapNodes,
       localNode: localConfig.dpos.bootstrapNodes,
@@ -22,6 +24,16 @@ describe("DPOS store, Mutations", () => {
 
     before(() => {
       state = defaultState()
+    })
+
+    it("bootstrapNodes state array should have a member [stage]", () => {
+      config = {
+        bootstrapNodes: bootStrapNodes.stageNode,
+        analyticsUrl: "",
+      }
+      setConfig(state, config)
+      // tslint:disable-next-line: no-unused-expression
+      expect(state.bootstrapNodes.length > 0).to.be.true
     })
 
     it("bootstrapNodes state array should have a member [production]", () => {

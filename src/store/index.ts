@@ -1,6 +1,7 @@
 import dev from "@/config/dev"
 import local from "@/config/local"
 import production from "@/config/production"
+import stage from "@/config/stage"
 
 import debug from "debug"
 import Vue from "vue"
@@ -11,7 +12,6 @@ import { tokenService } from "@/services/TokenService"
 
 import "@/feedback/store"
 import { zbcardsReactions } from "@/store/plasma/assets/reactions"
-import { airdropReactions } from "@/store/plasma/airdrop/reactions"
 
 import "./ethereum"
 import { ethereumModule } from "./ethereum"
@@ -79,7 +79,6 @@ function plugin(store_: Store<DashboardState>) {
   dposReactions(store_)
   zbcardsReactions(store_)
   whiteListReaction(store_)
-  airdropReactions(store_)
 }
 
 export { dashboardStore, store }

@@ -34,10 +34,7 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
-    multisig: {
-      loom: true,
-      main: false,
-    },
+    multisig: false,
     checkMarketplaceURL: "https://auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "https://api.loom.games/plasma/tokencontract/eth:{address}",
     binance: {

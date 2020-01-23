@@ -115,7 +115,7 @@
       "what_currency_will_rewards_be": "What currency will rewards be paid in?",
       "how_do_i_claim_my": "ฉันจะรับรางวัลของฉันอย่างไร?",
       "the_delegation_rewards_will_be": "The delegation rewards will be automatically distributed by the network, and be available under the “Rewards” tab on the",
-      "plasma_chain_dashboard": "Basechain Dashboard",
+      "plasma_chain_dashboard": "Basechain Dashboard ",
       "": ".",
       "when_will_i_receive_rewards": "When will I receive rewards on my delegations?",
       "currently_validator_rewards_are_calculated": "Currently, validator rewards are calculated and paid out at the end of election cycles, which run every 2 weeks.",
@@ -284,14 +284,6 @@
       "no_rewards": "You do not have any rewards at the moment.",
       "total": "Total"
     },
-    "airdrop": {
-      "airdrop": "Airdrop",
-      "airdrop_amount": "Airdrop Amount",
-      "token": "Token",
-      "unlock_time": "Unlock time",
-      "withdraw": "Withdraw",
-      "no_airdrop": "You have no airdrop."
-    },
     "validator_detail": {
       "state": "State:",
       "amount_delegated": "Amount Delegated:",
@@ -374,12 +366,6 @@
       "coming_soon": "Coming soon",
       "add_key": "Add key",
       "your_balance": "Your balance : {amount} LOOM"
-    },
-    "bounty": {
-      "description": "Each month, the validators who help the chain grow the most will be rewarded <strong>2,000,000 LOOM</strong>. For this month, we’re looking for high quality staking tutorials (video highly desired) with maximum amount of engagement (in terms of likes, retweets, views, upvotes, claps, etc).",
-      "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
-      "contact": "Contact {email} if you need guidance with submissions",
-      "email": "satoshi@loomx.io"
     }
   },
   "components": {
@@ -503,7 +489,6 @@
         "title": "Withdraw {token} to {chain}",
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
-        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "Recipient on {chain}",
         "withdraw": "Withdraw"
       }
@@ -768,7 +753,6 @@
       "undelegating_from": "Undelegating from ",
       "checking_reward": "Checking rewards...",
       "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
-      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "Claiming rewards...",
       "depositing_eth": "Depositing ETH",
       "checking_receipt": "Checking for pre-existing receipts...",
@@ -801,9 +785,7 @@
       "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
       "balance_not_enough": "Your balance isn't enough. Please deposit first.",
       "address_existed": "This address is already exists in your deployer list.",
-      "failed_to_get_receipt": "Failed to get receipt",
-      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "failed_to_get_receipt": "Failed to get receipt"
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",
@@ -818,8 +800,7 @@
       "eth_addr_copied": "Ethereum address copied.",
       "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
-      "register_success": "Successfully registered.",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "register_success": "Successfully registered."
     },
     "alert": {
       "title": {

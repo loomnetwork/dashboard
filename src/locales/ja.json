@@ -83,20 +83,20 @@
       "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
     },
     "help": {
-      "what_is_plasma_chain": "What is Basechain?",
+      "what_is_plasma_chain": "Basechainとは？",
       "plasma_chain_is_our_plasma_cash_backed": "Basechain is our Basechain Cash-backed hub for transacting between sidechains and Ethereum mainnet. It allows for highly-scalable, user-facing DApps and secure asset transfers between chains.",
       "what_is_staking": "ステーキングとは？",
       "when_a_user_stakes_tokens": "ユーザーがトークンを「ステーク」する際、これはネットワーク上で権利を得たりサービスを行なったり、また報酬にアクセスするために、彼らが自身のトークンを一定期間ロックするということを意味します。LOOMトークンホルダーとして、あなたは",
-      "help_secure_plasma_chain": "help secure Basechain",
-      "by_staking_your_tokens_with": "PlasmaChainの安全維持に参加できます。",
-      "why_is_staking_important_for": "Why is staking important for Basechain?",
-      "as_plasma_chain_runs_a_delegated": "As Basechain runs a Delegated Proof of Stake (DPoS) consensus model, staking is critical to securing the network. Through “delegation”, users support validators by proxying their tokens with those valdiators’ staking pools. The validator candidates with the largest pools become the official validators of the network. By staking your LOOM tokens, you can help choose the best validators to ensure the strongest possible security and performance for Basechain (and you can earn rewards by doing so — see below). The more people who delegate and actively contribute, the more secure the chain.",
-      "how_can_i_stake_my": "How can I stake my LOOM tokens on Basechain?",
-      "you_can_stake_your_tokens": "You can stake your tokens from the Basechain Dashboard:",
+      "help_secure_plasma_chain": "トークンをバリデーターにステーキングすることで",
+      "by_staking_your_tokens_with": "Basechainの安全維持に参加できます。",
+      "why_is_staking_important_for": "なぜBasechainにとってステーキングが重要なの？",
+      "as_plasma_chain_runs_a_delegated": "BasechainはDelegated Proof of Stake(DPoS)の合意モデルを採用しているため、ステーキングはネットワークの安全を守るために非常に重要です。「デリゲーション(委任)」では、ユーザーはバリデーターのステーキングプールにトークンを委託することで、彼らをサポートすることが可能です。最大級のプールを持ったバリデーター候補者たちは、ネットワーク公式バリデーターとなります。あなたのLOOMトークンをステーキングすることで、Basechainの最強の安全性とパフォーマンスを保証してくれる最高のバリデーターを選択することに参加できます(さらにこれにより報酬を得ることが可能ですー以下参照)。多くの人々が委任や活発な貢献を行えばそれだけ、チェーンはより安全なものになります。",
+      "how_can_i_stake_my": "LOOMトークンをBasechain上にステークする方法は？",
+      "you_can_stake_your_tokens": "Basechainダッシュボードよりトークンのステークが可能です:",
       "create_an_account": "アカウントの作成",
       "generate_a_private_key": "秘密鍵の生成",
       "log_in_to_your_meta_mask": "MetaMaskウォレットにログイン",
-      "deposit_loom_tokens_onto_plasma_chain": "Deposit LOOM tokens onto Basechain",
+      "deposit_loom_tokens_onto_plasma_chain": "BasechainにLOOMトークンをデポジット",
       "choose_validators_to_stake_with": "ステークしたいバリデーターを選択",
       "how_many_tokens_are_required": "デリゲーター(委任者)になるにはどのくらいトークンが必要？",
       "there_is_no_minimum_required": "デリゲーターになるための最低トークン数というのはありません。LOOMトークンホルダーであればどなたでも、ネットワーク上の任意のバリデーターに委任をすることが可能です。",
@@ -115,7 +115,7 @@
       "what_currency_will_rewards_be": "どの通貨で報酬は支払われる？",
       "how_do_i_claim_my": "報酬の請求方法は？",
       "the_delegation_rewards_will_be": "委任の報酬はネットワークにより自動的に分配され、こちらの「報酬」タブよりご利用いただけます:",
-      "plasma_chain_dashboard": "Basechain Dashboard",
+      "plasma_chain_dashboard": "Basechainダッシュボード",
       "": "。",
       "when_will_i_receive_rewards": "いつ委任した分の報酬を受け取れる？",
       "currently_validator_rewards_are_calculated": "現在バリデーターの報酬は、２週間毎の選挙周期の最後に計算され支払われています。",
@@ -258,7 +258,7 @@
       "deposit": "デポジット",
       "withdraw": "出金する",
       "use_maximum": "全額使用する",
-      "transfer_to_plasmachain_for_staking": "PlasmaChainへ移転してステーキング",
+      "transfer_to_plasmachain_for_staking": "Basechainへ移転してステーキング",
       "withdraw_to_metamask": "ウォレットへ出金",
       "wait_tx": "あなたのトランザクションは現在処理待機中です。トランザクションが確認後に残高が更新されますので、数分お待ちください。",
       "tokens_pending_deposit": "{pendingDepositAmount} トークンのデポジットが未処理です。まずこのデポジットを完了してから、他の処理を行なって下さい。",
@@ -283,14 +283,6 @@
       "will_be_reclaimed_after_next_election": "LOOM will be reclaimed after next election.",
       "no_rewards": "You do not have any rewards at the moment.",
       "total": "Total"
-    },
-    "airdrop": {
-      "airdrop": "Airdrop",
-      "airdrop_amount": "Airdrop Amount",
-      "token": "Token",
-      "unlock_time": "Unlock time",
-      "withdraw": "Withdraw",
-      "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
       "state": "状態:",
@@ -374,12 +366,6 @@
       "coming_soon": "Coming soon",
       "add_key": "Add key",
       "your_balance": "Your balance : {amount} LOOM"
-    },
-    "bounty": {
-      "description": "Each month, the validators who help the chain grow the most will be rewarded <strong>2,000,000 LOOM</strong>. For this month, we’re looking for high quality staking tutorials (video highly desired) with maximum amount of engagement (in terms of likes, retweets, views, upvotes, claps, etc).",
-      "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
-      "contact": "Contact {email} if you need guidance with submissions",
-      "email": "satoshi@loomx.io"
     }
   },
   "components": {
@@ -411,8 +397,8 @@
     "faucet_header": {
       "eth_connected": "Ethereumと接続済み",
       "eth_disconnected": "Ethereumと接続なし",
-      "dapp_connected": "Basechain Connected",
-      "dapp_disconnected": "Basechain Disconnected",
+      "dapp_connected": "Basechainと接続済み",
+      "dapp_disconnected": "Basechainと接続なし",
       "explorer": "エクスプロラー",
       "f_a_q": "よくある質問",
       "next_election_cycle": "次の選挙周期:",
@@ -466,7 +452,7 @@
       "deposit": {
         "sending": "デポジットリクエストを送信中...",
         "sent": "デポジットトランザクションの送信に成功しました。承認後にお知らせします。",
-        "confirmed": "The deposit has been confirmed. Your Basechain balance will be updated after 10 confirmations.",
+        "confirmed": "デポジットが承認されました。10回承認された後にPlasma残高が更新されます。",
         "view_confirmation": "承認を見る",
         "failure": "デポジットに失敗しました..."
       },
@@ -503,7 +489,6 @@
         "title": "Withdraw {token} to {chain}",
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
-        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
         "recipient": "Recipient on {chain}",
         "withdraw": "Withdraw"
       }
@@ -768,7 +753,6 @@
       "undelegating_from": "Undelegating from ",
       "checking_reward": "Checking rewards...",
       "claiming_dpos_reward": "Claiming DPOS 2 rewards...",
-      "claiming_past_reward": "Claiming rewards from past validator {validator}",
       "claiming_reward": "Claiming rewards...",
       "depositing_eth": "Depositing ETH",
       "checking_receipt": "Checking for pre-existing receipts...",
@@ -801,9 +785,7 @@
       "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
       "balance_not_enough": "Your balance isn't enough. Please deposit first.",
       "address_existed": "This address is already exists in your deployer list.",
-      "failed_to_get_receipt": "Failed to get receipt",
-      "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "failed_to_get_receipt": "Failed to get receipt"
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",
@@ -818,8 +800,7 @@
       "eth_addr_copied": "Ethereum address copied.",
       "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
-      "register_success": "Successfully registered.",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "register_success": "Successfully registered."
     },
     "alert": {
       "title": {

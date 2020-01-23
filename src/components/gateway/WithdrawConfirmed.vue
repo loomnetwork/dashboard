@@ -2,11 +2,8 @@
   <b-modal lazy id="withdraw-confirmed" v-model="visible" :title="title">
     <section v-if="status === 'default'">
       <b-container fluid>
-        <div v-if="chain !== 'binance'" class="lead">
+        <div class="lead">
           <p>{{$t('components.gateway.confirm_withdrawal_modal.confirm_withdrawl', {chain,amount, token: this.symbol})}}</p>
-        </div>
-        <div v-else>
-           <p>Fund withdrawn to Binance</p>
         </div>
       </b-container>
     </section>
@@ -31,7 +28,6 @@ import { DashboardState } from "../../types"
 import { gatewayModule } from "@/store/gateway"
 import { feedbackModule } from "../../feedback/store"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { TransferGatewayTxStatus } from "loom-js/dist/proto/transfer_gateway_pb"
 import { tokenService } from "../../services/TokenService"
 import { formatTokenAmount } from "../../filters"
 
@@ -43,13 +39,14 @@ export default class WithdrawConfirmed extends Vue {
   chain = ""
 
   completeWithdrawalHandler() {
+
     if (this.chain === "ethereum") {
       gatewayModule.ethereumWithdraw(this.symbol)
-    } else {
+    } else if (this.chain === "binance") {
       // retry withdraw for binance
-      // TODO:  we force to resubmit on binance chain if it isn't Ethereum
-      //        need to fix this if we integrate with other chain
       gatewayModule.binanceResubmitWithdrawal()
+    } else {
+      console.error("complete withdrawal unimplemented for chain" + this.chain)
     }
     this.close()
   }
@@ -78,14 +75,7 @@ export default class WithdrawConfirmed extends Vue {
   }
 
   get visible() {
-    if (this.state.gateway.withdrawalReceipts !== null) {
-      if (this.chain === "binance") {
-        return this.state.gateway.withdrawalReceipts.txStatus === TransferGatewayTxStatus.REJECTED
-      } else {
-        return true
-      }
-    }
-    return false
+    return this.state.gateway.withdrawalReceipts !== null
   }
 
   set visible(value) {
@@ -98,22 +88,22 @@ export default class WithdrawConfirmed extends Vue {
   @Watch("receipt")
   setTokenSymbol(receipt: IWithdrawalReceipt) {
     if (receipt === null) return
-    if (this.chain === "binance" && receipt.txStatus !== TransferGatewayTxStatus.REJECTED) return
-
-    const chainId = receipt.tokenContract!.chainId
+    const chainId = receipt.tokenContract.chainId
     const chainMappings = {
       binance: "binance",
       eth: "ethereum",
       tron: "tron",
     }
     const chain = chainMappings[chainId]
-    const contractAddress = receipt.tokenContract!.local
+    const contractAddress = receipt.tokenContract.local
     const contractAddrStr = contractAddress.toString().toLowerCase()
 
     let tokenInfo
+
     if (chain === "binance") {
-      this.chain = "binance"
-      return
+      // for binance the token symbol is stored in the address
+      const symbol = [...contractAddress.bytes.filter((cc) => cc > 0)].map((cc) => String.fromCharCode(cc)).join("")
+      tokenInfo = tokenService.getTokenbySymbol(symbol)
     } else {
       try {
         tokenInfo = tokenService.tokenFromAddress(contractAddrStr, chain)

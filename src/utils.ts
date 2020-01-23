@@ -5,6 +5,7 @@ import CardDetails from "./data/cardDetail.json"
 import { TokenData } from "./services/TokenService"
 import productionTokens from "@/assets/tokens/production.tokens.json"
 import extDevTokens from "@/assets/tokens/ext-dev.tokens.json"
+import stageTokens from "@/assets/tokens/stage.tokens.json"
 import devTokens from "@/assets/tokens/dev.tokens.json"
 
 export const ZERO = new BN(0)
@@ -25,7 +26,7 @@ export function parseToWei(amount: string, decimal = 18) {
 
 export const DOMAIN_NETWORK_ID = {
   1: ["loom"],
-  4: ["rinkeby", "local"],
+  4: ["rinkeby", "stage", "local"],
 }
 
 export function getRandomInt(min, max) {
@@ -117,6 +118,7 @@ export function getWalletFromLocalStorage(env: string) {
   const tokens = {
     "production": productionTokens,
     "ext-dev": extDevTokens,
+    "stage": stageTokens,
     "dev": devTokens,
   }
   let wallets = JSON.parse(localStorage.getItem("wallets")!) // Get wallet from localStorage

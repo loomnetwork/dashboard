@@ -5,7 +5,6 @@ import {
 } from "loom-js/dist/contracts"
 import { Address, Client, Contract } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { TransferGatewayTxStatus } from "loom-js/dist/proto/transfer_gateway_pb"
 
 import BN from "bn.js"
 import { Funds, Transfer } from "@/types"
@@ -48,14 +47,6 @@ class LoomGatewayAdapter implements PlasmaGatewayAdapter {
     const receipt = await this.contract.withdrawalReceiptAsync(this.mapping.to)
     return receipt
   }
-
-  async getLocalAccountInfo(owner: Address) {
-    return this.contract.getLocalAccountInfoAsync(owner)
-  }
-
-  async getGatewayState() {
-    return this.contract.getStateAsync()
-  }
 }
 
 class EthGatewayAdapter implements PlasmaGatewayAdapter {
@@ -75,12 +66,6 @@ class EthGatewayAdapter implements PlasmaGatewayAdapter {
     const owner = this.mapping.to
     return this.contract.withdrawalReceiptAsync(owner)
   }
-  async getLocalAccountInfo(owner: Address) {
-    return this.contract.getLocalAccountInfoAsync(owner)
-  }
-  async getGatewayState() {
-    return this.contract.getStateAsync()
-  }
 }
 
 class ERC20GatewayAdapter extends EthGatewayAdapter {
@@ -98,15 +83,9 @@ class ERC20GatewayAdapter extends EthGatewayAdapter {
 
   withdraw(amount: BN) {
     const plasmaTokenAddrStr = tokenService.getTokenAddressBySymbol(this.token, "plasma")
-    const plasmaTokenAddr = Address.fromString(`${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
-    log("TransferGateway withdrawERC20Async", this.token, `${this.contract.address.chainId}:${plasmaTokenAddrStr}`)
+    const plasmaTokenAddr = Address.fromString(`default:${plasmaTokenAddrStr}`)
+    log("TransferGateway withdrawERC20Async", this.token, `default:${plasmaTokenAddrStr}`)
     return this.contract.withdrawERC20Async(amount, plasmaTokenAddr)
-  }
-  async getLocalAccountInfo(owner: Address) {
-    return this.contract.getLocalAccountInfoAsync(owner)
-  }
-  async getGatewayState() {
-    return this.contract.getStateAsync()
   }
 }
 
@@ -174,19 +153,11 @@ class PlasmaGateways {
     let adapter: PlasmaGatewayAdapter
     switch (symbol) {
       case "LOOM":
-        if (chain === "binance") {
-          adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
-            token: "BNB",
-            amount: new BN(37500),
-          }, "LOOM")
-          break
-        } else {
-          adapter = new LoomGatewayAdapter(
-            this.ethereumLoomGateway,
-            srcChainGateway!,
-            this.mapping,
-          )
-        }
+        adapter = new LoomGatewayAdapter(
+          this.ethereumLoomGateway,
+          srcChainGateway!,
+          this.mapping,
+        )
         break
       case "ETH":
         adapter = new EthGatewayAdapter(
@@ -202,28 +173,20 @@ class PlasmaGateways {
           adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
             token: "BNB",
             amount: new BN(37500),
-          }, "BNB")
+          })
           log("added BNB adapter")
           break
         }
 
       default:
-        if (chain === "binance") {
-          adapter = new BinanceGatewayAdapter(this.binanceGateway, this.mapping, {
-            token: "BNB",
-            amount: new BN(37500),
-          }, symbol)
-          break
-        } else {
-          adapter = new ERC20GatewayAdapter(
-            this.ethereumMainGateway,
-            srcChainGateway!,
-            symbol,
-            this.mapping,
-          )
-          break
-        }
-      }
+        adapter = new ERC20GatewayAdapter(
+          this.ethereumMainGateway,
+          srcChainGateway!,
+          symbol,
+          this.mapping,
+        )
+        break
+    }
 
     this.adapters.set(symbol, adapter)
     if (!this.chains.has(chain)) {
@@ -372,13 +335,11 @@ export function pollReceipt(chain: string, symbol: string) {
 
 export async function refreshWithdrawalReceipt(
   context: ActionContext, { chain, symbol }: { chain: string, symbol: string }) {
-  const receipt: IWithdrawalReceipt | null = await refreshPendingReceipt(chain, symbol)
+  const receipt = await refreshPendingReceipt(chain, symbol)
   log("refreshWithdrawalReceipt", chain, symbol, receipt)
   // @ts-ignore
   if (receipt !== null) {
-    if ((chain === "binance" && receipt.txStatus === TransferGatewayTxStatus.REJECTED) || chain !== "binance") {
     context.state.withdrawalReceipts = receipt
-    }
   }
 }
 

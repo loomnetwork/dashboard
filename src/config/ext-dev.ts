@@ -17,8 +17,8 @@ export default {
     endpoint: "https://rinkeby.infura.io/5Ic91y0T9nLh6qUg33K0",
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
-      loomGateway: "0x5558ba31CB91b2a45B3DCe9c720A0e0b59785711",
-      mainGateway: "0xb73C9506cb7f4139A4D6Ac81DF1e5b6756Fab7A2",
+      loomGateway: "0xc6e1421720c7f62455c053bc8326633d68c01c00",
+      mainGateway: "0x9c67fd4eaf0497f9820a3fbf782f81d6b6dc4baa",
     },
     portisKey: "10589118-6329-43a0-818c-93800c206786",
     formaticKey: "pk_test_58DB7D96C460470B",
@@ -30,7 +30,10 @@ export default {
   coinDataUrl: "/tokens/ext-dev.tokens.json",
   gateway: {
     chains: ["ethereum", "binance"],
-    multisig: false,
+    multisig: {
+      loom: true,
+      main: true,
+    },
     checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "",
     binance: {

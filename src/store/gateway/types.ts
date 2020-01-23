@@ -15,12 +15,27 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 }
 
 export interface GatewayConfig {
-  multisig: boolean
+  multisig: { loom: boolean, main: boolean }
   chains: string[]
   checkMarketplaceURL: string
   tokenContractLogsURL: string
   binance: BinanceGateway
 }
+
+export interface ITransferGatewayState {
+  maxTotalDailyWithdrawalAmount: BN
+  maxPerAccountDailyWithdrawalAmount: BN
+  lastWithdrawalLimitResetTime: Date
+  totalWithdrawalAmount: BN
+}
+
+export interface ILocalAccountInfo {
+  withdrawalReceipt: IWithdrawalReceipt | null
+  totalWithdrawalAmount: BN
+  lastWithdrawalLimitResetTime: number
+}
+
+
 /**
  * Gateway state
  */
@@ -83,6 +98,8 @@ export interface PlasmaGatewayAdapter {
   contract: Contract | any
   withdraw(amount: BN, recipient?: Address)
   withdrawalReceipt(): Promise<IWithdrawalReceipt | null>
+  getLocalAccountInfo(owner: Address): Promise<ILocalAccountInfo>
+  getGatewayState(): Promise<ITransferGatewayState>
 }
 
 export interface WithdrawalReceipt extends IWithdrawalReceipt {

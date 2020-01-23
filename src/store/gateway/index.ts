@@ -20,7 +20,10 @@ const log = debug("dash.gateway")
 
 function initialState(): GatewayState {
   return {
-    multisig: false,
+    multisig: {
+      loom: false,
+      main: false,
+    },
     chains: [],
     mapping: null,
     withdrawalReceipts: null,
@@ -77,7 +80,6 @@ export const gatewayModule = {
   refreshEthereumHistory: builder.dispatch(EthereumGateways.refreshEthereumHistory),
   refreshAllowances: builder.dispatch(EthereumGateways.refreshAllowances),
   loadTokenMappings: builder.dispatch(PlasmaGateways.loadTokenMappings),
-
   plasmaWithdraw: builder.dispatch(PlasmaGateways.plasmaWithdraw),
   pollReceipt: PlasmaGateways.pollReceipt,
   refreshWithdrawalReceipt: builder.dispatch(PlasmaGateways.refreshWithdrawalReceipt),

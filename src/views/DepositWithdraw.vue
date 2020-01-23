@@ -242,8 +242,7 @@ export default class DepositWithdraw extends Vue {
     const possibleChains = this.state.chains.filter((chainId) => !!tokenInfo[chainId])
     const chain = (possibleChains.length === 1) ?
       possibleChains[0] : ""
-
-    gatewayModule.setTransferRequest({ chain: possibleChains[0], type, token })
+    gatewayModule.setTransferRequest({ chain, type, token })
   }
 
   async requestSwap(token: string) {

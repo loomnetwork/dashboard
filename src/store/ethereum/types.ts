@@ -1,7 +1,7 @@
 import BN from "bn.js"
 import { ethers } from "ethers"
 import { Observable } from "rxjs"
-import { ERC20 } from "loom-js/dist/mainnet-contracts/ERC20"
+import { ERC20Factory } from "loom-js/dist/mainnet-contracts/ERC20Factory"
 import { GatewayState } from "../gateway/types"
 import { provider } from "web3-providers"
 
@@ -32,7 +32,7 @@ export interface EthereumState extends EthereumConfig {
     [erc20Symbol: string]: BN,
   }
   LOOM: {
-    contract: ERC20 | null
+    contract: ERC20Factory | null
     balance: BN
     address: string,
   }

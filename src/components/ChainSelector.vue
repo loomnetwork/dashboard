@@ -14,6 +14,7 @@ export default class ChainSelector extends Vue {
 
   set env(config: DashboardConfig) {
     console.log("config", config)
+    localStorage.setItem("selectedConfig", config.name)
     dashboardStore.setEnv(config)
   }
 

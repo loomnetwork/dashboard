@@ -117,6 +117,7 @@
                       </div>
                     </b-card>
                   </div>
+                  <template v-if="$store.state.disabled !== undefined">
                   <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
                     <b-card
                       id="portis-button"
@@ -141,6 +142,7 @@
                       </div>
                     </b-card>
                   </div>
+                  </template>
                   <div class="col-sm-12 mb-3">
                     <b-card
                       id="explore-button"
@@ -168,22 +170,25 @@
                 </div>
               </b-card-body>
             </b-card>
+            <template v-if="env">
             <div class="d-none d-xl-block">
-              <div id="announcement" v-if="showAnnounce">
+              <div id="announcement" v-if="env.announcement.home">
                 <a href="https://cryptozombies.io/libra" target="_blank">
                   <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
                 </a>
               </div>
             </div>
+            </template>
           </b-row>
-
-          <div class="d-xl-none" v-if="showAnnounce">
+          <template v-if="env">
+          <div class="d-xl-none" v-if="env.announcement.home">
             <div id="announcement-mobile">
               <a href="https://cryptozombies.io/libra" target="_blank">
                 <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
               </a>
             </div>
           </div>
+          </template>
 
           <b-card v-if="!metamaskInstalled" class="metamask-suggest">
             <b-row>
@@ -295,6 +300,15 @@ export default class FirstPage extends Vue {
     return this.$state.plasma.loomGamesEndpoint
   }
 
+  get env() {
+    let networkId = this.$state.plasma.networkId
+    // for production networkId = "plasma" and chainId = "default"
+    if (networkId === "plasma") {
+      networkId = "default"
+    }
+    return this.$state.envs.find((env) => env.plasma.chainId === networkId)!
+  }
+
   setWallet = ethereumModule.setWalletType
   setExploreMode = ethereumModule.setToExploreMode
 
@@ -302,14 +316,9 @@ export default class FirstPage extends Vue {
   addressModalShow = false
   mappedModalShow = false
   reconsider = false
-  showAnnounce = false
 
   onConnectionUrlChanged(newUrl) {
     this.$emit("update:chain")
-  }
-
-  getEnv() {
-    return (this.$state.envs || []).find((env) => env.name === this.$state.env)!
   }
 
   onClose() {
@@ -325,15 +334,6 @@ export default class FirstPage extends Vue {
   */
   get metamaskInstalled() {
     return MetaMaskAdapter.detect()
-  }
-
-  @Watch("$store.state.plasma.networkId")
-  chainIdChange() {
-    this.showAnnounce = this.getEnv().announcement.home
-  }
-
-  mounted() {
-    this.showAnnounce = this.getEnv().announcement.home
   }
 
 }

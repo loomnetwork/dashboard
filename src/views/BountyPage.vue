@@ -13,18 +13,18 @@
         </b-col>
       </b-row>
       <b-card-body>
-        <span>Get the most engagement in <strong>staking tutorials</strong>, whether that is likes, retweets, claps or upvotes</span>
+        <span v-html="$t('views.bounty.description')"/>
       </b-card-body>
     </b-card>
     <div v-for="(bounty, topic) in bountyList" :key="topic" class="topic-section">
-      <h2 class="bounty-topic mb-3">{{ topic }}</h2>
-      <b-card class="mb-3" v-for="(bountyData, index) in bounty" :key="index">
+      <h2 class="bounty-topic mb-4">{{ topic }}</h2>
+      <b-card class="mb-4" v-for="(bountyData, index) in bounty" :key="index">
         <b-row>
-          <b-col sm="8">
+          <b-col sm="9">
             <b-card-title>{{ bountyData.title }}</b-card-title>
             <p v-html="bountyData.description"/>
           </b-col>
-          <b-col sm="4" class="bounty-reward">
+          <b-col sm="3" class="bounty-reward">
             {{ loomAmount(bountyData.reward) | tokenAmount(18,0)}} {{ bountyData.token }}
           </b-col>
         </b-row>

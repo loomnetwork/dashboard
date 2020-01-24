@@ -59,9 +59,10 @@ const initialState: PlasmaState = {
       loading: false,
       decimals: 18,
     },
-    // bnb: {
+    // BNB: {
     //   balance: new BN("0"),
     //   loading: false,
+    //   decimals: 8,
     // },
   },
   selectedToken: "",

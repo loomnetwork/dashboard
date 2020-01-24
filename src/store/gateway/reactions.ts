@@ -1,4 +1,4 @@
-import { tokenService } from "@/services/TokenService"
+import { tokenService, TokenData } from "@/services/TokenService"
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { DashboardState, Funds } from "@/types"
 import BN from "bn.js"
@@ -10,7 +10,7 @@ import { EventLog } from "web3-core"
 import { gatewayModule } from "."
 import { ethereumModule } from "../ethereum"
 import { plasmaModule } from "../plasma"
-import { ERC20Gateway_v2 } from "./contracts/ERC20Gateway_v2"
+import { EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV2Factory"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
@@ -78,30 +78,39 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.subscribeAction({
     after(action) {
       if (/^plasma.+addToken$/.test(action.type)) {
-        const tokenInfo = action.payload
-        if (tokenInfo.ethereum) {
-          ethereumModule.initERC20(tokenInfo.symbol)
-          const ethereumGateways = EthereumGateways.service()
-          log("adding gateway for %s to ethereum", tokenInfo.symbol)
-          const etherumTokenAddress = tokenInfo.ethereum
-          const adapter = ethereumGateways.add(tokenInfo.symbol, etherumTokenAddress)
-          // @ts-ignore
-          const ethGatewayAddr = Address.fromString("eth:" + adapter!.contract._address)
-          PlasmaGateways.service().add("ethereum", tokenInfo.symbol, ethGatewayAddr)
-        }
-        if (tokenInfo.binance) {
-          log("adding gateway for %s to binance", tokenInfo.symbol)
-          PlasmaGateways.service().add("binance", tokenInfo.symbol)
-          gatewayModule.refreshWithdrawalReceipt({ chain: "binance", symbol: tokenInfo.symbol })
-        }
-        // XXX dont refresh all allowances, just the current token
-        gatewayModule.refreshAllowances()
-
+        addTokenAdapter(action.payload)
       }
     },
   })
 
-  async function initializeGateways(mapping: IAddressMapping, multisig: boolean) {
+  function addTokenAdapter(tokenInfo: TokenData) {
+    const ethereumGateways = EthereumGateways.service()
+    const plasmaGateways = PlasmaGateways.service()
+
+    if (!ethereumGateways || !plasmaGateways) {
+      return
+    }
+
+    if (tokenInfo.ethereum) {
+      ethereumModule.initERC20(tokenInfo.symbol)
+      log("adding gateway for %s to ethereum", tokenInfo.symbol)
+      const etherumTokenAddress = tokenInfo.ethereum
+      const adapter = ethereumGateways.add(tokenInfo.symbol, etherumTokenAddress)
+      // @ts-ignore
+      const ethGatewayAddr = Address.fromString("eth:" + adapter!.contract._address)
+      plasmaGateways.add("ethereum", tokenInfo.symbol, ethGatewayAddr)
+    }
+
+    if (tokenInfo.binance) {
+      log("adding gateway for %s to binance", tokenInfo.symbol)
+      plasmaGateways.add("binance", tokenInfo.symbol)
+      gatewayModule.refreshWithdrawalReceipt({ chain: "binance", symbol: tokenInfo.symbol })
+    }
+    // XXX dont refresh all allowances, just the current token
+    gatewayModule.refreshAllowances()
+  }
+
+  async function initializeGateways(mapping: IAddressMapping, multisig: { loom: boolean, main: boolean }) {
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
@@ -139,6 +148,10 @@ export function gatewayReactions(store: Store<DashboardState>) {
       return
     }
 
+    Object.keys(store.state.plasma.coins).forEach((token) => {
+      const tokenInfo = tokenService.getTokenbySymbol(token)
+      addTokenAdapter(tokenInfo)
+    })
   }
 
   /**
@@ -192,7 +205,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
 function listenToDepositApproval(
   account: string,
-  gw: ERC20Gateway_v2,
+  gw: EthereumGatewayV2Factory,
   loom: ERC20,
 ) {
   // const approval = loom.filters.Approval(account, gw.address, null)
@@ -223,7 +236,7 @@ function listenToDepositApproval(
   )
 }
 
-function listenToDeposit(account: string, gw: ERC20Gateway_v2, loom: ERC20) {
+function listenToDeposit(account: string, gw: EthereumGatewayV2Factory, loom: ERC20) {
   loom.events.Transfer(
     {
       filter: {

@@ -16,6 +16,7 @@ import { Address, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 import * as Sentry from "@sentry/browser"
 import { i18n } from "@/i18n"
+import BigNumber from "bignumber.js"
 
 const log = debug("dash.dpos")
 
@@ -47,6 +48,7 @@ const dposModule = {
   claimRewards: builder.dispatch(claimRewards),
 
   refreshElectionTime: builder.dispatch(refreshElectionTime),
+  refreshContractState: builder.dispatch(refreshContractState),
   refreshValidators: builder.dispatch(refreshValidators),
   refreshDelegations: builder.dispatch(refreshDelegations),
 
@@ -158,6 +160,30 @@ export async function refreshValidators(ctx: ActionContext) {
 
   ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
   ctx.state.loading.validators = false
+}
+
+export async function refreshContractState(context: ActionContext) {
+  const { state } = context
+  const contract = state.contract!
+
+  const cs = await contract.getStateAsync()
+  const stdRewardsRatio = new BigNumber("0.05")
+
+  const fromBN = (n: BN) => new BigNumber(n.toString())
+
+  state.maxYearlyRewards = fromBN(cs.maxYearlyRewards)
+  state.totalWeightedStakes = fromBN(cs.totalWeightedAmountStaked)
+
+  const expectedYearlyRewards = state.totalWeightedStakes.times(stdRewardsRatio)
+
+  if (expectedYearlyRewards.gt(state.maxYearlyRewards)) {
+    // shrink
+    state.rewardsScalingFactor = expectedYearlyRewards.div(state.maxYearlyRewards)
+  } else {
+    state.rewardsScalingFactor = new BigNumber(1)
+  }
+
+  state.effectiveRewardsRatio = stdRewardsRatio.times(state.rewardsScalingFactor).times(100)
 }
 
 /**

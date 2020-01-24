@@ -101,7 +101,10 @@ function scheduleElectionTimeCall() {
 
 async function refreshDPoSState() {
   log("refreshDPoSState", store.state.plasma.address)
-  await dposModule.refreshValidators()
+  await Promise.all([
+    dposModule.refreshContractState(),
+    dposModule.refreshValidators(),
+  ])
 
   if (store.state.plasma.address) {
     await dposUtils.refreshDPoSUserState()

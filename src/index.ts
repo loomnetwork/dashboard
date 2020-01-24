@@ -28,7 +28,6 @@ import { ethereumModule } from "./store/ethereum"
 import { isMobile, detectedWallet } from "./utils"
 import production from "./config/production"
 import extDev from "./config/ext-dev"
-import stage from "./config/stage"
 import dev from "./config/dev"
 import local from "./config/local"
 
@@ -60,9 +59,9 @@ export default new Vue({
       await dashboardStore.setEnv(production)
     } else {
       console.log("multiple envs")
-      dashboardStore.setEnvs([production, extDev, stage, dev])
+      dashboardStore.setEnvs([production, extDev, dev])
       // default
-      await dashboardStore.setEnv(stage)
+      await dashboardStore.setEnv(extDev)
     }
 
     // do not auto connect if mobile or more than one environement config is present

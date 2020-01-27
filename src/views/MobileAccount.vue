@@ -76,6 +76,7 @@
     </b-card>
 
     <rewards></rewards>
+    <airdrop/> 
 
     <b-card id="delegations-container" no-body>
       <b-card-body>
@@ -112,6 +113,7 @@ import { dposModule } from "@/dpos/store"
 import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 import Delegations from "@/dpos/components/Delegations.vue"
 import { Subscription, timer } from "rxjs"
+import Airdrop from "@/dpos/components/Airdrop.vue"
 
 const log = debug("mobileaccount")
 
@@ -124,6 +126,7 @@ const ELECTION_CYCLE_MILLIS = 600000
     Rewards,
     ElectionTimer,
     Delegations,
+    Airdrop,
   },
 })
 export default class MobileAccount extends Vue {

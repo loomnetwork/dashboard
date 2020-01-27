@@ -24,6 +24,7 @@ export function emptyValidator() {
         name: "",
         description: "",
         website: "",
+        jailed: false,
     }
 }
 

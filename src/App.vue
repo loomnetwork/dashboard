@@ -84,4 +84,10 @@ main.container {
 #walletconnect-qrcode-modal {
   z-index: 9999 !important;
 }
+
+.faq img {
+  border:1px solid;
+  box-shadow: 0 0 5px #ccc;
+  max-width: 100% !important;
+}
 </style>

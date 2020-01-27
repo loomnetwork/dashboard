@@ -130,9 +130,11 @@
                     4. {{ $t('views.staking_guide.2_step_4') }}
                   </u>
                 </h6>
+                <!--
                 <div class="img-container">
                   <img src="../assets/staking-guide-9.png" class="img-medium-size" alt="New account">
                 </div>
+                -->
                 <p>
                   {{ $t('views.staking_guide.block_confirmations') }}
                 </p>
@@ -218,7 +220,7 @@
                 </h6>
                 <p>{{ $t('views.staking_guide.press_claim_button') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-13.png" class="img-medium-size" alt="New account">
+                  <img src="../assets/faq-screencap-3.png" class="img-medium-size" alt="New account">
                 </div>
                 <h6>
                   <u>
@@ -250,7 +252,7 @@
                 <p>{{ $t('views.staking_guide.deposit_withdraw_page') }}</p>
                 <p>{{ $t('views.staking_guide.press_withdraw') }}</p>
                 <div class="img-container">
-                  <img src="../assets/staking-guide-16.png" class="img-medium-size" alt="New account">
+                  <img src="../assets/staking-guide-4.png" class="img-medium-size" alt="New account">
                 </div>
                 <p>{{ $t('views.staking_guide.pop_up_asking') }}</p>
                 <div class="img-container">
@@ -440,6 +442,20 @@
   margin: 0 auto;
   width: 50%;
   height: auto;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
+.img-medium-size {
+  width: 100% !important;  
+}
+
+@media only screen and (min-width: 780px) {
+  .img-container {
+    margin: 48px 0;
+  }
+  .img-medium-size {
+    width: 80% !important;
+  }
 }
 
 .img-medium-size {

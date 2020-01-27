@@ -59,9 +59,19 @@ export default new Vue({
       await dashboardStore.setEnv(production)
     } else {
       console.log("multiple envs")
-      dashboardStore.setEnvs([production, extDev, dev])
-      // default
-      await dashboardStore.setEnv(extDev)
+      const userSelected = localStorage.getItem("selectedConfig")
+      const multipleEnvs = [production, extDev, dev]
+
+      dashboardStore.setEnvs(multipleEnvs)
+
+      if (userSelected) {
+        // if user has already selected a config before
+        const selectedEnv = multipleEnvs.find((env) => env.name === userSelected)!
+        await dashboardStore.setEnv(selectedEnv)
+      } else {
+        // default
+        await dashboardStore.setEnv(extDev)
+      }
     }
 
     // do not auto connect if mobile or more than one environement config is present

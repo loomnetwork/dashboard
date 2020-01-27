@@ -155,7 +155,7 @@
       "Q_What_is_the_validator_fee_for": "What is the validator fee for?",
       "A_What_is_the_validator_fee_for": "Validators need to invest in hardware and perform various network services to ensure the security of Basechain, so they each charge a fee to their delegators as compensation. (Also see: <u>What are validators?</u>)\n\nFor example, if a validator had a fee of 30%, it would mean they would take 30% of the rewards listed in the table above, and you would keep the remaining 70%.\n\nEach validator’s fee level is published on the [Validators page](https://wallet.loomx.io/validators) of the Basechain Dashboard so that users can make informed decisions prior to staking.\n\nFor additional info on fees and rewards, see [this post on validator and staking economics](https://medium.com/loom-network/plasmachain-validator-staking-economics-part-1-e816d5825849).",
       "Q_What_currency_are_rewards_paid_in": "What currency are rewards paid in?",
-      "A_What_currency_are_rewards_paid_in": "All_rewards are paid in [LOOM](https://etherscan.io/token/0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0) — an ERC20 token.",
+      "A_What_currency_are_rewards_paid_in": "All rewards are paid in [LOOM](https://etherscan.io/token/0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0) — an ERC20 token.",
       "Q_How_do_I_claim_my_rewards": "How do I claim my rewards?",
       "A_How_do_I_claim_my_rewards": "The staking rewards will be automatically distributed by the network. To claim your rewards, press the “Claim Rewards” button on the [My Account page](https://wallet.loomx.io/account).\n\n![Basechain-Claim-Rewards.png](/assets/Basechain-Claim-Rewards.png)",
       "Q_How_much_can_I_be_rewarded": "How much can I be rewarded?",

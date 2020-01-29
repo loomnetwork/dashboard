@@ -10,7 +10,7 @@
           <h5>{{ $t('views.transfer_gateway.connect_new_contracts') }}</h5>
           </b-col>
           <b-col>
-          <b-button variant="primary" style="float:right;">{{ $t('views.transfer_gateway.view_docs') }}</b-button>
+          <b-button variant="primary" style="float:right;" :href="docsLink" target="_blank">{{ $t('views.transfer_gateway.view_docs') }}</b-button>
           </b-col>
         </b-row>
       </b-card>
@@ -121,6 +121,8 @@ export default class TransferGateway extends Vue {
   currentPage = 1
 
   onChain = "ethereum"
+
+  docsLink = "https://loomx.io/developers/en/extdev-transfer-gateway.html#overview"
 
   getContractLogs = gatewayModule.getTokenContractLogs
 

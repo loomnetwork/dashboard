@@ -20,6 +20,7 @@ export interface GatewayConfig {
   checkMarketplaceURL: string
   tokenContractLogsURL: string
   binance: BinanceGateway
+  withdrawalLimit: boolean
 }
 
 export interface ITransferGatewayState {
@@ -55,6 +56,7 @@ export interface GatewayState extends GatewayConfig {
     confirmed: IAddressMapping[],
     pending: IAddressMapping[],
   }
+
 }
 
 export interface WithdrawalReceiptsV2 extends IWithdrawalReceipt {

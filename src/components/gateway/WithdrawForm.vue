@@ -13,7 +13,7 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6 v-if="networkId === 'asia1' && isCheckDailyRemainingWithdrawAmount()">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
+        <h6 v-if="isWithdrawalLimitEnableForNetwork() && isCheckDailyRemainingWithdrawAmount()">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
         <amount-input
           :min="min"
           :max="max"
@@ -133,6 +133,10 @@ export default class WithdrawForm extends Vue {
     return this.isValidAddress = isValid
   }
 
+  isWithdrawalLimitEnabledForNetwork() {
+    return this.networkId === 'asia1' || this.networkId === 'default'
+  } 
+
   isCheckDailyRemainingWithdrawAmount() {
     return this.transferRequest.token === "ETH" || this.transferRequest.token === "LOOM"
   }
@@ -193,7 +197,7 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    if (this.networkId === 'asia1' && this.isCheckDailyRemainingWithdrawAmount()) {
+    if (this.isWithdrawalLimitEnabledForNetwork() && this.isCheckDailyRemainingWithdrawAmount()) {
       this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
       this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
     } else {
@@ -216,7 +220,7 @@ export default class WithdrawForm extends Vue {
       this.fee = {}
     }
     this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
-    if (this.networkId === 'asia1') {
+    if (this.isWithdrawalLimitEnabledForNetwork()) {
       this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
     }
   }

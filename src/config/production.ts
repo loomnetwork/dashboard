@@ -44,7 +44,7 @@ export default {
       gatewayAccount: "bnb17mxq8p5jmw27dtt6s92fd35yltdml6snw3r98t",
       fee: 37500,
     },
-    withdrawalLimit: true
+    withdrawalLimit: false
   },
   coinDataUrl: "/tokens/production.tokens.json",
   disabled: ["portis", "fortmatic", "walletconnect"],

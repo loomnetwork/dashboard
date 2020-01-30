@@ -37,6 +37,7 @@ export default {
       gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",
       fee: 37500,
     },
+    withdrawalLimit: true
   },
   coinDataUrl: "",
   disabled: [],

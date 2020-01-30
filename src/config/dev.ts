@@ -40,6 +40,7 @@ export default {
       fee: 37500,
     },
     tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
+    withdrawalLimit: true
   },
   disabled: [],
   chains: ["ethereum", "binance"],

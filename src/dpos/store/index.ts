@@ -178,7 +178,7 @@ export async function refreshContractState(context: ActionContext) {
 
   if (expectedYearlyRewards.gt(state.maxYearlyRewards)) {
     // shrink
-    state.rewardsScalingFactor = expectedYearlyRewards.div(state.maxYearlyRewards)
+    state.rewardsScalingFactor = state.maxYearlyRewards.div(expectedYearlyRewards)
   } else {
     state.rewardsScalingFactor = new BigNumber(1)
   }

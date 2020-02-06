@@ -192,8 +192,9 @@ export default class DelegateModal extends Vue {
   }
 
   calcReceiveAmount(i) {
-    const feePercent = this.rewardsScalingFactor.multipliedBy(this.validator.fee.toNumber() / 100).toNumber()
-    return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * this.rewardTiers[i]) * (1 - feePercent)))
+    const feePercent = this.validator.fee.toNumber() / 100
+    const rewardPercent = this.rewardsScalingFactor.multipliedBy(this.rewardTiers[i]).toNumber()
+    return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * rewardPercent) * (1 - feePercent)))
   }
 }
 </script>

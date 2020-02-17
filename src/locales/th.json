@@ -397,7 +397,7 @@
     },
     "transfer_gateway": {
       "connect_new_contracts": "Connect New Contracts",
-      "view_docs": "View Documentations",
+      "view_docs": "View Documentation",
       "debug_mapped_contract": "Debug Mapped Contract",
       "view_logs": "View Logs",
       "loading": "Loading...",

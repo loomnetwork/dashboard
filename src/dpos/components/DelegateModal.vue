@@ -42,11 +42,11 @@
               class="radio tier"
               :class="{selected: i === delegation.lockTimeTier}"
             >
-              <input type="radio" v-model="delegation.lockTimeTier" :value="i">
+              <input type="radio" v-model="delegation.lockTimeTier" :value="i" />
               <strong>{{ $t('components.modals.faucet_delegate_modal.locktime') }}</strong>
               <div>{{ locktimeTiers[i] }}</div>
               <strong>{{ $t('components.modals.faucet_delegate_modal.bonuses') }}</strong>
-              <div class="fee">{{ bonusTiers[i] }}</div>
+              <div class="fee">{{ bonusTiers[i] }}%</div>
               <div class="spec">({{ calcReceiveAmount(i) }} LOOM)</div>
             </label>
           </div>
@@ -88,12 +88,10 @@ export default class DelegateModal extends Vue {
 
   locktimeTiers: any[] = []
 
-  bonusTiers = [
-    "5%",
-    "7.5%",
-    "10%",
-    "20%",
-  ]
+
+  get bonusTiers() {
+    return this.rewardTiers.map((t) => this.rewardsScalingFactor.multipliedBy(t * 100).toFixed(2))
+  }
 
   rewardTiers = [
     0.05,
@@ -141,6 +139,10 @@ export default class DelegateModal extends Vue {
 
   get validators() {
     return this.state.dpos.validators
+  }
+
+  get rewardsScalingFactor() {
+    return this.dposState.rewardsScalingFactor
   }
 
   get delegationAmount(): number {
@@ -191,7 +193,8 @@ export default class DelegateModal extends Vue {
 
   calcReceiveAmount(i) {
     const feePercent = this.validator.fee.toNumber() / 100
-    return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * this.rewardTiers[i]) * (1 - feePercent)))
+    const rewardPercent = this.rewardsScalingFactor.multipliedBy(this.rewardTiers[i]).toNumber()
+    return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * rewardPercent) * (1 - feePercent)))
   }
 }
 </script>

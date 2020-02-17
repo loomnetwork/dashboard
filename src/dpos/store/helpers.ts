@@ -64,6 +64,7 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
 // can still move their delegations
 export const FORMER_VALIDATORS = {
   "0xe3beb36ae8edb5dbb5c2cfba9960f0819dd8e13a": "Bixin",
+  "0x5ba928ace46672f15e6d8364084f1d6ae302543e": "BlockMatrix",
 }
 
 /**

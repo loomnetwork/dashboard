@@ -63,7 +63,7 @@
         <br />
       </p>
 
-      <div class="button-container" v-if="!validator.isBootstrap && validator.name != 'Bixin'">
+      <div class="button-container" v-if="!validator.isBootstrap && !isFormerValidator">
         <b-button
           class="stake mr-3"
           @click="requestDelegation()"
@@ -102,6 +102,7 @@ import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
 import { plasmaModule } from "../../store/plasma"
+import { FORMER_VALIDATORS } from "../store/helpers"
 
 @Component({
   components: {
@@ -146,6 +147,10 @@ export default class ValidatorDetail extends Vue {
       this.$router.push("../validators")
     }
     return validator
+  }
+
+  get isFormerValidator() {
+    return FORMER_VALIDATORS[this.validator!.addr] !== undefined
   }
 
   get delegations() {

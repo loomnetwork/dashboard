@@ -43,8 +43,8 @@ export default {
   disabled: [],
   chains: ["ethereum"],
   announcement: {
-    validatorsPage: true,
-    popup: true,
-    home: true,
+    validatorsPage: false,
+    popup: false,
+    home: false,
   },
 } as DashboardConfig

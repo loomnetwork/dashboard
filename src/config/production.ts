@@ -50,8 +50,8 @@ export default {
   disabled: ["portis", "fortmatic", "walletconnect"],
   chains: ["ethereum", "binance"],
   announcement: {
-    validatorsPage: true,
+    validatorsPage: false,
     popup: false,
-    home: true,
+    home: false,
   },
 } as DashboardConfig

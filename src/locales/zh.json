@@ -397,7 +397,7 @@
     },
     "transfer_gateway": {
       "connect_new_contracts": "连接新合约",
-      "view_docs": "查看文档",
+      "view_docs": "View Documentation",
       "debug_mapped_contract": "调试已映射合约",
       "view_logs": "查看日志",
       "loading": "加载中……",

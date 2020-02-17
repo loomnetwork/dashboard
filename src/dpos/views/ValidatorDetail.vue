@@ -150,7 +150,7 @@ export default class ValidatorDetail extends Vue {
   }
 
   get isFormerValidator() {
-    return FORMER_VALIDATORS[this.validator!.addr] !== undefined
+    return this.validator!.addr in FORMER_VALIDATORS
   }
 
   get delegations() {

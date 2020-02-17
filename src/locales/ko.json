@@ -397,7 +397,7 @@
     },
     "transfer_gateway": {
       "connect_new_contracts": "새 컨트랙트 연결",
-      "view_docs": "문서 보기",
+      "view_docs": "View Documentation",
       "debug_mapped_contract": "매핑된 컨트랙트 디버그",
       "view_logs": "로그 확인하기",
       "loading": "로딩 중...",

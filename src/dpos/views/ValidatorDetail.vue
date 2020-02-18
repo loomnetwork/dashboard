@@ -62,8 +62,7 @@
         {{ $t("views.validator_detail.no_stakes", {name:validator.name}) }}
         <br />
       </p>
-
-      <div class="button-container" v-if="!validator.isBootstrap && !isFormerValidator">
+      <div class="button-container" v-if="!validator.isBootstrap && !validator.jailed && !validator.isFormer">
         <b-button
           class="stake mr-3"
           @click="requestDelegation()"
@@ -147,10 +146,6 @@ export default class ValidatorDetail extends Vue {
       this.$router.push("../validators")
     }
     return validator
-  }
-
-  get isFormerValidator() {
-    return this.validator!.addr in FORMER_VALIDATORS
   }
 
   get delegations() {

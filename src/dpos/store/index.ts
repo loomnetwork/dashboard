@@ -126,14 +126,7 @@ export async function refreshValidators(ctx: ActionContext) {
     const addr = address.local.toString().toLowerCase()
     let existing = nodes.find((node) => node.addr === addr)
     if (existing === undefined) {
-      if (FORMER_VALIDATORS[addr]) {
-        existing = formerValidator(address)
-      } else {
-        existing = new Validator()
-        existing.addr = addr
-        existing.address = address
-      }
-      existing.isBootstrap = ctx.state.bootstrapNodes.includes(addr)
+      existing = formerValidator(address)
       nodes.push(existing)
     }
     return existing

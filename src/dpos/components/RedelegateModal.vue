@@ -81,7 +81,10 @@ export default class RedelegateModal extends Vue {
   }
 
   get validators() {
-    return this.state.dpos.validators
+    return this.state.dpos.validators.filter((validator) =>
+        !validator.isBootstrap &&
+        !validator.jailed &&
+        !validator.isFormer)
   }
 
   get delegation() {
@@ -114,6 +117,7 @@ export default class RedelegateModal extends Vue {
       this.items = validators.filter((validator) =>
         !validator.isBootstrap &&
         !validator.jailed &&
+        !validator.isFormer &&
         origin !== validator.addr &&
         validator.name.toLowerCase().includes(str),
       )

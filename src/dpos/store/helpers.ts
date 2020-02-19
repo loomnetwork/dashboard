@@ -65,6 +65,7 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
 export const FORMER_VALIDATORS = {
   "0xe3beb36ae8edb5dbb5c2cfba9960f0819dd8e13a": "Bixin",
   "0x5ba928ace46672f15e6d8364084f1d6ae302543e": "BlockMatrix",
+  "0x9f1581a14f1194ab4913745301b55fe8d20595fe": "Chorus One", //the active former validator for testing on dev site
 }
 
 /**

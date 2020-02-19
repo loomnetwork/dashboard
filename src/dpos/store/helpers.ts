@@ -62,20 +62,20 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
 // Temporary list of former validators
 // So that users that have delegated to one of these
 // can still move their delegations
-export const FORMER_VALIDATORS = {
+export const VALIDATOR_NAMES = {
   "0xe3beb36ae8edb5dbb5c2cfba9960f0819dd8e13a": "Bixin",
   "0x5ba928ace46672f15e6d8364084f1d6ae302543e": "BlockMatrix",
+  "0x9f1581a14f1194ab4913745301b55fe8d20595fe": "Chorus One", //the active former validator for testing on dev site
 }
 
 /**
- * see FORMER_VALIDATORS
+ * see VALIDATOR_NAMES
  * @param address
  */
 export function formerValidator(address: Address): Validator {
   const addr = address.local.toString().toLowerCase()
-  let name = FORMER_VALIDATORS[addr]
+  let name = VALIDATOR_NAMES[addr]
   if (name === undefined) {
-    Sentry.captureException(new Error("Unknown former validator " + addr))
     name = `${addr.substring(35)}`
   }
   const validator = new Validator()
@@ -83,5 +83,6 @@ export function formerValidator(address: Address): Validator {
   validator.address = address
   validator.name = `Former Validator ${name}`
   validator.description = "This validator is no longer active on Basechain."
+  validator.isFormer = true
   return validator
 }

@@ -81,6 +81,7 @@ export class Validator implements IValidator, ICandidate {
   totalStaked = ZERO
   delegations: Delegation[] = []
   isBootstrap: boolean = false
+  isFormer:boolean = false
   active: boolean = false
   /**
    * Lower case string representation of the local address

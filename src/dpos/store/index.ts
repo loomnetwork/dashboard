@@ -9,7 +9,7 @@ import debug from "debug"
 import Axios from "axios"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
-import { fromIDelegation, defaultState, FORMER_VALIDATORS, formerValidator } from "./helpers"
+import { fromIDelegation, defaultState, VALIDATOR_NAMES, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
 import { Address, CryptoUtils } from "loom-js"
@@ -126,14 +126,7 @@ export async function refreshValidators(ctx: ActionContext) {
     const addr = address.local.toString().toLowerCase()
     let existing = nodes.find((node) => node.addr === addr)
     if (existing === undefined) {
-      if (FORMER_VALIDATORS[addr]) {
-        existing = formerValidator(address)
-      } else {
-        existing = new Validator()
-        existing.addr = addr
-        existing.address = address
-      }
-      existing.isBootstrap = ctx.state.bootstrapNodes.includes(addr)
+      existing = formerValidator(address)
       nodes.push(existing)
     }
     return existing

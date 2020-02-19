@@ -59,7 +59,7 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
     isReward,
   }) as Delegation
 }
-// Validators name list
+// This list is used as a fallback when the validator name can't be obtained from the chain
 // So that users that have delegated to one of these
 // can still move their delegations
 export const VALIDATOR_NAMES = {

@@ -101,7 +101,6 @@ import { Delegation } from "@/dpos/store/types"
 import DelegationsList from "@/dpos/components/Delegations.vue"
 import { feedbackModule } from "../../feedback/store"
 import { plasmaModule } from "../../store/plasma"
-import { FORMER_VALIDATORS } from "../store/helpers"
 
 @Component({
   components: {
@@ -146,10 +145,6 @@ export default class ValidatorDetail extends Vue {
       this.$router.push("../validators")
     }
     return validator
-  }
-
-  get isFormerValidator() {
-    return this.validator!.addr in FORMER_VALIDATORS
   }
 
   get delegations() {

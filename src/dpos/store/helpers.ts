@@ -4,7 +4,6 @@ import { Validator, Delegation, DPOSState } from "./types"
 import { ZERO } from "@/utils"
 import BigNumber from "bignumber.js"
 import { Address } from "loom-js"
-import * as Sentry from "@sentry/browser"
 
 export function defaultState(): DPOSState {
   return {

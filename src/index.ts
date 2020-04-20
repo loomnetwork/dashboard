@@ -96,7 +96,7 @@ export default new Vue({
 
 // todo should store key/project elsewhere (vault?)
 Sentry.init({
-  dsn: process.env.NODE_ENV === "production" ? "https://7e893bd9be0942a0977eb2120b7722d4@sentry.io/1394913" : undefined,
+  dsn: undefined, // set this to allow Sentry to send events, otherwise it won't do anything
   environment: window.location.hostname,
   integrations: [
     new SentryIntegrations.Dedupe(),

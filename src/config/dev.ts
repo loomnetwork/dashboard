@@ -14,7 +14,7 @@ export default {
     networkId: "4",
     networkName: "rinkeby",
     chainId: "eth",
-    endpoint: "wss://rinkeby.infura.io/ws",
+    endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
       mainGateway: "0xa6BaAA13CD9d027e15Ae219C90b90991Af373796",

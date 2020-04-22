@@ -407,17 +407,22 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    feedback.showError(i18n.t("feedback_msg.error.err_while_undelegate").toString())
-    Sentry.withScope((scope) => {
-      scope.setExtra("undelegations", {
-        undelegations: JSON.stringify({
-          validator: delegation.validator.address.local.toString(),
-          updateAmount: delegation.updateAmount.toString(),
-          index: delegation.index,
-        }),
+    if (error.message.indexOf("Delegation currently locked") !== -1) {
+      feedback.showError(i18n.t("feedback_msg.error.err_delegation_locked").toString())
+    } else {
+      console.error(error)
+      feedback.showError(i18n.t("feedback_msg.error.err_while_undelegate").toString())
+      Sentry.withScope((scope) => {
+        scope.setExtra("undelegations", {
+          undelegations: JSON.stringify({
+            validator: delegation.validator.address.local.toString(),
+            updateAmount: delegation.updateAmount.toString(),
+            index: delegation.index,
+          }),
+        })
+        Sentry.captureException(error)
       })
-      Sentry.captureException(error)
-    })
+    }
   }
 }
 

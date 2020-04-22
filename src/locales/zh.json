@@ -345,12 +345,11 @@
       "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
-      "state": "状态：",
-      "amount_delegated": "委托的数量：",
-      "amount_delegated_loom": "{amountDelegated} 个LOOM",
-      "updated_amount": "更新后的数量：",
-      "updated_amount_loom": "{updatedAmount} 个LOOM",
-      "timelock_tier": "可选的计时锁定：",
+      "state": "State",
+      "amount_delegated": "Amount Delegated",
+      "updated_amount": "Updated Amount",
+      "timelock_tier": "Timelock Tier",
+      "unlock_time": "Unlock Time",
       "timelock": "计时锁定：",
       "unlocked": "已解除锁定",
       "no_stakes": "你还未和 {name} 一起锁仓过。",
@@ -365,7 +364,7 @@
       "states": {
         "bonding": "正在绑定",
         "bonded": "已绑定",
-        "unbonding": "正在解绑",
+        "unbonding": "Unbonding",
         "redelegating": "正在重新委托"
       }
     },
@@ -845,6 +844,7 @@
       "err_while_undelegate": "取消委托出错。请联系客服。",
       "err_while_claiming": "领取奖励出错。请联系客服。",
       "err_while_delegate": "委托时出现意外错误，请联系客服。",
+      "err_delegation_locked": "Can't undelegate locked delegation.",
       "insufficient_funds": "资金不足。",
       "approval_failed": "批准失败。",
       "err_while_register": "注册出错。请联系客服。",

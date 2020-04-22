@@ -790,6 +790,7 @@
       "err_while_undelegate": "위임 취소 중 오류가 발생했습니다. 고객센터에 문의해주세요.",
       "err_while_claiming": "보상 수령 중 오류가 발생했습니다. 고객센터에 문의해주세요.",
       "err_while_delegate": "위임 중 오류가 발생했습니다. 고객센터에 문의해주세요.",
+      "err_delegation_locked": "Can't undelegate locked delegation.",
       "insufficient_funds": "자금이 충분하지 않습니다.",
       "approval_failed": "승인 실패",
       "err_while_register": "등록 중 오류가 발생했습니다. 고객센터에 문의해주세요.",

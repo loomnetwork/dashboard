@@ -293,12 +293,11 @@
       "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
-      "state": "状态：",
-      "amount_delegated": "委托的数量：",
-      "amount_delegated_loom": "{amountDelegated} 个LOOM",
-      "updated_amount": "更新后的数量：",
-      "updated_amount_loom": "{updatedAmount} 个LOOM",
-      "timelock_tier": "可选的计时锁定：",
+      "state": "状态",
+      "amount_delegated": "委托的数量",
+      "updated_amount": "更新后的数量",
+      "timelock_tier": "可选的计时锁定",
+      "unlock_time": "Unlock Time",
       "timelock": "计时锁定：",
       "unlocked": "已解除锁定",
       "no_stakes": "你还未和 {name} 一起锁仓过。",

@@ -293,12 +293,11 @@
       "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
-      "state": "状態:",
+      "state": "状態",
       "amount_delegated": "委任の数量:",
-      "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "数量を更新:",
-      "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "タイムロックを選択:",
+      "updated_amount": "数量を更新",
+      "timelock_tier": "タイムロックを選択",
+      "unlock_time": "Unlock Time",
       "timelock": "タイムロック:",
       "unlocked": "アンロック済み",
       "no_stakes": "まだ {name} へステークしていません",
@@ -312,7 +311,7 @@
       "states": {
         "bonding": "Bonding",
         "bonded": "Bonded",
-        "unbonding": "Unbounding",
+        "unbonding": "Unbonding",
         "redelegating": "Redelegating"
       }
     },

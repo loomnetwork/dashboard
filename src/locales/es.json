@@ -293,12 +293,11 @@
       "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
-      "state": "State:",
-      "amount_delegated": "Amount Delegated:",
-      "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "Updated Amount:",
-      "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "Timelock Tier:",
+      "state": "State",
+      "amount_delegated": "Amount Delegated",
+      "updated_amount": "Updated Amount",
+      "timelock_tier": "Timelock Tier",
+      "unlock_time": "Unlock Time",
       "timelock": "Timelock:",
       "unlocked": "Unlocked",
       "no_stakes": "You have not yet staked with {name}",
@@ -312,7 +311,7 @@
       "states": {
         "bonding": "Bonding",
         "bonded": "Bonded",
-        "unbonding": "Unbounding",
+        "unbonding": "Unbonding",
         "redelegating": "Redelegating"
       }
     },

@@ -293,12 +293,11 @@
       "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
-      "state": "상태:",
-      "amount_delegated": "위임한 양:",
-      "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "갱신된 양:",
-      "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "선택 가능한 락업 기간:",
+      "state": "상태",
+      "amount_delegated": "위임한 양",
+      "updated_amount": "갱신된 양",
+      "timelock_tier": "선택 가능한 락업 기간",
+      "unlock_time": "Unlock Time",
       "timelock": "락업 기간:",
       "unlocked": "잠금 해제됨",
       "no_stakes": "아직 {name}에 스테이킹하지 않았습니다.",

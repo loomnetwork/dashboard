@@ -121,7 +121,7 @@ export default class ValidatorDetail extends Vue {
     this.states = [
       this.$t("views.validator_detail.states.bonding").toString(),
       this.$t("views.validator_detail.states.bonded").toString(),
-      this.$t("views.validator_detail.states.unbounding").toString(),
+      this.$t("views.validator_detail.states.unbonding").toString(),
       this.$t("views.validator_detail.states.redelegating").toString()]
   }
 

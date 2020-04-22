@@ -345,12 +345,11 @@
       "no_airdrop": "You have no airdrop."
     },
     "validator_detail": {
-      "state": "状態:",
-      "amount_delegated": "委任の数量:",
-      "amount_delegated_loom": "{amountDelegated} LOOM",
-      "updated_amount": "数量を更新:",
-      "updated_amount_loom": "{updatedAmount} LOOM",
-      "timelock_tier": "タイムロックを選択:",
+      "state": "State",
+      "amount_delegated": "Amount Delegated",
+      "updated_amount": "Updated Amount",
+      "timelock_tier": "Timelock Tier",
+      "unlock_time": "Unlock Time",
       "timelock": "タイムロック:",
       "unlocked": "アンロック済み",
       "no_stakes": "まだ {name} へステークしていません",
@@ -365,7 +364,7 @@
       "states": {
         "bonding": "Bonding",
         "bonded": "Bonded",
-        "unbonding": "Unbounding",
+        "unbonding": "Unbonding",
         "redelegating": "Redelegating"
       }
     },
@@ -845,6 +844,7 @@
       "err_while_undelegate": "Error while undelegating. Please contact support.",
       "err_while_claiming": "Error while claiming rewards. Please contact support.",
       "err_while_delegate": "Unexpected error while delegating, please contact support.",
+      "err_delegation_locked": "Can't undelegate locked delegation.",
       "insufficient_funds": "Insufficient funds.",
       "approval_failed": "Approval failed.",
       "err_while_register": "Error while registering. Please contact support.",

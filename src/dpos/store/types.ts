@@ -38,9 +38,7 @@ export interface DPOSState extends DPOSConfig {
   validators: Validator[]
   delegations: Delegation[]
   rewards: Delegation[]
-  // intent toggles visibility of the Delegate/Redelegate/UndelegateModal which in turn allow
-  // the user to confirm the action, at which point the delegate/redelegate/undelegate functions
-  // in src/dpos/store/index.ts get invoked.
+  // when user is requesting an action
   intent: "" | "delegate" | "redelegate" | "undelegate"
   delegation: Delegation | null,
   analyticsData: any[] | null,

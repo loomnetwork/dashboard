@@ -17,7 +17,7 @@
           :min="minWeiAmount"
           :max="delegation.amount"
           v-model="delegation.updateAmount"
-          :symbol="token"
+          symbol="LOOM"
         />
       </div>
     </b-form-group>

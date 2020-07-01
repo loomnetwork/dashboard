@@ -285,6 +285,10 @@
       "once_the_transaction": "트랜잭션 서명이 완료되면, 현재 선거 주기가 끝난 뒤에 위임 내역이 업데이트될 것입니다.",
       "any_questions": "궁금한 점이 더 있으시다면, {link}를 확인해주세요."
     },
+    "feedback": {
+      "take_a_look": "We recommend that you first take a look at our ",
+      "other_questions": "For other questions, please contact our support team at "
+    },
     "history": {
       "your_history": "내 거래 내역",
       "sort_by": "정렬 기준:",

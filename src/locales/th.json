@@ -285,6 +285,10 @@
       "once_the_transaction": "Once the transaction has been signed, you’ll see the update at the end of the current election cycle.",
       "any_questions": "If you have any questions, please see our {link}."
     },
+    "feedback": {
+      "take_a_look": "We recommend that you first take a look at our ",
+      "other_questions": "For other questions, please contact our support team at "
+    },
     "history": {
       "your_history": "Your History",
       "sort_by": "Sort by:",

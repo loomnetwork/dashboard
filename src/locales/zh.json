@@ -285,6 +285,10 @@
       "once_the_transaction": "事务签署后，你将在当前选举周期结束时看到合并结果。",
       "any_questions": "如果你还有任何问题，可以看下我们的 {link}。"
     },
+    "feedback": {
+      "take_a_look": "We recommend that you first take a look at our ",
+      "other_questions": "For other questions, please contact our support team at "
+    },
     "history": {
       "your_history": "我的历史记录",
       "sort_by": "排序方式：",

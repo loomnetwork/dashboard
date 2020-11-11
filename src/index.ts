@@ -82,13 +82,10 @@ export default new Vue({
 
     // @ts-ignore
     let web3 =  new Web3(window.ethereum)
-    // @ts-ignore
     if ((web3 && web3.currentProvider.isTrust) ||
       // @ts-ignore
       !!window.imToken ||
-      // @ts-ignore
       (web3 && web3.currentProvider.isMetaMask) ||
-      // @ts-ignore
       (web3 && web3.isCobo)
     ) {
       ethereumModule.setWalletType("metamask")

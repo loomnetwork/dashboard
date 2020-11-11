@@ -166,7 +166,7 @@ export function detectedWallet() {
   ) return "imToken"
 
   // @ts-ignore
-  const web3 = window.web3
+  let web3 =  new Web3(window.ethereum)
   if (!web3) return ""
 
   if (web3.isCobo) return "cobo"

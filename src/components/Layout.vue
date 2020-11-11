@@ -149,12 +149,13 @@ export default class Layout extends Vue {
 
   @Watch("s.ethereum.networkId")
   getMetamaskNetwork() {
-    if (!("web3" in window)) {
+    if (!("ethereum" in window)) {
       this.metamaskNetwork = ""
     }
     try {
       // @ts-ignore
-      window.web3.version.getNetwork((err, networkId) => {
+      let web3 =  new Web3(window.ethereum)
+      web3.version.getNetwork((err, networkId) => {
         if (!err) this.metamaskNetwork = networkId
 
       })

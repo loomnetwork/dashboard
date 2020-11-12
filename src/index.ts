@@ -25,7 +25,7 @@ import { store, dashboardStore } from "./store"
 
 import { initFilters } from "./filters"
 import { ethereumModule } from "./store/ethereum"
-import { isMobile, detectedWallet } from "./utils"
+import { isMobile } from "./utils"
 import production from "./config/production"
 import extDev from "./config/ext-dev"
 import dev from "./config/dev"
@@ -81,14 +81,22 @@ export default new Vue({
     document.dispatchEvent(new Event("render-event"))
 
     // @ts-ignore
-    let web3 =  new Web3(window.ethereum)
-    if ((web3 && web3.currentProvider.isTrust) ||
-      // @ts-ignore
-      !!window.imToken ||
-      (web3 && web3.currentProvider.isMetaMask) ||
-      (web3 && web3.isCobo)
-    ) {
+    if (!!window.imToken) {
       ethereumModule.setWalletType("metamask")
+      // @ts-ignore
+    } else if (window.ethereum) { // modern MetaMask-like wallet
+      // @ts-ignore
+      const ethereum = window.ethereum
+      if (ethereum.isTrust || ethereum.isMetaMask || ethereum.isCobo) {
+        ethereumModule.setWalletType("metamask")
+      }
+      // @ts-ignore
+    } else if (window.web3) { // legacy MetaMask-like wallet
+      // @ts-ignore
+      const web3 = window.web3;
+      if (web3.currentProvider.isTrust || web3.currentProvider.isMetaMask || web3.isCobo) {
+        ethereumModule.setWalletType("metamask")
+      }
     }
   },
 }).$mount("#app")
@@ -104,5 +112,3 @@ Sentry.init({
       attachProps: true,
     })],
 })
-
-Sentry.setTag("wallet", detectedWallet())

@@ -78,6 +78,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
+import Web3 from "web3";
 
 import FaucetHeader from "@/components/FaucetHeader.vue"
 import FaucetSidebar from "@/components/FaucetSidebar.vue"
@@ -133,7 +134,7 @@ export default class Layout extends Vue {
   get networkId() { return this.s.plasma.networkId }
 
   mounted() {
-    this.getMetamaskNetwork()
+    this.onEthereumNetworkChanged()
     this.$root.$on("logout", () => {
       this.restart()
     })
@@ -148,16 +149,24 @@ export default class Layout extends Vue {
   }
 
   @Watch("s.ethereum.networkId")
-  getMetamaskNetwork() {
-    if (!("web3" in window)) {
-      this.metamaskNetwork = ""
-    }
+  onEthereumNetworkChanged() {
     try {
+      // @ts-ignore  
+      if (window.ethereum) { // modern MetaMask-like wallet
+        // @ts-ignore
+        const web3 = new Web3(window.ethereum)
+        web3.eth.net.getId()
+        .then(networkId => this.metamaskNetwork = networkId)
+        .catch(err => console.log(err))
       // @ts-ignore
-      window.web3.version.getNetwork((err, networkId) => {
-        if (!err) this.metamaskNetwork = networkId
-
-      })
+      } else if (window.web3) { // legacy MetaMask-like wallet
+        // @ts-ignore
+        window.web3.version.getNetwork((err, networkId) => {
+          if (!err) this.metamaskNetwork = networkId
+        })
+      } else {
+        this.metamaskNetwork = ""
+      }
     } catch (err) {
       console.error(err)
     }

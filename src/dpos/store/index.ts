@@ -30,7 +30,6 @@ const dposModule = {
 
   rewardsUnclaimedTotal: builder.read(rewardsUnclaimedTotal),
   rewardsBeingClaimedTotal: builder.read(rewardsBeingClaimedTotal),
-  getReferrer: builder.read(getReferrer),
 
   setConfig: builder.commit(mutations.setConfig),
   setElectionTime: builder.commit(mutations.setElectionTime),
@@ -298,35 +297,6 @@ export async function delegate(context: ActionContext, delegation: Delegation) {
       Sentry.captureException(error)
     })
   }
-}
-
-function getReferrer() {
-  if ("imToken" in window ||
-    // @ts-ignore
-    ("ethereum" in window && window.ethereum.isImToken)
-  ) return "imToken"
-
-  // @ts-ignore
-  const web3 = window.web3
-  if (!web3) return ""
-
-  if (web3.isCobo) return "cobo"
-
-  if (web3.currentProvider.isTrust) return "trust"
-
-  if (web3.currentProvider.isGoWallet) return "goWallet"
-
-  if (web3.currentProvider.isAlphaWallet) return "alphaWallet"
-
-  if (web3.currentProvider.isStatus) return "status"
-
-  if (web3.currentProvider.isToshi) return "coinbase"
-
-  if ("__CIPHER__" in window) return "cipher"
-
-  if (web3.currentProvider.isMetaMask) return "metamask"
-
-  return ""
 }
 
 /**

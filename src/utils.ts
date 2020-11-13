@@ -158,32 +158,3 @@ export function setNewTokenToLocalStorage(token: TokenData, env: string) {
 export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
-
-export function detectedWallet() {
-  if ("imToken" in window ||
-    // @ts-ignore
-    ("ethereum" in window && window.ethereum.isImToken)
-  ) return "imToken"
-
-  // @ts-ignore
-  const web3 = window.web3
-  if (!web3) return ""
-
-  if (web3.isCobo) return "cobo"
-
-  if (web3.currentProvider.isTrust) return "trust"
-
-  if (web3.currentProvider.isGoWallet) return "goWallet"
-
-  if (web3.currentProvider.isAlphaWallet) return "alphaWallet"
-
-  if (web3.currentProvider.isStatus) return "status"
-
-  if (web3.currentProvider.isToshi) return "coinbase"
-
-  if ("__CIPHER__" in window) return "cipher"
-
-  if (web3.currentProvider.isMetaMask) return "metamask"
-
-  return ""
-}

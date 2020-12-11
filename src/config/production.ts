@@ -29,6 +29,7 @@ export default {
       "0x2a3a7c850586d4f80a12ac1952f88b1b69ef48e1",
       "0x4a1b8b15e50ce63cc6f65603ea79be09206cae70",
       "0x0ce7b61c97a6d5083356f115288f9266553e191e",
+      "0xCcE0021b0DE03C5fab36059f37dB003354bF98fb"
     ],
     analyticsUrl: "https://api.loom.games",
   },

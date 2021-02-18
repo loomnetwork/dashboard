@@ -1,5 +1,4 @@
 #!/bin/bash -ex
-# Deploy battleground-marketplace.
 
 export SENTRY_ORG=loom-network
 export SENTRY_PROJECT=loomgames-frontend
@@ -25,11 +24,9 @@ BRANCH_CHOICE=${1:-$GIT_BRANCH}
 case "$BRANCH_CHOICE" in
   origin/master|master)
     FAUCET_PATH="${PRESET_PROD}"
-    AWS_DISTRIBUTION_ID=E2NYGSJ6V75DN
   ;;
   origin/staging|staging)
     FAUCET_PATH="${PRESET_STAGE}"
-    AWS_DISTRIBUTION_ID=E3MGPR8CO07CC2
   ;;
   origin/develop|develop)
     FAUCET_PATH="${PRESET_DEV}"
@@ -70,18 +67,3 @@ cd dist
 aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
 aws s3 sync . s3://$FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
 
-# deploys a copy to wallet.loomx.io because AWS does not support mis-matched bucket/url names
-case "$BRANCH_CHOICE" in
-  origin/master|master)
-    ALT_FAUCET_PATH="wallet.loomx.io"
-    aws s3 sync . s3://$ALT_FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --exclude "*" --include "*.html"
-    aws s3 sync . s3://$ALT_FAUCET_PATH --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --exclude "*.html" --cache-control 'max-age=86400'
-  ;;
-  *)
-    echo "Did not deploy to wallet.loomx.io"
-  ;;
-esac
-# TODO get the one for the faucet
-#if [ ! -z "${AWS_DISTRIBUTION_ID}" ]; then
-#  aws cloudfront create-invalidation --distribution-id ${AWS_DISTRIBUTION_ID} --paths /\*
-#fi

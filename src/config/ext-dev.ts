@@ -34,7 +34,7 @@ export default {
       loom: true,
       main: true,
     },
-    checkMarketplaceURL: "https://dev-auth.loom.games/wallet/address?address={address}&wallet=eth",
+    checkMarketplaceURL: "",
     tokenContractLogsURL: "",
     binance: {
       gatewayAccount: "tbnb1gc7azhlup5a34t8us84x6d0fluw57deuf47q9w",

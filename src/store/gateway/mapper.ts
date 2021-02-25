@@ -134,9 +134,9 @@ export function idFromPrivateKey(pk: string, chainId = "default") {
  * otherwise, it's assume that user is newcomer so new mapping will be create
  */
 export async function checkRelentlessUser(context: ActionContext, address: string) {
-
-  // https://dev-auth.loom.games always return 'valid_address' as true no matter what address is
-  // So url will be change later
+  if (context.state.checkMarketplaceURL === "") {
+    return
+  }
   const checkURL = context.state.checkMarketplaceURL.replace("{address}", address)
   await axios.get(checkURL).then((response) => {
     context.state.maybeRelentlessUser = !response.data.valid_address

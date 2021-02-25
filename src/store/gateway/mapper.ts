@@ -135,6 +135,7 @@ export function idFromPrivateKey(pk: string, chainId = "default") {
  */
 export async function checkRelentlessUser(context: ActionContext, address: string) {
   if (context.state.checkMarketplaceURL === "") {
+    context.state.requireMapping = true
     return
   }
   const checkURL = context.state.checkMarketplaceURL.replace("{address}", address)

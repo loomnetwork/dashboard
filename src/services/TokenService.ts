@@ -22,6 +22,10 @@ const ETHBNB: TokenData = Object.freeze({
   binance: "",
 })
 
+const oldLoomTokenAddresses = [
+  "0x493640b5befb0962ce0932653987c41aa3608bd0", // Rinkeby
+]
+
 class TokenService {
   tokens: TokenData[] = []
 
@@ -87,7 +91,14 @@ class TokenService {
     address: string,
     chain: "plasma" | "ethereum",
   ): TokenData | null {
-    const info = this.tokens.find((token) => token[chain] === address.toLocaleLowerCase())
+    let info: TokenData | undefined;
+    // HACK: old LOOM withdrawal receipts may still refer to the old LOOM contract address on Ethereum,
+    // so catch those old token addresses here and lookup the token data by symbol instead.
+    if ((chain === "ethereum") && oldLoomTokenAddresses.find(tokenAddr => tokenAddr === address.toLowerCase())) {
+      info = this.get("LOOM")
+    } else {
+      info = this.tokens.find((token) => token[chain] === address.toLocaleLowerCase())
+    }
     if (info === undefined) {
       console.warn(
         `No known token contract matches address ${address} on ${chain}`,

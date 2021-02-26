@@ -17,7 +17,7 @@ export default {
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://rinkeby.etherscan.io",
     contracts: {
-      loomGateway: "0xc6e1421720c7f62455c053bc8326633d68c01c00",
+      loomGateway: "0x63E4efDf3786EaCa967A30D2Cdc154AaDC2526E6",
       mainGateway: "0x9c67fd4eaf0497f9820a3fbf782f81d6b6dc4baa",
     },
     portisKey: "10589118-6329-43a0-818c-93800c206786",
@@ -31,7 +31,7 @@ export default {
   gateway: {
     chains: ["ethereum", "binance"],
     multisig: {
-      loom: true,
+      loom: false,
       main: true,
     },
     checkMarketplaceURL: "",

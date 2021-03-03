@@ -449,6 +449,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     } else if (tokenInfo.symbol === "LOOM") {
       console.error("LOOM withdrawals are temporarily suspended")
       fb.showError(i18n.t("feedback_msg.error.withdraw_suspended").toString())
+      return
     }
     token = tokenInfo.symbol
   }

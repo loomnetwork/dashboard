@@ -446,6 +446,9 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
       console.error("token contract address in receipt unknown ", tokenInfo)
       fb.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
       return
+    } else if (tokenInfo.symbol === "LOOM") {
+      console.error("LOOM withdrawals are temporarily suspended")
+      fb.showError(i18n.t("feedback_msg.error.withdraw_suspended").toString())
     }
     token = tokenInfo.symbol
   }

@@ -3,7 +3,7 @@
     "symbol": "LOOM",
     "name": "Loom",
     "decimals": 18,
-    "ethereum": "0xF0265F31D8Ec34Eb32a2928288a5F12a284eA822",
+    "ethereum": "0xf0265f31d8ec34eb32a2928288a5f12a284ea822",
     "plasma": "0x0e9d499f42dfafe7f0e397f86fee6ab09483f36b",
     "binance": ""
   },

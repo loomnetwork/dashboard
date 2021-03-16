@@ -39,7 +39,7 @@
               style="display:flex"
               class="button"
               variant="outline-primary"
-              :disabled="disableDeposit || symbol === 'LOOM'"
+              :disabled="disableDeposit"
               @click="requestCrossChainTranfer(DEPOSIT, symbol)"
             >
               {{ $t('views.my_account.deposit' )}}
@@ -48,7 +48,7 @@
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero() || symbol === 'LOOM'"
+              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
               @click="requestCrossChainTranfer(WITHDRAW, symbol)"
             >
               <span>{{ $t('views.my_account.withdraw' )}}</span>
@@ -144,7 +144,6 @@ export default class DepositWithdraw extends Vue {
     return this.txInProgress
   }
 
-  // FIXME: this isn't used, which doesn't seem right
   get disableWithdraw(): boolean {
     return !this.currentBlockNumber || !this.pastTxHasExpired || this.txInProgress
   }

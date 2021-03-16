@@ -18,7 +18,7 @@ export default {
     blockExplorer: "https://etherscan.com",
     contracts: {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
-      loomGateway: "0x8f8e8b3c4de76a31971fe6a87297d8f703be8570",
+      loomGateway: "0xfcf1e3fa575a313fd81fea2caa06269b49f1a528",
     },
   },
   dpos: {

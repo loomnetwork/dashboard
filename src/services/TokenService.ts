@@ -24,6 +24,7 @@ const ETHBNB: TokenData = Object.freeze({
 
 const oldLoomTokenAddresses = [
   "0x493640b5befb0962ce0932653987c41aa3608bd0", // Rinkeby
+  "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0" // Mainnet
 ]
 
 class TokenService {

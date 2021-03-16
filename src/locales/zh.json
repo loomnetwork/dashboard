@@ -801,6 +801,7 @@
       "could_not_deposit_eth": "不能存入 ETH，请确认为此事务支付足够的 gas 费。",
       "deposit_approval_failed": "存入批准失败。",
       "withdraw_failed": "提取出错，请重试或联系客服。",
+      "withdraw_suspended": "LOOM Withdrawals are currently suspended for maintenance.",
       "supplied_key_already_mapped": "提供的密钥已映射。",
       "unexpected_error_while_add_account": "添加账户映射时出现意外错误。",
       "balance_not_enough": "你的余额不足。请先存入一些。",

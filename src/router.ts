@@ -17,7 +17,6 @@ import DepositWithdraw from "./views/DepositWithdraw.vue"
 import FeedbackForm from "./views/FeedbackForm.vue"
 import ValidatorManagement from "./dpos/views/ValidatorManagement.vue"
 import TransferGateway from "./views/TransferGateway.vue"
-import BountyPage from "./views/BountyPage.vue"
 import { plasmaModule } from "./store/plasma"
 
 Vue.use(VueRouter)
@@ -80,11 +79,6 @@ const router = new VueRouter({
       name: "addKey",
       component: AddKey,
       beforeEnter: requireAccount,
-    },
-    {
-      path: "/bounty",
-      name: "bounty",
-      component: BountyPage,
     },
     {
       path: "/game-assets",

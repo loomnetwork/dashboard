@@ -16,6 +16,7 @@ export default {
     chainId: "eth",
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://rinkeby.etherscan.io",
+    blockExplorerApi: "api-rinkeby.etherscan.io/api",
     contracts: {
       mainGateway: "0xa6BaAA13CD9d027e15Ae219C90b90991Af373796",
       loomGateway: "0x065F7D2636880aE34a98dD7600b9bD1D5EcAFA97",

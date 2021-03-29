@@ -15,6 +15,7 @@ export default {
     networkName: "Ganache",
     endpoint: "ws://localhost:8484",
     blockExplorer: "",
+    blockExplorerApi: "",
     chainId: "eth",
     contracts: {
       gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",

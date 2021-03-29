@@ -59,6 +59,7 @@ const initialState: EthereumState = {
   chainId: "",
   endpoint: "",
   blockExplorer: "",
+  blockExplorerApi: "",
   provider: null,
   address: "",
   signer: null,

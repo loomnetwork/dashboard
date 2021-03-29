@@ -16,6 +16,7 @@ export default {
     chainId: "eth",
     endpoint: `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://etherscan.com",
+    blockExplorerApi: "api.etherscan.io/api",
     contracts: {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
       loomGateway: "0xfcf1e3fa575a313fd81fea2caa06269b49f1a528",

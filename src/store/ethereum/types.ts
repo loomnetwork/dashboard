@@ -11,6 +11,7 @@ export interface EthereumConfig {
   chainId: string
   endpoint: string
   blockExplorer: string
+  blockExplorerApi: string
   contracts: { [name: string]: string }
   formaticKey?: string
   portisKey?: string

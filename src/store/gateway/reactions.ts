@@ -47,6 +47,11 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
         const ethereumGateways = EthereumGateways.service()
 
+        // TODO: Remove this. This event listening stuff is half done, the events are fetched and
+        //       then nothing actually looks at them or does anything useful,
+        //       also BSC doesn't have any official websocket endpoints so this just plain doesn't
+        //       work there.
+        /*
         // Listen to approval & deposit events
         listenToDepositApproval(
           ethereumModule.state.address,
@@ -59,7 +64,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
           ethereumGateways.loomGateway,
           ethereumModule.getERC20("LOOM")!,
         )
-
+        */
         checkIncompleteTransfers()
       }
     },

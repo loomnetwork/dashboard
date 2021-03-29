@@ -443,6 +443,7 @@
     "account": {
       "account": "Account",
       "show_etherscan": "Show in EtherScan",
+      "show_bscscan": "Show in BscScan",
       "show_block_explorer": "Show in Block Explorer"
     },
     "amount_input": {

@@ -389,6 +389,7 @@
     "account": {
       "account": "账户：",
       "show_etherscan": "查看 EtherScan",
+      "show_bscscan": "Show in BscScan",
       "show_block_explorer": "查看区块浏览器"
     },
     "amount_input": {

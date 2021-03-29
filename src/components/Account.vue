@@ -2,13 +2,13 @@
   <b-card class="mb-1">
     <b-card-title>{{ $t('components.account.account') }}</b-card-title>
     <div class="account ethereum">
-      <label>Ethereum</label>
+      <label>{{ foreignNetworkName }}</label>
       <address @click="copyEthereum">
         <span class="highlight">{{ethAccount}}</span>
         <fa icon="paste"/>
       </address>
       <a a class="explorer" :href="etherScanUrl" target="_blank">
-        {{ $t('components.account.show_etherscan') }}
+        {{ foreignNetworkName === "Ethereum" ? $t('components.account.show_etherscan') : $t('components.account.show_bscscan') }}
         <fa icon="external-link-alt"/>
       </a>
     </div>
@@ -29,7 +29,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import { dposModule } from "@/dpos/store"
 import { DashboardState } from "@/types"
 import { feedbackModule } from "@/feedback/store"
 import { formatToLoomAddress } from "@/utils"
@@ -41,6 +40,17 @@ export default class Account extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get foreignNetworkName() {
+    switch (this.state.ethereum.networkName) {
+      case "rinkeby":
+      case "mainnet":
+        return "Ethereum"
+      case "bsc-testnet":
+      case "bsc-mainnet":
+        return "Binance Smart Chain"
+    }
   }
 
   get ethAccount() {

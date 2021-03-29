@@ -389,6 +389,7 @@
     "account": {
       "account": "계정",
       "show_etherscan": "이더스캔에서 보기",
+      "show_bscscan": "Show in BscScan",
       "show_block_explorer": "블록 탐색기에서 보기"
     },
     "amount_input": {

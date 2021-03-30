@@ -14,6 +14,7 @@ export default {
     networkId: "1",
     networkName: "mainnet",
     chainId: "eth",
+    nativeTokenSymbol: "ETH",
     endpoint: `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://etherscan.com",
     blockExplorerApi: "api.etherscan.io/api",

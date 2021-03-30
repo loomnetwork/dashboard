@@ -9,6 +9,7 @@ export interface EthereumConfig {
   networkId: string
   networkName: string
   chainId: string
+  nativeTokenSymbol: string
   endpoint: string
   blockExplorer: string
   blockExplorerApi: string
@@ -52,7 +53,7 @@ export interface EthereumState extends EthereumConfig {
   blockNumber: number,
   // TODO move to gateway module
   latestWithdrawalBlock: number,
-  claimedReceiptHasExpired: boolean,
+  claimedReceiptHasExpired: boolean, // TODO: get rid of this, it's not used
   history: any[],
   metamaskChangeAlert: boolean,
   userData: {

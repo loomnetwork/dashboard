@@ -164,6 +164,18 @@ class PlasmaGateways {
     return adapter
   }
 
+  // @return Gateway adapter registered for the given chain & symbol, or undefined if one doesn't
+  //         exist.
+  // NOTE: This is very similar to get() above, but doesn't needlessly throw errors.
+  getGatewayAdapter(chain: string, symbol: string): PlasmaGatewayAdapter | undefined {
+    const chainAdapters = this.chains.get(chain)
+    if (chainAdapters === undefined) {
+      console.warn(`No gateway adapters registered for ${chain}`)
+      return undefined
+    }
+    return chainAdapters.get(symbol)
+  }
+
   /**
    *
    * @param chain

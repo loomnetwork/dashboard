@@ -14,6 +14,7 @@ export default {
     networkId: "4",
     networkName: "rinkeby",
     chainId: "eth",
+    nativeTokenSymbol: "ETH",
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://rinkeby.etherscan.io",
     blockExplorerApi: "api-rinkeby.etherscan.io/api",

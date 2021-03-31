@@ -37,7 +37,7 @@ import { PortisAdapter } from "./wallets/portis"
 import { FortmaticAdapter } from "./wallets/fortmatic"
 import { TestWalletAdapter } from "./wallets/test-wallet"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
-import Connector from "@walletconnect/core"
+import { BinanceChainWalletAdapter } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -46,6 +46,7 @@ const ZERO = new BN("0")
 
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
+  ["binance", BinanceChainWalletAdapter],
   ["ledger", LedgerAdapter],
   ["portis", PortisAdapter],
   ["fortmatic", FortmaticAdapter],

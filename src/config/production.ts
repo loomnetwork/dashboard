@@ -1,4 +1,5 @@
 import { DashboardConfig } from "@/types"
+import { ethers } from "ethers"
 
 export default {
   name: "production",
@@ -21,6 +22,19 @@ export default {
     contracts: {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
       loomGateway: "0xfcf1e3fa575a313fd81fea2caa06269b49f1a528",
+    },
+  },
+  binance: {
+    networkId: "56",
+    networkName: "bsc-mainnet",
+    chainId: "eth",
+    nativeTokenSymbol: "BNB",
+    endpoint: "https://bsc-dataseed.binance.org",
+    blockExplorer: "https://bscscan.com",
+    blockExplorerApi: "api.bscscan.com/api",
+    contracts: {
+      mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
+      loomGateway: "0xdeadbeef"
     },
   },
   dpos: {

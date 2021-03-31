@@ -75,7 +75,8 @@
         "trezor_via_metamask": "Trezor (via Metamask)",
         "ledger_legacy": "Ledger (Legacy)",
         "walletconnect": "WalletConnect",
-        "explore": "Explore"
+        "explore": "Explore",
+        "binance": "Binance Chain"
       },
       "no_metamask": "Looks like you don't have {metamask} extension",
       "get_one": "Get one here!",

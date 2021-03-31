@@ -9,10 +9,10 @@
       <hr />
       <div class="helpAlert">
         <p>
-          <b>{{ $t('views.my_account.deposit' )}}</b> : {{ $t('views.help.deposit_to_plasmachain' )}}
+          <b>{{ $t('views.my_account.deposit' )}}</b> : {{ $t('views.help.deposit_to_plasmachain', { network: foreignNetworkName }) }}
         </p>
         <p>
-          <b>{{ $t('views.my_account.withdraw' )}}</b> : {{ $t('views.help.withdraw_to_ethereum' )}}
+          <b>{{ $t('views.my_account.withdraw' )}}</b> : {{ $t('views.help.withdraw_to_ethereum', { network: foreignNetworkName }) }}
         </p>
         <b>{{ $t('components.gameAsset.cards.transfer' )}}</b> : {{ $t('views.help.transfer_token' )}}
       </div>
@@ -134,6 +134,10 @@ export default class DepositWithdraw extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get foreignNetworkName() {
+    return this.state.ethereum.genericNetworkName
   }
 
   get txInProgress(): boolean {

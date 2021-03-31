@@ -43,14 +43,7 @@ export default class Account extends Vue {
   }
 
   get foreignNetworkName() {
-    switch (this.state.ethereum.networkName) {
-      case "rinkeby":
-      case "mainnet":
-        return "Ethereum"
-      case "bsc-testnet":
-      case "bsc-mainnet":
-        return "Binance Smart Chain"
-    }
+    return this.state.ethereum.genericNetworkName
   }
 
   get ethAccount() {
@@ -63,7 +56,9 @@ export default class Account extends Vue {
 
   copyEthereum() {
     this.$copyText(this.ethAccount).then(() =>
-      feedbackModule.showSuccess(this.$t("feedback_msg.success.eth_addr_copied").toString()),
+      feedbackModule.showSuccess(
+        this.$t("feedback_msg.success.eth_addr_copied", { network: this.foreignNetworkName }).toString()
+      ),
       console.error,
     )
   }

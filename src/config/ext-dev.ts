@@ -14,6 +14,7 @@ export default {
   ethereum: {
     networkId: "4",
     networkName: "rinkeby",
+    genericNetworkName: "Ethereum",
     chainId: "eth",
     nativeTokenSymbol: "ETH",
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
@@ -29,6 +30,7 @@ export default {
   binance: {
     networkId: "97",
     networkName: "bsc-testnet",
+    genericNetworkName: "Binance Smart Chain",
     chainId: "eth", // NOTE: not a typo, use the same chain ID as Ethereum to reuse account mappings etc.
     nativeTokenSymbol: "BNB",
     endpoint: "https://data-seed-prebsc-1-s1.binance.org:8545",

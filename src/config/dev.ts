@@ -13,6 +13,7 @@ export default {
   ethereum: {
     networkId: "4",
     networkName: "rinkeby",
+    genericNetworkName: "Ethereum",
     chainId: "eth",
     nativeTokenSymbol: "ETH",
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,

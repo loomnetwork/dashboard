@@ -8,6 +8,7 @@ import { provider } from "web3-providers"
 export interface EthereumConfig {
   networkId: string
   networkName: string
+  genericNetworkName: string
   chainId: string
   nativeTokenSymbol: string
   endpoint: string

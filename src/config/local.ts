@@ -13,6 +13,7 @@ export default {
   ethereum: {
     networkId: "default",
     networkName: "Ganache",
+    genericNetworkName: "Ethereum",
     endpoint: "ws://localhost:8484",
     blockExplorer: "",
     blockExplorerApi: "",

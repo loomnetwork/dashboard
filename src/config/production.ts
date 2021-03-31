@@ -14,6 +14,7 @@ export default {
   ethereum: {
     networkId: "1",
     networkName: "mainnet",
+    genericNetworkName: "Ethereum",
     chainId: "eth",
     nativeTokenSymbol: "ETH",
     endpoint: `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
@@ -27,6 +28,7 @@ export default {
   binance: {
     networkId: "56",
     networkName: "bsc-mainnet",
+    genericNetworkName: "Binance Smart Chain",
     chainId: "eth",
     nativeTokenSymbol: "BNB",
     endpoint: "https://bsc-dataseed.binance.org",

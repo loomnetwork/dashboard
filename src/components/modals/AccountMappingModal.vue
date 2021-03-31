@@ -71,14 +71,7 @@ export default class AccountMappingModal extends Vue {
   }
 
   get foreignNetworkName() {
-    switch (this.state.ethereum.networkName) {
-      case "rinkeby":
-      case "mainnet":
-        return "Ethereum"
-      case "bsc-testnet":
-      case "bsc-mainnet":
-        return "Binance Smart Chain"
-    }
+    return this.state.ethereum.genericNetworkName
   }
 
   get visible() {

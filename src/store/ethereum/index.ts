@@ -57,6 +57,7 @@ const wallets: Map<string, WalletType> = new Map([
 const initialState: EthereumState = {
   networkId: "",
   networkName: "",
+  genericNetworkName: "",
   chainId: "",
   nativeTokenSymbol: "",
   endpoint: "",
@@ -242,8 +243,6 @@ export async function refreshBalance(context: ActionContext, symbol: string) {
   }
   const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
   const coinState = context.state.coins[symbol]
-  // @ts-ignore
-  console.log(symbol, contract._address)
   coinState.loading = true
   return (
     contract.methods

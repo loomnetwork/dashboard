@@ -25,7 +25,7 @@
             hide-footer
             centered
             no-close-on-backdrop
-          >{{ $t('components.layout.sign_wallet') }}</b-modal>
+          >{{ $t('components.layout.sign_wallet', { network: foreignNetworkName }) }}</b-modal>
           <b-modal
             id="already-mapped"
             title="$t('components.layout.account_mapped')"
@@ -128,6 +128,10 @@ export default class Layout extends Vue {
 
   // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
+
+  get foreignNetworkName() {
+    return this.s.ethereum.genericNetworkName
+  }
 
   get showLoadingSpinner() { return false }
 

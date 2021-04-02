@@ -18,7 +18,7 @@ export default {
     blockExplorer: "https://etherscan.com",
     contracts: {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
-      loomGateway: "0x8f8e8b3c4de76a31971fe6a87297d8f703be8570",
+      loomGateway: "0xfcf1e3fa575a313fd81fea2caa06269b49f1a528",
     },
   },
   dpos: {
@@ -29,6 +29,7 @@ export default {
       "0x2a3a7c850586d4f80a12ac1952f88b1b69ef48e1",
       "0x4a1b8b15e50ce63cc6f65603ea79be09206cae70",
       "0x0ce7b61c97a6d5083356f115288f9266553e191e",
+      "0xCcE0021b0DE03C5fab36059f37dB003354bF98fb"
     ],
     analyticsUrl: "https://api.loom.games",
   },

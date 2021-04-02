@@ -1,15 +1,8 @@
 <template>
   <div id="feedback-form">
-    <b-card class="mb-4 form-contianer" no-body>
-      <iframe title="Feedback Form" 
-        class="freshwidget-embedded-form"
-        id="freshwidget-embedded-form" 
-        src="https://loom.freshdesk.com/widgets/feedback_widget/new?&widgetType=embedded&formTitle=Contact+Support&submitTitle=Send+to+Support&submitThanks=Thanks!+Your+message+has+been+added+to+our+support+queue.+One+of+our+agents+will+get+back+to+you+within+the+next+2+work+days.&searchArea=no&captcha=yes" 
-        scrolling="no"
-        height="1100px"
-        width="100%"
-        frameborder="0">
-      </iframe>
+    <b-card>
+      {{ $t('views.feedback.take_a_look') }} <router-link to="/staking-guide">Staking Guide</router-link>.
+      {{ $t('views.feedback.other_questions') }} <a place="email" href="mailto:support@loomx.io" target="_blank" class="hover-warning"><fa :icon="['fas', 'envelope']" fixed-width /> support@loomx.io </a>
     </b-card>
   </div>
 </template>

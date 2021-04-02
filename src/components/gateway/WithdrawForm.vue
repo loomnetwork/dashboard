@@ -7,6 +7,23 @@
     id="deposit-approval-success"
     :title="$t('components.gateway.withdraw_form_modal.title', { token: token, chain: transferRequest.chain })"
   >
+    <b-alert v-if="token === 'LOOM'" show variant="warning">
+      <strong>WARNING</strong>
+      <p>
+        Most exchanges only support one version of the LOOM token.
+        You are withdrawing <strong>NEW LOOM</strong> tokens, do not send them to an exchange that only
+        supports <strong>OLD LOOM</strong> tokens!
+      </p>
+      <p>
+        Sending the <strong>NEW LOOM</strong> tokens to an exchange that doesn't support them yet
+        may result in a loss of funds. See our
+        <a
+          href="https://medium.com/loom-network/loom-token-swap-launch-f9257a4ae066"
+          target="_blank"
+        >
+        token swap launch article</a> for the latest exchange info.
+      </p>
+    </b-alert>
     <div v-if="visible && tokenInfo">
       <div v-if="fee.amount">
         <p>{{ $t('components.gateway.withdraw_form_modal.transfer_fee', { chain: transferRequest.chain }) }} {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}</p>

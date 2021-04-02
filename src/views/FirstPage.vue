@@ -53,8 +53,9 @@
             <b-card-group deck>
               <b-card>
                 <b-card-title>
-                  <img class="d-block mx-auto" width="56px" height="64px" src="../assets/binance_logo.png" alt="Binance Logo" />
+                  <img class="d-block mx-auto" width="64px" height="64px" src="../assets/binance_logo.png" alt="Binance Logo" />
                   <div class="text-center mt-2">Binance Smart Chain</div>
+                  <div class="text-center h6 font-weight-normal font-italic">Stake your LOOM BEP20 tokens!</div>
                 </b-card-title>
                 <div class="text-center">{{ $t('views.first_page.select_wallet') }}...</div>
                 <b-card-body>
@@ -63,7 +64,7 @@
                       <div class="col-sm-12 mb-3">
                         <b-card
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !binanceChainWalletInstalled}"
+                          :class="{'wallet-selection-card disabled' : !isBinanceWalletDetected}"
                           @click="setWallet('binance', 'binance')"
                         >
                           <div>
@@ -75,7 +76,7 @@
                       <div class="col-sm-12 mb-3">
                         <b-card
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                          :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('binance', 'metamask')"
                         >
                           <div>
@@ -90,8 +91,9 @@
               </b-card>
               <b-card>
                 <b-card-title>
-                  <img class="d-block mx-auto" width="56px" height="64px" src="../assets/ethereum_logo.png" alt="Ethereum Logo" />
+                  <img class="d-block mx-auto" width="54px" height="64px" src="../assets/ethereum_logo.png" alt="Ethereum Logo" />
                   <div class="text-center mt-2">Ethereum</div>
+                  <div class="text-center h6 font-weight-normal font-italic">Stake your LOOM ERC20 tokens!</div>
                 </b-card-title>
                 <div class="text-center">{{ $t('views.first_page.select_wallet') }}...</div>
                 <b-card-body>
@@ -101,7 +103,7 @@
                         <b-card
                           id="metamask-button"
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                          :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('ethereum', 'metamask')"
                         >
                           <div>
@@ -114,7 +116,7 @@
                         <b-card
                           id="test-wallet-button"
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !metamaskInstalled}"
+                          :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('ethereum', 'test_wallet')"
                         >
                           <div>
@@ -127,6 +129,7 @@
                         <b-card
                           id="ledger-button"
                           class="wallet-selection-card text-center mb-3"
+                          :class="{'disabled' : !isMetamaskDetected}"
                           @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                         >
                           <div>
@@ -139,7 +142,7 @@
                         <b-card
                           id="trezor-button"
                           class="wallet-selection-card text-center"
-                          :class="{'disabled' : !metamaskInstalled}"
+                          :class="{'disabled' : !isMetamaskDetected}"
                           @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                         >
                           <div>
@@ -235,7 +238,7 @@
           </div>
           </template>
 
-          <b-card v-if="!metamaskInstalled" class="metamask-suggest">
+          <b-card v-if="!isMetamaskDetected" class="metamask-suggest">
             <b-row>
               <b-col class="card-label">
                 <img class="mr-2" id="metamask-mini-icon" src="../assets/metamask_logo.png" />
@@ -317,7 +320,7 @@ import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from "../feedback/store"
 
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
-//import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
+import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
 
 @Component({
   components: {
@@ -327,6 +330,10 @@ import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
   },
 })
 export default class FirstPage extends Vue {
+  prevOnLoadCallback: typeof window.onload = null
+  isMetamaskDetected = false
+  isBinanceWalletDetected = false
+  extensionsTimer = 0
 
   get $state() { return (this.$store.state as DashboardState) }
 
@@ -376,24 +383,25 @@ export default class FirstPage extends Vue {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
   }
 
-  /* For Chrome & Firefox Browser
-     if user dont have Metamask installed, there is no web3 that inject in their browser
-     (except user install other extensions for crypto wallet (Ethereum platform))
-
-     For Opera Browser
-     Metamask on opera is broken now, so we have to wait for Metamask dev team to fix
-  */
-  get metamaskInstalled() {
-    return MetaMaskAdapter.detect()
+  detectBrowserExtensions() {
+    this.isMetamaskDetected = MetaMaskAdapter.detect()
+    this.isBinanceWalletDetected = BinanceChainWalletAdapter.detect()
+    // extensions may take a while to inject themselves on page load, so keep looking for them if
+    // any are missing...
+    // FIXME: endlessly running this timer sucks, better way to fix this would be to do the
+    //        detection once on user input (i.e. button press)
+    if (!this.isMetamaskDetected || !this.isBinanceWalletDetected) {
+      this.extensionsTimer = window.setTimeout(() => this.detectBrowserExtensions(), 3000)
+    }
   }
 
-  get binanceChainWalletInstalled() {
-    // FIXME: This gets called too early on page load, before window.BinanceChain is injected,
-    // need to do delay this after page load
-    // BinanceChainWalletAdapter.detect()
-    return true;
+  mounted() {
+    this.$nextTick().then(() => this.detectBrowserExtensions())
   }
 
+  beforeDestroy() {
+    window.clearTimeout(this.extensionsTimer)
+  }
 }
 </script>
 

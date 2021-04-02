@@ -27,6 +27,7 @@ import {
   setUserData,
   deleteUserData,
   clearHistory,
+  setWalletNetworkId,
 } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
@@ -67,6 +68,7 @@ const initialState: EthereumState = {
   address: "",
   signer: null,
   walletType: "",
+  walletNetworkId: null,
   balances: {
     ETH: ZERO,
     LOOM: ZERO,
@@ -135,6 +137,7 @@ export const ethereumModule = {
   setWalletType: builder.dispatch(setWalletType),
   setProvider: builder.dispatch(setProvider),
   clearWalletType: builder.commit(clearWalletType),
+  commitSetWalletNetworkId: builder.commit(setWalletNetworkId),
 
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
@@ -178,8 +181,6 @@ async function setWalletType(context: ActionContext, walletType: string) {
         console.error(error)
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
       })
-  } else {
-    context.state.walletType = walletType
   }
 }
 
@@ -191,6 +192,8 @@ async function setProvider(context: ActionContext, p: provider) {
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
+  const network = await signer.provider!.getNetwork()
+  ethereumModule.commitSetWalletNetworkId(network.chainId)
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {

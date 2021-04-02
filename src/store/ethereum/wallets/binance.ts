@@ -18,9 +18,10 @@ export const BinanceChainWalletAdapter: WalletType = {
     // @ts-ignore
     const bc = window.BinanceChain
     // bc.removeAllListeners() // NOTE: not implemented by Binance Wallet
-    bc.autoRefreshOnNetworkChange = false
 
-    bc.on("chainChanged", () => window.location.reload());
+    bc.autoRefreshOnNetworkChange = false
+    // @ts-ignore
+    bc.on("chainChanged", () => ethereumModule.commitSetWalletNetworkId(parseInt(window.BinanceChain.chainId, 16)));
     
     let accounts: string[] = []
     try {

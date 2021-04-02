@@ -31,6 +31,7 @@ export interface EthereumState extends EthereumConfig {
   address: string
   signer: ethers.Signer | null
   walletType: string
+  walletNetworkId: number | null // ID of foreign network the wallet is connected to (if any)
   balances: {
     [erc20Symbol: string]: BN,
   }

@@ -63,6 +63,7 @@
                     <div class="row">
                       <div class="col-sm-12 mb-3">
                         <b-card
+                          id="bsc-binance-wallet"
                           class="wallet-selection-card text-center"
                           :class="{'wallet-selection-card disabled' : !isBinanceWalletDetected}"
                           @click="setWallet('binance', 'binance')"
@@ -75,6 +76,7 @@
                       </div>
                       <div class="col-sm-12 mb-3">
                         <b-card
+                          id="bsc-metamask-wallet"
                           class="wallet-selection-card text-center"
                           :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('binance', 'metamask')"
@@ -82,6 +84,18 @@
                           <div>
                             <img src="../assets/metamask_logo.png" />
                             <span>{{ $t('views.first_page.wallets.metamask') }}</span>
+                          </div>
+                        </b-card>
+                      </div>
+                      <div class="col-sm-12 mb-3">
+                        <b-card
+                          id="bsc-walletconnect"
+                          class="wallet-selection-card text-center"
+                          @click="setWallet('binance', 'walletconnect')"
+                        >
+                          <div>
+                            <img src="../assets/walletconnect-logo.svg" />
+                            <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -191,7 +205,6 @@
                       </template>
                       <div class="col-sm-12 mb-3">
                         <b-card
-                          id="explore-button"
                           class="wallet-selection-card text-center"
                           @click="setWallet('ethereum', 'walletconnect')"
                         >
@@ -299,6 +312,61 @@
                 place="ledgerMetamask"
               >{{ $t('views.first_page.wallets.ledger_via_metamask') }}</strong>
             </i18n>
+          </b-popover>
+          <b-popover
+            class="popover"
+            target="bsc-binance-wallet"
+            title="Binance Chain Wallet"
+            triggers="hover"
+          >
+            <p>
+            This wallet also supports <strong>Ledger</strong>.
+            </p>
+            <p>
+              If you want to use a Ledger open the Binance Chain Wallet extension and select
+              <strong>Hardware Wallet</strong> from the menu, then follow the steps to setup your
+              device for use with Binance Chain Wallet.
+            </p>
+            <div>
+              <div class="wizard-img-container mb-3">
+                <img
+                  class="wizard-img" src="../assets/binance-wallet-ledger.png"
+                  alt="Screenshot of setting up Ledger in Binance Chain Wallet"
+                />
+              </div>
+            </div>
+          </b-popover>
+          <b-popover
+            class="popover"
+            target="bsc-metamask-wallet"
+            title="Metamask Wallet"
+            triggers="hover"
+          >
+            <p>
+            This wallet also supports <strong>Ledger</strong> and <strong>Trezor</strong>.
+            </p>
+            <p>
+              If you want to use a Ledger or Trezor open the Metamask extension and select
+              <strong>Connect Hardware Wallet</strong> from the menu, then follow the steps to
+              setup your device for use with Metamask.
+            </p>
+            <div>
+              <div class="wizard-img-container mb-3">
+                <img
+                  class="wizard-img" src="../assets/metamask-hardware-screencap.png"
+                  alt="Screenshot of setting up hardware wallet in Metamask"
+                />
+              </div>
+            </div>
+          </b-popover>
+          <b-popover
+            class="popover"
+            target="bsc-walletconnect"
+            title="WalletConnect Protocol"
+            triggers="hover"
+          >
+            WalletConnect supports many <strong>iOS</strong> and <strong>Android</strong> wallets.
+            It's easy to use and there's nothing to install, just scan a QR code to connect.
           </b-popover>
           <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
         </div>
@@ -569,6 +637,7 @@ export default class FirstPage extends Vue {
   max-width: 350px;
   .wallet-selection-card {
     position: relative;
+    cursor: pointer;
     div {
       display: flex;
       align-items: center;

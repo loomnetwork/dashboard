@@ -82,7 +82,8 @@ export function formatUrl(domainOrUrl: string) {
 
 export function formatTokenAmount(wei: BN, decimals = 18, precision?: number) {
   if (!wei) return wei
-  const c = new BigNumber(wei.toString()).dividedBy(10 ** decimals)
+  const d = new BigNumber(10).pow(decimals)
+  const c = new BigNumber(wei.toString()).dividedBy(d)
   return c.toFormat(precision)
 }
 

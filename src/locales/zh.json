@@ -78,8 +78,6 @@
         "explore": "直接输入",
         "binance": "Binance Chain"
       },
-      "no_metamask": "看起来你没有装 {metamask} 扩展",
-      "get_one": "装一个吧！",
       "now_deprecated": "现已不建议使用",
       "recommend_use_ledger_via_metamask": "我们建议使用 {ledgerMetamask}。"
     },

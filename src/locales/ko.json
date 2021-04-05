@@ -78,8 +78,6 @@
         "explore": "살펴보기",
         "binance": "Binance Chain"
       },
-      "no_metamask": "{metamask} 확장 프로그램이 설치되어있지 않습니다.",
-      "get_one": "여기에서 설치하세요!\n",
       "now_deprecated": "더 이상 사용되지 않습니다.",
       "recommend_use_ledger_via_metamask": "{ledgerMetamask}를 사용하는 것을 권장합니다."
     },

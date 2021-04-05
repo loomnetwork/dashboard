@@ -78,8 +78,6 @@
         "explore": "Explore",
         "binance": "Binance Chain"
       },
-      "no_metamask": "Looks like you don't have {metamask} extension",
-      "get_one": "Get one here!",
       "now_deprecated": "Now deprecated",
       "recommend_use_ledger_via_metamask": "We recommend using {ledgerMetamask} instead."
     },

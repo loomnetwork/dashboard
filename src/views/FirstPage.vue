@@ -65,7 +65,6 @@
                         <b-card
                           id="bsc-binance-wallet"
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !isBinanceWalletDetected}"
                           @click="setWallet('binance', 'binance')"
                         >
                           <div>
@@ -78,7 +77,6 @@
                         <b-card
                           id="bsc-metamask-wallet"
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('binance', 'metamask')"
                         >
                           <div>
@@ -117,7 +115,6 @@
                         <b-card
                           id="metamask-button"
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('ethereum', 'metamask')"
                         >
                           <div>
@@ -130,7 +127,6 @@
                         <b-card
                           id="test-wallet-button"
                           class="wallet-selection-card text-center"
-                          :class="{'wallet-selection-card disabled' : !isMetamaskDetected}"
                           @click="setWallet('ethereum', 'test_wallet')"
                         >
                           <div>
@@ -143,7 +139,6 @@
                         <b-card
                           id="ledger-button"
                           class="wallet-selection-card text-center mb-3"
-                          :class="{'disabled' : !isMetamaskDetected}"
                           @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                         >
                           <div>
@@ -156,7 +151,6 @@
                         <b-card
                           id="trezor-button"
                           class="wallet-selection-card text-center"
-                          :class="{'disabled' : !isMetamaskDetected}"
                           @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
                         >
                           <div>
@@ -251,24 +245,46 @@
           </div>
           </template>
 
-          <b-card v-if="!isMetamaskDetected" class="metamask-suggest">
-            <b-row>
-              <b-col class="card-label">
-                <img class="mr-2" id="metamask-mini-icon" src="../assets/metamask_logo.png" />
-                <i18n path="views.first_page.no_metamask">
-                  <span place="metamask" id="orange">{{ $t('views.first_page.wallets.metamask') }}</span>
-                </i18n>
-              </b-col>
-              <b-col>
-                <b-button
+          <b-modal v-model="showMetamaskInstallPrompt" ok-only>
+            <template slot="modal-title">
+              <img class="mr-2" id="metamask-mini-icon" src="../assets/metamask_logo.png" />
+              Metamask Wallet not found
+            </template>
+            <p>The Metamask Wallet extension is not installed, or not enabled.</p>
+            <ul>
+              <li>If you have previously installed this extension please enable it now and reload the page.</li>
+              <li>Otherwise, you can download and install from the
+                <a href="https://metamask.io/" target="_blank">official site</a>.
+              </li>
+            </ul>
+          </b-modal>
+
+          <b-modal v-model="showBinanceInstallPrompt" ok-only>
+            <template slot="modal-title">
+              <img class="mr-2" id="metamask-mini-icon" src="../assets/binance_wallet_logo.svg" />
+              Binance Chain Wallet not found
+            </template>
+            <p>The Binance Chain Wallet extension is not installed, or not enabled.</p>
+            <ul>
+              <li>If you have previously installed this extension please enable it now and reload the page.</li>
+              <li>Otherwise, you can download and install it in
+                <a
+                  href="https://chrome.google.com/webstore/detail/binance-chain-wallet/fhbohimaelbohpjbbldcngcnapndodjp"
                   target="_blank"
-                  variant="outline-primary"
-                  href="https://metamask.io/"
-                  style="float: right; margin-top: 5px"
-                >{{ $t('views.first_page.get_one') }}</b-button>
-              </b-col>
-            </b-row>
-          </b-card>
+                >
+                  Chrome
+                </a> or
+                <a
+                  href="https://addons.mozilla.org/en-US/firefox/addon/binance-chain/?src=search"
+                  target="_blank"
+                >
+                  Firefox
+                </a>.
+                If you need any help with the installation please check out the
+                <a href="https://docs.binance.org/smart-chain/wallet/binance.html" target="_blank">Binance docs</a>.
+              </li>
+            </ul>
+          </b-modal>
 
           <b-modal v-model="addressModalShow" hide-header hide-footer>
             <div>
@@ -398,10 +414,12 @@ import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
   },
 })
 export default class FirstPage extends Vue {
-  prevOnLoadCallback: typeof window.onload = null
-  isMetamaskDetected = false
-  isBinanceWalletDetected = false
-  extensionsTimer = 0
+  address = ""
+  addressModalShow = false
+  mappedModalShow = false
+  reconsider = false
+  showMetamaskInstallPrompt = false
+  showBinanceInstallPrompt = false
 
   get $state() { return (this.$store.state as DashboardState) }
 
@@ -428,47 +446,36 @@ export default class FirstPage extends Vue {
   }
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {
+    switch (walletType) {
+      case "metamask":
+      case "test_wallet":
+        if (!MetaMaskAdapter.detect()) {
+          this.showMetamaskInstallPrompt = true
+          return
+        }
+        break
+
+      case "binance":
+        if (!BinanceChainWalletAdapter.detect()) {
+          this.showBinanceInstallPrompt = true
+          return
+        }
+        break
+    }
+
     if (chain === "ethereum") {
       ethereumModule.setConfig(this.env.ethereum)
     } else if (chain === "binance" && this.env.binance !== undefined) {
       ethereumModule.setConfig(this.env.binance)
     }
+
     ethereumModule.setWalletType(walletType)
   }
 
   setExploreMode = ethereumModule.setToExploreMode
 
-  address = ""
-  addressModalShow = false
-  mappedModalShow = false
-  reconsider = false
-
-  onConnectionUrlChanged(newUrl) {
-    this.$emit("update:chain")
-  }
-
   onClose() {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()
-  }
-
-  detectBrowserExtensions() {
-    this.isMetamaskDetected = MetaMaskAdapter.detect()
-    this.isBinanceWalletDetected = BinanceChainWalletAdapter.detect()
-    // extensions may take a while to inject themselves on page load, so keep looking for them if
-    // any are missing...
-    // FIXME: endlessly running this timer sucks, better way to fix this would be to do the
-    //        detection once on user input (i.e. button press)
-    if (!this.isMetamaskDetected || !this.isBinanceWalletDetected) {
-      this.extensionsTimer = window.setTimeout(() => this.detectBrowserExtensions(), 3000)
-    }
-  }
-
-  mounted() {
-    this.$nextTick().then(() => this.detectBrowserExtensions())
-  }
-
-  beforeDestroy() {
-    window.clearTimeout(this.extensionsTimer)
   }
 }
 </script>

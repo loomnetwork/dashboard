@@ -123,18 +123,6 @@
                           </div>
                         </b-card>
                       </div>
-                      <div v-if="$store.state.env !== 'production'" class="col-sm-12 mb-3">
-                        <b-card
-                          id="test-wallet-button"
-                          class="wallet-selection-card text-center"
-                          @click="setWallet('ethereum', 'test_wallet')"
-                        >
-                          <div>
-                            <img src="../assets/metamask_logo.png" />
-                            <span>Metamask (Test Wallet)</span>
-                          </div>
-                        </b-card>
-                      </div>
                       <div class="col-sm-12">
                         <b-card
                           id="ledger-button"
@@ -171,32 +159,6 @@
                           </div>
                         </b-card>
                       </div>
-                      <template v-if="$store.state.disabled !== undefined">
-                      <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('portis')">
-                        <b-card
-                          id="portis-button"
-                          class="wallet-selection-card text-center"
-                          @click="setWallet('ethereum', 'portis')"
-                        >
-                          <div class="ml-1">
-                            <img src="../assets/portis_icon.svg" />
-                            <span>Portis</span>
-                          </div>
-                        </b-card>
-                      </div>
-                      <div class="col-sm-12 mb-3" v-if="!$store.state.disabled.includes('fortmatic')">
-                        <b-card
-                          id="fortmatic-button"
-                          class="wallet-selection-card text-center"
-                          @click="setWallet('ethereum', 'fortmatic')"
-                        >
-                          <div>
-                            <img src="../assets/fortmatic-icon.svg" />
-                            <span>Fortmatic</span>
-                          </div>
-                        </b-card>
-                      </div>
-                      </template>
                       <div class="col-sm-12 mb-3">
                         <b-card
                           class="wallet-selection-card text-center"

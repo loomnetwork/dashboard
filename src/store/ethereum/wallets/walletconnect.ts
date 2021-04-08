@@ -1,21 +1,11 @@
-import { WalletType, EthereumConfig } from "../types"
-
 import WalletConnectProvider from "@walletconnect/web3-provider"
-import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal"
+import { IWalletConnectProviderOptions } from "@walletconnect/types"
+import { getMetamaskSigner } from "loom-js"
+import { Signer } from "ethers"
+import Web3 from "web3"
 
-const INITIAL_STATE = {
-  walletConnector: null,
-  fetching: false,
-  connected: false,
-  chainId: 1,
-  showModal: false,
-  pendingRequest: false,
-  uri: "",
-  accounts: [],
-  address: "",
-  result: null,
-  assets: [],
-}
+import { WalletType, EthereumConfig, IWalletProvider } from "../types"
+import { ethereumModule } from ".."
 
 export const WalletConnectAdapter: WalletType = {
   id: "walletconnect",
@@ -27,29 +17,37 @@ export const WalletConnectAdapter: WalletType = {
   detect() {
     return true
   },
-  async createProvider(config: EthereumConfig) {
-
-    const net = config.networkId === "1" ? "mainnet" : "rinkeby"
-
-    const provider = new WalletConnectProvider({
-      bridge: "https://bridge.walletconnect.org",
-      // infuraId: "5Ic91y0T9nLh6qUg33K0", // Required
-      infuraId: "44ad2034a545495ca22dda2a4d50feba",
-    })
-    provider.on("chainChanged", (chainId) => console.log("chainChanged", chainId))
-    provider.on("networkChanged", (net) => console.log("networkChanged", net))
-    provider.on("accountsChanged", (acc) => window.location.reload())
-    // wc is WalletConnect class in library
-    provider.wc.on("disconnect", (error, payload) => {
-      if (error) {
-        throw error
+  async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
+    const opts: IWalletConnectProviderOptions = {}
+    if (config.genericNetworkName === "Ethereum") {
+      opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
+    } else {
+      opts.chainId = parseInt(config.networkId)
+      opts.rpc = { [opts.chainId]: config.endpoint }
+    }
+    const wcProvider = new WalletConnectProvider(opts)
+    wcProvider.on(
+      "chainChanged",
+      (chainId: string) => {
+        console.log(`WalletConnect chainChanged ${chainId}`)
+        ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
       }
-      console.log("User cancel a sign-in request")
-      WalletConnectQRCodeModal.close()
-      provider.updateState({ ...INITIAL_STATE })
+    )
+    // NOTE: WC seems to emit accountsChanged every time the provider is enabled, unlike MetaMask.
+    wcProvider.on("accountsChanged",  (accounts: string[]) => {
+      console.log(`WalletConnect accountsChanged ${accounts}`)
+    })
+    wcProvider.on("disconnect", (code, reason) => {
+      console.log(`WalletConnect session disconnected, ${code}, reason ${reason}`)
+      window.location.reload()
     })
 
-    await provider.enable()
-    return provider
+    // enable session (triggers QR Code modal)
+    await wcProvider.enable()
+    return {
+      web3: new Web3(wcProvider),
+      signer: getMetamaskSigner(wcProvider),
+      chainId: wcProvider.chainId,
+    }
   },
 }

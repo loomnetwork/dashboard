@@ -14,9 +14,9 @@ import {
   EthereumConfig,
   EthereumState,
   HasEthereumState,
+  IWalletProvider,
   WalletType,
 } from "./types"
-import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
 import {
@@ -29,14 +29,9 @@ import {
   clearHistory,
   setWalletNetworkId,
 } from "./mutations"
-import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
-import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
-import { PortisAdapter } from "./wallets/portis"
-import { FortmaticAdapter } from "./wallets/fortmatic"
-import { TestWalletAdapter } from "./wallets/test-wallet"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
 import { BinanceChainWalletAdapter } from "./wallets/binance"
 
@@ -48,10 +43,6 @@ const ZERO = new BN("0")
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["binance", BinanceChainWalletAdapter],
-  ["ledger", LedgerAdapter],
-  ["portis", PortisAdapter],
-  ["fortmatic", FortmaticAdapter],
-  ["test_wallet", TestWalletAdapter],
   ["walletconnect", WalletConnectAdapter],
 ])
 
@@ -64,7 +55,6 @@ const initialState: EthereumState = {
   endpoint: "",
   blockExplorer: "",
   blockExplorerApi: "",
-  provider: null,
   address: "",
   signer: null,
   walletType: "",
@@ -175,7 +165,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async (web3provider) => await setProvider(context, web3provider))
+      .then(async provider => await setProvider(context, provider))
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
@@ -184,16 +174,13 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
 }
 
-async function setProvider(context: ActionContext, p: provider) {
-  log("setting provider", p)
-  context.state.provider = p
-  web3 = new Web3(p)
-  const signer = getMetamaskSigner(p)
+async function setProvider(context: ActionContext, p: IWalletProvider) {
+  web3 = p.web3
+  const signer = p.signer
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
-  const network = await signer.provider!.getNetwork()
-  ethereumModule.commitSetWalletNetworkId(network.chainId)
+  ethereumModule.commitSetWalletNetworkId(p.chainId)
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
@@ -339,6 +326,8 @@ export function initERC20(context: ActionContext, symbol: string) {
   const account = context.state.address
   const refresh = () => ethereumModule.refreshBalance(symbol)
 
+  // TODO: This probably only works when the web3 provider is hooked up to a websocket endpoint,
+  //       which means it won't work with BSC (which has no official websocket endpoints).
   // out out filters
   const send = contract.events.Transfer(
     {

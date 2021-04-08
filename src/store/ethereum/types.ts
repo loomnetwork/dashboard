@@ -1,9 +1,8 @@
 import BN from "bn.js"
-import { ethers } from "ethers"
+import { ethers, Signer } from "ethers"
 import { Observable } from "rxjs"
 import { ERC20Factory } from "loom-js/dist/mainnet-contracts/ERC20Factory"
-import { GatewayState } from "../gateway/types"
-import { provider } from "web3-providers"
+import Web3 from "web3"
 
 export interface EthereumConfig {
   networkId: string
@@ -25,9 +24,6 @@ export interface HasEthereumState {
 }
 
 export interface EthereumState extends EthereumConfig {
-  // not really state but...
-  // see type provider in web3-provider
-  provider: provider | null
   address: string
   signer: ethers.Signer | null
   walletType: string
@@ -63,6 +59,11 @@ export interface EthereumState extends EthereumConfig {
   },
 }
 
+export interface IWalletProvider {
+  web3: Web3,
+  signer: Signer,
+  chainId: number
+}
 export interface WalletType {
   id: string
   name: string
@@ -71,8 +72,8 @@ export interface WalletType {
   detect: () => boolean
   desktop: boolean
   mobile: boolean
-  // createProvider(): Promise<ethers.providers.Web3Provider>
-  createProvider(config: EthereumConfig): Promise<provider>
+  
+  createProvider(config: EthereumConfig): Promise<IWalletProvider>
 }
 
 export interface MultiAccountWallet {

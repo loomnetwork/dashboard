@@ -1,5 +1,7 @@
-import { WalletType } from "../types"
-import { provider } from "web3-providers"
+import Web3 from "web3"
+import { getMetamaskSigner } from "loom-js"
+
+import { IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
 
 export const BinanceChainWalletAdapter: WalletType = {
@@ -14,7 +16,7 @@ export const BinanceChainWalletAdapter: WalletType = {
     return (window as any).BinanceChain !== undefined
   },
 
-  async createProvider(): Promise<provider> {
+  async createProvider(): Promise<IWalletProvider> {
     // @ts-ignore
     const bc = window.BinanceChain
     // bc.removeAllListeners() // NOTE: not implemented by Binance Wallet
@@ -43,7 +45,11 @@ export const BinanceChainWalletAdapter: WalletType = {
       changeAccounts(accounts).catch(err => console.error(err))
     })
     
-    return bc
+    return {
+      web3: new Web3(bc),
+      signer: getMetamaskSigner(bc),
+      chainId: parseInt(bc.chainId, 16),
+    }
   },
 }
 

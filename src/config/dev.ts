@@ -1,4 +1,5 @@
 import { DashboardConfig } from "@/types"
+import { ethers } from "ethers"
 
 export default {
   name: "dev",
@@ -26,6 +27,20 @@ export default {
     portisKey: "10589118-6329-43a0-818c-93800c206786",
     formaticKey: "pk_test_58DB7D96C460470B",
   },
+  binance: {
+    networkId: "97",
+    networkName: "bsc-testnet",
+    genericNetworkName: "Binance Smart Chain",
+    chainId: "eth", // NOTE: not a typo, use the same chain ID as Ethereum to reuse account mappings etc.
+    nativeTokenSymbol: "BNB",
+    endpoint: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    blockExplorer: "https://testnet.bscscan.com",
+    blockExplorerApi: "api-testnet.bscscan.com/api",
+    contracts: {
+      loomGateway: "0x0cee0FB12205b9Ca9d4Fbed502091dEfD7ae6ff5",
+      mainGateway: ethers.constants.AddressZero // NOTE: generic gateway is not deployed on BSC yet
+    }
+  },
   dpos: {
     bootstrapNodes: [],
     analyticsUrl: "//dev-api.loom.games",
@@ -34,7 +49,7 @@ export default {
   gateway: {
     chains: ["ethereum"],
     multisig: {
-      loom: true,
+      loom: false,
       main: true,
     },
     checkMarketplaceURL: "",

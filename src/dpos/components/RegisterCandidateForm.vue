@@ -90,11 +90,10 @@ import Vue from "vue"
 import { HasDPOSState } from "@/dpos/store/types"
 import { Component } from "vue-property-decorator"
 import { Address, CryptoUtils } from "loom-js"
-import { formatToLoomAddress, ZERO, parseToWei } from "../../utils"
+import { ZERO, parseToWei } from "../../utils"
 import { LocktimeTier, CandidateState } from "loom-js/dist/proto/dposv3_pb"
 import { dposModule } from "../store"
 import { formatTokenAmount } from "@/filters"
-import BigNumber from 'bignumber.js';
 import BN from "bn.js"
 
 @Component
@@ -115,9 +114,7 @@ export default class RegisterCandidateForm extends Vue {
   }
 
   get fixedLoomBalance() {
-    const loomBalance = formatTokenAmount(this.state.plasma.coins.LOOM.balance)
-    return new BigNumber(loomBalance).toFixed(2)
-    // return this.state.plasma.coins.LOOM.balance.toNumber()
+    return formatTokenAmount(this.state.plasma.coins.LOOM.balance, 18, 2)
   }
 
   get isStakable() {

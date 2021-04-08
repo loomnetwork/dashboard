@@ -145,6 +145,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
+        store.state.ethereum.nativeTokenSymbol === "BNB",
       )
 
       plasmaGateways.add("ethereum", "LOOM", Address.fromString(`eth:${addresses.loomGateway}`))

@@ -8571,10 +8571,10 @@ lolex@^4.0.1, lolex@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npmjs.org/lolex/-/lolex-4.1.0.tgz#ecdd7b86539391d8237947a3419aa8ac975f0fe1"
 
-loom-js@1.74.0:
-  version "1.74.0"
-  resolved "https://registry.npmjs.org/loom-js/-/loom-js-1.74.0.tgz#e2a287c88b3c2e9ce38f85280a5ec3a27ad40017"
-  integrity sha512-ARq7DRZwN1KE/PwaL+QUZxYRbae29b8RzpJ0f6bRg2uRJek50lKkXaSoZtYIaTDE+GiTlI/DWF93FMoL+Al/1Q==
+loom-js@1.75.2:
+  version "1.75.2"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.75.2.tgz#45332ff5e111ec2f0eaa982f477027efae55ea87"
+  integrity sha512-g/0Nv6tYU7wN2wlsmZCW9zJmFyYmx3aehll0ooCQj4VcxLy1Zd9fSjnLGR8UA2HDCGRS9FsStFsSL8ytrarkWA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.5"
     abi-decoder "^1.2.0"
@@ -14055,7 +14055,6 @@ websocket-stream@^5.5.0:
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
-    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"

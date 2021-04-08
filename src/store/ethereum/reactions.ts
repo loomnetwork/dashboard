@@ -1,6 +1,7 @@
 import { Store } from "vuex"
 import { ethereumModule } from "."
 import { DashboardState } from "@/types"
+import { tokenService } from "@/services/TokenService"
 
 export function ethereumReactions(store: Store<DashboardState>) {
   store.watch((s) => s.ethereum.address, onAddressChange)
@@ -17,8 +18,10 @@ export function ethereumReactions(store: Store<DashboardState>) {
     ethereumModule.initUserData(address)
     ethereumModule.pollLastBlockNumber()
     ethereumModule.initERC20("LOOM")
-    ethereumModule.refreshBalance("ETH")
-
+    
+    if (tokenService.get(store.state.ethereum.nativeTokenSymbol)) {
+      ethereumModule.refreshBalance(store.state.ethereum.nativeTokenSymbol)
+    }
   }
 
 }

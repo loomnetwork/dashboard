@@ -41,19 +41,18 @@ export function plasmaReactions(store: Store<DashboardState>) {
       await createPlasmaWeb3(store)
       await resetLoomContract(store)
       await resetEthContract(store)
-      await resetERC20Contracts(store)
     },
   )
 
   store.subscribeAction({
     async after(action) {
-      if (
-        action.type === "plasma/transfer" ||
-        action.type === "plasma/addToken"
-      ) {
-        console.log("in subscription ", action)
+      if (action.type === "plasma/transfer") {
         await plasmaModule.refreshBalance(
-          action.payload.symbol || action.payload,
+          action.payload.symbol || action.payload
+        )
+      } else if (action.type === "plasma/addToken") {
+        await plasmaModule.refreshBalance(
+          action.payload.token.symbol
         )
       }
     },
@@ -88,10 +87,6 @@ async function resetEthContract(store: Store<DashboardState>) {
     decimals: 18,
   }
   plasmaModule.refreshBalance("ETH")
-}
-
-async function resetERC20Contracts(store: Store<DashboardState>) {
-  plasmaModule.addToken(tokenService.get("BNB")!)
 }
 
 async function createPlasmaWeb3(store: Store<DashboardState>) {

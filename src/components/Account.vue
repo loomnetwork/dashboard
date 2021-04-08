@@ -2,13 +2,13 @@
   <b-card class="mb-1">
     <b-card-title>{{ $t('components.account.account') }}</b-card-title>
     <div class="account ethereum">
-      <label>Ethereum</label>
+      <label>{{ foreignNetworkName }}</label>
       <address @click="copyEthereum">
         <span class="highlight">{{ethAccount}}</span>
         <fa icon="paste"/>
       </address>
       <a a class="explorer" :href="etherScanUrl" target="_blank">
-        {{ $t('components.account.show_etherscan') }}
+        {{ foreignNetworkName === "Ethereum" ? $t('components.account.show_etherscan') : $t('components.account.show_bscscan') }}
         <fa icon="external-link-alt"/>
       </a>
     </div>
@@ -29,7 +29,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component } from "vue-property-decorator"
-import { dposModule } from "@/dpos/store"
 import { DashboardState } from "@/types"
 import { feedbackModule } from "@/feedback/store"
 import { formatToLoomAddress } from "@/utils"
@@ -43,6 +42,10 @@ export default class Account extends Vue {
     return this.$store.state
   }
 
+  get foreignNetworkName() {
+    return this.state.ethereum.genericNetworkName
+  }
+
   get ethAccount() {
     return this.state.ethereum.address
   }
@@ -53,7 +56,9 @@ export default class Account extends Vue {
 
   copyEthereum() {
     this.$copyText(this.ethAccount).then(() =>
-      feedbackModule.showSuccess(this.$t("feedback_msg.success.eth_addr_copied").toString()),
+      feedbackModule.showSuccess(
+        this.$t("feedback_msg.success.eth_addr_copied", { network: this.foreignNetworkName }).toString()
+      ),
       console.error,
     )
   }

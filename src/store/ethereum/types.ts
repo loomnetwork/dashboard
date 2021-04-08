@@ -8,9 +8,12 @@ import { provider } from "web3-providers"
 export interface EthereumConfig {
   networkId: string
   networkName: string
+  genericNetworkName: string
   chainId: string
+  nativeTokenSymbol: string
   endpoint: string
   blockExplorer: string
+  blockExplorerApi: string
   contracts: { [name: string]: string }
   formaticKey?: string
   portisKey?: string
@@ -28,6 +31,7 @@ export interface EthereumState extends EthereumConfig {
   address: string
   signer: ethers.Signer | null
   walletType: string
+  walletNetworkId: number | null // ID of foreign network the wallet is connected to (if any)
   balances: {
     [erc20Symbol: string]: BN,
   }
@@ -51,7 +55,7 @@ export interface EthereumState extends EthereumConfig {
   blockNumber: number,
   // TODO move to gateway module
   latestWithdrawalBlock: number,
-  claimedReceiptHasExpired: boolean,
+  claimedReceiptHasExpired: boolean, // TODO: get rid of this, it's not used
   history: any[],
   metamaskChangeAlert: boolean,
   userData: {

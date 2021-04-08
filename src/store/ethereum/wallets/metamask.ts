@@ -53,6 +53,12 @@ async function getCurrentApi(): Promise<provider> {
     feedbackModule.endTask()
   }
 
+  ethereum.autoRefreshOnNetworkChange = false
+  ethereum.on(
+    "chainChanged",
+    (chainId: string) => ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
+  )
+
   try {
     // The following throws on Trust
     ethereum.on("accountsChanged", (accounts) => {

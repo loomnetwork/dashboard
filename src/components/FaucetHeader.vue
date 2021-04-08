@@ -5,11 +5,14 @@
     <div class="d-none d-lg-block">
       <nav class="navbar">
         <div class="container-fluid">
-          <router-link to="/account" class="navbar-brand ml-3">
-            <loom-icon width="18px" height="18px" :color="'#ffffff'" />
-            <span class="px-1">Basechain</span>
-            <span class="beta-label">BETA</span>
-          </router-link>
+          <div class="d-flex align-items-baseline">
+            <router-link to="/account" class="navbar-brand ml-3">
+              <loom-icon width="18px" height="18px" :color="'#ffffff'" />
+              <span class="px-1">Basechain</span>
+              <span class="beta-label">BETA</span>
+            </router-link>
+            <ForeignNetworkChip />
+          </div>
           <form class="form-inline">
             <LangSwitcher />
           </form>
@@ -26,8 +29,14 @@
             </a>
 
             <b-navbar-brand href="#">
-              <loom-icon :color="'#ffffff'" />
+              <loom-icon :color="'#ffffff'" :width="'24px'" :height="'24px'" />
             </b-navbar-brand>
+
+            <b-navbar-nav>
+              <b-nav-text>
+              <ForeignNetworkChip :compact="true" />
+              </b-nav-text>
+            </b-navbar-nav>
 
             <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
             <b-collapse is-nav id="nav_collapse">
@@ -106,6 +115,7 @@ import LangSwitcher from "./LangSwitcher.vue"
 import { DashboardState } from "../types"
 import LoadingBar from "@/feedback/components/LoadingBar.vue"
 import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue"
+import ForeignNetworkChip from "./ForeignNetworkChip.vue"
 
 @Component({
   components: {
@@ -114,6 +124,7 @@ import FeedbackNotification from "@/feedback/components/FeedbackNotification.vue
     LoomIcon,
     LoadingBar,
     FeedbackNotification,
+    ForeignNetworkChip
   },
 })
 export default class FaucetHeader extends Vue {
@@ -226,13 +237,6 @@ export default class FaucetHeader extends Vue {
       rgba(0, 0, 0, 0.13)
     );
     width: 100%;
-    .navbar-brand {
-      position: absolute;
-      top: 4px;
-      left: 50%;
-      margin: 0;
-      transform: translateX(-50%);
-    }
   }
 }
 

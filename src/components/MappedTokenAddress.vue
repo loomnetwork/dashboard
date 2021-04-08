@@ -45,6 +45,7 @@ import Vue from "vue"
 import { Component, Prop } from "vue-property-decorator"
 import { TokenData } from "../services/TokenService"
 import { feedbackModule } from "../feedback/store"
+import { DashboardState } from "@/types"
 
 @Component
 export default class MappedTokenAddress extends Vue {
@@ -52,13 +53,19 @@ export default class MappedTokenAddress extends Vue {
 
   chainTabs: "ethereum" | "binance" | "" = ""
 
+  get state(): DashboardState {
+    return this.$store.state
+  }
+
   mounted() {
     this.chainTabs = "ethereum"
   }
 
   copyEthereum() {
     this.$copyText(this.tokenData.ethereum).then(() =>
-      feedbackModule.showSuccess(this.$t("feedback_msg.success.eth_addr_copied").toString()),
+      feedbackModule.showSuccess(
+        this.$t("feedback_msg.success.eth_addr_copied", { network: this.state.ethereum.genericNetworkName }).toString()
+      ),
       console.error,
     )
   }

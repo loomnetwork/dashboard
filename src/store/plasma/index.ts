@@ -53,17 +53,7 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
       decimals: 18,
-    },
-    ETH: {
-      balance: new BN("0"),
-      loading: false,
-      decimals: 18,
-    },
-    // BNB: {
-    //   balance: new BN("0"),
-    //   loading: false,
-    //   decimals: 8,
-    // },
+    }
   },
   selectedToken: "",
   blockExplorer: "",

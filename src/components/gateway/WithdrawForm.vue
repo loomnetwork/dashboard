@@ -7,7 +7,7 @@
     id="deposit-approval-success"
     :title="$t('components.gateway.withdraw_form_modal.title', { token: token, chain: transferRequest.chain })"
   >
-    <b-alert v-if="token === 'LOOM'" show variant="warning">
+    <b-alert v-if="token === 'LOOM' && foreignNetworkName === 'Ethereum'" show variant="warning">
       <strong>WARNING</strong>
       <p>
         Most exchanges only support one version of the LOOM token.
@@ -109,6 +109,10 @@ export default class WithdrawForm extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get foreignNetworkName() {
+    return this.state.ethereum.genericNetworkName
   }
 
   get networkId() { return this.$store.state.plasma.networkId }

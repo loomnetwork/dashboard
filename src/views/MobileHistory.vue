@@ -9,13 +9,13 @@
         <b-button
           variant="outline-primary"
           @click="visible = 'plasma'"
-          :class="{active:visible === 'plasma'}"
+          :class="{active: visible === 'plasma'}"
         >Basechain</b-button>
         <b-button
           variant="outline-primary"
           @click="visible = 'ethereum'"
-          :class="{active:visible === 'ethereum'}"
-        >Ethereum</b-button>
+          :class="{active: visible === 'ethereum'}"
+        >{{ foreignNetworkName }}</b-button>
       </b-button-group>
 
       <section v-if="visible === 'plasma'">
@@ -68,13 +68,10 @@ import { Component } from "vue-property-decorator"
 import HistoryEvent from "../components/HistoryEvent.vue"
 import LoadingSpinner from "../components/LoadingSpinner.vue"
 import VirtualList from "vue-virtual-scroll-list"
-import Web3 from "web3"
 
-import { formatToCrypto } from "@/utils"
 import { DashboardState } from "../types"
 import { gatewayModule } from "../store/gateway"
 import { plasmaModule } from "../store/plasma"
-import { ethereumModule } from "../store/ethereum"
 
 @Component({
   components: {
@@ -94,6 +91,10 @@ export default class History extends Vue {
     return this.$store.state
   }
 
+  get foreignNetworkName() {
+    return this.state.ethereum.genericNetworkName
+  }
+
   async mounted() {
     this.visible = "plasma"
     await this.setPlasmaHistory()
@@ -109,7 +110,6 @@ export default class History extends Vue {
     await gatewayModule.refreshEthereumHistory()
     this.ethereumHistory = this.state.ethereum.history
   }
-
 }
 </script>
 

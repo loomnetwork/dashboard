@@ -27,6 +27,7 @@ import {
   setUserData,
   deleteUserData,
   clearHistory,
+  setWalletNetworkId,
 } from "./mutations"
 import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
@@ -37,7 +38,7 @@ import { PortisAdapter } from "./wallets/portis"
 import { FortmaticAdapter } from "./wallets/fortmatic"
 import { TestWalletAdapter } from "./wallets/test-wallet"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
-import Connector from "@walletconnect/core"
+import { BinanceChainWalletAdapter } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -46,6 +47,7 @@ const ZERO = new BN("0")
 
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
+  ["binance", BinanceChainWalletAdapter],
   ["ledger", LedgerAdapter],
   ["portis", PortisAdapter],
   ["fortmatic", FortmaticAdapter],
@@ -56,13 +58,17 @@ const wallets: Map<string, WalletType> = new Map([
 const initialState: EthereumState = {
   networkId: "",
   networkName: "",
+  genericNetworkName: "",
   chainId: "",
+  nativeTokenSymbol: "",
   endpoint: "",
   blockExplorer: "",
+  blockExplorerApi: "",
   provider: null,
   address: "",
   signer: null,
   walletType: "",
+  walletNetworkId: null,
   balances: {
     ETH: ZERO,
     LOOM: ZERO,
@@ -131,6 +137,7 @@ export const ethereumModule = {
   setWalletType: builder.dispatch(setWalletType),
   setProvider: builder.dispatch(setProvider),
   clearWalletType: builder.commit(clearWalletType),
+  commitSetWalletNetworkId: builder.commit(setWalletNetworkId),
 
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
@@ -174,8 +181,6 @@ async function setWalletType(context: ActionContext, walletType: string) {
         console.error(error)
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
       })
-  } else {
-    context.state.walletType = walletType
   }
 }
 
@@ -187,6 +192,8 @@ async function setProvider(context: ActionContext, p: provider) {
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
+  const network = await signer.provider!.getNetwork()
+  ethereumModule.commitSetWalletNetworkId(network.chainId)
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
@@ -230,15 +237,15 @@ export async function refreshBalance(context: ActionContext, symbol: string) {
       },
     )
   }
-  if (symbol === "ETH") {
+  // On Ethereum fetch the current user's ETH balance, on BSC fetch the BNB balance, etc.
+  const nativeTokenSymbol = context.state.nativeTokenSymbol
+  if (symbol === nativeTokenSymbol) {
     const b = await web3.eth.getBalance(context.state.address)
-    context.state.coins.ETH.balance = new BN(b.toString())
+    context.state.coins[nativeTokenSymbol].balance = new BN(b.toString())
     return
   }
   const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
   const coinState = context.state.coins[symbol]
-  // @ts-ignore
-  console.log(symbol, contract._address)
   coinState.loading = true
   return (
     contract.methods

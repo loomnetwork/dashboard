@@ -1,0 +1,9 @@
+[
+  {
+    "symbol": "LOOM",
+    "name": "Loom",
+    "decimals": 18,
+    "ethereum": "0xddb89011821aed4908e8b4b3dbdbd81e9026e9cb",
+    "plasma": "0xcd9bfe0d35c054305ee1b7f3a2677c1bbbb74a9f"
+  }
+]

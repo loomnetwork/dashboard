@@ -36,6 +36,7 @@ function initialState(): GatewayState {
       chain: "",
       token: "",
     },
+    // TODO: neither withdrawStates nor withdrawStateIdx appear to be used, should probably remove them
     withdrawStates: [
       { text: "Checking for pre-existing receipts...", isComplete: false },
       { text: "Depositing to Basechain Gateway...", isComplete: false },

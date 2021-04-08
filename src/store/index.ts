@@ -48,13 +48,11 @@ const builder = getStoreBuilder<DashboardState>()
 
 const dashboardStore = {
   setEnv: builder.dispatch(async function setEnv(context, env: DashboardConfig) {
-    await tokenService.load(env.coinDataUrl)
     context.state.env = env.name
     plasmaModule.setConfig(env.plasma)
     ethereumModule.setConfig(env.ethereum)
     dposModule.setConfig(env.dpos)
     gatewayModule.setConfig(env.gateway)
-    log("tokensService", env.coinDataUrl)
     context.state.disabled = env.disabled
     context.state.chains = env.chains
   }),

@@ -405,6 +405,8 @@ import { feedbackModule } from "../feedback/store"
 
 import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
 import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
+import { tokenService } from "@/services/TokenService"
+import { getTokenList } from "../utils"
 
 @Component({
   components: {
@@ -464,8 +466,10 @@ export default class FirstPage extends Vue {
     }
 
     if (chain === "ethereum") {
+      tokenService.setTokens(getTokenList(this.env.name))
       ethereumModule.setConfig(this.env.ethereum)
     } else if (chain === "binance" && this.env.binance !== undefined) {
+      tokenService.setTokens(getTokenList(`${this.env.name}.${chain}`))
       ethereumModule.setConfig(this.env.binance)
     }
 

@@ -8,6 +8,7 @@ import extDevTokens from "@/assets/tokens/ext-dev.tokens.json"
 import devTokens from "@/assets/tokens/dev.tokens.json"
 import productionBinanceTokens from "@/assets/tokens/production.binance.tokens.json"
 import extDevBinanceTokens from "@/assets/tokens/ext-dev.binance.tokens.json"
+import devBinanceTokens from "@/assets/tokens/dev.binance.tokens.json"
 
 export const ZERO = new BN(0)
 
@@ -112,18 +113,23 @@ export function getRequired<T>(value: T | null | undefined, name: string): T {
   return value
 }
 
+const tokens = {
+  "production": productionTokens,
+  "ext-dev": extDevTokens,
+  "dev": devTokens,
+  "production.binance": productionBinanceTokens,
+  "ext-dev.binance": extDevBinanceTokens,
+  "dev.binance": devBinanceTokens
+}
+
+export function getTokenList(tokenListId: string): TokenData[] {
+  return tokens[tokenListId]
+}
+
 /**
  * @return List of loomchain addresses of tokens the user added to their Basechain Wallet.
  */
 export function getWalletFromLocalStorage(walletId: string) {
-  const tokens = {
-    "production": productionTokens,
-    "ext-dev": extDevTokens,
-    "dev": devTokens,
-    "production.binance": productionBinanceTokens,
-    "ext-dev.binance": extDevBinanceTokens
-  }
-
   if (!Object.keys(tokens).includes(walletId)) {
     throw new Error(`Missing token list for ${walletId}!`)
   }

@@ -73,7 +73,6 @@
         "metamask": "Metamask",
         "ledger_via_metamask": "Ledger (via Metamask)",
         "trezor_via_metamask": "Trezor (via Metamask)",
-        "ledger_legacy": "Ledger (Legacy)",
         "walletconnect": "WalletConnect",
         "explore": "Explore",
         "binance": "Binance Chain"

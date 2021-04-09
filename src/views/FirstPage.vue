@@ -2,7 +2,6 @@
   <div class>
     <div class="pt-3">
       <main>
-        <hardware-wallet-modal ref="hardwareWalletConfigRef" />
         <div class="container-fluid mb-5 rmv-padding">
           <b-modal
             no-close-on-esc
@@ -144,18 +143,6 @@
                           <div>
                             <img src="../assets/metamask_logo.png" />
                             <span>{{ $t('views.first_page.wallets.trezor_via_metamask') }}</span>
-                          </div>
-                        </b-card>
-                      </div>
-                      <div class="col-sm-12">
-                        <b-card
-                          id="ledger-button"
-                          class="wallet-selection-card text-center mb-3"
-                          @click="setWallet('ethereum', 'ledger')"
-                        >
-                          <div id="ledger-card">
-                            <img src="../assets/ledger_logo.svg" />
-                            <span>{{ $t('views.first_page.wallets.ledger_legacy') }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -356,7 +343,6 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
 import ChainSelector from "../components/ChainSelector.vue"
-import HardwareWalletModal from "../components/modals/HardwareWalletModal.vue"
 
 import { ethereumModule } from "@/store/ethereum"
 import { DashboardState, DashboardConfig } from "../types"
@@ -373,7 +359,6 @@ import { getTokenList } from "../utils"
 @Component({
   components: {
     ChainSelector,
-    HardwareWalletModal,
     LoomIcon,
   },
 })

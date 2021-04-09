@@ -73,7 +73,6 @@
         "metamask": "메타마스크",
         "ledger_via_metamask": "Ledger (메타마스크를 통한)",
         "trezor_via_metamask": "Trezor (메타마스크를 통한)",
-        "ledger_legacy": "Ledger (하드웨어로 연결)",
         "walletconnect": "지갑 연결",
         "explore": "살펴보기",
         "binance": "Binance Chain"

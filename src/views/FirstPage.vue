@@ -268,18 +268,6 @@
           </b-modal>
           <b-popover
             class="popover"
-            target="ledger-card"
-            :title="$t('views.first_page.now_deprecated')"
-            triggers="hover"
-          >
-            <i18n path="views.first_page.recommend_use_ledger_via_metamask">
-              <strong
-                place="ledgerMetamask"
-              >{{ $t('views.first_page.wallets.ledger_via_metamask') }}</strong>
-            </i18n>
-          </b-popover>
-          <b-popover
-            class="popover"
             target="bsc-binance-wallet"
             title="Binance Chain Wallet"
             triggers="hover"

@@ -157,10 +157,10 @@ let instance: EthereumGateways | null = null
 export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
-  multisig: { main: boolean, loom: boolean },
+  version: { main: 1 | 2, loom: 1 | 2 },
 ) {
-  const ERC20GatewayABI: AbiItem[] = multisig.loom ? GatewayABIv2 : GatewayABIv1
-  const GatewayABI: AbiItem[] = multisig.main ? GatewayABIv2 : GatewayABIv1
+  const ERC20GatewayABI: AbiItem[] = version.loom === 2 ? GatewayABIv2 : GatewayABIv1
+  const GatewayABI: AbiItem[] = version.main === 2 ? GatewayABIv2 : GatewayABIv1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI,
@@ -179,9 +179,9 @@ export async function init(
   }
   let vmcContract: any = null
   let vmcSourceGateway: any = null
-  if (multisig.loom) {
+  if (version.loom === 2) {
     vmcSourceGateway = loomGateway
-  } else if (multisig.main && mainGateway) {
+  } else if ((version.main === 2) && mainGateway) {
     vmcSourceGateway = mainGateway
   }
   if (vmcSourceGateway) {
@@ -195,7 +195,7 @@ export async function init(
   } else {
     log("Assuming oracle sig gateways")
   }
-  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3, multisig)
+  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3, version)
   return instance
 }
 
@@ -221,7 +221,7 @@ class EthereumGateways {
     readonly loomGateway: EthereumGatewayV2Factory,
     readonly vmc: ValidatorManagerContract | null,
     readonly web3: Web3,
-    readonly multisig: { main: boolean, loom: boolean },
+    readonly version: { main: 1 | 2, loom: 1 | 2 },
   ) { }
 
   destroy() {
@@ -241,7 +241,7 @@ class EthereumGateways {
       console.warn(token + " token gateway adapter already set.")
       return this.adapters.get(token)
     }
-    const { mainGateway, loomGateway, web3, multisig } = this
+    const { mainGateway, loomGateway, web3, version } = this
     let adapter: EthereumGatewayAdapter
     let vmc: ValidatorManagerContract | null
     switch (token) {
@@ -249,18 +249,18 @@ class EthereumGateways {
         if (mainGateway === null) {
           throw new Error(`Can't add token ${token} because gateway doesn't exist`)
         }
-        vmc = multisig.main ? this.vmc : null
+        vmc = version.main === 2 ? this.vmc : null
         adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
       case "LOOM":
-        vmc = multisig.loom ? this.vmc : null
+        vmc = version.loom === 2 ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
         break
       default:
         if (mainGateway === null) {
           throw new Error(`Can't add token ${token} because gateway doesn't exist`)
         }
-        vmc = multisig.main ? this.vmc : null
+        vmc = version.main === 2 ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, mainGateway, tokenAddress, token)
         break
     }

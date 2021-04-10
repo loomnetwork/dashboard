@@ -16,6 +16,10 @@ export interface EthereumConfig {
   contracts: { [name: string]: string }
   formaticKey?: string
   portisKey?: string
+  gatewayVersions: {
+    loom: 1 | 2,
+    main: 1 | 2,
+  },
 }
 
 // Interface for application stores than include EthereumState

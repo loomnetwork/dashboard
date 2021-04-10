@@ -24,6 +24,10 @@ export default {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
       loomGateway: "0xfcf1e3fa575a313fd81fea2caa06269b49f1a528",
     },
+    gatewayVersions: {
+      loom: 1,
+      main: 1,
+    },
   },
   binance: {
     networkId: "56",
@@ -37,6 +41,10 @@ export default {
     contracts: {
       mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
       loomGateway: "0xdeadbeef"
+    },
+    gatewayVersions: {
+      loom: 1,
+      main: 1,
     },
   },
   dpos: {
@@ -53,10 +61,6 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
-    multisig: {
-      loom: false,
-      main: false,
-    },
     checkMarketplaceURL: "https://auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "https://api.loom.games/plasma/tokencontract/eth:{address}",
     binance: {

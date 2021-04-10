@@ -15,7 +15,6 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 }
 
 export interface GatewayConfig {
-  multisig: { loom: boolean, main: boolean }
   chains: string[]
   checkMarketplaceURL: string
   tokenContractLogsURL: string

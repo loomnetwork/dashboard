@@ -86,6 +86,10 @@ const initialState: EthereumState = {
   userData: {
     pendingWithdrawal: false,
   },
+  gatewayVersions: {
+    main: 1,
+    loom: 1,
+  }
 }
 
 // web3 instance

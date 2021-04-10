@@ -45,7 +45,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         Sentry.setExtra(mapping.to.chainId, mapping.to.local.toString())
 
         await setPlasmaAccount(mapping)
-        await initializeGateways(mapping, store.state.gateway.multisig)
+        await initializeGateways(mapping, store.state.ethereum.gatewayVersions)
 
         const ethereumGateways = EthereumGateways.service()
 
@@ -117,16 +117,17 @@ export function gatewayReactions(store: Store<DashboardState>) {
     gatewayModule.refreshAllowances()
   }
 
-  async function initializeGateways(mapping: IAddressMapping, multisig: { loom: boolean, main: boolean }) {
+  async function initializeGateways(mapping: IAddressMapping, version: { loom: 1 | 2, main: 1 | 2 }) {
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
     }
+    // Initialize Ethereum gateways & coin contracts
     try {
       const ethereumGateway = await EthereumGateways.init(
         ethereumModule.web3,
         addresses,
-        multisig,
+        version,
       )
       const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
       ethereumGateway.add("LOOM", loomAddr)
@@ -137,7 +138,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
       console.error("Error initializing ethereum gateways " + error.message)
       return
     }
-    // Initialize Ethereum gateways & coin contracts
 
     // Init plasma side
     try {

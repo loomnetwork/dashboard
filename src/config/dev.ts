@@ -26,6 +26,10 @@ export default {
     },
     portisKey: "10589118-6329-43a0-818c-93800c206786",
     formaticKey: "pk_test_58DB7D96C460470B",
+    gatewayVersions: {
+      loom: 2,
+      main: 2,
+    },
   },
   binance: {
     networkId: "97",
@@ -39,7 +43,11 @@ export default {
     contracts: {
       loomGateway: "0x0cee0FB12205b9Ca9d4Fbed502091dEfD7ae6ff5",
       mainGateway: ethers.constants.AddressZero // NOTE: generic gateway is not deployed on BSC yet
-    }
+    },
+    gatewayVersions: {
+      loom: 1,
+      main: 1,
+    },
   },
   dpos: {
     bootstrapNodes: [],
@@ -48,10 +56,6 @@ export default {
   coinDataUrl: "/tokens/dev.tokens.json",
   gateway: {
     chains: ["ethereum"],
-    multisig: {
-      loom: false,
-      main: true,
-    },
     checkMarketplaceURL: "",
     binance: {
       gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",

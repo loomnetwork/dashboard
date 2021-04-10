@@ -10,7 +10,9 @@
     no-close-on-backdrop
     hide-header-close
   >
-    <template slot="modal-title">{{ $t('components.gateway.deposit_form.title', {token: token, chain: transferRequest.chain}) }}</template>
+    <template slot="modal-title">
+      {{ $t('components.gateway.deposit_form.title', { token: token, chain: sourceNetworkName }) }}
+    </template>
     <div v-if="!status">
       <form>
         <h6
@@ -51,21 +53,18 @@
     </template>
   </b-modal>
 </template>
+
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
-import { ethers } from "ethers"
 import BN from "bn.js"
-import { formatToCrypto, parseToWei, ZERO } from "@/utils"
-import { formatTokenAmount } from "@/filters"
+import { ZERO } from "@/utils"
 import { DashboardState } from "@/types"
 
 import { Funds } from "@/types"
 
 import { gatewayModule } from "@/store/gateway"
 import AmountInput from "@/components/AmountInput.vue"
-import { gatewayReactions } from "@/store/gateway/reactions"
 import { ethereumModule } from "@/store/ethereum"
-import { tokenService } from "@/services/TokenService"
 
 @Component({
   components: {
@@ -127,6 +126,14 @@ export default class DepositForm extends Vue {
     } else {
       const allowance = this.state.gateway.ethereumAllowances.find((a) => a.token.symbol === symbol)
       return allowance ? allowance.amount : ZERO
+    }
+  }
+
+  get sourceNetworkName() {
+    if (this.transferRequest.chain === "binance") {
+      return "Binance Chain"
+    } else { // transferRequest.chain === "ethereum" could be either Ethereum or BSC
+      return this.state.ethereum.genericNetworkName
     }
   }
 

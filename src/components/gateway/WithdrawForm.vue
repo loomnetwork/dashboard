@@ -5,9 +5,9 @@
     no-close-on-esc
     hide-header-close
     id="deposit-approval-success"
-    :title="$t('components.gateway.withdraw_form_modal.title', { token: token, chain: transferRequest.chain })"
+    :title="$t('components.gateway.withdraw_form_modal.title', { token: token, chain: destinationNetworkName })"
   >
-    <b-alert v-if="token === 'LOOM' && foreignNetworkName === 'Ethereum'" show variant="warning">
+    <b-alert v-if="token === 'LOOM' && destinationNetworkName === 'Ethereum'" show variant="warning">
       <strong>WARNING</strong>
       <p>
         Most exchanges only support one version of the LOOM token.
@@ -26,11 +26,17 @@
     </b-alert>
     <div v-if="visible && tokenInfo">
       <div v-if="fee.amount">
-        <p>{{ $t('components.gateway.withdraw_form_modal.transfer_fee', { chain: transferRequest.chain }) }} {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}</p>
+        <p>
+          {{ $t('components.gateway.withdraw_form_modal.transfer_fee', { chain: destinationNetworkName }) }}
+          {{fee.amount|tokenAmount(fee.decimals)}} {{fee.token}}
+        </p>
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount()">{{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }} {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}</h6>
+        <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount()">
+          {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}
+          {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
+        </h6>
         <amount-input
           :min="min"
           :max="max"
@@ -42,11 +48,11 @@
         />
       </div>
       <div v-if="requireRecipient" class="mt-3">
-        <h6>{{ $t('components.gateway.withdraw_form_modal.recipient', { chain: transferRequest.chain }) }}</h6>
+        <h6>{{ $t('components.gateway.withdraw_form_modal.recipient', { chain: destinationNetworkName }) }}</h6>
         <input-address
           v-model="recepient"
           :chain="transferRequest.chain"
-          :placeholder="$t('input_placeholder.chain_addr', {transferChain: transferRequest.chain})"
+          :placeholder="$t('input_placeholder.chain_addr', { transferChain: destinationNetworkName })"
           @isValid="isValidAddressFormat"
         />
       </div>
@@ -69,13 +75,10 @@ import Vue from "vue"
 import BN from "bn.js"
 import bech32 from "bech32"
 import { Component, Prop, Watch } from "vue-property-decorator"
-import { ethers } from "ethers"
 
-import { formatTokenAmount } from "@/filters"
-import { formatToCrypto, formatToLoomAddress, ZERO } from "@/utils"
+import { ZERO } from "@/utils"
 import { DashboardState, Funds } from "@/types"
 import { gatewayModule } from "@/store/gateway"
-import { gatewayReactions } from "@/store/gateway/reactions"
 
 import AmountInput from "@/components/AmountInput.vue"
 import InputAddress from "../InputAddress.vue"
@@ -111,10 +114,6 @@ export default class WithdrawForm extends Vue {
     return this.$store.state
   }
 
-  get foreignNetworkName() {
-    return this.state.ethereum.genericNetworkName
-  }
-
   get networkId() { return this.$store.state.plasma.networkId }
 
   get requireRecipient(): boolean {
@@ -129,6 +128,13 @@ export default class WithdrawForm extends Vue {
     return this.state.gateway.transferRequest
   }
 
+  get destinationNetworkName() {
+    if (this.transferRequest.chain === "binance") {
+      return "Binance Chain"
+    } else { // transferRequest.chain === "ethereum" could be either Ethereum or BSC
+      return this.state.ethereum.genericNetworkName
+    }
+  }
 
   get isWithdrawalLimitEnabled() {
     return this.state.gateway.withdrawalLimit

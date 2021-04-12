@@ -127,15 +127,9 @@ export default class RegisterCandidateForm extends Vue {
   onSubmit(evt) {
     evt.preventDefault()
     const candidate = {
-        address: Address.fromString(this.$store.state.plasma.chainId + ":" + this.$store.state.plasma.address),
         pubKey: CryptoUtils.B64ToUint8Array(this.form.pubKey),
-        delegationTotal: ZERO,
-        slashPercentage: ZERO,
-        whitelistAmount: ZERO,
-        whitelistLocktimeTier: LocktimeTier.TIER_ONE,
-        fee: new BN(this.form.fee),
-        newFee: ZERO,
-        candidateState: CandidateState.REGISTERED,
+        whitelistLocktimeTier: LocktimeTier.TIER_THREE,
+        fee: new BN(this.form.fee).muln(100),
         name: this.form.name,
         description: this.form.description,
         website: this.form.website,

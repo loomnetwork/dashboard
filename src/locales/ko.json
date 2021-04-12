@@ -73,12 +73,10 @@
         "metamask": "메타마스크",
         "ledger_via_metamask": "Ledger (메타마스크를 통한)",
         "trezor_via_metamask": "Trezor (메타마스크를 통한)",
-        "ledger_legacy": "Ledger (하드웨어로 연결)",
         "walletconnect": "지갑 연결",
-        "explore": "살펴보기"
+        "explore": "살펴보기",
+        "binance": "Binance Chain"
       },
-      "no_metamask": "{metamask} 확장 프로그램이 설치되어있지 않습니다.",
-      "get_one": "여기에서 설치하세요!\n",
       "now_deprecated": "더 이상 사용되지 않습니다.",
       "recommend_use_ledger_via_metamask": "{ledgerMetamask}를 사용하는 것을 권장합니다."
     },
@@ -133,8 +131,8 @@
       "where_do_the_tokens_go": "검증자들이 처벌받으면, 토큰은 어떻게 되나요?",
       "slashed_tokens_will_be_contributed": "몰수된 토큰은 앞으로의 블록 보상을 위한 비상금으로 환원되어 네트워크에서 검증 및 스테이킹을 하는 사람들에게 지급됩니다.",
       "check_your_balance": "당신의 토큰 잔액을 확인하세요",
-      "deposit_to_plasmachain": "이더리움에서 베이스체인으로 입금",
-      "withdraw_to_ethereum": "이더리움으로 출금",
+      "deposit_to_plasmachain": "Deposit to Basechain from {network}",
+      "withdraw_to_ethereum": "Withdraw to {network}",
       "transfer_token": "다른 베이스체인 계정으로 토큰 전송",
       "check_your_asset": "당신의 릴렌트리스 자산을 확인하세요 (더 많은 기능이 기다리고 있답니다!)",
       "transfer_asset_to_other": "다른 주소들로 자산을 전송",
@@ -389,6 +387,7 @@
     "account": {
       "account": "계정",
       "show_etherscan": "이더스캔에서 보기",
+      "show_bscscan": "Show in BscScan",
       "show_block_explorer": "블록 탐색기에서 보기"
     },
     "amount_input": {
@@ -515,7 +514,7 @@
       "network": "네트워크: ",
       "sign_wallet_title": "당신의 지갑에 서명하세요.",
       "account_mapped_title": "계정이 매핑되었습니다.",
-      "metamask_changed": "MetaMask 계정을 전환했습니다. 예기치 않은 오류를 방지하기 위해 앱을 재시작합니다.",
+      "metamask_changed": "You have just switched your wallet account. To avoid any unexpected behaviour the dashboard will reload.",
       "metamask_error": "MetaMask 오류!?",
       "please_enable_metamask_or_switch": "MetaMask를 활성화하거나, 지원되는 브라우저를 사용해 주세요.",
       "mapping_error": "매핑 오류!?",
@@ -523,7 +522,7 @@
       "but_your_current_account_address": "하지만 당신의 현재 이더리움 계정 주소는 다음과 같습니다: ",
       "please_change_your_metamask_account": "이더리움 계좌를 변경해주세요.",
       "please_check_your_metamask_account": "이더리움 계좌 및(또는) 네트워크를 확인해주세요.",
-      "sign_wallet": "지갑을 사용하여 메시지에 서명하고, 이더리움 계좌를 확인하세요. (가스 비용 없음)",
+      "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요.",
       "your_wallet_connected_to": "당신의 지갑은 {network}에 이미 연결되어 있습니다.",
       "please_change_to": "{network}로 변경해주세요."
@@ -719,8 +718,8 @@
       "fee": "수수료",
       "new_fee": "새 수수료",
       "candidate_state": "후보 상태",
-      "max_referral_percentage": "최대 추천 %",
-      "slash_percentage": "처벌 %",
+      "max_referral_percentage": "Max Referral",
+      "slash_percentage": "Slash",
       "delegation_total": "총 위임 금액",
       "staked_amount": "스테이킹 금액",
       "whitelist_locktime_tier": "락업 기간 등급을 화이트리스트에 추가",
@@ -776,7 +775,7 @@
       "depositing_eth": "ETH 입금 중",
       "checking_receipt": "이전 영수증을 검사하는 중...",
       "check_account_mapping": "계정 매핑 확인하는 중",
-      "create_new_mapping": "이더리움 계정에서 새로운 매핑 생성 중",
+      "create_new_mapping": "Creating a new mapping from {network} account",
       "depositing_to_plasma": "베이스체인 게이트웨이로 입금 중...",
       "awaiting_oracle": "Oracle 서명 대기 중...",
       "complete_withdrawal_binance": "Binance로 출금 완료하는 중...",
@@ -819,7 +818,7 @@
     },
     "success": {
       "transaction_success": "트랜잭션이 성공적으로 전송되었습니다.",
-      "eth_addr_copied": "이더리움 주소가 복사되었습니다.",
+      "eth_addr_copied": "{network} address copied.",
       "plasma_addr_copied": "베이스체인 주소가 복사되었습니다.",
       "address_copied": "주소가 복사되었습니다.",
       "register_success": "성공적으로 등록되었습니다.",

@@ -11,7 +11,7 @@ import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState, VALIDATOR_NAMES, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
-import { Delegation, DPOSState, HasDPOSState, Validator } from "./types"
+import { Delegation, DPOSState, HasDPOSState, Validator, ICandidateRegistrationInfo } from "./types"
 import { Address, CryptoUtils } from "loom-js"
 import { feedbackModule as feedback } from "@/feedback/store"
 import * as Sentry from "@sentry/browser"
@@ -459,7 +459,7 @@ async function tmpClaimFormerValidatorsRewards(context: ActionContext) {
  * @param context
  * @param candidate
  */
-export async function registerCandidate(context: ActionContext, candidate: ICandidate) {
+export async function registerCandidate(context: ActionContext, candidate: ICandidateRegistrationInfo) {
   const balance = context.rootState.plasma.coins.LOOM.balance
   const weiAmount = parseToWei("1250000")
 

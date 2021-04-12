@@ -45,3 +45,8 @@ export function deleteUserData(state: EthereumState, key: string) {
 export function clearHistory(state: EthereumState) {
   state.history = []
 }
+
+export function setWalletNetworkId(state: EthereumState, payload: number) {
+  console.log(`setWalletNetworkId - ${payload}`)
+  state.walletNetworkId = payload
+}

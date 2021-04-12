@@ -15,9 +15,10 @@ export interface DashboardConfig {
   coinDataUrl: string
   disabled: string[]
   // config for the gateway enabled chains
-  chains: string[]
+  chains: string[] // list of external chains to which gateways have been deployed
   plasma: PlasmaConfig
   ethereum: EthereumConfig
+  binance?: EthereumConfig
   dpos: DPOSConfig
   gateway: GatewayConfig,
   announcement: {

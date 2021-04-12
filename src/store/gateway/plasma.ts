@@ -2,6 +2,7 @@ import {
   TransferGateway,
   LoomCoinTransferGateway,
   BinanceTransferGateway,
+  BscTransferGateway,
 } from "loom-js/dist/contracts"
 import { Address, Client, Contract } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
@@ -115,16 +116,16 @@ export async function init(
   client: Client,
   plasmaWeb3: Web3,
   mapping: IAddressMapping,
+  isConnectedToBsc: boolean,
 ) {
 
-  // return new EthereumGateways()
-  // create gateways and vmc (maybe vmc does not care...)
   const ethereumMainGateway = await TransferGateway.createAsync(client, mapping.from)
-  const ethereumLoomGateway = await LoomCoinTransferGateway.createAsync(
+  const loomGatewayVariant = isConnectedToBsc ? BscTransferGateway : LoomCoinTransferGateway
+  const ethereumLoomGateway = await loomGatewayVariant.createAsync(
     client,
     mapping.from,
   )
-  // todo: add binance loom adapter
+  
   const binanceGateway = await BinanceTransferGateway.createAsync(client, mapping.from)
 
   instance = new PlasmaGateways(ethereumMainGateway, ethereumLoomGateway, binanceGateway, plasmaWeb3, mapping)
@@ -143,7 +144,7 @@ class PlasmaGateways {
 
   constructor(
     readonly ethereumMainGateway: TransferGateway,
-    readonly ethereumLoomGateway: LoomCoinTransferGateway,
+    readonly ethereumLoomGateway: LoomCoinTransferGateway | BscTransferGateway,
     readonly binanceGateway: BinanceTransferGateway,
     readonly web3: Web3,
     readonly mapping: IAddressMapping,
@@ -162,6 +163,18 @@ class PlasmaGateways {
       throw new Error("No gateway for " + symbol)
     }
     return adapter
+  }
+
+  // @return Gateway adapter registered for the given chain & symbol, or undefined if one doesn't
+  //         exist.
+  // NOTE: This is very similar to get() above, but doesn't needlessly throw errors.
+  getGatewayAdapter(chain: string, symbol: string): PlasmaGatewayAdapter | undefined {
+    const chainAdapters = this.chains.get(chain)
+    if (chainAdapters === undefined) {
+      console.warn(`No gateway adapters registered for ${chain}`)
+      return undefined
+    }
+    return chainAdapters.get(symbol)
   }
 
   /**

@@ -34,10 +34,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue, Prop, Provide } from "vue-property-decorator"
+import { Component, Watch, Vue } from "vue-property-decorator"
 import VirtualList from "vue-virtual-scroll-list"
 import { plasmaModule } from "../../store/plasma"
 import { tokenService, TokenData } from "@/services/TokenService"
+import { DashboardState } from "@/types"
 
 @Component({
   components: {
@@ -47,6 +48,10 @@ import { tokenService, TokenData } from "@/services/TokenService"
 export default class AddTokenModal extends Vue {
   searchText: string = ""
   filteredTokens: TokenData[] = []
+
+  get state(): DashboardState {
+    return this.$store.state
+  }
 
   async mounted() {
     this.filterToken()
@@ -66,7 +71,8 @@ export default class AddTokenModal extends Vue {
   }
 
   addToken(token) {
-    plasmaModule.addToken(token)
+    const walletId = this.state.ethereum.nativeTokenSymbol === "BNB" ? (this.state.env + '.binance') : this.state.env
+    plasmaModule.addToken({ token, walletId })
     this.$root.$emit("bv::hide::modal", "add-token-modal")
     this.$emit("refreshTokenList")
   }

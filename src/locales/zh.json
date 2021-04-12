@@ -73,12 +73,10 @@
         "metamask": "Metamask",
         "ledger_via_metamask": "Ledger (通过 Metamask)",
         "trezor_via_metamask": "Trezor (通过 Metamask)",
-        "ledger_legacy": "Ledger (Legacy)",
         "walletconnect": "钱包连接",
-        "explore": "直接输入"
+        "explore": "直接输入",
+        "binance": "Binance Chain"
       },
-      "no_metamask": "看起来你没有装 {metamask} 扩展",
-      "get_one": "装一个吧！",
       "now_deprecated": "现已不建议使用",
       "recommend_use_ledger_via_metamask": "我们建议使用 {ledgerMetamask}。"
     },
@@ -133,8 +131,8 @@
       "where_do_the_tokens_go": "扣罚的代币会去哪里？",
       "slashed_tokens_will_be_contributed": "扣罚的代币将去到剩余代币储备中，作为未来区块奖励，贡献给那些在网络上参与验证和锁定代币的人们。",
       "check_your_balance": "查看你的代币余额",
-      "deposit_to_plasmachain": "从以太坊存入到 Basechain",
-      "withdraw_to_ethereum": "提取到以太坊",
+      "deposit_to_plasmachain": "Deposit to Basechain from {network}",
+      "withdraw_to_ethereum": "Withdraw to {network}",
       "transfer_token": "将代币转移到其他 Basechain 账户",
       "check_your_asset": "查看你的 Relentless 资产（更多功能即将到来）",
       "transfer_asset_to_other": "将资产转移到其他地址",
@@ -389,6 +387,7 @@
     "account": {
       "account": "账户：",
       "show_etherscan": "查看 EtherScan",
+      "show_bscscan": "Show in BscScan",
       "show_block_explorer": "查看区块浏览器"
     },
     "amount_input": {
@@ -515,7 +514,7 @@
       "network": "网络: ",
       "sign_wallet_title": "签署你的钱包",
       "account_mapped_title": "账户已映射",
-      "metamask_changed": "你刚刚切换了 MetaMask 帐户。 为避免任何意外行为，应用程序将重新加载",
+      "metamask_changed": "You have just switched your wallet account. To avoid any unexpected behaviour the dashboard will reload.",
       "metamask_error": "Metamask 错误！？",
       "please_enable_metamask_or_switch": "请启用 Metamask 或切换到支持的浏览器",
       "mapping_error": "映射错误！？",
@@ -523,7 +522,7 @@
       "but_your_current_account_address": "但你当前的以太坊账户地址是：",
       "please_change_your_metamask_account": "请更改你的以太坊帐户",
       "please_check_your_metamask_account": "请检查你的以太坊帐户和/或网络",
-      "sign_wallet": "用你的钱包，签名以确认你的以太坊身份。（不需要gas）",
+      "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": " 你选择的账户已映射。请选择新帐户。",
       "your_wallet_connected_to": "你的钱包已连接到 {network}。",
       "please_change_to": "请更换到 {network}。"
@@ -719,8 +718,8 @@
       "fee": "佣金",
       "new_fee": "新佣金",
       "candidate_state": "候选人状态",
-      "max_referral_percentage": "Max referral %",
-      "slash_percentage": "扣罚 %",
+      "max_referral_percentage": "Max Referral",
+      "slash_percentage": "Slash",
       "delegation_total": "委托总数",
       "staked_amount": "锁定量",
       "whitelist_locktime_tier": "将锁定期层级添加到白名单",
@@ -776,7 +775,7 @@
       "depositing_eth": "正在存入 ETH",
       "checking_receipt": "正在检查之前的收据……",
       "check_account_mapping": "正在检查账户映射",
-      "create_new_mapping": "正在创建一个来自于以太坊账户的新映射",
+      "create_new_mapping": "Creating a new mapping from {network} account",
       "depositing_to_plasma": "正在存入到 Basechain 网关",
       "awaiting_oracle": "等待 Oracle 签名……",
       "complete_withdrawal_binance": "正在完成提取到 binance……",
@@ -819,7 +818,7 @@
     },
     "success": {
       "transaction_success": "事务已成功发送。",
-      "eth_addr_copied": "已复制以太坊地址。",
+      "eth_addr_copied": "{network} address copied.",
       "plasma_addr_copied": "已复制 Basechain 地址。",
       "address_copied": "已复制地址。",
       "register_success": "已成功注册。",

@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { tokenService, TokenData } from "@/services/TokenService"
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { DashboardState, Funds } from "@/types"
@@ -15,6 +16,7 @@ import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
 import * as Sentry from "@sentry/browser"
+import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
 
 const log = debug("dash.gateway")
 
@@ -43,10 +45,15 @@ export function gatewayReactions(store: Store<DashboardState>) {
         Sentry.setExtra(mapping.to.chainId, mapping.to.local.toString())
 
         await setPlasmaAccount(mapping)
-        await initializeGateways(mapping, store.state.gateway.multisig)
+        await initializeGateways(mapping, store.state.ethereum.gatewayVersions)
 
         const ethereumGateways = EthereumGateways.service()
 
+        // TODO: Remove this. This event listening stuff is half done, the events are fetched and
+        //       then nothing actually looks at them or does anything useful,
+        //       also BSC doesn't have any official websocket endpoints so this just plain doesn't
+        //       work there.
+        /*
         // Listen to approval & deposit events
         listenToDepositApproval(
           ethereumModule.state.address,
@@ -59,7 +66,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
           ethereumGateways.loomGateway,
           ethereumModule.getERC20("LOOM")!,
         )
-
+        */
         checkIncompleteTransfers()
       }
     },
@@ -78,7 +85,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
   store.subscribeAction({
     after(action) {
       if (/^plasma.+addToken$/.test(action.type)) {
-        addTokenAdapter(action.payload)
+        addTokenAdapter(action.payload.token)
       }
     },
   })
@@ -110,25 +117,27 @@ export function gatewayReactions(store: Store<DashboardState>) {
     gatewayModule.refreshAllowances()
   }
 
-  async function initializeGateways(mapping: IAddressMapping, multisig: { loom: boolean, main: boolean }) {
+  async function initializeGateways(mapping: IAddressMapping, version: { loom: 1 | 2, main: 1 | 2 }) {
     const addresses = {
       mainGateway: store.state.ethereum.contracts.mainGateway,
       loomGateway: store.state.ethereum.contracts.loomGateway,
     }
+    // Initialize Ethereum gateways & coin contracts
     try {
       const ethereumGateway = await EthereumGateways.init(
         ethereumModule.web3,
         addresses,
-        multisig,
+        version,
       )
       const loomAddr = tokenService.getTokenAddressBySymbol("LOOM", "ethereum")
       ethereumGateway.add("LOOM", loomAddr)
-      ethereumGateway.add("ETH", "") // Ether does not have a contract address
+      if (addresses.mainGateway !== ethers.constants.AddressZero) {
+        ethereumGateway.add("ETH", "") // Ether does not have a contract address
+      }
     } catch (error) {
       console.error("Error initializing ethereum gateways " + error.message)
       return
     }
-    // Initialize Ethereum gateways & coin contracts
 
     // Init plasma side
     try {
@@ -136,21 +145,23 @@ export function gatewayReactions(store: Store<DashboardState>) {
         plasmaModule.state.client!,
         plasmaModule.state.web3!,
         mapping,
+        store.state.ethereum.nativeTokenSymbol === "BNB",
       )
 
-      const loomGatewayAddr = Address.fromString(`eth:${addresses.loomGateway}`)
-      const ethGatewayAddr = Address.fromString(`eth:${addresses.mainGateway}`)
-
-      plasmaGateways.add("ethereum", "LOOM", loomGatewayAddr)
-      plasmaGateways.add("ethereum", "ETH", ethGatewayAddr)
+      plasmaGateways.add("ethereum", "LOOM", Address.fromString(`eth:${addresses.loomGateway}`))
+      if (addresses.mainGateway !== ethers.constants.AddressZero) {
+        plasmaGateways.add("ethereum", "ETH", Address.fromString(`eth:${addresses.mainGateway}`))
+      }
     } catch (error) {
       console.error("Error initializing plasma gateways " + error.message)
       return
     }
 
     Object.keys(store.state.plasma.coins).forEach((token) => {
-      const tokenInfo = tokenService.getTokenbySymbol(token)
-      addTokenAdapter(tokenInfo)
+      const tokenInfo = tokenService.get(token)
+      if (tokenInfo) {
+        addTokenAdapter(tokenInfo)
+      }
     })
   }
 
@@ -159,8 +170,17 @@ export function gatewayReactions(store: Store<DashboardState>) {
    */
   async function checkIncompleteTransfers() {
     const plasmaGateways = PlasmaGateways.service()
-    const loomReceipt = await plasmaGateways.get("ethereum", "LOOM").withdrawalReceipt()
-    const mainReceipt = await plasmaGateways.get("ethereum", "ETH").withdrawalReceipt()
+    let adapter = plasmaGateways.getGatewayAdapter("ethereum", "LOOM")
+    let loomReceipt: IWithdrawalReceipt | null = null
+    if (adapter) {
+      loomReceipt = await adapter.withdrawalReceipt()
+    }
+    
+    adapter = plasmaGateways.getGatewayAdapter("ethereum", "ETH")
+    let mainReceipt: IWithdrawalReceipt | null = null
+    if (adapter) {
+      mainReceipt = await adapter.withdrawalReceipt()
+    }
     // console.log("receipts", loomReceipt, mainReceipt)
 
     if (!loomReceipt && !mainReceipt) return
@@ -177,7 +197,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
       gatewayModule.setWithdrawalReceipts(mainReceipt)
       return
     }
-
   }
 
   /**

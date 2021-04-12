@@ -8,7 +8,7 @@ import Axios from "axios"
 import BN from "bn.js"
 import debug from "debug"
 import { ethers } from "ethers"
-import { CryptoUtils, Address } from "loom-js"
+import { CryptoUtils } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { parseSigs } from "loom-js/dist/helpers"
 import { abi as GatewayABIv1, EthereumGatewayV1Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV1Factory"
@@ -23,12 +23,10 @@ import { ethereumModule } from "../ethereum"
 import { PlasmaTokenKind } from "../plasma/types"
 // these are v2 types
 import { Gateway } from "./contracts/Gateway"
-import GatewayABI_v1 from "./contracts/Gateway_v1.json"
 // XXX
 import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import { gatewayModule } from "./index"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
-import { async } from "rxjs/internal/scheduler/async"
 
 const log = debug("dash.gateway.ethereum")
 
@@ -159,26 +157,34 @@ let instance: EthereumGateways | null = null
 export async function init(
   web3: Web3,
   addresses: { mainGateway: string; loomGateway: string },
-  multisig: { main: boolean, loom: boolean },
+  version: { main: 1 | 2, loom: 1 | 2 },
 ) {
-  const ERC20GatewayABI: AbiItem[] = multisig.loom ? GatewayABIv2 : GatewayABIv1
-  const GatewayABI: AbiItem[] = multisig.main ? GatewayABIv2 : GatewayABIv1
+  const ERC20GatewayABI: AbiItem[] = version.loom === 2 ? GatewayABIv2 : GatewayABIv1
+  const GatewayABI: AbiItem[] = version.main === 2 ? GatewayABIv2 : GatewayABIv1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI,
     addresses.loomGateway,
   ) as EthereumGatewayV2Factory
   log("loom gateway initialized")
-  // @ts-ignore
-  const mainGateway: Gateway = new web3.eth.Contract(
-    GatewayABI as AbiItem[],
-    addresses.mainGateway,
-  )
-  log("main gateway initialized")
-  let vmcContract: any = null
-  if (multisig.loom || multisig.main) {
-    const vmcSourceGateway = multisig.loom ? loomGateway : mainGateway
+
+  let mainGateway: Gateway | null = null;
+  if (addresses.mainGateway !== ethers.constants.AddressZero) {
     // @ts-ignore
+    mainGateway = new web3.eth.Contract(
+      GatewayABI as AbiItem[],
+      addresses.mainGateway,
+    )
+    log("main gateway initialized")
+  }
+  let vmcContract: any = null
+  let vmcSourceGateway: any = null
+  if (version.loom === 2) {
+    vmcSourceGateway = loomGateway
+  } else if ((version.main === 2) && mainGateway) {
+    vmcSourceGateway = mainGateway
+  }
+  if (vmcSourceGateway) {
     const vmcAddress = await vmcSourceGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
@@ -189,7 +195,7 @@ export async function init(
   } else {
     log("Assuming oracle sig gateways")
   }
-  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3, multisig)
+  instance = new EthereumGateways(mainGateway, loomGateway, vmcContract, web3, version)
   return instance
 }
 
@@ -211,11 +217,11 @@ class EthereumGateways {
    * @param web3
    */
   constructor(
-    readonly mainGateway: EthereumGatewayV1Factory,
+    readonly mainGateway: EthereumGatewayV1Factory | null,
     readonly loomGateway: EthereumGatewayV2Factory,
     readonly vmc: ValidatorManagerContract | null,
     readonly web3: Web3,
-    readonly multisig: { main: boolean, loom: boolean },
+    readonly version: { main: 1 | 2, loom: 1 | 2 },
   ) { }
 
   destroy() {
@@ -235,20 +241,26 @@ class EthereumGateways {
       console.warn(token + " token gateway adapter already set.")
       return this.adapters.get(token)
     }
-    const { mainGateway, loomGateway, web3, multisig } = this
+    const { mainGateway, loomGateway, web3, version } = this
     let adapter: EthereumGatewayAdapter
     let vmc: ValidatorManagerContract | null
     switch (token) {
       case "ETH":
-        vmc = multisig.main ? this.vmc : null
+        if (mainGateway === null) {
+          throw new Error(`Can't add token ${token} because gateway doesn't exist`)
+        }
+        vmc = version.main === 2 ? this.vmc : null
         adapter = new EthGatewayAdapter(vmc, mainGateway, "", web3)
         break
       case "LOOM":
-        vmc = multisig.loom ? this.vmc : null
+        vmc = version.loom === 2 ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, loomGateway, tokenAddress, token)
         break
       default:
-        vmc = multisig.main ? this.vmc : null
+        if (mainGateway === null) {
+          throw new Error(`Can't add token ${token} because gateway doesn't exist`)
+        }
+        vmc = version.main === 2 ? this.vmc : null
         adapter = new ERC20GatewayAdapter(vmc, mainGateway, tokenAddress, token)
         break
     }
@@ -399,9 +411,8 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
  * @param {*} address
  */
 export async function checkTxStatus(context: ActionContext, tx: string) {
-  const api = context.rootState.env === "production" ? "//api.etherscan.io/api" : "//api-rinkeby.etherscan.io/api"
   return Axios
-    .get(`${api}?module=transaction&action=getstatus&txhash=${tx}`)
+    .get(`//${context.rootState.ethereum.blockExplorerApi}?module=transaction&action=getstatus&txhash=${tx}`)
     .then((response) => {
       const { isError, errDescription } = response.data.result
       if (isError === "0") {
@@ -492,11 +503,15 @@ export async function refreshEthereumHistory(context: ActionContext) {
   const promises = coins.map((symbol) => {
     switch (symbol) {
       case PlasmaTokenKind.ETH:
-        return logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn")
+        if (mainGateway !== null) {
+          return logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn") 
+        }
       case PlasmaTokenKind.LOOMCOIN:
         return logEvents(address, loomGateway, symbol, "LoomCoinReceived", "TokenWithdrawn")
       default:
-        return logEvents(address, mainGateway, symbol, "ERC20Received", "TokenWithdrawn")
+        if (mainGateway !== null) {
+          return logEvents(address, mainGateway, symbol, "ERC20Received", "TokenWithdrawn")
+        }
     }
   })
   await Promise.all(promises)

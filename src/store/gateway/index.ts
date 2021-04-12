@@ -20,10 +20,6 @@ const log = debug("dash.gateway")
 
 function initialState(): GatewayState {
   return {
-    multisig: {
-      loom: false,
-      main: false,
-    },
     chains: [],
     mapping: null,
     withdrawalReceipts: null,
@@ -36,6 +32,7 @@ function initialState(): GatewayState {
       chain: "",
       token: "",
     },
+    // TODO: neither withdrawStates nor withdrawStateIdx appear to be used, should probably remove them
     withdrawStates: [
       { text: "Checking for pre-existing receipts...", isComplete: false },
       { text: "Depositing to Basechain Gateway...", isComplete: false },

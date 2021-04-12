@@ -68,7 +68,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
   const ethSigner = new EthersSigner(signer)
   const plasmaId = privateKey === "" ?
     generateNewId(context.rootState.plasma.chainId) :
-    idFromPrivateKey(privateKey)
+    idFromPrivateKey(privateKey, context.rootState.plasma.chainId)
 
   state.requireMapping = false
   console.log("caller", caller)
@@ -78,7 +78,9 @@ export async function createMapping(context: ActionContext, privateKey: string) 
     rootState.plasma.endpoint,
     rootState.plasma.chainId,
   )
-  feedbackModule.setStep(i18n.t("feedback_msg.step.create_new_mapping").toString())
+  feedbackModule.setStep(
+    i18n.t("feedback_msg.step.create_new_mapping", { network: rootState.ethereum.genericNetworkName }
+  ).toString())
   const mapper = await AddressMapper.createAsync(client, address)
   try {
     await mapper.addIdentityMappingAsync(

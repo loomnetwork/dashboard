@@ -26,7 +26,7 @@
       </b-form-group>
       <div v-if="mappingChoice === 'existing'">
         <div class="mb-2">
-          <label style="margin:0">Ethereum address</label><br>
+          <label style="margin:0">{{ foreignNetworkName }} address</label><br>
           <code>{{$store.state.ethereum.address}}</code>
         </div>
         <div class="mb-2">
@@ -68,6 +68,10 @@ export default class AccountMappingModal extends Vue {
 
   get state(): DashboardState {
     return this.$store.state
+  }
+
+  get foreignNetworkName() {
+    return this.state.ethereum.genericNetworkName
   }
 
   get visible() {

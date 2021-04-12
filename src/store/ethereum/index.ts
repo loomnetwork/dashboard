@@ -14,9 +14,9 @@ import {
   EthereumConfig,
   EthereumState,
   HasEthereumState,
+  IWalletProvider,
   WalletType,
 } from "./types"
-import { LedgerAdapter } from "./wallets/ledger"
 import { MetaMaskAdapter } from "./wallets/metamask"
 import { tokenService } from "@/services/TokenService"
 import {
@@ -27,17 +27,13 @@ import {
   setUserData,
   deleteUserData,
   clearHistory,
+  setWalletNetworkId,
 } from "./mutations"
-import { provider } from "web3-providers/types"
 import { feedbackModule } from "@/feedback/store"
-import { getMetamaskSigner } from "loom-js"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
-import { PortisAdapter } from "./wallets/portis"
-import { FortmaticAdapter } from "./wallets/fortmatic"
-import { TestWalletAdapter } from "./wallets/test-wallet"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
-import Connector from "@walletconnect/core"
+import { BinanceChainWalletAdapter } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -46,23 +42,23 @@ const ZERO = new BN("0")
 
 const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
-  ["ledger", LedgerAdapter],
-  ["portis", PortisAdapter],
-  ["fortmatic", FortmaticAdapter],
-  ["test_wallet", TestWalletAdapter],
+  ["binance", BinanceChainWalletAdapter],
   ["walletconnect", WalletConnectAdapter],
 ])
 
 const initialState: EthereumState = {
   networkId: "",
   networkName: "",
+  genericNetworkName: "",
   chainId: "",
+  nativeTokenSymbol: "",
   endpoint: "",
   blockExplorer: "",
-  provider: null,
+  blockExplorerApi: "",
   address: "",
   signer: null,
   walletType: "",
+  walletNetworkId: null,
   balances: {
     ETH: ZERO,
     LOOM: ZERO,
@@ -90,6 +86,10 @@ const initialState: EthereumState = {
   userData: {
     pendingWithdrawal: false,
   },
+  gatewayVersions: {
+    main: 1,
+    loom: 1,
+  }
 }
 
 // web3 instance
@@ -131,6 +131,7 @@ export const ethereumModule = {
   setWalletType: builder.dispatch(setWalletType),
   setProvider: builder.dispatch(setProvider),
   clearWalletType: builder.commit(clearWalletType),
+  commitSetWalletNetworkId: builder.commit(setWalletNetworkId),
 
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
@@ -168,25 +169,22 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async (web3provider) => await setProvider(context, web3provider))
+      .then(async provider => await setProvider(context, provider))
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
       })
-  } else {
-    context.state.walletType = walletType
   }
 }
 
-async function setProvider(context: ActionContext, p: provider) {
-  log("setting provider", p)
-  context.state.provider = p
-  web3 = new Web3(p)
-  const signer = getMetamaskSigner(p)
+async function setProvider(context: ActionContext, p: IWalletProvider) {
+  web3 = p.web3
+  const signer = p.signer
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
+  ethereumModule.commitSetWalletNetworkId(p.chainId)
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
@@ -230,15 +228,15 @@ export async function refreshBalance(context: ActionContext, symbol: string) {
       },
     )
   }
-  if (symbol === "ETH") {
+  // On Ethereum fetch the current user's ETH balance, on BSC fetch the BNB balance, etc.
+  const nativeTokenSymbol = context.state.nativeTokenSymbol
+  if (symbol === nativeTokenSymbol) {
     const b = await web3.eth.getBalance(context.state.address)
-    context.state.coins.ETH.balance = new BN(b.toString())
+    context.state.coins[nativeTokenSymbol].balance = new BN(b.toString())
     return
   }
   const contract = requireValue(erc20Contracts.get(symbol), "No contract found")
   const coinState = context.state.coins[symbol]
-  // @ts-ignore
-  console.log(symbol, contract._address)
   coinState.loading = true
   return (
     contract.methods
@@ -332,6 +330,8 @@ export function initERC20(context: ActionContext, symbol: string) {
   const account = context.state.address
   const refresh = () => ethereumModule.refreshBalance(symbol)
 
+  // TODO: This probably only works when the web3 provider is hooked up to a websocket endpoint,
+  //       which means it won't work with BSC (which has no official websocket endpoints).
   // out out filters
   const send = contract.events.Transfer(
     {

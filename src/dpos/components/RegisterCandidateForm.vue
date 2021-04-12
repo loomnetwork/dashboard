@@ -31,7 +31,7 @@
           <b-col><b-card-title class="ml-3 mt-2">{{ $t('components.validator_extended_detail.register_this_account_as_a_validator', { address: "" }) }}</b-card-title></b-col>
           <b-col><b-button class="more-detail" variant="link" size="sm" :href="guideLink" target="_blank">More Detail</b-button></b-col>
         </b-row>
-        <b-form>
+        <b-form @submit="onSubmit">
           <b-form-group class="main-form">
           <label for="input-name">{{ $t('components.registerCandidate.validator_name') }}</label>
             <b-form-input
@@ -54,7 +54,7 @@
               v-model="form.description"
               required
             ></b-form-textarea>
-            <b-row @submit="onSubmit">
+            <b-row>
               <b-col>
                 <b-input-group :prepend="$t('components.registerCandidate.website')">
                   <b-form-input

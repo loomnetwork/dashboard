@@ -68,7 +68,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
   const ethSigner = new EthersSigner(signer)
   const plasmaId = privateKey === "" ?
     generateNewId(context.rootState.plasma.chainId) :
-    idFromPrivateKey(privateKey)
+    idFromPrivateKey(privateKey, context.rootState.plasma.chainId)
 
   state.requireMapping = false
   console.log("caller", caller)

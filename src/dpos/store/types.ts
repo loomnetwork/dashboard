@@ -137,12 +137,3 @@ export interface Delegation {
   locked: boolean
   isReward: boolean
 }
-
-export interface ICandidateRegistrationInfo {
-  pubKey: Uint8Array;
-  whitelistLocktimeTier: LocktimeTier;
-  fee: BN;
-  name: string;
-  description: string;
-  website: string;
-}

@@ -31,7 +31,7 @@
           <b-col><b-card-title class="ml-3 mt-2">{{ $t('components.validator_extended_detail.register_this_account_as_a_validator', { address: "" }) }}</b-card-title></b-col>
           <b-col><b-button class="more-detail" variant="link" size="sm" :href="guideLink" target="_blank">More Detail</b-button></b-col>
         </b-row>
-        <b-form @submit="onSubmit">
+        <b-form>
           <b-form-group class="main-form">
           <label for="input-name">{{ $t('components.registerCandidate.validator_name') }}</label>
             <b-form-input
@@ -54,7 +54,7 @@
               v-model="form.description"
               required
             ></b-form-textarea>
-            <b-row>
+            <b-row @submit="onSubmit">
               <b-col>
                 <b-input-group :prepend="$t('components.registerCandidate.website')">
                   <b-form-input
@@ -127,9 +127,15 @@ export default class RegisterCandidateForm extends Vue {
   onSubmit(evt) {
     evt.preventDefault()
     const candidate = {
+        address: Address.fromString(this.$store.state.plasma.chainId + ":" + this.$store.state.plasma.address),
         pubKey: CryptoUtils.B64ToUint8Array(this.form.pubKey),
-        whitelistLocktimeTier: LocktimeTier.TIER_THREE,
-        fee: new BN(this.form.fee).muln(100),
+        delegationTotal: ZERO,
+        slashPercentage: ZERO,
+        whitelistAmount: ZERO,
+        whitelistLocktimeTier: LocktimeTier.TIER_ONE,
+        fee: new BN(this.form.fee),
+        newFee: ZERO,
+        candidateState: CandidateState.REGISTERED,
         name: this.form.name,
         description: this.form.description,
         website: this.form.website,

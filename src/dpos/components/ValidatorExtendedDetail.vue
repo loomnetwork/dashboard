@@ -41,7 +41,7 @@
           <p>{{ validator.description }}</p>
           <div class="public-key">
             <p>{{ $t('components.validator_extended_detail.public_key') }}</p>
-            <span>{{ pubKeyToB64(validator.pubKey) }}</span>
+            <span>{{ decodeUint8Array(validator.pubKey) }}</span>
           </div>
         </b-card-text>
         <b-row>
@@ -66,7 +66,7 @@
               <dd>{{ validator.delegationTotal | tokenAmount }}</dd>
               <dt>{{ $t('components.validator_extended_detail.staked_amount') }}</dt>
               <dd>{{ validator.stakedAmount | tokenAmount }}</dd>
-              <dt>{{ $t('components.validator_extended_detail.whitelist_amount') }}</dt>
+              <dt>{{ $t('components.validator_extended_detail.whitelist_amount') }}t</dt>
               <dd>{{ validator.whitelistAmount | tokenAmount }}</dd>
               <dt>{{ $t('components.validator_extended_detail.whitelist_locktime_tier') }}</dt>
               <dd>{{ validator.whitelistLocktimeTier }}</dd>
@@ -82,7 +82,13 @@
 import Vue from "vue"
 import { Component, Watch, Prop } from "vue-property-decorator"
 import { HasDPOSState } from "@/dpos/store/types"
+import { formatTokenAmount } from "@/filters"
+import { TextDecoder } from "util"
+import { formatToLoomAddress, parseToWei } from "@/utils"
+import BN from "bn.js"
+import { dposModule } from "../store"
 import RegisterCandidateForm from "./RegisterCandidateForm.vue"
+import BigNumber from 'bignumber.js';
 
 @Component({
   components: {
@@ -116,8 +122,8 @@ export default class ValidatorExtendedDetail extends Vue {
     return myValidator ? myValidator : false
   }
 
-  pubKeyToB64(key: Uint8Array) {
-    return Buffer.from(key).toString("base64")
+  decodeUint8Array(key: Uint8Array) {
+    return Buffer.from(key).toString("hex")
   }
 
 

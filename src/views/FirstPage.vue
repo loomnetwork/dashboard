@@ -50,7 +50,8 @@
             style="justify-content: center;"
           >
             <b-card-group deck>
-              <b-card>
+              <!-- Binance Smart Chain wallets -->
+              <b-card v-if="bscWalletsEnabled">
                 <b-card-title>
                   <img class="d-block mx-auto" width="64px" height="64px" src="../assets/binance_logo.png" alt="Binance Logo" />
                   <div class="text-center mt-2">Binance Smart Chain</div>
@@ -100,6 +101,7 @@
                   </div>
                 </b-card-body>
               </b-card>
+              <!-- Ethereum wallets -->
               <b-card>
                 <b-card-title>
                   <img class="d-block mx-auto" width="54px" height="64px" src="../assets/ethereum_logo.png" alt="Ethereum Logo" />
@@ -271,6 +273,7 @@
             target="bsc-binance-wallet"
             title="Binance Chain Wallet"
             triggers="hover"
+            v-if="bscWalletsEnabled"
           >
             <p>
             This wallet also supports <strong>Ledger</strong>.
@@ -294,6 +297,7 @@
             target="bsc-metamask-wallet"
             title="Metamask Wallet"
             triggers="hover"
+            v-if="bscWalletsEnabled"
           >
             <p>
             This wallet also supports <strong>Ledger</strong> and <strong>Trezor</strong>.
@@ -317,6 +321,7 @@
             target="bsc-walletconnect"
             title="WalletConnect Protocol"
             triggers="hover"
+            v-if="bscWalletsEnabled"
           >
             WalletConnect supports many <strong>iOS</strong> and <strong>Android</strong> wallets.
             It's easy to use and there's nothing to install, just scan a QR code to connect.
@@ -380,6 +385,10 @@ export default class FirstPage extends Vue {
       networkId = "default"
     }
     return this.$state.envs.find((env) => env.plasma.chainId === networkId)!
+  }
+
+  get bscWalletsEnabled(): boolean {
+    return this.$state.activeConfig ? this.$state.activeConfig.features.bscWallets : false
   }
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {

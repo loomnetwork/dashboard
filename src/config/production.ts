@@ -77,4 +77,7 @@ export default {
     popup: false,
     home: false,
   },
+  features: {
+    bscWallets: false,
+  }
 } as DashboardConfig

@@ -25,6 +25,9 @@ export interface DashboardConfig {
     validatorsPage: boolean,
     popup: boolean,
     home: boolean,
+  },
+  features: {
+    bscWallets: boolean, // show wallets that connect to BSC on the sign-in page
   }
 }
 
@@ -38,6 +41,7 @@ export interface DashboardState extends
   envs: DashboardConfig[]
   disabled: string[]
   chains: string[]
+  activeConfig?: DashboardConfig
 }
 
 export interface Funds {

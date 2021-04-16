@@ -55,6 +55,7 @@ const dashboardStore = {
     gatewayModule.setConfig(env.gateway)
     context.state.disabled = env.disabled
     context.state.chains = env.chains
+    context.state.activeConfig = env
   }),
   setEnvs: builder.commit(function setEnvs(state, envs: DashboardConfig[]) {
     state.envs = envs

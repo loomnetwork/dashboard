@@ -1,12 +1,12 @@
 <template>
   <div>
     <b-badge id="network-badge" pill variant="dark">
-      {{ genericNetworkName }}
+      {{ genericNetworkName ? genericNetworkName : "Not Connected" }}
     </b-badge>
     <b-popover v-if="!compact"
       target="network-badge"
       placement="bottom"
-      :title="`Connected to ${networkName}`"
+      :title="networkName ? `Connected to ${networkName}` : `Waiting to connect...`"
       triggers="hover">
       <div style="min-width: 300px;">
         <div v-if="latestBlock === 0 && account">Fetching latest block...</div>
@@ -31,11 +31,11 @@ export default class NetworkChip extends Vue {
   }
 
   get genericNetworkName() {
-    return this.account ? this.state.ethereum.genericNetworkName : "Not Connected"
+    return this.account ? this.state.ethereum.genericNetworkName : ""
   }
 
   get networkName() {
-    return this.account ? this.state.ethereum.networkName : "Waiting to connect..."
+    return this.account ? this.state.ethereum.networkName : ""
   }
 
   get account() {

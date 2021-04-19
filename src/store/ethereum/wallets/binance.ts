@@ -24,7 +24,7 @@ export const BinanceChainWalletAdapter: WalletType = {
     bc.autoRefreshOnNetworkChange = false
     // @ts-ignore
     bc.on("chainChanged", () => ethereumModule.commitSetWalletNetworkId(parseInt(window.BinanceChain.chainId, 16)));
-    
+
     let accounts: string[] = []
     try {
       accounts = await bc.request({ method: "eth_requestAccounts" })
@@ -44,11 +44,12 @@ export const BinanceChainWalletAdapter: WalletType = {
       console.log(`accountsChanged ${accounts}`)
       changeAccounts(accounts).catch(err => console.error(err))
     })
-    
+
     return {
       web3: new Web3(bc),
       signer: getMetamaskSigner(bc),
       chainId: parseInt(bc.chainId, 16),
+      disconnect: () => Promise.resolve(),
     }
   },
 }
@@ -65,7 +66,7 @@ async function changeAccounts(accounts: string[]) {
     return
   }
   if (ethereumModule.state.address &&
-      ethereumModule.state.address.toLowerCase() !== accounts[0]) {
+    ethereumModule.state.address.toLowerCase() !== accounts[0]) {
     // Remove any reference to past withdrawals as it is bound to a specific address
     localStorage.removeItem("lastWithdrawTime")
     ethereumModule.state.metamaskChangeAlert = true;

@@ -58,6 +58,7 @@ const initialState: EthereumState = {
   address: "",
   signer: null,
   walletType: "",
+  wallet: null,
   walletNetworkId: null,
   balances: {
     ETH: ZERO,
@@ -133,6 +134,8 @@ export const ethereumModule = {
   clearWalletType: builder.commit(clearWalletType),
   commitSetWalletNetworkId: builder.commit(setWalletNetworkId),
 
+  onLogout: builder.dispatch(onLogout),
+
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
 
@@ -169,7 +172,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async provider => await setProvider(context, provider))
+      .then(async (provider) => await setProvider(context, provider))
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
@@ -184,7 +187,15 @@ async function setProvider(context: ActionContext, p: IWalletProvider) {
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
+  context.state.wallet = p
   ethereumModule.commitSetWalletNetworkId(p.chainId)
+}
+
+async function onLogout(context: ActionContext) {
+  const provider = context.state.wallet
+  if (provider != null) {
+    await provider.disconnect()
+  }
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {

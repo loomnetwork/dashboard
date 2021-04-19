@@ -34,12 +34,17 @@ export const WalletConnectAdapter: WalletType = {
       }
     )
     // NOTE: WC seems to emit accountsChanged every time the provider is enabled, unlike MetaMask.
-    wcProvider.on("accountsChanged",  (accounts: string[]) => {
+    wcProvider.on("accountsChanged", (accounts: string[]) => {
       console.log(`WalletConnect accountsChanged ${accounts}`)
     })
-    wcProvider.on("disconnect", (code, reason) => {
+    const onDisconnect = (code, reason) => {
       console.log(`WalletConnect session disconnected, ${code}, reason ${reason}`)
       window.location.reload()
+    }
+    wcProvider.on("disconnect", onDisconnect)
+    window.addEventListener("beforeunload", (_) => {
+      wcProvider.removeListener("disconnect", onDisconnect)
+      wcProvider.disconnect()
     })
 
     // enable session (triggers QR Code modal)

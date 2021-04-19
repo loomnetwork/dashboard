@@ -108,27 +108,32 @@ interface ExtValidatorData {
 }
 
 async function fetchExtraValidators(url: string): Promise<Validator[]> {
-  const resp = await Axios.get<ExtValidatorData[]>(url)
-  return resp.data.map(data => {
-    const v = new Validator()
-    v.address = Address.fromString(data.address)
-    v.addr = v.address.local.toString().toLowerCase()
-    v.name = data.name
-    if (data.description) {
-      v.description = data.description
-    } else if (v.isFormer) {
-      v.description = "This validator is no longer active."
-    }
-    v.website = data.website || ""
-    v.isFormer = !!data.isFormer
-    v.active = !v.isFormer
-    v.isBootstrap = !!data.isBootstrap
-    v.isHidden = !!data.isHidden
-    v.whitelistAmount = data.whitelistAmount ? new BN(data.whitelistAmount) : new BN(0)
-    v.totalStaked = data.totalStaked ? new BN(data.totalStaked) : v.whitelistAmount
-    v.fee = data.fee ? new BN(data.fee).divn(100) : new BN(0)
-    return v
-  })
+  try {
+    const resp = await Axios.get<ExtValidatorData[]>(url)
+    return resp.data.map(data => {
+      const v = new Validator()
+      v.address = Address.fromString(data.address)
+      v.addr = v.address.local.toString().toLowerCase()
+      v.name = data.name
+      if (data.description) {
+        v.description = data.description
+      } else if (v.isFormer) {
+        v.description = "This validator is no longer active."
+      }
+      v.website = data.website || ""
+      v.isFormer = !!data.isFormer
+      v.active = !v.isFormer
+      v.isBootstrap = !!data.isBootstrap
+      v.isHidden = !!data.isHidden
+      v.whitelistAmount = data.whitelistAmount ? new BN(data.whitelistAmount) : new BN(0)
+      v.totalStaked = data.totalStaked ? new BN(data.totalStaked) : v.whitelistAmount
+      v.fee = data.fee ? new BN(data.fee).divn(100) : new BN(0)
+      return v
+    })
+  } catch (err) {
+    console.error(`Failed to fetch extra validator info from ${url}`, err)
+  }
+  return []
 }
 
 /**
@@ -171,7 +176,9 @@ export async function refreshValidators(ctx: ActionContext) {
   let extValidators: Validator[] = []
   const hiddenValidators: string[] = []
   if (process.env.EXT_VALIDATORS_URL) {
-    extValidators = await fetchExtraValidators(process.env.EXT_VALIDATORS_URL)
+    extValidators = await fetchExtraValidators(
+      process.env.EXT_VALIDATORS_URL.replace("{network}", ctx.rootState.plasma.networkId)
+    )
     extValidators.forEach(v => {
       if (v.isHidden) {
         hiddenValidators.push(v.addr)

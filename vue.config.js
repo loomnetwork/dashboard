@@ -32,7 +32,7 @@ module.exports = {
     // https://github.com/sindresorhus/got/issues/345
     let plugins = [
       new webpack.IgnorePlugin(/^electron$/),
-      new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID']),
+      new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID', 'EXT_VALIDATORS_URL']),
       // new DuplicatesPlugin(),
       // new BundleAnalyzerPlugin(),
     ]

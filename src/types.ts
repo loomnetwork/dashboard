@@ -15,15 +15,19 @@ export interface DashboardConfig {
   coinDataUrl: string
   disabled: string[]
   // config for the gateway enabled chains
-  chains: string[]
+  chains: string[] // list of external chains to which gateways have been deployed
   plasma: PlasmaConfig
   ethereum: EthereumConfig
+  binance?: EthereumConfig
   dpos: DPOSConfig
   gateway: GatewayConfig,
   announcement: {
     validatorsPage: boolean,
     popup: boolean,
     home: boolean,
+  },
+  features: {
+    bscWallets: boolean, // show wallets that connect to BSC on the sign-in page
   }
 }
 
@@ -37,6 +41,7 @@ export interface DashboardState extends
   envs: DashboardConfig[]
   disabled: string[]
   chains: string[]
+  activeConfig?: DashboardConfig
 }
 
 export interface Funds {

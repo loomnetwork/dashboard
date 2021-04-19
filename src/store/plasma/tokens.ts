@@ -154,10 +154,10 @@ export function addCoinState(state: PlasmaState, symbol: string) {
   }
 }
 
-export async function addToken(context: PlasmaContext, token: TokenData) {
+export async function addToken(context: PlasmaContext, payload: { token: TokenData, walletId: string }) {
+  const { token, walletId } = payload
   const state = context.state
   const web3 = state.web3!
-  // const network = state.networkId // 'us1'
   if (token.symbol in state.coins) {
     return
   }
@@ -175,7 +175,7 @@ export async function addToken(context: PlasmaContext, token: TokenData) {
   } catch (error) {
     console.error("error ", error)
   }
-  setNewTokenToLocalStorage(token, context.rootState.env)
+  setNewTokenToLocalStorage(token, walletId)
 }
 
 /**

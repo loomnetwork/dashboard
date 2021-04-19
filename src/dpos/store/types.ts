@@ -81,7 +81,8 @@ export class Validator implements IValidator, ICandidate {
   totalStaked = ZERO
   delegations: Delegation[] = []
   isBootstrap: boolean = false
-  isFormer:boolean = false
+  isFormer: boolean = false
+  isHidden: boolean = false
   active: boolean = false
   /**
    * Lower case string representation of the local address
@@ -136,4 +137,13 @@ export interface Delegation {
   pending: boolean
   locked: boolean
   isReward: boolean
+}
+
+export interface ICandidateRegistrationInfo {
+  pubKey: Uint8Array;
+  whitelistLocktimeTier: LocktimeTier;
+  fee: BN;
+  name: string;
+  description: string;
+  website: string;
 }

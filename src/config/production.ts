@@ -1,4 +1,5 @@
 import { DashboardConfig } from "@/types"
+import { ethers } from "ethers"
 
 export default {
   name: "production",
@@ -13,32 +14,48 @@ export default {
   ethereum: {
     networkId: "1",
     networkName: "mainnet",
+    genericNetworkName: "Ethereum",
     chainId: "eth",
+    nativeTokenSymbol: "ETH",
     endpoint: `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://etherscan.com",
+    blockExplorerApi: "api.etherscan.io/api",
     contracts: {
       mainGateway: "0xe080079ac12521d57573f39543e1725ea3e16dcc",
       loomGateway: "0xfcf1e3fa575a313fd81fea2caa06269b49f1a528",
     },
+    gatewayVersions: {
+      loom: 1,
+      main: 1,
+    },
+  },
+  binance: {
+    networkId: "56",
+    networkName: "bsc-mainnet",
+    genericNetworkName: "Binance Smart Chain",
+    chainId: "eth",
+    nativeTokenSymbol: "BNB",
+    endpoint: "https://bsc-dataseed.binance.org",
+    blockExplorer: "https://bscscan.com",
+    blockExplorerApi: "api.bscscan.com/api",
+    contracts: {
+      mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
+      loomGateway: "0xdeadbeef"
+    },
+    gatewayVersions: {
+      loom: 1,
+      main: 1,
+    },
   },
   dpos: {
     bootstrapNodes: [
-      "0x0e99fc16e32e568971908f2ce54b967a42663a26",
-      "0xac3211caecc45940a6d2ba006ca465a647d8464f",
-      "0x69c48768dbac492908161be787b7a5658192df35",
-      "0x2a3a7c850586d4f80a12ac1952f88b1b69ef48e1",
-      "0x4a1b8b15e50ce63cc6f65603ea79be09206cae70",
-      "0x0ce7b61c97a6d5083356f115288f9266553e191e",
+      "0x0e99fc16e32e568971908f2ce54b967a42663a26", // plasma-0
       "0xCcE0021b0DE03C5fab36059f37dB003354bF98fb"
     ],
     analyticsUrl: "https://api.loom.games",
   },
   gateway: {
     chains: ["ethereum"],
-    multisig: {
-      loom: false,
-      main: false,
-    },
     checkMarketplaceURL: "https://auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "https://api.loom.games/plasma/tokencontract/eth:{address}",
     binance: {
@@ -55,4 +72,7 @@ export default {
     popup: false,
     home: false,
   },
+  features: {
+    bscWallets: false,
+  }
 } as DashboardConfig

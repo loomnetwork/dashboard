@@ -13,12 +13,19 @@ export default {
   ethereum: {
     networkId: "default",
     networkName: "Ganache",
+    genericNetworkName: "Ethereum",
     endpoint: "ws://localhost:8484",
     blockExplorer: "",
+    blockExplorerApi: "",
     chainId: "eth",
+    nativeTokenSymbol: "ETH",
     contracts: {
       gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
       loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
+    },
+    gatewayVersions: {
+      loom: 2,
+      main: 2,
     },
   },
   dpos: {
@@ -27,10 +34,6 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
-    multisig: {
-      loom: true,
-      main: true,
-    },
     checkMarketplaceURL: "",
     tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
     binance: {
@@ -47,4 +50,7 @@ export default {
     popup: false,
     home: false,
   },
+  features: {
+    bscWallets: true,
+  }
 } as DashboardConfig

@@ -4,10 +4,12 @@
  * @preferred
  */
 import * as Sentry from "@sentry/browser"
-
-import { WalletType } from "../types"
 import { provider } from "web3-providers"
 import { feedbackModule } from "@/feedback/store"
+import Web3 from "web3"
+import { getMetamaskSigner } from "loom-js"
+
+import { IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
 
 export const MetaMaskAdapter: WalletType = {
@@ -20,13 +22,23 @@ export const MetaMaskAdapter: WalletType = {
   detect() {
     return isCurrentApi() || isLegacyApi()
   },
-  async createProvider() {
+  async createProvider(): Promise<IWalletProvider> {
+    let provider
     if (isCurrentApi()) {
-      return getCurrentApi()
+      provider = await getCurrentApi()
     } else if (isLegacyApi()) {
-      return getLegacyApi()
+      provider = getLegacyApi()
     }
-    throw new Error("no Metamask installation detected")
+    if (!provider) {
+      throw new Error("no Metamask installation detected")
+    }
+    const signer = getMetamaskSigner(provider)
+    const network = await signer.provider!.getNetwork()
+    return {
+      web3: new Web3(provider),
+      signer,
+      chainId: network.chainId,
+    }
   },
 }
 
@@ -52,6 +64,12 @@ async function getCurrentApi(): Promise<provider> {
     Sentry.captureException(err)
     feedbackModule.endTask()
   }
+
+  ethereum.autoRefreshOnNetworkChange = false
+  ethereum.on(
+    "chainChanged",
+    (chainId: string) => ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
+  )
 
   try {
     // The following throws on Trust

@@ -9,10 +9,10 @@
       <hr />
       <div class="helpAlert">
         <p>
-          <b>{{ $t('views.my_account.deposit' )}}</b> : {{ $t('views.help.deposit_to_plasmachain' )}}
+          <b>{{ $t('views.my_account.deposit' )}}</b> : {{ $t('views.help.deposit_to_plasmachain', { network: foreignNetworkName }) }}
         </p>
         <p>
-          <b>{{ $t('views.my_account.withdraw' )}}</b> : {{ $t('views.help.withdraw_to_ethereum' )}}
+          <b>{{ $t('views.my_account.withdraw' )}}</b> : {{ $t('views.help.withdraw_to_ethereum', { network: foreignNetworkName }) }}
         </p>
         <b>{{ $t('components.gameAsset.cards.transfer' )}}</b> : {{ $t('views.help.transfer_token' )}}
       </div>
@@ -39,8 +39,8 @@
               style="display:flex"
               class="button"
               variant="outline-primary"
-              :disabled="disableDeposit"
-              @click="requestCrossChainTranfer(DEPOSIT, symbol)"
+              :disabled="txInProgress || !allowDeposit(symbol)"
+              @click="requestCrossChainTransfer(DEPOSIT, symbol)"
             >
               {{ $t('views.my_account.deposit' )}}
               <b-badge variant="warning" v-if="symbol in ethereumAllowances">!</b-badge>
@@ -48,15 +48,15 @@
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
-              @click="requestCrossChainTranfer(WITHDRAW, symbol)"
+              :disabled="txInProgress || plasma.coins[symbol].balance.isZero() || !allowWithdraw(symbol)"
+              @click="requestCrossChainTransfer(WITHDRAW, symbol)"
             >
               <span>{{ $t('views.my_account.withdraw' )}}</span>
             </b-button>
             <b-button
               class="button"
               variant="outline-primary"
-              :disabled="disableTransfer || plasma.coins[symbol].balance.isZero()"
+              :disabled="txInProgress || plasma.coins[symbol].balance.isZero()"
               @click="requestSwap(symbol)"
             >{{ $t('components.gameAsset.cards.transfer' )}}</b-button>
           </b-button-group>
@@ -136,16 +136,20 @@ export default class DepositWithdraw extends Vue {
     return this.$store.state
   }
 
+  get foreignNetworkName() {
+    return this.state.ethereum.genericNetworkName
+  }
+
   get txInProgress(): boolean {
     return feedbackModule.state.isLoading
   }
 
-  get disableDeposit(): boolean {
-    return this.txInProgress
+  allowDeposit(symbol: string): boolean {
+    return !!tokenService.get(symbol)
   }
 
-  get disableWithdraw(): boolean {
-    return !this.currentBlockNumber || !this.pastTxHasExpired || this.txInProgress
+  allowWithdraw(symbol: string): boolean {
+    return !!tokenService.get(symbol)
   }
 
   get currentBlockNumber(): number {
@@ -156,26 +160,18 @@ export default class DepositWithdraw extends Vue {
     return ethereumModule.state.latestWithdrawalBlock
   }
 
-  get pastTxHasExpired() {
-    if (this.latestWithdrawalBlock === 0) return true
-    return ethereumModule.state.claimedReceiptHasExpired
-  }
-
-  get disableTransfer(): boolean {
-    return this.txInProgress
-  }
-
   get plasma(): PlasmaState {
     return this.state.plasma
   }
 
   async mounted() {
-    const supported = tokenService.symbols.map((token) => token.plasma)
-    const env = this.$store.state.env
     // TODO move this to store
-    getWalletFromLocalStorage(env)
+    const supported = tokenService.symbols.map((token) => token.plasma)
+    // Binance and Ethereum have different supported token lists
+    const walletId = this.state.ethereum.nativeTokenSymbol === "BNB" ? (this.state.env + '.binance') : this.state.env
+    getWalletFromLocalStorage(walletId)
       .filter((address) => supported.includes(address))
-      .forEach((address) => plasmaModule.addToken(tokenService.tokenFromAddress(address, "plasma")!))
+      .forEach((address) => plasmaModule.addToken({ token: tokenService.tokenFromAddress(address, "plasma")!, walletId }))
 
     this.filterTokens()
 
@@ -231,7 +227,7 @@ export default class DepositWithdraw extends Vue {
    * set selected token to component state
    * then show selectChain modal
    */
-  async requestCrossChainTranfer(type: string, token: string) {
+  async requestCrossChainTransfer(type: string, token: string) {
     if (! await plasmaModule.signerIsSet()) {
       return
     }

@@ -4,11 +4,11 @@
       <span>{{ $t('components.layout.network') }} {{networkId}}</span>
     </div>
     <div
-      v-if="metamaskNetwork && (metamaskNetwork != s.ethereum.networkId)"
+      v-if="foreignNetworkId !== null && (foreignNetworkId != s.ethereum.networkId)"
       style="background: #FF9800;padding: 16px 16px;"
     >
       <span>
-        {{ $t('components.layout.your_wallet_connected_to', { network: ethereumNets[metamaskNetwork] }) }}
+        {{ $t('components.layout.your_wallet_connected_to', { network: ethereumNets[foreignNetworkId] }) }}
         {{ $t('components.layout.please_change_to', { network: s.ethereum.networkName }) }}
       </span>
     </div>
@@ -25,7 +25,7 @@
             hide-footer
             centered
             no-close-on-backdrop
-          >{{ $t('components.layout.sign_wallet') }}</b-modal>
+          >{{ $t('components.layout.sign_wallet', { network: foreignNetworkName }) }}</b-modal>
           <b-modal
             id="already-mapped"
             title="$t('components.layout.account_mapped')"
@@ -116,25 +116,32 @@ import { ethereumModule } from "../store/ethereum"
   },
 })
 export default class Layout extends Vue {
-  metamaskNetwork = ""
-
   ethereumNets = {
-    1: "Mainnet",
+    1: "Ethereum Mainnet",
     3: "Ropsten",
     4: "Rinkeby",
     5: "Goerli",
     42: "Kovan",
+    56: "Binance Smart Chain Mainnet",
+    97: "Binance Smart Chain Testnet"
   }
 
   // get $state() { return (this.$store.state as DashboardState) }
   get s() { return (this.$store.state as DashboardState) }
+
+  get foreignNetworkName() {
+    return this.s.ethereum.genericNetworkName
+  }
+
+  get foreignNetworkId() {
+    return this.s.ethereum.walletNetworkId
+  }
 
   get showLoadingSpinner() { return false }
 
   get networkId() { return this.s.plasma.networkId }
 
   mounted() {
-    this.onEthereumNetworkChanged()
     this.$root.$on("logout", () => {
       this.restart()
     })
@@ -146,30 +153,6 @@ export default class Layout extends Vue {
 
   restart() {
     window.location.reload(true)
-  }
-
-  @Watch("s.ethereum.networkId")
-  onEthereumNetworkChanged() {
-    try {
-      // @ts-ignore  
-      if (window.ethereum) { // modern MetaMask-like wallet
-        // @ts-ignore
-        const web3 = new Web3(window.ethereum)
-        web3.eth.net.getId()
-        .then(networkId => this.metamaskNetwork = networkId)
-        .catch(err => console.log(err))
-      // @ts-ignore
-      } else if (window.web3) { // legacy MetaMask-like wallet
-        // @ts-ignore
-        window.web3.version.getNetwork((err, networkId) => {
-          if (!err) this.metamaskNetwork = networkId
-        })
-      } else {
-        this.metamaskNetwork = ""
-      }
-    } catch (err) {
-      console.error(err)
-    }
   }
 }
 </script>

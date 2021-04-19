@@ -1,4 +1,5 @@
 import { DashboardConfig } from "@/types"
+import { ethers } from "ethers"
 
 export default {
   name: "ext-dev",
@@ -13,15 +14,40 @@ export default {
   ethereum: {
     networkId: "4",
     networkName: "rinkeby",
+    genericNetworkName: "Ethereum",
     chainId: "eth",
+    nativeTokenSymbol: "ETH",
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://rinkeby.etherscan.io",
+    blockExplorerApi: "api-rinkeby.etherscan.io/api",
     contracts: {
       loomGateway: "0x63E4efDf3786EaCa967A30D2Cdc154AaDC2526E6",
       mainGateway: "0x9c67fd4eaf0497f9820a3fbf782f81d6b6dc4baa",
     },
     portisKey: "10589118-6329-43a0-818c-93800c206786",
     formaticKey: "pk_test_58DB7D96C460470B",
+    gatewayVersions: {
+      loom: 1,
+      main: 2,
+    },
+  },
+  binance: {
+    networkId: "97",
+    networkName: "bsc-testnet",
+    genericNetworkName: "Binance Smart Chain",
+    chainId: "eth", // NOTE: not a typo, use the same chain ID as Ethereum to reuse account mappings etc.
+    nativeTokenSymbol: "BNB",
+    endpoint: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    blockExplorer: "https://testnet.bscscan.com",
+    blockExplorerApi: "api-testnet.bscscan.com/api",
+    contracts: {
+      loomGateway: "0xdeadbeef",
+      mainGateway: ethers.constants.AddressZero // NOTE: generic gateway is not deployed on BSC yet
+    },
+    gatewayVersions: {
+      loom: 1,
+      main: 1,
+    },
   },
   dpos: {
     bootstrapNodes: [],
@@ -30,10 +56,6 @@ export default {
   coinDataUrl: "/tokens/ext-dev.tokens.json",
   gateway: {
     chains: ["ethereum", "binance"],
-    multisig: {
-      loom: false,
-      main: true,
-    },
     checkMarketplaceURL: "",
     tokenContractLogsURL: "",
     binance: {
@@ -49,4 +71,7 @@ export default {
     popup: false,
     home: false,
   },
+  features: {
+    bscWallets: false,
+  }
 } as DashboardConfig

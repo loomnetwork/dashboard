@@ -46,6 +46,10 @@ class TokenService {
     this.tokens.push(ETHBNB)
   }
 
+  setTokens(tokens: TokenData[]) {
+    this.tokens = tokens.map(t => Object.freeze(t))
+  }
+
   getAddress(
     symbol: string,
     chain: "ethereum" | "plasma" | "binance",

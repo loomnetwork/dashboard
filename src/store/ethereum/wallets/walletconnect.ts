@@ -37,14 +37,9 @@ export const WalletConnectAdapter: WalletType = {
     wcProvider.on("accountsChanged", (accounts: string[]) => {
       console.log(`WalletConnect accountsChanged ${accounts}`)
     })
-    const onDisconnect = (code, reason) => {
+    wcProvider.on("disconnect", (code, reason) => {
       console.log(`WalletConnect session disconnected, ${code}, reason ${reason}`)
       window.location.reload()
-    }
-    wcProvider.on("disconnect", onDisconnect)
-    window.addEventListener("beforeunload", (_) => {
-      wcProvider.removeListener("disconnect", onDisconnect)
-      wcProvider.disconnect()
     })
 
     // enable session (triggers QR Code modal)
@@ -53,6 +48,7 @@ export const WalletConnectAdapter: WalletType = {
       web3: new Web3(wcProvider),
       signer: getMetamaskSigner(wcProvider),
       chainId: wcProvider.chainId,
+      provider: wcProvider,
     }
   },
 }

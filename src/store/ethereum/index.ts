@@ -58,6 +58,7 @@ const initialState: EthereumState = {
   address: "",
   signer: null,
   walletType: "",
+  wallet: null,
   walletNetworkId: null,
   balances: {
     ETH: ZERO,
@@ -133,6 +134,8 @@ export const ethereumModule = {
   clearWalletType: builder.commit(clearWalletType),
   commitSetWalletNetworkId: builder.commit(setWalletNetworkId),
 
+  onLogout: builder.dispatch(onLogout),
+
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
 
@@ -184,7 +187,16 @@ async function setProvider(context: ActionContext, p: IWalletProvider) {
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
+  context.state.wallet = p.provider || null
   ethereumModule.commitSetWalletNetworkId(p.chainId)
+}
+
+async function onLogout(context: ActionContext) {
+  // yep. Now this module knows about provider inner workings...
+  if (context.state.walletType === "walletconnect") {
+    const wcProvider: any = context.state.wallet
+    await wcProvider.disconnect()
+  }
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {

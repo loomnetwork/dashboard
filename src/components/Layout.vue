@@ -142,7 +142,8 @@ export default class Layout extends Vue {
   get networkId() { return this.s.plasma.networkId }
 
   mounted() {
-    this.$root.$on("logout", () => {
+    this.$root.$on("logout", async () => {
+      await ethereumModule.onLogout()
       this.restart()
     })
   }

@@ -9,7 +9,7 @@ import debug from "debug"
 import Axios from "axios"
 import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
-import { fromIDelegation, defaultState, VALIDATOR_NAMES, formerValidator } from "./helpers"
+import { fromIDelegation, defaultState, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
 import { Delegation, DPOSState, HasDPOSState, Validator, ICandidateRegistrationInfo } from "./types"
 import { Address, CryptoUtils } from "loom-js"
@@ -94,6 +94,48 @@ export async function refreshElectionTime(context: ActionContext) {
   dposModule.setElectionTime(new Date(date))
 }
 
+interface ExtValidatorData {
+  address: string
+  name: string
+  description?: string
+  website?: string
+  isFormer?: boolean
+  isBootstrap?: boolean
+  isHidden?: boolean
+  whitelistAmount?: string
+  totalStaked?: string
+  fee?: string
+}
+
+async function fetchExtraValidators(url: string): Promise<Validator[]> {
+  try {
+    const resp = await Axios.get<ExtValidatorData[]>(url)
+    return resp.data.map(data => {
+      const v = new Validator()
+      v.address = Address.fromString(data.address)
+      v.addr = v.address.local.toString().toLowerCase()
+      v.name = data.name
+      if (data.description) {
+        v.description = data.description
+      } else if (v.isFormer) {
+        v.description = "This validator is no longer active."
+      }
+      v.website = data.website || ""
+      v.isFormer = !!data.isFormer
+      v.active = !v.isFormer
+      v.isBootstrap = !!data.isBootstrap
+      v.isHidden = !!data.isHidden
+      v.whitelistAmount = data.whitelistAmount ? new BN(data.whitelistAmount) : new BN(0)
+      v.totalStaked = data.totalStaked ? new BN(data.totalStaked) : v.whitelistAmount
+      v.fee = data.fee ? new BN(data.fee).divn(100) : new BN(0)
+      return v
+    })
+  } catch (err) {
+    console.error(`Failed to fetch extra validator info from ${url}`, err)
+  }
+  return []
+}
+
 /**
  * Loads validator candidate and total delegations list
  * Called after each new election
@@ -131,6 +173,21 @@ export async function refreshValidators(ctx: ActionContext) {
     return existing
   }
 
+  let extValidators: Validator[] = []
+  const hiddenValidators: string[] = []
+  if (process.env.EXT_VALIDATORS_URL) {
+    extValidators = await fetchExtraValidators(
+      process.env.EXT_VALIDATORS_URL.replace("{network}", ctx.rootState.plasma.networkId)
+    )
+    extValidators.forEach(v => {
+      if (v.isHidden) {
+        hiddenValidators.push(v.addr)
+      } else {
+        nodes.push(v)
+      }
+    })
+  }
+
   validators.forEach((v) => {
     const node = getOrCreate(v.address)
     node.setValidatorData(v)
@@ -150,7 +207,7 @@ export async function refreshValidators(ctx: ActionContext) {
     .filter((n) => n.name === "")
     .forEach((n) => (n.name = n.addr.replace("0x", "loom")))
 
-  ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero())
+  ctx.state.validators = nodes.filter((n) => !n.totalStaked.isZero() && !hiddenValidators.includes(n.addr))
   ctx.state.loading.validators = false
 }
 

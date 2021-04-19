@@ -38,6 +38,7 @@ export const MetaMaskAdapter: WalletType = {
       web3: new Web3(provider),
       signer,
       chainId: network.chainId,
+      disconnect: () => Promise.resolve(),
     }
   },
 }

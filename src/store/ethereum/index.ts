@@ -172,7 +172,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async provider => await setProvider(context, provider))
+      .then(async (provider) => await setProvider(context, provider))
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
@@ -187,15 +187,14 @@ async function setProvider(context: ActionContext, p: IWalletProvider) {
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
-  context.state.wallet = p.provider || null
+  context.state.wallet = p
   ethereumModule.commitSetWalletNetworkId(p.chainId)
 }
 
 async function onLogout(context: ActionContext) {
-  // yep. Now this module knows about provider inner workings...
-  if (context.state.walletType === "walletconnect") {
-    const wcProvider: any = context.state.wallet
-    await wcProvider.disconnect()
+  const provider = context.state.wallet
+  if (provider != null) {
+    await provider.disconnect()
   }
 }
 

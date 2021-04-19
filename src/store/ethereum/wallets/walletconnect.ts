@@ -48,7 +48,7 @@ export const WalletConnectAdapter: WalletType = {
       web3: new Web3(wcProvider),
       signer: getMetamaskSigner(wcProvider),
       chainId: wcProvider.chainId,
-      provider: wcProvider,
+      disconnect: () => wcProvider.disconnect(),
     }
   },
 }

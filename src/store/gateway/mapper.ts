@@ -25,6 +25,16 @@ export async function loadMapping(context: ActionContext, address: string) {
   const client = context.rootState.plasma.client!
   const chainId = client.chainId
   const caller = context.rootState.plasma.appId.address
+
+  const foreignNetwork = String((context.rootState.ethereum.wallet || {}).chainId)
+  const expectedNetwork = context.rootState.ethereum.networkId
+
+  console.log(foreignNetwork, expectedNetwork)
+  if (foreignNetwork !== expectedNetwork) {
+    // fail silently. UI will pickup the state and let user know
+    return
+  }
+
   feedbackModule.setStep(i18n.t("feedback_msg.step.check_account_mapping").toString())
   const mapper = await AddressMapper.createAsync(
     client,
@@ -80,7 +90,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
   )
   feedbackModule.setStep(
     i18n.t("feedback_msg.step.create_new_mapping", { network: rootState.ethereum.genericNetworkName }
-  ).toString())
+    ).toString())
   const mapper = await AddressMapper.createAsync(client, address)
   try {
     await mapper.addIdentityMappingAsync(

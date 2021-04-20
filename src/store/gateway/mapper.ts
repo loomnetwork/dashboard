@@ -26,7 +26,10 @@ export async function loadMapping(context: ActionContext, address: string) {
   const chainId = client.chainId
   const caller = context.rootState.plasma.appId.address
 
-  const foreignNetwork = String((context.rootState.ethereum.wallet || {}).chainId)
+  if (context.rootState.ethereum.wallet === null) {
+    throw new Error("Expected rootState.ethereum.wallet to be set but was null")
+  }
+  const foreignNetwork = String(context.rootState.ethereum.wallet.chainId)
   const expectedNetwork = context.rootState.ethereum.networkId
 
   if (foreignNetwork !== expectedNetwork) {

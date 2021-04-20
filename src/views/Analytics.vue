@@ -140,8 +140,9 @@ export default class Analytics extends Vue {
         autoSkip: true,
       }
     }
-
+    // @ts-ignore 
     const pieChart = new Chart(ctx, config)
+    // @ts-ignore 
     const barChart = new Chart(ctx2, config2)
 
   }

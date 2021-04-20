@@ -1,16 +1,10 @@
 <template>
   <div id="layout" class="d-flex flex-column">
-    <div v-if="networkId && networkId !== 'plasma'" style="background: #FFC107; padding: 0 16px;">
-      <span>{{ $t('components.layout.network') }} {{networkId}}</span>
-    </div>
     <div
-      v-if="foreignNetworkId !== null && (foreignNetworkId != s.ethereum.networkId)"
-      style="background: #FF9800;padding: 16px 16px;"
+      v-if="networkId && networkId !== 'plasma'"
+      style="background: #ffc107; padding: 0 16px"
     >
-      <span>
-        {{ $t('components.layout.your_wallet_connected_to', { network: ethereumNets[foreignNetworkId] }) }}
-        {{ $t('components.layout.please_change_to', { network: s.ethereum.networkName }) }}
-      </span>
+      <span>{{ $t("components.layout.network") }} {{ networkId }}</span>
     </div>
     <faucet-header></faucet-header>
     <div class="content">
@@ -25,14 +19,20 @@
             hide-footer
             centered
             no-close-on-backdrop
-          >{{ $t('components.layout.sign_wallet', { network: foreignNetworkName }) }}</b-modal>
+            >{{
+              $t("components.layout.sign_wallet", {
+                network: foreignNetworkName,
+              })
+            }}</b-modal
+          >
           <b-modal
             id="already-mapped"
             title="$t('components.layout.account_mapped')"
             hide-footer
             centered
             no-close-on-backdrop
-          >{{ $t('components.layout.already_mapped') }}</b-modal>
+            >{{ $t("components.layout.already_mapped") }}</b-modal
+          >
           <transition name="page" mode="out-in">
             <router-view></router-view>
             <!-- <p class="custom-notification">Scheduled maintance for upgrading to DPOSv3, please check back in a few hours.</p> -->
@@ -40,6 +40,29 @@
         </div>
       </div>
     </div>
+    <b-modal
+      no-close-on-backdrop
+      hide-header
+      hide-footer
+      centered
+      v-model="badWalletNetworkConnected"
+    >
+      <span>
+        {{
+          $t("components.layout.your_wallet_connected_to", {
+            network: ethereumNets[foreignNetworkId],
+          })
+        }}
+        {{
+          $t("components.layout.please_change_to", {
+            network: ethereumNets[s.ethereum.networkId],
+          })
+        }}
+      </span>
+      <b-button class="mt-2" variant="primary" block @click="logout"
+        >OK</b-button
+      >
+    </b-modal>
     <b-modal
       id="metamaskChangeDialog"
       no-close-on-backdrop
@@ -49,16 +72,21 @@
       v-model="metamaskChangeAlert"
     >
       <div class="d-block text-center">
-        <p>{{ $t('components.layout.metamask_changed')}}</p>
+        <p>{{ $t("components.layout.metamask_changed") }}</p>
       </div>
-      <b-button class="mt-2" variant="primary" block @click="restart">OK</b-button>
+      <b-button class="mt-2" variant="primary" block @click="restart"
+        >OK</b-button
+      >
     </b-modal>
     <transition
       name="router-anim"
       enter-active-class="animated fadeIn faster"
       leave-active-class="animated fadeOut faster"
     >
-      <loading-spinner v-if="showLoadingSpinner" :showBackdrop="true"></loading-spinner>
+      <loading-spinner
+        v-if="showLoadingSpinner"
+        :showBackdrop="true"
+      ></loading-spinner>
     </transition>
 
     <!-- dpos -->
@@ -142,14 +170,20 @@ export default class Layout extends Vue {
   get networkId() { return this.s.plasma.networkId }
 
   mounted() {
-    this.$root.$on("logout", async () => {
-      await ethereumModule.onLogout()
-      this.restart()
-    })
+    this.$root.$on("logout", () => this.logout())
   }
 
   get metamaskChangeAlert() {
     return ethereumModule.state.metamaskChangeAlert
+  }
+
+  get badWalletNetworkConnected() {
+    return this.foreignNetworkId !== null && String(this.foreignNetworkId) !== this.s.ethereum.networkId
+  }
+
+  async logout() {
+    await ethereumModule.onLogout()
+    this.restart()
   }
 
   restart() {

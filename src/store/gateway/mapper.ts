@@ -29,8 +29,8 @@ export async function loadMapping(context: ActionContext, address: string) {
   const foreignNetwork = String((context.rootState.ethereum.wallet || {}).chainId)
   const expectedNetwork = context.rootState.ethereum.networkId
 
-  console.log(foreignNetwork, expectedNetwork)
   if (foreignNetwork !== expectedNetwork) {
+    console.warn(`Expected network ${expectedNetwork} but wallet network is ${foreignNetwork}.`)
     // fail silently. UI will pickup the state and let user know
     return
   }
@@ -81,7 +81,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
     idFromPrivateKey(privateKey, context.rootState.plasma.chainId)
 
   state.requireMapping = false
-  console.log("caller", caller)
+  log("caller", caller)
 
   const { address, client } = createDefaultClient(
     CryptoUtils.Uint8ArrayToB64(plasmaId.privateKey),

@@ -55,7 +55,7 @@
         }}
         {{
           $t("components.layout.please_change_to", {
-            network: s.ethereum.networkName,
+            network: ethereumNets[s.ethereum.networkId],
           })
         }}
       </span>

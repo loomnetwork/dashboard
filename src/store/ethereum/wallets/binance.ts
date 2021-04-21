@@ -77,18 +77,19 @@ async function changeAccounts(accounts: string[]) {
   }
 }
 
-
 /**
  * https://github.com/loomnetwork/dashboard/issues/1421
  * NOTE: based on ethers 4.0.47!
  */
 function patchSigner(signer: ethers.Signer) {
-  const patch = (message: ethers.utils.Arrayish) => {
+  const patch = async (message: ethers.utils.Arrayish) => {
     const data = ((typeof (message) === "string") ? ethers.utils.toUtf8Bytes(message) : message)
-    return signer.getAddress().then((address) => {
-      const provider: any = signer.provider
-      return provider.bnbSign(address.toLowerCase(), ethers.utils.hexlify(data))
-    })
+    const address = await signer.getAddress()
+    // @ts-ignore
+    return signer.provider._web3Provider.bnbSign(address, ethers.utils.hexlify(data))
+      .then((result) => result.signature)
+      .catch((result) => { throw new Error("Biance wallet: " + result.error) })
+
   }
   signer.signMessage = patch
   return signer

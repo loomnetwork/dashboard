@@ -1,5 +1,6 @@
 import Web3 from "web3"
 import { getMetamaskSigner } from "loom-js"
+import { ethers } from "ethers"
 
 import { IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
@@ -40,14 +41,16 @@ export const BinanceChainWalletAdapter: WalletType = {
 
     await changeAccounts(accounts)
 
-    bc.on("accountsChanged", accounts => {
+    bc.on("accountsChanged", (accounts) => {
       console.log(`accountsChanged ${accounts}`)
-      changeAccounts(accounts).catch(err => console.error(err))
+      changeAccounts(accounts).catch((err) => console.error(err))
     })
+
+    const signer = getMetamaskSigner(bc)
 
     return {
       web3: new Web3(bc),
-      signer: getMetamaskSigner(bc),
+      signer: patchSigner(signer),
       chainId: parseInt(bc.chainId, 16),
       disconnect: () => Promise.resolve(),
     }
@@ -69,7 +72,24 @@ async function changeAccounts(accounts: string[]) {
     ethereumModule.state.address.toLowerCase() !== accounts[0]) {
     // Remove any reference to past withdrawals as it is bound to a specific address
     localStorage.removeItem("lastWithdrawTime")
-    ethereumModule.state.metamaskChangeAlert = true;
+    ethereumModule.state.metamaskChangeAlert = true
     // (window as any).BinanceChain.removeAllListeners() // NOTE: not implemented by Binance Wallet
   }
+}
+
+
+/**
+ * https://github.com/loomnetwork/dashboard/issues/1421
+ * NOTE: based on ethers 4.0.47!
+ */
+function patchSigner(signer: ethers.Signer) {
+  const patch = (message: ethers.utils.Arrayish) => {
+    const data = ((typeof (message) === "string") ? ethers.utils.toUtf8Bytes(message) : message)
+    return signer.getAddress().then((address) => {
+      const provider: any = signer.provider
+      return provider.bnbSign(address.toLowerCase(), ethers.utils.hexlify(data))
+    })
+  }
+  signer.signMessage = patch
+  return signer
 }

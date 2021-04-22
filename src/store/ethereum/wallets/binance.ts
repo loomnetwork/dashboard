@@ -88,15 +88,16 @@ function patchSigner(signer: ethers.Signer) {
     const data = ((typeof (message) === "string") ? ethers.utils.toUtf8Bytes(message) : message)
     const address = await signer.getAddress()
     // @ts-ignore
-    return signer.provider._web3Provider.bnbSign(address, ethers.utils.hexlify(data))
+    return signer.provider.provider.bnbSign(address, ethers.utils.hexlify(data))
       .then((result) => result.signature)
-      .catch((result) => { throw new Error("Biance wallet: " + result.error) })
+      .catch((result) => { throw new Error(`Binance wallet bnbSign failed: ${result.error}`) })
 
   }
   signer.signMessage = patch
   return signer
 }
 
-export function isBCWallet(wallet: IWalletProvider) {
-  return wallet.web3._provider.isBCWallet
+export function isBCWallet(wallet: IWalletProvider | null) {
+  debugger
+  return wallet != null && wallet.web3.currentProvider.isBCWallet
 }

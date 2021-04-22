@@ -287,7 +287,7 @@ export async function approve(context: ActionContext, payload: Transfer) {
       })
     return result
   } catch (error) {
-    if (isBCWallet(context.rootState.ethereum.wallet!) &&
+    if (isBCWallet(context.rootState.ethereum.wallet) &&
       error.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
       // XXX when it fails it doesnt return the transaction hash
       return ""
@@ -311,7 +311,6 @@ export async function transfer(
     erc20Contracts.get(symbol),
     "Contract not initialized",
   )
-  debugger
   const tx = await contract.methods
     .transfer(to, weiAmount.toString())
     // @ts-ignore

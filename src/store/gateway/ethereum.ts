@@ -386,7 +386,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
       } catch (err) {
         let sendToSentry = true
         // NOTE remove this when BSC supports websocket
-        if (isBCWallet(context.rootState.ethereum.wallet!) &&
+        if (isBCWallet(context.rootState.ethereum.wallet) &&
           err.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
           fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
           sendToSentry = false
@@ -480,7 +480,7 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
   } catch (err) {
     let sendToSentry = true
     // NOTE remove this when BSC supports websocket
-    if (isBCWallet(context.rootState.ethereum.wallet!) &&
+    if (isBCWallet(context.rootState.ethereum.wallet) &&
       err.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
       fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
       sendToSentry = false

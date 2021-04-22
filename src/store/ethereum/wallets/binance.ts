@@ -46,6 +46,8 @@ export const BinanceChainWalletAdapter: WalletType = {
       changeAccounts(accounts).catch((err) => console.error(err))
     })
 
+    bc.isBCWallet = true
+
     const signer = getMetamaskSigner(bc)
 
     return {
@@ -93,4 +95,8 @@ function patchSigner(signer: ethers.Signer) {
   }
   signer.signMessage = patch
   return signer
+}
+
+export function isBCWallet(wallet: IWalletProvider) {
+  return wallet.web3._provider.isBCWallet
 }

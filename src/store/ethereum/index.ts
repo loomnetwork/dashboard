@@ -33,7 +33,7 @@ import { feedbackModule } from "@/feedback/store"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
-import { BinanceChainWalletAdapter } from "./wallets/binance"
+import { BinanceChainWalletAdapter, isBCWallet } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -278,12 +278,24 @@ export async function approve(context: ActionContext, payload: Transfer) {
     erc20Contracts.get(symbol),
     "Contract not initialized",
   )
-  await contract.methods
-    .approve(to, weiAmount.toString())
-    // @ts-ignore
-    .send({
-      from: context.state.address,
-    })
+  try {
+    const result = await contract.methods
+      .approve(to, weiAmount.toString())
+      // @ts-ignore
+      .send({
+        from: context.state.address,
+      })
+    return result
+  } catch (error) {
+    if (isBCWallet(context.rootState.ethereum.wallet!) &&
+      error.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+      // XXX when it fails it doesnt return the transaction hash
+      return ""
+    } else {
+      throw error
+    }
+  }
+
 }
 
 /**
@@ -299,6 +311,7 @@ export async function transfer(
     erc20Contracts.get(symbol),
     "Contract not initialized",
   )
+  debugger
   const tx = await contract.methods
     .transfer(to, weiAmount.toString())
     // @ts-ignore

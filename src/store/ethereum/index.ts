@@ -33,7 +33,7 @@ import { feedbackModule } from "@/feedback/store"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
-import { BinanceChainWalletAdapter, isBCWallet } from "./wallets/binance"
+import { BinanceChainWalletAdapter, isBCWallet, BSC_SAFE_BLOCK_WAIT_TIME_MS } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -90,7 +90,7 @@ const initialState: EthereumState = {
   gatewayVersions: {
     main: 1,
     loom: 1,
-  }
+  },
 }
 
 // web3 instance
@@ -289,6 +289,7 @@ export async function approve(context: ActionContext, payload: Transfer) {
   } catch (error) {
     if (isBCWallet(context.rootState.ethereum.wallet) &&
       error.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+      await new Promise((resolve) => setTimeout(resolve, BSC_SAFE_BLOCK_WAIT_TIME_MS))
       // XXX when it fails it doesnt return the transaction hash
       return ""
     } else {

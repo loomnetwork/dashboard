@@ -5,6 +5,8 @@ import { ethers } from "ethers"
 import { IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
 
+export const BSC_SAFE_BLOCK_WAIT_TIME_MS = 15000
+
 export const BinanceChainWalletAdapter: WalletType = {
   id: "binance",
   name: "BinanceChain",
@@ -98,6 +100,5 @@ function patchSigner(signer: ethers.Signer) {
 }
 
 export function isBCWallet(wallet: IWalletProvider | null) {
-  debugger
   return wallet != null && wallet.web3.currentProvider.isBCWallet
 }

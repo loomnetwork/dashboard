@@ -1,8 +1,11 @@
 import Web3 from "web3"
 import { getMetamaskSigner } from "loom-js"
+import { ethers } from "ethers"
 
 import { IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
+
+export const BSC_SAFE_BLOCK_WAIT_TIME_MS = 15000
 
 export const BinanceChainWalletAdapter: WalletType = {
   id: "binance",
@@ -40,14 +43,18 @@ export const BinanceChainWalletAdapter: WalletType = {
 
     await changeAccounts(accounts)
 
-    bc.on("accountsChanged", accounts => {
+    bc.on("accountsChanged", (accounts) => {
       console.log(`accountsChanged ${accounts}`)
-      changeAccounts(accounts).catch(err => console.error(err))
+      changeAccounts(accounts).catch((err) => console.error(err))
     })
+
+    bc.isBCWallet = true
+
+    const signer = getMetamaskSigner(bc)
 
     return {
       web3: new Web3(bc),
-      signer: getMetamaskSigner(bc),
+      signer: patchSigner(signer),
       chainId: parseInt(bc.chainId, 16),
       disconnect: () => Promise.resolve(),
     }
@@ -69,7 +76,29 @@ async function changeAccounts(accounts: string[]) {
     ethereumModule.state.address.toLowerCase() !== accounts[0]) {
     // Remove any reference to past withdrawals as it is bound to a specific address
     localStorage.removeItem("lastWithdrawTime")
-    ethereumModule.state.metamaskChangeAlert = true;
+    ethereumModule.state.metamaskChangeAlert = true
     // (window as any).BinanceChain.removeAllListeners() // NOTE: not implemented by Binance Wallet
   }
+}
+
+/**
+ * https://github.com/loomnetwork/dashboard/issues/1421
+ * NOTE: based on ethers 4.0.47!
+ */
+function patchSigner(signer: ethers.Signer) {
+  const patch = async (message: ethers.utils.Arrayish) => {
+    const data = ((typeof (message) === "string") ? ethers.utils.toUtf8Bytes(message) : message)
+    const address = await signer.getAddress()
+    // @ts-ignore
+    return signer.provider.provider.bnbSign(address, ethers.utils.hexlify(data))
+      .then((result) => result.signature)
+      .catch((result) => { throw new Error(`Binance wallet bnbSign failed: ${result.error}`) })
+
+  }
+  signer.signMessage = patch
+  return signer
+}
+
+export function isBCWallet(wallet: IWalletProvider | null) {
+  return wallet != null && wallet.web3.currentProvider.isBCWallet
 }

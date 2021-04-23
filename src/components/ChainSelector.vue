@@ -15,7 +15,7 @@ export default class ChainSelector extends Vue {
   set env(config: DashboardConfig) {
     console.log("config", config)
     localStorage.setItem("selectedConfig", config.name)
-    dashboardStore.setEnv(config)
+    window.location.reload()
   }
 
   get envs() {
@@ -28,7 +28,9 @@ export default class ChainSelector extends Vue {
 <template>
   <div id="chain-selector" v-if="envs.length > 1">
     <b-form-select v-model="env" size="sm" class="mt-3">
-      <option v-for="env in envs" :value="env" :key="env.name">{{env.name}}</option>
+      <option v-for="env in envs" :value="env" :key="env.name">
+        {{ env.name }}
+      </option>
     </b-form-select>
   </div>
 </template>

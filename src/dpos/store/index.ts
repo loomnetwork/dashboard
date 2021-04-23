@@ -7,7 +7,7 @@ import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import Axios from "axios"
-import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
+import { ICandidate, IDelegation, IValidator } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
@@ -53,6 +53,9 @@ const dposModule = {
 
   registerCandidate: builder.dispatch(registerCandidate),
   fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
+
+  updateValidatorDetail: builder.dispatch(updateValidatorDetail),
+
 
 }
 
@@ -105,6 +108,15 @@ interface ExtValidatorData {
   whitelistAmount?: string
   totalStaked?: string
   fee?: string
+}
+
+export interface UpdateValidatorDetailRequest {
+  name: string
+  description: string
+  website: string
+  fee?: BN
+  maxReferralPercentage: number;
+
 }
 
 async function fetchExtraValidators(url: string): Promise<Validator[]> {
@@ -559,4 +571,30 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
 export async function fetchAnalyticsData(context: ActionContext) {
   const response = await Axios.get(context.rootState.dpos.analyticsUrl + "/delegation/total?from_date&to_date")
   dposModule.setAnalyticsData(response.data.data)
+}
+
+/**
+ * @param context
+ * @param validator
+ */
+export async function updateValidatorDetail(context: ActionContext, validator: UpdateValidatorDetailRequest) {
+
+  try {
+    await context.state.contract!.updateCandidateInfoAsync(
+      validator.name,
+      validator.description,
+      validator.website,
+      validator.maxReferralPercentage,
+      )
+
+    if (validator.fee) {
+      await context.state.contract!.changeFeeAsync(
+        validator.fee!
+      )
+    }
+    feedback.showSuccess(i18n.t("feedback_msg.success.update_validator_info_success").toString())
+  } catch (err) {
+    console.error(err)
+    feedback.showError(i18n.t("feedback_msg.error.err_while_update_validator_info").toString())
+  }
 }

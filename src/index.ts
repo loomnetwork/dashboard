@@ -87,6 +87,8 @@ export default new Vue({
     } else if (window.ethereum) { // modern MetaMask-like wallet
       // @ts-ignore
       const ethereum = window.ethereum
+      // walletlink steals typing of window.ethereum
+      // @ts-ignore
       if (ethereum.isTrust || ethereum.isMetaMask || ethereum.isCobo) {
         ethereumModule.setWalletType("metamask")
       }

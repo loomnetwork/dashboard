@@ -52,9 +52,9 @@
         <div>
           <h2>{{ validator.name }}</h2>
           <ValidatorUpdateForm ref="validatorUpdateform" :validator="validator"/>
-          <b-button @click="openUpdateModal()">
-            <fa icon="wrench" />
-          </b-button>
+          <a @click="openUpdateModal()">
+            <fa icon="wrench" @click="openUpdateModal()" style="color:#007bff;cursor:pointer;"/>
+          </a>
           <h5>{{ validator.active ? "Active" : "Inactive" }}</h5>
           <br />
           <p>{{ validator.addr | loomAddress }}</p>
@@ -166,7 +166,6 @@ export default class ValidatorExtendedDetail extends Vue {
   }
 
   get validator() {
-    console.log("this.state.dpos.validators", this.state.dpos.validators);
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress;
       // return validator.addr === this.plasmaAddress

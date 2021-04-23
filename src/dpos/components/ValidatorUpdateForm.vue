@@ -34,14 +34,15 @@
       <b-form-input
         class="mb-3"
         id="input-fee"
-        v-model="form.fee.toString()"
+        v-model="form.fee"
         type="number"
         required
       ></b-form-input>
     </form>
     <template slot="modal-footer">
-      <b-btn variant="primary" @click="submit()" class="mr-2">Submit</b-btn>
-      <b-btn @click="close()" class="mr-2">Cancel</b-btn>
+      <b-spinner v-if="disableButton" type="border" small />
+      <b-btn variant="primary" @click="submit()" :disabled="disableButton" class="mr-2">Submit</b-btn>
+      <b-btn @click="close()" class="mr-2" :disabled="disableButton">Cancel</b-btn>
     </template>
   </b-modal>
 </template>
@@ -57,11 +58,10 @@ import BN from "bn.js";
 })
 export default class ValidatorUpdateForm extends Vue {
   @Prop({ required: true }) validator!: UpdateValidatorDetailRequest // prettier-ignore
-
-  visible = false;
+  disableButton = false
   form = {
     name: this.validator.name,
-    fee: this.validator.fee,
+    fee: this.validator.fee!.toString(),
     description: this.validator.description,
     website: this.validator.website,
     maxReferralPercentage: this.validator.maxReferralPercentage,
@@ -79,25 +79,27 @@ export default class ValidatorUpdateForm extends Vue {
 
   async submit() {
     console.log(this.form);
-    let newValidatorDetail: UpdateValidatorDetailRequest;
-    if (this.form.fee != this.validator.fee) {
-      newValidatorDetail = {
-        fee: new BN(this.form.fee!).muln(100),
-        name: this.form.name,
-        description: this.form.description,
-        website: this.form.website,
-        maxReferralPercentage: this.form.maxReferralPercentage,
-      };
-    } else {
-      newValidatorDetail = {
-        name: this.form.name,
-        description: this.form.description,
-        website: this.form.website,
-        maxReferralPercentage: this.form.maxReferralPercentage,
-      };
+    this.disableButton = true
+    // let newValidatorDetail: UpdateValidatorDetailRequest;
+    console.log("this.form.fee", this.form.fee!.toString());
+    console.log("this.validator.fee", this.validator.fee!.toString());
+    const newValidatorDetail: UpdateValidatorDetailRequest = {
+      name: this.form.name,
+      description: this.form.description,
+      website: this.form.website,
+      maxReferralPercentage: this.form.maxReferralPercentage,
+    };
+    if (this.form.name != this.validator.name || this.form.description != this.validator.description ||this.form.website != this.validator.website ||this.form.maxReferralPercentage != this.validator.maxReferralPercentage  ) {
+      await dposModule.updateValidatorDetail(newValidatorDetail);
     }
-    await dposModule.updateValidatorDetail(newValidatorDetail);
-    this.close()
+
+    if (this.form.fee!.toString() != this.validator.fee!.toString()) {
+      console.log("this.form.fee", this.form.fee!.toString());
+      console.log("this.validator.fee", this.validator.fee!.toString());
+      await dposModule.changeValidatorFee(new BN(this.form.fee!).muln(100));
+    }
+    this.close();
+    this.disableButton = false
   }
 }
 </script>

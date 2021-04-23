@@ -55,7 +55,7 @@ const dposModule = {
   fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
 
   updateValidatorDetail: builder.dispatch(updateValidatorDetail),
-
+  changeValidatorFee: builder.dispatch(changeValidatorFee),
 
 }
 
@@ -114,7 +114,7 @@ export interface UpdateValidatorDetailRequest {
   name: string
   description: string
   website: string
-  fee?: BN
+  fee?: string
   maxReferralPercentage: number;
 
 }
@@ -578,23 +578,33 @@ export async function fetchAnalyticsData(context: ActionContext) {
  * @param validator
  */
 export async function updateValidatorDetail(context: ActionContext, validator: UpdateValidatorDetailRequest) {
-
   try {
     await context.state.contract!.updateCandidateInfoAsync(
       validator.name,
       validator.description,
       validator.website,
       validator.maxReferralPercentage,
-      )
+    )
 
-    if (validator.fee) {
-      await context.state.contract!.changeFeeAsync(
-        validator.fee!
-      )
-    }
     feedback.showSuccess(i18n.t("feedback_msg.success.update_validator_info_success").toString())
   } catch (err) {
     console.error(err)
     feedback.showError(i18n.t("feedback_msg.error.err_while_update_validator_info").toString())
+  }
+}
+
+/**
+ * @param context
+ * @param newFee
+ */
+export async function changeValidatorFee(context: ActionContext, newFee: BN) {
+  try {
+    await context.state.contract!.changeFeeAsync(
+      newFee
+    )
+    feedback.showSuccess(i18n.t("feedback_msg.success.change_validator_fee_success").toString())
+  } catch (err) {
+    console.error(err)
+    feedback.showError(i18n.t("feedback_msg.error.err_while_change_validator_fee").toString())
   }
 }

@@ -12,11 +12,13 @@
             v-model="maybeRelentlessUser"
           >
             <div class="confirm-link text-center">
-              <h3>{{ $t('views.first_page.ask_from_relentless_marketplace') }}</h3>
-              <p>{{ $t('views.first_page.if_from_relentless_marketplace') }}</p>
+              <h3>
+                {{ $t("views.first_page.ask_from_relentless_marketplace") }}
+              </h3>
+              <p>{{ $t("views.first_page.if_from_relentless_marketplace") }}</p>
               <div class="linking-div">
                 <img src="../assets/images/relentless.png" />
-                <i style="font-size:56px;" class="fa">&#8651;</i>
+                <i style="font-size: 56px" class="fa">&#8651;</i>
                 <loom-icon width="56px" height="56px" :color="'#6eccd8'" />
               </div>
               <div class="linking-div-choice">
@@ -24,40 +26,55 @@
                   block
                   variant="outline-primary"
                   :href="loomGamesUrl"
-                >{{ $t('views.first_page.link_my_account') }}</b-button>
+                  >{{ $t("views.first_page.link_my_account") }}</b-button
+                >
               </div>
             </div>
-            <div slot="modal-footer" class="w-100" style="text-align: center;">
+            <div slot="modal-footer" class="w-100" style="text-align: center">
               <b-button
                 v-show="!reconsider"
                 variant="link"
-                style="color: gray;"
+                style="color: gray"
                 @click="reconsider = true"
-              >{{ $t('views.first_page.not_from_relentless_marketplace') }}</b-button>
+                >{{
+                  $t("views.first_page.not_from_relentless_marketplace")
+                }}</b-button
+              >
               <div class="reconsider" v-show="reconsider">
-                <h5>{{ $t('views.first_page.you_sure') }}</h5>
-                <p style="color: red;">{{ $t('views.first_page.warn_note') }}</p>
+                <h5>{{ $t("views.first_page.you_sure") }}</h5>
+                <p style="color: red">{{ $t("views.first_page.warn_note") }}</p>
                 <b-button
                   variant="outline-dark"
                   @click="maybeRelentlessUser = false"
-                >{{ $t('views.first_page.create_new_account') }}</b-button>
+                  >{{ $t("views.first_page.create_new_account") }}</b-button
+                >
               </div>
             </div>
           </b-modal>
           <b-row
             id="main-main"
             class="container-fluid center-content"
-            style="justify-content: center;"
+            style="justify-content: center"
           >
             <b-card-group deck>
               <!-- Binance Smart Chain wallets -->
               <b-card v-if="bscWalletsEnabled">
                 <b-card-title>
-                  <img class="d-block mx-auto" width="64px" height="64px" src="../assets/binance_logo.png" alt="Binance Logo" />
+                  <img
+                    class="d-block mx-auto"
+                    width="64px"
+                    height="64px"
+                    src="../assets/binance_logo.png"
+                    alt="Binance Logo"
+                  />
                   <div class="text-center mt-2">Binance Smart Chain</div>
-                  <div class="text-center h6 font-weight-normal font-italic">Stake your LOOM BEP20 tokens!</div>
+                  <div class="text-center h6 font-weight-normal font-italic">
+                    Stake your LOOM BEP20 tokens!
+                  </div>
                 </b-card-title>
-                <div class="text-center">{{ $t('views.first_page.select_wallet') }}...</div>
+                <div class="text-center">
+                  {{ $t("views.first_page.select_wallet") }}...
+                </div>
                 <b-card-body>
                   <div class="wallet-provider-container">
                     <div class="row">
@@ -69,7 +86,9 @@
                         >
                           <div>
                             <img src="../assets/binance_wallet_logo.svg" />
-                            <span>{{ $t('views.first_page.wallets.binance') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.binance")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -81,7 +100,9 @@
                         >
                           <div>
                             <img src="../assets/metamask_logo.png" />
-                            <span>{{ $t('views.first_page.wallets.metamask') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.metamask")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -93,7 +114,9 @@
                         >
                           <div>
                             <img src="../assets/walletconnect-logo.svg" />
-                            <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.walletconnect")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -104,11 +127,21 @@
               <!-- Ethereum wallets -->
               <b-card>
                 <b-card-title>
-                  <img class="d-block mx-auto" width="54px" height="64px" src="../assets/ethereum_logo.png" alt="Ethereum Logo" />
+                  <img
+                    class="d-block mx-auto"
+                    width="54px"
+                    height="64px"
+                    src="../assets/ethereum_logo.png"
+                    alt="Ethereum Logo"
+                  />
                   <div class="text-center mt-2">Ethereum</div>
-                  <div class="text-center h6 font-weight-normal font-italic">Stake your LOOM ERC20 tokens!</div>
+                  <div class="text-center h6 font-weight-normal font-italic">
+                    Stake your LOOM ERC20 tokens!
+                  </div>
                 </b-card-title>
-                <div class="text-center">{{ $t('views.first_page.select_wallet') }}...</div>
+                <div class="text-center">
+                  {{ $t("views.first_page.select_wallet") }}...
+                </div>
                 <b-card-body>
                   <div class="wallet-provider-container">
                     <div class="row">
@@ -120,7 +153,9 @@
                         >
                           <div>
                             <img src="../assets/metamask_logo.png" />
-                            <span>{{ $t('views.first_page.wallets.metamask') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.metamask")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -128,11 +163,18 @@
                         <b-card
                           id="ledger-button"
                           class="wallet-selection-card text-center mb-3"
-                          @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
+                          @click="
+                            $root.$emit(
+                              'bv::show::modal',
+                              'metmask-hardware-wizard'
+                            )
+                          "
                         >
                           <div>
                             <img src="../assets/ledger_logo.svg" />
-                            <span>{{ $t('views.first_page.wallets.ledger_via_metamask') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.ledger_via_metamask")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -140,11 +182,18 @@
                         <b-card
                           id="trezor-button"
                           class="wallet-selection-card text-center"
-                          @click="$root.$emit('bv::show::modal', 'metmask-hardware-wizard')"
+                          @click="
+                            $root.$emit(
+                              'bv::show::modal',
+                              'metmask-hardware-wizard'
+                            )
+                          "
                         >
                           <div>
                             <img src="../assets/metamask_logo.png" />
-                            <span>{{ $t('views.first_page.wallets.trezor_via_metamask') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.trezor_via_metamask")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -155,7 +204,22 @@
                         >
                           <div>
                             <img src="../assets/walletconnect-logo.svg" />
-                            <span>{{ $t('views.first_page.wallets.walletconnect') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.walletconnect")
+                            }}</span>
+                          </div>
+                        </b-card>
+                      </div>
+                      <div class="col-sm-12 mb-3">
+                        <b-card
+                          class="wallet-selection-card text-center"
+                          @click="setWallet('ethereum', 'walletlink')"
+                        >
+                          <div>
+                            <img src="../assets/walletlink-logo.png" />
+                            <span>{{
+                              $t("views.first_page.wallets.walletconnect")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -167,7 +231,9 @@
                         >
                           <div>
                             <fa icon="search" class="search-icon" />
-                            <span>{{ $t('views.first_page.wallets.explore') }}</span>
+                            <span>{{
+                              $t("views.first_page.wallets.explore")
+                            }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -177,62 +243,95 @@
               </b-card>
             </b-card-group>
             <template v-if="env">
-            <div class="d-none d-xl-block">
-              <div id="announcement" v-if="env.announcement.home">
-                <a href="https://cryptozombies.io/libra" target="_blank">
-                  <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
-                </a>
+              <div class="d-none d-xl-block">
+                <div id="announcement" v-if="env.announcement.home">
+                  <a href="https://cryptozombies.io/libra" target="_blank">
+                    <img
+                      src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg"
+                      class="ad-img"
+                    />
+                  </a>
+                </div>
               </div>
-            </div>
             </template>
           </b-row>
           <template v-if="env">
-          <div class="d-xl-none" v-if="env.announcement.home">
-            <div id="announcement-mobile">
-              <a href="https://cryptozombies.io/libra" target="_blank">
-                <img src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg" class="ad-img">
-              </a>
+            <div class="d-xl-none" v-if="env.announcement.home">
+              <div id="announcement-mobile">
+                <a href="https://cryptozombies.io/libra" target="_blank">
+                  <img
+                    src="../assets/images/ads/Libra-Banner-Homepage-300x250px.jpg"
+                    class="ad-img"
+                  />
+                </a>
+              </div>
             </div>
-          </div>
           </template>
 
           <b-modal v-model="showMetamaskInstallPrompt" ok-only>
             <template slot="modal-title">
-              <img class="mr-2" id="metamask-mini-icon" src="../assets/metamask_logo.png" />
+              <img
+                class="mr-2"
+                id="metamask-mini-icon"
+                src="../assets/metamask_logo.png"
+              />
               Metamask Wallet not found
             </template>
-            <p>The Metamask Wallet extension is not installed, or not enabled.</p>
+            <p>
+              The Metamask Wallet extension is not installed, or not enabled.
+            </p>
             <ul>
-              <li>If you have previously installed this extension please enable it now and reload the page.</li>
-              <li>Otherwise, you can download and install from the
-                <a href="https://metamask.io/" target="_blank">official site</a>.
+              <li>
+                If you have previously installed this extension please enable it
+                now and reload the page.
+              </li>
+              <li>
+                Otherwise, you can download and install from the
+                <a href="https://metamask.io/" target="_blank">official site</a
+                >.
               </li>
             </ul>
           </b-modal>
 
           <b-modal v-model="showBinanceInstallPrompt" ok-only>
             <template slot="modal-title">
-              <img class="mr-2" id="metamask-mini-icon" src="../assets/binance_wallet_logo.svg" />
+              <img
+                class="mr-2"
+                id="metamask-mini-icon"
+                src="../assets/binance_wallet_logo.svg"
+              />
               Binance Chain Wallet not found
             </template>
-            <p>The Binance Chain Wallet extension is not installed, or not enabled.</p>
+            <p>
+              The Binance Chain Wallet extension is not installed, or not
+              enabled.
+            </p>
             <ul>
-              <li>If you have previously installed this extension please enable it now and reload the page.</li>
-              <li>Otherwise, you can download and install it in
+              <li>
+                If you have previously installed this extension please enable it
+                now and reload the page.
+              </li>
+              <li>
+                Otherwise, you can download and install it in
                 <a
                   href="https://chrome.google.com/webstore/detail/binance-chain-wallet/fhbohimaelbohpjbbldcngcnapndodjp"
                   target="_blank"
                 >
                   Chrome
-                </a> or
+                </a>
+                or
                 <a
                   href="https://addons.mozilla.org/en-US/firefox/addon/binance-chain/?src=search"
                   target="_blank"
                 >
-                  Firefox
-                </a>.
-                If you need any help with the installation please check out the
-                <a href="https://docs.binance.org/smart-chain/wallet/binance.html" target="_blank">Binance docs</a>.
+                  Firefox </a
+                >. If you need any help with the installation please check out
+                the
+                <a
+                  href="https://docs.binance.org/smart-chain/wallet/binance.html"
+                  target="_blank"
+                  >Binance docs</a
+                >.
               </li>
             </ul>
           </b-modal>
@@ -248,23 +347,32 @@
                 type="submit"
                 @click="setExploreMode(address)"
                 variant="primary"
-              >{{ $t('button.submit') }}</b-button>
+                >{{ $t("button.submit") }}</b-button
+              >
             </div>
           </b-modal>
 
           <b-modal
             id="metmask-hardware-wizard"
-            :title="$t('components.modals.hardware_wallet_modal.hardware_wallet')"
+            :title="
+              $t('components.modals.hardware_wallet_modal.hardware_wallet')
+            "
           >
             <div>
               <div class="wizard-img-container mb-3">
-                <img class="wizard-img" src="../assets/metamask-hardware-screencap.png" alt />
+                <img
+                  class="wizard-img"
+                  src="../assets/metamask-hardware-screencap.png"
+                  alt
+                />
               </div>
-              <p>{{$t("messages.metamask_hardware_wizard")}}</p>
+              <p>{{ $t("messages.metamask_hardware_wizard") }}</p>
             </div>
             <template slot="modal-footer">
               <div>
-                <b-btn @click="setWallet('ethereum', 'metamask')">{{ $t('button.next') }}</b-btn>
+                <b-btn @click="setWallet('ethereum', 'metamask')">{{
+                  $t("button.next")
+                }}</b-btn>
               </div>
             </template>
           </b-modal>
@@ -275,18 +383,18 @@
             triggers="hover"
             v-if="bscWalletsEnabled"
           >
+            <p>This wallet also supports <strong>Ledger</strong>.</p>
             <p>
-            This wallet also supports <strong>Ledger</strong>.
-            </p>
-            <p>
-              If you want to use a Ledger open the Binance Chain Wallet extension and select
-              <strong>Hardware Wallet</strong> from the menu, then follow the steps to setup your
-              device for use with Binance Chain Wallet.
+              If you want to use a Ledger open the Binance Chain Wallet
+              extension and select
+              <strong>Hardware Wallet</strong> from the menu, then follow the
+              steps to setup your device for use with Binance Chain Wallet.
             </p>
             <div>
               <div class="wizard-img-container mb-3">
                 <img
-                  class="wizard-img" src="../assets/binance-wallet-ledger.png"
+                  class="wizard-img"
+                  src="../assets/binance-wallet-ledger.png"
                   alt="Screenshot of setting up Ledger in Binance Chain Wallet"
                 />
               </div>
@@ -300,17 +408,20 @@
             v-if="bscWalletsEnabled"
           >
             <p>
-            This wallet also supports <strong>Ledger</strong> and <strong>Trezor</strong>.
+              This wallet also supports <strong>Ledger</strong> and
+              <strong>Trezor</strong>.
             </p>
             <p>
-              If you want to use a Ledger or Trezor open the Metamask extension and select
-              <strong>Connect Hardware Wallet</strong> from the menu, then follow the steps to
-              setup your device for use with Metamask.
+              If you want to use a Ledger or Trezor open the Metamask extension
+              and select
+              <strong>Connect Hardware Wallet</strong> from the menu, then
+              follow the steps to setup your device for use with Metamask.
             </p>
             <div>
               <div class="wizard-img-container mb-3">
                 <img
-                  class="wizard-img" src="../assets/metamask-hardware-screencap.png"
+                  class="wizard-img"
+                  src="../assets/metamask-hardware-screencap.png"
                   alt="Screenshot of setting up hardware wallet in Metamask"
                 />
               </div>
@@ -323,10 +434,14 @@
             triggers="hover"
             v-if="bscWalletsEnabled"
           >
-            WalletConnect supports many <strong>iOS</strong> and <strong>Android</strong> wallets.
-            It's easy to use and there's nothing to install, just scan a QR code to connect.
+            WalletConnect supports many <strong>iOS</strong> and
+            <strong>Android</strong> wallets. It's easy to use and there's
+            nothing to install, just scan a QR code to connect.
           </b-popover>
-          <ChainSelector style="width: 250px; margin: 0 auto;" class="connection-status" />
+          <ChainSelector
+            style="width: 250px; margin: 0 auto"
+            class="connection-status"
+          />
         </div>
       </main>
     </div>
@@ -334,11 +449,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator"
+import { Vue, Component } from "vue-property-decorator"
 import ChainSelector from "../components/ChainSelector.vue"
 
 import { ethereumModule } from "@/store/ethereum"
-import { DashboardState, DashboardConfig } from "../types"
+import { DashboardState } from "../types"
 
 import LoomIcon from "@/components/LoomIcon.vue"
 import { gatewayModule } from "../store/gateway"
@@ -388,7 +503,7 @@ export default class FirstPage extends Vue {
   }
 
   get bscWalletsEnabled(): boolean {
-    return this.$state.activeConfig ? this.$state.activeConfig.features.bscWallets : false
+    return this.$state.env ? this.$state.activeConfig!.features.bscWallets : false
   }
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {
@@ -429,9 +544,8 @@ export default class FirstPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
 #main-main {
-  flex-direction: row
+  flex-direction: row;
 }
 
 #announcement {
@@ -488,7 +602,7 @@ export default class FirstPage extends Vue {
 
 @media (max-width: 767px) {
   #main-main {
-    flex-direction: column
+    flex-direction: column;
   }
   #login-tab {
     .actions {
@@ -500,16 +614,13 @@ export default class FirstPage extends Vue {
       }
     }
   }
-
 }
 
 @media (max-width: 1024px) {
   .wallet-provider-container {
     margin: auto;
   }
-
 }
-
 </style>
 
 <style lang="scss">
@@ -584,7 +695,7 @@ export default class FirstPage extends Vue {
   }
 }
 
-.center-content { 
+.center-content {
   margin: 24px auto;
 }
 

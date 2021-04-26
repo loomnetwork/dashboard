@@ -887,8 +887,8 @@
       "address_copied": "Address copied.",
       "register_success": "Successfully registered.",
       "withdraw_airdrop_success": "Successfully withdrew airdrop.",
-      "update_validator_info_success":"Successfully update validator information.",
-      "change_validator_fee_success": "Successfully change validator fee."
+      "update_validator_info_success":"Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {

@@ -135,11 +135,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Watch, Prop } from "vue-property-decorator";
-import { HasDPOSState } from "@/dpos/store/types";
-import RegisterCandidateForm from "./RegisterCandidateForm.vue";
-import ValidatorUpdateForm from "./ValidatorUpdateForm.vue";
+import Vue from "vue"
+import { Component, Watch, Prop } from "vue-property-decorator"
+import { HasDPOSState } from "@/dpos/store/types"
+import RegisterCandidateForm from "./RegisterCandidateForm.vue"
+import ValidatorUpdateForm from "./ValidatorUpdateForm.vue"
 
 @Component({
   components: {
@@ -149,38 +149,37 @@ import ValidatorUpdateForm from "./ValidatorUpdateForm.vue";
 })
 export default class ValidatorExtendedDetail extends Vue {
   formLink =
-    "https://docs.google.com/forms/d/e/1FAIpQLSeNOYyBKwvYVWc-jQ3-cb-8g22GffQ24vvxe0LwS5xUKp43Rg/viewform";
-  guideLink = "https://loomx.io/developers/en/validator.html";
-  setupLink = "https://loomx.io/developers/en/jump-start-plasma.html";
+    "https://docs.google.com/forms/d/e/1FAIpQLSeNOYyBKwvYVWc-jQ3-cb-8g22GffQ24vvxe0LwS5xUKp43Rg/viewform"
+  guideLink = "https://loomx.io/developers/en/validator.html"
+  setupLink = "https://loomx.io/developers/en/jump-start-plasma.html"
 
-  showInfo = false;
+  showInfo = false
 
-  @Prop(String) userAddress!: string;
+  @Prop(String) userAddress!: string
 
   get state(): HasDPOSState {
-    return this.$store.state;
+    return this.$store.state
   }
 
   get plasmaAddress() {
-    return this.state.plasma.address;
+    return this.state.plasma.address
   }
 
   get validator() {
     const myValidator = this.state.dpos.validators.find((validator) => {
-      return validator.addr === this.userAddress;
+      return validator.addr === this.userAddress
       // return validator.addr === this.plasmaAddress
-    });
+    })
     // console.log("validator ADDR", myValidator!.addr)
-    console.log("myValidator....", myValidator);
-    return myValidator ? myValidator : false;
+    return myValidator ? myValidator : false
   }
 
   pubKeyToB64(key: Uint8Array) {
-    return Buffer.from(key).toString("base64");
+    return Buffer.from(key).toString("base64")
   }
   openUpdateModal() {
     // @ts-ignore
-    this.$refs.validatorUpdateform.show();
+    this.$refs.validatorUpdateform.show()
   }
 }
 </script>

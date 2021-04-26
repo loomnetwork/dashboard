@@ -114,9 +114,15 @@ export interface UpdateValidatorDetailRequest {
   name: string
   description: string
   website: string
-  fee?: string
   maxReferralPercentage: number;
+}
 
+export interface UpdateValidatorFormRequest {
+  name: string
+  description: string
+  website: string
+  maxReferralPercentage: number;
+  fee: BN;
 }
 
 async function fetchExtraValidators(url: string): Promise<Validator[]> {
@@ -597,7 +603,7 @@ export async function updateValidatorDetail(context: ActionContext, validator: U
  * @param context
  * @param newFee
  */
-export async function changeValidatorFee(context: ActionContext, newFee: BN) {
+export async function changeValidatorFee(context: ActionContext, newFee: number) {
   try {
     await context.state.contract!.changeFeeAsync(
       newFee

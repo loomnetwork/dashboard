@@ -4,7 +4,7 @@
       {{ $t("components.validator_update_form.title") }}
     </template>
     <form>
-      <p class="mb-1">{{ $t("components.validator_update_form.name") }} :</p>
+      <p class="mb-1">{{ $t("components.validator_update_form.name") }}</p>
       <b-form-input
         class="mb-3"
         id="input-name"
@@ -13,7 +13,7 @@
         required
       ></b-form-input>
       <p class="mb-1">
-        {{ $t("components.validator_update_form.description") }} :
+        {{ $t("components.validator_update_form.description") }}
       </p>
       <b-form-input
         class="mb-3"
@@ -22,7 +22,7 @@
         type="text"
         required
       ></b-form-input>
-      <p class="mb-1">{{ $t("components.validator_update_form.website") }} :</p>
+      <p class="mb-1">{{ $t("components.validator_update_form.website") }}</p>
       <b-form-input
         class="mb-3"
         id="input-website"
@@ -30,7 +30,7 @@
         type="text"
         required
       ></b-form-input>
-      <p class="mb-1">{{ $t("components.validator_update_form.fee") }} :</p>
+      <p class="mb-1">{{ $t("components.validator_update_form.fee") }}</p>
       <b-form-input
         class="mb-3"
         id="input-fee"
@@ -50,18 +50,16 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { Validator } from "../store/types";
-import { dposModule, UpdateValidatorDetailRequest } from "../store";
+import { dposModule, UpdateValidatorDetailRequest, UpdateValidatorFormRequest } from "../store";
 import BN from "bn.js";
 
-@Component({
-  components: {},
-})
+@Component
 export default class ValidatorUpdateForm extends Vue {
-  @Prop({ required: true }) validator!: UpdateValidatorDetailRequest // prettier-ignore
+  @Prop({ required: true }) validator!: UpdateValidatorFormRequest // prettier-ignore
   disableButton = false
   form = {
     name: this.validator.name,
-    fee: this.validator.fee!.toString(),
+    fee: this.validator.fee.toNumber(),
     description: this.validator.description,
     website: this.validator.website,
     maxReferralPercentage: this.validator.maxReferralPercentage,
@@ -78,25 +76,19 @@ export default class ValidatorUpdateForm extends Vue {
   }
 
   async submit() {
-    console.log(this.form);
     this.disableButton = true
-    // let newValidatorDetail: UpdateValidatorDetailRequest;
-    console.log("this.form.fee", this.form.fee!.toString());
-    console.log("this.validator.fee", this.validator.fee!.toString());
     const newValidatorDetail: UpdateValidatorDetailRequest = {
       name: this.form.name,
       description: this.form.description,
       website: this.form.website,
       maxReferralPercentage: this.form.maxReferralPercentage,
     };
-    if (this.form.name != this.validator.name || this.form.description != this.validator.description ||this.form.website != this.validator.website ||this.form.maxReferralPercentage != this.validator.maxReferralPercentage  ) {
+    if (this.form.name != this.validator.name || this.form.description != this.validator.description || this.form.website != this.validator.website || this.form.maxReferralPercentage != this.validator.maxReferralPercentage) {
       await dposModule.updateValidatorDetail(newValidatorDetail);
     }
 
-    if (this.form.fee!.toString() != this.validator.fee!.toString()) {
-      console.log("this.form.fee", this.form.fee!.toString());
-      console.log("this.validator.fee", this.validator.fee!.toString());
-      await dposModule.changeValidatorFee(new BN(this.form.fee!).muln(100));
+    if (this.form.fee != this.validator.fee.toNumber()) {
+      await dposModule.changeValidatorFee(this.form.fee*100);
     }
     this.close();
     this.disableButton = false

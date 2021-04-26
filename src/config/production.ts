@@ -40,7 +40,7 @@ export default {
     blockExplorerApi: "api.bscscan.com/api",
     contracts: {
       mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
-      loomGateway: "0xdeadbeef"
+      loomGateway: "0x37939c8Bdbf6BCb6fFBC9519f88027CFe9dFe6D7"
     },
     gatewayVersions: {
       loom: 1,
@@ -73,6 +73,6 @@ export default {
     home: false,
   },
   features: {
-    bscWallets: false,
+    bscWallets: true,
   }
 } as DashboardConfig

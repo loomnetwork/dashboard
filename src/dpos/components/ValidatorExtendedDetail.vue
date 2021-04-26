@@ -52,9 +52,6 @@
         <div>
           <h2>{{ validator.name }}</h2>
           <ValidatorUpdateForm ref="validatorUpdateform" :validator="validator" :candidateState="validator.candidateState"/>
-          <a @click="openUpdateModal()">
-            <fa icon="wrench" @click="openUpdateModal()" style="color:#007bff;cursor:pointer;"/>
-          </a>
           <h5>{{ validator.active ? "Active" : "Inactive" }}</h5>
           <br />
           <p>{{ validator.addr | loomAddress }}</p>
@@ -130,6 +127,13 @@
           </b-col>
         </b-row>
       </b-card-body>
+      <b-row>
+        <b-col cols="12" class="pr-0">
+          <b-btn variant="primary" @click="openUpdateModal()" class="float-right px-5">
+            {{ $t("components.validator_extended_detail.edit") }} <fa icon="wrench"/>
+          </b-btn>
+        </b-col>
+      </b-row>
     </b-card>
   </div>
 </template>

@@ -778,7 +778,8 @@
       "staked_amount": "Staked Amount",
       "whitelist_locktime_tier": "Whitelist Locktime Tier",
       "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
-      "node_setup_guide": "Node setup guide"
+      "node_setup_guide": "Node setup guide",
+      "edit": "Edit"
     },
     "validator_update_form": {
       "title": "Update Validator Detail",

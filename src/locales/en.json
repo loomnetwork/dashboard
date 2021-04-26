@@ -786,7 +786,8 @@
       "website": "Website",
       "description": "Description",
       "fee": "Fee",
-      "max_referral_percentage": "Max Referral"
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "You will able to change fee when candidate state is 0"
     }
   },
   "events": {

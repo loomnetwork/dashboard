@@ -51,7 +51,7 @@
       <b-card-header class="validator-head" v-if="validator">
         <div>
           <h2>{{ validator.name }}</h2>
-          <ValidatorUpdateForm ref="validatorUpdateform" :validator="validator"/>
+          <ValidatorUpdateForm ref="validatorUpdateform" :validator="validator" :candidateState="validator.candidateState"/>
           <a @click="openUpdateModal()">
             <fa icon="wrench" @click="openUpdateModal()" style="color:#007bff;cursor:pointer;"/>
           </a>

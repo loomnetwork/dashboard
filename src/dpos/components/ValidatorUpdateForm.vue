@@ -32,12 +32,13 @@
       ></b-form-input>
       <p class="mb-1">{{ $t("components.validator_update_form.fee") }}</p>
       <b-form-input
-        class="mb-3"
         id="input-fee"
         v-model="form.fee"
         type="number"
         required
+        :disabled="!ableToChangeFee"
       ></b-form-input>
+      <p class="mb-3" style="font-size: 12px;" v-if="!ableToChangeFee">({{ $t("components.validator_update_form.wait_change_fee_state") }})</p>
     </form>
     <template slot="modal-footer">
       <b-spinner v-if="disableButton" type="border" small />
@@ -56,6 +57,8 @@ import BN from "bn.js";
 @Component
 export default class ValidatorUpdateForm extends Vue {
   @Prop({ required: true }) validator!: UpdateValidatorFormRequest // prettier-ignore
+  @Prop({ required: true }) candidateState!: number // prettier-ignore
+
   disableButton = false
   form = {
     name: this.validator.name,
@@ -92,6 +95,10 @@ export default class ValidatorUpdateForm extends Vue {
     }
     this.close();
     this.disableButton = false
+  }
+
+  get ableToChangeFee() {
+    return this.candidateState == 0
   }
 }
 </script>

@@ -16,18 +16,14 @@ export const WalletLinkAdapter: WalletType = {
     },
     async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
         const chainId = parseInt(config.networkId, 10)
-        // FIXME: Hardcoded to mainnet right now since WalletLink API is half-baked and doesn't provide
-        // a way for the user to specify the network within the wallet app.
-        if (chainId !== 1) {
-            alert("WalletLink only works with mainnet for the moment " + config.networkId)
-            window.location.reload()
-        }
         const walletLink = new WalletLink({
             appName: "Loom Network - Basechain Dashboard",
         })
-        const rpcUrl = `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
-        // const rpcUrl = `https://rinkeby.infura.io/v3/${INFURA_PROJECT_ID}`;
-        // const chainId = 4;
+        // const rpcUrl = config.endpoint
+        // console.log(rpcUrl)
+        const rpcUrl = chainId === 1 ?
+            `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}` :
+            `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
 
         const wlProvider = walletLink.makeWeb3Provider(rpcUrl, chainId)
 

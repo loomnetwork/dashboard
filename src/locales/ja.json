@@ -724,7 +724,17 @@
       "staked_amount": "Staked Amount",
       "whitelist_locktime_tier": "Whitelist Locktime Tier",
       "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
-      "node_setup_guide": "Node setup guide"
+      "node_setup_guide": "Node setup guide",
+      "edit": "Edit"
+    },
+    "validator_update_form": {
+      "title": "Update Validator Detail",
+      "name": "Name",
+      "website": "Website",
+      "description": "Description",
+      "fee": "Fee",
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election."
     }
   },
   "events": {
@@ -806,7 +816,9 @@
       "address_existed": "This address is already exists in your deployer list.",
       "failed_to_get_receipt": "Failed to get receipt",
       "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
+      "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",
@@ -822,7 +834,9 @@
       "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
       "register_success": "Successfully registered.",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "withdraw_airdrop_success": "Successfully withdrew airdrop.",
+      "update_validator_info_success": "Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {

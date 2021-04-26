@@ -872,7 +872,7 @@
       "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
       "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
       "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
-      "err_while_change_validator_fee": "Unexpected error while changing validator fee, please check your input or wait until Candidate State is 0 and try again."
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",

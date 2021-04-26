@@ -114,7 +114,7 @@ export interface UpdateValidatorDetailRequest {
   name: string
   description: string
   website: string
-  maxReferralPercentage: number;
+  maxReferralPercentage: number
 }
 
 async function fetchExtraValidators(url: string): Promise<Validator[]> {

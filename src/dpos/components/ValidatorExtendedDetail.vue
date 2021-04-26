@@ -51,7 +51,7 @@
       <b-card-header class="validator-head" v-if="validator">
         <div>
           <h2>{{ validator.name }}</h2>
-          <ValidatorUpdateForm ref="validatorUpdateform" :validator="validator" :candidateState="validator.candidateState"/>
+          <ValidatorUpdateForm ref="validatorUpdateForm" :validator="validator" :candidateState="validator.candidateState"/>
           <h5>{{ validator.active ? "Active" : "Inactive" }}</h5>
           <br />
           <p>{{ validator.addr | loomAddress }}</p>
@@ -152,8 +152,6 @@ import ValidatorUpdateForm from "./ValidatorUpdateForm.vue"
   },
 })
 export default class ValidatorExtendedDetail extends Vue {
-  formLink =
-    "https://docs.google.com/forms/d/e/1FAIpQLSeNOYyBKwvYVWc-jQ3-cb-8g22GffQ24vvxe0LwS5xUKp43Rg/viewform"
   guideLink = "https://loomx.io/developers/en/validator.html"
   setupLink = "https://loomx.io/developers/en/jump-start-plasma.html"
 
@@ -183,7 +181,7 @@ export default class ValidatorExtendedDetail extends Vue {
   }
   openUpdateModal() {
     // @ts-ignore
-    this.$refs.validatorUpdateform.show()
+    this.$refs.validatorUpdateForm.show()
   }
 }
 </script>

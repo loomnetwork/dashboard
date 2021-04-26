@@ -117,14 +117,6 @@ export interface UpdateValidatorDetailRequest {
   maxReferralPercentage: number;
 }
 
-export interface UpdateValidatorFormRequest {
-  name: string
-  description: string
-  website: string
-  maxReferralPercentage: number;
-  fee: BN;
-}
-
 async function fetchExtraValidators(url: string): Promise<Validator[]> {
   try {
     const resp = await Axios.get<ExtValidatorData[]>(url)

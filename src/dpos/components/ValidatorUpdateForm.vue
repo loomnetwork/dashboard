@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="validatorUpdateform" id="validator-update-form">
+  <b-modal ref="validatorUpdateForm" id="validator-update-form">
     <template slot="modal-title">
       {{ $t("components.validator_update_form.title") }}
     </template>
@@ -50,9 +50,18 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { Validator } from "../store/types";
-import { dposModule, UpdateValidatorDetailRequest, UpdateValidatorFormRequest } from "../store";
-import BN from "bn.js";
+import { dposModule, UpdateValidatorDetailRequest } from "../store";
+import BN from "bn.js"
+
+
+interface UpdateValidatorFormRequest {
+  name: string
+  description: string
+  website: string
+  maxReferralPercentage: number;
+  fee: BN;
+}
+
 
 @Component
 export default class ValidatorUpdateForm extends Vue {
@@ -70,12 +79,12 @@ export default class ValidatorUpdateForm extends Vue {
 
   show() {
     // @ts-ignore
-    this.$refs.validatorUpdateform.show();
+    this.$refs.validatorUpdateForm.show();
   }
 
   close() {
     // @ts-ignore
-    this.$refs.validatorUpdateform.hide();
+    this.$refs.validatorUpdateForm.hide();
   }
 
   async submit() {

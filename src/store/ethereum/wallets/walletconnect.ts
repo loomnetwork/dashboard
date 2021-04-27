@@ -34,7 +34,7 @@ export const WalletConnectAdapter: WalletType = {
       }
     )
     // NOTE: WC seems to emit accountsChanged every time the provider is enabled, unlike MetaMask.
-    wcProvider.on("accountsChanged",  (accounts: string[]) => {
+    wcProvider.on("accountsChanged", (accounts: string[]) => {
       console.log(`WalletConnect accountsChanged ${accounts}`)
     })
     wcProvider.on("disconnect", (code, reason) => {
@@ -48,6 +48,7 @@ export const WalletConnectAdapter: WalletType = {
       web3: new Web3(wcProvider),
       signer: getMetamaskSigner(wcProvider),
       chainId: wcProvider.chainId,
+      disconnect: () => wcProvider.disconnect(),
     }
   },
 }

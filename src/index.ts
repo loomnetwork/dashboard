@@ -80,26 +80,6 @@ export default new Vue({
 
     document.dispatchEvent(new Event("render-event"))
 
-    // @ts-ignore
-    if (!!window.imToken) {
-      ethereumModule.setWalletType("metamask")
-      // @ts-ignore
-    } else if (window.ethereum) { // modern MetaMask-like wallet
-      // @ts-ignore
-      const ethereum = window.ethereum
-      // walletlink steals typing of window.ethereum
-      // @ts-ignore
-      if (ethereum.isTrust || ethereum.isMetaMask || ethereum.isCobo) {
-        ethereumModule.setWalletType("metamask")
-      }
-      // @ts-ignore
-    } else if (window.web3) { // legacy MetaMask-like wallet
-      // @ts-ignore
-      const web3 = window.web3;
-      if (web3.currentProvider.isTrust || web3.currentProvider.isMetaMask || web3.isCobo) {
-        ethereumModule.setWalletType("metamask")
-      }
-    }
   },
 }).$mount("#app")
 

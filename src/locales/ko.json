@@ -694,7 +694,8 @@
       "required": "필요",
       "insufficient_loom": "LOOM이 충분하지 않습니다.",
       "ready_to_stake": "스테이킹이 준비되었습니다.",
-      "your_balance": "당신의 잔액"
+      "your_balance": "당신의 잔액",
+      "validate_fee": "Fee can't be less than {min}%"
     },
     "validator_extended_detail": {
       "validator_associated": "관련된 검증자",
@@ -734,7 +735,8 @@
       "description": "Description",
       "fee": "Fee",
       "max_referral_percentage": "Max Referral",
-      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election."
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee can't be less than {min}%"
     }
   },
   "events": {

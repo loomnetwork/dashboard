@@ -694,7 +694,8 @@
       "required": "必须",
       "insufficient_loom": "LOOM 不足",
       "ready_to_stake": "准备好锁定了",
-      "your_balance": "你的余额"
+      "your_balance": "你的余额",
+      "validate_fee": "Fee can't be less than {min}%"
     },
     "validator_extended_detail": {
       "validator_associated": "相关的验证者",
@@ -734,7 +735,8 @@
       "description": "Description",
       "fee": "Fee",
       "max_referral_percentage": "Max Referral",
-      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election."
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee can't be less than {min}%"
     }
   },
   "events": {

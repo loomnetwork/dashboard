@@ -218,7 +218,7 @@
                           <div>
                             <img src="../assets/walletlink-logo.png" />
                             <span>{{
-                              $t("views.first_page.wallets.walletconnect")
+                              $t("views.first_page.wallets.walletlink")
                             }}</span>
                           </div>
                         </b-card>

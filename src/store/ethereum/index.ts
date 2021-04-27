@@ -41,7 +41,7 @@ declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 const log = debug("dash.ethereum")
 const ZERO = new BN("0")
 
-const wallets: Map<string, WalletType> = new Map([
+export const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["binance", BinanceChainWalletAdapter],
   ["walletconnect", WalletConnectAdapter],

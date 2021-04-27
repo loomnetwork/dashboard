@@ -10,6 +10,7 @@ import { ethereumModule } from ".."
 export const WalletConnectAdapter: WalletType = {
   id: "walletconnect",
   name: "WalletConnect",
+  logo: require("@/assets/walletconnect-logo.svg"),
   detectable: true,
   isMultiAccount: false,
   desktop: true,

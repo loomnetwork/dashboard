@@ -15,6 +15,7 @@ import { ethereumModule } from ".."
 export const MetaMaskAdapter: WalletType = {
   id: "netamask",
   name: "Metamask",
+  logo: require("@/assets/metamask_logo.png"),
   detectable: true,
   isMultiAccount: false,
   desktop: true,

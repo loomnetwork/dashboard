@@ -78,8 +78,9 @@
                 </b-input-group>
               </b-col>
             </b-row>
+            <p class="mb-3 float-right" style="font-size: 12px; color:red" v-if="!validFee">({{ $t("components.registerCandidate.validate_fee", {min: state.dpos.minCandidateFee}) }})</p>
           </b-form-group>
-        <b-button type="submit" class="submit-btn mt-3" adasdasdssize="lg" variant="primary" style="float:right;" >{{ $t('button.submit') }}</b-button>
+        <b-button type="submit" class="submit-btn mt-3" adasdasdssize="lg" variant="primary" style="float:right;" :disabled="!validFee">{{ $t('button.submit') }}</b-button>
         </b-form>
       </b-card>
   </div>
@@ -136,7 +137,11 @@ export default class RegisterCandidateForm extends Vue {
     }
     dposModule.registerCandidate(candidate)
   }
+
+  get validFee() {
+    return this.form.fee >= this.state.dpos.minCandidateFee
   }
+}
 </script>
 
 <style lang="scss">

@@ -232,6 +232,7 @@ export async function refreshContractState(context: ActionContext) {
 
   state.maxYearlyRewards = fromBN(cs.maxYearlyRewards)
   state.totalWeightedStakes = fromBN(cs.totalWeightedAmountStaked)
+  state.minCandidateFee = cs.minCandidateFee
 
   const expectedYearlyRewards = state.totalWeightedStakes.times(stdRewardsRatio)
 

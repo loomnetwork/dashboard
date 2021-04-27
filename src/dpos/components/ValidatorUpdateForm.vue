@@ -39,19 +39,21 @@
         :disabled="!ableToChangeFee"
       ></b-form-input>
       <p class="mb-3" style="font-size: 12px;" v-if="!ableToChangeFee">({{ $t("components.validator_update_form.wait_change_fee_state") }})</p>
+      <p class="mb-3" style="font-size: 12px; color:red" v-if="!validFee">({{ $t("components.validator_update_form.validate_fee", {min: state.dpos.minCandidateFee}) }})</p>
     </form>
     <template slot="modal-footer">
       <b-spinner v-if="disableButton" type="border" small />
-      <b-btn variant="primary" @click="submit()" :disabled="disableButton" class="mr-2">Submit</b-btn>
+      <b-btn variant="primary" @click="submit()" :disabled="disableButton || !validFee" class="mr-2">Submit</b-btn>
       <b-btn @click="close()" class="mr-2" :disabled="disableButton">Cancel</b-btn>
     </template>
   </b-modal>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import { dposModule, UpdateValidatorDetailRequest } from "../store";
 import BN from "bn.js"
+import { HasDPOSState } from "@/dpos/store/types"
 
 
 interface UpdateValidatorFormRequest {
@@ -76,6 +78,11 @@ export default class ValidatorUpdateForm extends Vue {
     website: this.validator.website,
     maxReferralPercentage: this.validator.maxReferralPercentage,
   };
+
+
+  get state(): HasDPOSState {
+    return this.$store.state
+  }
 
   show() {
     // @ts-ignore
@@ -108,6 +115,10 @@ export default class ValidatorUpdateForm extends Vue {
 
   get ableToChangeFee() {
     return this.candidateState == 0
+  }
+
+  get validFee() {
+    return this.form.fee >= this.state.dpos.minCandidateFee
   }
 }
 </script>

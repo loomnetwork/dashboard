@@ -44,8 +44,9 @@ export const WalletLinkAdapter: WalletType = {
             throw new Error("Wallet is locked or the user has not connected any accounts")
         }
         const web3 = new Web3(wlProvider)
-        // issues is said to be fixed in version 2 but it seems it's not
+
         // See https://github.com/walletlink/walletlink/issues/19
+        // Said to be fixed in version 2 but it seems not to be the case.
         // @ts-ignore
         wlProvider.on = null
         Object.defineProperties(wlProvider, { isMetaMask: { value: true } })

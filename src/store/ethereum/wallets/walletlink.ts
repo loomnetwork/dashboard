@@ -19,13 +19,14 @@ export const WalletLinkAdapter: WalletType = {
         const walletLink = new WalletLink({
             appName: "Loom Network - Basechain Dashboard",
         })
+        // In config we use websockets. Not supported by walletlink yet.
         // const rpcUrl = config.endpoint
-        // console.log(rpcUrl)
         const rpcUrl = chainId === 1 ?
             `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}` :
             `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
 
         const wlProvider = walletLink.makeWeb3Provider(rpcUrl, chainId)
+        wlProvider.enable()
 
         let accounts: string[] = []
         try {
@@ -43,14 +44,20 @@ export const WalletLinkAdapter: WalletType = {
             throw new Error("Wallet is locked or the user has not connected any accounts")
         }
         const web3 = new Web3(wlProvider)
-        web3.eth.defaultAccount = wlProvider.selectedAddress
+        // issues is said to be fixed in version 2 but it seems it's not
+        // See https://github.com/walletlink/walletlink/issues/19
+        // @ts-ignore
+        wlProvider.on = null
         Object.defineProperties(wlProvider, { isMetaMask: { value: true } })
         const signer = new ethers.providers.Web3Provider(wlProvider).getSigner(wlProvider.selectedAddress)
         return {
             web3,
             signer,
             chainId,
-            disconnect: () => wlProvider.disconnect() ? Promise.resolve() : Promise.reject("WalletLink: Could not disconnect"),
+            disconnect() {
+                walletLink.disconnect()
+                return Promise.resolve()
+            },
         }
     },
 }

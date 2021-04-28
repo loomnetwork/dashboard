@@ -5,7 +5,9 @@
     </header>
     <Account class="account"/>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
+    <statistics class="statistic"></statistics>
     <validator-rewards class="reward" v-if="isValidator"></validator-rewards> 
+
   </main>
 </template>
 
@@ -16,6 +18,7 @@ import Account from "@/components/Account.vue"
 import Rewards from "@/dpos/components/Rewards.vue"
 import ValidatorExtendedDetail from "@/dpos/components/ValidatorExtendedDetail.vue"
 import ValidatorRewards from "@/dpos/components/ValidatorRewards.vue"
+import Statistics from "@/dpos/components/Statistics.vue"
 
 @Component({
   components: {
@@ -23,6 +26,7 @@ import ValidatorRewards from "@/dpos/components/ValidatorRewards.vue"
     Rewards,
     ValidatorExtendedDetail,
     ValidatorRewards,
+    Statistics,
   },
 })
 
@@ -61,6 +65,10 @@ export default class ValidatorManagement extends Vue {
   }
 
   .reward {
+    margin-top: 2%;
+  }
+
+  .statistic {
     margin-top: 2%;
   }
   

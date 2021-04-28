@@ -538,7 +538,12 @@ export async function refreshEthereumHistory(context: ActionContext) {
 
 async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) {
   const cached = ethereumModule.state.history
-  const fromBlock = cached.length ? cached[0].blockNumber : 0
+  let firstBlock = 0
+  // BSC max query size is 5000
+  if (ethereumModule.state.walletType === "binance") {
+    firstBlock = ethereumModule.state.blockNumber - 5000
+  }
+  const fromBlock = cached.length ? cached[0].blockNumber : firstBlock
   const range = {
     fromBlock,
     toBlock: "latest",

@@ -4,35 +4,20 @@
       <b-card-title class="statistcs">
         <h4>{{ $t("views.statistcs.statistcs") }}</h4>
       </b-card-title>
-      <hr />
+      <hr/>
       <b-card-body>
-        <b-row>
+        <b-row v-if="downtimeRecord.periods.length > 0">
           <b-col cols="12">
             <h5>{{ $t("views.statistcs.missed_blocks") }}</h5>
             <dl>
-              <dt class="table-header">
-                <p>{{ $t("views.statistcs.period") }}</p>
-              </dt>
-              <dt class="table-header">
-                <p>{{ $t("views.statistcs.blocks_missed") }}</p>
-              </dt>
+              <dt class="table-header">{{ $t("views.statistcs.period") }}</dt>
+              <dt class="table-header">{{ $t("views.statistcs.blocks_missed") }}</dt>
             </dl>
-            <dl class="table-body">
-              <dd>
-                <!-- <p> -->
-                  validator.fee
-                <!-- </p> -->
-              </dd>
-              <dd>
-                <!-- <p> -->
-                  validator.newFee
-                  <!-- </p> -->
-              </dd>
+            <dl v-for="(period, index) in downtimeRecord.periods">
+              <dd v-if="index==0">P</dd>
+              <dd v-else>P-{{index}}</dd>
+              <dd>{{ period }}</dd>
             </dl>
-            <!-- <dl>
-              <dd>validator.candidateState</dd>
-              <dd>validator.maxReferralPercentage</dd>
-            </dl> -->
           </b-col>
         </b-row>
       </b-card-body>
@@ -42,29 +27,36 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { dposModule } from "@/dpos/store"
+import { dposModule, ValidatorDowntimeRecord } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
+import { Address } from "loom-js"
 
 @Component
 export default class Statistics extends Vue {
-  claimRewards = dposModule.claimRewards
-
-  // items = [
-  //         { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-  //         { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-  //         { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-  //         { age: 38, first_name: 'Jami', last_name: 'Carney' }
-  //       ]
-      
+  downtimeRecord: ValidatorDowntimeRecord = {
+    periods: [],
+  }
 
   get state(): HasDPOSState {
     return this.$store.state
+  }
+
+  async mounted() {
+    await this.getDowntimeRecords();
+  }
+
+  async getDowntimeRecords() {
+    const validatorAddress = Address.fromString(
+      `${this.state.plasma.chainId}:${this.state.plasma.address}`
+    );
+    this.downtimeRecord = await dposModule.getDowntimeRecordsList(
+      validatorAddress
+    );
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 h4 {
   margin-bottom: 0.75rem;
 }
@@ -74,19 +66,22 @@ h4 {
   background-color: #f2f2f2;
   display: block;
   padding-top: 0;
-  p {
-    vertical-align: middle;
-    color: #6e6e6e;
-    line-height: 50px;
-    display: inline-block;
-    font-weight: 500;
-    margin-left: 5%;
-  }
+  text-align: center;
+}
+dt {
+  color: #6e6e6e;
+  line-height: 50px;
+  font-weight: 500;
+  margin-bottom: 0;
 }
 
-.table-body {
-  dd {
-    text-align: left;
-  }
+dd {
+  text-align: center !important;
+  margin-bottom: 0;
+  line-height: 30px;
+}
+
+dl {
+  margin-bottom: 0;
 }
 </style>

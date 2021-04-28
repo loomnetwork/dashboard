@@ -5,7 +5,7 @@
     </header>
     <Account class="account"/>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
-    <statistics class="statistic"></statistics>
+    <statistics class="statistic" v-if="isValidator"></statistics>
     <validator-rewards class="reward" v-if="isValidator"></validator-rewards> 
 
   </main>

@@ -870,7 +870,7 @@
       "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
       "withdrawal_in_progress": "Withdrawal already in progress.",
       "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
-      "please_sign_tx": "Please sign the tx using your wallet."
+      "please_sign_tx": "Please sign the transaction using your wallet."
     },
     "success": {
       "transaction_success": "Transaction sent successfully.",
@@ -894,7 +894,7 @@
         "complete_deposit": "Complete deposit"
       },
       "message": {
-        "please_sign_click": "Please sign click confirm to complete your deposit."
+        "please_sign_click": "Please sign the next transaction using your wallet to complete the deposit."
       }
     }
   },

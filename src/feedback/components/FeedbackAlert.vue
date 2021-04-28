@@ -1,11 +1,18 @@
 <template>
-  <b-modal v-model="visible"
+  <b-modal
+    v-model="visible"
     :title="$t(title)"
+    :no-close-on-backdrop="isConfirmation"
+    :no-close-on-esc="isConfirmation"
+    :hide-header-close="isConfirmation"
     :hide-footer="hideFooter"
     @ok="handleOk"
-    @hide="close">
-
+    @hide="close"
+  >
     {{ $t(message) }}
+    <template #modal-footer="{ ok }">
+      <b-button variant="primary" @click="ok()"> OK </b-button>
+    </template>
   </b-modal>
 </template>
 <script lang="ts">
@@ -40,6 +47,10 @@ export default class FeedbackAlert extends Vue {
 
   get hideFooter() {
     return this.alert.type === "alert" ? true : false
+  }
+
+  get isConfirmation() {
+    return this.alert.type === "confirmation"
   }
 
   handleOk() {

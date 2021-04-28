@@ -53,10 +53,7 @@ const dposModule = {
 
   registerCandidate: builder.dispatch(registerCandidate),
   fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
-
   getDowntimeRecordsList: builder.dispatch(getDowntimeRecordsList),
-
-
 }
 
 // vuex module as a service
@@ -581,5 +578,4 @@ export async function getDowntimeRecordsList(context: ActionContext, validator: 
     console.log("GetDowntimeRecordsList error", error);
   }
   return validatorDowntime
-
 }

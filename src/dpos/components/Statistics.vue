@@ -68,7 +68,6 @@ export default class Statistics extends Vue {
 
   async refreshDowntime(){
     await this.getDowntimeRecords()
-
   }
 }
 </script>
@@ -85,6 +84,7 @@ h4 {
   padding-top: 0;
   text-align: center;
 }
+
 dt {
   color: #6e6e6e;
   line-height: 50px;

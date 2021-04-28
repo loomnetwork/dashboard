@@ -45,7 +45,12 @@
       </section>
       <section v-else-if="visible === 'ethereum'" class="list-wrapper">
         <div v-if="ethereumHistory && ethereumHistory.length === 0">
-          <p>
+          <p v-if="foreignNetIsBSC">
+            {{ $t('views.history.no_activity_in_n', { blocks: 5000}) }}&nbsp;
+            <a :href="state.ethereum.blockExplorer + '/address/' + state.ethereum.address" target="_blank">{{ 
+              $t('views.history.check_block_explorer', {explorer: "BSCScan"}) 
+            }}&nbsp;<fa icon="external-link-alt"/></a> 
+          <p v-else>
             {{ $t('views.history.no_activity') }}
             <a>{{ $t('views.history.funds_to_plasma') }}</a>
           </p>
@@ -110,6 +115,11 @@ export default class History extends Vue {
     await gatewayModule.refreshEthereumHistory()
     this.ethereumHistory = this.state.ethereum.history
   }
+
+  get foreignNetIsBSC() {
+    return this.state.ethereum.networkName.startsWith("bsc-")
+  }
+
 }
 </script>
 

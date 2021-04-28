@@ -538,11 +538,16 @@ export async function refreshEthereumHistory(context: ActionContext) {
 
 async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) {
   const cached = ethereumModule.state.history
-  const fromBlock = cached.length ? cached[0].blockNumber : 0
-  const range = {
-    fromBlock,
-    toBlock: "latest",
+  let fromBlock = cached.length ? cached[0].blockNumber : 0
+  let toBlock: string | number = "latest"
+  // BSC max query size is 5000
+  if (ethereumModule.state.networkName.startsWith("bsc-")) {
+    fromBlock = Math.max(fromBlock, ethereumModule.state.blockNumber - 5000)
+    // state.blockNumber is not garanteed to be latest,
+    // to make sure we don't go over 5000 usedstate.blockNumber as toBlock
+    toBlock = ethereumModule.state.blockNumber
   }
+  const range = { fromBlock, toBlock }
   const logToHistory = (items, type, token, valueField) => {
     log("logToHistory", type, token, items)
     for (const item of items) {

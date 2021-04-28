@@ -294,6 +294,8 @@
       "item_2": "Item 2",
       "home": "Home",
       "no_activity": "No activity detected.",
+      "no_activity_in_n": "No activity in the last {blocks} blocks.",
+      "check_block_explorer": "Check {explorer} for a full history.",
       "or_head_to_validators_page": "Or head over to the {page} to get started",
       "validators_page": "Validators page",
       "funds_to_plasma": "Deposit funds to the Basechain"

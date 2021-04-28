@@ -242,6 +242,8 @@
       "item_2": "아이템 2",
       "home": "홈",
       "no_activity": "발견된 활동이 없습니다.",
+      "no_activity_in_n": "No activity in the last {blocks} blocks.",
+      "check_block_explorer": "Check {explorer} for a full history.",
       "or_head_to_validators_page": "또는 {page}로 가서 시작해보세요!",
       "validators_page": "검증자 페이지",
       "funds_to_plasma": "베이스체인에 자금 입금"

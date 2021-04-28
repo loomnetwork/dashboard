@@ -242,6 +242,8 @@
       "item_2": "Item 2",
       "home": "Home",
       "no_activity": "No activity detected.",
+      "no_activity_in_n": "No activity in the last {blocks} blocks.",
+      "check_block_explorer": "Check {explorer} for a full history.",
       "or_head_to_validators_page": "Or head over to the {page} to get started",
       "validators_page": "Validators page",
       "funds_to_plasma": "Deposit funds to the Basechain"
@@ -814,7 +816,7 @@
       "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
       "withdrawal_in_progress": "Withdrawal already in progress.",
       "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
-      "please_sign_tx": "Please sign the tx using your wallet."
+      "please_sign_tx": "Please sign the transaction using your wallet."
     },
     "success": {
       "transaction_success": "Transaction sent successfully.",
@@ -838,7 +840,7 @@
         "complete_deposit": "Complete deposit"
       },
       "message": {
-        "please_sign_click": "Please sign click confirm to complete your deposit."
+        "please_sign_click": "Please sign the next transaction using your wallet to complete the deposit."
       }
     }
   },

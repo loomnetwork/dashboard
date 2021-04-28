@@ -381,6 +381,13 @@
       "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
       "contact": "Contact {email} if you need guidance with submissions",
       "email": "satoshi@loomx.io"
+    },
+    "statistcs": {
+      "statistcs": "Statistcs",
+      "missed_blocks": "Missed Blocks",
+      "period": "Period",
+      "blocks_missed": "Blocks Missed",
+      "no_downtime": "You have no missed block"
     }
   },
   "components": {

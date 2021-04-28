@@ -541,7 +541,6 @@ async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) 
   let fromBlock = cached.length ? cached[0].blockNumber : 0
   let toBlock: string | number = "latest"
   // BSC max query size is 5000
-  console.log(ethereumModule.state.walletType)
   if (ethereumModule.state.walletType === "binance") {
     fromBlock = Math.max(fromBlock, ethereumModule.state.blockNumber - 5000)
     // state.blockNumber is not garanteed to be latest,

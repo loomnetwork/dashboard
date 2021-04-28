@@ -33,7 +33,7 @@ import { feedbackModule } from "@/feedback/store"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
-import { BinanceChainWalletAdapter } from "./wallets/binance"
+import { BinanceChainWalletAdapter, isBCWallet, BSC_SAFE_BLOCK_WAIT_TIME_MS } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 
@@ -58,6 +58,7 @@ const initialState: EthereumState = {
   address: "",
   signer: null,
   walletType: "",
+  wallet: null,
   walletNetworkId: null,
   balances: {
     ETH: ZERO,
@@ -89,7 +90,7 @@ const initialState: EthereumState = {
   gatewayVersions: {
     main: 1,
     loom: 1,
-  }
+  },
 }
 
 // web3 instance
@@ -133,6 +134,8 @@ export const ethereumModule = {
   clearWalletType: builder.commit(clearWalletType),
   commitSetWalletNetworkId: builder.commit(setWalletNetworkId),
 
+  onLogout: builder.dispatch(onLogout),
+
   setToExploreMode: builder.dispatch(setToExploreMode),
   allowance: builder.dispatch(allowance),
 
@@ -169,7 +172,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async provider => await setProvider(context, provider))
+      .then(async (provider) => await setProvider(context, provider))
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
@@ -184,7 +187,15 @@ async function setProvider(context: ActionContext, p: IWalletProvider) {
   const address = await signer.getAddress()
   context.state.signer = signer
   context.state.address = address
+  context.state.wallet = p
   ethereumModule.commitSetWalletNetworkId(p.chainId)
+}
+
+async function onLogout(context: ActionContext) {
+  const provider = context.state.wallet
+  if (provider != null) {
+    await provider.disconnect()
+  }
 }
 
 async function setToExploreMode(context: ActionContext, address: string) {
@@ -267,12 +278,25 @@ export async function approve(context: ActionContext, payload: Transfer) {
     erc20Contracts.get(symbol),
     "Contract not initialized",
   )
-  await contract.methods
-    .approve(to, weiAmount.toString())
-    // @ts-ignore
-    .send({
-      from: context.state.address,
-    })
+  try {
+    const result = await contract.methods
+      .approve(to, weiAmount.toString())
+      // @ts-ignore
+      .send({
+        from: context.state.address,
+      })
+    return result
+  } catch (error) {
+    if (isBCWallet(context.rootState.ethereum.wallet) &&
+      error.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+      await new Promise((resolve) => setTimeout(resolve, BSC_SAFE_BLOCK_WAIT_TIME_MS))
+      // XXX when it fails it doesnt return the transaction hash
+      return ""
+    } else {
+      throw error
+    }
+  }
+
 }
 
 /**

@@ -242,6 +242,8 @@
       "item_2": "第 2 项",
       "home": "首页",
       "no_activity": "未检测到活动。",
+      "no_activity_in_n": "No activity in the last {blocks} blocks.",
+      "check_block_explorer": "Check {explorer} for a full history.",
       "or_head_to_validators_page": "或者可以去 {page} 开始",
       "validators_page": "验证者页面",
       "funds_to_plasma": "将资金存入 Basechain"

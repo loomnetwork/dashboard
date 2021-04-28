@@ -28,6 +28,8 @@ import { ValidatorManagerContract } from "./contracts/ValidatorManagerContract"
 import { gatewayModule } from "./index"
 import { ActionContext, WithdrawalReceiptsV2 } from "./types"
 
+import { isBCWallet } from "../ethereum/wallets/binance"
+
 const log = debug("dash.gateway.ethereum")
 
 /**
@@ -40,7 +42,7 @@ interface EthereumGatewayAdapter {
 
   deposit(amount: BN, address: string)
   withdraw(receipt: IWithdrawalReceipt)
-  
+
 }
 
 class ERC20GatewayAdapter implements EthereumGatewayAdapter {
@@ -380,27 +382,35 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
           funds.weiAmount,
           context.rootState.ethereum.address,
         )
-        fb.showLoadingBar(false)
         fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
       } catch (err) {
-        fb.showLoadingBar(false)
-        if ("imToken" in window) {
+        let sendToSentry = true
+        // NOTE remove this when BSC supports websocket
+        if (isBCWallet(context.rootState.ethereum.wallet) &&
+          err.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+          fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
+          sendToSentry = false
+        } else if ("imToken" in window) {
           console.log("imToken error", err)
           fb.showInfo(i18n.t("feedback_msg.info.please_track_transaction").toString())
         } else {
           console.error(err)
           fb.showError(i18n.t("components.gateway.deposit.failure").toString())
         }
-        Sentry.withScope((scope) => {
-          scope.setExtra("ethereumDeposit", {
-            funds: JSON.stringify({
-              chain,
-              symbol,
-              amount: weiAmount.toString(),
-            }),
+        if (sendToSentry) {
+          Sentry.withScope((scope) => {
+            scope.setExtra("ethereumDeposit", {
+              funds: JSON.stringify({
+                chain,
+                symbol,
+                amount: weiAmount.toString(),
+              }),
+            })
+            Sentry.captureException(err)
           })
-          Sentry.captureException(err)
-        })
+        }
+      } finally {
+        fb.showLoadingBar(false)
       }
     },
   })
@@ -468,29 +478,37 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     ethereumModule.setUserData({ pendingWithdrawal: true })
     fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
   } catch (err) {
-    // imToken throws even if transaction succeeds
-    ethereumModule.setUserData({ pendingWithdrawal: false })
-    if ("imToken" in window) {
+    let sendToSentry = true
+    // NOTE remove this when BSC supports websocket
+    if (isBCWallet(context.rootState.ethereum.wallet) &&
+      err.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+      fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
+      sendToSentry = false
+    } else if ("imToken" in window) {
+      // imToken throws even if transaction succeeds
       console.log("imToken error", err, err.hash, "x", err.transactionHash)
     } else {
-      console.log(err)
+      console.error(err)
       fb.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
     }
-    Sentry.withScope((scope) => {
-      scope.setExtra("ethereumWithdraw", {
-        receipt: JSON.stringify({
-          tokenOwner: receipt.tokenOwner.local.toString(),
-          tokenContract: receipt.tokenContract!.local.toString(),
-          tokenId: (receipt.tokenId || "").toString(),
-          tokenAmount: receipt.tokenAmount!.toString(),
-          signatures: receipt.oracleSignature,
-        }),
+    if (sendToSentry) {
+      Sentry.withScope((scope) => {
+        scope.setExtra("ethereumWithdraw", {
+          receipt: JSON.stringify({
+            tokenOwner: receipt.tokenOwner.local.toString(),
+            tokenContract: receipt.tokenContract!.local.toString(),
+            tokenId: (receipt.tokenId || "").toString(),
+            tokenAmount: receipt.tokenAmount!.toString(),
+            signatures: receipt.oracleSignature,
+          }),
+        })
+        Sentry.captureException(err)
       })
-      Sentry.captureException(err)
-    })
+    }
+  } finally {
+    ethereumModule.setUserData({ pendingWithdrawal: false })
+    fb.showLoadingBar(false)
   }
-  ethereumModule.setUserData({ pendingWithdrawal: false })
-  fb.showLoadingBar(false)
 }
 
 export async function refreshEthereumHistory(context: ActionContext) {
@@ -504,7 +522,7 @@ export async function refreshEthereumHistory(context: ActionContext) {
     switch (symbol) {
       case PlasmaTokenKind.ETH:
         if (mainGateway !== null) {
-          return logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn") 
+          return logEvents(address, mainGateway, symbol, "ETHReceived", "TokenWithdrawn")
         }
       case PlasmaTokenKind.LOOMCOIN:
         return logEvents(address, loomGateway, symbol, "LoomCoinReceived", "TokenWithdrawn")
@@ -520,11 +538,16 @@ export async function refreshEthereumHistory(context: ActionContext) {
 
 async function logEvents(address, gateway, symbol, depositEvent, withdrawEvent) {
   const cached = ethereumModule.state.history
-  const fromBlock = cached.length ? cached[0].blockNumber : 0
-  const range = {
-    fromBlock,
-    toBlock: "latest",
+  let fromBlock = cached.length ? cached[0].blockNumber : 0
+  let toBlock: string | number = "latest"
+  // BSC max query size is 5000
+  if (ethereumModule.state.networkName.startsWith("bsc-")) {
+    fromBlock = Math.max(fromBlock, ethereumModule.state.blockNumber - 5000)
+    // state.blockNumber is not garanteed to be latest,
+    // to make sure we don't go over 5000 usedstate.blockNumber as toBlock
+    toBlock = ethereumModule.state.blockNumber
   }
+  const range = { fromBlock, toBlock }
   const logToHistory = (items, type, token, valueField) => {
     log("logToHistory", type, token, items)
     for (const item of items) {

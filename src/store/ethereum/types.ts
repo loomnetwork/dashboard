@@ -31,6 +31,7 @@ export interface EthereumState extends EthereumConfig {
   address: string
   signer: ethers.Signer | null
   walletType: string
+  wallet: IWalletProvider | null
   walletNetworkId: number | null // ID of foreign network the wallet is connected to (if any)
   balances: {
     [erc20Symbol: string]: BN,
@@ -66,7 +67,8 @@ export interface EthereumState extends EthereumConfig {
 export interface IWalletProvider {
   web3: Web3,
   signer: Signer,
-  chainId: number
+  chainId: number,
+  disconnect(): Promise<void>,
 }
 export interface WalletType {
   id: string
@@ -76,7 +78,7 @@ export interface WalletType {
   detect: () => boolean
   desktop: boolean
   mobile: boolean
-  
+
   createProvider(config: EthereumConfig): Promise<IWalletProvider>
 }
 

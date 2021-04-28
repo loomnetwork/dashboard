@@ -258,4 +258,7 @@ main.validator {
     }
   }
 }
+.button-container {
+  position:inherit  !important;
+}
 </style>

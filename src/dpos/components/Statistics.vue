@@ -4,22 +4,34 @@
       <b-card-title class="statistcs">
         <h4>{{ $t("views.statistcs.statistcs") }}</h4>
       </b-card-title>
-      <hr/>
-      <b-card-body>
-        <b-row v-if="downtimeRecord.periods.length > 0">
+      <hr />
+      <b-row class="mb-3">
+        <h5 style="position: absolute; left: 20px">
+          {{ $t("views.statistcs.missed_blocks") }}
+        </h5>
+        <a @click="refreshDowntime" style="position: absolute; right: 20px">
+          <fa :icon="['fas', 'sync']" class="refresh-icon"/>
+        </a>
+      </b-row>
+      <b-card-body v-if="downtimeRecord.periods.length > 0">
+        <b-row>
           <b-col cols="12">
-            <h5>{{ $t("views.statistcs.missed_blocks") }}</h5>
             <dl>
               <dt class="table-header">{{ $t("views.statistcs.period") }}</dt>
-              <dt class="table-header">{{ $t("views.statistcs.blocks_missed") }}</dt>
+              <dt class="table-header">
+                {{ $t("views.statistcs.blocks_missed") }}
+              </dt>
             </dl>
             <dl v-for="(period, index) in downtimeRecord.periods">
-              <dd v-if="index==0">P</dd>
-              <dd v-else>P-{{index}}</dd>
+              <dd v-if="index == 0">P</dd>
+              <dd v-else>P-{{ index }}</dd>
               <dd>{{ period }}</dd>
             </dl>
           </b-col>
         </b-row>
+      </b-card-body>
+      <b-card-body v-else>
+        {{ $t("views.statistcs.no_downtime") }}
       </b-card-body>
     </b-card>
   </div>
@@ -42,16 +54,21 @@ export default class Statistics extends Vue {
   }
 
   async mounted() {
-    await this.getDowntimeRecords();
+    await this.refreshDowntime()
   }
 
   async getDowntimeRecords() {
     const validatorAddress = Address.fromString(
       `${this.state.plasma.chainId}:${this.state.plasma.address}`
-    );
+    )
     this.downtimeRecord = await dposModule.getDowntimeRecordsList(
       validatorAddress
-    );
+    )
+  }
+
+  async refreshDowntime(){
+    await this.getDowntimeRecords()
+
   }
 }
 </script>

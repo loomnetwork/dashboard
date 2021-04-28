@@ -569,12 +569,17 @@ export async function fetchAnalyticsData(context: ActionContext) {
 }
 
 export async function getDowntimeRecordsList(context: ActionContext, validator: Address): Promise<ValidatorDowntimeRecord> {
-  const records = await context.state.contract!.getDowntimeRecordAsync(validator)
   let validatorDowntime: ValidatorDowntimeRecord = {
     periods: []
   }
-  if (records) {
-    validatorDowntime.periods = records[0].getPeriodsList()
+  try {
+    const records = await context.state.contract!.getDowntimeRecordAsync(validator)
+    if (records) {
+      validatorDowntime.periods = records[0].getPeriodsList()
+    }
+  } catch (error) {
+    console.log("GetDowntimeRecordsList error", error);
   }
   return validatorDowntime
+
 }

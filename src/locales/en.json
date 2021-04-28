@@ -440,7 +440,8 @@
       "statistcs": "Statistcs",
       "missed_blocks": "Missed Blocks",
       "period": "Period",
-      "blocks_missed": "Blocks Missed"
+      "blocks_missed": "Blocks Missed",
+      "no_downtime": "You have no missed block"
     }
   },
   "components": {

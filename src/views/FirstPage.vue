@@ -201,7 +201,7 @@
                           </div>
                         </b-card>
                       </div>
-                      <div class="col-sm-12 mb-3">
+                      <!-- <div class="col-sm-12 mb-3">
                         <b-card
                           class="wallet-selection-card text-center"
                           @click="setWallet('ethereum', 'walletlink')"
@@ -211,7 +211,7 @@
                             <span>{{ wallets.get("walletlink").name }}</span>
                           </div>
                         </b-card>
-                      </div>
+                      </div> -->
                       <div class="col-sm-12">
                         <b-card
                           id="explore-button"

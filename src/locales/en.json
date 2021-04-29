@@ -582,7 +582,7 @@
       "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": " Your selected accout is already mapped. Please select new account.",
       "your_wallet_connected_to": "Your wallet is connected to {network}.",
-      "please_change_to": "Please change to {network}."
+      "please_change_to": "Please connect it to {network}, and then press the button below."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",

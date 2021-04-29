@@ -527,7 +527,7 @@
       "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": "당신의 선택된 계정은 이미 매핑되어 있습니다. 새로운 계정을 선택하세요.",
       "your_wallet_connected_to": "당신의 지갑은 {network}에 이미 연결되어 있습니다.",
-      "please_change_to": "{network}로 변경해주세요."
+      "please_change_to": "Please connect it to {network}, and then press the button below."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "잠시만 기다려주세요, Loomy가 처리 중입니다!",

@@ -527,7 +527,7 @@
       "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": "選択したアカウントはすでにマッピング済みです。新しいアカウントを選択して下さい。",
       "your_wallet_connected_to": "Your wallet is connected to {network}.",
-      "please_change_to": "Please change to {network}."
+      "please_change_to": "Please connect it to {network}, and then press the button below."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Loomyが頑張ってロード中！少々お待ちください。",

@@ -503,7 +503,7 @@ export default class FirstPage extends Vue {
   }
 
   get bscWalletsEnabled(): boolean {
-    return this.$state.activeConfig ? this.$state.activeConfig!.features.bscWallets : false
+    return this.$state.activeConfig ? this.$state.activeConfig.features.bscWallets : false
   }
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {

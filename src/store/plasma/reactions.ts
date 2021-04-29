@@ -40,7 +40,9 @@ export function plasmaReactions(store: Store<DashboardState>) {
       }
       await createPlasmaWeb3(store)
       await resetLoomContract(store)
-      await resetEthContract(store)
+      if (store.state.ethereum.genericNetworkName === "Ethereum") {
+        await resetEthContract(store)
+      }
     },
   )
 

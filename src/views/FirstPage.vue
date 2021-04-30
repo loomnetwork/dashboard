@@ -701,7 +701,7 @@ export default class FirstPage extends Vue {
       width: 100%;
     }
     img {
-      height: 20px !important;
+      height: 32px !important;
       width: auto;
       margin-right: 3px;
       height: auto;
@@ -729,7 +729,7 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
     .card-body {
-      padding: 0.5rem 0.8rem;
+      padding: 0.4rem 0.8rem;
     }
     .search-icon {
       margin-right: 6px;

@@ -59,6 +59,7 @@ export default class NetworkChip extends Vue {
   font-size: 1rem;
   font-weight: 500;
   color: white;
+  padding-left: 1em ;
 }
 .wallet-logo {
   height: 24px;

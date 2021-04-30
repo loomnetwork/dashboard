@@ -50,18 +50,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { dposModule, UpdateValidatorDetailRequest } from "../store";
+import { Vue, Component, Prop } from "vue-property-decorator"
+import { dposModule, UpdateValidatorDetailRequest } from "../store"
 import BN from "bn.js"
-import { HasDPOSState } from "@/dpos/store/types"
+import { DPOSState } from "@/dpos/store/types"
 
 
 interface UpdateValidatorFormRequest {
   name: string
   description: string
   website: string
-  maxReferralPercentage: number;
-  fee: BN;
+  maxReferralPercentage: number
+  fee: BN
 }
 
 
@@ -77,21 +77,21 @@ export default class ValidatorUpdateForm extends Vue {
     description: this.validator.description,
     website: this.validator.website,
     maxReferralPercentage: this.validator.maxReferralPercentage,
-  };
+  }
 
 
-  get state(): HasDPOSState {
+  get state(): DPOSState {
     return this.$store.state
   }
 
   show() {
     // @ts-ignore
-    this.$refs.validatorUpdateForm.show();
+    this.$refs.validatorUpdateForm.show()
   }
 
   close() {
     // @ts-ignore
-    this.$refs.validatorUpdateForm.hide();
+    this.$refs.validatorUpdateForm.hide()
   }
 
   async submit() {
@@ -101,15 +101,15 @@ export default class ValidatorUpdateForm extends Vue {
       description: this.form.description,
       website: this.form.website,
       maxReferralPercentage: this.form.maxReferralPercentage,
-    };
+    }
     if (this.form.name != this.validator.name || this.form.description != this.validator.description || this.form.website != this.validator.website || this.form.maxReferralPercentage != this.validator.maxReferralPercentage) {
-      await dposModule.updateValidatorDetail(newValidatorDetail);
+      await dposModule.updateValidatorDetail(newValidatorDetail)
     }
 
     if (this.form.fee != this.validator.fee.toNumber()) {
-      await dposModule.changeValidatorFee(this.form.fee*100);
+      await dposModule.changeValidatorFee(this.form.fee*100)
     }
-    this.close();
+    this.close()
     this.disableButton = false
   }
 
@@ -118,7 +118,7 @@ export default class ValidatorUpdateForm extends Vue {
   }
 
   get validFee() {
-    return this.form.fee >= this.state.dpos.minCandidateFee
+    return this.form.fee >= this.state.minCandidateFee
   }
 }
 </script>

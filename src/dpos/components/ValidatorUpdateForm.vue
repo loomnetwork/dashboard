@@ -39,7 +39,7 @@
         :disabled="!ableToChangeFee"
       ></b-form-input>
       <p class="mb-3" style="font-size: 12px;" v-if="!ableToChangeFee">({{ $t("components.validator_update_form.wait_change_fee_state") }})</p>
-      <p class="mb-3" style="font-size: 12px; color:red" v-if="!validFee">({{ $t("components.validator_update_form.validate_fee", {min: state.dpos.minCandidateFee}) }})</p>
+      <p class="mb-3" style="font-size: 12px; color:red" v-if="!validFee">({{ $t("components.validator_update_form.validate_fee", {min: state.minCandidateFee/100, max: state.maxCandidateFee/100 }) }})</p>
     </form>
     <template slot="modal-footer">
       <b-spinner v-if="disableButton" type="border" small />
@@ -53,7 +53,8 @@
 import { Vue, Component, Prop } from "vue-property-decorator"
 import { dposModule, UpdateValidatorDetailRequest } from "../store"
 import BN from "bn.js"
-import { DPOSState } from "@/dpos/store/types"
+import { DPOSState, HasDPOSState } from "@/dpos/store/types"
+import { Store } from "vuex"
 
 
 interface UpdateValidatorFormRequest {
@@ -81,7 +82,7 @@ export default class ValidatorUpdateForm extends Vue {
 
 
   get state(): DPOSState {
-    return this.$store.state
+    return (this.$store as Store<HasDPOSState>).state.dpos
   }
 
   show() {
@@ -106,7 +107,7 @@ export default class ValidatorUpdateForm extends Vue {
       await dposModule.updateValidatorDetail(newValidatorDetail)
     }
 
-    if (this.form.fee != this.validator.fee.toNumber()) {
+    if ((this.form.fee*100) != this.validator.fee.toNumber()) {
       await dposModule.changeValidatorFee(this.form.fee*100)
     }
     this.close()
@@ -117,8 +118,9 @@ export default class ValidatorUpdateForm extends Vue {
     return this.candidateState == 0
   }
 
+  
   get validFee() {
-    return this.form.fee >= this.state.minCandidateFee
+    return (this.form.fee*100) >= this.state.minCandidateFee && (this.form.fee*100) <= this.state.maxCandidateFee
   }
 }
 </script>

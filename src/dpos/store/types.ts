@@ -49,6 +49,7 @@ export interface DPOSState extends DPOSConfig {
   maxYearlyRewards: BigNumber,
   totalWeightedStakes: BigNumber,
   minCandidateFee: number,
+  maxCandidateFee: 10000,
 }
 
 /**

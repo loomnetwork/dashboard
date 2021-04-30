@@ -382,8 +382,8 @@
       "contact": "对于提交作品如果需要任何指导，请发邮件到 {email}",
       "email": "satoshi@loomx.io"
     },
-    "statistcs": {
-      "statistcs": "Statistcs",
+    "statistics": {
+      "statistics": "Statistcs",
       "missed_blocks": "Missed Blocks",
       "period": "Period",
       "blocks_missed": "Blocks Missed",

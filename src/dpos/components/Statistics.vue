@@ -1,13 +1,13 @@
 <template>
   <div>
     <b-card class="mb-4">
-      <b-card-title class="statistcs">
-        <h4>{{ $t("views.statistcs.statistcs") }}</h4>
+      <b-card-title class="statistics">
+        <h4>{{ $t("views.statistics.statistics") }}</h4>
       </b-card-title>
       <hr />
       <b-row class="mb-3">
         <h5 style="position: absolute; left: 20px">
-          {{ $t("views.statistcs.missed_blocks") }}
+          {{ $t("views.statistics.missed_blocks") }}
         </h5>
         <a @click="refreshDowntime" style="position: absolute; right: 20px">
           <fa :icon="['fas', 'sync']" class="refresh-icon"/>
@@ -17,9 +17,9 @@
         <b-row>
           <b-col cols="12">
             <dl>
-              <dt class="table-header">{{ $t("views.statistcs.period") }}</dt>
+              <dt class="table-header">{{ $t("views.statistics.period") }}</dt>
               <dt class="table-header">
-                {{ $t("views.statistcs.blocks_missed") }}
+                {{ $t("views.statistics.blocks_missed") }}
               </dt>
             </dl>
             <dl v-for="(period, index) in downtimeRecord.periods">
@@ -31,7 +31,7 @@
         </b-row>
       </b-card-body>
       <b-card-body v-else>
-        {{ $t("views.statistcs.no_downtime") }}
+        {{ $t("views.statistics.no_downtime") }}
       </b-card-body>
     </b-card>
   </div>

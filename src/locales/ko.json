@@ -382,8 +382,8 @@
       "contact": "제출품에 대한 가이드가 필요할 경우 {email}로 문의해주세요.",
       "email": "satoshi@loomx.io"
     },
-    "statistcs": {
-      "statistcs": "Statistcs",
+    "statistics": {
+      "statistics": "Statistcs",
       "missed_blocks": "Missed Blocks",
       "period": "Period",
       "blocks_missed": "Blocks Missed",

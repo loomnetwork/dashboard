@@ -40,8 +40,9 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator"
 import { dposModule, ValidatorDowntimeRecord } from "@/dpos/store"
-import { DPOSState } from "@/dpos/store/types"
+import { DPOSState, HasDPOSState } from "@/dpos/store/types"
 import { Address } from "loom-js"
+import { Store } from "vuex"
 
 @Component
 export default class Statistics extends Vue {
@@ -53,7 +54,7 @@ export default class Statistics extends Vue {
   }
 
   get state(): DPOSState {
-    return this.$store.state
+    return (this.$store as Store<HasDPOSState>).state.dpos
   }
 
   async mounted() {

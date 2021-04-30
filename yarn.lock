@@ -8020,10 +8020,10 @@ lolex@^4.0.1, lolex@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npmjs.org/lolex/-/lolex-4.1.0.tgz#ecdd7b86539391d8237947a3419aa8ac975f0fe1"
 
-loom-js@1.75.3:
-  version "1.75.3"
-  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.75.3.tgz#70454e8da535809e5293da4b75079da3c529009a"
-  integrity sha512-z34nE93xy1m/9Vuu6LrsFO2KbZkUprKxQaNVqtjtBJdNKtJ6Qr9Hdx4qeZmgtWoe44hZAhj8lbVr1ukEnAhyPQ==
+loom-js@1.76.0:
+  version "1.76.0"
+  resolved "https://registry.yarnpkg.com/loom-js/-/loom-js-1.76.0.tgz#d4a2b937a54908a487ab488ffbc8c46ed5a61c45"
+  integrity sha512-iYrj9rCqDQ+Q9nx9ubJ8Llbtrq5n1sDH7ab0Ycfim3tWQjncKTjn4q1msd3PsS/nxrtySifvi0lZKKhFtpaW5g==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.5"
     abi-decoder "^1.2.0"

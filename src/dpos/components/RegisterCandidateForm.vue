@@ -78,7 +78,7 @@
                 </b-input-group>
               </b-col>
             </b-row>
-            <p class="mb-3 float-right" style="font-size: 12px; color:red" v-if="!validFee">({{ $t("components.registerCandidate.validate_fee", {min: state.dpos.minCandidateFee}) }})</p>
+            <p class="mb-3 float-right" style="font-size: 12px; color:red" v-if="!validFee">({{ $t("components.registerCandidate.validate_fee", {min: state.dpos.minCandidateFee/100, max: state.dpos.maxCandidateFee/100 }) }})</p>
           </b-form-group>
         <b-button type="submit" class="submit-btn mt-3" adasdasdssize="lg" variant="primary" style="float:right;" :disabled="!validFee">{{ $t('button.submit') }}</b-button>
         </b-form>
@@ -139,7 +139,7 @@ export default class RegisterCandidateForm extends Vue {
   }
 
   get validFee() {
-    return this.form.fee >= this.state.dpos.minCandidateFee
+    return (this.form.fee*100) >= this.state.dpos.minCandidateFee && (this.form.fee*100) <= this.state.dpos.maxCandidateFee
   }
 }
 </script>

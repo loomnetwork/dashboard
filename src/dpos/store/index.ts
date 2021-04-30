@@ -566,7 +566,7 @@ export async function fetchAnalyticsData(context: ActionContext) {
 }
 
 export async function getDowntimeRecordsList(context: ActionContext, validator: Address): Promise<ValidatorDowntimeRecord> {
-  let validatorDowntime: ValidatorDowntimeRecord = {
+  const validatorDowntime: ValidatorDowntimeRecord = {
     periods: []
   }
   try {

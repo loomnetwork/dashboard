@@ -5,7 +5,7 @@
     </header>
     <Account class="account"/>
     <validator-extended-detail :userAddress="userAddress" class="validator"></validator-extended-detail>
-    <statistics class="statistic" v-if="isValidator"></statistics>
+    <statistics class="statistic" v-if="isValidator" :userAddress="userAddress" :chainId="chainId"></statistics>
     <validator-rewards class="reward" v-if="isValidator"></validator-rewards> 
 
   </main>
@@ -38,6 +38,10 @@ export default class ValidatorManagement extends Vue {
 
   get userAddress() {
     return this.state.plasma.address
+  }
+
+  get chainId() {
+    return this.state.plasma.chainId
   }
 
   get isValidator() {

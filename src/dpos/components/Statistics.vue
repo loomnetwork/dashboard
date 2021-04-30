@@ -38,18 +38,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Vue, Prop } from "vue-property-decorator"
 import { dposModule, ValidatorDowntimeRecord } from "@/dpos/store"
-import { HasDPOSState } from "@/dpos/store/types"
+import { DPOSState } from "@/dpos/store/types"
 import { Address } from "loom-js"
 
 @Component
 export default class Statistics extends Vue {
+  @Prop(String) userAddress!: string
+  @Prop(String) chainId!: string
+
   downtimeRecord: ValidatorDowntimeRecord = {
     periods: [],
   }
 
-  get state(): HasDPOSState {
+  get state(): DPOSState {
     return this.$store.state
   }
 
@@ -59,7 +62,7 @@ export default class Statistics extends Vue {
 
   async getDowntimeRecords() {
     const validatorAddress = Address.fromString(
-      `${this.state.plasma.chainId}:${this.state.plasma.address}`
+      `${this.chainId}:${this.userAddress}`
     )
     this.downtimeRecord = await dposModule.getDowntimeRecordsList(
       validatorAddress

@@ -86,10 +86,8 @@
                           @click="setWallet('binance', 'binance')"
                         >
                           <div>
-                            <img src="../assets/binance_wallet_logo.svg" />
-                            <span>{{
-                              $t("views.first_page.wallets.binance")
-                            }}</span>
+                            <img :src="wallets.get('binance').logo" />
+                            <span>{{ wallets.get("binance").name }}</span>
                           </div>
                         </b-card>
                       </div>

@@ -9,7 +9,7 @@ export const BSC_SAFE_BLOCK_WAIT_TIME_MS = 15000
 
 export const BinanceChainWalletAdapter: WalletType = {
   id: "binance",
-  name: "BinanceChain",
+  name: "Binance Chain",
   logo: require("@/assets/binance_wallet_logo.svg"),
   detectable: true,
   isMultiAccount: false,

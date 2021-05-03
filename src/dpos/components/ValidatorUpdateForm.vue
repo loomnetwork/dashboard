@@ -51,15 +51,15 @@
       </p>
     </form>
     <template slot="modal-footer">
-      <b-spinner v-if="disableButton" type="border" small />
+      <b-spinner v-if="txInProgress" type="border" small />
       <b-btn
         variant="primary"
         @click="submit()"
-        :disabled="disableButton || !validFee"
+        :disabled="submitBtnDisabled"
         class="mr-2"
         >Submit</b-btn
       >
-      <b-btn @click="close()" class="mr-2" :disabled="disableButton"
+      <b-btn @click="close()" class="mr-2" :disabled="txInProgress"
         >Cancel</b-btn
       >
     </template>
@@ -86,13 +86,17 @@ export default class ValidatorUpdateForm extends Vue {
   @Prop({ required: true }) validator!: UpdateValidatorFormRequest // prettier-ignore
   @Prop({ required: true }) candidateState!: number // prettier-ignore
 
-  disableButton = false
+  txInProgress = false
   form = {
     name: this.validator.name,
     fee: this.validator.fee.toNumber(),
     description: this.validator.description,
     website: this.validator.website,
     maxReferralPercentage: this.validator.maxReferralPercentage,
+  }
+
+  get submitBtnDisabled() {
+    return this.txInProgress || !this.validFee
   }
 
   get state(): DPOSState {
@@ -118,7 +122,7 @@ export default class ValidatorUpdateForm extends Vue {
   }
 
   async submit() {
-    this.disableButton = true
+    this.txInProgress = true
     const newValidatorDetail: UpdateValidatorDetailRequest = {
       name: this.form.name,
       description: this.form.description,
@@ -134,11 +138,11 @@ export default class ValidatorUpdateForm extends Vue {
       await dposModule.updateValidatorDetail(newValidatorDetail)
     }
 
-    if (this.form.fee * 100 != this.validator.fee.toNumber()) {
+    if (this.form.fee != this.validator.fee.toNumber()) {
       await dposModule.changeValidatorFee(this.form.fee * 100)
     }
     this.close()
-    this.disableButton = false
+    this.txInProgress = false
   }
 
   get ableToChangeFee() {

@@ -1,26 +1,28 @@
 <template>
-  <b-card title="Rewards" class="mb-4">
+  <b-card class="mb-4">
+    <b-card-title
+      >{{ $t("views.rewards.rewards") }}
+      <b-spinner
+        v-if="state.dpos.loading.delegations"
+        variant="primary"
+        label="Spinning"
+        small
+        style="margin: 0 0 0.4rem 0.4rem"
+    /></b-card-title>
     <div class="mb-4">
-      <div v-if="state.dpos.loading.delegations">
-        <b-spinner variant="primary" label="Spinning" />
+      <div v-if="hasRewardsUnclaimed">
+        <h6>{{ $t("views.rewards.unclaimed_rewards") }}</h6>
+        <h5 class="highlight" data-cy="unclaimed-rewards">
+          {{ rewardsUnclaimed | tokenAmount }} LOOM
+        </h5>
       </div>
-      <div v-else-if="hasRewardsUnclaimed">
-        <h6>{{ $t('views.rewards.unclaimed_rewards') }}</h6>
-        <h5 class="highlight" data-cy="unclaimed-rewards">{{rewardsUnclaimed | tokenAmount}} LOOM</h5>
+      <div v-else-if="hasRewardsBeingClaimed" data-cy="rewards-being-claimed">
+        {{ rewardsBeingClaimed | tokenAmount }}
+        {{ $t("views.rewards.will_be_reclaimed_after_next_election") }}
       </div>
-      <div
-        v-else-if="hasRewardsBeingClaimed"
-        data-cy="rewards-being-claimed"
-      >{{rewardsBeingClaimed| tokenAmount}} {{ $t('views.rewards.will_be_reclaimed_after_next_election') }}</div>
       <div v-else>
         <h6>
-          {{ $t('views.rewards.no_rewards') }}
-          <!-- only show this is user has no delegations
-            Please visit the
-            <router-link
-              to="/validators"
-              exact-active-class="router-active"
-          >{{ $t('components.faucet_sidebar.validators') }}</router-link>page.-->
+          {{ $t("views.rewards.no_rewards") }}
         </h6>
       </div>
     </div>
@@ -30,15 +32,14 @@
       variant="primary"
       @click="claimRewards"
       :disabled="hasRewardsUnclaimed === false"
-    >{{ $t('views.rewards.claim_reward') }}</b-button>
+      >{{ $t("views.rewards.claim_reward") }}</b-button
+    >
   </b-card>
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from "vue-property-decorator"
-import { DashboardState } from "@/types"
+import { Component, Vue } from "vue-property-decorator"
 
-import BN from "bn.js"
 import { dposModule } from "@/dpos/store"
 import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"

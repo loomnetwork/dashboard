@@ -242,6 +242,8 @@
       "item_2": "第 2 项",
       "home": "首页",
       "no_activity": "未检测到活动。",
+      "no_activity_in_n": "No activity in the last {blocks} blocks.",
+      "check_block_explorer": "Check {explorer} for a full history.",
       "or_head_to_validators_page": "或者可以去 {page} 开始",
       "validators_page": "验证者页面",
       "funds_to_plasma": "将资金存入 Basechain"
@@ -532,7 +534,7 @@
       "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": " 你选择的账户已映射。请选择新帐户。",
       "your_wallet_connected_to": "你的钱包已连接到 {network}。",
-      "please_change_to": "请更换到 {network}。"
+      "please_change_to": "Please connect it to {network}, and then press the button below."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "请耐心等待哟，Loomy 正在努力加载！",
@@ -701,7 +703,8 @@
       "required": "必须",
       "insufficient_loom": "LOOM 不足",
       "ready_to_stake": "准备好锁定了",
-      "your_balance": "你的余额"
+      "your_balance": "你的余额",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
       "validator_associated": "相关的验证者",
@@ -731,7 +734,18 @@
       "staked_amount": "锁定量",
       "whitelist_locktime_tier": "将锁定期层级添加到白名单",
       "follow_node_guide": "要设置你自己的验证者节点，请遵循 {link}。",
-      "node_setup_guide": "节点设置指南"
+      "node_setup_guide": "节点设置指南",
+      "edit": "Edit"
+    },
+    "validator_update_form": {
+      "title": "Update Validator Detail",
+      "name": "Name",
+      "website": "Website",
+      "description": "Description",
+      "fee": "Fee",
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     }
   },
   "events": {
@@ -813,7 +827,9 @@
       "address_existed": "这个地址已经在你的部署者清单里了。",
       "failed_to_get_receipt": "获取收据失败",
       "connect_wallet_prob": "连接你的钱包似乎有问题。请联系客服。",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
+      "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "已成功领取奖励。",
@@ -829,7 +845,9 @@
       "plasma_addr_copied": "已复制 Basechain 地址。",
       "address_copied": "已复制地址。",
       "register_success": "已成功注册。",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "withdraw_airdrop_success": "Successfully withdrew airdrop.",
+      "update_validator_info_success": "Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {

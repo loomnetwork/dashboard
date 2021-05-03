@@ -33,6 +33,7 @@ import { feedbackModule } from "@/feedback/store"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
+import { WalletLinkAdapter } from "./wallets/walletlink"
 import { BinanceChainWalletAdapter, isBCWallet, BSC_SAFE_BLOCK_WAIT_TIME_MS } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
@@ -44,6 +45,7 @@ const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["binance", BinanceChainWalletAdapter],
   ["walletconnect", WalletConnectAdapter],
+  ["walletlink", WalletLinkAdapter],
 ])
 
 const initialState: EthereumState = {

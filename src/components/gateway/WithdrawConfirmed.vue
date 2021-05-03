@@ -1,9 +1,12 @@
 <template>
-  <b-modal lazy id="withdraw-confirmed" v-model="visible" :title="title">
+  <b-modal lazy id="withdraw-confirmed" v-model="visible" :title="title" no-close-on-esc no-close-on-backdrop hide-header-close >
     <section v-if="status === 'default'">
       <b-container fluid>
         <div v-if="chain !== 'binance'" class="lead">
-          <p>{{$t('components.gateway.confirm_withdrawal_modal.confirm_withdrawl', {chain,amount, token: this.symbol})}}</p>
+          <p>{{
+            $t('components.gateway.confirm_withdrawal_modal.confirm_withdrawl', 
+              { chain: state.ethereum.genericNetworkName, amount, token: this.symbol })
+          }}</p>
         </div>
         <div v-else>
            <p>Fund withdrawn to Binance</p>

@@ -58,7 +58,7 @@ function getLegacyApi(): Promise<provider> {
 
 async function getCurrentApi(): Promise<provider> {
   // @ts-ignore
-  const ethereum = window.ethereum
+  const ethereum: any = window.ethereum
   try {
     await ethereum.enable()
   } catch (err) {

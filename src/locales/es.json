@@ -242,6 +242,8 @@
       "item_2": "Item 2",
       "home": "Home",
       "no_activity": "No activity detected.",
+      "no_activity_in_n": "No activity in the last {blocks} blocks.",
+      "check_block_explorer": "Check {explorer} for a full history.",
       "or_head_to_validators_page": "Or head over to the {page} to get started",
       "validators_page": "Validators page",
       "funds_to_plasma": "Deposit funds to the Basechain"
@@ -532,7 +534,7 @@
       "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": " Your selected accout is already mapped. Please select new account.",
       "your_wallet_connected_to": "Your wallet is connected to {network}.",
-      "please_change_to": "Please change to {network}."
+      "please_change_to": "Please connect it to {network}, and then press the button below."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Please be patient, Loomy is on it!",
@@ -701,7 +703,8 @@
       "required": "Required",
       "insufficient_loom": "Insufficient LOOM",
       "ready_to_stake": "Ready to stake",
-      "your_balance": "Your balance"
+      "your_balance": "Your balance",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
       "validator_associated": "Validator Associated",
@@ -731,7 +734,18 @@
       "staked_amount": "Staked Amount",
       "whitelist_locktime_tier": "Whitelist Locktime Tier",
       "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
-      "node_setup_guide": "Node setup guide"
+      "node_setup_guide": "Node setup guide",
+      "edit": "Edit"
+    },
+    "validator_update_form": {
+      "title": "Update Validator Detail",
+      "name": "Name",
+      "website": "Website",
+      "description": "Description",
+      "fee": "Fee",
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     }
   },
   "events": {
@@ -813,7 +827,9 @@
       "address_existed": "This address is already exists in your deployer list.",
       "failed_to_get_receipt": "Failed to get receipt",
       "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
+      "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",
@@ -821,7 +837,7 @@
       "please_track_deposit_approval": "Please track deposit approval the transaction on your wallet.",
       "withdrawal_in_progress": "Withdrawal already in progress.",
       "withdrawal_request_sent": "Withdrawal request sent. Your binance account will receive the funds in a moment.",
-      "please_sign_tx": "Please sign the tx using your wallet."
+      "please_sign_tx": "Please sign the transaction using your wallet."
     },
     "success": {
       "transaction_success": "Transaction sent successfully.",
@@ -829,7 +845,9 @@
       "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
       "register_success": "Successfully registered.",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "withdraw_airdrop_success": "Successfully withdrew airdrop.",
+      "update_validator_info_success": "Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {
@@ -845,7 +863,7 @@
         "complete_deposit": "Complete deposit"
       },
       "message": {
-        "please_sign_click": "Please sign click confirm to complete your deposit."
+        "please_sign_click": "Please sign the next transaction using your wallet to complete the deposit."
       }
     }
   },

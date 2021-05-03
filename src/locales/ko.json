@@ -383,6 +383,13 @@
       "contact_desc": "Loom은 제출품에 대한 심사를 진행하고 각각의 바운티에 대한 우승자를 선정할 것입니다.",
       "contact": "제출품에 대한 가이드가 필요할 경우 {email}로 문의해주세요.",
       "email": "satoshi@loomx.io"
+    },
+    "statistics": {
+      "statistics": "Statistics",
+      "missed_blocks": "Missed Blocks",
+      "period": "Period",
+      "blocks_missed": "Blocks Missed",
+      "no_downtime": "Your validator node hasn't missed signing any blocks."
     }
   },
   "components": {

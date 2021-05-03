@@ -53,10 +53,9 @@ const dposModule = {
 
   registerCandidate: builder.dispatch(registerCandidate),
   fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
-
+  getDowntimeRecordsList: builder.dispatch(getDowntimeRecordsList),
   updateValidatorDetail: builder.dispatch(updateValidatorDetail),
   changeValidatorFee: builder.dispatch(changeValidatorFee),
-
 }
 
 // vuex module as a service
@@ -108,6 +107,10 @@ interface ExtValidatorData {
   whitelistAmount?: string
   totalStaked?: string
   fee?: string
+}
+
+export interface ValidatorDowntimeRecord {
+  periods: number[]
 }
 
 export interface UpdateValidatorDetailRequest {
@@ -570,6 +573,21 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
 export async function fetchAnalyticsData(context: ActionContext) {
   const response = await Axios.get(context.rootState.dpos.analyticsUrl + "/delegation/total?from_date&to_date")
   dposModule.setAnalyticsData(response.data.data)
+}
+
+export async function getDowntimeRecordsList(context: ActionContext, validator: Address): Promise<ValidatorDowntimeRecord> {
+  const validatorDowntime: ValidatorDowntimeRecord = {
+    periods: []
+  }
+  try {
+    const records = await context.state.contract!.getDowntimeRecordAsync(validator)
+    if (records) {
+      validatorDowntime.periods = records[0].getPeriodsList()
+    }
+  } catch (error) {
+    console.log("GetDowntimeRecordsList error", error);
+  }
+  return validatorDowntime
 }
 
 /**

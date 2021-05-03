@@ -383,6 +383,13 @@
       "contact_desc": "Loom 将对提交作品进行评审，并选出每个奖项的获胜者",
       "contact": "对于提交作品如果需要任何指导，请发邮件到 {email}",
       "email": "satoshi@loomx.io"
+    },
+    "statistics": {
+      "statistics": "Statistics",
+      "missed_blocks": "Missed Blocks",
+      "period": "Period",
+      "blocks_missed": "Blocks Missed",
+      "no_downtime": "Your validator node hasn't missed signing any blocks."
     }
   },
   "components": {

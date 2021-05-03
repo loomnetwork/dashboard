@@ -385,11 +385,11 @@
       "email": "satoshi@loomx.io"
     },
     "statistics": {
-      "statistics": "Statistcs",
+      "statistics": "Statistics",
       "missed_blocks": "Missed Blocks",
       "period": "Period",
       "blocks_missed": "Blocks Missed",
-      "no_downtime": "You have no missed block"
+      "no_downtime": "Your validator node hasn't missed signing any blocks."
     }
   },
   "components": {

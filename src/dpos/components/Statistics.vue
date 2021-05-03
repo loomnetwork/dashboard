@@ -22,7 +22,7 @@
                 {{ $t("views.statistics.blocks_missed") }}
               </dt>
             </dl>
-            <dl v-for="(period, index) in downtimeRecord.periods">
+            <dl v-for="(period, index) in downtimeRecord.periods" :key="'p'+index">
               <dd v-if="index == 0">P</dd>
               <dd v-else>P-{{ index }}</dd>
               <dd>{{ period }}</dd>

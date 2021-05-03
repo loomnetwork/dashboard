@@ -2,6 +2,7 @@
   <div>
     <b-badge id="network-badge" pill variant="dark">
       {{ genericNetworkName ? genericNetworkName : "Not Connected" }}
+      <img v-if="wallet" :src="wallet.logo" class="wallet-logo" :title="wallet.name">
     </b-badge>
     <b-popover v-if="!compact"
       target="network-badge"
@@ -20,6 +21,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { DashboardState } from "@/types";
+import { wallets } from "@/store/ethereum";
 
 @Component
 export default class NetworkChip extends Vue {
@@ -45,6 +47,10 @@ export default class NetworkChip extends Vue {
   get latestBlock(): number {
     return this.state.ethereum.blockNumber
   }
+
+  get wallet() {
+    return wallets.get(this.state.ethereum.walletType)
+  }
 }
 </script>
 
@@ -53,5 +59,11 @@ export default class NetworkChip extends Vue {
   font-size: 1rem;
   font-weight: 500;
   color: white;
+  padding-left: 1em ;
+}
+.wallet-logo {
+  height: 24px;
+  margin: 0 0 0 4px;
+  display: inline-block;
 }
 </style>

@@ -7,6 +7,7 @@ import { WalletType, EthereumConfig, IWalletProvider } from "../types"
 export const WalletLinkAdapter: WalletType = {
     id: "walletlink",
     name: "WalletLink",
+    logo: require("@/assets/walletlink-logo.png"),
     detectable: true,
     isMultiAccount: false,
     desktop: true,

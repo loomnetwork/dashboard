@@ -695,7 +695,7 @@
       "insufficient_loom": "Insufficient LOOM",
       "ready_to_stake": "Ready to stake",
       "your_balance": "Your balance",
-      "validate_fee": "Fee can't be less than {min}%"
+      "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
       "validator_associated": "Validator Associated",
@@ -736,7 +736,7 @@
       "fee": "Fee",
       "max_referral_percentage": "Max Referral",
       "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
-      "validate_fee": "Fee can't be less than {min}%"
+      "validate_fee": "Fee must be between {min}% and {max}%."
     }
   },
   "events": {

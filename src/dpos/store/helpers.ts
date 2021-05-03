@@ -27,6 +27,8 @@ export function defaultState(): DPOSState {
     effectiveRewardsRatio: new BigNumber(0),
     maxYearlyRewards: new BigNumber(0),
     totalWeightedStakes: new BigNumber(0),
+    minCandidateFee: 0,
+    maxCandidateFee: 10000,
   }
 }
 

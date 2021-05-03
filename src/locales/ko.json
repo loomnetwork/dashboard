@@ -696,7 +696,8 @@
       "required": "필요",
       "insufficient_loom": "LOOM이 충분하지 않습니다.",
       "ready_to_stake": "스테이킹이 준비되었습니다.",
-      "your_balance": "당신의 잔액"
+      "your_balance": "당신의 잔액",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
       "validator_associated": "관련된 검증자",
@@ -726,7 +727,18 @@
       "staked_amount": "스테이킹 금액",
       "whitelist_locktime_tier": "락업 기간 등급을 화이트리스트에 추가",
       "follow_node_guide": "당신만의 검증자 노드를 구축하려면 다음 {link}를 참고하세요.",
-      "node_setup_guide": "노드 구축 가이드"
+      "node_setup_guide": "노드 구축 가이드",
+      "edit": "Edit"
+    },
+    "validator_update_form": {
+      "title": "Update Validator Detail",
+      "name": "Name",
+      "website": "Website",
+      "description": "Description",
+      "fee": "Fee",
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     }
   },
   "events": {
@@ -808,7 +820,9 @@
       "address_existed": "이 주소는 이미 당신의 배포자 목록에 존재합니다.",
       "failed_to_get_receipt": "영수증을 가져오는 데 실패하였습니다.",
       "connect_wallet_prob": "지갑 연결 중 문제가 발생했습니다. 고객센터에 문의해주세요.",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
+      "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "보상을 성공적으로 수령하였습니다.",
@@ -824,7 +838,9 @@
       "plasma_addr_copied": "베이스체인 주소가 복사되었습니다.",
       "address_copied": "주소가 복사되었습니다.",
       "register_success": "성공적으로 등록되었습니다.",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "withdraw_airdrop_success": "Successfully withdrew airdrop.",
+      "update_validator_info_success": "Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {

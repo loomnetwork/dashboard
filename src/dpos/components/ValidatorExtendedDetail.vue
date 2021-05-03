@@ -129,7 +129,7 @@
         <b-row>
           <b-col cols="12" class="pr-0">
             <b-btn variant="primary" @click="openUpdateModal()" class="float-right px-5">
-              {{ $t("components.validator_extended_detail.edit") }} <fa icon="wrench"/>
+              {{ $t("components.validator_extended_detail.edit") }}
             </b-btn>
           </b-col>
         </b-row>

@@ -378,7 +378,7 @@ export function initERC20(context: ActionContext, symbol: string) {
     refresh,
   )
 
-  // For the deprectaion waring see https://github.com/MetaMask/metamask-extension/issues/9301#issuecomment-680955280
+  // For the deprecation warning see https://github.com/MetaMask/metamask-extension/issues/9301#issuecomment-680955280
   send.on("data", refresh)
   receive.on("data", refresh)
 

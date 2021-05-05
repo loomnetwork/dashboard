@@ -42,12 +42,6 @@ function isMetamaskPresent() {
   return "ethereum" in window && window.ethereum.isMetaMask
 }
 
-// no longer required https://docs.metamask.io/guide/provider-migration.html#summary-of-breaking-changes
-function getLegacyApi(): Promise<provider> {
-  // @ts-ignore
-  return window.web3.currentProvider
-}
-
 async function getCurrentApi(): Promise<provider> {
   // @ts-ignore
   const ethereum: any = window.ethereum

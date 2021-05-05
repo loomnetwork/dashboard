@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import Vue from "vue"
 import Layout from "@/components/Layout"
 
 export default {

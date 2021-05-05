@@ -19,7 +19,7 @@
               <div class="linking-div">
                 <img src="../assets/images/relentless.png" />
                 <i style="font-size: 56px" class="fa">&#8651;</i>
-                <loom-icon width="56px" height="56px" :color="'#6eccd8'" />
+                <loom-icon width="56px" height="56px" color="#6eccd8" />
               </div>
               <div class="linking-div-choice">
                 <b-button
@@ -122,6 +122,25 @@
                       </div>
                     </div>
                   </div>
+                  <b-card
+                    id="bsc-metamask-wallet"
+                    class="wallet-selection-card text-center"
+                  >
+                    <div>
+                      <h5>
+                        <img src="../assets/metamask_logo.png" height="24" />
+                        Using metamask?
+                      </h5>
+                      <p>
+                        Select Binance Smart Chain in your MetaMask wallet
+                        first, if you don't see it there
+                        <b-link @click="addBSCToMetamask()" size="sm"
+                          >Add BSC Network
+                        </b-link>
+                        now.
+                      </p>
+                    </div>
+                  </b-card>
                 </b-card-body>
               </b-card>
               <!-- Ethereum wallets -->
@@ -459,7 +478,7 @@ import LoomIcon from "@/components/LoomIcon.vue"
 import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from "../feedback/store"
 
-import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
+import { MetaMaskAdapter, addNetwork as mmAddNetwork } from "../store/ethereum/wallets/metamask"
 import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
 import { tokenService } from "@/services/TokenService"
 import { getTokenList } from "../utils"
@@ -536,6 +555,49 @@ export default class FirstPage extends Vue {
   }
 
   setExploreMode = ethereumModule.setToExploreMode
+
+  async addBSCToMetamask() {
+    const params = {
+      mainnet: {
+        chainId: "0x38", // A 0x-prefixed hexadecimal chainId
+        chainName: "Binance Smart Chain",
+        nativeCurrency: {
+          symbol: "BNB",
+          decimals: 18,
+        },
+        rpcUrls: [
+          "https://bsc-dataseed.binance.org/",
+          "https://bsc-dataseed1.defibit.io/",
+          "https://bsc-dataseed1.ninicoin.io/",
+        ],
+        blockExplorerUrls: ["https://bscscan.com"],
+      },
+      testnet: {
+        chainId: "0x61", // A 0x-prefixed hexadecimal chainId
+        chainName: "Testnet - Binance Smart Chain",
+        nativeCurrency: {
+          symbol: "BNB",
+          decimals: 18,
+
+        },
+        rpcUrls: [
+          "https://data-seed-prebsc-1-s1.binance.org:8545/",
+          "https://data-seed-prebsc-2-s1.binance.org:8545/",
+          "https://data-seed-prebsc-1-s2.binance.org:8545/",
+          "https://data-seed-prebsc-2-s2.binance.org:8545/",
+          "https://data-seed-prebsc-1-s3.binance.org:8545/",
+          "https://data-seed-prebsc-2-s3.binance.org:8545/",
+        ],
+        blockExplorerUrls: ["https://testnet.bscscan.com"],
+      },
+    }
+    const netParams = this.env.binance!.networkName === "bsc-testnet" ?
+      params.testnet :
+      params.mainnet
+
+    await mmAddNetwork(netParams)
+
+  }
 
   onClose() {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()

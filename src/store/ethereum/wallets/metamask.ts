@@ -95,3 +95,20 @@ async function getCurrentApi(): Promise<provider> {
 
   return ethereum
 }
+
+export function addNetwork(networkParams: any) {
+  if (!isCurrentApi()) {
+    return false
+  }
+  // See https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
+  // @ts-ignore
+  const p: any = window.ethereum
+  p.request({
+    method: "wallet_addEthereumChain",
+    params: [networkParams],
+  }).then(() => true)
+    .catch((error: Error) => {
+      console.error(error)
+      return false
+    })
+}

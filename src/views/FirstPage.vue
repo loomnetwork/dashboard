@@ -557,45 +557,10 @@ export default class FirstPage extends Vue {
   setExploreMode = ethereumModule.setToExploreMode
 
   async addBSCToMetamask() {
-    const params = {
-      mainnet: {
-        chainId: "0x38", // A 0x-prefixed hexadecimal chainId
-        chainName: "Binance Smart Chain",
-        nativeCurrency: {
-          symbol: "BNB",
-          decimals: 18,
-        },
-        rpcUrls: [
-          "https://bsc-dataseed.binance.org/",
-          "https://bsc-dataseed1.defibit.io/",
-          "https://bsc-dataseed1.ninicoin.io/",
-        ],
-        blockExplorerUrls: ["https://bscscan.com"],
-      },
-      testnet: {
-        chainId: "0x61", // A 0x-prefixed hexadecimal chainId
-        chainName: "Testnet - Binance Smart Chain",
-        nativeCurrency: {
-          symbol: "BNB",
-          decimals: 18,
+    const bscConf = this.env.binance
+    if (!bscConf) throw new Error("binance config not set in current env")
 
-        },
-        rpcUrls: [
-          "https://data-seed-prebsc-1-s1.binance.org:8545/",
-          "https://data-seed-prebsc-2-s1.binance.org:8545/",
-          "https://data-seed-prebsc-1-s2.binance.org:8545/",
-          "https://data-seed-prebsc-2-s2.binance.org:8545/",
-          "https://data-seed-prebsc-1-s3.binance.org:8545/",
-          "https://data-seed-prebsc-2-s3.binance.org:8545/",
-        ],
-        blockExplorerUrls: ["https://testnet.bscscan.com"],
-      },
-    }
-    const netParams = this.env.binance!.networkName === "bsc-testnet" ?
-      params.testnet :
-      params.mainnet
-
-    await mmAddNetwork(netParams)
+    await mmAddNetwork(bscConf)
 
   }
 

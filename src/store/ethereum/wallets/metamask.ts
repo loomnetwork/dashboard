@@ -9,7 +9,7 @@ import { feedbackModule } from "@/feedback/store"
 import Web3 from "web3"
 import { getMetamaskSigner } from "loom-js"
 
-import { IWalletProvider, WalletType } from "../types"
+import { EthereumConfig, IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
 
 export const MetaMaskAdapter: WalletType = {
@@ -96,16 +96,33 @@ async function getCurrentApi(): Promise<provider> {
   return ethereum
 }
 
-export function addNetwork(networkParams: any) {
-  if (!isCurrentApi()) {
-    return false
+/**
+ * See https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
+ */
+export function addNetwork(bscConf: EthereumConfig) {
+  if (!isCurrentApi()) throw new Error("Please update Metamask")
+
+  let chainName = bscConf.genericNetworkName
+  // ...
+  if (bscConf.networkName.includes("testnet")) {
+    chainName = "Testnet - " + chainName
   }
-  // See https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
+
+  const params = {
+    chainId: `0x${Number(bscConf.networkId).toString(16)}`,
+    chainName,
+    nativeCurrency: {
+      symbol: bscConf.nativeTokenSymbol,
+      decimals: bscConf.nativeTokenDecimals,
+    },
+    rpcUrls: [bscConf.endpoint],
+    blockExplorerUrls: [bscConf.blockExplorer],
+  }
   // @ts-ignore
   const p: any = window.ethereum
   p.request({
     method: "wallet_addEthereumChain",
-    params: [networkParams],
+    params: [params],
   }).then(() => true)
     .catch((error: Error) => {
       console.error(error)

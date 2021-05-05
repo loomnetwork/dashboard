@@ -10,6 +10,7 @@ export interface EthereumConfig {
   genericNetworkName: string
   chainId: string
   nativeTokenSymbol: string
+  nativeTokenDecimals: 18
   endpoint: string
   blockExplorer: string
   blockExplorerApi: string

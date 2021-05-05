@@ -19,6 +19,7 @@ export default {
     blockExplorerApi: "",
     chainId: "eth",
     nativeTokenSymbol: "ETH",
+    nativeTokenDecimals: 18,
     contracts: {
       gateway: "0xE57e0793f953684Bc9D2EF3D795408afb4a100c3",
       loomGateway: "0x76c41effc2871e73f42b2eae5eaf8efe50bdbf73",
@@ -40,7 +41,7 @@ export default {
       gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",
       fee: 37500,
     },
-    withdrawalLimit: true
+    withdrawalLimit: true,
   },
   coinDataUrl: "",
   disabled: [],
@@ -52,5 +53,5 @@ export default {
   },
   features: {
     bscWallets: true,
-  }
+  },
 } as DashboardConfig

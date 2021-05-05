@@ -116,6 +116,7 @@
                     </div>
                   </div>
                 </b-card-body>
+                <WalletsTooltipsBSC />
               </b-card>
               <!-- Ethereum wallets -->
               <b-card v-once>
@@ -190,6 +191,7 @@
                       </div>
                       <div class="col-sm-12 mb-3">
                         <b-card
+                          id="eth-walletconnect-button"
                           class="wallet-selection-card text-center"
                           @click="setWallet('ethereum', 'walletconnect')"
                         >
@@ -201,6 +203,7 @@
                       </div>
                       <div class="col-sm-12 mb-3">
                         <b-card
+                          id="eth-walletlink-button"
                           class="wallet-selection-card text-center"
                           @click="setWallet('ethereum', 'walletlink')"
                         >
@@ -227,6 +230,7 @@
                     </div>
                   </div>
                 </b-card-body>
+                <WalletsTooltipsEthereum />
               </b-card>
             </b-card-group>
             <template v-if="env">
@@ -363,68 +367,7 @@
               </div>
             </template>
           </b-modal>
-          <b-popover
-            class="popover"
-            target="bsc-binance-wallet"
-            title="Binance Chain Wallet"
-            triggers="hover"
-            v-if="bscWalletsEnabled"
-          >
-            <p>This wallet also supports <strong>Ledger</strong>.</p>
-            <p>
-              If you want to use a Ledger open the Binance Chain Wallet
-              extension and select
-              <strong>Hardware Wallet</strong> from the menu, then follow the
-              steps to setup your device for use with Binance Chain Wallet.
-            </p>
-            <div>
-              <div class="wizard-img-container mb-3">
-                <img
-                  class="wizard-img"
-                  src="../assets/binance-wallet-ledger.png"
-                  alt="Screenshot of setting up Ledger in Binance Chain Wallet"
-                />
-              </div>
-            </div>
-          </b-popover>
-          <b-popover
-            class="popover"
-            target="bsc-metamask-wallet"
-            title="Metamask Wallet"
-            triggers="hover"
-            v-if="bscWalletsEnabled"
-          >
-            <p>
-              This wallet also supports <strong>Ledger</strong> and
-              <strong>Trezor</strong>.
-            </p>
-            <p>
-              If you want to use a Ledger or Trezor open the Metamask extension
-              and select
-              <strong>Connect Hardware Wallet</strong> from the menu, then
-              follow the steps to setup your device for use with Metamask.
-            </p>
-            <div>
-              <div class="wizard-img-container mb-3">
-                <img
-                  class="wizard-img"
-                  src="../assets/metamask-hardware-screencap.png"
-                  alt="Screenshot of setting up hardware wallet in Metamask"
-                />
-              </div>
-            </div>
-          </b-popover>
-          <b-popover
-            class="popover"
-            target="bsc-walletconnect"
-            title="WalletConnect Protocol"
-            triggers="hover"
-            v-if="bscWalletsEnabled"
-          >
-            WalletConnect supports many <strong>iOS</strong> and
-            <strong>Android</strong> wallets. It's easy to use and there's
-            nothing to install, just scan a QR code to connect.
-          </b-popover>
+
           <ChainSelector
             style="width: 250px; margin: 0 auto"
             class="connection-status"
@@ -437,7 +380,9 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
-import ChainSelector from "../components/ChainSelector.vue"
+import ChainSelector from "@/components/ChainSelector.vue"
+import WalletsTooltipsBSC from "@/components/WalletsTooltipsBSC.vue"
+import WalletsTooltipsEthereum from "@/components/WalletsTooltipsEthereum.vue"
 
 import { ethereumModule } from "@/store/ethereum"
 import { DashboardState } from "../types"
@@ -455,6 +400,8 @@ import { wallets } from "@/store/ethereum"
 
 @Component({
   components: {
+    WalletsTooltipsBSC,
+    WalletsTooltipsEthereum,
     ChainSelector,
     LoomIcon,
   },
@@ -631,7 +578,7 @@ export default class FirstPage extends Vue {
 
 .popover {
   h3 {
-    color: gray;
+    color: black;
   }
 }
 

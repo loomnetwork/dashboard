@@ -20,19 +20,12 @@ export const MetaMaskAdapter: WalletType = {
   isMultiAccount: false,
   desktop: true,
   mobile: false,
-  detect() {
-    return isCurrentApi() || isLegacyApi()
-  },
+  detect: isMetamaskPresent,
   async createProvider(): Promise<IWalletProvider> {
-    let provider
-    if (isCurrentApi()) {
-      provider = await getCurrentApi()
-    } else if (isLegacyApi()) {
-      provider = getLegacyApi()
-    }
-    if (!provider) {
+    if (!isMetamaskPresent()) {
       throw new Error("no Metamask installation detected")
     }
+    const provider = await getCurrentApi()
     const signer = getMetamaskSigner(provider)
     const network = await signer.provider!.getNetwork()
     return {
@@ -44,14 +37,12 @@ export const MetaMaskAdapter: WalletType = {
   },
 }
 
-function isLegacyApi() {
-  return "web3" in window
+function isMetamaskPresent() {
+  // @ts-ignore
+  return "ethereum" in window && window.ethereum.isMetaMask
 }
 
-function isCurrentApi() {
-  return "ethereum" in window
-}
-
+// no longer required https://docs.metamask.io/guide/provider-migration.html#summary-of-breaking-changes
 function getLegacyApi(): Promise<provider> {
   // @ts-ignore
   return window.web3.currentProvider

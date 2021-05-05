@@ -61,7 +61,7 @@ async function getCurrentApi(): Promise<provider> {
   // @ts-ignore
   const ethereum: any = window.ethereum
   try {
-    await ethereum.enable()
+    await ethereum.request({ method: "eth_requestAccounts" })
   } catch (err) {
     Sentry.captureException(err)
     feedbackModule.endTask()

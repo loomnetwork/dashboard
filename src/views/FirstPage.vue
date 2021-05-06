@@ -122,10 +122,7 @@
                       </div>
                     </div>
                   </div>
-                  <b-card
-                    id="bsc-metamask-wallet"
-                    class="wallet-selection-card text-center"
-                  >
+                  <b-card class="wallet-selection-card text-center">
                     <div>
                       <h5>
                         <img src="../assets/metamask_logo.png" height="24" />

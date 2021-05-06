@@ -86,7 +86,7 @@ async function getCurrentApi(): Promise<provider> {
  * See https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
  */
 export function addNetwork(bscConf: EthereumConfig) {
-  if (!isCurrentApi()) throw new Error("Please update Metamask")
+  if (!isMetamaskPresent()) throw new Error("Please update Metamask")
 
   let chainName = bscConf.genericNetworkName
   // ...

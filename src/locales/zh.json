@@ -1,5 +1,6 @@
 {
   "messages": {
+    "loading_validators": "Loading validator list....",
     "user_denied_tx": "你拒绝了此事务",
     "transfer_card_success_tx": "成功转移卡牌。事务：{transactionHash}",
     "transfer_pack_success_tx": "成功转移卡包。事务：{transactionHash}",

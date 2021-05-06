@@ -1,5 +1,6 @@
 {
   "messages": {
+    "loading_validators": "Loading validator list....",
     "user_denied_tx": "You denied the transaction",
     "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
     "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",

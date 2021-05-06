@@ -44,8 +44,10 @@ export const BinanceChainWalletAdapter: WalletType = {
 
     await changeAccounts(accounts)
 
-    bc.on("accountsChanged", changeAccounts).catch((err) => console.error(err))
-
+    bc.on("accountsChanged", (_accounts) => {
+      console.log(`accountsChanged ${_accounts}`)
+      changeAccounts(_accounts).catch((err) => console.error(err))
+    })
     bc.isBCWallet = true
 
     const signer = getMetamaskSigner(bc)

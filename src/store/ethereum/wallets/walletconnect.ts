@@ -23,10 +23,12 @@ export const WalletConnectAdapter: WalletType = {
     if (config.genericNetworkName === "Ethereum") {
       opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
     } else {
-      opts.chainId = parseInt(config.networkId)
+      opts.chainId = parseInt(config.networkId, 10)
       opts.rpc = { [opts.chainId]: config.endpoint }
     }
+    localStorage.removeItem("walletconnect")
     const wcProvider = new WalletConnectProvider(opts)
+
     wcProvider.on(
       "chainChanged",
       (chainId: string) => {

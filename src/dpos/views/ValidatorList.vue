@@ -1,25 +1,35 @@
 <template>
   <main class="validators">
-    <div class="row" v-if="validators && validators.length > 0">
+    <div class="row" v-if="validators && validators.length > 0 && false">
       <div class="col">
         <header>
-          <h1>{{ $t('views.validator_list.validators') }}</h1>
+          <h1>{{ $t("views.validator_list.validators") }}</h1>
         </header>
         <b-card
           no-body
-          style="justify-content: space-around;flex-direction: row;text-align: center;align-items: flex-end;padding-top: 5px;"
+          style="
+            justify-content: space-around;
+            flex-direction: row;
+            text-align: center;
+            align-items: flex-end;
+            padding-top: 5px;
+          "
         >
           <h6>
-            {{ $t('views.validator_list.next_election_in') }}
+            {{ $t("views.validator_list.next_election_in") }}
             <election-timer />
           </h6>
           <h6>
-            {{ $t('views.validator_list.total_staked_amount') }}
-            <h5 class="highlight">{{totalStaked | tokenAmount(18,0)}} LOOM</h5>
+            {{ $t("views.validator_list.total_staked_amount") }}
+            <h5 class="highlight">
+              {{ totalStaked | tokenAmount(18, 0) }} LOOM
+            </h5>
           </h6>
           <h6>
-            {{ $t('views.validator_list.effective_rewards') }}
-            <h5 class="highlight">{{state.dpos.effectiveRewardsRatio | bigNumber(2)}} %</h5>
+            {{ $t("views.validator_list.effective_rewards") }}
+            <h5 class="highlight">
+              {{ state.dpos.effectiveRewardsRatio | bigNumber(2) }} %
+            </h5>
           </h6>
         </b-card>
         <div class="content">
@@ -35,23 +45,39 @@
               >
                 <div class="copy-wrapper">
                   <h6>
-                    <span :class="[validator.active ? 'active-symbol active' : 'active-symbol']"></span>
-                    {{validator.name}}
+                    <span
+                      :class="[
+                        validator.active
+                          ? 'active-symbol active'
+                          : 'active-symbol',
+                      ]"
+                    ></span>
+                    {{ validator.name }}
                   </h6>
                 </div>
                 <div class="copy-wrapper">
-                  <label>{{ $t('components.validator_extended_detail.fee') }}</label>
-                  <strong>{{validator.fee}}</strong>
+                  <label>{{
+                    $t("components.validator_extended_detail.fee")
+                  }}</label>
+                  <strong>{{ validator.fee }}</strong>
                 </div>
                 <div class="copy-wrapper">
-                  <label>{{ $t('views.validator_list.stake') }}</label>
-                  <strong>{{validator.totalStaked | tokenAmount(18,0)}} LOOM</strong>
+                  <label>{{ $t("views.validator_list.stake") }}</label>
+                  <strong
+                    >{{
+                      validator.totalStaked | tokenAmount(18, 0)
+                    }}
+                    LOOM</strong
+                  >
                 </div>
               </b-card>
 
               <div v-if="index === 9 && isAdsEnabled()" class="mb-3">
                 <a href="https://cryptozombies.io/libra" target="_blank">
-                  <img src="../../assets/images/ads/CZ_Libra_ad_400x110.png" class="ad-img" />
+                  <img
+                    src="../../assets/images/ads/CZ_Libra_ad_400x110.png"
+                    class="ad-img"
+                  />
                 </a>
               </div>
             </div>
@@ -65,44 +91,56 @@
               tr-class="spacer"
               :items="validators"
               :fields="validatorFields"
-              :class="{'validator-ads' : isAdsEnabled()}"
+              :class="{ 'validator-ads': isAdsEnabled() }"
               @row-clicked="showValidatorDetail"
             >
               <template slot="name" slot-scope="data">
                 <li
-                  :class="[data.item.jailed || !data.item.active ? 'jailed-symbol jailed' : 'jailed-symbol']"
+                  :class="[
+                    data.item.jailed || !data.item.active
+                      ? 'jailed-symbol jailed'
+                      : 'jailed-symbol',
+                  ]"
                 />
                 {{ data.item.name }}
                 <div v-if="data.index === 9 && isAdsEnabled()" class="ads">
                   <a href="https://cryptozombies.io/libra" target="_blank">
-                    <img src="../../assets/images/ads/CZ_Libra_ad_1110x110.png" class="ad-img" />
+                    <img
+                      src="../../assets/images/ads/CZ_Libra_ad_1110x110.png"
+                      class="ad-img"
+                    />
                   </a>
                 </div>
               </template>
 
-              <template
-                slot="active"
-                slot-scope="data"
-              >{{ data.item.jailed ? $t('views.validator_detail.jailed') : data.item.active ? $t('views.validator_detail.active') : "" }}</template>
+              <template slot="active" slot-scope="data">{{
+                data.item.jailed
+                  ? $t("views.validator_detail.jailed")
+                  : data.item.active
+                  ? $t("views.validator_detail.active")
+                  : ""
+              }}</template>
             </b-table>
           </template>
         </div>
       </div>
+    </div>
+    <div class="spinner-wrapper" v-else>
+      <LoadingSpinner :message="$t('messages.loading_validators')" />
     </div>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch } from "vue-property-decorator"
-import LoadingSpinner from "../components/LoadingSpinner.vue"
-import ElectionTimer from "../components/ElectionTimer.vue"
-import { CryptoUtils, LocalAddress } from "loom-js"
+import { Component } from "vue-property-decorator"
+import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
+import LoadingSpinner from "@/components/LoadingSpinner.vue"
+
 import { HasDPOSState } from "@/dpos/store/types"
-import { ZERO } from "../../utils"
+import { ZERO } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import BN from "bn.js"
-import { DashboardState } from '../../types';
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
@@ -117,7 +155,7 @@ function random() {
 }
 
 @Component({
-  components: { ElectionTimer },
+  components: { ElectionTimer, LoadingSpinner },
 })
 export default class ValidatorList extends Vue {
   isSmallDevice = window.innerWidth < 600
@@ -224,12 +262,17 @@ tr {
     background-color: #5756e60f;
     cursor: pointer;
   }
-
 }
 
-
-
 main.validators {
+  height: 100%;
+  .spinner-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   // ther should be global class for page titles
   header > h1 {
     color: #5246d5;
@@ -341,7 +384,6 @@ main.validators {
   }
 }
 
-
 .validator-ads {
   table tr:nth-child(10) {
     position: relative;
@@ -359,7 +401,11 @@ main.validators {
 }
 
 @keyframes fade {
-    from { opacity: 0.5; }
-    to   { opacity: 1; }
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

@@ -1,5 +1,6 @@
 {
   "messages": {
+    "loading_validators": "Loading validator list....",
     "user_denied_tx": "You denied the transaction",
     "transfer_card_success_tx": "Transferring cards success. Tx: {transactionHash}",
     "transfer_pack_success_tx": "Transferring packs success. Tx: {transactionHash}",
@@ -901,7 +902,7 @@
       "address_copied": "Address copied.",
       "register_success": "Successfully registered.",
       "withdraw_airdrop_success": "Successfully withdrew airdrop.",
-      "update_validator_info_success":"Successfully updated validator information.",
+      "update_validator_info_success": "Successfully updated validator information.",
       "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {

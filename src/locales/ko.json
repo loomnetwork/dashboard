@@ -1,5 +1,6 @@
 {
   "messages": {
+    "loading_validators": "Loading validator list....",
     "user_denied_tx": "트랜잭션을 거절했습니다",
     "transfer_card_success_tx": "카드를 성공적으로 전송했습니다. Tx: {transactionHash}",
     "transfer_pack_success_tx": "팩을 성공적으로 전송했습니다. Tx: {transactionHash}",

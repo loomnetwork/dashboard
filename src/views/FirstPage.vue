@@ -151,44 +151,6 @@
                           </div>
                         </b-card>
                       </div>
-                      <div class="col-sm-12">
-                        <b-card
-                          id="ledger-button"
-                          class="wallet-selection-card text-center mb-3"
-                          @click="
-                            $root.$emit(
-                              'bv::show::modal',
-                              'metmask-hardware-wizard'
-                            )
-                          "
-                        >
-                          <div>
-                            <img src="@/assets/ledger_logo.svg" />
-                            <span>{{
-                              $t("views.first_page.wallets.ledger_via_metamask")
-                            }}</span>
-                          </div>
-                        </b-card>
-                      </div>
-                      <div class="col-sm-12 mb-3">
-                        <b-card
-                          id="trezor-button"
-                          class="wallet-selection-card text-center"
-                          @click="
-                            $root.$emit(
-                              'bv::show::modal',
-                              'metmask-hardware-wizard'
-                            )
-                          "
-                        >
-                          <div>
-                            <img :src="wallets.get('metamask').logo" />
-                            <span>{{
-                              $t("views.first_page.wallets.trezor_via_metamask")
-                            }}</span>
-                          </div>
-                        </b-card>
-                      </div>
                       <div class="col-sm-12 mb-3">
                         <b-card
                           id="eth-walletconnect-button"
@@ -341,31 +303,6 @@
                 >{{ $t("button.submit") }}</b-button
               >
             </div>
-          </b-modal>
-
-          <b-modal
-            id="metmask-hardware-wizard"
-            :title="
-              $t('components.modals.hardware_wallet_modal.hardware_wallet')
-            "
-          >
-            <div>
-              <div class="wizard-img-container mb-3">
-                <img
-                  class="wizard-img"
-                  src="../assets/metamask-hardware-screencap.png"
-                  alt
-                />
-              </div>
-              <p>{{ $t("messages.metamask_hardware_wizard") }}</p>
-            </div>
-            <template slot="modal-footer">
-              <div>
-                <b-btn @click="setWallet('ethereum', 'metamask')">{{
-                  $t("button.next")
-                }}</b-btn>
-              </div>
-            </template>
           </b-modal>
 
           <ChainSelector

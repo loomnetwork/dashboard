@@ -30,12 +30,15 @@
     >
       WalletConnect supports many <strong>iOS</strong> and
       <strong>Android</strong> wallets. It's easy to use and there's nothing to
-      install, just scan a QR code to connect.
+      install, just scan a QR code to connect. See the
+      <a href="https://walletconnect.org/wallets" target="_blank"
+        >list of mobile wallets supported by WalletConnect</a
+      >
     </b-popover>
     <b-popover
       class="popover"
       target="eth-walletlink-button"
-      title="WalletLink/Coinbase"
+      title="WalletLink Protocol"
       triggers="hover"
     >
       For the time being WalletLink only supports Coinbase Wallet mobile app.

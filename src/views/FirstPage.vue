@@ -129,15 +129,17 @@
                     <div>
                       <h5>
                         <img src="../assets/metamask_logo.png" height="24" />
-                        Using metamask?
+                        Using Metamask?
                       </h5>
                       <p>
-                        Select Binance Smart Chain in your MetaMask wallet
-                        first, if you don't see it there
-                        <b-link @click="addBSCToMetamask()" size="sm"
-                          >Add BSC Network
-                        </b-link>
-                        now.
+                        Select <strong>Binance Smart Chain</strong> in your
+                        Metamask wallet first. If you don't see it there
+                        <b-button
+                          @click="addBSCToMetamask()"
+                          size="sm"
+                          variant="outline-primary"
+                          >add BSC Network
+                        </b-button>
                       </p>
                     </div>
                   </b-card>
@@ -490,12 +492,6 @@ import { getTokenList } from "../utils"
   },
 })
 export default class FirstPage extends Vue {
-  address = ""
-  addressModalShow = false
-  mappedModalShow = false
-  reconsider = false
-  showMetamaskInstallPrompt = false
-  showBinanceInstallPrompt = false
 
   get $state() { return (this.$store.state as DashboardState) }
 
@@ -524,6 +520,14 @@ export default class FirstPage extends Vue {
   get bscWalletsEnabled(): boolean {
     return this.$state.activeConfig ? this.$state.activeConfig.features.bscWallets : false
   }
+  address = ""
+  addressModalShow = false
+  mappedModalShow = false
+  reconsider = false
+  showMetamaskInstallPrompt = false
+  showBinanceInstallPrompt = false
+
+  setExploreMode = ethereumModule.setToExploreMode
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {
     switch (walletType) {
@@ -554,14 +558,11 @@ export default class FirstPage extends Vue {
     ethereumModule.setWalletType(walletType)
   }
 
-  setExploreMode = ethereumModule.setToExploreMode
-
   async addBSCToMetamask() {
     const bscConf = this.env.binance
     if (!bscConf) throw new Error("binance config not set in current env")
 
     await mmAddNetwork(bscConf)
-
   }
 
   onClose() {

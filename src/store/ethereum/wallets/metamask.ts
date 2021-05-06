@@ -105,7 +105,7 @@ export function addNetwork(bscConf: EthereumConfig) {
   let chainName = bscConf.genericNetworkName
   // ...
   if (bscConf.networkName.includes("testnet")) {
-    chainName = "Testnet - " + chainName
+    chainName = `${chainName} Testnet`
   }
 
   const params = {

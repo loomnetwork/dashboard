@@ -55,6 +55,7 @@
             id="main-main"
             class="container-fluid center-content"
             style="justify-content: center"
+            v-once
           >
             <b-card-group deck>
               <!-- Binance Smart Chain wallets -->
@@ -85,10 +86,8 @@
                           @click="setWallet('binance', 'binance')"
                         >
                           <div>
-                            <img src="../assets/binance_wallet_logo.svg" />
-                            <span>{{
-                              $t("views.first_page.wallets.binance")
-                            }}</span>
+                            <img :src="wallets.get('binance').logo" />
+                            <span>{{ wallets.get("binance").name }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -99,10 +98,8 @@
                           @click="setWallet('binance', 'metamask')"
                         >
                           <div>
-                            <img src="../assets/metamask_logo.png" />
-                            <span>{{
-                              $t("views.first_page.wallets.metamask")
-                            }}</span>
+                            <img :src="wallets.get('metamask').logo" />
+                            <span>{{ wallets.get("metamask").name }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -112,12 +109,8 @@
                           class="wallet-selection-card text-center"
                           @click="setWallet('binance', 'walletconnect')"
                         >
-                          <div>
-                            <img src="../assets/walletconnect-logo.svg" />
-                            <span>{{
-                              $t("views.first_page.wallets.walletconnect")
-                            }}</span>
-                          </div>
+                          <img :src="wallets.get('walletconnect').logo" />
+                          <span>{{ wallets.get("walletconnect").name }}</span>
                         </b-card>
                       </div>
                     </div>
@@ -143,7 +136,7 @@
                 </b-card-body>
               </b-card>
               <!-- Ethereum wallets -->
-              <b-card>
+              <b-card v-once>
                 <b-card-title>
                   <img
                     class="d-block mx-auto"
@@ -170,10 +163,8 @@
                           @click="setWallet('ethereum', 'metamask')"
                         >
                           <div>
-                            <img src="../assets/metamask_logo.png" />
-                            <span>{{
-                              $t("views.first_page.wallets.metamask")
-                            }}</span>
+                            <img :src="wallets.get('metamask').logo" />
+                            <span>{{ wallets.get("metamask").name }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -189,7 +180,7 @@
                           "
                         >
                           <div>
-                            <img src="../assets/ledger_logo.svg" />
+                            <img src="@/assets/ledger_logo.svg" />
                             <span>{{
                               $t("views.first_page.wallets.ledger_via_metamask")
                             }}</span>
@@ -208,7 +199,7 @@
                           "
                         >
                           <div>
-                            <img src="../assets/metamask_logo.png" />
+                            <img :src="wallets.get('metamask').logo" />
                             <span>{{
                               $t("views.first_page.wallets.trezor_via_metamask")
                             }}</span>
@@ -221,10 +212,8 @@
                           @click="setWallet('ethereum', 'walletconnect')"
                         >
                           <div>
-                            <img src="../assets/walletconnect-logo.svg" />
-                            <span>{{
-                              $t("views.first_page.wallets.walletconnect")
-                            }}</span>
+                            <img :src="wallets.get('walletconnect').logo" />
+                            <span>{{ wallets.get("walletconnect").name }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -234,10 +223,8 @@
                           @click="setWallet('ethereum', 'walletlink')"
                         >
                           <div>
-                            <img src="../assets/walletlink-logo.png" />
-                            <span>{{
-                              $t("views.first_page.wallets.walletlink")
-                            }}</span>
+                            <img :src="wallets.get('walletlink').logo" />
+                            <span>{{ wallets.get("walletlink").name }}</span>
                           </div>
                         </b-card>
                       </div>
@@ -482,6 +469,8 @@ import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
 import { tokenService } from "@/services/TokenService"
 import { getTokenList } from "../utils"
 
+import { wallets } from "@/store/ethereum"
+
 @Component({
   components: {
     ChainSelector,
@@ -489,6 +478,8 @@ import { getTokenList } from "../utils"
   },
 })
 export default class FirstPage extends Vue {
+
+  wallets = wallets
 
   get $state() { return (this.$store.state as DashboardState) }
 
@@ -735,7 +726,7 @@ export default class FirstPage extends Vue {
       width: 100%;
     }
     img {
-      height: 20px !important;
+      height: 32px !important;
       width: auto;
       margin-right: 3px;
       height: auto;
@@ -763,7 +754,7 @@ export default class FirstPage extends Vue {
       border-radius: 50%;
     }
     .card-body {
-      padding: 0.5rem 0.8rem;
+      padding: 0.4rem 0.8rem;
     }
     .search-icon {
       margin-right: 6px;

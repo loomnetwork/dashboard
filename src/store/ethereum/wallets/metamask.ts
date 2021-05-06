@@ -15,23 +15,17 @@ import { ethereumModule } from ".."
 export const MetaMaskAdapter: WalletType = {
   id: "netamask",
   name: "Metamask",
+  logo: require("@/assets/metamask_logo.png"),
   detectable: true,
   isMultiAccount: false,
   desktop: true,
   mobile: false,
-  detect() {
-    return isCurrentApi() || isLegacyApi()
-  },
+  detect: isMetamaskPresent,
   async createProvider(): Promise<IWalletProvider> {
-    let provider
-    if (isCurrentApi()) {
-      provider = await getCurrentApi()
-    } else if (isLegacyApi()) {
-      provider = getLegacyApi()
-    }
-    if (!provider) {
+    if (!isMetamaskPresent()) {
       throw new Error("no Metamask installation detected")
     }
+    const provider = await getCurrentApi()
     const signer = getMetamaskSigner(provider)
     const network = await signer.provider!.getNetwork()
     return {
@@ -43,24 +37,16 @@ export const MetaMaskAdapter: WalletType = {
   },
 }
 
-function isLegacyApi() {
-  return "web3" in window
-}
-
-function isCurrentApi() {
-  return "ethereum" in window
-}
-
-function getLegacyApi(): Promise<provider> {
+function isMetamaskPresent() {
   // @ts-ignore
-  return window.web3.currentProvider
+  return "ethereum" in window && window.ethereum.isMetaMask
 }
 
 async function getCurrentApi(): Promise<provider> {
   // @ts-ignore
   const ethereum: any = window.ethereum
   try {
-    await ethereum.enable()
+    await ethereum.request({ method: "eth_requestAccounts" })
   } catch (err) {
     Sentry.captureException(err)
     feedbackModule.endTask()

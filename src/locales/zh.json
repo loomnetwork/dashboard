@@ -383,6 +383,13 @@
       "contact_desc": "Loom 将对提交作品进行评审，并选出每个奖项的获胜者",
       "contact": "对于提交作品如果需要任何指导，请发邮件到 {email}",
       "email": "satoshi@loomx.io"
+    },
+    "statistics": {
+      "statistics": "Statistics",
+      "missed_blocks": "Missed Blocks",
+      "period": "Period",
+      "blocks_missed": "Blocks Missed",
+      "no_downtime": "Your validator node hasn't missed signing any blocks."
     }
   },
   "components": {
@@ -696,7 +703,8 @@
       "required": "必须",
       "insufficient_loom": "LOOM 不足",
       "ready_to_stake": "准备好锁定了",
-      "your_balance": "你的余额"
+      "your_balance": "你的余额",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
       "validator_associated": "相关的验证者",
@@ -726,7 +734,18 @@
       "staked_amount": "锁定量",
       "whitelist_locktime_tier": "将锁定期层级添加到白名单",
       "follow_node_guide": "要设置你自己的验证者节点，请遵循 {link}。",
-      "node_setup_guide": "节点设置指南"
+      "node_setup_guide": "节点设置指南",
+      "edit": "Edit"
+    },
+    "validator_update_form": {
+      "title": "Update Validator Detail",
+      "name": "Name",
+      "website": "Website",
+      "description": "Description",
+      "fee": "Fee",
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     }
   },
   "events": {
@@ -808,7 +827,9 @@
       "address_existed": "这个地址已经在你的部署者清单里了。",
       "failed_to_get_receipt": "获取收据失败",
       "connect_wallet_prob": "连接你的钱包似乎有问题。请联系客服。",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
+      "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "已成功领取奖励。",
@@ -824,7 +845,9 @@
       "plasma_addr_copied": "已复制 Basechain 地址。",
       "address_copied": "已复制地址。",
       "register_success": "已成功注册。",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "withdraw_airdrop_success": "Successfully withdrew airdrop.",
+      "update_validator_info_success": "Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {

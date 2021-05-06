@@ -1,7 +1,7 @@
 <template>
   <div id="mobile-account">
     <account-info />
-    <b-card :title="$t('views.my_account.balance')" class="mb-4" no-body>
+    <b-card :title="$t('views.my_account.balance')" id="balances" class="mb-4" no-body>
       <b-card-header class="custom-card-header d-flex justify-content-between">
         <h4>{{ $t('views.my_account.balance') }}</h4>
         <a v-if="!showRefreshSpinner" @click="refresh">
@@ -9,7 +9,7 @@
         </a>
         <b-spinner v-else type="border" small />
       </b-card-header>
-      <b-card-body>
+      <b-card-body style="padding-top: 0;">
         <b-card
           v-if="currentAllowance && !gatewayBusy"
           bg-variant="warning"
@@ -26,35 +26,17 @@
         </b-card>
 
         <div class="p3">
-          <h6>{{ $t('views.my_account.mainnet') }}</h6>
-          <div>
+          <h6>{{ state.ethereum.genericNetworkName }}</h6>
             <h5 class="highlight" data-cy="ethereum-loom-balance">
               {{state.ethereum.coins.LOOM.balance | tokenAmount}} LOOM
-              <loom-icon
-                v-if="!state.ethereum.coins.LOOM.loading"
-                :color="'#f0ad4e'"
-                width="20px"
-                height="20px"
-              />
+              <b-spinner v-show="state.ethereum.coins.LOOM.loading" variant="primary" label="Spinning" small/>
             </h5>
-          </div>
-          <div v-if="state.ethereum.coins.LOOM.loading">
-            <b-spinner variant="primary" label="Spinning" />
-          </div>
           <h6>{{ $t('views.my_account.plasmachain') }}</h6>
           <div>
             <h5 class="highlight" data-cy="plasma-loom-balance">
               {{state.plasma.coins.LOOM.balance | tokenAmount}} LOOM
-              <loom-icon
-                v-if="!state.plasma.coins.LOOM.loading"
-                :color="'#f0ad4e'"
-                width="20px"
-                height="20px"
-              />
+              <b-spinner v-show="state.plasma.coins.LOOM.loading" variant="primary" label="Spinning" small/>
             </h5>
-          </div>
-          <div v-if="state.plasma.coins.LOOM.loading">
-            <b-spinner variant="primary" label="Spinning" />
           </div>
           <b-link href="#" class="card-link">
             <router-link to="/wallet">{{ $t('components.faucet_sidebar.deposit_withdraw') }}</router-link>
@@ -85,9 +67,9 @@
       <delegations :delegations="delegations" show-validator />
     </b-card>
 
-    <pre>
+    <!-- <pre>
       {{state.dpos.unclaimedTokens}}
-    </pre>
+    </pre> -->
 
     <div class="button-container">
       <b-button @click="$router.push({ path: '/validators' })">{{ $t('views.validator_detail.stake_tokens') }}</b-button>
@@ -97,27 +79,21 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch } from "vue-property-decorator"
+import { Component } from "vue-property-decorator"
 import LoomIcon from "@/components/LoomIcon.vue"
 
-import Web3 from "web3"
-import BN from "bn.js"
 import debug from "debug"
-import { formatToCrypto, sleep } from "@/utils.ts"
 import Rewards from "@/dpos/components/Rewards.vue"
 import AccountInfo from "@/components/Account.vue"
 import { DashboardState } from "../types"
 import { ethereumModule } from "../store/ethereum"
 import { plasmaModule } from "../store/plasma"
-import { dposModule } from "@/dpos/store"
 import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 import Delegations from "@/dpos/components/Delegations.vue"
 import { Subscription, timer } from "rxjs"
 import Airdrop from "@/dpos/components/Airdrop.vue"
 
 const log = debug("mobileaccount")
-
-const ELECTION_CYCLE_MILLIS = 600000
 
 @Component({
   components: {
@@ -171,6 +147,19 @@ export default class MobileAccount extends Vue {
 #mobile-account {
   padding-top: 1.5rem;
   padding-bottom: 5.5rem;
+}
+
+#balances {
+  h5.highlight {
+    height:2rem; 
+    line-height:2rem
+  }
+  .spinner-border {
+    display: inline-block;
+    margin-left: 0.8rem;
+    margin-bottom: 0.4rem;
+    vertical-align: middle;
+  }
 }
 
 h3 {

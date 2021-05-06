@@ -42,12 +42,14 @@ export interface DPOSState extends DPOSConfig {
   // the user to confirm the action, at which point the delegate/redelegate/undelegate functions
   // in src/dpos/store/index.ts get invoked.
   intent: "" | "delegate" | "redelegate" | "undelegate"
-  delegation: Delegation | null,
-  analyticsData: any[] | null,
-  rewardsScalingFactor: BigNumber,
-  effectiveRewardsRatio: BigNumber,
-  maxYearlyRewards: BigNumber,
-  totalWeightedStakes: BigNumber,
+  delegation: Delegation | null
+  analyticsData: any[] | null
+  rewardsScalingFactor: BigNumber
+  effectiveRewardsRatio: BigNumber
+  maxYearlyRewards: BigNumber
+  totalWeightedStakes: BigNumber
+  minCandidateFee: number
+  maxCandidateFee: number
 }
 
 /**
@@ -142,10 +144,10 @@ export interface Delegation {
 }
 
 export interface ICandidateRegistrationInfo {
-  pubKey: Uint8Array;
-  whitelistLocktimeTier: LocktimeTier;
-  fee: BN;
-  name: string;
-  description: string;
-  website: string;
+  pubKey: Uint8Array
+  whitelistLocktimeTier: LocktimeTier
+  fee: BN
+  name: string
+  description: string
+  website: string
 }

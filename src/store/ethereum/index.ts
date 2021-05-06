@@ -41,7 +41,7 @@ declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 const log = debug("dash.ethereum")
 const ZERO = new BN("0")
 
-const wallets: Map<string, WalletType> = new Map([
+export const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["binance", BinanceChainWalletAdapter],
   ["walletconnect", WalletConnectAdapter],
@@ -379,6 +379,7 @@ export function initERC20(context: ActionContext, symbol: string) {
     refresh,
   )
 
+  // For the deprecation warning see https://github.com/MetaMask/metamask-extension/issues/9301#issuecomment-680955280
   send.on("data", refresh)
   receive.on("data", refresh)
 

@@ -74,6 +74,7 @@ export interface IWalletProvider {
 export interface WalletType {
   id: string
   name: string
+  logo: string
   isMultiAccount: boolean
   detectable: boolean
   detect: () => boolean

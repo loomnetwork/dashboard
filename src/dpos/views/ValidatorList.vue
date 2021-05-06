@@ -1,6 +1,6 @@
 <template>
   <main class="validators">
-    <div class="row" v-if="validators && validators.length > 0 && false">
+    <div class="row" v-if="validators && validators.length > 0">
       <div class="col">
         <header>
           <h1>{{ $t("views.validator_list.validators") }}</h1>

@@ -25,7 +25,7 @@
         <b-navbar toggleable="lg" type="dark">
           <div class="container d-flex justify-content-between ensure-padded">
             <a v-if="showBackButton" @click="$router.go(-1)" class="back-btn">
-              <strong>{{ $t('components.faucet_header.back') }}</strong>
+              <strong>{{ $t("components.faucet_header.back") }}</strong>
             </a>
 
             <b-navbar-brand href="#">
@@ -34,11 +34,14 @@
 
             <b-navbar-nav>
               <b-nav-text>
-              <ForeignNetworkChip :compact="true" />
+                <ForeignNetworkChip :compact="true" />
               </b-nav-text>
             </b-navbar-nav>
 
-            <b-navbar-toggle style="border: 0px;" target="nav_collapse"></b-navbar-toggle>
+            <b-navbar-toggle
+              style="border: 0px"
+              target="nav_collapse"
+            ></b-navbar-toggle>
             <b-collapse is-nav id="nav_collapse">
               <!-- Right aligned nav items -->
               <b-navbar-nav class="mobile-nav ml-auto">
@@ -47,12 +50,15 @@
                     <router-link
                       to="/analytics"
                       class="router text-light hover-warning"
-                    >{{ $t('components.faucet_sidebar.analytics') }}</router-link>
+                      >{{
+                        $t("components.faucet_sidebar.analytics")
+                      }}</router-link
+                    >
                   </h5>
                 </b-nav-item>
                 <b-nav-item
                   v-for="(menu, index) in menus.staking"
-                  :key="index+'s'"
+                  :key="index + 's'"
                   :to="menu.to"
                   class="router"
                 >
@@ -61,7 +67,7 @@
                 <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.wallet"
-                  :key="index+'w'"
+                  :key="index + 'w'"
                   :to="menu.to"
                   class="router"
                 >
@@ -70,7 +76,7 @@
                 <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.dev"
-                  :key="index+'d'"
+                  :key="index + 'd'"
                   :to="menu.to"
                   :href="menu.href"
                   class="router"
@@ -80,7 +86,7 @@
                 <hr />
                 <b-nav-item
                   v-for="(menu, index) in menus.help"
-                  :key="index+'h'"
+                  :key="index + 'h'"
                   :to="menu.to"
                   class="router"
                 >
@@ -92,7 +98,8 @@
                     <a
                       @click="logout"
                       class="router text-light hover-warning"
-                    >{{ $t('components.faucet_header.sign_out') }}</a>
+                      >{{ $t("components.faucet_header.sign_out") }}</a
+                    >
                   </h5>
                 </b-nav-item>
               </b-navbar-nav>
@@ -124,7 +131,7 @@ import ForeignNetworkChip from "./ForeignNetworkChip.vue"
     LoomIcon,
     LoadingBar,
     FeedbackNotification,
-    ForeignNetworkChip
+    ForeignNetworkChip,
   },
 })
 export default class FaucetHeader extends Vue {

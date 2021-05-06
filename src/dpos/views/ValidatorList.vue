@@ -102,7 +102,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import { ZERO } from "../../utils"
 import { formatTokenAmount } from "@/filters"
 import BN from "bn.js"
-import { DashboardState } from '../../types';
+import { DashboardState } from "../../types"
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))

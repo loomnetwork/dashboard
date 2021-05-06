@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers"
 import { tokenService, TokenData } from "@/services/TokenService"
 import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { DashboardState, Funds } from "@/types"
@@ -16,7 +16,7 @@ import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
 import * as Sentry from "@sentry/browser"
-import { IWithdrawalReceipt } from 'loom-js/dist/contracts/transfer-gateway';
+import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 
 const log = debug("dash.gateway")
 
@@ -175,7 +175,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     if (adapter) {
       loomReceipt = await adapter.withdrawalReceipt()
     }
-    
+
     adapter = plasmaGateways.getGatewayAdapter("ethereum", "ETH")
     let mainReceipt: IWithdrawalReceipt | null = null
     if (adapter) {

@@ -1,47 +1,54 @@
 <template>
   <main class="transfer-gateway">
     <header>
-      <h1>{{ $t('components.faucet_sidebar.transfer_gateway') }}</h1>
+      <h1>{{ $t("components.faucet_sidebar.transfer_gateway") }}</h1>
     </header>
     <div>
       <b-card>
         <b-row>
           <b-col class="card-label">
-          <h5>{{ $t('views.transfer_gateway.connect_new_contracts') }}</h5>
+            <h5>{{ $t("views.transfer_gateway.connect_new_contracts") }}</h5>
           </b-col>
           <b-col>
-          <b-button variant="primary" style="float:right;" :href="docsLink" target="_blank">{{ $t('views.transfer_gateway.view_docs') }}</b-button>
+            <b-button
+              variant="primary"
+              style="float: right"
+              :href="docsLink"
+              target="_blank"
+              >{{ $t("views.transfer_gateway.view_docs") }}</b-button
+            >
           </b-col>
         </b-row>
       </b-card>
       <b-card class="mapped-card">
         <b-row>
           <b-col class="card-label">
-          <h5>{{ $t('views.transfer_gateway.debug_mapped_contract') }}</h5>
+            <h5>{{ $t("views.transfer_gateway.debug_mapped_contract") }}</h5>
           </b-col>
           <b-col>
-          <b-input-group
-            v-on:keyup.enter="viewLogs">
-            <b-form-input
-              v-model="tokenName"
-              type="text"
-              :placeholder="$t('input_placeholder.token_name')"
-              style="text-align: right;"
-            ></b-form-input>
-            <b-input-group-append>
-              <b-button @click="viewLogs">{{ $t('views.transfer_gateway.view_logs') }}</b-button>
-            </b-input-group-append>
-          </b-input-group>
+            <b-input-group v-on:keyup.enter="viewLogs">
+              <b-form-input
+                v-model="tokenName"
+                type="text"
+                :placeholder="$t('input_placeholder.token_name')"
+                style="text-align: right"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button @click="viewLogs">{{
+                  $t("views.transfer_gateway.view_logs")
+                }}</b-button>
+              </b-input-group-append>
+            </b-input-group>
           </b-col>
         </b-row>
       </b-card>
       <b-card class="mapped-card-table">
-      <mapped-token-address
-        v-if="showResult.tokenAddress"
-        :tokenData="tokenData"
-        @toggleChain="switchChain"
-        class="ml-4 mb-4"
-      />
+        <mapped-token-address
+          v-if="showResult.tokenAddress"
+          :tokenData="tokenData"
+          @toggleChain="switchChain"
+          class="ml-4 mb-4"
+        />
         <b-table
           v-if="showResult.table"
           striped
@@ -54,7 +61,7 @@
         >
           <div slot="table-busy" class="text-center my-2">
             <b-spinner class="align-middle"></b-spinner>
-            <strong>{{ $t('views.transfer_gateway.loading') }}</strong>
+            <strong>{{ $t("views.transfer_gateway.loading") }}</strong>
           </div>
         </b-table>
         <b-pagination
@@ -67,10 +74,9 @@
           class="mapped-pagination"
         ></b-pagination>
         <div v-if="showResult.notFound" class="not-found">
-        <h1 style="text-align:center;">{{ showResult.message }}</h1>
-      </div>
+          <h1 style="text-align: center">{{ showResult.message }}</h1>
+        </div>
       </b-card>
-      
     </div>
   </main>
 </template>
@@ -97,7 +103,6 @@ export default class TransferGateway extends Vue {
   get $state() { return (this.$store.state as DashboardState) }
 
   tokenMappingFields: any[] = []
-
 
   tokenData: TokenData = {
     symbol: "",
@@ -134,12 +139,14 @@ export default class TransferGateway extends Vue {
       key: "token_kind",
       label: this.$t("views.transfer_gateway.fields.token_kind"),
       tdClass: "align-center-td",
-      formatter: (value) => this.getKeyByValue(TransferGatewayTokenKind, value)  },
+      formatter: (value) => this.getKeyByValue(TransferGatewayTokenKind, value),
+    },
     {
       key: "token_amount",
       label: this.$t("views.transfer_gateway.fields.token_amount"),
       formatter: (value) => formatTokenAmount(value, 18, 0),
-      tdClass: "align-right-td"  },
+      tdClass: "align-right-td",
+    },
     { key: "topic", label: this.$t("views.transfer_gateway.fields.topic") },
     ]
   }
@@ -190,9 +197,9 @@ export default class TransferGateway extends Vue {
 
   checkChain(chain) {
     // if user click binance chain, use plasma address (just for now)
-    if (this.onChain  === "ethereum") {
+    if (this.onChain === "ethereum") {
       this.getLogs(this.tokenData.ethereum, 1)
-    } else if (this.onChain  === "binance") {
+    } else if (this.onChain === "binance") {
       this.getLogs(this.tokenData.plasma, 1)
     }
   }
@@ -211,7 +218,7 @@ export default class TransferGateway extends Vue {
         this.showResult.message = this.$t("messages.no_event_found").toString()
       } else if (msg === "NO_TOKEN") {
         this.showResult.tokenAddress = false
-        this.showResult.message = this.$t("messages.no_token_found", {tokenName: this.tokenName }).toString()
+        this.showResult.message = this.$t("messages.no_token_found", { tokenName: this.tokenName }).toString()
       }
     } else {
       this.showResult.table = true
@@ -224,7 +231,6 @@ export default class TransferGateway extends Vue {
 
 <style lang="scss">
 main.transfer-gateway {
-
   header > h1 {
     color: #5246d5;
     font-size: 1.35em;
@@ -242,7 +248,8 @@ main.transfer-gateway {
     background-color: #ffffff;
   }
 
-  .mapped-pagination, .mapped-table,
+  .mapped-pagination,
+  .mapped-table,
   .mapped-card {
     margin-top: 2%;
     margin-bottom: 2%;
@@ -251,6 +258,7 @@ main.transfer-gateway {
   .not-found {
     margin: 10% 0;
     -webkit-user-select: none;
+    user-select: none;
   }
 
   .align-right-td {

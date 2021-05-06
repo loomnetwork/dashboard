@@ -23,7 +23,6 @@ export default class ChainSelector extends Vue {
     return (this.$store.state as DashboardState).envs
   }
 }
-
 </script>
 <template>
   <div id="chain-selector" v-if="envs.length > 1">

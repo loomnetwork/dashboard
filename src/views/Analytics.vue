@@ -5,10 +5,17 @@
         <b-card>
           <b-row class="mb-3">
             <b-col class="card-label">
-              <b-card-title>{{ $t('views.analytics.total_amount_staked') }}</b-card-title>
+              <b-card-title>{{
+                $t("views.analytics.total_amount_staked")
+              }}</b-card-title>
             </b-col>
             <b-col>
-              <b-form-select class="period-select" size="sm" v-model="selected" id="dropdown-right" >
+              <b-form-select
+                class="period-select"
+                size="sm"
+                v-model="selected"
+                id="dropdown-right"
+              >
                 <option value="daily">Daily</option>
                 <option value="monthly">Monthly</option>
               </b-form-select>
@@ -44,7 +51,7 @@ export default class Analytics extends Vue {
 
   allDelegationArray: any = []
   // 2 weeks / 3 months / 6 months / 1 year
-  tierDistribution = [0,0,0,0]
+  tierDistribution = [0, 0, 0, 0]
   selected = "daily"
   filteredArray: any = []
 
@@ -133,16 +140,16 @@ export default class Analytics extends Vue {
           }],
           yAxes: [{
             type: "logarithmic",
-          }]
+          }],
         },
       },
       ticks: {
         autoSkip: true,
-      }
+      },
     }
-    // @ts-ignore 
+    // @ts-ignore
     const pieChart = new Chart(ctx, config)
-    // @ts-ignore 
+    // @ts-ignore
     const barChart = new Chart(ctx2, config2)
 
   }
@@ -153,7 +160,7 @@ export default class Analytics extends Vue {
 
   getDaily() {
     const today = new Date().toISOString()
-    const nowTime = new Date().toLocaleTimeString("it-IT") 
+    const nowTime = new Date().toLocaleTimeString("it-IT")
     const fromDate = today.replace(today.substring(11), "00:00:00")
     const toDate = today.replace(today.substring(11), nowTime)
     return { fromDate, toDate }
@@ -163,9 +170,9 @@ export default class Analytics extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .period-select {
-    margin-top: 0.5%;
-    width: 50%;
-    float: right;
-  }
+.period-select {
+  margin-top: 0.5%;
+  width: 50%;
+  float: right;
+}
 </style>

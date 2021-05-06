@@ -1,26 +1,30 @@
 <template>
   <b-card class="mb-1">
-    <b-card-title>{{ $t('components.account.account') }}</b-card-title>
+    <b-card-title>{{ $t("components.account.account") }}</b-card-title>
     <div class="account ethereum">
       <label>{{ foreignNetworkName }}</label>
       <address @click="copyEthereum">
-        <span class="highlight">{{ethAccount}}</span>
-        <fa icon="paste"/>
+        <span class="highlight">{{ ethAccount }}</span>
+        <fa icon="paste" />
       </address>
       <a a class="explorer" :href="etherScanUrl" target="_blank">
-        {{ foreignNetworkName === "Ethereum" ? $t('components.account.show_etherscan') : $t('components.account.show_bscscan') }}
-        <fa icon="external-link-alt"/>
+        {{
+          foreignNetworkName === "Ethereum"
+            ? $t("components.account.show_etherscan")
+            : $t("components.account.show_bscscan")
+        }}
+        <fa icon="external-link-alt" />
       </a>
     </div>
     <div class="account ethereum">
       <label>Loom</label>
       <address @click="copyPlasma">
-        <span class="highlight">{{plasmaAccount | loomAddress}}</span>
-        <fa icon="paste"/>
+        <span class="highlight">{{ plasmaAccount | loomAddress }}</span>
+        <fa icon="paste" />
       </address>
       <a class="explorer" :href="loomScanUrl" target="_blank">
-        {{ $t('components.account.show_block_explorer') }}
-        <fa icon="external-link-alt"/>
+        {{ $t("components.account.show_block_explorer") }}
+        <fa icon="external-link-alt" />
       </a>
     </div>
   </b-card>
@@ -57,7 +61,7 @@ export default class Account extends Vue {
   copyEthereum() {
     this.$copyText(this.ethAccount).then(() =>
       feedbackModule.showSuccess(
-        this.$t("feedback_msg.success.eth_addr_copied", { network: this.foreignNetworkName }).toString()
+        this.$t("feedback_msg.success.eth_addr_copied", { network: this.foreignNetworkName }).toString(),
       ),
       console.error,
     )

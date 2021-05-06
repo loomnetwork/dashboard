@@ -10,7 +10,11 @@
       id="gdelegation-amount-input"
       :label="$t('components.modals.faucet_delegate_modal.amount')"
       label-for="delegation-amount-input"
-      :description="$t('components.modals.faucet_delegate_modal.your_balance', { amount: balance })"
+      :description="
+        $t('components.modals.faucet_delegate_modal.your_balance', {
+          amount: balance,
+        })
+      "
     >
       <b-form-input
         id="delegation-amount-input"
@@ -26,13 +30,15 @@
     <b-container fluid>
       <b-row class="my-1" key="range">
         <b-col sm="6">
-          <label
-            id="lockTimeReward"
-            for="locktime"
-          >{{ $t('components.modals.faucet_delegate_modal.locktime_bonuses') }}</label>
+          <label id="lockTimeReward" for="locktime">{{
+            $t("components.modals.faucet_delegate_modal.locktime_bonuses")
+          }}</label>
         </b-col>
         <b-col sm="6">
-          <span>{{locktimeTiers[delegation.lockTimeTier]}} / {{bonusTiers[delegation.lockTimeTier]}}</span>
+          <span
+            >{{ locktimeTiers[delegation.lockTimeTier] }} /
+            {{ bonusTiers[delegation.lockTimeTier] }}</span
+          >
         </b-col>
         <b-col>
           <div class="tier-options">
@@ -40,12 +46,20 @@
               v-for="(n, i) in locktimeTiers.length"
               :key="i"
               class="radio tier"
-              :class="{selected: i === delegation.lockTimeTier}"
+              :class="{ selected: i === delegation.lockTimeTier }"
             >
-              <input type="radio" v-model="delegation.lockTimeTier" :value="i" />
-              <strong>{{ $t('components.modals.faucet_delegate_modal.locktime') }}</strong>
+              <input
+                type="radio"
+                v-model="delegation.lockTimeTier"
+                :value="i"
+              />
+              <strong>{{
+                $t("components.modals.faucet_delegate_modal.locktime")
+              }}</strong>
               <div>{{ locktimeTiers[i] }}</div>
-              <strong>{{ $t('components.modals.faucet_delegate_modal.bonuses') }}</strong>
+              <strong>{{
+                $t("components.modals.faucet_delegate_modal.bonuses")
+              }}</strong>
               <div class="fee">{{ bonusTiers[i] }}%</div>
               <div class="spec">({{ calcReceiveAmount(i) }} LOOM)</div>
             </label>
@@ -54,14 +68,17 @@
       </b-row>
     </b-container>
     <div slot="modal-footer" class="w-100">
-      <b-button @click="cancel">{{ $t('components.modals.faucet_delegate_modal.cancel') }}</b-button>
+      <b-button @click="cancel">{{
+        $t("components.modals.faucet_delegate_modal.cancel")
+      }}</b-button>
       <b-button
         v-if="!loading"
-        style="width: 160px; float: right;"
+        style="width: 160px; float: right"
         variant="primary"
         :disabled="delegation.lockTimeTier < 0 || !isAmountValid"
         @click="delegate"
-      >{{ $t('components.modals.faucet_delegate_modal.delegate') }}</b-button>
+        >{{ $t("components.modals.faucet_delegate_modal.delegate") }}</b-button
+      >
     </div>
   </b-modal>
 </template>
@@ -87,7 +104,6 @@ export default class DelegateModal extends Vue {
   okTitle = "Delegate"
 
   locktimeTiers: any[] = []
-
 
   get bonusTiers() {
     return this.rewardTiers.map((t) => this.rewardsScalingFactor.multipliedBy(t * 100).toFixed(2))
@@ -194,7 +210,8 @@ export default class DelegateModal extends Vue {
   calcReceiveAmount(i) {
     const feePercent = this.validator.fee.toNumber() / 100
     const rewardPercent = this.rewardsScalingFactor.multipliedBy(this.rewardTiers[i]).toNumber()
-    return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * rewardPercent) * (1 - feePercent)))
+    return Intl.NumberFormat().format(this.delegationAmount +
+      ((this.delegationAmount * rewardPercent) * (1 - feePercent)))
   }
 }
 </script>

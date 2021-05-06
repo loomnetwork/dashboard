@@ -42,7 +42,7 @@ export default {
     blockExplorerApi: "api-testnet.bscscan.com/api",
     contracts: {
       loomGateway: "0x0cee0FB12205b9Ca9d4Fbed502091dEfD7ae6ff5",
-      mainGateway: ethers.constants.AddressZero // NOTE: generic gateway is not deployed on BSC yet
+      mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
     },
     gatewayVersions: {
       loom: 1,
@@ -62,7 +62,7 @@ export default {
       fee: 37500,
     },
     tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
-    withdrawalLimit: true
+    withdrawalLimit: true,
   },
   disabled: [],
   chains: ["ethereum", "binance"],
@@ -73,5 +73,5 @@ export default {
   },
   features: {
     bscWallets: true,
-  }
+  },
 } as DashboardConfig

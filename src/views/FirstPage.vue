@@ -469,6 +469,8 @@ export default class FirstPage extends Vue {
 
   wallets = wallets
 
+  setExploreMode = ethereumModule.setToExploreMode
+
   get $state() { return (this.$store.state as DashboardState) }
 
   get maybeRelentlessUser() {
@@ -525,8 +527,6 @@ export default class FirstPage extends Vue {
 
     ethereumModule.setWalletType(walletType)
   }
-
-  setExploreMode = ethereumModule.setToExploreMode
 
   onClose() {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()

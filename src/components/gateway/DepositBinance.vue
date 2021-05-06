@@ -64,7 +64,7 @@ export default class DepositBinance extends Vue {
         { value: token, text: token, disabled: true },
       ],
       gateway: gatewayModule.state.binance.gatewayAccount,
-      memo: formatToLoomAddress(this.state.plasma.address)
+      memo: formatToLoomAddress(this.state.plasma.address),
     }
   }
 

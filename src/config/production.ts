@@ -40,7 +40,7 @@ export default {
     blockExplorerApi: "api.bscscan.com/api",
     contracts: {
       mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
-      loomGateway: "0x37939c8Bdbf6BCb6fFBC9519f88027CFe9dFe6D7"
+      loomGateway: "0x37939c8Bdbf6BCb6fFBC9519f88027CFe9dFe6D7",
     },
     gatewayVersions: {
       loom: 1,
@@ -50,7 +50,7 @@ export default {
   dpos: {
     bootstrapNodes: [
       "0x0e99fc16e32e568971908f2ce54b967a42663a26", // plasma-0
-      "0xCcE0021b0DE03C5fab36059f37dB003354bF98fb"
+      "0xCcE0021b0DE03C5fab36059f37dB003354bF98fb",
     ],
     analyticsUrl: "https://api.loom.games",
   },
@@ -62,7 +62,7 @@ export default {
       gatewayAccount: "bnb17mxq8p5jmw27dtt6s92fd35yltdml6snw3r98t",
       fee: 37500,
     },
-    withdrawalLimit: false
+    withdrawalLimit: false,
   },
   coinDataUrl: "/tokens/production.tokens.json",
   disabled: ["portis", "fortmatic", "walletconnect"],
@@ -74,5 +74,5 @@ export default {
   },
   features: {
     bscWallets: true,
-  }
+  },
 } as DashboardConfig

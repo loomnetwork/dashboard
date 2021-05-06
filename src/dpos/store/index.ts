@@ -123,7 +123,7 @@ export interface UpdateValidatorDetailRequest {
 async function fetchExtraValidators(url: string): Promise<Validator[]> {
   try {
     const resp = await Axios.get<ExtValidatorData[]>(url)
-    return resp.data.map(data => {
+    return resp.data.map((data) => {
       const v = new Validator()
       v.address = Address.fromString(data.address)
       v.addr = v.address.local.toString().toLowerCase()
@@ -190,9 +190,9 @@ export async function refreshValidators(ctx: ActionContext) {
   const hiddenValidators: string[] = []
   if (process.env.EXT_VALIDATORS_URL) {
     extValidators = await fetchExtraValidators(
-      process.env.EXT_VALIDATORS_URL.replace("{network}", ctx.rootState.plasma.networkId)
+      process.env.EXT_VALIDATORS_URL.replace("{network}", ctx.rootState.plasma.networkId),
     )
-    extValidators.forEach(v => {
+    extValidators.forEach((v) => {
       if (v.isHidden) {
         hiddenValidators.push(v.addr)
       } else {
@@ -575,9 +575,12 @@ export async function fetchAnalyticsData(context: ActionContext) {
   dposModule.setAnalyticsData(response.data.data)
 }
 
-export async function getDowntimeRecordsList(context: ActionContext, validator: Address): Promise<ValidatorDowntimeRecord> {
+export async function getDowntimeRecordsList(
+  context: ActionContext,
+  validator: Address,
+): Promise<ValidatorDowntimeRecord> {
   const validatorDowntime: ValidatorDowntimeRecord = {
-    periods: []
+    periods: [],
   }
   try {
     const records = await context.state.contract!.getDowntimeRecordAsync(validator)
@@ -585,7 +588,7 @@ export async function getDowntimeRecordsList(context: ActionContext, validator: 
       validatorDowntime.periods = records[0].getPeriodsList()
     }
   } catch (error) {
-    console.log("GetDowntimeRecordsList error", error);
+    console.log("GetDowntimeRecordsList error", error)
   }
   return validatorDowntime
 }
@@ -617,7 +620,7 @@ export async function updateValidatorDetail(context: ActionContext, validator: U
 export async function changeValidatorFee(context: ActionContext, newFee: number) {
   try {
     await context.state.contract!.changeFeeAsync(
-      newFee
+      newFee,
     )
     feedback.showSuccess(i18n.t("feedback_msg.success.change_validator_fee_success").toString())
   } catch (err) {

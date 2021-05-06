@@ -10,7 +10,7 @@
           {{ $t("views.statistics.missed_blocks") }}
         </h5>
         <a @click="refreshDowntime" style="position: absolute; right: 20px">
-          <fa :icon="['fas', 'sync']" class="refresh-icon"/>
+          <fa :icon="['fas', 'sync']" class="refresh-icon" />
         </a>
       </b-row>
       <b-card-body v-if="downtimeRecord.periods.length > 0">
@@ -22,7 +22,10 @@
                 {{ $t("views.statistics.blocks_missed") }}
               </dt>
             </dl>
-            <dl v-for="(period, index) in downtimeRecord.periods" :key="'p'+index">
+            <dl
+              v-for="(period, index) in downtimeRecord.periods"
+              :key="'p' + index"
+            >
               <dd v-if="index == 0">P</dd>
               <dd v-else>P-{{ index }}</dd>
               <dd>{{ period }}</dd>
@@ -63,14 +66,14 @@ export default class Statistics extends Vue {
 
   async getDowntimeRecords() {
     const validatorAddress = Address.fromString(
-      `${this.chainId}:${this.userAddress}`
+      `${this.chainId}:${this.userAddress}`,
     )
     this.downtimeRecord = await dposModule.getDowntimeRecordsList(
-      validatorAddress
+      validatorAddress,
     )
   }
 
-  async refreshDowntime(){
+  async refreshDowntime() {
     await this.getDowntimeRecords()
   }
 }

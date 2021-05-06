@@ -7,11 +7,19 @@
     @hide="resetModal"
   >
     <b-card>
-      <h6>{{ $t('components.modals.transfer_token_form_modal.token_type') }} {{ token }}</h6>
-      <h6>{{ $t('components.modals.transfer_token_form_modal.balance') }} {{ balance | tokenAmount(tokenDecimals)}} {{ token }}</h6>
+      <h6>
+        {{ $t("components.modals.transfer_token_form_modal.token_type") }}
+        {{ token }}
+      </h6>
+      <h6>
+        {{ $t("components.modals.transfer_token_form_modal.balance") }}
+        {{ balance | tokenAmount(tokenDecimals) }} {{ token }}
+      </h6>
       <div class="input-section">
         <i18n path="components.modals.transfer_token_form_modal.amount">
-          <span place="amount"> {{ balance | tokenAmount(tokenDecimals)}} </span>
+          <span place="amount">
+            {{ balance | tokenAmount(tokenDecimals) }}
+          </span>
         </i18n>
         <amount-input
           :min="min"
@@ -24,7 +32,9 @@
         />
       </div>
       <div class="input-section">
-        <span>{{ $t('components.modals.transfer_token_form_modal.receiver_address') }}</span>
+        <span>{{
+          $t("components.modals.transfer_token_form_modal.receiver_address")
+        }}</span>
         <input-address
           v-model="receiverAddress"
           chain="loom"
@@ -33,13 +43,19 @@
           @isValid="isValidAddressFormat"
         />
       </div>
-      <b-button type="button" :disabled="valid === false" @click="transferToken()">{{ $t('components.modals.transfer_token_form_modal.transfer') }}</b-button>
+      <b-button
+        type="button"
+        :disabled="valid === false"
+        @click="transferToken()"
+        >{{
+          $t("components.modals.transfer_token_form_modal.transfer")
+        }}</b-button
+      >
     </b-card>
   </b-modal>
 </template>
 
 <script lang="ts">
-
 import { Component, Watch, Vue, Prop } from "vue-property-decorator"
 import { PlasmaState } from "@/store/plasma/types"
 import { DashboardState } from "@/types"

@@ -53,7 +53,7 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
       decimals: 18,
-    }
+    },
   },
   selectedToken: "",
   blockExplorer: "",

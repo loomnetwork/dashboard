@@ -42,7 +42,7 @@ export default {
     blockExplorerApi: "api-testnet.bscscan.com/api",
     contracts: {
       loomGateway: "0x8Fa01da9B68dc0cAE32e12E8daFE9B136EfAbee6",
-      mainGateway: ethers.constants.AddressZero // NOTE: generic gateway is not deployed on BSC yet
+      mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
     },
     gatewayVersions: {
       loom: 1,
@@ -62,7 +62,7 @@ export default {
       gatewayAccount: "tbnb1gc7azhlup5a34t8us84x6d0fluw57deuf47q9w",
       fee: 37500,
     },
-    withdrawalLimit: false
+    withdrawalLimit: false,
   },
   disabled: [],
   chains: ["ethereum", "binance"],
@@ -73,5 +73,5 @@ export default {
   },
   features: {
     bscWallets: true,
-  }
+  },
 } as DashboardConfig

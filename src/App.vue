@@ -16,7 +16,7 @@ export default {
   watch: {
     "$store.state.plasma.address"(address) {
       const target = this.$route.query.redirect
-      const hasRoute = this.$router.options.routes.some(r => r.path === target)
+      const hasRoute = this.$router.options.routes.some((r) => r.path === target)
       if (address !== "") {
         if (hasRoute && !["/login", "/"].includes(target)) {
           this.$router.push(target)
@@ -86,7 +86,7 @@ main.container {
 }
 
 .faq img {
-  border:1px solid;
+  border: 1px solid;
   box-shadow: 0 0 5px #ccc;
   max-width: 100% !important;
 }

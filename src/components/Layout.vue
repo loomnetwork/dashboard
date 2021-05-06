@@ -106,7 +106,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
-import Web3 from "web3";
+import Web3 from "web3"
 
 import FaucetHeader from "@/components/FaucetHeader.vue"
 import FaucetSidebar from "@/components/FaucetSidebar.vue"
@@ -151,7 +151,7 @@ export default class Layout extends Vue {
     5: "Goerli",
     42: "Kovan",
     56: "Binance Smart Chain Mainnet",
-    97: "Binance Smart Chain Testnet"
+    97: "Binance Smart Chain Testnet",
   }
 
   // get $state() { return (this.$store.state as DashboardState) }

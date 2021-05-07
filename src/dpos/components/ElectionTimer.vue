@@ -1,13 +1,14 @@
 <template>
   <div>
-    <h5 v-if="timeLeft > 0" class="highlight">{{formattedTimeUntilElection}}</h5>
-    <b-spinner v-else variant="primary" label="Spinning"/>
+    <h5 class="highlight" style="height: 2rem;">
+      <span v-if="timeLeft > 0">{{formattedTimeUntilElection}}</span>
+      <b-spinner v-else variant="primary" label="Spinning" small style="margin: 0 0 0.4rem 0.4rem;" />
+    </h5>
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch } from "vue-property-decorator"
-import { dposModule } from "@/dpos/store"
+import { Component } from "vue-property-decorator"
 import { HasDPOSState } from "@/dpos/store/types"
 
 @Component

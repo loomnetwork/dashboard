@@ -8,7 +8,7 @@ import { getStoreBuilder } from "vuex-typex"
 import { DashboardState } from "@/types"
 import { whiteListReaction } from "../reactions"
 import { whiteListModuleStub } from "./_helpers"
-import { timer } from "rxjs";
+import { timer } from "rxjs"
 import BN from "bn.js"
 
 const whiteListstate: WhiteListState = {
@@ -86,7 +86,7 @@ describe("Whitelist, reactions test", () => {
     // @ts-ignore
     store.state.whiteList.userDeployerWhitelist = sinon.createStubInstance(UserDeployerWhitelist)
     await timer(1000).toPromise()
-    //console.log(store.state.whiteList.userDeployerWhitelist)
+    // console.log(store.state.whiteList.userDeployerWhitelist)
     sinon.assert.calledOnce(whiteListModuleStub.setDefaultTiers)
   })
 

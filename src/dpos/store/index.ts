@@ -7,7 +7,7 @@ import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import Axios from "axios"
-import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
+import { ICandidate, IDelegation, IValidator } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
@@ -53,7 +53,9 @@ const dposModule = {
 
   registerCandidate: builder.dispatch(registerCandidate),
   fetchAnalyticsData: builder.dispatch(fetchAnalyticsData),
-
+  getDowntimeRecordsList: builder.dispatch(getDowntimeRecordsList),
+  updateValidatorDetail: builder.dispatch(updateValidatorDetail),
+  changeValidatorFee: builder.dispatch(changeValidatorFee),
 }
 
 // vuex module as a service
@@ -107,10 +109,21 @@ interface ExtValidatorData {
   fee?: string
 }
 
+export interface ValidatorDowntimeRecord {
+  periods: number[]
+}
+
+export interface UpdateValidatorDetailRequest {
+  name: string
+  description: string
+  website: string
+  maxReferralPercentage: number
+}
+
 async function fetchExtraValidators(url: string): Promise<Validator[]> {
   try {
     const resp = await Axios.get<ExtValidatorData[]>(url)
-    return resp.data.map(data => {
+    return resp.data.map((data) => {
       const v = new Validator()
       v.address = Address.fromString(data.address)
       v.addr = v.address.local.toString().toLowerCase()
@@ -177,9 +190,9 @@ export async function refreshValidators(ctx: ActionContext) {
   const hiddenValidators: string[] = []
   if (process.env.EXT_VALIDATORS_URL) {
     extValidators = await fetchExtraValidators(
-      process.env.EXT_VALIDATORS_URL.replace("{network}", ctx.rootState.plasma.networkId)
+      process.env.EXT_VALIDATORS_URL.replace("{network}", ctx.rootState.plasma.networkId),
     )
-    extValidators.forEach(v => {
+    extValidators.forEach((v) => {
       if (v.isHidden) {
         hiddenValidators.push(v.addr)
       } else {
@@ -222,6 +235,7 @@ export async function refreshContractState(context: ActionContext) {
 
   state.maxYearlyRewards = fromBN(cs.maxYearlyRewards)
   state.totalWeightedStakes = fromBN(cs.totalWeightedAmountStaked)
+  state.minCandidateFee = cs.minCandidateFee
 
   const expectedYearlyRewards = state.totalWeightedStakes.times(stdRewardsRatio)
 
@@ -559,4 +573,56 @@ export async function registerCandidate(context: ActionContext, candidate: ICand
 export async function fetchAnalyticsData(context: ActionContext) {
   const response = await Axios.get(context.rootState.dpos.analyticsUrl + "/delegation/total?from_date&to_date")
   dposModule.setAnalyticsData(response.data.data)
+}
+
+export async function getDowntimeRecordsList(
+  context: ActionContext, validator: Address): Promise<ValidatorDowntimeRecord> {
+  const validatorDowntime: ValidatorDowntimeRecord = {
+    periods: [],
+  }
+  try {
+    const records = await context.state.contract!.getDowntimeRecordAsync(validator)
+    if (records) {
+      validatorDowntime.periods = records[0].getPeriodsList()
+    }
+  } catch (error) {
+    console.log("GetDowntimeRecordsList error", error)
+  }
+  return validatorDowntime
+}
+
+/**
+ * @param context
+ * @param validator
+ */
+export async function updateValidatorDetail(context: ActionContext, validator: UpdateValidatorDetailRequest) {
+  try {
+    await context.state.contract!.updateCandidateInfoAsync(
+      validator.name,
+      validator.description,
+      validator.website,
+      validator.maxReferralPercentage,
+    )
+
+    feedback.showSuccess(i18n.t("feedback_msg.success.update_validator_info_success").toString())
+  } catch (err) {
+    console.error(err)
+    feedback.showError(i18n.t("feedback_msg.error.err_while_update_validator_info").toString())
+  }
+}
+
+/**
+ * @param context
+ * @param newFee
+ */
+export async function changeValidatorFee(context: ActionContext, newFee: number) {
+  try {
+    await context.state.contract!.changeFeeAsync(
+      newFee,
+    )
+    feedback.showSuccess(i18n.t("feedback_msg.success.change_validator_fee_success").toString())
+  } catch (err) {
+    console.error(err)
+    feedback.showError(i18n.t("feedback_msg.error.err_while_change_validator_fee").toString())
+  }
 }

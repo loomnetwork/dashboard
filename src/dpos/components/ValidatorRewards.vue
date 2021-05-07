@@ -53,7 +53,6 @@ import { dposModule } from "@/dpos/store"
 import { ZERO } from "@/utils"
 import { HasDPOSState } from "@/dpos/store/types"
 
-
 @Component
 export default class ValidatorRewards extends Vue {
 

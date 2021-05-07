@@ -27,6 +27,8 @@ export function defaultState(): DPOSState {
     effectiveRewardsRatio: new BigNumber(0),
     maxYearlyRewards: new BigNumber(0),
     totalWeightedStakes: new BigNumber(0),
+    minCandidateFee: 0,
+    maxCandidateFee: 10000,
   }
 }
 
@@ -63,7 +65,7 @@ export function fromIDelegation(d: IDelegation, validators: Validator[]) {
  */
 export function formerValidator(address: Address): Validator {
   const addr = address.local.toString().toLowerCase()
-  let name = addr.substring(35)
+  const name = addr.substring(35)
   const validator = new Validator()
   validator.addr = addr
   validator.address = address

@@ -33,6 +33,7 @@ import { feedbackModule } from "@/feedback/store"
 import { timer, Subscription } from "rxjs"
 import { i18n } from "@/i18n"
 import { WalletConnectAdapter } from "./wallets/walletconnect"
+import { WalletLinkAdapter } from "./wallets/walletlink"
 import { BinanceChainWalletAdapter, isBCWallet, BSC_SAFE_BLOCK_WAIT_TIME_MS } from "./wallets/binance"
 
 declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
@@ -40,10 +41,11 @@ declare type ActionContext = BareActionContext<EthereumState, HasEthereumState>
 const log = debug("dash.ethereum")
 const ZERO = new BN("0")
 
-const wallets: Map<string, WalletType> = new Map([
+export const wallets: Map<string, WalletType> = new Map([
   ["metamask", MetaMaskAdapter],
   ["binance", BinanceChainWalletAdapter],
   ["walletconnect", WalletConnectAdapter],
+  ["walletlink", WalletLinkAdapter],
 ])
 
 const initialState: EthereumState = {
@@ -52,6 +54,7 @@ const initialState: EthereumState = {
   genericNetworkName: "",
   chainId: "",
   nativeTokenSymbol: "",
+  nativeTokenDecimals: 18,
   endpoint: "",
   blockExplorer: "",
   blockExplorerApi: "",
@@ -172,13 +175,25 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async (provider) => await setProvider(context, provider))
+      .then((provider) => {
+        disconnectWalletBeforeUnload(provider)
+        return setProvider(context, provider)
+      })
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
       })
   }
+}
+
+function disconnectWalletBeforeUnload(wallet) {
+  const listener = (e: BeforeUnloadEvent) => {
+    e.preventDefault()
+    wallet.disconnect()
+    window.removeEventListener("beforeunload", listener)
+  }
+  window.addEventListener("beforeunload", listener)
 }
 
 async function setProvider(context: ActionContext, p: IWalletProvider) {
@@ -376,6 +391,7 @@ export function initERC20(context: ActionContext, symbol: string) {
     refresh,
   )
 
+  // For the deprecation warning see https://github.com/MetaMask/metamask-extension/issues/9301#issuecomment-680955280
   send.on("data", refresh)
   receive.on("data", refresh)
 

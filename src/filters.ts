@@ -7,7 +7,7 @@ import BigNumber from "bignumber.js"
 const delegationStateText = ["Bonding", "Bonded", "Unbonding", "Redelegating"]
 const lockTimeTierText = ["2 weeks", "3 months", "6 months", "1 year"]
 const lockTimeTierBonus = [1, 1.5, 2, 3]
-import marked from "marked";
+import marked from "marked"
 
 export function initFilters() {
   Vue.filter("delegationState", formateDelegationState)

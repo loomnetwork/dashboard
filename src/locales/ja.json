@@ -1,5 +1,6 @@
 {
   "messages": {
+    "loading_validators": "Loading validator list....",
     "user_denied_tx": "トランザクションを拒否しました",
     "transfer_card_success_tx": "カードの移転は成功しました。Tx: {transactionHash}",
     "transfer_pack_success_tx": "パックの移転は成功しました。Tx: {transactionHash}",
@@ -383,6 +384,13 @@
       "contact_desc": "Loom will be evaluating submissions and choosing select winners for each bounty",
       "contact": "Contact {email} if you need guidance with submissions",
       "email": "satoshi@loomx.io"
+    },
+    "statistics": {
+      "statistics": "Statistics",
+      "missed_blocks": "Missed Blocks",
+      "period": "Period",
+      "blocks_missed": "Blocks Missed",
+      "no_downtime": "Your validator node hasn't missed signing any blocks."
     }
   },
   "components": {
@@ -527,7 +535,7 @@
       "sign_wallet": "Using your wallet, sign the message to confirm your {network} identity. (No gas required)",
       "already_mapped": "選択したアカウントはすでにマッピング済みです。新しいアカウントを選択して下さい。",
       "your_wallet_connected_to": "Your wallet is connected to {network}.",
-      "please_change_to": "Please change to {network}."
+      "please_change_to": "Please connect it to {network}, and then press the button below."
     },
     "loading_spinner": {
       "please_be_patient_loomy_is": "Loomyが頑張ってロード中！少々お待ちください。",
@@ -696,7 +704,8 @@
       "required": "Required",
       "insufficient_loom": "Insufficient LOOM",
       "ready_to_stake": "Ready to stake",
-      "your_balance": "Your balance"
+      "your_balance": "Your balance",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
       "validator_associated": "Validator Associated",
@@ -726,7 +735,18 @@
       "staked_amount": "Staked Amount",
       "whitelist_locktime_tier": "Whitelist Locktime Tier",
       "follow_node_guide": "For setting up a your own validator node, please follow a {link}.",
-      "node_setup_guide": "Node setup guide"
+      "node_setup_guide": "Node setup guide",
+      "edit": "Edit"
+    },
+    "validator_update_form": {
+      "title": "Update Validator Detail",
+      "name": "Name",
+      "website": "Website",
+      "description": "Description",
+      "fee": "Fee",
+      "max_referral_percentage": "Max Referral",
+      "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
+      "validate_fee": "Fee must be between {min}% and {max}%."
     }
   },
   "events": {
@@ -808,7 +828,9 @@
       "address_existed": "This address is already exists in your deployer list.",
       "failed_to_get_receipt": "Failed to get receipt",
       "connect_wallet_prob": "There seems to be a problem connecting to your wallet. Please contact support.",
-      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support."
+      "err_while_withdraw_airdrop": "Unexpected error while withdrawing airdrop, please contact support.",
+      "err_while_update_validator_info": "Unexpected error while updating validator information, please check your input and try again.",
+      "err_while_change_validator_fee": "Unexpected error while changing validator fee, try again after the next election."
     },
     "info": {
       "reward_claimed": "Rewards successfully claimed.",
@@ -824,7 +846,9 @@
       "plasma_addr_copied": "Basechain address copied.",
       "address_copied": "Address copied.",
       "register_success": "Successfully registered.",
-      "withdraw_airdrop_success": "Successfully withdrew airdrop."
+      "withdraw_airdrop_success": "Successfully withdrew airdrop.",
+      "update_validator_info_success": "Successfully updated validator information.",
+      "change_validator_fee_success": "Successfully changed validator fee."
     },
     "alert": {
       "title": {

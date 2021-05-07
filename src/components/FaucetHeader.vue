@@ -124,7 +124,7 @@ import ForeignNetworkChip from "./ForeignNetworkChip.vue"
     LoomIcon,
     LoadingBar,
     FeedbackNotification,
-    ForeignNetworkChip
+    ForeignNetworkChip,
   },
 })
 export default class FaucetHeader extends Vue {

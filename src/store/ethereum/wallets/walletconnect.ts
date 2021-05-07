@@ -10,6 +10,7 @@ import { ethereumModule } from ".."
 export const WalletConnectAdapter: WalletType = {
   id: "walletconnect",
   name: "WalletConnect",
+  logo: require("@/assets/walletconnect-logo.svg"),
   detectable: true,
   isMultiAccount: false,
   desktop: true,
@@ -22,16 +23,19 @@ export const WalletConnectAdapter: WalletType = {
     if (config.genericNetworkName === "Ethereum") {
       opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
     } else {
-      opts.chainId = parseInt(config.networkId)
+      opts.chainId = parseInt(config.networkId, 10)
       opts.rpc = { [opts.chainId]: config.endpoint }
     }
+    // clear our previous session so user is prompted to scan QR code
+    localStorage.removeItem("walletconnect")
     const wcProvider = new WalletConnectProvider(opts)
+
     wcProvider.on(
       "chainChanged",
       (chainId: string) => {
         console.log(`WalletConnect chainChanged ${chainId}`)
         ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
-      }
+      },
     )
     // NOTE: WC seems to emit accountsChanged every time the provider is enabled, unlike MetaMask.
     wcProvider.on("accountsChanged", (accounts: string[]) => {

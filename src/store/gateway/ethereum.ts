@@ -170,7 +170,7 @@ export async function init(
   ) as EthereumGatewayV2Factory
   log("loom gateway initialized")
 
-  let mainGateway: Gateway | null = null;
+  let mainGateway: Gateway | null = null
   if (addresses.mainGateway !== ethers.constants.AddressZero) {
     // @ts-ignore
     mainGateway = new web3.eth.Contract(

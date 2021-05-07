@@ -9,7 +9,8 @@ export const BSC_SAFE_BLOCK_WAIT_TIME_MS = 15000
 
 export const BinanceChainWalletAdapter: WalletType = {
   id: "binance",
-  name: "BinanceChain",
+  name: "Binance Chain",
+  logo: require("@/assets/binance_wallet_logo.svg"),
   detectable: true,
   isMultiAccount: false,
   desktop: true,
@@ -26,7 +27,7 @@ export const BinanceChainWalletAdapter: WalletType = {
 
     bc.autoRefreshOnNetworkChange = false
     // @ts-ignore
-    bc.on("chainChanged", () => ethereumModule.commitSetWalletNetworkId(parseInt(window.BinanceChain.chainId, 16)));
+    bc.on("chainChanged", () => ethereumModule.commitSetWalletNetworkId(parseInt(window.BinanceChain.chainId, 16)))
 
     let accounts: string[] = []
     try {
@@ -43,9 +44,9 @@ export const BinanceChainWalletAdapter: WalletType = {
 
     await changeAccounts(accounts)
 
-    bc.on("accountsChanged", (accounts) => {
-      console.log(`accountsChanged ${accounts}`)
-      changeAccounts(accounts).catch((err) => console.error(err))
+    bc.on("accountsChanged", (_accounts) => {
+      console.log(`accountsChanged ${_accounts}`)
+      changeAccounts(_accounts).catch((err) => console.error(err))
     })
 
     bc.isBCWallet = true

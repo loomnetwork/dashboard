@@ -188,8 +188,7 @@ export default class ValidatorExtendedDetail extends Vue {
     this.$refs.validatorUpdateForm.show()
   }
   unjail() {
-    if (this.validator.)
-    dposModule.unjail(this.validator)
+    dposModule.unjail(this.userAddress)
   }
 }
 </script>

@@ -629,6 +629,6 @@ export async function changeValidatorFee(context: ActionContext, newFee: number)
 }
 
 
-export async function unjail(context:ActionContext, validatorAddress:Address) {
+export async function unjail(context:ActionContext, validatorAddress:string) {
   throw new Error("Not implemented")
 }

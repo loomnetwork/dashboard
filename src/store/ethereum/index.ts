@@ -175,13 +175,25 @@ async function setWalletType(context: ActionContext, walletType: string) {
 
     await wallet
       .createProvider(context.state)
-      .then(async (provider) => await setProvider(context, provider))
+      .then((provider) => {
+        disconnectWalletBeforeUnload(provider)
+        return setProvider(context, provider)
+      })
       .catch((error) => {
         Sentry.captureException(error)
         console.error(error)
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
       })
   }
+}
+
+function disconnectWalletBeforeUnload(wallet) {
+  const listener = (e: BeforeUnloadEvent) => {
+    e.preventDefault()
+    wallet.disconnect()
+    window.removeEventListener("beforeunload", listener)
+  }
+  window.addEventListener("beforeunload", listener)
 }
 
 async function setProvider(context: ActionContext, p: IWalletProvider) {

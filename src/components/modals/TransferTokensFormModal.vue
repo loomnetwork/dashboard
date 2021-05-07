@@ -37,19 +37,14 @@
     </b-card>
   </b-modal>
 </template>
-
 <script lang="ts">
-
-import { Component, Watch, Vue, Prop } from "vue-property-decorator"
+import { Component, Vue, Prop } from "vue-property-decorator"
 import { PlasmaState } from "@/store/plasma/types"
 import { DashboardState } from "@/types"
 import { plasmaModule } from "@/store/plasma"
 import AmountInput from "@/components/AmountInput.vue"
 import BN from "bn.js"
-import { BigNumber } from "bignumber.js"
-import { formatTokenAmount } from "@/filters"
 import InputAddress from "../InputAddress.vue"
-import { tokenService } from "@/services/TokenService"
 import { ZERO } from "@/utils"
 
 @Component({

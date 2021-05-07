@@ -130,15 +130,15 @@ export default class ValidatorUpdateForm extends Vue {
       maxReferralPercentage: this.form.maxReferralPercentage,
     }
     if (
-      this.form.name != this.validator.name ||
-      this.form.description != this.validator.description ||
-      this.form.website != this.validator.website ||
-      this.form.maxReferralPercentage != this.validator.maxReferralPercentage
+      this.form.name !== this.validator.name ||
+      this.form.description !== this.validator.description ||
+      this.form.website !== this.validator.website ||
+      this.form.maxReferralPercentage !== this.validator.maxReferralPercentage
     ) {
       await dposModule.updateValidatorDetail(newValidatorDetail)
     }
 
-    if (this.form.fee != this.validator.fee.toNumber()) {
+    if (this.form.fee !== this.validator.fee.toNumber()) {
       await dposModule.changeValidatorFee(this.form.fee * 100)
     }
     this.close()
@@ -146,7 +146,7 @@ export default class ValidatorUpdateForm extends Vue {
   }
 
   get ableToChangeFee() {
-    return this.candidateState == 0
+    return this.candidateState === 0
   }
 
   get validFee() {

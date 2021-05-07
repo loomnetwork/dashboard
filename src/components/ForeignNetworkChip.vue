@@ -19,14 +19,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
-import { DashboardState } from "@/types";
-import { wallets } from "@/store/ethereum";
+import { Component, Vue, Prop } from "vue-property-decorator"
+import { DashboardState } from "@/types"
+import { wallets } from "@/store/ethereum"
 
 @Component
 export default class NetworkChip extends Vue {
   @Prop({ default: false })
-  readonly compact!: boolean;
+  readonly compact!: boolean
 
   get state(): DashboardState {
     return this.$store.state

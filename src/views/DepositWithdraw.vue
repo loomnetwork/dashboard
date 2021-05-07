@@ -168,10 +168,13 @@ export default class DepositWithdraw extends Vue {
     // TODO move this to store
     const supported = tokenService.symbols.map((token) => token.plasma)
     // Binance and Ethereum have different supported token lists
-    const walletId = this.state.ethereum.nativeTokenSymbol === "BNB" ? (this.state.env + '.binance') : this.state.env
+    const walletId = this.state.ethereum.nativeTokenSymbol === "BNB" ? (this.state.env + ".binance") : this.state.env
     getWalletFromLocalStorage(walletId)
       .filter((address) => supported.includes(address))
-      .forEach((address) => plasmaModule.addToken({ token: tokenService.tokenFromAddress(address, "plasma")!, walletId }))
+      .forEach((address) => plasmaModule.addToken({
+          token: tokenService.tokenFromAddress(address, "plasma")!,
+          walletId,
+      }))
 
     this.filterTokens()
 

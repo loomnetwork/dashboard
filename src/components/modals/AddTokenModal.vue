@@ -71,7 +71,7 @@ export default class AddTokenModal extends Vue {
   }
 
   addToken(token) {
-    const walletId = this.state.ethereum.nativeTokenSymbol === "BNB" ? (this.state.env + '.binance') : this.state.env
+    const walletId = this.state.ethereum.nativeTokenSymbol === "BNB" ? (this.state.env + ".binance") : this.state.env
     plasmaModule.addToken({ token, walletId })
     this.$root.$emit("bv::hide::modal", "add-token-modal")
     this.$emit("refreshTokenList")

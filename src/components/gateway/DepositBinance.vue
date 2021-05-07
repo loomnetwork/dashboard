@@ -14,43 +14,75 @@
       <div class="content" v-if="step === 1">
         <div class="description">
           <i18n path="components.gateway.deposit_binance.description">
-            <a place="link" :href="$t('components.gateway.deposit_binance.binance_link')" target="_blank">{{ $t('components.gateway.deposit_binance.binance_link') }}</a>
+            <a
+              place="link"
+              :href="$t('components.gateway.deposit_binance.binance_link')"
+              target="_blank"
+              >{{ $t("components.gateway.deposit_binance.binance_link") }}</a
+            >
           </i18n>
         </div>
         <div class="deposit-form">
-          <p>{{ $t('components.gateway.deposit_binance.send_asset') }}</p>
+          <p>{{ $t("components.gateway.deposit_binance.send_asset") }}</p>
           <div class="flex-row my-4">
             <div class="yellow-line"></div>
             <div class="gray-line"></div>
           </div>
-          <p>{{ $t('components.gateway.deposit_binance.select_asset') }}</p>
-          <b-form-select v-model="form.selected" :options="form.options"></b-form-select>
-          <p>{{ $t('components.gateway.deposit_binance.to_address') }}</p>
-          <b-form-input :placeholder="$t('input_placeholder.gateway_addr')" :value="form.gateway" disabled></b-form-input>
-          <p>{{ $t('components.gateway.deposit_binance.send_amount') }}</p>
-          <b-form-input :placeholder="$t('input_placeholder.amount')" :value="$t('components.gateway.deposit_binance.send_amount_placeholder')" disabled></b-form-input>
-          <p>{{ $t('components.gateway.deposit_binance.memo') }}</p>
-          <b-form-textarea rows="3" :placeholder="$t('input_placeholder.memo')" disabled v-model="form.memo"></b-form-textarea>
+          <p>{{ $t("components.gateway.deposit_binance.select_asset") }}</p>
+          <b-form-select
+            v-model="form.selected"
+            :options="form.options"
+          ></b-form-select>
+          <p>{{ $t("components.gateway.deposit_binance.to_address") }}</p>
+          <b-form-input
+            :placeholder="$t('input_placeholder.gateway_addr')"
+            :value="form.gateway"
+            disabled
+          ></b-form-input>
+          <p>{{ $t("components.gateway.deposit_binance.send_amount") }}</p>
+          <b-form-input
+            :placeholder="$t('input_placeholder.amount')"
+            :value="
+              $t('components.gateway.deposit_binance.send_amount_placeholder')
+            "
+            disabled
+          ></b-form-input>
+          <p>{{ $t("components.gateway.deposit_binance.memo") }}</p>
+          <b-form-textarea
+            rows="3"
+            :placeholder="$t('input_placeholder.memo')"
+            disabled
+            v-model="form.memo"
+          ></b-form-textarea>
         </div>
       </div>
       <div class="content" v-else-if="step === 2">
-        <p>{{ $t('components.gateway.deposit_binance.deposit_message') }}</p>
+        <p>{{ $t("components.gateway.deposit_binance.deposit_message") }}</p>
       </div>
     </div>
     <div slot="modal-footer" class="w-100 space-between">
       <b-button @click="onBack">{{ backButtonText }}</b-button>
-      <b-button :class="{ hide: step >= 2 }" variant="primary" @click="onNext">{{ $t('components.gateway.deposit_binance.next') }}</b-button>
-      <b-button :class="{ hide: step < 2 }" variant="primary" @click="visible = false">{{ $t('components.gateway.deposit_binance.close') }}</b-button>
+      <b-button
+        :class="{ hide: step >= 2 }"
+        variant="primary"
+        @click="onNext"
+        >{{ $t("components.gateway.deposit_binance.next") }}</b-button
+      >
+      <b-button
+        :class="{ hide: step < 2 }"
+        variant="primary"
+        @click="visible = false"
+        >{{ $t("components.gateway.deposit_binance.close") }}</b-button
+      >
     </div>
   </b-modal>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator"
-import { capitalize, formatToLoomAddress } from "@/utils"
+import { Vue, Component } from "vue-property-decorator"
+import { formatToLoomAddress } from "@/utils"
 import { DashboardState } from "@/types"
 import { gatewayModule } from "@/store/gateway"
-import { tokenService } from "@/services/TokenService"
 
 @Component
 export default class DepositBinance extends Vue {
@@ -64,7 +96,7 @@ export default class DepositBinance extends Vue {
         { value: token, text: token, disabled: true },
       ],
       gateway: gatewayModule.state.binance.gatewayAccount,
-      memo: formatToLoomAddress(this.state.plasma.address)
+      memo: formatToLoomAddress(this.state.plasma.address),
     }
   }
 

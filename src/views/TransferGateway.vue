@@ -98,7 +98,6 @@ export default class TransferGateway extends Vue {
 
   tokenMappingFields: any[] = []
 
-
   tokenData: TokenData = {
     symbol: "",
     ethereum: "",
@@ -250,6 +249,7 @@ main.transfer-gateway {
 
   .not-found {
     margin: 10% 0;
+    user-select: none;
     -webkit-user-select: none;
   }
 

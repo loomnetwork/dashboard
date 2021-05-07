@@ -4,7 +4,7 @@
  * @preferred
  */
 import * as Sentry from "@sentry/browser"
-import { provider } from "web3-providers"
+import { provider as W3Provider } from "web3-providers"
 import { feedbackModule } from "@/feedback/store"
 import Web3 from "web3"
 import { getMetamaskSigner } from "loom-js"
@@ -42,7 +42,7 @@ function isMetamaskPresent() {
   return "ethereum" in window && window.ethereum.isMetaMask
 }
 
-async function getCurrentApi(): Promise<provider> {
+async function getCurrentApi(): Promise<W3Provider> {
   // @ts-ignore
   const ethereum: any = window.ethereum
   try {
@@ -55,7 +55,7 @@ async function getCurrentApi(): Promise<provider> {
   ethereum.autoRefreshOnNetworkChange = false
   ethereum.on(
     "chainChanged",
-    (chainId: string) => ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
+    (chainId: string) => ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16)),
   )
 
   try {

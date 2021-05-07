@@ -92,7 +92,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
     rootState.plasma.chainId,
   )
   feedbackModule.setStep(
-    i18n.t("feedback_msg.step.create_new_mapping", { network: rootState.ethereum.genericNetworkName }
+    i18n.t("feedback_msg.step.create_new_mapping", { network: rootState.ethereum.genericNetworkName },
     ).toString())
   const mapper = await AddressMapper.createAsync(client, address)
   try {

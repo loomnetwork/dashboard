@@ -63,14 +63,14 @@ export default class Statistics extends Vue {
 
   async getDowntimeRecords() {
     const validatorAddress = Address.fromString(
-      `${this.chainId}:${this.userAddress}`
+      `${this.chainId}:${this.userAddress}`,
     )
     this.downtimeRecord = await dposModule.getDowntimeRecordsList(
-      validatorAddress
+      validatorAddress,
     )
   }
 
-  async refreshDowntime(){
+  async refreshDowntime() {
     await this.getDowntimeRecords()
   }
 }

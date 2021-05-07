@@ -25,18 +25,13 @@
     </b-row>
   </div>
 </template>
-
-
 <script lang="ts">
 import Vue from "vue"
 import Chart from "chart.js"
 import { Component } from "vue-property-decorator"
-import { Address, CryptoUtils, LocalAddress } from "loom-js"
 
 import { DashboardState } from "../types"
-import { timer } from "rxjs"
 import { dposModule } from "../dpos/store"
-import { DPOS3 } from "loom-js/dist/contracts"
 import BigNumber from "bignumber.js"
 
 @Component
@@ -44,7 +39,7 @@ export default class Analytics extends Vue {
 
   allDelegationArray: any = []
   // 2 weeks / 3 months / 6 months / 1 year
-  tierDistribution = [0,0,0,0]
+  tierDistribution = [0, 0, 0, 0]
   selected = "daily"
   filteredArray: any = []
 
@@ -133,16 +128,16 @@ export default class Analytics extends Vue {
           }],
           yAxes: [{
             type: "logarithmic",
-          }]
+          }],
         },
       },
       ticks: {
         autoSkip: true,
-      }
+      },
     }
-    // @ts-ignore 
+    // @ts-ignore
     const pieChart = new Chart(ctx, config)
-    // @ts-ignore 
+    // @ts-ignore
     const barChart = new Chart(ctx2, config2)
 
   }
@@ -153,7 +148,7 @@ export default class Analytics extends Vue {
 
   getDaily() {
     const today = new Date().toISOString()
-    const nowTime = new Date().toLocaleTimeString("it-IT") 
+    const nowTime = new Date().toLocaleTimeString("it-IT")
     const fromDate = today.replace(today.substring(11), "00:00:00")
     const toDate = today.replace(today.substring(11), nowTime)
     return { fromDate, toDate }

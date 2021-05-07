@@ -131,6 +131,9 @@
             <b-btn variant="primary" @click="openUpdateModal()" class="float-right px-5">
               {{ $t("components.validator_extended_detail.edit") }}
             </b-btn>
+            <b-btn v-if="validator.jailed" variant="primary" @click="unjail()" class="float-right px-5">
+              {{ $t("components.validator_extended_detail.unjail") }}
+            </b-btn>
           </b-col>
         </b-row>
       </b-card-body>
@@ -140,10 +143,11 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch, Prop } from "vue-property-decorator"
+import { Component, Prop } from "vue-property-decorator"
 import { HasDPOSState } from "@/dpos/store/types"
 import RegisterCandidateForm from "./RegisterCandidateForm.vue"
 import ValidatorUpdateForm from "./ValidatorUpdateForm.vue"
+import { dposModule } from "@/dpos/store"
 
 @Component({
   components: {
@@ -182,6 +186,10 @@ export default class ValidatorExtendedDetail extends Vue {
   openUpdateModal() {
     // @ts-ignore
     this.$refs.validatorUpdateForm.show()
+  }
+  unjail() {
+    if (this.validator.)
+    dposModule.unjail(this.validator)
   }
 }
 </script>

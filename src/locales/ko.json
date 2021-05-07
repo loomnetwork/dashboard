@@ -708,6 +708,7 @@
       "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
+      "unjail": "Unjail",
       "validator_associated": "관련된 검증자",
       "not_validator_account": "이 계정({address})은 검증자 계정이 아닙니다.",
       "become_validator": "검증자 되기",

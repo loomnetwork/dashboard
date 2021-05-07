@@ -708,6 +708,7 @@
       "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
+      "unjail": "Unjail",
       "validator_associated": "相关的验证者",
       "not_validator_account": "这个账户 {address} 不是验证者账户。",
       "become_validator": "成为验证者",

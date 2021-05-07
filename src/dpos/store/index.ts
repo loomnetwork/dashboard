@@ -56,6 +56,7 @@ const dposModule = {
   getDowntimeRecordsList: builder.dispatch(getDowntimeRecordsList),
   updateValidatorDetail: builder.dispatch(updateValidatorDetail),
   changeValidatorFee: builder.dispatch(changeValidatorFee),
+  unjail: builder.dispatch(unjail),
 }
 
 // vuex module as a service
@@ -625,4 +626,9 @@ export async function changeValidatorFee(context: ActionContext, newFee: number)
     console.error(err)
     feedback.showError(i18n.t("feedback_msg.error.err_while_change_validator_fee").toString())
   }
+}
+
+
+export async function unjail(context:ActionContext, validatorAddress:Address) {
+  throw new Error("Not implemented")
 }

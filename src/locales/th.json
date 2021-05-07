@@ -708,6 +708,7 @@
       "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
+      "unjail": "Unjail",
       "validator_associated": "Validator Associated",
       "not_validator_account": "This account {address} is not a validator account.",
       "become_validator": "Becoming a Validator",

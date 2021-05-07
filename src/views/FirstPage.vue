@@ -19,7 +19,7 @@
               <div class="linking-div">
                 <img src="../assets/images/relentless.png" />
                 <i style="font-size: 56px" class="fa">&#8651;</i>
-                <loom-icon width="56px" height="56px" :color="'#6eccd8'" />
+                <loom-icon width="56px" height="56px" color="#6eccd8" />
               </div>
               <div class="linking-div-choice">
                 <b-button
@@ -111,6 +111,27 @@
                         >
                           <img :src="wallets.get('walletconnect').logo" />
                           <span>{{ wallets.get("walletconnect").name }}</span>
+                        </b-card>
+                      </div>
+                      <div class="col-sm-12 mb-3">
+                        <b-card style="box-shadow: none">
+                          <h5>
+                            <img
+                              src="../assets/metamask_logo.png"
+                              height="32"
+                            />
+                            Using Metamask?
+                          </h5>
+                          <b-card-text>
+                            Select <strong>Binance Smart Chain</strong> in your
+                            Metamask wallet first. If you don't see it there
+                            <b-button
+                              @click="addBSCToMetamask()"
+                              size="sm"
+                              variant="outline-primary"
+                              >add BSC Network
+                            </b-button>
+                          </b-card-text>
                         </b-card>
                       </div>
                     </div>
@@ -328,7 +349,7 @@ import LoomIcon from "@/components/LoomIcon.vue"
 import { gatewayModule } from "../store/gateway"
 import { feedbackModule } from "../feedback/store"
 
-import { MetaMaskAdapter } from "../store/ethereum/wallets/metamask"
+import { MetaMaskAdapter, addNetwork as mmAddNetwork } from "../store/ethereum/wallets/metamask"
 import { BinanceChainWalletAdapter } from "../store/ethereum/wallets/binance"
 import { tokenService } from "@/services/TokenService"
 import { getTokenList } from "../utils"
@@ -344,12 +365,6 @@ import { wallets } from "@/store/ethereum"
   },
 })
 export default class FirstPage extends Vue {
-  address = ""
-  addressModalShow = false
-  mappedModalShow = false
-  reconsider = false
-  showMetamaskInstallPrompt = false
-  showBinanceInstallPrompt = false
 
   wallets = wallets
 
@@ -380,6 +395,14 @@ export default class FirstPage extends Vue {
   get bscWalletsEnabled(): boolean {
     return this.$state.activeConfig ? this.$state.activeConfig.features.bscWallets : false
   }
+  address = ""
+  addressModalShow = false
+  mappedModalShow = false
+  reconsider = false
+  showMetamaskInstallPrompt = false
+  showBinanceInstallPrompt = false
+
+  setExploreMode = ethereumModule.setToExploreMode
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {
     switch (walletType) {
@@ -410,7 +433,12 @@ export default class FirstPage extends Vue {
     ethereumModule.setWalletType(walletType)
   }
 
-  setExploreMode = ethereumModule.setToExploreMode
+  async addBSCToMetamask() {
+    const bscConf = this.env.binance
+    if (!bscConf) throw new Error("binance config not set in current env")
+
+    await mmAddNetwork(bscConf)
+  }
 
   onClose() {
     if (!this.$state.ethereum.signer) feedbackModule.endTask()

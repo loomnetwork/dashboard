@@ -54,6 +54,7 @@ const initialState: EthereumState = {
   genericNetworkName: "",
   chainId: "",
   nativeTokenSymbol: "",
+  nativeTokenDecimals: 18,
   endpoint: "",
   blockExplorer: "",
   blockExplorerApi: "",

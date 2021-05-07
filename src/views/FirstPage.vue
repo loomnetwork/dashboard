@@ -113,26 +113,29 @@
                           <span>{{ wallets.get("walletconnect").name }}</span>
                         </b-card>
                       </div>
+                      <div class="col-sm-12 mb-3">
+                        <b-card style="box-shadow: none">
+                          <h5>
+                            <img
+                              src="../assets/metamask_logo.png"
+                              height="32"
+                            />
+                            Using Metamask?
+                          </h5>
+                          <b-card-text>
+                            Select <strong>Binance Smart Chain</strong> in your
+                            Metamask wallet first. If you don't see it there
+                            <b-button
+                              @click="addBSCToMetamask()"
+                              size="sm"
+                              variant="outline-primary"
+                              >add BSC Network
+                            </b-button>
+                          </b-card-text>
+                        </b-card>
+                      </div>
                     </div>
                   </div>
-                  <b-card class="wallet-selection-card text-center">
-                    <div>
-                      <h5>
-                        <img src="../assets/metamask_logo.png" height="24" />
-                        Using Metamask?
-                      </h5>
-                      <p>
-                        Select <strong>Binance Smart Chain</strong> in your
-                        Metamask wallet first. If you don't see it there
-                        <b-button
-                          @click="addBSCToMetamask()"
-                          size="sm"
-                          variant="outline-primary"
-                          >add BSC Network
-                        </b-button>
-                      </p>
-                    </div>
-                  </b-card>
                 </b-card-body>
               </b-card>
               <!-- Ethereum wallets -->

@@ -35,7 +35,7 @@ export const WalletConnectAdapter: WalletType = {
       (chainId: string) => {
         console.log(`WalletConnect chainChanged ${chainId}`)
         ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
-      }
+      },
     )
     // NOTE: WC seems to emit accountsChanged every time the provider is enabled, unlike MetaMask.
     wcProvider.on("accountsChanged", (accounts: string[]) => {

@@ -19,12 +19,6 @@ import { Component, Watch, Prop } from "vue-property-decorator"
 import { EthereumState } from "@/store/ethereum/types"
 import { DashboardState } from "@/types"
 
-
-// ({
-//   props: {
-//     event: Object,
-//   },
-// })
 @Component
 export default class HistoryEvent extends Vue {
 

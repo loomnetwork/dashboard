@@ -35,7 +35,6 @@ export interface ILocalAccountInfo {
   lastWithdrawalLimitResetTime: number
 }
 
-
 /**
  * Gateway state
  */

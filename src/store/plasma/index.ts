@@ -9,7 +9,6 @@ import BN from "bn.js"
 import { PlasmaSigner, HasPlasmaState, PlasmaContext } from "./types"
 import { Client, Address, LocalAddress, CryptoUtils } from "loom-js"
 
-import * as mutations from "./mutations"
 import { i18n } from "@/i18n"
 
 import {
@@ -17,14 +16,13 @@ import {
   createDefaultTxMiddleware,
 } from "loom-js/dist/helpers"
 
-// assets (make this a sepoerate module)
+// assets (make this a separate module)
 
 import debug from "debug"
 
 import * as Tokens from "./tokens"
 import { feedbackModule } from "@/feedback/store"
 import Axios from "axios"
-import { tokenService } from "@/services/TokenService"
 
 const log = debug("dash.plasma")
 
@@ -53,7 +51,7 @@ const initialState: PlasmaState = {
       balance: new BN("0"),
       loading: false,
       decimals: 18,
-    }
+    },
   },
   selectedToken: "",
   blockExplorer: "",

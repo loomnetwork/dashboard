@@ -50,11 +50,11 @@ export function plasmaReactions(store: Store<DashboardState>) {
     async after(action) {
       if (action.type === "plasma/transfer") {
         await plasmaModule.refreshBalance(
-          action.payload.symbol || action.payload
+          action.payload.symbol || action.payload,
         )
       } else if (action.type === "plasma/addToken") {
         await plasmaModule.refreshBalance(
-          action.payload.token.symbol
+          action.payload.token.symbol,
         )
       }
     },

@@ -119,7 +119,7 @@ const tokens = {
   "dev": devTokens,
   "production.binance": productionBinanceTokens,
   "ext-dev.binance": extDevBinanceTokens,
-  "dev.binance": devBinanceTokens
+  "dev.binance": devBinanceTokens,
 }
 
 export function getTokenList(tokenListId: string): TokenData[] {

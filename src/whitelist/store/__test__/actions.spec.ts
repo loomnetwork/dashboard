@@ -9,14 +9,14 @@ import { WhiteListState, DeployerAddress, DeployedContractAddress } from "../typ
 import { ITier, IDeployer, IDeployedContract } from "loom-js/dist/contracts/user-deployer-whitelist"
 import { sha256 } from "js-sha256"
 import sinon from "sinon"
-import { TransferRequest } from "@/store/plasma/types";
+import { TransferRequest } from "@/store/plasma/types"
 import {
   createContract,
   getTierInfo,
   addDeployer,
   getDeployers,
   getDeployedContractAddresses,
-  generateSeeds
+  generateSeeds,
 } from "@/whitelist/store/index"
 import { whiteListModuleStub } from "./_helpers"
 

@@ -24,7 +24,7 @@ const ETHBNB: TokenData = Object.freeze({
 
 const oldLoomTokenAddresses = [
   "0x493640b5befb0962ce0932653987c41aa3608bd0", // Rinkeby
-  "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0" // Mainnet
+  "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0", // Mainnet
 ]
 
 class TokenService {
@@ -47,7 +47,7 @@ class TokenService {
   }
 
   setTokens(tokens: TokenData[]) {
-    this.tokens = tokens.map(t => Object.freeze(t))
+    this.tokens = tokens.map((t) => Object.freeze(t))
   }
 
   getAddress(
@@ -96,10 +96,10 @@ class TokenService {
     address: string,
     chain: "plasma" | "ethereum",
   ): TokenData | null {
-    let info: TokenData | undefined;
+    let info: TokenData | undefined
     // HACK: old LOOM withdrawal receipts may still refer to the old LOOM contract address on Ethereum,
     // so catch those old token addresses here and lookup the token data by symbol instead.
-    if ((chain === "ethereum") && oldLoomTokenAddresses.find(tokenAddr => tokenAddr === address.toLowerCase())) {
+    if ((chain === "ethereum") && oldLoomTokenAddresses.find((tokenAddr) => tokenAddr === address.toLowerCase())) {
       info = this.get("LOOM")
     } else {
       info = this.tokens.find((token) => token[chain] === address.toLocaleLowerCase())

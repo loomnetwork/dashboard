@@ -64,7 +64,7 @@ export default class MappedTokenAddress extends Vue {
   copyEthereum() {
     this.$copyText(this.tokenData.ethereum).then(() =>
       feedbackModule.showSuccess(
-        this.$t("feedback_msg.success.eth_addr_copied", { network: this.state.ethereum.genericNetworkName }).toString()
+        this.$t("feedback_msg.success.eth_addr_copied", { network: this.state.ethereum.genericNetworkName }).toString(),
       ),
       console.error,
     )

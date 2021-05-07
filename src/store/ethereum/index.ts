@@ -175,7 +175,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
     await wallet
       .createProvider(context.state)
       .then((provider) => {
-        walletDisconnectBeforeUnload(provider)
+        disconnectWalletBeforeUnload(provider)
         return setProvider(context, provider)
       })
       .catch((error) => {
@@ -186,7 +186,7 @@ async function setWalletType(context: ActionContext, walletType: string) {
   }
 }
 
-function walletDisconnectBeforeUnload(wallet) {
+function disconnectWalletBeforeUnload(wallet) {
   const listener = (e: BeforeUnloadEvent) => {
     e.preventDefault()
     wallet.disconnect()

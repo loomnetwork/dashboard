@@ -88,7 +88,6 @@ export default class DelegateModal extends Vue {
 
   locktimeTiers: any[] = []
 
-
   get bonusTiers() {
     return this.rewardTiers.map((t) => this.rewardsScalingFactor.multipliedBy(t * 100).toFixed(2))
   }
@@ -194,7 +193,8 @@ export default class DelegateModal extends Vue {
   calcReceiveAmount(i) {
     const feePercent = this.validator.fee.toNumber() / 100
     const rewardPercent = this.rewardsScalingFactor.multipliedBy(this.rewardTiers[i]).toNumber()
-    return Intl.NumberFormat().format(this.delegationAmount + ((this.delegationAmount * rewardPercent) * (1 - feePercent)))
+    return Intl.NumberFormat().format(this.delegationAmount +
+      ((this.delegationAmount * rewardPercent) * (1 - feePercent)))
   }
 }
 </script>

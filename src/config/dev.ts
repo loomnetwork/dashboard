@@ -17,6 +17,7 @@ export default {
     genericNetworkName: "Ethereum",
     chainId: "eth",
     nativeTokenSymbol: "ETH",
+    nativeTokenDecimals: 18,
     endpoint: `wss://rinkeby.infura.io/ws/v3/${process.env.INFURA_PROJECT_ID}`,
     blockExplorer: "https://rinkeby.etherscan.io",
     blockExplorerApi: "api-rinkeby.etherscan.io/api",
@@ -37,12 +38,13 @@ export default {
     genericNetworkName: "Binance Smart Chain",
     chainId: "eth", // NOTE: not a typo, use the same chain ID as Ethereum to reuse account mappings etc.
     nativeTokenSymbol: "BNB",
+    nativeTokenDecimals: 18,
     endpoint: "https://data-seed-prebsc-1-s1.binance.org:8545",
     blockExplorer: "https://testnet.bscscan.com",
     blockExplorerApi: "api-testnet.bscscan.com/api",
     contracts: {
       loomGateway: "0x0cee0FB12205b9Ca9d4Fbed502091dEfD7ae6ff5",
-      mainGateway: ethers.constants.AddressZero // NOTE: generic gateway is not deployed on BSC yet
+      mainGateway: ethers.constants.AddressZero, // NOTE: generic gateway is not deployed on BSC yet
     },
     gatewayVersions: {
       loom: 1,
@@ -62,7 +64,7 @@ export default {
       fee: 37500,
     },
     tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
-    withdrawalLimit: true
+    withdrawalLimit: true,
   },
   disabled: [],
   chains: ["ethereum", "binance"],
@@ -73,5 +75,5 @@ export default {
   },
   features: {
     bscWallets: true,
-  }
+  },
 } as DashboardConfig

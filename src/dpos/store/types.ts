@@ -40,12 +40,14 @@ export interface DPOSState extends DPOSConfig {
   rewards: Delegation[]
   // when user is requesting an action
   intent: "" | "delegate" | "redelegate" | "undelegate"
-  delegation: Delegation | null,
-  analyticsData: any[] | null,
-  rewardsScalingFactor: BigNumber,
-  effectiveRewardsRatio: BigNumber,
-  maxYearlyRewards: BigNumber,
-  totalWeightedStakes: BigNumber,
+  delegation: Delegation | null
+  analyticsData: any[] | null
+  rewardsScalingFactor: BigNumber
+  effectiveRewardsRatio: BigNumber
+  maxYearlyRewards: BigNumber
+  totalWeightedStakes: BigNumber
+  minCandidateFee: number
+  maxCandidateFee: number
 }
 
 /**
@@ -140,10 +142,10 @@ export interface Delegation {
 }
 
 export interface ICandidateRegistrationInfo {
-  pubKey: Uint8Array;
-  whitelistLocktimeTier: LocktimeTier;
-  fee: BN;
-  name: string;
-  description: string;
-  website: string;
+  pubKey: Uint8Array
+  whitelistLocktimeTier: LocktimeTier
+  fee: BN
+  name: string
+  description: string
+  website: string
 }

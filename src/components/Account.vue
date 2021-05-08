@@ -57,7 +57,7 @@ export default class Account extends Vue {
   copyEthereum() {
     this.$copyText(this.ethAccount).then(() =>
       feedbackModule.showSuccess(
-        this.$t("feedback_msg.success.eth_addr_copied", { network: this.foreignNetworkName }).toString()
+        this.$t("feedback_msg.success.eth_addr_copied", { network: this.foreignNetworkName }).toString(),
       ),
       console.error,
     )

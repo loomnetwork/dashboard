@@ -18,7 +18,7 @@ export function ethereumReactions(store: Store<DashboardState>) {
     ethereumModule.initUserData(address)
     ethereumModule.pollLastBlockNumber()
     ethereumModule.initERC20("LOOM")
-    
+
     if (tokenService.get(store.state.ethereum.nativeTokenSymbol)) {
       ethereumModule.refreshBalance(store.state.ethereum.nativeTokenSymbol)
     }

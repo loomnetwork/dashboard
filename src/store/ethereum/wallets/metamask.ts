@@ -4,34 +4,28 @@
  * @preferred
  */
 import * as Sentry from "@sentry/browser"
-import { provider } from "web3-providers"
+import { provider as W3Provider } from "web3-providers"
 import { feedbackModule } from "@/feedback/store"
 import Web3 from "web3"
 import { getMetamaskSigner } from "loom-js"
 
-import { IWalletProvider, WalletType } from "../types"
+import { EthereumConfig, IWalletProvider, WalletType } from "../types"
 import { ethereumModule } from ".."
 
 export const MetaMaskAdapter: WalletType = {
   id: "netamask",
   name: "Metamask",
+  logo: require("@/assets/metamask_logo.png"),
   detectable: true,
   isMultiAccount: false,
   desktop: true,
   mobile: false,
-  detect() {
-    return isCurrentApi() || isLegacyApi()
-  },
+  detect: isMetamaskPresent,
   async createProvider(): Promise<IWalletProvider> {
-    let provider
-    if (isCurrentApi()) {
-      provider = await getCurrentApi()
-    } else if (isLegacyApi()) {
-      provider = getLegacyApi()
-    }
-    if (!provider) {
+    if (!isMetamaskPresent()) {
       throw new Error("no Metamask installation detected")
     }
+    const provider = await getCurrentApi()
     const signer = getMetamaskSigner(provider)
     const network = await signer.provider!.getNetwork()
     return {
@@ -43,24 +37,16 @@ export const MetaMaskAdapter: WalletType = {
   },
 }
 
-function isLegacyApi() {
-  return "web3" in window
-}
-
-function isCurrentApi() {
-  return "ethereum" in window
-}
-
-function getLegacyApi(): Promise<provider> {
+function isMetamaskPresent() {
   // @ts-ignore
-  return window.web3.currentProvider
+  return "ethereum" in window && window.ethereum.isMetaMask
 }
 
-async function getCurrentApi(): Promise<provider> {
+async function getCurrentApi(): Promise<W3Provider> {
   // @ts-ignore
-  const ethereum = window.ethereum
+  const ethereum: any = window.ethereum
   try {
-    await ethereum.enable()
+    await ethereum.request({ method: "eth_requestAccounts" })
   } catch (err) {
     Sentry.captureException(err)
     feedbackModule.endTask()
@@ -69,7 +55,7 @@ async function getCurrentApi(): Promise<provider> {
   ethereum.autoRefreshOnNetworkChange = false
   ethereum.on(
     "chainChanged",
-    (chainId: string) => ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16))
+    (chainId: string) => ethereumModule.commitSetWalletNetworkId(parseInt(chainId, 16)),
   )
 
   try {
@@ -94,4 +80,38 @@ async function getCurrentApi(): Promise<provider> {
   }
 
   return ethereum
+}
+
+/**
+ * See https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
+ */
+export function addNetwork(bscConf: EthereumConfig) {
+  if (!isMetamaskPresent()) throw new Error("Please update Metamask")
+
+  let chainName = bscConf.genericNetworkName
+  // ...
+  if (bscConf.networkName.includes("testnet")) {
+    chainName = `${chainName} Testnet`
+  }
+
+  const params = {
+    chainId: `0x${Number(bscConf.networkId).toString(16)}`,
+    chainName,
+    nativeCurrency: {
+      symbol: bscConf.nativeTokenSymbol,
+      decimals: bscConf.nativeTokenDecimals,
+    },
+    rpcUrls: [bscConf.endpoint],
+    blockExplorerUrls: [bscConf.blockExplorer],
+  }
+  // @ts-ignore
+  const p: any = window.ethereum
+  p.request({
+    method: "wallet_addEthereumChain",
+    params: [params],
+  }).then(() => true)
+    .catch((error: Error) => {
+      console.error(error)
+      return false
+    })
 }

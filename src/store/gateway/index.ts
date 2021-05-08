@@ -52,7 +52,7 @@ function initialState(): GatewayState {
       gatewayAccount: "",
       fee: 0,
     },
-    withdrawalLimit: false
+    withdrawalLimit: false,
   }
 }
 

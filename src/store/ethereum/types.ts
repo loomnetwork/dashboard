@@ -10,6 +10,7 @@ export interface EthereumConfig {
   genericNetworkName: string
   chainId: string
   nativeTokenSymbol: string
+  nativeTokenDecimals: number
   endpoint: string
   blockExplorer: string
   blockExplorerApi: string
@@ -73,6 +74,7 @@ export interface IWalletProvider {
 export interface WalletType {
   id: string
   name: string
+  logo: string
   isMultiAccount: boolean
   detectable: boolean
   detect: () => boolean

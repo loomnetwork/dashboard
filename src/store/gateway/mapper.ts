@@ -92,7 +92,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
     rootState.plasma.chainId,
   )
   feedbackModule.setStep(
-    i18n.t("feedback_msg.step.create_new_mapping", { network: rootState.ethereum.genericNetworkName }
+    i18n.t("feedback_msg.step.create_new_mapping", { network: rootState.ethereum.genericNetworkName },
     ).toString())
   const mapper = await AddressMapper.createAsync(client, address)
   try {
@@ -111,11 +111,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
       feedbackModule.showError(i18n.t("feedback_msg.error.unexpected_error_while_add_account").toString())
 
       console.error(e)
-      console.error(
-        "could not get mapping after creating a new identity" +
-        ethAddress +
-        plasmaId.address,
-      )
+      console.error(`Could not get mapping after creating a new identity ${ethAddress} ${plasmaId.address}`)
       Sentry.withScope((scope) => {
         scope.setExtra("ethereum", ethAddress.toString())
         scope.setExtra("plasma", plasmaId.address.toString())

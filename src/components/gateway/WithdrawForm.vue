@@ -138,7 +138,7 @@ export default class WithdrawForm extends Vue {
 
   get isWithdrawalLimitEnabled() {
     return this.state.gateway.withdrawalLimit
-  } 
+  }
 
   get visible() {
     const { type, token, chain } = this.transferRequest
@@ -202,7 +202,7 @@ export default class WithdrawForm extends Vue {
     const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
     const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
     let totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
-    
+
     const lastWithdrawalLimitResetTime: number = plasmaAccountInfo!.lastWithdrawalLimitResetTime
     const lastWithdrawalLimitResetDate: Date = new Date(lastWithdrawalLimitResetTime * 1000)
     const todayDate: Date = new Date()
@@ -213,9 +213,9 @@ export default class WithdrawForm extends Vue {
     }
 
     const gatewayState = await gateway.getGatewayState()
-    const maxPerAccountDailyWithdrawalAmount:BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
+    const maxPerAccountDailyWithdrawalAmount: BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
     const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
-    
+
     console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
     return remainingWithdrawAmount
   }

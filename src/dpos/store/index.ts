@@ -628,12 +628,16 @@ export async function changeValidatorFee(context: ActionContext, newFee: number)
   }
 }
 
-export async function unjail(context: ActionContext, validatorAddress: Address) {
+export async function unjail(context: ActionContext) {
+  feedback.setTask(i18n.t("dpos.unjail_progress").toString())
+  feedback.setStep(i18n.t("dpos.unjail_progress").toString())
   try {
-    await context.state.contract!.unjailAsync(plasmaModule.getAddress())
+    await context.state.contract!.unjailAsync()
     feedback.showSuccess(i18n.t("dpos.unjail_success").toString())
   } catch (err) {
     console.error(err)
     feedback.showError(i18n.t("dpos.unjail_error", { error: err.message }).toString())
+  } finally {
+    feedback.endTask()
   }
 }

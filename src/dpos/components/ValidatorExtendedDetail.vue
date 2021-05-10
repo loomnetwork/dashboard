@@ -1,5 +1,11 @@
 <template>
   <div>
+    <b-card bg-variant="warning" text-variant="black" v-if="validator.jailed">
+      <b-card-text>{{ $t("dpos.jailed_warning") }}</b-card-text>
+      <b-button @click="unjail()" variant="primary" class="m-1">
+        Unjail Validator
+      </b-button>
+    </b-card>
     <b-card>
       <b-card-title>{{
         $t("components.validator_extended_detail.register_as_validator")
@@ -51,7 +57,11 @@
       <b-card-header class="validator-head" v-if="validator">
         <div>
           <h2>{{ validator.name }}</h2>
-          <ValidatorUpdateForm ref="validatorUpdateForm" :validator="validator" :candidateState="validator.candidateState"/>
+          <ValidatorUpdateForm
+            ref="validatorUpdateForm"
+            :validator="validator"
+            :candidateState="validator.candidateState"
+          />
           <h5>{{ validator.active ? "Active" : "Inactive" }}</h5>
           <br />
           <p>{{ validator.addr | loomAddress }}</p>
@@ -128,7 +138,11 @@
         </b-row>
         <b-row>
           <b-col cols="12" class="pr-0">
-            <b-btn variant="primary" @click="openUpdateModal()" class="float-right px-5">
+            <b-btn
+              variant="primary"
+              @click="openUpdateModal()"
+              class="float-right px-5"
+            >
               {{ $t("components.validator_extended_detail.edit") }}
             </b-btn>
           </b-col>
@@ -140,10 +154,11 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch, Prop } from "vue-property-decorator"
+import { Component, Prop } from "vue-property-decorator"
 import { HasDPOSState } from "@/dpos/store/types"
 import RegisterCandidateForm from "./RegisterCandidateForm.vue"
 import ValidatorUpdateForm from "./ValidatorUpdateForm.vue"
+import { dposModule } from "@/dpos/store"
 
 @Component({
   components: {
@@ -170,9 +185,7 @@ export default class ValidatorExtendedDetail extends Vue {
   get validator() {
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress
-      // return validator.addr === this.plasmaAddress
     })
-    // console.log("validator ADDR", myValidator!.addr)
     return myValidator ? myValidator : false
   }
 
@@ -182,6 +195,9 @@ export default class ValidatorExtendedDetail extends Vue {
   openUpdateModal() {
     // @ts-ignore
     this.$refs.validatorUpdateForm.show()
+  }
+  unjail() {
+    dposModule.unjail()
   }
 }
 </script>

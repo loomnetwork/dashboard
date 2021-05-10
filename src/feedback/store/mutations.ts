@@ -11,11 +11,9 @@ export function setStep(state: FeedbackState, step: string) {
 
 export function endTask(state: FeedbackState) {
     state.progress.currentStep++
-    setTimeout(() => {
-        state.progress.task = ""
-        state.progress.steps = []
-        state.progress.currentStep = -1
-    }, 1500)
+    state.progress.task = ""
+    state.progress.steps = []
+    state.progress.currentStep = -1
 }
 
 export function showInfo(state: FeedbackState, message: string) {

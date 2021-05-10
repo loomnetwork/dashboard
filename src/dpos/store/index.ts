@@ -7,7 +7,7 @@ import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import Axios from "axios"
-import { ICandidate, IDelegation, IValidator } from "loom-js/dist/contracts/dpos3"
+import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
@@ -56,6 +56,7 @@ const dposModule = {
   getDowntimeRecordsList: builder.dispatch(getDowntimeRecordsList),
   updateValidatorDetail: builder.dispatch(updateValidatorDetail),
   changeValidatorFee: builder.dispatch(changeValidatorFee),
+  unjail: builder.dispatch(unjail),
 }
 
 // vuex module as a service
@@ -624,5 +625,20 @@ export async function changeValidatorFee(context: ActionContext, newFee: number)
   } catch (err) {
     console.error(err)
     feedback.showError(i18n.t("feedback_msg.error.err_while_change_validator_fee").toString())
+  }
+}
+
+export async function unjail(context: ActionContext) {
+  feedback.setTask(i18n.t("dpos.unjail_progress").toString())
+  feedback.setStep(i18n.t("dpos.unjail_progress").toString())
+  try {
+    await context.state.contract!.unjailAsync()
+    await dposModule.refreshValidators()
+    feedback.showSuccess(i18n.t("dpos.unjail_success").toString())
+  } catch (err) {
+    console.error(err)
+    feedback.showError(i18n.t("dpos.unjail_error", { error: err.message }).toString())
+  } finally {
+    feedback.endTask()
   }
 }

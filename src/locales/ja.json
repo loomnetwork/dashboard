@@ -1,4 +1,9 @@
 {
+  "dpos": {
+    "unjail_button": "Unjail",
+    "unjail_success": "Validator has been successfully unjailed.",
+    "unjail_error": "Could not unjail validator. Error: {error}"
+  },
   "messages": {
     "loading_validators": "Loading validator list....",
     "user_denied_tx": "トランザクションを拒否しました",
@@ -708,7 +713,6 @@
       "validate_fee": "Fee must be between {min}% and {max}%."
     },
     "validator_extended_detail": {
-      "unjail": "Unjail",
       "validator_associated": "Validator Associated",
       "not_validator_account": "This account {address} is not a validator account.",
       "become_validator": "Becoming a Validator",

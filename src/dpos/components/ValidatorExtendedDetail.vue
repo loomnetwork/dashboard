@@ -51,7 +51,11 @@
       <b-card-header class="validator-head" v-if="validator">
         <div>
           <h2>{{ validator.name }}</h2>
-          <ValidatorUpdateForm ref="validatorUpdateForm" :validator="validator" :candidateState="validator.candidateState"/>
+          <ValidatorUpdateForm
+            ref="validatorUpdateForm"
+            :validator="validator"
+            :candidateState="validator.candidateState"
+          />
           <h5>{{ validator.active ? "Active" : "Inactive" }}</h5>
           <br />
           <p>{{ validator.addr | loomAddress }}</p>
@@ -128,11 +132,20 @@
         </b-row>
         <b-row>
           <b-col cols="12" class="pr-0">
-            <b-btn variant="primary" @click="openUpdateModal()" class="float-right px-5">
+            <b-btn
+              variant="primary"
+              @click="openUpdateModal()"
+              class="float-right px-5"
+            >
               {{ $t("components.validator_extended_detail.edit") }}
             </b-btn>
-            <b-btn v-if="validator.jailed" variant="primary" @click="unjail()" class="float-right px-5">
-              {{ $t("components.validator_extended_detail.unjail") }}
+            <b-btn
+              v-if="validator.jailed"
+              variant="primary"
+              @click="unjail()"
+              class="float-right px-5"
+            >
+              {{ $t("dpos.unjail_button") }}
             </b-btn>
           </b-col>
         </b-row>
@@ -148,6 +161,7 @@ import { HasDPOSState } from "@/dpos/store/types"
 import RegisterCandidateForm from "./RegisterCandidateForm.vue"
 import ValidatorUpdateForm from "./ValidatorUpdateForm.vue"
 import { dposModule } from "@/dpos/store"
+import { plasmaModule } from "@/store/plasma"
 
 @Component({
   components: {
@@ -174,9 +188,7 @@ export default class ValidatorExtendedDetail extends Vue {
   get validator() {
     const myValidator = this.state.dpos.validators.find((validator) => {
       return validator.addr === this.userAddress
-      // return validator.addr === this.plasmaAddress
     })
-    // console.log("validator ADDR", myValidator!.addr)
     return myValidator ? myValidator : false
   }
 
@@ -188,7 +200,7 @@ export default class ValidatorExtendedDetail extends Vue {
     this.$refs.validatorUpdateForm.show()
   }
   unjail() {
-    dposModule.unjail(this.userAddress)
+    dposModule.unjail(plasmaModule.getAddress())
   }
 }
 </script>

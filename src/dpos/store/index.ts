@@ -7,7 +7,7 @@ import { ZERO, parseToWei } from "@/utils"
 import BN from "bn.js"
 import debug from "debug"
 import Axios from "axios"
-import { ICandidate, IDelegation, IValidator } from "loom-js/dist/contracts/dpos3"
+import { ICandidate, IDelegation } from "loom-js/dist/contracts/dpos3"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import { fromIDelegation, defaultState, formerValidator } from "./helpers"
 import * as mutations from "./mutations"
@@ -628,7 +628,12 @@ export async function changeValidatorFee(context: ActionContext, newFee: number)
   }
 }
 
-
-export async function unjail(context:ActionContext, validatorAddress:string) {
-  throw new Error("Not implemented")
+export async function unjail(context: ActionContext, validatorAddress: Address) {
+  try {
+    await context.state.contract!.unjailAsync(plasmaModule.getAddress())
+    feedback.showSuccess(i18n.t("dpos.unjail_success").toString())
+  } catch (err) {
+    console.error(err)
+    feedback.showError(i18n.t("dpos.unjail_error", { error: err.message }).toString())
+  }
 }

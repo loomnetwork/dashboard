@@ -1,8 +1,10 @@
 {
   "dpos": {
+    "jailed_warning": "CRITICAL: Your validator has been jailed for failing to sign too many blocks. Please resolve the issue preventing the validator node from operating properly ASAP. Once the node resumes signing blocks press the button to unjail it.",
     "unjail_button": "Unjail",
+    "unjail_progress": "Attempting to unjail validator...",
     "unjail_success": "Validator has been successfully unjailed.",
-    "unjail_error": "Could not unjail validator. Error: {error}"
+    "unjail_error": "Could not unjail validator: {error}"
   },
   "messages": {
     "loading_validators": "Loading validator list....",

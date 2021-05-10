@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card bg-variant="warning" text-variant="black">
+    <b-card bg-variant="warning" text-variant="black" v-if="validator.jailed">
       <b-card-text>{{ $t("dpos.jailed_warning") }}</b-card-text>
       <b-button @click="unjail()" variant="primary" class="m-1">
         Unjail Validator

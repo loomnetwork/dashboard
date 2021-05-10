@@ -633,6 +633,7 @@ export async function unjail(context: ActionContext) {
   feedback.setStep(i18n.t("dpos.unjail_progress").toString())
   try {
     await context.state.contract!.unjailAsync()
+    await dposModule.refreshValidators()
     feedback.showSuccess(i18n.t("dpos.unjail_success").toString())
   } catch (err) {
     console.error(err)

@@ -137,7 +137,7 @@
                     </div>
                   </div>
                 </b-card-body>
-                <WalletsTooltipsBSC />
+                <WalletsTooltipsBSC v-if="!isTouchDevice" />
               </b-card>
               <!-- Ethereum wallets -->
               <b-card v-once>
@@ -213,7 +213,7 @@
                     </div>
                   </div>
                 </b-card-body>
-                <WalletsTooltipsEthereum />
+                <WalletsTooltipsEthereum v-if="!isTouchDevice" />
               </b-card>
             </b-card-group>
             <template v-if="env">
@@ -403,6 +403,10 @@ export default class FirstPage extends Vue {
   showBinanceInstallPrompt = false
 
   setExploreMode = ethereumModule.setToExploreMode
+
+  get isTouchDevice() {
+    return "ontouchstart" in window
+  }
 
   setWallet(chain: "ethereum" | "binance", walletType: string) {
     switch (walletType) {

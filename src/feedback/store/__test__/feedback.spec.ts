@@ -48,12 +48,14 @@ describe("Feedback Mutations", () => {
   })
 
   it("endTask", () => {
-    mutations.endTask(state)
+    mutations.setTask(state, "task")
+    mutations.setStep(state, "step0")
     expect(state.progress.currentStep).to.equal(0)
+    mutations.endTask(state)
     setTimeout(() => {
-      expect(state.progress.task).to.equal("")
-      expect(state.progress.steps.length).to.equal(0)
-      expect(state.progress.currentStep).to.equal(-1)
+      expect(state.progress.task, "task").to.equal("")
+      expect(state.progress.steps.length, "steps.length").to.equal(0)
+      expect(state.progress.currentStep, "currentStep").to.equal(-1)
     }, 1500)
   })
 
@@ -81,7 +83,7 @@ describe("Feedback Mutations", () => {
   it("showAlert", () => {
     const title = "Test title"
     const message = "Test message"
-    mutations.showAlert(state, {title, message})
+    mutations.showAlert(state, { title, message })
     expect(state.alert.type).to.equal("alert")
     expect(state.alert.title).to.equal(title)
     expect(state.alert.message).to.equal(message)
@@ -93,7 +95,7 @@ describe("Feedback Mutations", () => {
     const onConfirm = () => {
       return "Confirmed"
     }
-    mutations.requireConfirmation(state, {title, message, onConfirm})
+    mutations.requireConfirmation(state, { title, message, onConfirm })
     expect(state.alert.type).to.equal("confirmation")
     expect(state.alert.title).to.equal(title)
     expect(state.alert.message).to.equal(message)

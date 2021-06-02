@@ -21,7 +21,8 @@ export const WalletConnectAdapter: WalletType = {
   async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
     const opts: IWalletConnectProviderOptions = {}
     if (config.genericNetworkName === "Ethereum") {
-      opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
+      opts.infuraId = `${process.env.INFURA_PROJECT_ID}`,
+      opts.bridge = 'https://walletconnect.dappchains.com'
     } else {
       opts.chainId = parseInt(config.networkId, 10)
       opts.rpc = { [opts.chainId]: config.endpoint }

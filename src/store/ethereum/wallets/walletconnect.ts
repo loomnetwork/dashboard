@@ -21,12 +21,12 @@ export const WalletConnectAdapter: WalletType = {
   async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
     const opts: IWalletConnectProviderOptions = {}
     if (config.genericNetworkName === "Ethereum") {
-      opts.infuraId = `${process.env.INFURA_PROJECT_ID}`,
-      opts.bridge = "https://walletconnect.dappchains.com"
+      opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
     } else {
       opts.chainId = parseInt(config.networkId, 10)
       opts.rpc = { [opts.chainId]: config.endpoint }
     }
+    opts.bridge = "https://walletconnect.dappchains.com"
     // clear our previous session so user is prompted to scan QR code
     localStorage.removeItem("walletconnect")
     const wcProvider = new WalletConnectProvider(opts)

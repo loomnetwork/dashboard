@@ -523,6 +523,7 @@
         "transfer_fee": "Transfer to {chain} requires a fee of ",
         "balance": "Your balance : ",
         "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
+        "daily_withdrawal_limit_reached": "Daily withdrawal limit reached",
         "recipient": "Recipient on {chain}",
         "withdraw": "Withdraw"
       }

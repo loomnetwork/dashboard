@@ -830,6 +830,7 @@
       "could_not_deposit_eth": "Could not deposit ETH, please make sure you pay enough gas for the transaction.",
       "deposit_approval_failed": "Deposit approval failed.",
       "withdraw_failed": "Withdraw failed, please try again or contact support.",
+      "withdraw_failed_limit_reached": "Total daily withdrawal limit has been reached, please try again tomorrow.",
       "supplied_key_already_mapped": "The supplied key is already mapped.",
       "unexpected_error_while_add_account": "Unexpected error while adding account mapping.",
       "balance_not_enough": "Your balance isn't enough. Please deposit first.",

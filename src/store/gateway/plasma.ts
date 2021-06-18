@@ -334,7 +334,13 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
       return
     }
     feedback.endTask()
-    feedback.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
+    if (error.message.includes("TG024")) {
+      feedback.showError(i18n.t("feedback_msg.error.withdraw_failed_total_limit_reached").toString())
+    } else if (error.message.includes("TG025")) {
+      feedback.showError(i18n.t("feedback_msg.error.withdraw_failed_account_limit_reached").toString())
+    } else {
+      feedback.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())
+    }
     Sentry.withScope((scope) => {
       scope.setExtra("plasmaWithdraw", {
         withdraw: JSON.stringify({

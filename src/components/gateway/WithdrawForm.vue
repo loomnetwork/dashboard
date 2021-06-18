@@ -35,7 +35,7 @@
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
         <h6 v-if="reachedLimit">
           {{ $t('components.gateway.withdraw_form_modal.daily_withdrawal_limit_reached') }}
-          {{ isWithdrawalLimitEnabled | tokenAmount(tokenInfo.decimals) }} {{ token }}
+          {{ maxPerAccountDailyWithdrawalAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
         </h6>
         <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount() && !reachedLimit">
           {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}

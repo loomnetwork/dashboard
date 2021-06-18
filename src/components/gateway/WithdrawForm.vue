@@ -33,14 +33,14 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6 v-if="reachedLimit()">
+        <h6 v-if="reachedLimit">
           {{ $t('components.gateway.withdraw_form_modal.daily_withdrawal_limit_reached') }}
           {{ isWithdrawalLimitEnabled | tokenAmount(tokenInfo.decimals) }} {{ token }}
         </h6>
-        <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount() && !reachedLimit()">
+        <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount() && !reachedLimit">
           {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}
           {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} /   
-          {{ isWithdrawalLimitEnabled | tokenAmount(tokenInfo.decimals) }} {{ token }}          
+          {{ maxPerAccountDailyWithdrawalAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}          
         </h6>
         <amount-input
           :min="min"
@@ -69,7 +69,7 @@
         class="ml-2"
         @click="requestWithdrawal"
         variant="primary"
-        :disabled="validInput === false || max <= 0 || reachedLimit()"
+        :disabled="validInput === false || max <= 0 || reachedLimit"
       >{{ $t('components.gateway.withdraw_form_modal.withdraw') }}</b-btn>
     </template>
   </b-modal>
@@ -109,6 +109,7 @@ export default class WithdrawForm extends Vue {
   isValidAddress: boolean = false
   recepient = ""
   dailyRemainingWithdrawAmount: BN = ZERO
+  maxPerAccountDailyWithdrawalAmount: BN = ZERO
 
   tokenInfo: TokenData | null = null
 
@@ -178,7 +179,7 @@ export default class WithdrawForm extends Vue {
     this.visible = false
   }
 
-  reachedLimit() {
+  get reachedLimit() {
     return this.isWithdrawalLimitEnabled && this.dailyRemainingWithdrawAmount.lte(new BN(0))
   }
 
@@ -220,10 +221,9 @@ export default class WithdrawForm extends Vue {
     if (lastWithdrawalLimitResetDate.toDateString() !== todayDate.toDateString()) {
       totalWithdrawalAmount = new BN(0)
     }
-
     const gatewayState = await gateway.getGatewayState()
-    const maxPerAccountDailyWithdrawalAmount: BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
-    const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
+    this.maxPerAccountDailyWithdrawalAmount = gatewayState!.maxPerAccountDailyWithdrawalAmount
+    const remainingWithdrawAmount = this.maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
 
     console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
     return remainingWithdrawAmount

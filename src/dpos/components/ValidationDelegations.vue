@@ -6,34 +6,38 @@
       <div v-for="(tier, index) in locktimeTiers">
         <b-button
           block
-          :aria-expanded="visible ? 'true' : 'false'"
           aria-controls="collapse-4"
-          @click="visible = !visible"
+          @click="showDetail(index)"
           class="my-2"
+          v-if="getSumDelegations(getDelegationsTier(index)) > 0"
+          v-b-toggle="'accordion-' + currentTier"
         >
-          <dl v-if="">
+          <dl>
             <dt>Locktime {{ tier }}</dt>
             <dd>
-              {{
-                getSumDelegations(getDelegationsTier(index)) | tokenAmount
-              }}
+              {{ getSumDelegations(getDelegationsTier(index)) | tokenAmount }}
               LOOM
             </dd>
-            <!-- getDelegationsTier(index) -->
           </dl>
         </b-button>
-        <!-- <b-collapse id="collapse-4" v-model="visible" class="mt-2">
-          <b-card
+        <b-collapse
+          :id="'accordion-' + index"
+          class="mt-2"
+          :visible="index == currentTier"
+        >
+          <b-card>
+            <!-- <b-card
             v-for="(delegation, i) in delegations"
             :key="delegation.unlockTime"
-            >I should start open!
+            > -->
+            I should start open! {{ tier }}
 
-            <dl>
+            <!-- <dl>
               <dt>Tier {{ i }}</dt>
               <dd>{{ delegation.amount | tokenAmount }} LOOM</dd>
-            </dl>
+            </dl> -->
           </b-card>
-        </b-collapse> -->
+        </b-collapse>
       </div>
     </div>
   </div>
@@ -44,35 +48,24 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 
 import { Delegation, HasDPOSState, Validator } from "@/dpos/store/types"
 import { ZERO } from "@/utils"
-import { formatTokenAmount } from "@/filters"
 
 @Component({
   components: {},
 })
 export default class ValidationDelegations extends Vue {
   zero = ZERO
-  visible = true
-  /**
-   * Filter by validator
-   */
+
   @Prop({ required: true }) validator!: Validator
-  // delegations = []
 
   get state(): HasDPOSState {
     return this.$store.state
   }
 
   get totalStaked() {
-
-    // console.log("this.state.dpos.delegations,",this.state.dpos);
-    // console.log("this.validator.delegations,",this.validator);
     return this.validator.totalStaked
   }
-  summm = ZERO
 
   get delegations() {
-    
-    // return this.state.dpos.delegations.filter((d) => d.validator.addr === this.validator!.addr)
     return this.validator.allDelegations
   }
 
@@ -97,6 +90,12 @@ export default class ValidationDelegations extends Vue {
       this.$t("components.modals.faucet_delegate_modal.six_months").toString(),
       this.$t("components.modals.faucet_delegate_modal.one_year").toString(),
     ]
+  }
+
+  currentTier = 0
+
+  showDetail(selectedTier) {
+    this.currentTier = selectedTier
   }
 }
 </script>

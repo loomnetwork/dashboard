@@ -25,17 +25,31 @@
           class="mt-2"
           :visible="index == currentTier"
         >
-          <b-card>
-            <!-- <b-card
-            v-for="(delegation, i) in delegations"
+          <b-card
+            v-for="(delegation, i) in getDelegationsTier(index)"
             :key="delegation.unlockTime"
-            > -->
-            I should start open! {{ tier }}
-
-            <!-- <dl>
-              <dt>Tier {{ i }}</dt>
+            class="my-2"
+          >
+            <dl>
+              <dt>delegator</dt>
+              <dd>loom{{validator.address.local.toString().substring(2)}}</dd>
+            </dl>
+            <dl>
+              <dt>delegation index</dt>
+              <dd>{{ delegation.index }}</dd>
+            </dl>
+            <dl>
+              <dt>amount staked</dt>
               <dd>{{ delegation.amount | tokenAmount }} LOOM</dd>
-            </dl> -->
+            </dl>
+            <dl>
+              <dt>tier</dt>
+              <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
+            </dl>
+            <dl>
+              <dt>unlock time</dt>
+              <dd>{{delegation.lockTime | date('seconds')}}</dd>
+            </dl>
           </b-card>
         </b-collapse>
       </div>
@@ -92,7 +106,7 @@ export default class ValidationDelegations extends Vue {
     ]
   }
 
-  currentTier = 0
+  currentTier = 5
 
   showDetail(selectedTier) {
     this.currentTier = selectedTier

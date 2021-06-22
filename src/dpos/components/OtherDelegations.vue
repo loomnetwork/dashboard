@@ -73,9 +73,7 @@ import { Vue, Component, Prop } from "vue-property-decorator"
 import { Delegation, HasDPOSState, Validator } from "@/dpos/store/types"
 import { ZERO } from "@/utils"
 
-@Component({
-  components: {},
-})
+@Component
 export default class OtherDelegations extends Vue {
   @Prop({ required: true }) validator!: Validator
 
@@ -165,6 +163,7 @@ dl {
   }
   dt {
     font-weight: normal;
+    text-align: left;
   }
   dd {
     font-weight: 500;

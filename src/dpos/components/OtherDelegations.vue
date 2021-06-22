@@ -1,6 +1,9 @@
 <template>
-  <div class="validation-delegations">
-    <h6>Total stake: {{ totalStaked | tokenAmount(18, 0) }} LOOM</h6>
+  <div class="validation-delegations py-2">
+    <h6>
+      {{ $t("components.other_delegations.total_staked") }}:
+      {{ totalStaked | tokenAmount(18, 0) }} LOOM
+    </h6>
     <div role="tablist" v-if="delegations.length">
       <div v-for="(tier, index) in locktimeTiers">
         <b-button
@@ -12,7 +15,9 @@
           v-b-toggle="'accordion-' + currentTier"
         >
           <dl>
-            <dt>Locktime {{ tier }}</dt>
+            <dt>
+              {{ $t("components.other_delegations.lock_time") }} {{ tier }}
+            </dt>
             <dd>
               {{ getSumDelegations(getDelegationsTier(index)) | tokenAmount }}
               LOOM
@@ -33,7 +38,7 @@
             :current-page="currentPage"
           >
             <template scope="data" slot="delegator">
-              loom{{ data.item.delegator.local.toString().substring(2) }}
+              {{ data.item.delegator.local.toString() | loomAddress }}
             </template>
             <template scope="data" slot="index">
               {{ data.item.index }}
@@ -72,12 +77,12 @@ import { ZERO } from "@/utils"
   components: {},
 })
 export default class OtherDelegations extends Vue {
+  @Prop({ required: true }) validator!: Validator
+
   zero = ZERO
   currentTier = 5
   perPage = 10
   currentPage = 1
-
-  @Prop({ required: true }) validator!: Validator
 
   get state(): HasDPOSState {
     return this.$store.state
@@ -94,11 +99,34 @@ export default class OtherDelegations extends Vue {
   get locktimeTiers() {
     return [
       this.$t("components.modals.faucet_delegate_modal.two_weeks").toString(),
-      this.$t(
-        "components.modals.faucet_delegate_modal.three_months"
-      ).toString(),
+      this.$t("components.modals.faucet_delegate_modal.three_months").toString(),
       this.$t("components.modals.faucet_delegate_modal.six_months").toString(),
       this.$t("components.modals.faucet_delegate_modal.one_year").toString(),
+    ]
+  }
+
+  get tableFields() {
+    return [
+      {
+        key: "delegator",
+        label: this.$t("components.other_delegations.delegator").toString(),
+      },
+      {
+        key: "index",
+        label: this.$t("components.other_delegations.delegation_index").toString(),
+      },
+      {
+        key: "amount",
+        label: this.$t("components.other_delegations.amount_staked").toString(),
+      },
+      {
+        key: "lockTimeTier",
+        label: this.$t("components.other_delegations.tier").toString(),
+      },
+      {
+        key: "lockTime",
+        label: this.$t("components.other_delegations.unlock_time").toString(),
+      },
     ]
   }
 
@@ -118,16 +146,7 @@ export default class OtherDelegations extends Vue {
     this.currentTier = selectedTier
     this.currentPage = 1
   }
-
-  tableFields = [
-    { key: "delegator", label: "Delegator" },
-    { key: "index", label: "Delegation index" },
-    { key: "amount", label: "Amount staked" },
-    { key: "lockTimeTier", label: "Tier" },
-    { key: "lockTime", label: "Unlock time" },
-  ]
 }
-
 </script>
 <style lang="scss" scoped>
 header {

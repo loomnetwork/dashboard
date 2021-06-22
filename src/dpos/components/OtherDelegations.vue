@@ -25,32 +25,28 @@
           class="mt-2"
           :visible="index == currentTier"
         >
-          <b-card
-            v-for="(delegation, i) in getDelegationsTier(index)"
-            :key="delegation.unlockTime"
-            class="my-2"
+          <b-table
+            striped
+            hover
+            :items="getDelegationsTier(index)"
+            :fields="tableFields"
           >
-            <dl>
-              <dt>delegator</dt>
-              <dd>loom{{validator.address.local.toString().substring(2)}}</dd>
-            </dl>
-            <dl>
-              <dt>delegation index</dt>
-              <dd>{{ delegation.index }}</dd>
-            </dl>
-            <dl>
-              <dt>amount staked</dt>
-              <dd>{{ delegation.amount | tokenAmount }} LOOM</dd>
-            </dl>
-            <dl>
-              <dt>tier</dt>
-              <dd>{{delegation.lockTimeTier | lockTimeTier}}</dd>
-            </dl>
-            <dl>
-              <dt>unlock time</dt>
-              <dd>{{delegation.lockTime | date('seconds')}}</dd>
-            </dl>
-          </b-card>
+            <template scope="item" slot="delegator">
+              loom{{ item.item.delegator.local.toString().substring(2) }}
+            </template>
+            <template scope="item" slot="index">
+              {{ item.item.index }}
+            </template>
+            <template scope="item" slot="amount">
+              {{ item.item.amount | tokenAmount }} LOOM
+            </template>
+            <template scope="item" slot="lockTimeTier">
+              {{ item.item.lockTimeTier | lockTimeTier }}
+            </template>
+            <template scope="item" slot="lockTime">
+              {{ item.item.lockTime | date("seconds") }}
+            </template>
+          </b-table>
         </b-collapse>
       </div>
     </div>
@@ -111,6 +107,14 @@ export default class OtherDelegations extends Vue {
   showDetail(selectedTier) {
     this.currentTier = selectedTier
   }
+
+  tableFields = [
+    { key: "delegator", label: "Delegator" },
+    { key: "index", label: "Delegation index" },
+    { key: "amount", label: "Amount staked" },
+    { key: "lockTimeTier", label: "Tier" },
+    { key: "lockTime", label: "Unlock time" },
+  ]
 }
 </script>
 <style lang="scss" scoped>

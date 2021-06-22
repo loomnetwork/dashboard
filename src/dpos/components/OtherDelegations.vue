@@ -1,6 +1,5 @@
 <template>
   <div class="validation-delegations">
-    <!-- <b-card class="mb-4"> -->
     <h6>Total stake: {{ totalStaked | tokenAmount(18, 0) }} LOOM</h6>
     <div role="tablist" v-if="delegations.length">
       <div v-for="(tier, index) in locktimeTiers">
@@ -30,23 +29,33 @@
             hover
             :items="getDelegationsTier(index)"
             :fields="tableFields"
+            :per-page="perPage"
+            :current-page="currentPage"
           >
-            <template scope="item" slot="delegator">
-              loom{{ item.item.delegator.local.toString().substring(2) }}
+            <template scope="data" slot="delegator">
+              loom{{ data.item.delegator.local.toString().substring(2) }}
             </template>
-            <template scope="item" slot="index">
-              {{ item.item.index }}
+            <template scope="data" slot="index">
+              {{ data.item.index }}
             </template>
-            <template scope="item" slot="amount">
-              {{ item.item.amount | tokenAmount }} LOOM
+            <template scope="data" slot="amount">
+              {{ data.item.amount | tokenAmount }} LOOM
             </template>
-            <template scope="item" slot="lockTimeTier">
-              {{ item.item.lockTimeTier | lockTimeTier }}
+            <template scope="data" slot="lockTimeTier">
+              {{ data.item.lockTimeTier | lockTimeTier }}
             </template>
-            <template scope="item" slot="lockTime">
-              {{ item.item.lockTime | date("seconds") }}
+            <template scope="data" slot="lockTime">
+              {{ data.item.lockTime | date("seconds") }}
             </template>
           </b-table>
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="getDelegationsTier(index).length"
+            :per-page="perPage"
+            aria-controls="my-table"
+            v-if="getDelegationsTier(index).length / perPage > 1"
+            align="right"
+          ></b-pagination>
         </b-collapse>
       </div>
     </div>
@@ -64,6 +73,9 @@ import { ZERO } from "@/utils"
 })
 export default class OtherDelegations extends Vue {
   zero = ZERO
+  currentTier = 5
+  perPage = 10
+  currentPage = 1
 
   @Prop({ required: true }) validator!: Validator
 
@@ -79,6 +91,17 @@ export default class OtherDelegations extends Vue {
     return this.validator.allDelegations
   }
 
+  get locktimeTiers() {
+    return [
+      this.$t("components.modals.faucet_delegate_modal.two_weeks").toString(),
+      this.$t(
+        "components.modals.faucet_delegate_modal.three_months"
+      ).toString(),
+      this.$t("components.modals.faucet_delegate_modal.six_months").toString(),
+      this.$t("components.modals.faucet_delegate_modal.one_year").toString(),
+    ]
+  }
+
   getDelegationsTier(tierIndex: number) {
     return this.delegations.filter((d) => d.lockTimeTier === tierIndex)
   }
@@ -91,21 +114,9 @@ export default class OtherDelegations extends Vue {
     return sum
   }
 
-  get locktimeTiers() {
-    return [
-      this.$t("components.modals.faucet_delegate_modal.two_weeks").toString(),
-      this.$t(
-        "components.modals.faucet_delegate_modal.three_months"
-      ).toString(),
-      this.$t("components.modals.faucet_delegate_modal.six_months").toString(),
-      this.$t("components.modals.faucet_delegate_modal.one_year").toString(),
-    ]
-  }
-
-  currentTier = 5
-
   showDetail(selectedTier) {
     this.currentTier = selectedTier
+    this.currentPage = 1
   }
 
   tableFields = [
@@ -116,6 +127,7 @@ export default class OtherDelegations extends Vue {
     { key: "lockTime", label: "Unlock time" },
   ]
 }
+
 </script>
 <style lang="scss" scoped>
 header {

@@ -66,7 +66,7 @@ import { ZERO } from "@/utils"
 @Component({
   components: {},
 })
-export default class ValidationDelegations extends Vue {
+export default class OtherDelegations extends Vue {
   zero = ZERO
 
   @Prop({ required: true }) validator!: Validator

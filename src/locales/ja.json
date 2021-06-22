@@ -350,7 +350,8 @@
       "resume_deposit": "Resume Deposit",
       "election_cycle": "Election Cycle",
       "time_left": "Time left",
-      "delegations": "Delegations"
+      "validator_delegations": "Validator Delegations",
+      "other_delegations": "Other Delegations"
     },
     "transfer_gateway": {
       "connect_new_contracts": "Connect New Contracts",

@@ -47,10 +47,12 @@
               {{ data.item.amount | tokenAmount(18, 3) }} LOOM
             </template>
             <template scope="data" slot="lockTime">
-              <span v-if="data.item.lockTime != 0">
-                {{ data.item.lockTime | dateWithoutTime }}</span
-              >
-              <span v-else> {{ $t("views.validator_detail.unlocked") }}</span>
+              <span v-if="data.item.lockTime > today">
+                {{ data.item.lockTime | dateWithoutTime }}
+              </span>
+              <span v-else>
+                {{ $t("views.validator_detail.unlocked") }}
+              </span>
             </template>
           </b-table>
           <b-pagination
@@ -101,6 +103,10 @@ export default class OtherDelegations extends Vue {
       this.$t("components.modals.faucet_delegate_modal.six_months").toString(),
       this.$t("components.modals.faucet_delegate_modal.one_year").toString(),
     ]
+  }
+
+  get today() {
+    return  Date.now()/1000
   }
 
   get tableFields() {

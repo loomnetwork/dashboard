@@ -47,7 +47,10 @@
               {{ data.item.amount | tokenAmount(18, 3) }} LOOM
             </template>
             <template scope="data" slot="lockTime">
-              {{ data.item.lockTime | dateWithoutTime }}
+              <span v-if="data.item.lockTime != 0">
+                {{ data.item.lockTime | dateWithoutTime }}</span
+              >
+              <span v-else> {{ $t("views.validator_detail.unlocked") }}</span>
             </template>
           </b-table>
           <b-pagination

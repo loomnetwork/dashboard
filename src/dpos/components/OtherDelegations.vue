@@ -2,7 +2,7 @@
   <div class="validation-delegations py-2">
     <h6>
       {{ $t("components.other_delegations.total_staked") }}:
-      {{ totalStaked | tokenAmount(18, 0) }} LOOM
+      {{ totalStaked | tokenAmount(18, 3) }} LOOM
     </h6>
     <div role="tablist" v-if="delegations.length">
       <div v-for="(tier, index) in locktimeTiers">
@@ -19,7 +19,7 @@
               {{ $t("components.other_delegations.lock_time") }} {{ tier }}
             </dt>
             <dd>
-              {{ getSumDelegations(getDelegationsTier(index)) | tokenAmount }}
+              {{ getSumDelegations(getDelegationsTier(index)) | tokenAmount(18, 3) }}
               LOOM
             </dd>
           </dl>
@@ -44,13 +44,10 @@
               {{ data.item.index }}
             </template>
             <template scope="data" slot="amount">
-              {{ data.item.amount | tokenAmount }} LOOM
-            </template>
-            <template scope="data" slot="lockTimeTier">
-              {{ data.item.lockTimeTier | lockTimeTier }}
+              {{ data.item.amount | tokenAmount(18, 3) }} LOOM
             </template>
             <template scope="data" slot="lockTime">
-              {{ data.item.lockTime | date("seconds") }}
+              {{ data.item.lockTime | dateWithoutTime }}
             </template>
           </b-table>
           <b-pagination
@@ -115,15 +112,11 @@ export default class OtherDelegations extends Vue {
       },
       {
         key: "amount",
-        label: this.$t("components.other_delegations.amount_staked").toString(),
-      },
-      {
-        key: "lockTimeTier",
-        label: this.$t("components.other_delegations.tier").toString(),
+        label: this.$t("views.validator_detail.amount_delegated").toString(),
       },
       {
         key: "lockTime",
-        label: this.$t("components.other_delegations.unlock_time").toString(),
+        label: this.$t("views.validator_detail.unlock_time").toString(),
       },
     ]
   }

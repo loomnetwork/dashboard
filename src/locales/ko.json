@@ -350,7 +350,8 @@
       "resume_deposit": "입금 계속하기",
       "election_cycle": "선거 주기",
       "time_left": "남은 기간",
-      "delegations": "위임 내역"
+      "validator_delegations": "Validator Delegations",
+      "other_delegations": "Other Delegations"
     },
     "transfer_gateway": {
       "connect_new_contracts": "새 컨트랙트 연결",
@@ -754,6 +755,12 @@
       "max_referral_percentage": "Max Referral",
       "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
       "validate_fee": "Fee must be between {min}% and {max}%."
+    },
+    "other_delegations": {
+      "total_staked": "Total Staked",
+      "lock_time": "Lock Time",
+      "delegator": "Delegator",
+      "delegation_index": "Index"
     }
   },
   "events": {

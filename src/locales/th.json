@@ -754,6 +754,12 @@
       "max_referral_percentage": "Max Referral",
       "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
       "validate_fee": "Fee must be between {min}% and {max}%."
+    },
+    "other_delegations": {
+      "total_staked": "Total Staked",
+      "lock_time": "Lock Time",
+      "delegator": "Delegator",
+      "delegation_index": "Index"
     }
   },
   "events": {

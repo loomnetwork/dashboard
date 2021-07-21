@@ -65,7 +65,7 @@ export function readableDateTime(timestamp) {
 const DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
   year: "numeric",
   month: "short",
-  day: "numeric"
+  day: "numeric",
 })
 export function dateWithoutTime(timestamp) {
   return DATE_FORMAT.format(new Date(parseInt("" + timestamp, 10) * 1000))

@@ -106,7 +106,7 @@ export default class OtherDelegations extends Vue {
   }
 
   get today() {
-    return  Date.now()/1000
+    return  Date.now() / 1000
   }
 
   get tableFields() {

@@ -5,7 +5,7 @@
       {{ totalStaked | tokenAmount(18, 3) }} LOOM
     </h6>
     <div role="tablist" v-if="delegations.length">
-      <div v-for="(tier, index) in locktimeTiers">
+      <div v-for="(tier, index) in locktimeTiers" :key="'lt_'+index">
         <b-button
           block
           aria-controls="collapse-4"
@@ -16,7 +16,7 @@
         >
           <dl>
             <dt>
-              {{ $t("components.other_delegations.lock_time") }} {{ tier }}
+              {{ $t("components.other_delegations.lock_time") }}: {{ tier }}
             </dt>
             <dd>
               {{ getSumDelegations(getDelegationsTier(index)) | tokenAmount(18, 3) }}

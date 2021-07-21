@@ -37,16 +37,16 @@
             :per-page="perPage"
             :current-page="currentPage"
           >
-            <template scope="data" slot="delegator">
+            <template slot-scope="data" slot="delegator">
               {{ data.item.delegator.local.toString() | loomAddress }}
             </template>
-            <template scope="data" slot="index">
+            <template slot-scope="data" slot="index">
               {{ data.item.index }}
             </template>
-            <template scope="data" slot="amount">
+            <template slot-scope="data" slot="amount">
               {{ data.item.amount | tokenAmount(18, 3) }} LOOM
             </template>
-            <template scope="data" slot="lockTime">
+            <template slot-scope="data" slot="lockTime">
               <span v-if="data.item.lockTime > today">
                 {{ data.item.lockTime | dateWithoutTime }}
               </span>

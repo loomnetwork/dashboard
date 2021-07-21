@@ -64,7 +64,7 @@ export function readableDateTime(timestamp) {
 
 const DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
   year: "numeric",
-  month: "long",
+  month: "short",
   day: "numeric"
 })
 export function dateWithoutTime(timestamp) {

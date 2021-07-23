@@ -60,14 +60,14 @@ module.exports = {
     }
 
     if (process.env.NODE_ENV === "test") {
-      plugins.push(
-        new CopyPlugin([
-          {
-            from: "node_modules/scrypt/build",
-            to: "dist"
-          }
-        ])
-      )
+      // plugins.push(
+      //   new CopyPlugin([
+      //     {
+      //       from: "node_modules/scrypt/build",
+      //       to: "dist"
+      //     }
+      //   ])
+      // )
       config.externals = {
         scrypt: "require('scrypt')"
       }

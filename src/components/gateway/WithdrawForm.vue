@@ -33,16 +33,21 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6 v-if="reachedLimit">
-          {{ $t('components.gateway.withdraw_form_modal.daily_withdrawal_limit_reached') }}
+        <h6 v-if="isWithdrawalLimitReached">
+          {{
+            $t('components.gateway.withdraw_form_modal.daily_withdrawal_limit_reached', {
+              amount: formattedMaxPerAccountDailyWithdrawalAmount,
+              token
+            })
+          }}
+        </h6>
+        <h6 v-else-if="isWithdrawalLimitEnabled">
+          {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}
+          {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} /
           {{ maxPerAccountDailyWithdrawalAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
         </h6>
-        <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount() && !reachedLimit">
-          {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}
-          {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} /   
-          {{ maxPerAccountDailyWithdrawalAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}          
-        </h6>
         <amount-input
+          v-if="!isWithdrawalLimitReached"
           :min="min"
           :max="max"
           :symbol="transferRequest.token"
@@ -69,7 +74,7 @@
         class="ml-2"
         @click="requestWithdrawal"
         variant="primary"
-        :disabled="validInput === false || max <= 0 || reachedLimit"
+        :disabled="validInput === false || max <= 0 || isWithdrawalLimitReached"
       >{{ $t('components.gateway.withdraw_form_modal.withdraw') }}</b-btn>
     </template>
   </b-modal>
@@ -91,6 +96,7 @@ import { LocalAddress, Address } from "loom-js"
 
 import * as plasmaGateways from "@/store/gateway/plasma"
 import { tokenService, TokenData } from "@/services/TokenService"
+import { formatTokenAmount } from "@/filters"
 
 @Component({
   components: {
@@ -144,6 +150,13 @@ export default class WithdrawForm extends Vue {
 
   get isWithdrawalLimitEnabled() {
     return this.state.gateway.withdrawalLimit
+      && (this.transferRequest.token === "ETH" || this.transferRequest.token === "LOOM")
+  }
+
+  get formattedMaxPerAccountDailyWithdrawalAmount(): string {
+    return formatTokenAmount(
+      this.maxPerAccountDailyWithdrawalAmount, this.tokenInfo ? this.tokenInfo.decimals : 18,
+    )
   }
 
   get visible() {
@@ -171,15 +184,11 @@ export default class WithdrawForm extends Vue {
     return this.isValidAddress = isValid
   }
 
-  isCheckDailyRemainingWithdrawAmount() {
-    return this.transferRequest.token === "ETH" || this.transferRequest.token === "LOOM"
-  }
-
   close() {
     this.visible = false
   }
 
-  get reachedLimit() {
+  get isWithdrawalLimitReached() {
     return this.isWithdrawalLimitEnabled && this.dailyRemainingWithdrawAmount.lte(new BN(0))
   }
 
@@ -205,7 +214,7 @@ export default class WithdrawForm extends Vue {
     return true
   }
 
-  async remainWithdrawAmount() {
+  async fetchRemainingWithdrawalAmount() {
     const { chain, token } = this.transferRequest
     const gateway = plasmaGateways.service().get(chain, token)
 
@@ -234,8 +243,8 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    if (this.isWithdrawalLimitEnabled && this.isCheckDailyRemainingWithdrawAmount()) {
-      this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+    if (this.isWithdrawalLimitEnabled) {
+      this.dailyRemainingWithdrawAmount = await this.fetchRemainingWithdrawalAmount()
       this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
     } else {
       this.max = this.balance
@@ -251,9 +260,6 @@ export default class WithdrawForm extends Vue {
       this.fee = {}
     }
     this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
-    if (this.isWithdrawalLimitEnabled) {
-      this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
-    }
   }
 
   async requestWithdrawal(e) {

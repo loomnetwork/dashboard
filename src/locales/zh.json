@@ -521,9 +521,9 @@
       "withdraw_form_modal": {
         "title": "提取 {token} 到 {chain}",
         "transfer_fee": "转移到 {chain} 需要手续费 ",
-        "balance": "你的余额： ",
-        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
-        "daily_withdrawal_limit_reached": "Daily withdrawal limit reached",
+        "balance": "Your balance: ",
+        "daily_remaining_withdraw_amount": "Daily remaining withdrawal amount: ",
+        "daily_withdrawal_limit_reached": "You've reached your daily withdrawal limit of {amount} {token}, please try again later.",
         "recipient": "{chain} 上的接受者",
         "withdraw": "提取"
       }

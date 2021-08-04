@@ -98,6 +98,8 @@ import * as plasmaGateways from "@/store/gateway/plasma"
 import { tokenService, TokenData } from "@/services/TokenService"
 import { formatTokenAmount } from "@/filters"
 
+const ONE_DAY_MSECS = 86400000 // 24hrs in milliseconds
+
 @Component({
   components: {
     AmountInput,
@@ -219,23 +221,17 @@ export default class WithdrawForm extends Vue {
     const gateway = plasmaGateways.service().get(chain, token)
 
     const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
-    const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
-    let totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
-
-    const lastWithdrawalLimitResetTime: number = plasmaAccountInfo!.lastWithdrawalLimitResetTime
-    const lastWithdrawalLimitResetDate: Date = new Date(lastWithdrawalLimitResetTime * 1000)
-    const todayDate: Date = new Date()
-
-    // if lastWithdrawalLimitResetDate is not today then set total withdraw amount of this account to 0
-    if (lastWithdrawalLimitResetDate.toDateString() !== todayDate.toDateString()) {
+    const plasmaAccountInfo = await gateway.getLocalAccountInfo(ownerAddress)
+    let totalWithdrawalAmount =  plasmaAccountInfo.totalWithdrawalAmount
+    const lastWithdrawalLimitResetTime = plasmaAccountInfo.lastWithdrawalLimitResetTime * 1000
+    const elapsedMSecs = Date.now() - lastWithdrawalLimitResetTime
+    // daily withdrawal limit is reset every 24 hours
+    if (elapsedMSecs > ONE_DAY_MSECS) {
       totalWithdrawalAmount = new BN(0)
     }
     const gatewayState = await gateway.getGatewayState()
-    this.maxPerAccountDailyWithdrawalAmount = gatewayState!.maxPerAccountDailyWithdrawalAmount
-    const remainingWithdrawAmount = this.maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
-
-    console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
-    return remainingWithdrawAmount
+    this.maxPerAccountDailyWithdrawalAmount = gatewayState.maxPerAccountDailyWithdrawalAmount
+    return this.maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
   }
 
   @Watch("visible")

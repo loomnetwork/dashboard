@@ -41,7 +41,7 @@
             })
           }}
         </h6>
-        <h6 v-else-if="isWithdrawalLimitEnabled">
+        <h6 v-else-if="isWithdrawalLimitEnabled && dailyRemainingWithdrawAmount !== null">
           {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}
           {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} /
           {{ maxPerAccountDailyWithdrawalAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
@@ -116,7 +116,7 @@ export default class WithdrawForm extends Vue {
   amountIsValid: boolean = false
   isValidAddress: boolean = false
   recepient = ""
-  dailyRemainingWithdrawAmount: BN = ZERO
+  dailyRemainingWithdrawAmount: BN | null = null
   maxPerAccountDailyWithdrawalAmount: BN = ZERO
 
   tokenInfo: TokenData | null = null
@@ -180,6 +180,7 @@ export default class WithdrawForm extends Vue {
     this.isValidAddress = false
     this.weiAmount = ZERO
     this.recepient = ""
+    this.dailyRemainingWithdrawAmount = null
   }
 
   isValidAddressFormat(isValid) {
@@ -191,7 +192,9 @@ export default class WithdrawForm extends Vue {
   }
 
   get isWithdrawalLimitReached() {
-    return this.isWithdrawalLimitEnabled && this.dailyRemainingWithdrawAmount.lte(new BN(0))
+    return this.isWithdrawalLimitEnabled
+      && this.dailyRemainingWithdrawAmount !== null
+      && this.dailyRemainingWithdrawAmount.lte(new BN(0))
   }
 
   setAmountIsError(isError: boolean) {

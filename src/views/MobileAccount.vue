@@ -62,7 +62,7 @@
 
     <b-card id="delegations-container" no-body>
       <b-card-body>
-        <h4 class="card-title" style="margin: 0;">{{ $t('views.mobile_account.delegations') }}</h4>
+        <h4 class="card-title" style="margin: 0;">{{ $t('views.mobile_account.validator_delegations') }}</h4>
       </b-card-body>
       <delegations :delegations="delegations" show-validator />
     </b-card>
@@ -71,9 +71,13 @@
       {{state.dpos.unclaimedTokens}}
     </pre> -->
 
-    <div class="button-container">
+    <div class="button-container mb-4">
       <b-button @click="$router.push({ path: '/validators' })">{{ $t('views.validator_detail.stake_tokens') }}</b-button>
     </div>
+
+    <b-card :title="$t('views.mobile_account.other_delegations')" v-if="validator">
+      <OtherDelegations :validator="validator" />
+    </b-card>
   </div>
 </template>
 
@@ -92,6 +96,7 @@ import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 import Delegations from "@/dpos/components/Delegations.vue"
 import { Subscription, timer } from "rxjs"
 import Airdrop from "@/dpos/components/Airdrop.vue"
+import OtherDelegations from "@/dpos/components/OtherDelegations.vue"
 
 const log = debug("mobileaccount")
 
@@ -103,6 +108,7 @@ const log = debug("mobileaccount")
     ElectionTimer,
     Delegations,
     Airdrop,
+    OtherDelegations,
   },
 })
 export default class MobileAccount extends Vue {
@@ -119,6 +125,13 @@ export default class MobileAccount extends Vue {
   refreshTimer: Subscription | null = null
 
   get delegations() { return this.state.dpos.delegations }
+
+  get validator() {
+    const myValidator = this.state.dpos.validators.find((validator) => {
+      return validator.addr === this.state.plasma.address
+    })
+    return myValidator ? myValidator : false
+  }
 
   toggleAccordion(idx) {
     this.$root.$emit("bv::toggle::collapse", "accordion" + idx)

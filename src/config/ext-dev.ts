@@ -64,7 +64,7 @@ export default {
       gatewayAccount: "tbnb1gc7azhlup5a34t8us84x6d0fluw57deuf47q9w",
       fee: 37500,
     },
-    withdrawalLimit: false,
+    withdrawalLimit: true,
   },
   disabled: [],
   chains: ["ethereum", "binance"],

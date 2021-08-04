@@ -15,6 +15,7 @@ export function initFilters() {
   Vue.filter("lockTimeBonus", formatLockTimeBonus)
   // Vue.filter('duration', formatDuration)
   Vue.filter("date", formatDate)
+  Vue.filter("dateWithoutTime", dateWithoutTime)
   Vue.filter("readableDate", readableDateTime)
   Vue.filter("bn", formatBN)
   Vue.filter("bigNumber", formatBigNumber)
@@ -59,6 +60,16 @@ export function formatDate(timestamp) {
 export function readableDateTime(timestamp) {
   console.log("date", timestamp)
   return new Date(timestamp * 1000).toLocaleDateString()
+}
+
+const DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+})
+export function dateWithoutTime(timestamp) {
+  return DATE_FORMAT.format(new Date(parseInt("" + timestamp, 10) * 1000))
+
 }
 
 /**

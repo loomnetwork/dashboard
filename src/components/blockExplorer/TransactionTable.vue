@@ -35,13 +35,13 @@
 @import '~@/assets/scss/variables';
 
 .block-explorer-tx-table {
-  table /deep/ .thead-gray th {
+  table .thead-gray th {
     background-color: theme-color('muted');
     border: none;
   }
 
-  table /deep/ th,
-  table /deep/ td {
+  table th,
+  table td {
     font-size: 18px;
     border-color: #2d2c2c;
     letter-spacing: 0.4px;
@@ -57,7 +57,7 @@
       padding-right: 20px;
     }
   }
-  table /deep/ td {
+  table  td {
     font-size: 16px;
     padding: 11px 12px;
   }

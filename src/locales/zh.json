@@ -351,7 +351,8 @@
       "resume_deposit": "继续未完成的存入",
       "election_cycle": "选举周期",
       "time_left": "剩下时间",
-      "delegations": "委托"
+      "validator_delegations": "Validator Delegations",
+      "other_delegations": "Other Delegations"
     },
     "transfer_gateway": {
       "connect_new_contracts": "连接新合约",
@@ -755,6 +756,12 @@
       "max_referral_percentage": "Max Referral",
       "wait_change_fee_state": "Update already in progress, please try changing the fee after the next election.",
       "validate_fee": "Fee must be between {min}% and {max}%."
+    },
+    "other_delegations": {
+      "total_staked": "Total Staked",
+      "lock_time": "Lock Time",
+      "delegator": "Delegator",
+      "delegation_index": "Index"
     }
   },
   "events": {

@@ -32,8 +32,8 @@
     "receiver_addr_err_tx": "无效的接收者地址",
     "invalid_amount": "无效的数量",
     "invalid_addr": "无效的接收者地址",
-    "amount_input_should_less": "数量应少于 {amount}",
-    "amount_input_should_more": "数量应多于 {amount}",
+    "amount_input_should_less": "Amount should not exceed {amount}",
+    "amount_input_should_more": "Amount should be at least {amount}",
     "amount_input_invalid_amount": "请输入一个有效的数量",
     "amount_input_only_round_amount": "只接受整数",
     "awaiting_transaction": "正在等待交易确认",
@@ -522,8 +522,9 @@
       "withdraw_form_modal": {
         "title": "提取 {token} 到 {chain}",
         "transfer_fee": "转移到 {chain} 需要手续费 ",
-        "balance": "你的余额： ",
-        "daily_remaining_withdraw_amount": "Daily remaining withdraw amount: ",
+        "balance": "Your balance: ",
+        "daily_remaining_withdraw_amount": "Daily remaining withdrawal amount: ",
+        "daily_withdrawal_limit_reached": "You've reached your daily withdrawal limit of {amount} {token}, please try again later.",
         "recipient": "{chain} 上的接受者",
         "withdraw": "提取"
       }
@@ -836,6 +837,8 @@
       "could_not_deposit_eth": "不能存入 ETH，请确认为此事务支付足够的 gas 费。",
       "deposit_approval_failed": "存入批准失败。",
       "withdraw_failed": "提取出错，请重试或联系客服。",
+      "withdraw_failed_total_limit_reached": "Total daily withdrawal limit has been reached, please try again tomorrow.",
+      "withdraw_failed_account_limit_reached": "Account daily withdrawal limit has been reached, please try again tomorrow.",
       "supplied_key_already_mapped": "提供的密钥已映射。",
       "unexpected_error_while_add_account": "添加账户映射时出现意外错误。",
       "balance_not_enough": "你的余额不足。请先存入一些。",

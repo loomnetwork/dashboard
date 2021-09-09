@@ -33,11 +33,21 @@
       </div>
       <div>
         <h6>{{ $t('components.gateway.withdraw_form_modal.balance') }} {{ balance | tokenAmount(tokenInfo.decimals)}} {{ token }}</h6>
-        <h6 v-if="isWithdrawalLimitEnabled && isCheckDailyRemainingWithdrawAmount()">
+        <h6 v-if="isWithdrawalLimitReached">
+          {{
+            $t('components.gateway.withdraw_form_modal.daily_withdrawal_limit_reached', {
+              amount: formattedMaxPerAccountDailyWithdrawalAmount,
+              token
+            })
+          }}
+        </h6>
+        <h6 v-else-if="isWithdrawalLimitEnabled && dailyRemainingWithdrawAmount !== null">
           {{ $t('components.gateway.withdraw_form_modal.daily_remaining_withdraw_amount') }}
-          {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
+          {{ dailyRemainingWithdrawAmount | tokenAmount(tokenInfo.decimals) }} /
+          {{ maxPerAccountDailyWithdrawalAmount | tokenAmount(tokenInfo.decimals) }} {{ token }}
         </h6>
         <amount-input
+          v-if="!isWithdrawalLimitReached"
           :min="min"
           :max="max"
           :symbol="transferRequest.token"
@@ -64,7 +74,7 @@
         class="ml-2"
         @click="requestWithdrawal"
         variant="primary"
-        :disabled="validInput === false || max <= 0"
+        :disabled="validInput === false || max <= 0 || isWithdrawalLimitReached"
       >{{ $t('components.gateway.withdraw_form_modal.withdraw') }}</b-btn>
     </template>
   </b-modal>
@@ -86,6 +96,9 @@ import { LocalAddress, Address } from "loom-js"
 
 import * as plasmaGateways from "@/store/gateway/plasma"
 import { tokenService, TokenData } from "@/services/TokenService"
+import { formatTokenAmount } from "@/filters"
+
+const ONE_DAY_MSECS = 86400000 // 24hrs in milliseconds
 
 @Component({
   components: {
@@ -103,7 +116,8 @@ export default class WithdrawForm extends Vue {
   amountIsValid: boolean = false
   isValidAddress: boolean = false
   recepient = ""
-  dailyRemainingWithdrawAmount: BN = ZERO
+  dailyRemainingWithdrawAmount: BN | null = null
+  maxPerAccountDailyWithdrawalAmount: BN = ZERO
 
   tokenInfo: TokenData | null = null
 
@@ -138,6 +152,13 @@ export default class WithdrawForm extends Vue {
 
   get isWithdrawalLimitEnabled() {
     return this.state.gateway.withdrawalLimit
+      && (this.transferRequest.token === "ETH" || this.transferRequest.token === "LOOM")
+  }
+
+  get formattedMaxPerAccountDailyWithdrawalAmount(): string {
+    return formatTokenAmount(
+      this.maxPerAccountDailyWithdrawalAmount, this.tokenInfo ? this.tokenInfo.decimals : 18,
+    )
   }
 
   get visible() {
@@ -159,18 +180,21 @@ export default class WithdrawForm extends Vue {
     this.isValidAddress = false
     this.weiAmount = ZERO
     this.recepient = ""
+    this.dailyRemainingWithdrawAmount = null
   }
 
   isValidAddressFormat(isValid) {
     return this.isValidAddress = isValid
   }
 
-  isCheckDailyRemainingWithdrawAmount() {
-    return this.transferRequest.token === "ETH" || this.transferRequest.token === "LOOM"
-  }
-
   close() {
     this.visible = false
+  }
+
+  get isWithdrawalLimitReached() {
+    return this.isWithdrawalLimitEnabled
+      && this.dailyRemainingWithdrawAmount !== null
+      && this.dailyRemainingWithdrawAmount.lte(new BN(0))
   }
 
   setAmountIsError(isError: boolean) {
@@ -195,29 +219,22 @@ export default class WithdrawForm extends Vue {
     return true
   }
 
-  async remainWithdrawAmount() {
+  async fetchRemainingWithdrawalAmount() {
     const { chain, token } = this.transferRequest
     const gateway = plasmaGateways.service().get(chain, token)
 
     const ownerAddress = Address.fromString(`${this.state.plasma.chainId}:${this.state.plasma.address}`)
-    const plasmaAccountInfo =  await gateway.getLocalAccountInfo(ownerAddress)
-    let totalWithdrawalAmount: BN =  plasmaAccountInfo!.totalWithdrawalAmount
-
-    const lastWithdrawalLimitResetTime: number = plasmaAccountInfo!.lastWithdrawalLimitResetTime
-    const lastWithdrawalLimitResetDate: Date = new Date(lastWithdrawalLimitResetTime * 1000)
-    const todayDate: Date = new Date()
-
-    // if lastWithdrawalLimitResetDate is not today then set total withdraw amount of this account to 0
-    if (lastWithdrawalLimitResetDate.toDateString() !== todayDate.toDateString()) {
+    const plasmaAccountInfo = await gateway.getLocalAccountInfo(ownerAddress)
+    let totalWithdrawalAmount =  plasmaAccountInfo.totalWithdrawalAmount
+    const lastWithdrawalLimitResetTime = plasmaAccountInfo.lastWithdrawalLimitResetTime * 1000
+    const elapsedMSecs = Date.now() - lastWithdrawalLimitResetTime
+    // daily withdrawal limit is reset every 24 hours
+    if (elapsedMSecs > ONE_DAY_MSECS) {
       totalWithdrawalAmount = new BN(0)
     }
-
     const gatewayState = await gateway.getGatewayState()
-    const maxPerAccountDailyWithdrawalAmount: BN = gatewayState!.maxPerAccountDailyWithdrawalAmount
-    const remainingWithdrawAmount = maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
-
-    console.log("remainingWithdrawAmount: ", remainingWithdrawAmount.toString())
-    return remainingWithdrawAmount
+    this.maxPerAccountDailyWithdrawalAmount = gatewayState.maxPerAccountDailyWithdrawalAmount
+    return this.maxPerAccountDailyWithdrawalAmount.sub(totalWithdrawalAmount)
   }
 
   @Watch("visible")
@@ -225,8 +242,8 @@ export default class WithdrawForm extends Vue {
     if (!visible) return
     const { chain, token } = this.transferRequest
     const fee = plasmaGateways.service().get(chain, token).fee
-    if (this.isWithdrawalLimitEnabled && this.isCheckDailyRemainingWithdrawAmount()) {
-      this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
+    if (this.isWithdrawalLimitEnabled) {
+      this.dailyRemainingWithdrawAmount = await this.fetchRemainingWithdrawalAmount()
       this.max = this.balance.lt(this.dailyRemainingWithdrawAmount) ? this.balance : this.dailyRemainingWithdrawAmount
     } else {
       this.max = this.balance
@@ -242,9 +259,6 @@ export default class WithdrawForm extends Vue {
       this.fee = {}
     }
     this.tokenInfo = tokenService.getTokenbySymbol(this.transferRequest.token)
-    if (this.isWithdrawalLimitEnabled) {
-      this.dailyRemainingWithdrawAmount = await this.remainWithdrawAmount()
-    }
   }
 
   async requestWithdrawal(e) {

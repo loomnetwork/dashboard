@@ -125,7 +125,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
     // Initialize Ethereum gateways & coin contracts
     try {
       const ethereumGateway = await EthereumGateways.init(
-        ethereumModule.web3,
+        ethereumModule.web3!,
         addresses,
         version,
       )
@@ -135,7 +135,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         ethereumGateway.add("ETH", "") // Ether does not have a contract address
       }
     } catch (error) {
-      console.error("Error initializing ethereum gateways " + error.message)
+      console.error("Error initializing ethereum gateways " + (error as any).message)
       return
     }
 
@@ -153,7 +153,7 @@ export function gatewayReactions(store: Store<DashboardState>) {
         plasmaGateways.add("ethereum", "ETH", Address.fromString(`eth:${addresses.mainGateway}`))
       }
     } catch (error) {
-      console.error("Error initializing plasma gateways " + error.message)
+      console.error("Error initializing plasma gateways " + (error as any).message)
       return
     }
 

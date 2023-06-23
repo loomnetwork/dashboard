@@ -115,6 +115,7 @@ class ERC20Adapter implements ContractAdapter {
     const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .balanceOf(account)
+      // @ts-expect-error
       .call({
         from: caller.local.toString(),
       })
@@ -124,6 +125,7 @@ class ERC20Adapter implements ContractAdapter {
     const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .allowance(account, to)
+      // @ts-expect-error
       .call({
         from: caller.local.toString(),
       })
@@ -133,12 +135,14 @@ class ERC20Adapter implements ContractAdapter {
     const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .approve(to, amount.toString())
+      // @ts-expect-error
       .send({ from: caller.local.toString() })
   }
   async transfer(to: string, amount: BN) {
     const caller = await plasmaModule.getCallerAddress()
     const result = await this.contract.methods
       .transfer(to, amount.toString())
+      // @ts-expect-error
       .send({ from: caller.local.toString() })
     console.log("transferred.")
     console.log("transferred result", result)
@@ -170,6 +174,7 @@ export async function addToken(context: PlasmaContext, payload: { token: TokenDa
   log("add token state ", state.coins)
   let contract
   try {
+    // @ts-expect-error
     contract = new web3.eth.Contract(ERC20ABI, token.plasma) as ERC20
     await addContract(token.symbol, PlasmaTokenKind.ERC20, contract)
   } catch (error) {
@@ -263,13 +268,13 @@ export async function approve(
     await adapter.approve(to, approvalAmount)
     return true
   } catch (error) {
-    if (error.message.includes("User denied message")) {
+    if ((error as any).message.includes("User denied message")) {
       feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
       feedbackModule.endTask()
     } else {
       feedbackModule.showError(
         i18n
-          .t("messages.transaction_apprv_err_tx", { msg: error.message })
+          .t("messages.transaction_apprv_err_tx", { msg: (error as any).message })
           .toString(),
       )
       feedbackModule.endTask()

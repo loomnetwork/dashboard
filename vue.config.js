@@ -1,18 +1,11 @@
 /* eslint-disable */
 var PrerenderSpaPlugin = require("prerender-spa-plugin")
 var path = require("path")
-const Renderer = PrerenderSpaPlugin.PuppeteerRenderer
-const SentryCliPlugin = require("@sentry/webpack-plugin")
 const TerserPlugin = require("terser-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const webpack = require("webpack")
-const baseUrl = "/"
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const { DuplicatesPlugin } = require("inspectpack/plugin");
 
 module.exports = {
-  //publicPath: baseUrl,
-  //baseUrl: baseUrl,
   pages: {
     index: {
       title: "Index Page",
@@ -32,9 +25,7 @@ module.exports = {
     // https://github.com/sindresorhus/got/issues/345
     let plugins = [
       new webpack.IgnorePlugin(/^electron$/),
-      new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID', 'EXT_VALIDATORS_URL']),
-      // new DuplicatesPlugin(),
-      // new BundleAnalyzerPlugin(),
+      new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID', 'EXT_VALIDATORS_URL', 'WALLETCONNECT_PROJECT_ID']),
     ]
     config.optimization = {
       minimizer: [
@@ -77,6 +68,7 @@ module.exports = {
 
     return {
       resolve: {
+        mainFields: ['browser', 'main'],
         alias: {
           "bn.js": path.resolve(__dirname, "node_modules/bn.js/lib/bn.js"),
           "web3-core": path.resolve(__dirname, "node_modules/web3-core"),

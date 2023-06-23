@@ -33,7 +33,7 @@ export const BinanceChainWalletAdapter: WalletType = {
     try {
       accounts = await bc.request({ method: "eth_requestAccounts" })
     } catch (err) {
-      if (err.code === 4001) {
+      if ((err as any).code === 4001) {
         // EIP-1193 userRejectedRequest error
         // If this happens, the user rejected the connection request.
         console.log("Use rejected Binance Chain Wallet connection request")
@@ -101,5 +101,5 @@ function patchSigner(signer: ethers.Signer) {
 }
 
 export function isBCWallet(wallet: IWalletProvider | null) {
-  return wallet != null && wallet.web3.currentProvider.isBCWallet
+  return wallet != null && (wallet.web3.currentProvider as any).isBCWallet
 }

@@ -1,6 +1,6 @@
 import { ethers } from "ethers"
 import Web3 from "web3"
-import WalletLink from "walletlink"
+import CoinbaseWalletSDK from "@coinbase/wallet-sdk"
 
 import { WalletType, EthereumConfig, IWalletProvider } from "../types"
 
@@ -17,7 +17,7 @@ export const WalletLinkAdapter: WalletType = {
     },
     async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
         const chainId = parseInt(config.networkId, 10)
-        const walletLink = new WalletLink({
+        const walletLink = new CoinbaseWalletSDK({
             appName: "Loom Network - Basechain Dashboard",
         })
         // In config we use websockets. Not supported by walletlink yet.
@@ -33,7 +33,7 @@ export const WalletLinkAdapter: WalletType = {
         try {
             accounts = await wlProvider.send("eth_requestAccounts")
         } catch (err) {
-            if (err.code === 4001) {
+            if ((err as any).code === 4001) {
                 // EIP-1193 userRejectedRequest error
                 // If this happens, the user rejected the connection request.
                 console.log("User rejected WalletLink connection request")

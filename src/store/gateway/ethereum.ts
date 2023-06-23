@@ -161,7 +161,9 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   version: { main: 1 | 2, loom: 1 | 2 },
 ) {
+  // @ts-expect-error
   const ERC20GatewayABI: AbiItem[] = version.loom === 2 ? GatewayABIv2 : GatewayABIv1
+  // @ts-expect-error
   const GatewayABI: AbiItem[] = version.main === 2 ? GatewayABIv2 : GatewayABIv1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
@@ -190,6 +192,7 @@ export async function init(
     const vmcAddress = await vmcSourceGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
+      // @ts-expect-error
       ValidatorManagerV2FactoryABI,
       vmcAddress,
     )
@@ -284,6 +287,7 @@ export async function refreshAllowances(context: ActionContext) {
       mergeMap(async (symbol) => {
         // @ts-ignore
         const spender = gateways.get(symbol).contract._address
+        console.log('checking allowance', {symbol, spender})
         const amount = await ethereumModule.allowance({ symbol, spender })
         return { token: tokenService.getTokenbySymbol(symbol), amount }
       }),
@@ -387,7 +391,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
         let sendToSentry = true
         // NOTE remove this when BSC supports websocket
         if (isBCWallet(context.rootState.ethereum.wallet) &&
-          err.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+          (err as any).message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
           fb.showSuccess(i18n.t("components.gateway.deposit.confirmed").toString())
           sendToSentry = false
         } else if ("imToken" in window) {
@@ -481,12 +485,12 @@ export async function ethereumWithdraw(context: ActionContext, token_: string) {
     let sendToSentry = true
     // NOTE remove this when BSC supports websocket
     if (isBCWallet(context.rootState.ethereum.wallet) &&
-      err.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+      (err as any).message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
       fb.showSuccess(i18n.t("feedback_msg.success.transaction_success").toString())
       sendToSentry = false
     } else if ("imToken" in window) {
       // imToken throws even if transaction succeeds
-      console.log("imToken error", err, err.hash, "x", err.transactionHash)
+      console.log("imToken error", err, (err as any).hash, "x", (err as any).transactionHash)
     } else {
       console.error(err)
       fb.showError(i18n.t("feedback_msg.error.withdraw_failed").toString())

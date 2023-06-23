@@ -1,7 +1,5 @@
-import WalletConnectProvider from "@walletconnect/web3-provider"
-import { IWalletConnectProviderOptions } from "@walletconnect/types"
+import { EthereumProvider } from "@walletconnect/ethereum-provider"
 import { getMetamaskSigner } from "loom-js"
-import { Signer } from "ethers"
 import Web3 from "web3"
 
 import { WalletType, EthereumConfig, IWalletProvider } from "../types"
@@ -15,21 +13,30 @@ export const WalletConnectAdapter: WalletType = {
   isMultiAccount: false,
   desktop: true,
   mobile: true,
+  
   detect() {
     return true
   },
+  
   async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
-    const opts: IWalletConnectProviderOptions = {}
+    /*
     if (config.genericNetworkName === "Ethereum") {
       opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
     } else {
       opts.chainId = parseInt(config.networkId, 10)
       opts.rpc = { [opts.chainId]: config.endpoint }
     }
-    opts.bridge = "https://walletconnect.dappchains.com"
+    */
     // clear our previous session so user is prompted to scan QR code
     localStorage.removeItem("walletconnect")
-    const wcProvider = new WalletConnectProvider(opts)
+
+    const chainId = parseInt(config.networkId, 10)
+    const wcProvider = await EthereumProvider.init({
+      projectId: `${process.env.WALLETCONNECT_PROJECT_ID}`,
+      chains: [chainId],
+      rpcMap: { chainId: config.endpoint },
+      showQrModal: true // requires @walletconnect/modal
+    })
 
     wcProvider.on(
       "chainChanged",
@@ -42,13 +49,16 @@ export const WalletConnectAdapter: WalletType = {
     wcProvider.on("accountsChanged", (accounts: string[]) => {
       console.log(`WalletConnect accountsChanged ${accounts}`)
     })
-    wcProvider.on("disconnect", (code, reason) => {
-      console.log(`WalletConnect session disconnected, ${code}, reason ${reason}`)
+    wcProvider.on("disconnect", (err) => {
+      console.log(`WalletConnect session disconnected, ${err.code}: ${err.message}}`)
       window.location.reload()
     })
 
     // enable session (triggers QR Code modal)
     await wcProvider.enable()
+
+    //const web3 = new Web3(Web3.givenProvider)
+    //web3.setProvider('ws://localhost:8546');
     return {
       web3: new Web3(wcProvider),
       signer: getMetamaskSigner(wcProvider),

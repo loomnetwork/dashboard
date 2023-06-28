@@ -1,7 +1,6 @@
-import { PlasmaState, CardDetail, PackDetail } from "../types"
+import { CardDetail, PackDetail } from "../types"
 import { Contract } from "web3-eth-contract"
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
-import { BoosterPack } from "./web3-contracts/BoosterPack"
 import { AssetsState } from "./types"
 
 export function setPacksContract(

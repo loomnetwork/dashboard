@@ -8,12 +8,11 @@ import Axios from "axios"
 import BN from "bn.js"
 import debug from "debug"
 import { ethers } from "ethers"
-import { CryptoUtils } from "loom-js"
+import { CryptoUtils, parseSigs } from "loom-js"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
-import { parseSigs } from "loom-js/dist/helpers"
-import { abi as GatewayABIv1, EthereumGatewayV1Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV1Factory"
-import { abi as GatewayABIv2, EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/EthereumGatewayV2Factory"
-import { abi as ValidatorManagerV2FactoryABI } from "loom-js/dist/mainnet-contracts/ValidatorManagerV2Factory"
+import { abi as GatewayABIv1, EthereumGatewayV1__factory as EthereumGatewayV1Factory } from "loom-js/dist/mainnet-contracts/factories/EthereumGatewayV1__factory"
+import { abi as GatewayABIv2, EthereumGatewayV2__factory as EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/factories/EthereumGatewayV2__factory"
+import { abi as ValidatorManagerV2FactoryABI } from "loom-js/dist/mainnet-contracts/factories/ValidatorManagerV2__factory"
 import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { from } from "rxjs"
 import { filter, mergeMap, tap, toArray } from "rxjs/operators"
@@ -161,9 +160,9 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   version: { main: 1 | 2, loom: 1 | 2 },
 ) {
-  // @ts-expect-error
+  // @ts-ignore-next-line
   const ERC20GatewayABI: AbiItem[] = version.loom === 2 ? GatewayABIv2 : GatewayABIv1
-  // @ts-expect-error
+  // @ts-ignore-next-line
   const GatewayABI: AbiItem[] = version.main === 2 ? GatewayABIv2 : GatewayABIv1
   // @ts-ignore
   const loomGateway = new web3.eth.Contract(
@@ -192,7 +191,7 @@ export async function init(
     const vmcAddress = await vmcSourceGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
-      // @ts-expect-error
+      // @ts-ignore-next-line
       ValidatorManagerV2FactoryABI,
       vmcAddress,
     )

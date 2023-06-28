@@ -28,20 +28,9 @@ export interface IDecodedTx {
 
 export function extractTxDataFromStr(base64Str: string): IOneSigTx {
   const pbBuf = CryptoUtils.bufferToProtobufBytes(CryptoUtils.B64ToUint8Array(base64Str))
-  let lastError = Error || null
-  try {
-    const sig = readTxSignature(pbBuf)
-    const payload = readTxPayload(pbBuf)
-    return { tx: payload, signed: sig }
-  } catch (e) {
-    if (e instanceof Error) {
-      throw lastError
-    } else {
-      lastError = e
-    }
-  }
-  throw  lastError
-
+  const sig = readTxSignature(pbBuf)
+  const payload = readTxPayload(pbBuf)
+  return { tx: payload, signed: sig }
 }
 
 function readTxPayload(i: Uint8Array): IDecodedTx {

@@ -186,6 +186,7 @@ export default class Layout extends Vue {
   }
 
   restart() {
+    // @ts-ignore-next-line
     window.location.reload(true)
   }
 }

@@ -1,7 +1,5 @@
 import BN from "bn.js"
-import { Client, DPOSUserV3, Address } from "loom-js"
-import { AddressMapper, DPOS3 } from "loom-js/dist/contracts"
-import { Contract } from "web3-eth-contract"
+import { Address } from "loom-js"
 import { HasDPOSState, DPOSConfig } from "@/dpos/store/types"
 import { EthereumConfig } from "./store/ethereum/types"
 import { HasGatewayState, GatewayConfig } from "@/store/gateway/types"

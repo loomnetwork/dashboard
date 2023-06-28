@@ -8,12 +8,10 @@ import Web3 from "web3"
 
 import * as Tokens from "./tokens"
 import { Web3Provider } from "ethers/providers"
-import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
 
 import debug from "debug"
-import { tokenService } from "@/services/TokenService"
 const log = debug("dash.plasma")
 
 /**

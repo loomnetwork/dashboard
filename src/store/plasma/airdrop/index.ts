@@ -63,7 +63,7 @@ export async function withdrawAirdrop(context: AirdropContext, payload: {airdrop
       .send({ from: caller.local.toString() })
     feedback.showSuccess(i18n.t("feedback_msg.success.withdraw_airdrop_success").toString())
   } catch (error) {
-    if (error.message.includes("denied")) {
+    if ((error as Error).message.includes("denied")) {
       feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {
       feedback.showError(i18n.t("feedback_msg.error.err_while_withdraw_airdrop").toString())

@@ -9,7 +9,7 @@ import {
 } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/ERC20Factory"
+import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/factories/ERC20__factory"
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
 import { tokenService, TokenData } from "@/services/TokenService"
@@ -174,7 +174,7 @@ export async function addToken(context: PlasmaContext, payload: { token: TokenDa
   log("add token state ", state.coins)
   let contract
   try {
-    // @ts-expect-error
+    // @ts-ignore-next-line
     contract = new web3.eth.Contract(ERC20ABI, token.plasma) as ERC20
     await addContract(token.symbol, PlasmaTokenKind.ERC20, contract)
   } catch (error) {

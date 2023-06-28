@@ -21,7 +21,6 @@ import {
   WhiteListContext,
 } from "@/whitelist/store/types"
 import * as mutations from "./mutations"
-import { async } from "rxjs/internal/scheduler/async"
 
 const log = debug("whitelist")
 
@@ -132,10 +131,10 @@ export async function addDeployer(
     )
   } catch (error) {
     log("addDeployerAsync error", error)
-    let errorMessage = error.message
-    if (error.message.includes("User denied message")) {
+    let errorMessage = (error as Error).message
+    if (errorMessage.includes("User denied message")) {
       errorMessage = i18n.t("messages.user_denied_sign_tx").toString()
-    } else if (error.message.includes("deployer already exists")) {
+    } else if (errorMessage.includes("deployer already exists")) {
       errorMessage = i18n.t("messages.deployer_already_exists").toString()
     }
     feedbackModule.showError(

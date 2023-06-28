@@ -16,17 +16,21 @@ module.exports = {
   },
   runtimeCompiler: true,
   devServer: {
-    https: true,
-    disableHostCheck: true
+    server: "http",
+    allowedHosts: "all"
   },
   configureWebpack: config => {
     console.log("nodeenv:", process.env.NODE_ENV)
 
     // https://github.com/sindresorhus/got/issues/345
     let plugins = [
-      new webpack.IgnorePlugin(/^electron$/),
+      new webpack.IgnorePlugin({ resourceRegExp: /^electron$/ }),
       new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID', 'EXT_VALIDATORS_URL', 'WALLETCONNECT_PROJECT_ID']),
+      new webpack.ProvidePlugin({
+        Buffer: ["buffer", "Buffer"] // set the global Buffer to the Buffer export from the buffer package
+      })
     ]
+    /* TODO: adjust for webpack v5
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -49,6 +53,7 @@ module.exports = {
         })
       ]
     }
+    */
 
     if (process.env.NODE_ENV === "test") {
       config.externals = {
@@ -58,17 +63,16 @@ module.exports = {
     }
 
     plugins.push(
-      new CopyPlugin([
-        {
+      new CopyPlugin({
+        patterns: [{
           from: "src/assets/tokens/",
           to: "tokens"
-        }
-      ])
+        }]
+      })
     )
 
     return {
       resolve: {
-        mainFields: ['browser', 'main'],
         alias: {
           "bn.js": path.resolve(__dirname, "node_modules/bn.js/lib/bn.js"),
           "web3-core": path.resolve(__dirname, "node_modules/web3-core"),
@@ -77,6 +81,15 @@ module.exports = {
           "web3-eth-accounts": path.resolve(__dirname, "node_modules/web3-eth-accounts"),
           "web3-eth-contract": path.resolve(__dirname, "node_modules/web3-eth-contract"),
           "web3-utils": path.resolve(__dirname, "node_modules/web3-utils"),
+        },
+        fallback: {
+          buffer: require.resolve("buffer/"),
+          stream: require.resolve("stream-browserify"),
+          http: require.resolve("stream-http"),
+          https: require.resolve("https-browserify"),
+          net: false,
+          child_process: false,
+          fs: false,
         }
       },
       externals: {

@@ -12,7 +12,7 @@ import {
 } from "loom-js"
 import { AddressMapper } from "loom-js/dist/contracts/address-mapper"
 import { ActionContext } from "./types"
-import { createDefaultClient, createDefaultEthSignClientAsync } from "loom-js/dist/helpers"
+import { createDefaultClient } from "loom-js"
 import { feedbackModule } from "@/feedback/store"
 import * as Sentry from "@sentry/browser"
 
@@ -52,13 +52,13 @@ export async function loadMapping(context: ActionContext, address: string) {
     log("got mapping", context.state.mapping)
   } catch (e) {
     // check if user mapping is from Relentless Marketplace
-    if (e.message.includes("failed to map address")) {
+    if ((e as Error).message.includes("failed to map address")) {
       context.state.mapping = {
         from: Address.fromString(`eth:${address}`),
         to: new Address("", new LocalAddress(new Uint8Array())),
       }
     } else {
-      console.error("Failed to load mapping, response was " + e.message)
+      console.error("Failed to load mapping, response was " + (e as Error).message)
       // todo feedback.showError("mapper.errors.load")
       context.state.mapping = {
         from: Address.fromString(`eth:${address}`),
@@ -104,7 +104,7 @@ export async function createMapping(context: ActionContext, privateKey: string) 
     log("addIdentityMappingAsync ok  ")
     loadMapping(context, rootState.ethereum.address)
   } catch (e) {
-    if (e.message.includes("identity mapping already exists")) {
+    if ((e as Error).message.includes("identity mapping already exists")) {
       state.requireMapping = true
       feedbackModule.showError(i18n.t("feedback_msg.error.supplied_key_already_mapped").toString())
     } else {

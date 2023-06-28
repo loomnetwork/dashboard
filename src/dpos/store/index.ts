@@ -449,7 +449,7 @@ export async function undelegate(context: ActionContext, delegation: Delegation)
     feedback.endTask()
   } catch (error) {
     feedback.endTask()
-    if (error.message.indexOf("Delegation currently locked") !== -1) {
+    if ((error as Error).message.indexOf("Delegation currently locked") !== -1) {
       feedback.showError(i18n.t("feedback_msg.error.err_delegation_locked").toString())
     } else {
       console.error(error)
@@ -637,7 +637,7 @@ export async function unjail(context: ActionContext) {
     feedback.showSuccess(i18n.t("dpos.unjail_success").toString())
   } catch (err) {
     console.error(err)
-    feedback.showError(i18n.t("dpos.unjail_error", { error: err.message }).toString())
+    feedback.showError(i18n.t("dpos.unjail_error", { error: (err as Error).message }).toString())
   } finally {
     feedback.endTask()
   }

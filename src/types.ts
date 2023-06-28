@@ -6,7 +6,6 @@ import { HasGatewayState, GatewayConfig } from "@/store/gateway/types"
 import { PlasmaConfig } from "@/store/plasma/types"
 import { HasWhiteListState } from "@/whitelist/store/types"
 import { HasAssetsState } from "./store/plasma/assets/types"
-import { HasAirdropState } from "./store/plasma/airdrop/types"
 
 export interface DashboardConfig {
   name: string
@@ -33,8 +32,7 @@ export interface DashboardState extends
   HasGatewayState,
   HasDPOSState,
   HasWhiteListState,
-  HasAssetsState,
-  HasAirdropState {
+  HasAssetsState {
   env: string
   envs: DashboardConfig[]
   disabled: string[]

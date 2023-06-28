@@ -58,7 +58,6 @@
     </b-card>
 
     <rewards></rewards>
-    <airdrop/> 
 
     <b-card id="delegations-container" no-body>
       <b-card-body>
@@ -95,7 +94,6 @@ import { plasmaModule } from "../store/plasma"
 import ElectionTimer from "@/dpos/components/ElectionTimer.vue"
 import Delegations from "@/dpos/components/Delegations.vue"
 import { Subscription, timer } from "rxjs"
-import Airdrop from "@/dpos/components/Airdrop.vue"
 import OtherDelegations from "@/dpos/components/OtherDelegations.vue"
 
 const log = debug("mobileaccount")
@@ -107,7 +105,6 @@ const log = debug("mobileaccount")
     Rewards,
     ElectionTimer,
     Delegations,
-    Airdrop,
     OtherDelegations,
   },
 })

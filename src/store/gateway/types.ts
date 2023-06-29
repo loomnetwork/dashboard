@@ -16,7 +16,6 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 
 export interface GatewayConfig {
   chains: string[]
-  checkMarketplaceURL: string
   tokenContractLogsURL: string
   binance: BinanceGateway
   withdrawalLimit: boolean

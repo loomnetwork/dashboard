@@ -58,7 +58,6 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
-    checkMarketplaceURL: "https://auth.loom.games/wallet/address?address={address}&wallet=eth",
     tokenContractLogsURL: "https://api.loom.games/plasma/tokencontract/eth:{address}",
     binance: {
       gatewayAccount: "bnb17mxq8p5jmw27dtt6s92fd35yltdml6snw3r98t",

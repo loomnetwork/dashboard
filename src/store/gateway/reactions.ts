@@ -37,8 +37,6 @@ export function gatewayReactions(store: Store<DashboardState>) {
         log("null mapping")
         // todo destroy anything that needs to be disposed of
         return
-      } else if (mapping.to.isEmpty()) {
-        await gatewayModule.checkRelentlessUser(mapping.from.local.toString().toLowerCase())
       } else if (mapping.to!.isEmpty() === false) {
 
         Sentry.setExtra(mapping.from.chainId, mapping.from.local.toString())

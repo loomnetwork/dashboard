@@ -40,7 +40,6 @@ function initialState(): GatewayState {
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
     requireMapping: false,
-    checkMarketplaceURL: "",
     tokenContractLogsURL: "",
     ethereumMappings: {
       confirmed: [],
@@ -87,7 +86,6 @@ export const gatewayModule = {
   loadMapping: builder.dispatch(Mapper.loadMapping),
   createMapping: builder.dispatch(Mapper.createMapping),
   setMaybeRelentlessUser: builder.commit(mutations.setMaybeRelentlessUser),
-  checkRelentlessUser: builder.dispatch(Mapper.checkRelentlessUser),
 
   // helper
   generateNewId: Mapper.generateNewId,

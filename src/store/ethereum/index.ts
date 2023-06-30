@@ -173,17 +173,16 @@ async function setWalletType(context: ActionContext, walletType: string) {
     feedbackModule.setTask(i18n.t("feedback_msg.task.connect_wallet").toString())
     feedbackModule.setStep(i18n.t("feedback_msg.task.connect_wallet").toString())
 
-    await wallet
-      .createProvider(context.state)
-      .then((provider) => {
-        disconnectWalletBeforeUnload(provider)
-        return setProvider(context, provider)
-      })
-      .catch((error) => {
+    try {
+      const provider = await wallet.createProvider(context.state)
+      disconnectWalletBeforeUnload(provider)
+      await setProvider(context, provider)
+    } catch(error) {
         Sentry.captureException(error)
         console.error(error)
+        feedbackModule.endTask()
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
-      })
+    }
   }
 }
 

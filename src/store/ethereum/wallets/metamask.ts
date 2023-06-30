@@ -20,6 +20,7 @@ export const MetaMaskAdapter: WalletType = {
   desktop: true,
   mobile: false,
   detect: isMetamaskPresent,
+
   async createProvider(): Promise<IWalletProvider> {
     if (!isMetamaskPresent()) {
       throw new Error("no Metamask installation detected")

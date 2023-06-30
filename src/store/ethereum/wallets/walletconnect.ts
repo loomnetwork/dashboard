@@ -19,23 +19,23 @@ export const WalletConnectAdapter: WalletType = {
   },
   
   async createProvider(config: EthereumConfig): Promise<IWalletProvider> {
-    /*
-    if (config.genericNetworkName === "Ethereum") {
-      opts.infuraId = `${process.env.INFURA_PROJECT_ID}`
-    } else {
-      opts.chainId = parseInt(config.networkId, 10)
-      opts.rpc = { [opts.chainId]: config.endpoint }
-    }
-    */
-    // clear our previous session so user is prompted to scan QR code
-    localStorage.removeItem("walletconnect")
+    // WalletConnect session restore is unreliable so clear it out every time
+    // a new provider is created so the user is prompted to scan QR code to connect
+    Object.keys(localStorage).filter(x =>x.startsWith('wc@2:')).forEach(x => localStorage.removeItem(x))
 
     const chainId = parseInt(config.networkId, 10)
     const wcProvider = await EthereumProvider.init({
       projectId: `${process.env.WALLETCONNECT_PROJECT_ID}`,
       chains: [chainId],
       rpcMap: { chainId: config.endpoint },
-      showQrModal: true // requires @walletconnect/modal
+      showQrModal: true, // requires @walletconnect/modal
+      qrModalOptions: {
+        enableExplorer: false,
+        themeMode: "dark",
+        themeVariables: {
+          "--w3m-z-index": "9999",
+        },
+      },
     })
 
     wcProvider.on(
@@ -57,8 +57,6 @@ export const WalletConnectAdapter: WalletType = {
     // enable session (triggers QR Code modal)
     await wcProvider.enable()
 
-    //const web3 = new Web3(Web3.givenProvider)
-    //web3.setProvider('ws://localhost:8546');
     return {
       web3: new Web3(wcProvider),
       signer: getMetamaskSigner(wcProvider),

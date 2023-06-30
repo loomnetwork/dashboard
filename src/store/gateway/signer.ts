@@ -37,7 +37,6 @@ export class EthPlasmSigner implements PlasmaSigner {
 }
 
 function initSignedEthMiddleware(signer: ethers.Signer): SignedEthTxMiddleware {
-  // @ts-ignore-next-line
   const middleware = new SignedEthTxMiddleware(signer)
   const handle = middleware.Handle.bind(middleware)
   middleware.Handle = async (txData) => {

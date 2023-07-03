@@ -17,6 +17,7 @@ import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb
 import { from } from "rxjs"
 import { filter, mergeMap, tap, toArray } from "rxjs/operators"
 import Web3 from "web3"
+import type { Contract } from "web3-eth-contract"
 import { AbiItem } from "web3-utils"
 import { ethereumModule } from "../ethereum"
 import { PlasmaTokenKind } from "../plasma/types"
@@ -37,7 +38,7 @@ const log = debug("dash.gateway.ethereum")
  */
 interface EthereumGatewayAdapter {
   token: string
-  contract: EthereumGatewayV2Factory | EthereumGatewayV1Factory
+  contract: Contract
 
   deposit(amount: BN, address: string)
   withdraw(receipt: IWithdrawalReceipt)
@@ -47,17 +48,15 @@ interface EthereumGatewayAdapter {
 class ERC20GatewayAdapter implements EthereumGatewayAdapter {
   constructor(
     private vmc: ValidatorManagerContract | null,
-    readonly contract: EthereumGatewayV2Factory | EthereumGatewayV1Factory,
+    readonly contract: Contract,
     readonly tokenAddress: string,
     readonly token: string,
   ) { }
 
   deposit(amount: BN, address: string) {
     return (
-      // @ts-ignore
       this.contract.methods
         .depositERC20(amount.toString(), this.tokenAddress)
-        // @ts-ignore
         .send({
           from: address,
         })
@@ -83,13 +82,11 @@ class ERC20GatewayAdapter implements EthereumGatewayAdapter {
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      // @ts-ignore
       tx = await this.contract.methods
         .withdrawERC20(amount, tokenAddress, valIndexes, vs, rs, ss)
         .send({ from: localAddress })
     } else {
       const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
-      // @ts-ignore
       tx = await this.contract.methods
         .withdrawERC20(amount, signature, tokenAddress)
         .send({ from: localAddress })
@@ -109,7 +106,7 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
 
   constructor(
     private vmc: ValidatorManagerContract | null,
-    readonly contract: EthereumGatewayV1Factory,
+    readonly contract: Contract,
     readonly tokenAddress: string,
     readonly web3: Web3,
   ) { }
@@ -117,14 +114,12 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
   async deposit(amount: BN, sender: string) {
     console.log({
       from: sender,
-      // @ts-ignore
-      to: this.contract._address,
-      value: amount.toString(),
+      to: this.contract.options.address,
+      value: amount.toString()
     })
     return await this.web3.eth.sendTransaction({
       from: sender,
-      // @ts-ignore
-      to: this.contract._address,
+      to: this.contract.options.address,
       value: amount.toString(),
     })
   }
@@ -138,14 +133,12 @@ class EthGatewayAdapter implements EthereumGatewayAdapter {
     if (this.vmc) {
       const { decodedSig } = await decodeSig(receipt, this.contract, this.vmc)
       const { valIndexes, vs, ss, rs } = decodedSig
-      // @ts-ignore
       return this.contract.methods.withdrawETH(
         amount,
         valIndexes, vs, rs, ss,
       ).send({ from: localAddress })
     } else {
       const signature = CryptoUtils.bytesToHexAddr(receipt.oracleSignature)
-      // @ts-ignore
       return this.contract.methods.withdrawETH(amount.toString(), signature)
         .send({ from: localAddress })
 
@@ -160,20 +153,18 @@ export async function init(
   addresses: { mainGateway: string; loomGateway: string },
   version: { main: 1 | 2, loom: 1 | 2 },
 ) {
-  // @ts-ignore-next-line
+  // @ts-expect-error 2322 ... readonly cannot be assigned to mutable type AbiItem[]
   const ERC20GatewayABI: AbiItem[] = version.loom === 2 ? GatewayABIv2 : GatewayABIv1
-  // @ts-ignore-next-line
+  // @ts-expect-error 2322 ... readonly cannot be assigned to mutable type AbiItem[]1
   const GatewayABI: AbiItem[] = version.main === 2 ? GatewayABIv2 : GatewayABIv1
-  // @ts-ignore
   const loomGateway = new web3.eth.Contract(
     ERC20GatewayABI,
     addresses.loomGateway,
-  ) as EthereumGatewayV2Factory
+  )
   log("loom gateway initialized")
 
   let mainGateway: Gateway | null = null
   if (addresses.mainGateway !== ethers.constants.AddressZero) {
-    // @ts-ignore
     mainGateway = new web3.eth.Contract(
       GatewayABI as AbiItem[],
       addresses.mainGateway,
@@ -191,7 +182,7 @@ export async function init(
     const vmcAddress = await vmcSourceGateway.methods.vmc().call()
     log("vmc address", vmcAddress)
     vmcContract = new web3.eth.Contract(
-      // @ts-ignore-next-line
+      // @ts-expect-error 2322 ... readonly cannot be assigned to mutable type AbiItem[]
       ValidatorManagerV2FactoryABI,
       vmcAddress,
     )
@@ -221,8 +212,8 @@ class EthereumGateways {
    * @param web3
    */
   constructor(
-    readonly mainGateway: EthereumGatewayV1Factory | null,
-    readonly loomGateway: EthereumGatewayV2Factory,
+    readonly mainGateway: Contract | null,
+    readonly loomGateway: Contract,
     readonly vmc: ValidatorManagerContract | null,
     readonly web3: Web3,
     readonly version: { main: 1 | 2, loom: 1 | 2 },
@@ -284,9 +275,7 @@ export async function refreshAllowances(context: ActionContext) {
       filter((symbol) => symbol !== "ETH"),
       tap(log),
       mergeMap(async (symbol) => {
-        // @ts-ignore
-        const spender = gateways.get(symbol).contract._address
-        console.log('checking allowance', {symbol, spender})
+        const spender = gateways.get(symbol).contract.options.address
         const amount = await ethereumModule.allowance({ symbol, spender })
         return { token: tokenService.getTokenbySymbol(symbol), amount }
       }),
@@ -339,14 +328,12 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
   fb.showLoadingBar(true)
   const approvalAmount = await ethereumModule.allowance({
     symbol,
-    // @ts-ignore
-    spender: gateway.contract._address,
+    spender: gateway.contract.options.address,
   })
   if (weiAmount.gt(approvalAmount)) {
     try {
       await ethereumModule.approve({
-        // @ts-ignore
-        to: gateway.contract._address,
+        to: gateway.contract.options.address,
         ...funds,
       })
       fb.showLoadingBar(false)
@@ -367,8 +354,7 @@ export async function ethereumDeposit(context: ActionContext, funds: Funds) {
             symbol,
             amount: weiAmount.toString(),
           }),
-          // @ts-ignore
-          spender: JSON.stringify(gateway.contract._address.toString()),
+          spender: JSON.stringify(gateway.contract.options.address.toString()),
         })
         Sentry.captureException(err)
       })
@@ -593,7 +579,7 @@ const WithdrawalPrefixes = [
 
 async function decodeSig(
   receipt: IWithdrawalReceipt,
-  gatewayContract: EthereumGatewayV1Factory | EthereumGatewayV2Factory,
+  gatewayContract: Contract,
   ethereumVMC: ValidatorManagerContract,
 ) {
   const hash = await createWithdrawalHash(receipt, gatewayContract)
@@ -616,13 +602,12 @@ async function decodeSig(
  */
 async function createWithdrawalHash(
   receipt: IWithdrawalReceipt,
-  gatewayContract: EthereumGatewayV1Factory | EthereumGatewayV2Factory,
+  gatewayContract: Contract,
 ): Promise<string> {
   const ethAddress = receipt.tokenOwner.local.toString()
   const tokenAddress = receipt.tokenContract!.local.toString()
   // ETH: gatewayAddress ?
-  // @ts-ignore
-  const gatewayAddress = gatewayContract._address
+  const gatewayAddress = gatewayContract.options.address
   const amount = receipt.value.isZero() ? receipt.tokenAmount!.toString() : receipt.value.toString()
   const amountHashed = receipt.tokenKind === TransferGatewayTokenKind.ETH
     ? ethers.utils.solidityKeccak256(
@@ -636,7 +621,6 @@ async function createWithdrawalHash(
   if (prefix === undefined) {
     throw new Error("Don't know prefix for token kind " + receipt.tokenKind)
   }
-  // @ts-ignore
   const nonce = await gatewayContract.methods.nonces(ethAddress).call()
   log("hash", [prefix, ethAddress, nonce, gatewayAddress, amountHashed])
   return ethers.utils.solidityKeccak256(

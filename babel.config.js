@@ -3,10 +3,7 @@ module.exports = {
   env: {
     test: {
       plugins: [
-        "@babel/plugin-transform-runtime",
-        "@babel/proposal-class-properties",
-        "@babel/proposal-object-rest-spread",
-        "istanbul"
+        "@babel/plugin-transform-runtime"
       ]
     }
   }

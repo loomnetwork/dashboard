@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit src/**/*.spec.ts",
     "lint": "vue-cli-service lint",
-    "test": "NODE_ENV=test ./node_modules/.bin/nyc vue-cli-service test:unit  src/**/*.spec.ts",
+    "test": "NODE_ENV=test vue-cli-service test:unit src/**/*.spec.ts",
     "tokens": "ts-node --compiler-options '{\"noImplicitAny\": false, \"module\": \"commonjs\" }'  --project tsconfig.json ./scripts/gen-tokens-info.ts"
   },
   "dependencies": {
@@ -93,26 +93,21 @@
     "eslint-plugin-html": "^5.0.3",
     "eslint-plugin-prettier": "^3.1.0",
     "husky": "^3.0.0",
-    "inspectpack": "^4.2.1",
-    "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
     "lolex": "^4.1.0",
     "mocha": "^6.1.4",
-    "nyc": "^14.1.1",
     "prerender-spa-plugin": "^3.3.0",
     "prettier": "^1.18.2",
     "sass": "^1.35.2",
     "sass-loader": "^8.0.0",
     "sentry-testkit": "^2.2.1",
     "sinon": "^7.3.2",
-    "ts-node": "^8.2.0",
+    "ts-node": "^10.9.1",
     "tslint-config-prettier": "^1.18.0",
     "typechain": "^0.3.14",
     "typescript": "~4.5.5",
-    "wait-for-expect": "^1.1.0",
-    "webpack-bundle-analyzer": "^3.3.2",
-    "window-mock": "^0.0.13"
+    "wait-for-expect": "^1.1.0"
   },
   "husky": {
     "hooks": {

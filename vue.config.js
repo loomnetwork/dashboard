@@ -30,7 +30,7 @@ module.exports = {
         Buffer: ["buffer", "Buffer"] // set the global Buffer to the Buffer export from the buffer package
       })
     ]
-    /* TODO: adjust for webpack v5
+    
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -38,22 +38,15 @@ module.exports = {
             sourceMap: true,
             ecma: undefined,
             warnings: false,
-            parse: {},
             compress: {},
             mangle: false, // Note `mangle.properties` is `false` by default.
             module: false,
-            output: null,
-            toplevel: false,
-            nameCache: null,
-            ie8: false,
             keep_classnames: undefined,
             keep_fnames: true,
-            safari10: false
           }
         })
       ]
     }
-    */
 
     if (process.env.NODE_ENV === "test") {
       config.externals = {
@@ -72,6 +65,7 @@ module.exports = {
     )
 
     return {
+      devtool: 'source-map',
       resolve: {
         alias: {
           "bn.js": path.resolve(__dirname, "node_modules/bn.js/lib/bn.js"),
@@ -102,17 +96,5 @@ module.exports = {
     config.module.rules.delete("eslint")
     config.resolve.set("symlinks", false) // makes yarn link loom-js work
     config.module.rules.delete("uglify")
-
-    if (process.env.NODE_ENV === "test") {
-      // config.module
-      //   .rule("istanbul")
-      //   .test(/\.(ts|vue)$/)
-      //   .enforce("post")
-      //   .include.add(path.resolve("src"))
-      //   .end()
-      //   .use("istanbul-instrumenter-loader")
-      //   .loader("istanbul-instrumenter-loader")
-      //   .options({ esModules: true })
-    }
   }
 }

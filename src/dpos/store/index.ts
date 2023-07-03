@@ -632,7 +632,7 @@ export async function unjail(context: ActionContext) {
     feedback.showSuccess(i18n.t("dpos.unjail_success").toString())
   } catch (err) {
     console.error(err)
-    feedback.showError(i18n.t("dpos.unjail_error", { error: err.message }).toString())
+    feedback.showError(i18n.t("dpos.unjail_error", { error: (err as Error).message }).toString())
   } finally {
     feedback.endTask()
   }

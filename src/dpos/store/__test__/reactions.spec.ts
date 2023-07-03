@@ -11,7 +11,6 @@ import { contracts as plasmaTokenContracts } from "@/store/plasma/tokens"
 import { CoinAdapter } from "@/store/plasma/tokens"
 import sinon from "sinon"
 import { now, nowStub, dposUtilsStub, dposModuleStub, plasmaModuleStub } from "./_helpers"
-import { Coin } from "loom-js/dist/contracts"
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

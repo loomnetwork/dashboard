@@ -58,7 +58,6 @@ export default {
   coinDataUrl: "/tokens/ext-dev.tokens.json",
   gateway: {
     chains: ["ethereum", "binance"],
-    checkMarketplaceURL: "",
     tokenContractLogsURL: "",
     binance: {
       gatewayAccount: "tbnb1gc7azhlup5a34t8us84x6d0fluw57deuf47q9w",

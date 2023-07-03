@@ -28,5 +28,5 @@
     "tests/**/*.tsx"
   ],
   "exclude": ["node_modules"],
-  "files": ["shims-vue.plugins.d.ts"]
+  "files": ["src/shims-vue.plugins.d.ts"]
 }

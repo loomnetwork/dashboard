@@ -329,8 +329,7 @@ export async function plasmaWithdraw(context: ActionContext, funds: Funds) {
     feedback.endTask()
   } catch (error) {
     console.error(error)
-    console.log(error, error.handled)
-    if (error.handled) {
+    if ((error as any).handled) {
       return
     }
     feedback.endTask()

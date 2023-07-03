@@ -1,15 +1,9 @@
-// module.exports = {
-//   presets: ['@vue/app']
-// }
 module.exports = {
-  presets: ["@vue/app", "@babel/preset-env"],
+  presets: ["@vue/cli-plugin-babel/preset", "@babel/preset-env"],
   env: {
     test: {
       plugins: [
-        "@babel/plugin-transform-runtime",
-        "@babel/proposal-class-properties",
-        "@babel/proposal-object-rest-spread",
-        "istanbul"
+        "@babel/plugin-transform-runtime"
       ]
     }
   }

@@ -4,7 +4,6 @@
  * @preferred
  */
 import * as Sentry from "@sentry/browser"
-import { provider as W3Provider } from "web3-providers"
 import { feedbackModule } from "@/feedback/store"
 import Web3 from "web3"
 import { getMetamaskSigner } from "loom-js"
@@ -21,6 +20,7 @@ export const MetaMaskAdapter: WalletType = {
   desktop: true,
   mobile: false,
   detect: isMetamaskPresent,
+
   async createProvider(): Promise<IWalletProvider> {
     if (!isMetamaskPresent()) {
       throw new Error("no Metamask installation detected")
@@ -42,7 +42,7 @@ function isMetamaskPresent() {
   return "ethereum" in window && window.ethereum.isMetaMask
 }
 
-async function getCurrentApi(): Promise<W3Provider> {
+async function getCurrentApi(): Promise<any> {
   // @ts-ignore
   const ethereum: any = window.ethereum
   try {

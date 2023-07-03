@@ -9,7 +9,7 @@ import {
 } from "./types"
 import { plasmaModule } from "."
 import BN from "bn.js"
-import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/ERC20Factory"
+import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/factories/ERC20__factory"
 import debug from "debug"
 import { setNewTokenToLocalStorage, ZERO } from "@/utils"
 import { tokenService, TokenData } from "@/services/TokenService"
@@ -109,7 +109,7 @@ export class CoinAdapter implements ContractAdapter {
 class ERC20Adapter implements ContractAdapter {
   constructor(readonly token: string, public contract: ERC20) { }
   get contractAddress() {
-    return this.contract.address.toLocaleLowerCase()
+    return this.contract.options.address.toLocaleLowerCase()
   }
   async balanceOf(account: string) {
     const caller = await plasmaModule.getCallerAddress()
@@ -170,6 +170,7 @@ export async function addToken(context: PlasmaContext, payload: { token: TokenDa
   log("add token state ", state.coins)
   let contract
   try {
+    // @ts-ignore-next-line
     contract = new web3.eth.Contract(ERC20ABI, token.plasma) as ERC20
     await addContract(token.symbol, PlasmaTokenKind.ERC20, contract)
   } catch (error) {
@@ -263,13 +264,13 @@ export async function approve(
     await adapter.approve(to, approvalAmount)
     return true
   } catch (error) {
-    if (error.message.includes("User denied message")) {
+    if ((error as any).message.includes("User denied message")) {
       feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
       feedbackModule.endTask()
     } else {
       feedbackModule.showError(
         i18n
-          .t("messages.transaction_apprv_err_tx", { msg: error.message })
+          .t("messages.transaction_apprv_err_tx", { msg: (error as any).message })
           .toString(),
       )
       feedbackModule.endTask()

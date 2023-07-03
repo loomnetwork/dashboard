@@ -35,7 +35,6 @@ export default {
   },
   gateway: {
     chains: ["ethereum"],
-    checkMarketplaceURL: "",
     tokenContractLogsURL: "https://dev-api.loom.games/plasma/tokencontract/eth:{address}",
     binance: {
       gatewayAccount: "tbnb14sa7gnlalxd0e336clc0ltgke6e6hdanyl6pqq",

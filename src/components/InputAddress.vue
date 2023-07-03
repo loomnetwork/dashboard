@@ -14,8 +14,6 @@
 
 <script lang="ts">
 import { Watch, Vue, Prop, Component } from "vue-property-decorator"
-import { DashboardState } from "@/types"
-import { PlasmaState } from "../store/plasma/types"
 
 @Component
 export default class InputAddress extends Vue {

@@ -7,7 +7,7 @@ import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
 import { Transfer } from "@/types"
 import BN from "bn.js"
 import debug from "debug"
-import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/ERC20Factory"
+import { abi as ERC20ABI } from "loom-js/dist/mainnet-contracts/factories/ERC20__factory"
 import { BareActionContext, getStoreBuilder } from "vuex-typex"
 import Web3 from "web3"
 import {
@@ -118,7 +118,7 @@ export const ethereumModule = {
     return stateGetter()
   },
 
-  get web3(): Web3 {
+  get web3(): Web3 | null {
     return web3
   },
 
@@ -173,17 +173,16 @@ async function setWalletType(context: ActionContext, walletType: string) {
     feedbackModule.setTask(i18n.t("feedback_msg.task.connect_wallet").toString())
     feedbackModule.setStep(i18n.t("feedback_msg.task.connect_wallet").toString())
 
-    await wallet
-      .createProvider(context.state)
-      .then((provider) => {
-        disconnectWalletBeforeUnload(provider)
-        return setProvider(context, provider)
-      })
-      .catch((error) => {
+    try {
+      const provider = await wallet.createProvider(context.state)
+      disconnectWalletBeforeUnload(provider)
+      await setProvider(context, provider)
+    } catch(error) {
         Sentry.captureException(error)
         console.error(error)
+        feedbackModule.endTask()
         feedbackModule.showError(i18n.t("feedback_msg.error.connect_wallet_prob").toString())
-      })
+    }
   }
 }
 
@@ -257,7 +256,7 @@ export async function refreshBalance(context: ActionContext, symbol: string) {
   // On Ethereum fetch the current user's ETH balance, on BSC fetch the BNB balance, etc.
   const nativeTokenSymbol = context.state.nativeTokenSymbol
   if (symbol === nativeTokenSymbol) {
-    const b = await web3.eth.getBalance(context.state.address)
+    const b = await web3!.eth.getBalance(context.state.address)
     context.state.coins[nativeTokenSymbol].balance = new BN(b.toString())
     return
   }
@@ -303,7 +302,7 @@ export async function approve(context: ActionContext, payload: Transfer) {
     return result
   } catch (error) {
     if (isBCWallet(context.rootState.ethereum.wallet) &&
-      error.message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
+      (error as any).message.includes("Failed to subscribe to new newBlockHeaders to confirm the transaction receipts")) {
       await new Promise((resolve) => setTimeout(resolve, BSC_SAFE_BLOCK_WAIT_TIME_MS))
       // XXX when it fails it doesnt return the transaction hash
       return ""

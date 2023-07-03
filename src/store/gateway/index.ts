@@ -3,7 +3,6 @@
  */
 
 import debug from "debug"
-import BN from "bn.js"
 
 import { getStoreBuilder } from "vuex-typex"
 import { GatewayState, HasGatewayState } from "./types"
@@ -12,7 +11,6 @@ import * as PlasmaGateways from "./plasma"
 import * as EthereumGateways from "./ethereum"
 import * as mutations from "./mutations"
 import { ethereumModule } from "../ethereum"
-import { TransferGatewayTokenKind } from "loom-js/dist/proto/transfer_gateway_pb"
 import { ActionContext } from "./types"
 import Axios from "axios"
 
@@ -42,7 +40,6 @@ function initialState(): GatewayState {
     withdrawStateIdx: 0,
     maybeRelentlessUser: null,
     requireMapping: false,
-    checkMarketplaceURL: "",
     tokenContractLogsURL: "",
     ethereumMappings: {
       confirmed: [],
@@ -89,7 +86,6 @@ export const gatewayModule = {
   loadMapping: builder.dispatch(Mapper.loadMapping),
   createMapping: builder.dispatch(Mapper.createMapping),
   setMaybeRelentlessUser: builder.commit(mutations.setMaybeRelentlessUser),
-  checkRelentlessUser: builder.dispatch(Mapper.checkRelentlessUser),
 
   // helper
   generateNewId: Mapper.generateNewId,

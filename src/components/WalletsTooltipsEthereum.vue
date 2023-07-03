@@ -38,10 +38,11 @@
     <b-popover
       class="popover"
       target="eth-walletlink-button"
-      title="WalletLink Protocol"
+      title="Coinbase Wallet"
       triggers="hover"
     >
-      For the time being WalletLink only supports Coinbase Wallet mobile app.
+      <a href="https://www.coinbase.com/wallet" target="_blank">Coinbase Wallet</a>
+      is available on <strong>iOS</strong>, <strong>Android</strong>, and as a desktop Chrome extension.
     </b-popover>
   </div>
 </template>

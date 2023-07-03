@@ -14,7 +14,7 @@ import { i18n } from "@/i18n"
 import {
   setupProtocolsFromEndpoint,
   createDefaultTxMiddleware,
-} from "loom-js/dist/helpers"
+} from "loom-js"
 
 // assets (make this a separate module)
 
@@ -224,7 +224,7 @@ async function refreshHistory(context: PlasmaContext) {
         }
       })
   } catch (e) {
-    console.error("Error loading plasma history. " + e.message)
+    console.error("Error loading plasma history. " + (e as Error).message)
   }
 
   // example entry

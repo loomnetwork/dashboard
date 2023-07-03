@@ -2,7 +2,7 @@ import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { IWithdrawalReceipt } from "loom-js/dist/contracts/transfer-gateway"
 import { BareActionContext } from "vuex-typex"
 import { HasEthereumState } from "../ethereum/types"
-import { HasPlasmaState, PlasmaSigner } from "../plasma/types"
+import { HasPlasmaState } from "../plasma/types"
 import BN from "bn.js"
 import { Contract, Address } from "loom-js"
 import { TokenData } from "@/services/TokenService"
@@ -16,7 +16,6 @@ export interface HasGatewayState extends HasEthereumState, HasPlasmaState {
 
 export interface GatewayConfig {
   chains: string[]
-  checkMarketplaceURL: string
   tokenContractLogsURL: string
   binance: BinanceGateway
   withdrawalLimit: boolean

@@ -26,7 +26,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import { plasmaModule } from "@/store/plasma"
 import { assetsModule } from "@/store/plasma/assets"
 import { PACKS_NAME } from "@/store/plasma/assets/reactions"
 import TransferPacksModal from "@/components/modals/TransferPacksModal.vue"

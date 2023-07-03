@@ -47,7 +47,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { Component, Watch } from "vue-property-decorator"
-import { plasmaModule } from "@/store/plasma"
 import { CardDetail } from "@/store/plasma/types"
 import { DashboardState } from "@/types"
 import TransferAllCardsModal from "@/components/modals/TransferAllCardsModal.vue"

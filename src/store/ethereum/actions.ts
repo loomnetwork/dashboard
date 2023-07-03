@@ -1,4 +1,4 @@
-import { ERC20Factory } from "loom-js/dist/mainnet-contracts/ERC20Factory"
+import { ERC20__factory as ERC20Factory } from "loom-js/dist/mainnet-contracts/factories/ERC20__factory"
 import { timer } from "rxjs"
 import BN from "bn.js"
 import { BareActionContext } from "vuex-typex"

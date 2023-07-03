@@ -46,14 +46,14 @@ function initSignedEthMiddleware(signer: ethers.Signer): SignedEthTxMiddleware {
       feedbackModule.showInfo("")
       return res
     } catch (e) {
-      if (e.message.includes("User denied message")) {
-        feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
-        e.handled = true
+      if ((e as Error).message.includes("User denied message")) {
+        feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString());
+        (e as any).handled = true
         feedbackModule.endTask()
       } else {
         feedbackModule.showError(
           i18n
-            .t("messages.transaction_apprv_err_tx", { msg: e.message })
+            .t("messages.transaction_apprv_err_tx", { msg: (e as any).message })
             .toString(),
         )
         feedbackModule.endTask()
@@ -73,14 +73,14 @@ export function modifyRPCSigner(signer: ethers.Signer): ethers.Signer {
       feedbackModule.showInfo("")
       return res
     } catch (e) {
-      if (e.message.includes("User denied message")) {
-        feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString())
-        e.handled = true
+      if ((e as Error).message.includes("User denied message")) {
+        feedbackModule.showError(i18n.t("messages.user_denied_sign_tx").toString());
+        (e as any).handled = true
         feedbackModule.endTask()
       } else {
         feedbackModule.showError(
           i18n
-            .t("messages.transaction_apprv_err_tx", { msg: e.message })
+            .t("messages.transaction_apprv_err_tx", { msg: (e as Error).message })
             .toString(),
         )
         feedbackModule.endTask()

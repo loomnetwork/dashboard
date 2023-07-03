@@ -152,19 +152,17 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Component, Watch } from "vue-property-decorator"
-import { createNamespacedHelpers } from "vuex"
+import { Component } from "vue-property-decorator"
 import SeedPhraseModal from "@/components/modals/SeedPhraseModal.vue"
 import { BModal } from "bootstrap-vue"
 import { whiteListModule } from "@/whitelist/store"
-import { WhiteListState, DeployerAddress } from "@/whitelist/store/types"
+import { WhiteListState } from "@/whitelist/store/types"
 import { plasmaModule } from "@/store/plasma"
 import { formatFromLoomAddress, formatToLoomAddress } from "@/utils"
 import { formatTokenAmount } from "@/filters"
 import { Address } from "loom-js"
 import InputAddress from "@/components/InputAddress.vue"
 import { ITier } from "loom-js/dist/contracts/user-deployer-whitelist"
-import BN from "bn.js"
 import { feedbackModule } from "@/feedback/store"
 import { PlasmaState } from "../../store/plasma/types"
 

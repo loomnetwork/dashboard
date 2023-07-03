@@ -1,10 +1,8 @@
-import { HasPlasmaState } from "../types"
 import { Store } from "vuex"
 import MigratedZBGCardJSON from "@/contracts/MigratedZBGCard.json"
 import BoosterPackJSON from "@/contracts/BoosterPack.json"
 import packAddresses from "@/data/ZBGPackAddresses.json"
 
-import { plasmaModule } from ".."
 import { MigratedZBGCard } from "@/contracts/types/web3-contracts/MigratedZBGCard"
 
 import debug from "debug"

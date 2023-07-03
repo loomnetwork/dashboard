@@ -109,13 +109,12 @@ export class CoinAdapter implements ContractAdapter {
 class ERC20Adapter implements ContractAdapter {
   constructor(readonly token: string, public contract: ERC20) { }
   get contractAddress() {
-    return this.contract.address.toLocaleLowerCase()
+    return this.contract.options.address.toLocaleLowerCase()
   }
   async balanceOf(account: string) {
     const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .balanceOf(account)
-      // @ts-expect-error
       .call({
         from: caller.local.toString(),
       })
@@ -125,7 +124,6 @@ class ERC20Adapter implements ContractAdapter {
     const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .allowance(account, to)
-      // @ts-expect-error
       .call({
         from: caller.local.toString(),
       })
@@ -135,14 +133,12 @@ class ERC20Adapter implements ContractAdapter {
     const caller = await plasmaModule.getCallerAddress()
     return this.contract.methods
       .approve(to, amount.toString())
-      // @ts-expect-error
       .send({ from: caller.local.toString() })
   }
   async transfer(to: string, amount: BN) {
     const caller = await plasmaModule.getCallerAddress()
     const result = await this.contract.methods
       .transfer(to, amount.toString())
-      // @ts-expect-error
       .send({ from: caller.local.toString() })
     console.log("transferred.")
     console.log("transferred result", result)

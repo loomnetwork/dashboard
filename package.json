@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit src/**/*.spec.ts",
     "lint": "vue-cli-service lint",
     "test": "NODE_ENV=test vue-cli-service test:unit src/**/*.spec.ts",
-    "tokens": "ts-node --compiler-options '{\"noImplicitAny\": false, \"module\": \"commonjs\" }'  --project tsconfig.json ./scripts/gen-tokens-info.ts"
+    "tokens": "ts-node --compiler-options '{\"noImplicitAny\": false, \"module\": \"commonjs\" }'  --project tsconfig.json ./scripts/gen-tokens-info.ts",
+    "gen-contract-types": "yarn typechain \"src/contracts/ERC20.json\" --target=web3-v1 --out-dir src/store/plasma/web3-contracts"
   },
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.7.1",
@@ -68,6 +69,7 @@
   "devDependencies": {
     "@prerenderer/renderer-jsdom": "^0.2.0",
     "@sentry/webpack-plugin": "^1.7.0",
+    "@typechain/web3-v1": "^6.0.3",
     "@types/bip39": "^2.4.2",
     "@types/bn.js": "^4.11.5",
     "@types/chai": "^4.1.7",
@@ -105,7 +107,7 @@
     "sinon": "^7.3.2",
     "ts-node": "^10.9.1",
     "tslint-config-prettier": "^1.18.0",
-    "typechain": "^0.3.14",
+    "typechain": "^8.2.0",
     "typescript": "~4.5.5",
     "wait-for-expect": "^1.1.0"
   },

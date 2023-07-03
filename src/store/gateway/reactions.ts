@@ -1,17 +1,13 @@
 import { ethers } from "ethers"
 import { tokenService, TokenData } from "@/services/TokenService"
-import { ERC20 } from "@/store/plasma/web3-contracts/ERC20"
-import { DashboardState, Funds } from "@/types"
-import BN from "bn.js"
+import { DashboardState } from "@/types"
 import debug from "debug"
 import { Address } from "loom-js"
 import { IAddressMapping } from "loom-js/dist/contracts/address-mapper"
 import { Store } from "vuex"
-import { EventLog } from "web3-core"
 import { gatewayModule } from "."
 import { ethereumModule } from "../ethereum"
 import { plasmaModule } from "../plasma"
-import { EthereumGatewayV2__factory as EthereumGatewayV2Factory } from "loom-js/dist/mainnet-contracts/factories/EthereumGatewayV2__factory"
 import * as EthereumGateways from "./ethereum"
 import * as PlasmaGateways from "./plasma"
 import { EthPlasmSigner } from "./signer"
@@ -47,38 +43,10 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
         const ethereumGateways = EthereumGateways.service()
 
-        // TODO: Remove this. This event listening stuff is half done, the events are fetched and
-        //       then nothing actually looks at them or does anything useful,
-        //       also BSC doesn't have any official websocket endpoints so this just plain doesn't
-        //       work there.
-        /*
-        // Listen to approval & deposit events
-        listenToDepositApproval(
-          ethereumModule.state.address,
-          ethereumGateways.loomGateway,
-          ethereumModule.getERC20("LOOM")!,
-        )
-
-        listenToDeposit(
-          ethereumModule.state.address,
-          ethereumGateways.loomGateway,
-          ethereumModule.getERC20("LOOM")!,
-        )
-        */
         checkIncompleteTransfers()
       }
     },
   )
-
-  // store.watch(
-  //   (s) => s.gateway.maybeRelentlessUser,
-  //   async (maybeRelentlessUser) => {
-  //     if (maybeRelentlessUser === false) {
-  //       // User agree to create a new mapping
-  //       await gatewayModule.createMapping()
-  //     }
-  //   },
-  // )
 
   store.subscribeAction({
     after(action) {
@@ -218,77 +186,4 @@ export function gatewayReactions(store: Store<DashboardState>) {
 
     await plasmaModule.changeIdentity({ signer, address: plasmaAddress })
   }
-}
-
-function listenToDepositApproval(
-  account: string,
-  gw: EthereumGatewayV2Factory,
-  loom: ERC20,
-) {
-  // const approval = loom.filters.Approval(account, gw.address, null)
-  loom.events.Approval(
-    {
-      filter: {
-        from: account,
-        // @ts-ignore
-        to: gw.address,
-      },
-      fromBlock: "latest",
-    },
-    (error, event) => {
-      if (error) {
-        console.log(error)
-        return
-      }
-      log(
-        `transfer ${event.returnValues.value.toString()}
-       tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
-      )
-      const payload = formatTxFromEvent(event)
-      // TODO: Uncomments if using Ethers
-      gatewayModule.setPendingTransactions(payload)
-      // TODO: Clear specific hash
-      // gatewayModule.clearPendingTransactions()
-    },
-  )
-}
-
-function listenToDeposit(account: string, gw: EthereumGatewayV2Factory, loom: ERC20) {
-  loom.events.Transfer(
-    {
-      filter: {
-        from: account,
-        // @ts-ignore
-        to: gw.address,
-      },
-      fromBlock: "latest",
-    },
-    (error, event) => {
-      if (error) {
-        console.log(error)
-        return
-      }
-      log(
-        `transfer ${event.returnValues.value.toString()}
-       tokens from ${event.returnValues.from} to ${event.returnValues.to}`,
-      )
-      const payload = formatTxFromEvent(event)
-      // TODO: Uncomments if using Ethers
-      gatewayModule.setPendingTransactions(payload)
-      // TODO: Clear specific hash
-      // gatewayModule.clearPendingTransactions()
-    },
-  )
-}
-
-function formatTxFromEvent(event: EventLog) {
-  const contractAddr = (event.address as string).toLowerCase()
-  const chain = "ethereum"
-  const symbol = tokenService.tokenFromAddress(contractAddr, "ethereum")!.symbol
-  const funds: Funds = {
-    chain,
-    symbol,
-    weiAmount: new BN(event.returnValues.value.toString()),
-  }
-  return { ...event, funds }
 }

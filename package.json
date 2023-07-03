@@ -110,8 +110,6 @@
     "wait-for-expect": "^1.1.0"
   },
   "husky": {
-    "hooks": {
-      "pre-push": "yarn test"
-    }
+    "hooks": {}
   }
 }

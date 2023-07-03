@@ -3,7 +3,7 @@ import BN from "bn.js"
 import { Client, LoomProvider } from "loom-js"
 import Web3 from "web3"
 import { BareActionContext } from "vuex-typex"
-import { Provider } from "ethers/providers"
+import { ethers } from "ethers"
 
 export interface PlasmaConfig {
   networkId: string
@@ -24,7 +24,7 @@ export interface PlasmaState extends PlasmaConfig {
   provider: LoomProvider | null
   // for normal contracts
   web3: Web3 | null
-  ethersProvider: Provider | null
+  ethersProvider: ethers.providers.Provider | null
   address: string
   signer: PlasmaSigner | null
   history: any[]

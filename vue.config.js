@@ -1,18 +1,11 @@
 /* eslint-disable */
 var PrerenderSpaPlugin = require("prerender-spa-plugin")
 var path = require("path")
-const Renderer = PrerenderSpaPlugin.PuppeteerRenderer
-const SentryCliPlugin = require("@sentry/webpack-plugin")
 const TerserPlugin = require("terser-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const webpack = require("webpack")
-const baseUrl = "/"
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const { DuplicatesPlugin } = require("inspectpack/plugin");
 
 module.exports = {
-  //publicPath: baseUrl,
-  //baseUrl: baseUrl,
   pages: {
     index: {
       title: "Index Page",
@@ -23,19 +16,21 @@ module.exports = {
   },
   runtimeCompiler: true,
   devServer: {
-    https: true,
-    disableHostCheck: true
+    server: "http",
+    allowedHosts: "all"
   },
   configureWebpack: config => {
     console.log("nodeenv:", process.env.NODE_ENV)
 
     // https://github.com/sindresorhus/got/issues/345
     let plugins = [
-      new webpack.IgnorePlugin(/^electron$/),
-      new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID', 'EXT_VALIDATORS_URL']),
-      // new DuplicatesPlugin(),
-      // new BundleAnalyzerPlugin(),
+      new webpack.IgnorePlugin({ resourceRegExp: /^electron$/ }),
+      new webpack.EnvironmentPlugin(['NODE_ENV', 'INFURA_PROJECT_ID', 'EXT_VALIDATORS_URL', 'WALLETCONNECT_PROJECT_ID']),
+      new webpack.ProvidePlugin({
+        Buffer: ["buffer", "Buffer"] // set the global Buffer to the Buffer export from the buffer package
+      })
     ]
+    
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -43,17 +38,11 @@ module.exports = {
             sourceMap: true,
             ecma: undefined,
             warnings: false,
-            parse: {},
             compress: {},
             mangle: false, // Note `mangle.properties` is `false` by default.
             module: false,
-            output: null,
-            toplevel: false,
-            nameCache: null,
-            ie8: false,
             keep_classnames: undefined,
             keep_fnames: true,
-            safari10: false
           }
         })
       ]
@@ -67,15 +56,16 @@ module.exports = {
     }
 
     plugins.push(
-      new CopyPlugin([
-        {
+      new CopyPlugin({
+        patterns: [{
           from: "src/assets/tokens/",
           to: "tokens"
-        }
-      ])
+        }]
+      })
     )
 
     return {
+      devtool: 'source-map',
       resolve: {
         alias: {
           "bn.js": path.resolve(__dirname, "node_modules/bn.js/lib/bn.js"),
@@ -85,6 +75,15 @@ module.exports = {
           "web3-eth-accounts": path.resolve(__dirname, "node_modules/web3-eth-accounts"),
           "web3-eth-contract": path.resolve(__dirname, "node_modules/web3-eth-contract"),
           "web3-utils": path.resolve(__dirname, "node_modules/web3-utils"),
+        },
+        fallback: {
+          buffer: require.resolve("buffer/"),
+          stream: require.resolve("stream-browserify"),
+          http: require.resolve("stream-http"),
+          https: require.resolve("https-browserify"),
+          net: false,
+          child_process: false,
+          fs: false,
         }
       },
       externals: {
@@ -97,17 +96,5 @@ module.exports = {
     config.module.rules.delete("eslint")
     config.resolve.set("symlinks", false) // makes yarn link loom-js work
     config.module.rules.delete("uglify")
-
-    if (process.env.NODE_ENV === "test") {
-      // config.module
-      //   .rule("istanbul")
-      //   .test(/\.(ts|vue)$/)
-      //   .enforce("post")
-      //   .include.add(path.resolve("src"))
-      //   .end()
-      //   .use("istanbul-instrumenter-loader")
-      //   .loader("istanbul-instrumenter-loader")
-      //   .options({ esModules: true })
-    }
   }
 }

@@ -7,13 +7,11 @@ import BN from "bn.js"
 import Web3 from "web3"
 
 import * as Tokens from "./tokens"
-import { Web3Provider } from "ethers/providers"
 import { ethers } from "ethers"
 import { publicKeyFromPrivateKey } from "loom-js/dist/crypto-utils"
 import { DashboardState } from "@/types"
 
 import debug from "debug"
-import { tokenService } from "@/services/TokenService"
 const log = debug("dash.plasma")
 
 /**
@@ -104,7 +102,7 @@ async function createPlasmaWeb3(store: Store<DashboardState>) {
       : await createLoomProvider(client!, signer, genericKey)
   // @ts-ignore
   store.state.plasma.web3 = new Web3(loomProvider)
-  store.state.plasma.ethersProvider = new Web3Provider(loomProvider)
+  store.state.plasma.ethersProvider = new ethers.providers.Web3Provider(loomProvider)
 }
 
 async function createLoomProvider(

@@ -145,12 +145,12 @@ export async function transferCards(
     )
   } catch (error) {
     feedbackModule.endTask()
-    if (error.message.includes("denied")) {
+    if ((error as Error).message.includes("denied")) {
       feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {
       feedbackModule.showError(
         i18n
-          .t("messages.transfer_card_err_tx", { msg: error.message })
+          .t("messages.transfer_card_err_tx", { msg: (error as Error).message })
           .toString(),
       )
       throw error
@@ -190,12 +190,12 @@ export async function transferPacks(
     )
   } catch (error) {
     feedbackModule.endTask()
-    if (error.message.includes("denied")) {
+    if ((error as Error).message.includes("denied")) {
       feedbackModule.showError(i18n.t("messages.user_denied_tx").toString())
     } else {
       feedbackModule.showError(
         i18n
-          .t("messages.transfer_pack_err_tx", { msg: error.message })
+          .t("messages.transfer_pack_err_tx", { msg: (error as Error).message })
           .toString(),
       )
       throw error

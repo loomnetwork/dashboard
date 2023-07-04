@@ -113,12 +113,10 @@
                 </div>
               </template>
 
-              <template slot="active" slot-scope="data">{{
+              <template #cell(state)="data">{{
                 data.item.jailed
                   ? $t("views.validator_detail.jailed")
-                  : data.item.active
-                  ? $t("views.validator_detail.active")
-                  : ""
+                  : (data.item.active ? $t("views.validator_detail.active") : "")
               }}</template>
             </b-table>
           </template>
@@ -163,25 +161,26 @@ export default class ValidatorList extends Vue {
   validatorFields: any[] = []
 
   created() {
-    this.validatorFields = [{ key: "name", sortable: true, label: this.$t("views.validator_list.name") },
-    { key: "active", sortable: true, label: this.$t("views.validator_detail.active") },
-    //  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
-    {
-      key: "totalStaked",
-      sortable: true,
-      label: this.$t("components.modals.faucet_redelegate_modal.total_stake"),
-      formatter: (value) => formatTokenAmount(value, 18, 0),
-      thClass: "align-center-th",
-      tdClass: "align-right-td",
-    },
-    {
-      key: "fee",
-      sortable: true,
-      label: this.$t("components.validator_extended_detail.fee"),
-      formatter: (value) => value + "%",
-      thClass: "align-center-th",
-      tdClass: "align-right-td",
-    },
+    this.validatorFields = [
+      { key: "name", sortable: true, label: this.$t("views.validator_list.name") },
+      { key: "state", sortable: true, label: this.$t("views.validator_detail.state") },
+      //  { key: "recentlyMissedBlocks", sortable: true, label: "Recently missed blocks" },
+      {
+        key: "totalStaked",
+        sortable: true,
+        label: this.$t("components.modals.faucet_redelegate_modal.total_stake"),
+        formatter: (value) => formatTokenAmount(value, 18, 0),
+        thClass: "align-center-th",
+        tdClass: "align-right-td",
+      },
+      {
+        key: "fee",
+        sortable: true,
+        label: this.$t("components.validator_extended_detail.fee"),
+        formatter: (value) => value + "%",
+        thClass: "align-center-th",
+        tdClass: "align-right-td",
+      },
     ]
   }
 

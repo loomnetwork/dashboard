@@ -330,7 +330,7 @@
     "validator_list": {
       "no_validators_available_please_try": "대시보드 노드를 연결하는 중 오류가 발생했습니다. 나중에 다시 확인해주세요.",
       "validators": "검증자",
-      "next_election_in": "다음 선거 주기까지 남은 시간:",
+      "next_election_in": "다음 선거 주기까지 남은 시간",
       "total_staked_amount": "총 스테이킹 금액",
       "stake": "스테이킹",
       "name": "이름"

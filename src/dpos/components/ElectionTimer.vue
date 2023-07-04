@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 class="highlight" style="height: 2rem;">
+    <h5 class="highlight">
       <span v-if="timeLeft > 0">{{formattedTimeUntilElection}}</span>
       <b-spinner v-else variant="primary" label="Spinning" small style="margin: 0 0 0.4rem 0.4rem;" />
     </h5>

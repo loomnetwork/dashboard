@@ -331,7 +331,7 @@
     "validator_list": {
       "no_validators_available_please_try": "ダッシュ ボードのノードへの接続中にエラーが発生しました。後ほど再度確認してください。",
       "validators": "バリデーター",
-      "next_election_in": "Next election in:",
+      "next_election_in": "Next election in",
       "total_staked_amount": "Total staked amount",
       "stake": "Stake",
       "name": "Name"
